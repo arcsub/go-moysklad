@@ -214,10 +214,9 @@ func (p *Params) WithLimit(limit int) *Params {
 	return p
 }
 
-// WithOffset Смещение от первого элемента (считается с нуля).
-// От 0 до 1000
+// WithOffset Смещение от первого элемента.
 func (p *Params) WithOffset(offset int) *Params {
-	p.Offset = Clamp(offset, 0, MaxPositions)
+	p.Offset = offset
 	return p
 }
 
