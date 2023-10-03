@@ -152,6 +152,14 @@ func (s *endpointAttributes) CreateAttribute(ctx context.Context, attribute *Att
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-nye-polq-suschnostej-sozdat-dopolnitel-nye-polq
 func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributes []*Attribute) (*Slice[Attribute], *Response, error) {
 	path := "metadata/attributes"
+
+	// при передаче массива из 1-го доп поля сервис возвращает 1 доп поле, а не массив доп полей.
+	// если количество передаваемых доп полей равняется 1, то дополнительно оборачиваем в срез.
+	if len(attributes) == 1 {
+		attribute, response, err := NewRequestBuilder[Attribute](s.Endpoint, ctx).
+			WithPath(path).WithBody(attributes[0]).Post()
+		return &Slice[Attribute]{*attribute}, response, err
+	}
 	return NewRequestBuilder[Slice[Attribute]](s.Endpoint, ctx).WithPath(path).WithBody(attributes).Post()
 }
 
