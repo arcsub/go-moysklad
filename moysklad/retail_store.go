@@ -20,7 +20,7 @@ type RetailStore struct {
 	Archived                            *bool                 `json:"archived,omitempty"`                            // Добавлена ли Точка продаж в архив
 	AuthTokenAttached                   *bool                 `json:"authTokenAttached,omitempty"`                   // Создан ли токен для точки продаж
 	BankPercent                         *float64              `json:"bankPercent,omitempty"`                         // Комиссия банка-эквайера по операциям по карте (в процентах)
-	Cashiers                            Iterator[Cashier]     `json:"cashiers,omitempty"`                            // Метаданные Кассиров
+	Cashiers                            *Cashiers             `json:"cashiers,omitempty"`                            // Метаданные Кассиров
 	ControlCashierChoice                *bool                 `json:"controlCashierChoice,omitempty"`                // Выбор продавца
 	ControlShippingStock                *bool                 `json:"controlShippingStock,omitempty"`                // Контроль остатков. Не может быть true, если AllowCreateProducts имеет значение true
 	CreateAgentsTags                    *Tags                 `json:"createAgentsTags,omitempty"`                    // Коллекция групп покупателей, представленных в формате строк. Определяет группы, в которые добавляются новые покупатели. Значения null игнорируются
@@ -32,7 +32,7 @@ type RetailStore struct {
 	DemandPrefix                        *string               `json:"demandPrefix,omitempty"`                        // Префикс номера продаж
 	Description                         *string               `json:"description,omitempty"`                         // Комментарий к Точке продаж
 	DiscountEnable                      *bool                 `json:"discountEnable,omitempty"`                      // Разрешить скидки
-	DiscountMaxPercent                  *int                  `json:"discountMaxPercent,omitempty"`                  // Максимальная скидка (в процентах)
+	DiscountMaxPercent                  *float64              `json:"discountMaxPercent,omitempty"`                  // Максимальная скидка (в процентах)
 	EnableReturnsWithNoReason           *bool                 `json:"enableReturnsWithNoReason,omitempty"`           // Разрешить возвраты без основания
 	Environment                         *Environment          `json:"environment,omitempty"`                         // Информация об окружении
 	ExternalCode                        *string               `json:"externalCode,omitempty"`                        // Внешний код Точки продаж

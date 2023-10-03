@@ -38,4 +38,4 @@ func (p ProductFolder) MetaType() MetaType {
 	return MetaTypeProductFolder
 }
 
-type ProductFolders = Iterator[ProductFolder]
+type ProductFolders MetaArray[ProductFolder]

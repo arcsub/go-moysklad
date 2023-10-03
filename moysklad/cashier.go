@@ -23,4 +23,4 @@ func (c Cashier) MetaType() MetaType {
 	return MetaTypeCashier
 }
 
-type Cashiers = Iterator[Cashier]
+type Cashiers MetaArray[Cashier]
