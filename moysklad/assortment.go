@@ -3,6 +3,7 @@ package moysklad
 import (
 	"encoding/json"
 	"errors"
+	"github.com/google/uuid"
 )
 
 // Assortment Ассортимент.
@@ -20,7 +21,17 @@ func (a Assortment) MetaType() MetaType {
 // data для хранения сырых данных
 // Product | Variant | Bundle | Service | Consignment
 type AssortmentPosition struct {
-	Meta Meta `json:"meta"`
+	// Общие поля
+	AccountId    uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	Barcodes     Barcodes  `json:"barcodes,omitempty"`     // Штрихкоды
+	Code         string    `json:"code,omitempty"`         // Код
+	Description  string    `json:"description,omitempty"`  // Описание
+	ExternalCode string    `json:"externalCode,omitempty"` // Внешний код
+	Id           uuid.UUID `json:"id,omitempty"`           // ID сущности
+	Meta         Meta      `json:"meta"`                   // Метаданные
+	Name         string    `json:"name,omitempty"`         // Наименование
+
+	// сырые данные
 	data json.RawMessage
 }
 
@@ -93,7 +104,7 @@ func convertToAssortmentPosition[E AssortmentPositionTypes](element E) (*Assortm
 	if err != nil {
 		return nil, err
 	}
-	position := &AssortmentPosition{*meta, data}
+	position := &AssortmentPosition{Meta: *meta, data: data}
 	return position, nil
 }
 
