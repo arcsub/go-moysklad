@@ -57,17 +57,6 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 ```go
   client := moysklad.NewClient()
 ```
-### Простой клиент (Рекомендуется)
-Простой клиент не имеет встроенных сервисов и методов для работы с API МойСклад. Служит аргументом при создании новых сервисов. Рекомендуется к использованию.
-
-### Расширенный клиент
-Расширенный клиент имеет все доступные сервисы и методы для работы с API МойСклад. Потребляет большое количество ресурсов.
-
-Чтобы получить расширенный клиент вызовите метод клиента `Extend()`
-```go
-  client := moysklad.NewClient()
-  clientExt := client.Extend()
-```
 
 ## Аутентификация
 Имеется два способа аутентификации.
@@ -81,7 +70,7 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
   client := moysklad.NewClient().WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
 ```
 
-## Общие методы клиента
+## Методы клиента
 ### WithTokenAuth(token)
 Получить простой клиент с авторизацией через токен.
 ```go
@@ -107,43 +96,42 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
   client := moysklad.NewClient().WithDisabledWebhookContent(true)
 ```
 
-## Методы расширенного клиента
-### Async
+### Async()
 Методы для работы с асинхронными задачами.
 
 Относительный путь: `/async`
 ```go
   asyncService := clientExt.Async
 ```
-### Audit
+### Audit()
 Методы для работы с аудитом.
 
 Относительный путь: `/audit`
 ```go
   auditService := clientExt.Audit
 ```
-### Context
+### Context()
 Методы для работы с контекстом.
 
 Относительный путь: `/context`
 ```go
   contextService := clientExt.Context
 ```
-### Entity
+### Entity()
 Методы для работы с сущностями и документами.
 
 Относительный путь: `/entity`
 ```go
   entityService := clientExt.Entity
 ```
-### Report
+### Report()
 Методы для работы с отчётами.
 
 Относительный путь: `/report`
 ```go
   reportService := clientExt.Report
 ```
-### Security
+### Security()
 Относительный путь: `/security`
 
 Методы для получения токена.
@@ -337,16 +325,29 @@ params.WithMomentTo(time.Now())
 ```
 
 ## Сервисы
-Для получения каждого сервиса необходимо в метод получения нового сервиса передать экземпляр простого клиента.
+Для перехода к определённому сервису необходимо вызвать цепочку методов, аналогично пути запроса.
+
 ### Пример: ProductService
 Сервис для работы с товарами.
 
 Относительный путь: `/entity/product`
-> **Для простого клиента**:
->
-> Сначала необходимо инициализировать простой клиент, затем получить нужный сервис (в нашем примере `ProductService`), который предоставляет методы для работы с ним.
+Цепочка вызовов от клиента будет выглядеть следующим образом:
+```go
+client := moysklad.NewClient()
 
-Пример работы **простого** клиента:
+// `/entity/product`
+_ = client.Entity().Product()
+
+// `/entity/variant`
+_ = client.Entity().Variant()
+
+// `/context/companysettings`
+_ = client.Context().CompanySettings()
+
+// `/report/dashboard`
+_ = client.Report().Dashboard()
+```
+## Пример работы
 ```go
 package main
 
@@ -363,8 +364,8 @@ func main() {
 	  WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")).
 	  WithDisabledWebhookContent(true)
 
-  // получаем сервис для работы с товарами
-  productService := moysklad.NewProductService(client)
+  // сервис для работы с товарами
+  productService := client.Entity().Product()
 
   // выполняем запрос на получение списка товаров без дополнительных параметров (nil)
   products, _, err := productService.Get(context.Background(), nil)
@@ -410,77 +411,6 @@ func main() {
   // отправим запрос на удаление товара
   // в качестве аргументов передадим контекст и указатель на Id удаляемой сущности
   success, _, err := productService.Delete(context.Background(), productUpdated.Id)
-  if err != nil {
-    panic(err)
-  }
-
-  // выведем состояние выполненного запроса, где true - успешно удалено, false – не удалено, см ошибки
-  fmt.Println("Deleted", success)
-}
-```
-Пример работы **расширенного** клиента:
-```go
-package main
-
-import (
-  "context"
-  "fmt"
-  "github.com/arcsub/go-moysklad/moysklad"
-  "os"
-)
-
-func main() {
-  // инициализируем простой клиент с аутентификацией по паре логин/пароль
-  // затем получаем расширенный клиент
-  clientExt := moysklad.NewClient().
-	  WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")).
-	  WithDisabledWebhookContent(true).
-	  Extend()
-
-  // с помощью методов расширенного клиента вызываем необходимый метод конкретного сервиса
-  products, _, err := clientExt.Entity.Product.Get(context.Background(), nil)
-  if err != nil {
-    panic(err)
-  }
-
-  // выводим названия полученных товаров
-  for _, product := range products.Rows {
-    name := moysklad.Deref(product.Name) // Deref безопасно разыменовывает указатель
-    fmt.Println(name)
-  }
-
-  // создадим новый товар
-  product := new(moysklad.Product)
-
-  // придумаем ему название (обязательное поле)
-  product.Name = moysklad.String("Created Product")
-
-  // отправим запрос на создание товара
-  // в качестве аргументов передадим контекст, указатель на товар и nil в качестве параметров
-  productCreated, _, err := clientExt.Entity.Product.Create(context.Background(), product, nil)
-  if err != nil {
-    panic(err)
-  }
-
-  // выведем название созданного товара
-  fmt.Println(moysklad.Deref(productCreated.Name))
-
-  // изменим название товара
-  productCreated.Name = moysklad.String("Updated Product")
-
-  // отправим запрос на изменение товара
-  // в качестве аргументов передадим контекст, указатель на Id изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
-  productUpdated, _, err := clientExt.Entity.Product.Update(context.Background(), productCreated.Id, productCreated, nil)
-  if err != nil {
-    panic(err)
-  }
-
-  // выведем название изменённого товара
-  fmt.Println(moysklad.Deref(productUpdated.Name))
-
-  // отправим запрос на удаление товара
-  // в качестве аргументов передадим контекст и указатель на Id удаляемой сущности
-  success, _, err := clientExt.Entity.Product.Delete(context.Background(), productUpdated.Id)
   if err != nil {
     panic(err)
   }

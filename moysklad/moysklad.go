@@ -32,223 +32,11 @@ const (
 	MaxPrintCount = 1000 // TODO: Максимальное количество ценников/термоэтикеток
 )
 
-// ClientExtended расширенный клиент для взаимодействия с API МойСклад.
-// Отличается от базового наличием готовых к работе сервисов.
-type ClientExtended struct {
-	*Client
-	Async    *AsyncService
-	Audit    *AuditService
-	Context  *ContextService
-	Entity   *EntityService
-	Report   *ReportService
-	Security *SecurityService
-}
-
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
 	clientMu              sync.Mutex
 	client                *RetryableClient
 	disableWebhookContent bool // Отключить уведомления вебхуков в контексте данного клиента
-}
-
-// EntityService
-// Сервис для работы с сущностями и документами.
-type EntityService struct {
-	Application            *ApplicationService
-	Assortment             *AssortmentService
-	BonusProgram           *BonusProgramService
-	BonusTransaction       *BonusTransactionService
-	Bundle                 *BundleService
-	CashIn                 *CashInService
-	CashOut                *CashOutService
-	CommissionReportIn     *CommissionReportInService
-	CommissionReportOut    *CommissionReportOutService
-	Consignment            *ConsignmentService
-	Contract               *ContractService
-	Counterparty           *CounterpartyService
-	CounterPartyAdjustment *CounterPartyAdjustmentService
-	Country                *CountryService
-	Currency               *CurrencyService
-	CustomEntity           *CustomEntityService
-	CustomerOrder          *CustomerOrderService
-	Demand                 *DemandService
-	Discount               *DiscountService
-	Employee               *EmployeeService
-	Enter                  *EnterService
-	ExpenseItem            *ExpenseItemService
-	FactureIn              *FactureInService
-	FactureOut             *FactureOutService
-	Group                  *GroupService
-	InternalOrder          *InternalOrderService
-	Inventory              *InventoryService
-	InvoiceIn              *InvoiceInService
-	InvoiceOut             *InvoiceOutService
-	Loss                   *LossService
-	Metadata               *MetadataService
-	Move                   *MoveService
-	Organization           *OrganizationService
-	PaymentIn              *PaymentInService
-	PaymentOut             *PaymentOutService
-	Prepayment             *PrepaymentService
-	PrepaymentReturn       *PrepaymentReturnService
-	PriceList              *PriceListService
-	Processing             *ProcessingService
-	ProcessingOrder        *ProcessingOrderService
-	ProcessingPlan         *ProcessingPlanService
-	ProcessingPlanFolder   *ProcessingPlanFolderService
-	ProcessingProcess      *ProcessingProcessService
-	ProcessingStage        *ProcessingStageService
-	Product                *ProductService
-	ProductFolder          *ProductFolderService
-	Project                *ProjectService
-	PurchaseOrder          *PurchaseOrderService
-	PurchaseReturn         *PurchaseReturnService
-	Region                 *RegionService
-	RetailDemand           *RetailDemandService
-	RetailDrawerCashIn     *RetailDrawerCashInService
-	RetailDrawerCashOut    *RetailDrawerCashOutService
-	RetailSalesReturn      *RetailSalesReturnService
-	RetailShift            *RetailShiftService
-	RetailStore            *RetailStoreService
-	Role                   *RoleService
-	SalesChannel           *SalesChannelService
-	SalesReturn            *SalesReturnService
-	Service                *ServiceService
-	Store                  *StoreService
-	Subscription           *SubscriptionService
-	Supply                 *SupplyService
-	Task                   *TaskService
-	TaxRate                *TaxRateService
-	Uom                    *UomService
-	Variant                *VariantService
-	Webhook                *WebhookService
-	WebhookStock           *WebhookStockService
-}
-
-func NewEntityService(client *Client) *EntityService {
-	return &EntityService{
-		Application:            NewApplicationService(client),
-		Assortment:             NewAssortmentService(client),
-		BonusProgram:           NewBonusProgramService(client),
-		BonusTransaction:       NewBonusTransactionService(client),
-		Bundle:                 NewBundleService(client),
-		CashIn:                 NewCashInService(client),
-		CashOut:                NewCashOutService(client),
-		CommissionReportIn:     NewCommissionReportInService(client),
-		CommissionReportOut:    NewCommissionReportOutService(client),
-		Consignment:            NewConsignmentService(client),
-		Contract:               NewContractService(client),
-		Counterparty:           NewCounterpartyService(client),
-		CounterPartyAdjustment: NewCounterPartyAdjustmentService(client),
-		Country:                NewCountryService(client),
-		Currency:               NewCurrencyService(client),
-		CustomEntity:           NewCustomEntityService(client),
-		CustomerOrder:          NewCustomerOrderService(client),
-		Demand:                 NewDemandService(client),
-		Discount:               NewDiscountService(client),
-		Employee:               NewEmployeeService(client),
-		Enter:                  NewEnterService(client),
-		ExpenseItem:            NewExpenseItemService(client),
-		FactureIn:              NewFactureInService(client),
-		FactureOut:             NewFactureOutService(client),
-		Group:                  NewGroupService(client),
-		InternalOrder:          NewInternalOrderService(client),
-		Inventory:              NewInventoryService(client),
-		InvoiceIn:              NewInvoiceInService(client),
-		InvoiceOut:             NewInvoiceOutService(client),
-		Loss:                   NewLossService(client),
-		Metadata:               NewMetadataService(client),
-		Move:                   NewMoveService(client),
-		Organization:           NewOrganizationService(client),
-		PaymentIn:              NewPaymentInService(client),
-		PaymentOut:             NewPaymentOutService(client),
-		Prepayment:             NewPrepaymentService(client),
-		PrepaymentReturn:       NewPrepaymentReturnService(client),
-		PriceList:              NewPriceListService(client),
-		Processing:             NewProcessingService(client),
-		ProcessingOrder:        NewProcessingOrderService(client),
-		ProcessingPlan:         NewProcessingPlanService(client),
-		ProcessingPlanFolder:   NewProcessingPlanFolderService(client),
-		ProcessingProcess:      NewProcessingProcessService(client),
-		ProcessingStage:        NewProcessingStageService(client),
-		Product:                NewProductService(client),
-		ProductFolder:          NewProductFolderService(client),
-		Project:                NewProjectService(client),
-		PurchaseOrder:          NewPurchaseOrderService(client),
-		PurchaseReturn:         NewPurchaseReturnService(client),
-		Region:                 NewRegionService(client),
-		RetailDemand:           NewRetailDemandService(client),
-		RetailDrawerCashIn:     NewRetailDrawerCashInService(client),
-		RetailDrawerCashOut:    NewRetailDrawerCashOutService(client),
-		RetailSalesReturn:      NewRetailSalesReturnService(client),
-		RetailShift:            NewRetailShiftService(client),
-		RetailStore:            NewRetailStoreService(client),
-		Role:                   NewRoleService(client),
-		SalesChannel:           NewSalesChannelService(client),
-		SalesReturn:            NewSalesReturnService(client),
-		Service:                NewServiceService(client),
-		Store:                  NewStoreService(client),
-		Subscription:           NewSubscriptionService(client),
-		Supply:                 NewSupplyService(client),
-		Task:                   NewTaskService(client),
-		TaxRate:                NewTaxRateService(client),
-		Uom:                    NewUomService(client),
-		Variant:                NewVariantService(client),
-		Webhook:                NewWebhookService(client),
-		WebhookStock:           NewWebhookStockService(client),
-	}
-}
-
-// ContextService
-// Сервис для работы с контекстом.
-type ContextService struct {
-	CompanySettings *ContextCompanySettingsService
-	Employee        *ContextEmployeeService
-	UserSettings    *UserSettingsService
-}
-
-func NewContextService(client *Client) *ContextService {
-	return &ContextService{
-		CompanySettings: NewContextCompanySettingsService(client),
-		Employee:        NewContextEmployeeService(client),
-		UserSettings:    NewContextUserSettingsService(client),
-	}
-}
-
-// ReportService
-// Сервис для работы с отчётами.
-type ReportService struct {
-	Counterparty *ReportCounterpartyService
-	Dashboard    *ReportDashboardService
-	Money        *ReportMoneyService
-	Profit       *ReportProfitService
-	Sales        *ReportSalesService
-	Orders       *ReportOrdersService
-	Stock        *ReportStockService
-	Turnover     *ReportTurnoverService
-}
-
-func NewReportService(client *Client) *ReportService {
-	return &ReportService{
-		Counterparty: NewReportCounterpartyService(client),
-		Dashboard:    NewReportDashboardService(client),
-		Money:        NewReportMoneyService(client),
-		Profit:       NewReportProfitService(client),
-		Sales:        NewReportSalesService(client),
-		Orders:       NewReportOrdersService(client),
-		Stock:        NewReportStockService(client),
-		Turnover:     NewReportTurnoverService(client),
-	}
-}
-
-type SecurityService struct {
-	Token *SecurityTokenService
-}
-
-func NewSecurityService(client *Client) *SecurityService {
-	return &SecurityService{
-		Token: NewSecurityTokenService(client),
-	}
 }
 
 // NewClient возвращает новый клиент для работы с API МойСклад.
@@ -259,17 +47,28 @@ func NewClient() *Client {
 	return &Client{client: rc}
 }
 
-type roundTripperFunc func(*http.Request) (*http.Response, error)
-
-func (fn roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) {
-	return fn(r)
+func (c *Client) Async() *AsyncService {
+	return NewAsyncService(c)
 }
 
-// Extend инициализирует сервисы и возвращает "расширенный" клиент.
-func (c *Client) Extend() *ClientExtended {
-	c2 := &ClientExtended{Client: c.copy()}
-	c2.initializeServices()
-	return c2
+func (c *Client) Audit() *AuditService {
+	return NewAuditService(c)
+}
+
+func (c *Client) Context() *ContextService {
+	return &ContextService{c}
+}
+
+func (c *Client) Entity() *EntityService {
+	return &EntityService{c}
+}
+
+func (c *Client) Report() *ReportService {
+	return &ReportService{c}
+}
+
+func (c *Client) Security() *SecurityService {
+	return NewSecurityService(c)
 }
 
 // WithTokenAuth возвращает клиент с авторизацией через токен.
@@ -331,25 +130,6 @@ func (c *Client) copy() *Client {
 	return &clone
 }
 
-// initializeServices инициализирует сервисы клиента.
-func (c *ClientExtended) initializeServices() {
-	c.Async = NewAsyncService(c.Client)
-	c.Audit = NewAuditService(c.Client)
-	c.Context = NewContextService(c.Client)
-	c.Entity = NewEntityService(c.Client)
-	c.Report = NewReportService(c.Client)
-	c.Security = NewSecurityService(c.Client)
-}
-
-// RateLimit содержит значения ограничений API.
-//type RateLimit struct {
-//	Limit             int   // Количество запросов, которые равномерно можно сделать в течение интервала до появления 429 ошибки
-//	RetryTimeInterval int64 // Интервал в миллисекундах, в течение которого можно сделать эти запросы
-//	Remaining         int   // Число запросов, которые можно отправить до получения 429 ошибки
-//	Reset             int64 // Время до сброса ограничения в миллисекундах. Равно нулю, если ограничение не установлено
-//	RetryAfter        int64 // Время до сброса ограничения в миллисекундах.
-//}
-
 // Response Ответ от API МойСклад.
 // Оборачивает стандартный http.Response, полученный от API МойСклад.
 type Response struct {
@@ -380,44 +160,6 @@ func newResponse(r *http.Response) (*Response, error) {
 		_ = json.Unmarshal(data, apiErrs)
 	}
 	return resp, apiErrs
-}
-
-// parseRateLimits парсит заголовки ответа, связанные с ограничениями
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ogranicheniq
-//func parseRateLimits(r *http.Response) RateLimit {
-//	var rl RateLimit
-//	if limit := r.Header.Get(headerRateLimit); limit != "" {
-//		rl.Limit, _ = strconv.Atoi(limit)
-//	}
-//	if retryTimeInterval := r.Header.Get(headerRetryTimeInterval); retryTimeInterval != "" {
-//		if retryTimeIntervalValue, err := strconv.ParseInt(retryTimeInterval, 10, 64); err == nil {
-//			rl.RetryTimeInterval = retryTimeIntervalValue
-//		}
-//	}
-//	if remaining := r.Header.Get(headerRateRemaining); remaining != "" {
-//		rl.Remaining, _ = strconv.Atoi(remaining)
-//	}
-//	if resetHeader := r.Header.Get(headerRateReset); resetHeader != "" {
-//		if resetValue, err := strconv.ParseInt(resetHeader, 10, 64); err == nil {
-//			rl.Reset = resetValue
-//		}
-//	}
-//	if retryAfterHeader := r.Header.Get(headerRetryAfter); retryAfterHeader != "" {
-//		if retryAfterValue, err := strconv.ParseInt(retryAfterHeader, 10, 64); err == nil {
-//			rl.RetryAfter = retryAfterValue
-//		}
-//	}
-//	return rl
-//}
-
-// Заголовок Content-Encoding и декомпрессия данных (01.12.2023)
-func decompressResponse(r *http.Response) (err error) {
-	if !r.Uncompressed && r.Header.Get("Content-Encoding") == "gzip" {
-		if r.Body, err = gzip.NewReader(r.Body); err != nil {
-			return
-		}
-	}
-	return
 }
 
 // Do отправляет запрос в API и обрабатывает ответ.
@@ -458,4 +200,358 @@ func (c *Client) Do(ctx context.Context, req *http.Request) (*Response, error) {
 	}
 
 	return newResponse(resp)
+}
+
+// EntityService
+// Сервис для работы с сущностями и документами.
+type EntityService struct {
+	*Client
+}
+
+func (s *EntityService) Application() *ApplicationService {
+	return NewApplicationService(s.Client)
+}
+
+func (s *EntityService) Assortment() *AssortmentService {
+	return NewAssortmentService(s.Client)
+}
+
+func (s *EntityService) BonusProgram() *BonusProgramService {
+	return NewBonusProgramService(s.Client)
+}
+
+func (s *EntityService) BonusTransaction() *BonusTransactionService {
+	return NewBonusTransactionService(s.Client)
+}
+
+func (s *EntityService) Bundle() *BundleService {
+	return NewBundleService(s.Client)
+}
+
+func (s *EntityService) CashIn() *CashInService {
+	return NewCashInService(s.Client)
+}
+
+func (s *EntityService) CashOut() *CashOutService {
+	return NewCashOutService(s.Client)
+}
+
+func (s *EntityService) CommissionReportIn() *CommissionReportInService {
+	return NewCommissionReportInService(s.Client)
+}
+
+func (s *EntityService) CommissionReportOut() *CommissionReportOutService {
+	return NewCommissionReportOutService(s.Client)
+}
+
+func (s *EntityService) Consignment() *ConsignmentService {
+	return NewConsignmentService(s.Client)
+}
+
+func (s *EntityService) Contract() *ContractService {
+	return NewContractService(s.Client)
+}
+
+func (s *EntityService) Counterparty() *CounterpartyService {
+	return NewCounterpartyService(s.Client)
+}
+
+func (s *EntityService) CounterPartyAdjustment() *CounterPartyAdjustmentService {
+	return NewCounterPartyAdjustmentService(s.Client)
+}
+
+func (s *EntityService) Country() *CountryService {
+	return NewCountryService(s.Client)
+}
+
+func (s *EntityService) Currency() *CurrencyService {
+	return NewCurrencyService(s.Client)
+}
+
+func (s *EntityService) CustomEntity() *CustomEntityService {
+	return NewCustomEntityService(s.Client)
+}
+
+func (s *EntityService) CustomerOrder() *CustomerOrderService {
+	return NewCustomerOrderService(s.Client)
+}
+
+func (s *EntityService) Demand() *DemandService {
+	return NewDemandService(s.Client)
+}
+
+func (s *EntityService) Discount() *DiscountService {
+	return NewDiscountService(s.Client)
+}
+
+func (s *EntityService) Employee() *EmployeeService {
+	return NewEmployeeService(s.Client)
+}
+
+func (s *EntityService) Enter() *EnterService {
+	return NewEnterService(s.Client)
+}
+
+func (s *EntityService) ExpenseItem() *ExpenseItemService {
+	return NewExpenseItemService(s.Client)
+}
+
+func (s *EntityService) FactureIn() *FactureInService {
+	return NewFactureInService(s.Client)
+}
+
+func (s *EntityService) FactureOut() *FactureOutService {
+	return NewFactureOutService(s.Client)
+}
+
+func (s *EntityService) Group() *GroupService {
+	return NewGroupService(s.Client)
+}
+
+func (s *EntityService) InternalOrder() *InternalOrderService {
+	return NewInternalOrderService(s.Client)
+}
+
+func (s *EntityService) Inventory() *InventoryService {
+	return NewInventoryService(s.Client)
+}
+
+func (s *EntityService) InvoiceIn() *InvoiceInService {
+	return NewInvoiceInService(s.Client)
+}
+
+func (s *EntityService) InvoiceOut() *InvoiceOutService {
+	return NewInvoiceOutService(s.Client)
+}
+
+func (s *EntityService) Loss() *LossService {
+	return NewLossService(s.Client)
+}
+
+func (s *EntityService) Metadata() *MetadataService {
+	return NewMetadataService(s.Client)
+}
+
+func (s *EntityService) Move() *MoveService {
+	return NewMoveService(s.Client)
+}
+
+func (s *EntityService) Organization() *OrganizationService {
+	return NewOrganizationService(s.Client)
+}
+
+func (s *EntityService) PaymentIn() *PaymentInService {
+	return NewPaymentInService(s.Client)
+}
+
+func (s *EntityService) PaymentOut() *PaymentOutService {
+	return NewPaymentOutService(s.Client)
+}
+
+func (s *EntityService) Prepayment() *PrepaymentService {
+	return NewPrepaymentService(s.Client)
+}
+
+func (s *EntityService) PrepaymentReturn() *PrepaymentReturnService {
+	return NewPrepaymentReturnService(s.Client)
+}
+
+func (s *EntityService) PriceList() *PriceListService {
+	return NewPriceListService(s.Client)
+}
+
+func (s *EntityService) Processing() *ProcessingService {
+	return NewProcessingService(s.Client)
+}
+
+func (s *EntityService) ProcessingOrder() *ProcessingOrderService {
+	return NewProcessingOrderService(s.Client)
+}
+
+func (s *EntityService) ProcessingPlan() *ProcessingPlanService {
+	return NewProcessingPlanService(s.Client)
+}
+
+func (s *EntityService) ProcessingPlanFolder() *ProcessingPlanFolderService {
+	return NewProcessingPlanFolderService(s.Client)
+}
+
+func (s *EntityService) ProcessingProcess() *ProcessingProcessService {
+	return NewProcessingProcessService(s.Client)
+}
+
+func (s *EntityService) ProcessingStage() *ProcessingStageService {
+	return NewProcessingStageService(s.Client)
+}
+
+func (s *EntityService) Product() *ProductService {
+	return NewProductService(s.Client)
+}
+
+func (s *EntityService) ProductFolder() *ProductFolderService {
+	return NewProductFolderService(s.Client)
+}
+
+func (s *EntityService) Project() *ProjectService {
+	return NewProjectService(s.Client)
+}
+
+func (s *EntityService) PurchaseOrder() *PurchaseOrderService {
+	return NewPurchaseOrderService(s.Client)
+}
+
+func (s *EntityService) PurchaseReturn() *PurchaseReturnService {
+	return NewPurchaseReturnService(s.Client)
+}
+
+func (s *EntityService) Region() *RegionService {
+	return NewRegionService(s.Client)
+}
+
+func (s *EntityService) RetailDemand() *RetailDemandService {
+	return NewRetailDemandService(s.Client)
+}
+
+func (s *EntityService) RetailDrawerCashIn() *RetailDrawerCashInService {
+	return NewRetailDrawerCashInService(s.Client)
+}
+
+func (s *EntityService) RetailDrawerCashOut() *RetailDrawerCashOutService {
+	return NewRetailDrawerCashOutService(s.Client)
+}
+
+func (s *EntityService) RetailSalesReturn() *RetailSalesReturnService {
+	return NewRetailSalesReturnService(s.Client)
+}
+
+func (s *EntityService) RetailShift() *RetailShiftService {
+	return NewRetailShiftService(s.Client)
+}
+
+func (s *EntityService) RetailStore() *RetailStoreService {
+	return NewRetailStoreService(s.Client)
+}
+
+func (s *EntityService) Role() *RoleService {
+	return NewRoleService(s.Client)
+}
+
+func (s *EntityService) SalesChannel() *SalesChannelService {
+	return NewSalesChannelService(s.Client)
+}
+
+func (s *EntityService) SalesReturn() *SalesReturnService {
+	return NewSalesReturnService(s.Client)
+}
+
+func (s *EntityService) Service() *ServiceService {
+	return NewServiceService(s.Client)
+}
+
+func (s *EntityService) Store() *StoreService {
+	return NewStoreService(s.Client)
+}
+
+func (s *EntityService) Subscription() *SubscriptionService {
+	return NewSubscriptionService(s.Client)
+}
+
+func (s *EntityService) Supply() *SupplyService {
+	return NewSupplyService(s.Client)
+}
+
+func (s *EntityService) Task() *TaskService {
+	return NewTaskService(s.Client)
+}
+
+func (s *EntityService) TaxRate() *TaxRateService {
+	return NewTaxRateService(s.Client)
+}
+
+func (s *EntityService) Uom() *UomService {
+	return NewUomService(s.Client)
+}
+
+func (s *EntityService) Variant() *VariantService {
+	return NewVariantService(s.Client)
+}
+
+func (s *EntityService) Webhook() *WebhookService {
+	return NewWebhookService(s.Client)
+}
+
+func (s *EntityService) WebhookStock() *WebhookStockService {
+	return NewWebhookStockService(s.Client)
+}
+
+// ContextService
+// Сервис для работы с контекстом.
+type ContextService struct {
+	*Client
+}
+
+func (c *ContextService) CompanySettings() *ContextCompanySettingsService {
+	return NewContextCompanySettingsService(c.Client)
+}
+
+func (c *ContextService) Employee() *ContextEmployeeService {
+	return NewContextEmployeeService(c.Client)
+}
+
+func (c *ContextService) UserSettings() *UserSettingsService {
+	return NewContextUserSettingsService(c.Client)
+}
+
+// ReportService
+// Сервис для работы с отчётами.
+type ReportService struct {
+	*Client
+}
+
+func (s *ReportService) Counterparty() *ReportCounterpartyService {
+	return NewReportCounterpartyService(s.Client)
+}
+
+func (s *ReportService) Dashboard() *ReportDashboardService {
+	return NewReportDashboardService(s.Client)
+}
+
+func (s *ReportService) Money() *ReportMoneyService {
+	return NewReportMoneyService(s.Client)
+}
+
+func (s *ReportService) Profit() *ReportProfitService {
+	return NewReportProfitService(s.Client)
+}
+
+func (s *ReportService) Sales() *ReportSalesService {
+	return NewReportSalesService(s.Client)
+}
+
+func (s *ReportService) Orders() *ReportOrdersService {
+	return NewReportOrdersService(s.Client)
+}
+
+func (s *ReportService) Stock() *ReportStockService {
+	return NewReportStockService(s.Client)
+}
+
+func (s *ReportService) Turnover() *ReportTurnoverService {
+	return NewReportTurnoverService(s.Client)
+}
+
+type SecurityService struct {
+	Token *SecurityTokenService
+}
+
+func NewSecurityService(client *Client) *SecurityService {
+	return &SecurityService{
+		Token: NewSecurityTokenService(client),
+	}
+}
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (fn roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) {
+	return fn(r)
 }
