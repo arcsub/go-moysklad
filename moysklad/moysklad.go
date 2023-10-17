@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.1"
+	Version          = "v0.0.5"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -67,8 +67,8 @@ func (c *Client) Report() *ReportService {
 	return &ReportService{c}
 }
 
-func (c *Client) Security() *SecurityService {
-	return NewSecurityService(c)
+func (c *Client) Security() *SecurityTokenService {
+	return NewSecurityTokenService(c)
 }
 
 // WithTokenAuth возвращает клиент с авторизацией через токен.
@@ -205,349 +205,339 @@ func (c *Client) Do(ctx context.Context, req *http.Request) (*Response, error) {
 // EntityService
 // Сервис для работы с сущностями и документами.
 type EntityService struct {
-	*Client
+	client *Client
 }
 
 func (s *EntityService) Application() *ApplicationService {
-	return NewApplicationService(s.Client)
+	return NewApplicationService(s.client)
 }
 
 func (s *EntityService) Assortment() *AssortmentService {
-	return NewAssortmentService(s.Client)
+	return NewAssortmentService(s.client)
 }
 
 func (s *EntityService) BonusProgram() *BonusProgramService {
-	return NewBonusProgramService(s.Client)
+	return NewBonusProgramService(s.client)
 }
 
 func (s *EntityService) BonusTransaction() *BonusTransactionService {
-	return NewBonusTransactionService(s.Client)
+	return NewBonusTransactionService(s.client)
 }
 
 func (s *EntityService) Bundle() *BundleService {
-	return NewBundleService(s.Client)
+	return NewBundleService(s.client)
 }
 
 func (s *EntityService) CashIn() *CashInService {
-	return NewCashInService(s.Client)
+	return NewCashInService(s.client)
 }
 
 func (s *EntityService) CashOut() *CashOutService {
-	return NewCashOutService(s.Client)
+	return NewCashOutService(s.client)
 }
 
 func (s *EntityService) CommissionReportIn() *CommissionReportInService {
-	return NewCommissionReportInService(s.Client)
+	return NewCommissionReportInService(s.client)
 }
 
 func (s *EntityService) CommissionReportOut() *CommissionReportOutService {
-	return NewCommissionReportOutService(s.Client)
+	return NewCommissionReportOutService(s.client)
 }
 
 func (s *EntityService) Consignment() *ConsignmentService {
-	return NewConsignmentService(s.Client)
+	return NewConsignmentService(s.client)
 }
 
 func (s *EntityService) Contract() *ContractService {
-	return NewContractService(s.Client)
+	return NewContractService(s.client)
 }
 
 func (s *EntityService) Counterparty() *CounterpartyService {
-	return NewCounterpartyService(s.Client)
+	return NewCounterpartyService(s.client)
 }
 
 func (s *EntityService) CounterPartyAdjustment() *CounterPartyAdjustmentService {
-	return NewCounterPartyAdjustmentService(s.Client)
+	return NewCounterPartyAdjustmentService(s.client)
 }
 
 func (s *EntityService) Country() *CountryService {
-	return NewCountryService(s.Client)
+	return NewCountryService(s.client)
 }
 
 func (s *EntityService) Currency() *CurrencyService {
-	return NewCurrencyService(s.Client)
+	return NewCurrencyService(s.client)
 }
 
 func (s *EntityService) CustomEntity() *CustomEntityService {
-	return NewCustomEntityService(s.Client)
+	return NewCustomEntityService(s.client)
 }
 
 func (s *EntityService) CustomerOrder() *CustomerOrderService {
-	return NewCustomerOrderService(s.Client)
+	return NewCustomerOrderService(s.client)
 }
 
 func (s *EntityService) Demand() *DemandService {
-	return NewDemandService(s.Client)
+	return NewDemandService(s.client)
 }
 
 func (s *EntityService) Discount() *DiscountService {
-	return NewDiscountService(s.Client)
+	return NewDiscountService(s.client)
 }
 
 func (s *EntityService) Employee() *EmployeeService {
-	return NewEmployeeService(s.Client)
+	return NewEmployeeService(s.client)
 }
 
 func (s *EntityService) Enter() *EnterService {
-	return NewEnterService(s.Client)
+	return NewEnterService(s.client)
 }
 
 func (s *EntityService) ExpenseItem() *ExpenseItemService {
-	return NewExpenseItemService(s.Client)
+	return NewExpenseItemService(s.client)
 }
 
 func (s *EntityService) FactureIn() *FactureInService {
-	return NewFactureInService(s.Client)
+	return NewFactureInService(s.client)
 }
 
 func (s *EntityService) FactureOut() *FactureOutService {
-	return NewFactureOutService(s.Client)
+	return NewFactureOutService(s.client)
 }
 
 func (s *EntityService) Group() *GroupService {
-	return NewGroupService(s.Client)
+	return NewGroupService(s.client)
 }
 
 func (s *EntityService) InternalOrder() *InternalOrderService {
-	return NewInternalOrderService(s.Client)
+	return NewInternalOrderService(s.client)
 }
 
 func (s *EntityService) Inventory() *InventoryService {
-	return NewInventoryService(s.Client)
+	return NewInventoryService(s.client)
 }
 
 func (s *EntityService) InvoiceIn() *InvoiceInService {
-	return NewInvoiceInService(s.Client)
+	return NewInvoiceInService(s.client)
 }
 
 func (s *EntityService) InvoiceOut() *InvoiceOutService {
-	return NewInvoiceOutService(s.Client)
+	return NewInvoiceOutService(s.client)
 }
 
 func (s *EntityService) Loss() *LossService {
-	return NewLossService(s.Client)
+	return NewLossService(s.client)
 }
 
 func (s *EntityService) Metadata() *MetadataService {
-	return NewMetadataService(s.Client)
+	return NewMetadataService(s.client)
 }
 
 func (s *EntityService) Move() *MoveService {
-	return NewMoveService(s.Client)
+	return NewMoveService(s.client)
 }
 
 func (s *EntityService) Organization() *OrganizationService {
-	return NewOrganizationService(s.Client)
+	return NewOrganizationService(s.client)
 }
 
 func (s *EntityService) PaymentIn() *PaymentInService {
-	return NewPaymentInService(s.Client)
+	return NewPaymentInService(s.client)
 }
 
 func (s *EntityService) PaymentOut() *PaymentOutService {
-	return NewPaymentOutService(s.Client)
+	return NewPaymentOutService(s.client)
 }
 
 func (s *EntityService) Prepayment() *PrepaymentService {
-	return NewPrepaymentService(s.Client)
+	return NewPrepaymentService(s.client)
 }
 
 func (s *EntityService) PrepaymentReturn() *PrepaymentReturnService {
-	return NewPrepaymentReturnService(s.Client)
+	return NewPrepaymentReturnService(s.client)
 }
 
 func (s *EntityService) PriceList() *PriceListService {
-	return NewPriceListService(s.Client)
+	return NewPriceListService(s.client)
 }
 
 func (s *EntityService) Processing() *ProcessingService {
-	return NewProcessingService(s.Client)
+	return NewProcessingService(s.client)
 }
 
 func (s *EntityService) ProcessingOrder() *ProcessingOrderService {
-	return NewProcessingOrderService(s.Client)
+	return NewProcessingOrderService(s.client)
 }
 
 func (s *EntityService) ProcessingPlan() *ProcessingPlanService {
-	return NewProcessingPlanService(s.Client)
+	return NewProcessingPlanService(s.client)
 }
 
 func (s *EntityService) ProcessingPlanFolder() *ProcessingPlanFolderService {
-	return NewProcessingPlanFolderService(s.Client)
+	return NewProcessingPlanFolderService(s.client)
 }
 
 func (s *EntityService) ProcessingProcess() *ProcessingProcessService {
-	return NewProcessingProcessService(s.Client)
+	return NewProcessingProcessService(s.client)
 }
 
 func (s *EntityService) ProcessingStage() *ProcessingStageService {
-	return NewProcessingStageService(s.Client)
+	return NewProcessingStageService(s.client)
 }
 
 func (s *EntityService) Product() *ProductService {
-	return NewProductService(s.Client)
+	return NewProductService(s.client)
 }
 
 func (s *EntityService) ProductFolder() *ProductFolderService {
-	return NewProductFolderService(s.Client)
+	return NewProductFolderService(s.client)
 }
 
 func (s *EntityService) Project() *ProjectService {
-	return NewProjectService(s.Client)
+	return NewProjectService(s.client)
 }
 
 func (s *EntityService) PurchaseOrder() *PurchaseOrderService {
-	return NewPurchaseOrderService(s.Client)
+	return NewPurchaseOrderService(s.client)
 }
 
 func (s *EntityService) PurchaseReturn() *PurchaseReturnService {
-	return NewPurchaseReturnService(s.Client)
+	return NewPurchaseReturnService(s.client)
 }
 
 func (s *EntityService) Region() *RegionService {
-	return NewRegionService(s.Client)
+	return NewRegionService(s.client)
 }
 
 func (s *EntityService) RetailDemand() *RetailDemandService {
-	return NewRetailDemandService(s.Client)
+	return NewRetailDemandService(s.client)
 }
 
 func (s *EntityService) RetailDrawerCashIn() *RetailDrawerCashInService {
-	return NewRetailDrawerCashInService(s.Client)
+	return NewRetailDrawerCashInService(s.client)
 }
 
 func (s *EntityService) RetailDrawerCashOut() *RetailDrawerCashOutService {
-	return NewRetailDrawerCashOutService(s.Client)
+	return NewRetailDrawerCashOutService(s.client)
 }
 
 func (s *EntityService) RetailSalesReturn() *RetailSalesReturnService {
-	return NewRetailSalesReturnService(s.Client)
+	return NewRetailSalesReturnService(s.client)
 }
 
 func (s *EntityService) RetailShift() *RetailShiftService {
-	return NewRetailShiftService(s.Client)
+	return NewRetailShiftService(s.client)
 }
 
 func (s *EntityService) RetailStore() *RetailStoreService {
-	return NewRetailStoreService(s.Client)
+	return NewRetailStoreService(s.client)
 }
 
 func (s *EntityService) Role() *RoleService {
-	return NewRoleService(s.Client)
+	return NewRoleService(s.client)
 }
 
 func (s *EntityService) SalesChannel() *SalesChannelService {
-	return NewSalesChannelService(s.Client)
+	return NewSalesChannelService(s.client)
 }
 
 func (s *EntityService) SalesReturn() *SalesReturnService {
-	return NewSalesReturnService(s.Client)
+	return NewSalesReturnService(s.client)
 }
 
 func (s *EntityService) Service() *ServiceService {
-	return NewServiceService(s.Client)
+	return NewServiceService(s.client)
 }
 
 func (s *EntityService) Store() *StoreService {
-	return NewStoreService(s.Client)
+	return NewStoreService(s.client)
 }
 
 func (s *EntityService) Subscription() *SubscriptionService {
-	return NewSubscriptionService(s.Client)
+	return NewSubscriptionService(s.client)
 }
 
 func (s *EntityService) Supply() *SupplyService {
-	return NewSupplyService(s.Client)
+	return NewSupplyService(s.client)
 }
 
 func (s *EntityService) Task() *TaskService {
-	return NewTaskService(s.Client)
+	return NewTaskService(s.client)
 }
 
 func (s *EntityService) TaxRate() *TaxRateService {
-	return NewTaxRateService(s.Client)
+	return NewTaxRateService(s.client)
 }
 
 func (s *EntityService) Uom() *UomService {
-	return NewUomService(s.Client)
+	return NewUomService(s.client)
 }
 
 func (s *EntityService) Variant() *VariantService {
-	return NewVariantService(s.Client)
+	return NewVariantService(s.client)
 }
 
 func (s *EntityService) Webhook() *WebhookService {
-	return NewWebhookService(s.Client)
+	return NewWebhookService(s.client)
 }
 
 func (s *EntityService) WebhookStock() *WebhookStockService {
-	return NewWebhookStockService(s.Client)
+	return NewWebhookStockService(s.client)
 }
 
 // ContextService
 // Сервис для работы с контекстом.
 type ContextService struct {
-	*Client
+	client *Client
 }
 
-func (c *ContextService) CompanySettings() *ContextCompanySettingsService {
-	return NewContextCompanySettingsService(c.Client)
+func (s *ContextService) CompanySettings() *ContextCompanySettingsService {
+	return NewContextCompanySettingsService(s.client)
 }
 
-func (c *ContextService) Employee() *ContextEmployeeService {
-	return NewContextEmployeeService(c.Client)
+func (s *ContextService) Employee() *ContextEmployeeService {
+	return NewContextEmployeeService(s.client)
 }
 
-func (c *ContextService) UserSettings() *UserSettingsService {
-	return NewContextUserSettingsService(c.Client)
+func (s *ContextService) UserSettings() *UserSettingsService {
+	return NewContextUserSettingsService(s.client)
 }
 
 // ReportService
 // Сервис для работы с отчётами.
 type ReportService struct {
-	*Client
+	client *Client
 }
 
 func (s *ReportService) Counterparty() *ReportCounterpartyService {
-	return NewReportCounterpartyService(s.Client)
+	return NewReportCounterpartyService(s.client)
 }
 
 func (s *ReportService) Dashboard() *ReportDashboardService {
-	return NewReportDashboardService(s.Client)
+	return NewReportDashboardService(s.client)
 }
 
 func (s *ReportService) Money() *ReportMoneyService {
-	return NewReportMoneyService(s.Client)
+	return NewReportMoneyService(s.client)
 }
 
 func (s *ReportService) Profit() *ReportProfitService {
-	return NewReportProfitService(s.Client)
+	return NewReportProfitService(s.client)
 }
 
 func (s *ReportService) Sales() *ReportSalesService {
-	return NewReportSalesService(s.Client)
+	return NewReportSalesService(s.client)
 }
 
 func (s *ReportService) Orders() *ReportOrdersService {
-	return NewReportOrdersService(s.Client)
+	return NewReportOrdersService(s.client)
 }
 
 func (s *ReportService) Stock() *ReportStockService {
-	return NewReportStockService(s.Client)
+	return NewReportStockService(s.client)
 }
 
 func (s *ReportService) Turnover() *ReportTurnoverService {
-	return NewReportTurnoverService(s.Client)
-}
-
-type SecurityService struct {
-	Token *SecurityTokenService
-}
-
-func NewSecurityService(client *Client) *SecurityService {
-	return &SecurityService{
-		Token: NewSecurityTokenService(client),
-	}
+	return NewReportTurnoverService(s.client)
 }
 
 type roundTripperFunc func(*http.Request) (*http.Response, error)
