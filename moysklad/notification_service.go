@@ -27,7 +27,7 @@ func NewNotificationService(client *Client) *NotificationService {
 }
 
 // MarkAsRead Отметить Уведомление как прочитанное.
-// https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-uwedomlenie-kak-prochitannoe
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-uwedomlenie-kak-prochitannoe
 func (s *NotificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *Response, error) {
 	path := fmt.Sprintf("%s/markasread", id)
 	_, resp, err := NewRequestBuilder[MetaArray[File]](s.Endpoint, ctx).WithPath(path).Put()
@@ -35,7 +35,7 @@ func (s *NotificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bo
 }
 
 // MarkAsReadAll Отметить все Уведомления как прочитанные.
-// https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-wse-uwedomleniq-kak-prochitannye
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-wse-uwedomleniq-kak-prochitannye
 func (s *NotificationService) MarkAsReadAll(ctx context.Context) (bool, *Response, error) {
 	path := "markasreadall"
 	_, resp, err := NewRequestBuilder[MetaArray[File]](s.Endpoint, ctx).WithPath(path).Put()

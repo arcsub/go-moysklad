@@ -323,21 +323,21 @@ func (s *endpointPositions[T]) DeletePosition(ctx context.Context, id, positionI
 }
 
 // GetPositionTrackingCodes Получить Коды маркировки позиции документа.
-// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-poluchit-kody-markirowki-pozicii-dokumenta
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-poluchit-kody-markirowki-pozicii-dokumenta
 func (s *endpointPositions[T]) GetPositionTrackingCodes(ctx context.Context, id, positionId uuid.UUID) (*MetaArray[TrackingCode], *Response, error) {
 	path := fmt.Sprintf("%s/positions/%s/trackingCodes", id, positionId)
 	return NewRequestBuilder[MetaArray[TrackingCode]](s.Endpoint, ctx).WithPath(path).Get()
 }
 
 // CreateOrUpdatePositionTrackingCodes Массовое создание и обновление Кодов маркировки.
-// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-sozdanie-i-obnowlenie-kodow-markirowki
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-sozdanie-i-obnowlenie-kodow-markirowki
 func (s *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionId uuid.UUID, trackingCodes TrackingCodes) (*Slice[TrackingCode], *Response, error) {
 	path := fmt.Sprintf("%s/positions/%s/trackingCodes", id, positionId)
 	return NewRequestBuilder[Slice[TrackingCode]](s.Endpoint, ctx).WithPath(path).WithBody(trackingCodes).Post()
 }
 
 // DeletePositionTrackingCodes Массовое удаление Кодов маркировки.
-// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-udalenie-kodow-markirowki
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-udalenie-kodow-markirowki
 func (s *endpointPositions[T]) DeletePositionTrackingCodes(ctx context.Context, id, positionId uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *Response, error) {
 	path := fmt.Sprintf("%s/positions/%s/trackingCodes/delete", id, positionId)
 	return NewRequestBuilder[DeleteManyResponse](s.Endpoint, ctx).WithPath(path).WithBody(trackingCodes).Post()

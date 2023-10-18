@@ -3,7 +3,7 @@ package moysklad
 import "github.com/google/uuid"
 
 // Notification TODO: Общие атрибуты уведомлений.
-// https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-lenta-uwedomlenij-obschie-atributy-uwedomlenij
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-lenta-uwedomlenij-obschie-atributy-uwedomlenij
 type Notification struct {
 	AccountId   uuid.UUID `json:"accountId"`   // ID учетной записи
 	Created     Timestamp `json:"created"`     // Дата и время формирования Уведомления

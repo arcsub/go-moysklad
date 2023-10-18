@@ -53,7 +53,7 @@ func (c CashOut) MetaType() MetaType {
 
 // BindDocuments Привязка платежей к документам.
 // Необходимо передать *Meta документов, к которым необходимо привязать платёж.
-// https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
 func (c *CashOut) BindDocuments(documentsMeta ...*Meta) *CashOut {
 	if c.Operations == nil {
 		c.Operations = new(Operations)
