@@ -75,11 +75,6 @@ func (d Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-func (d Demand) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-	return &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-}
-
 type Demands = Iterator[Demand]
 
 // DemandPosition Позиция Отгрузки

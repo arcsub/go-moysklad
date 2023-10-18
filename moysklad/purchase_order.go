@@ -67,11 +67,6 @@ func (p PurchaseOrder) MetaType() MetaType {
 	return MetaTypePurchaseOrder
 }
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-func (p PurchaseOrder) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-	return &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-}
-
 type PurchaseOrders = Iterator[PurchaseOrder]
 
 // PurchaseOrderPosition Позиция Заказа поставщику.

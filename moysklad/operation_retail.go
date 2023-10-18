@@ -1,68 +1,67 @@
 package moysklad
 
-//
-//import (
-//	"encoding/json"
-//	"github.com/arcsub/moysklad/utils"
-//)
-//
-//// OperationRetail розничная операция
-//type OperationRetail struct {
-//	wrapper[operationRetail]
-//}
-//
-//type operationRetail struct {
-//	Meta      *Meta    `json:"meta,omitempty"`      // Метаданные
-//	LinkedSum *float64 `json:"linkedSum,omitempty"` // Сумма, оплаченная по данному документу из этого платежа
-//	raw       json.RawMessage
-//}
-//
-//func (o *OperationRetail) UnmarshalJSON(data []byte) (err error) {
-//	type alias OperationRetail
-//	var t alias
-//
-//	if err = json.Unmarshal(data, &t); err != nil {
-//		return err
-//	}
-//
-//	t.w.raw = data
-//	*o = OperationRetail(t)
-//
-//	return nil
-//}
-//
-//func (o OperationRetail) Data() json.RawMessage {
-//	return o.w.raw
-//}
-//
-//func (o OperationRetail) LinkedSum() float64 {
-//	return utils.Deref[float64](o.w.LinkedSum)
-//}
-//
-//func (o OperationRetail) Meta() Meta {
-//	return utils.Deref[Meta](o.w.Meta)
-//}
-//
-//func (o OperationRetail) RetailDemand() (RetailDemand, bool) {
-//	return ElementAsType[RetailDemand](o)
-//}
-//
-//func (o OperationRetail) RetailDrawerCashIn() (RetailDrawerCashIn, bool) {
-//	return ElementAsType[RetailDrawerCashIn](o)
-//}
-//
-//func (o OperationRetail) RetailDrawerCashOut() (RetailDrawerCashOut, bool) {
-//	return ElementAsType[RetailDrawerCashOut](o)
-//}
-//
-//func (o OperationRetail) RetailSalesReturn() (RetailSalesReturn, bool) {
-//	return ElementAsType[RetailSalesReturn](o)
-//}
-//
-//func (o OperationRetail) Prepayment() (Prepayment, bool) {
-//	return ElementAsType[Prepayment](o)
-//}
-//
-//func (o OperationRetail) PrepaymentReturn() (PrepaymentReturn, bool) {
-//	return ElementAsType[PrepaymentReturn](o)
-//}
+import "encoding/json"
+
+type RetailOperation struct {
+	Meta Meta `json:"meta"`
+	data json.RawMessage
+}
+
+func (o RetailOperation) String() string {
+	return Stringify(o.Meta)
+}
+
+// MetaType удовлетворяет интерфейсу MetaTyper
+func (o RetailOperation) MetaType() MetaType {
+	return o.Meta.Type
+}
+
+// Data удовлетворяет интерфейсу DataMetaTyper
+func (o RetailOperation) Data() json.RawMessage {
+	return o.data
+}
+
+func (o *RetailOperation) UnmarshalJSON(data []byte) error {
+	type alias RetailOperation
+	var t alias
+
+	if err := json.Unmarshal(data, &t); err != nil {
+		return err
+	}
+	t.data = data
+
+	*o = RetailOperation(t)
+	return nil
+}
+
+// RetailDemand структурирует сущность в *RetailDemand
+func (o *RetailOperation) RetailDemand() (*RetailDemand, error) {
+	return unmarshalTo[RetailDemand](o)
+}
+
+// RetailDrawerCashIn структурирует сущность в *RetailDrawerCashIn
+func (o *RetailOperation) RetailDrawerCashIn() (*RetailDrawerCashIn, error) {
+	return unmarshalTo[RetailDrawerCashIn](o)
+}
+
+// RetailDrawerCashOut структурирует сущность в *RetailDrawerCashOut
+func (o *RetailOperation) RetailDrawerCashOut() (*RetailDrawerCashOut, error) {
+	return unmarshalTo[RetailDrawerCashOut](o)
+}
+
+// RetailSalesReturn структурирует сущность в *RetailSalesReturn
+func (o *RetailOperation) RetailSalesReturn() (*RetailSalesReturn, error) {
+	return unmarshalTo[RetailSalesReturn](o)
+}
+
+// Prepayment структурирует сущность в *Prepayment
+func (o *RetailOperation) Prepayment() (*Prepayment, error) {
+	return unmarshalTo[Prepayment](o)
+}
+
+// PrepaymentReturn структурирует сущность в *PrepaymentReturn
+func (o *RetailOperation) PrepaymentReturn() (*PrepaymentReturn, error) {
+	return unmarshalTo[PrepaymentReturn](o)
+}
+
+type RetailOperations []RetailOperation

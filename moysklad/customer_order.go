@@ -74,11 +74,6 @@ func (c CustomerOrder) MetaType() MetaType {
 
 type CustomerOrders = Iterator[CustomerOrder]
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-//func (c CustomerOrder) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-//	return convertToOperation[OperationIn](&c, linkedSum) // &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-//}
-
 // CustomerOrderPosition Позиция Заказа покупателя.
 // Ключевое слово: customerorderposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-pokupatelq-zakazy-pokupatelej-pozicii-zakaza-pokupatelq

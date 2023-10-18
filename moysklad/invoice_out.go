@@ -63,11 +63,6 @@ func (i InvoiceOut) MetaType() MetaType {
 	return MetaTypeInvoiceOut
 }
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-func (i InvoiceOut) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-	return &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-}
-
 type InvoicesOut = Iterator[InvoiceOut]
 
 // InvoiceOutPosition Позиция Счета покупателю.
