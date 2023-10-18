@@ -10,6 +10,7 @@ type InvoiceOutService struct {
 	endpointGetById[InvoiceOut]
 	endpointUpdate[InvoiceOut]
 	endpointTemplate[InvoiceOut]
+	endpointTemplateBasedOn[InvoiceOut, InvoiceOutTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[InvoiceOutPosition]
 	endpointAttributes
@@ -28,6 +29,7 @@ func NewInvoiceOutService(client *Client) *InvoiceOutService {
 		endpointGetById:                endpointGetById[InvoiceOut]{e},
 		endpointUpdate:                 endpointUpdate[InvoiceOut]{e},
 		endpointTemplate:               endpointTemplate[InvoiceOut]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[InvoiceOut, InvoiceOutTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[InvoiceOutPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

@@ -75,11 +75,6 @@ func (d Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-func (d Demand) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-	return &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-}
-
 type Demands = Iterator[Demand]
 
 // DemandPosition Позиция Отгрузки
@@ -110,4 +105,12 @@ func (d DemandPosition) String() string {
 
 func (d DemandPosition) MetaType() MetaType {
 	return MetaTypeDemandPosition
+}
+
+// DemandTemplateArg
+// Документ: Отгрузка (demand)
+// Основание, на котором он может быть создан:
+// - Заказ покупателя (customerorder)
+type DemandTemplateArg struct {
+	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
 }

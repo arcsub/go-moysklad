@@ -67,11 +67,6 @@ func (p PurchaseOrder) MetaType() MetaType {
 	return MetaTypePurchaseOrder
 }
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-func (p PurchaseOrder) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-	return &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-}
-
 type PurchaseOrders = Iterator[PurchaseOrder]
 
 // PurchaseOrderPosition Позиция Заказа поставщику.
@@ -99,4 +94,12 @@ func (p PurchaseOrderPosition) String() string {
 
 func (p PurchaseOrderPosition) MetaType() MetaType {
 	return MetaTypePurchaseOrderPosition
+}
+
+// PurchaseOrderTemplateArg
+// Документ: Заказ поставщику (purchaseorder)
+// Основание, на котором он может быть создан:
+// - Внутренний заказ (internalorder)
+type PurchaseOrderTemplateArg struct {
+	InternalOrder *MetaWrapper `json:"internalOrder,omitempty"`
 }

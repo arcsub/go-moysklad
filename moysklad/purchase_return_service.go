@@ -10,6 +10,7 @@ type PurchaseReturnService struct {
 	endpointGetById[PurchaseReturn]
 	endpointUpdate[PurchaseReturn]
 	endpointTemplate[PurchaseReturn]
+	endpointTemplateBasedOn[PurchaseReturn, PurchaseReturnTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[PurchaseReturnPosition]
 	endpointAttributes
@@ -29,6 +30,7 @@ func NewPurchaseReturnService(client *Client) *PurchaseReturnService {
 		endpointGetById:                endpointGetById[PurchaseReturn]{e},
 		endpointUpdate:                 endpointUpdate[PurchaseReturn]{e},
 		endpointTemplate:               endpointTemplate[PurchaseReturn]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[PurchaseReturn, PurchaseReturnTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[PurchaseReturnPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

@@ -11,6 +11,7 @@ type CashOutService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointTemplate[CashOut]
+	endpointTemplateBasedOn[CashOut, CashOutTemplateArg]
 	endpointGetById[CashOut]
 	endpointUpdate[CashOut]
 	endpointPublication
@@ -29,6 +30,7 @@ func NewCashOutService(client *Client) *CashOutService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointTemplate:               endpointTemplate[CashOut]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[CashOut, CashOutTemplateArg]{e},
 		endpointGetById:                endpointGetById[CashOut]{e},
 		endpointUpdate:                 endpointUpdate[CashOut]{e},
 		endpointPublication:            endpointPublication{e},

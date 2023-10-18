@@ -34,14 +34,14 @@ func NewRetailStoreService(client *Client) *RetailStoreService {
 }
 
 // GetCashiers Получить Кассиров.
-// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassirow
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassirow
 func (s *RetailStoreService) GetCashiers(ctx context.Context, id *uuid.UUID) (*MetaArray[Cashier], *Response, error) {
 	path := fmt.Sprintf("%s/cashiers", id)
 	return NewRequestBuilder[MetaArray[Cashier]](s.Endpoint, ctx).WithPath(path).Get()
 }
 
 // GetCashierById Получить Кассира.
-// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassira
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassira
 func (s *RetailStoreService) GetCashierById(ctx context.Context, id, cashierId uuid.UUID) (*Cashier, *Response, error) {
 	path := fmt.Sprintf("%s/cashiers/%s", id, cashierId)
 	return NewRequestBuilder[Cashier](s.Endpoint, ctx).WithPath(path).Get()

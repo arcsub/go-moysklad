@@ -2,107 +2,95 @@ package moysklad
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
 )
 
-// PaymentInDocument Входящий платеж, Приходный ордер
-type PaymentInDocument struct {
-	Meta *Meta `json:"meta"`
-	raw  json.RawMessage
+type Payment struct {
+	// Общие поля
+	AccountId      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
+	Agent          *Counterparty `json:"agent,omitempty"`          // Метаданные контрагента
+	Applicable     *bool         `json:"applicable,omitempty"`     // Отметка о проведении
+	Attributes     *Attributes   `json:"attributes,omitempty"`     // Коллекция метаданных доп. полей. Поля объекта
+	Code           *string       `json:"code,omitempty"`           // Код выданного
+	Contract       *Contract     `json:"contract,omitempty"`       // Метаданные договора
+	Created        *Timestamp    `json:"created,omitempty"`        // Дата создания
+	Deleted        *Timestamp    `json:"deleted,omitempty"`        // Момент последнего удаления
+	Description    *string       `json:"description,omitempty"`    // Комментарий
+	ExternalCode   *string       `json:"externalCode,omitempty"`   // Внешний код
+	Files          *Files        `json:"files,omitempty"`          // Метаданные массива Файлов (Максимальное количество файлов - 100)
+	Group          *Group        `json:"group,omitempty"`          // Отдел сотрудника
+	Id             *uuid.UUID    `json:"id,omitempty"`             // ID сущности
+	Meta           Meta          `json:"meta"`                     // Метаданные
+	Moment         *Timestamp    `json:"moment,omitempty"`         // Дата документа
+	Name           *string       `json:"name,omitempty"`           // Наименование
+	Organization   *Organization `json:"organization,omitempty"`   // Метаданные юрлица
+	Owner          *Employee     `json:"owner,omitempty"`          // Владелец (Сотрудник)
+	PaymentPurpose *string       `json:"paymentPurpose,omitempty"` // Основание
+	Printed        *bool         `json:"printed,omitempty"`        // Напечатан ли документ
+	Project        *Project      `json:"project,omitempty"`        // Метаданные проекта
+	Published      *bool         `json:"published,omitempty"`      // Опубликован ли документ
+	Rate           *Rate         `json:"rate,omitempty"`           // Валюта
+	SalesChannel   *SalesChannel `json:"salesChannel,omitempty"`   // Метаданные канала продаж
+	Shared         *bool         `json:"shared,omitempty"`         // Общий доступ
+	State          *State        `json:"state,omitempty"`          // Метаданные статуса
+	Sum            *float64      `json:"sum,omitempty"`            // Сумма
+	SyncId         *uuid.UUID    `json:"syncId,omitempty"`         // ID синхронизации. После заполнения недоступен для изменения
+	Updated        *Timestamp    `json:"updated,omitempty"`        // Момент последнего обновления
+	VatSum         *float64      `json:"vatSum,omitempty"`         // Сумма включая НДС
+	LinkedSum      *float64      `json:"linkedSum,omitempty"`      // Сумма, оплаченная по документу из этого платежа
+	Operations     *Operations   `json:"operations,omitempty"`     // Массив ссылок на связанные операции в формате Метаданных
+
+	// сырые данные
+	data json.RawMessage
+}
+
+// MetaType удовлетворяет интерфейсу MetaTyper
+func (p Payment) MetaType() MetaType {
+	return p.Meta.Type
+}
+
+// Data удовлетворяет интерфейсу DataMetaTyper
+func (p Payment) Data() json.RawMessage {
+	return p.data
+}
+
+func (p Payment) String() string {
+	return Stringify(p.Meta)
 }
 
 // UnmarshalJSON анмаршалит Входящий платеж, Приходный ордер, при expand=payments
-func (p *PaymentInDocument) UnmarshalJSON(data []byte) (err error) {
-	type alias PaymentInDocument
+func (p *Payment) UnmarshalJSON(data []byte) (err error) {
+	type alias Payment
 	var t alias
 
 	if err = json.Unmarshal(data, &t); err != nil {
 		return err
 	}
 
-	t.raw = data
-	*p = PaymentInDocument(t)
-
+	t.data = data
+	*p = Payment(t)
 	return nil
 }
 
-// PaymentsIn Входящие платежи, Приходные ордеры
-type PaymentsIn []PaymentInDocument
-
-// PaymentOutDocument Исходящий платеж, Расходный ордер
-type PaymentOutDocument struct {
-	Meta *Meta `json:"meta"`
-	raw  json.RawMessage
+// ConvertToCashIn структурирует позицию в *CashIn
+func (p *Payment) ConvertToCashIn() (*CashIn, error) {
+	return unmarshalTo[CashIn](p)
 }
 
-// UnmarshalJSON анмаршалит Исходящий платеж, Расходный ордер, при expand=payments
-func (p *PaymentOutDocument) UnmarshalJSON(data []byte) (err error) {
-	type alias PaymentOutDocument
-	var t alias
-
-	if err = json.Unmarshal(data, &t); err != nil {
-		return err
-	}
-
-	t.raw = data
-	*p = PaymentOutDocument(t)
-
-	return nil
+// ConvertToCashOut структурирует позицию в *CashOut
+func (p *Payment) ConvertToCashOut() (*CashOut, error) {
+	return unmarshalTo[CashOut](p)
 }
 
-// PaymentsOut Исходящие платежи, Расходные ордеры
-type PaymentsOut []PaymentOutDocument
-
-// Payments срез всех типов платежей
-type Payments struct {
-	PaymentsIn
-	PaymentsOut
+// ConvertToPaymentIn структурирует позицию в *PaymentIn
+func (p *Payment) ConvertToPaymentIn() (*PaymentIn, error) {
+	return unmarshalTo[PaymentIn](p)
 }
 
-//
-//func (p PaymentInDocument) Data() json.RawMessage {
-//	return p.w.raw
-//}
-//
-//func (p PaymentInDocument) Meta() Meta {
-//	return utils.Deref[Meta](p.w.Meta)
-//}
-//
-//func (p PaymentInDocument) CashIn() (CashIn, bool) {
-//	return ElementAsType[CashIn](p)
-//}
-//
-//func (p PaymentInDocument) PaymentIn() (PaymentIn, bool) {
-//	return ElementAsType[PaymentIn](p)
-//}
-//
-////func (p PaymentsIn) GetCashesIn() Slice[CashIn] {
-////	return getElementsByType[CashIn](p)
-////}
-////
-////func (p PaymentsIn) GetPaymentsIn() Slice[PaymentIn] {
-////	return getElementsByType[PaymentIn](p)
-////}
-//
-//func (p PaymentOutDocument) Data() json.RawMessage {
-//	return p.w.raw
-//}
-//
-//func (p PaymentOutDocument) Meta() Meta {
-//	return utils.Deref[Meta](p.w.Meta)
-//}
-//
-//func (p PaymentOutDocument) CashOut() (CashOut, bool) {
-//	return ElementAsType[CashOut](p)
-//}
-//
-//func (p PaymentOutDocument) PaymentOut() (PaymentOut, bool) {
-//	return ElementAsType[PaymentOut](p)
-//}
-//
-////func (p PaymentsOut) GetCashesOut() Slice[CashOut] {
-////	return getElementsByType[CashOut](p)
-////}
-////
-////func (p PaymentsOut) GetPaymentsOut() Slice[PaymentOut] {
-////	return getElementsByType[PaymentOut](p)
-////}
+// ConvertToPaymentOut структурирует позицию в *PaymentOut
+func (p *Payment) ConvertToPaymentOut() (*PaymentOut, error) {
+	return unmarshalTo[PaymentOut](p)
+}
+
+// Payments Входящий платеж, Приходный ордер, Исходящий платеж, Расходный ордер
+type Payments []Payment

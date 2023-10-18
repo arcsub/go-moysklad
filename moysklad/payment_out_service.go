@@ -10,6 +10,7 @@ type PaymentOutService struct {
 	endpointGetById[PaymentOut]
 	endpointUpdate[PaymentOut]
 	endpointTemplate[PaymentOut]
+	endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointPublication
@@ -27,6 +28,7 @@ func NewPaymentOutService(client *Client) *PaymentOutService {
 		endpointGetById:                endpointGetById[PaymentOut]{e},
 		endpointUpdate:                 endpointUpdate[PaymentOut]{e},
 		endpointTemplate:               endpointTemplate[PaymentOut]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},

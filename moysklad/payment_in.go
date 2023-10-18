@@ -42,7 +42,7 @@ type PaymentIn struct {
 	SyncId              *uuid.UUID    `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
 	Updated             *Timestamp    `json:"updated,omitempty"`             // Момент последнего обновления
 	FactureOut          *FactureOut   `json:"factureOut,omitempty"`          // Ссылка на Счет-фактуру выданный, с которым связан этот платеж в формате Метаданных
-	//Operations          *Operations   `json:"operations,omitempty"`          // Массив ссылок на связанные операции в формате Метаданных
+	Operations          *Operations   `json:"operations,omitempty"`          // Массив ссылок на связанные операции в формате Метаданных
 }
 
 func (p PaymentIn) String() string {
@@ -51,4 +51,35 @@ func (p PaymentIn) String() string {
 
 func (p PaymentIn) MetaType() MetaType {
 	return MetaTypePaymentIn
+}
+
+// BindDocuments Привязка платежей к документам.
+// Необходимо передать *Meta документов, к которым необходимо привязать платёж.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
+func (p *PaymentIn) BindDocuments(documentsMeta ...*Meta) *PaymentIn {
+	if p.Operations == nil {
+		p.Operations = new(Operations)
+	}
+
+	for _, meta := range documentsMeta {
+		*p.Operations = append(*p.Operations, Operation{Meta: Deref(meta)})
+	}
+
+	return p
+}
+
+// PaymentInTemplateArg
+// Документ: Входящий платеж (paymentin)
+// Основание, на котором он может быть создан:
+// - Заказ покупателя (customerorder)
+// - Возврат поставщику (purchasereturn)
+// - Отгрузка (demand)
+// - Счет покупателю (invoiceout)
+// - Полученный отчет комиссионера (commissionreportin)
+type PaymentInTemplateArg struct {
+	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
+	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
+	Demand             *MetaWrapper `json:"demand,omitempty"`
+	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
+	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
 }

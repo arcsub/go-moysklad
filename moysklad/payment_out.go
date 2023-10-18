@@ -42,7 +42,7 @@ type PaymentOut struct {
 	Updated             *Timestamp    `json:"updated,omitempty"`             // Момент последнего обновления
 	VatSum              *float64      `json:"vatSum,omitempty"`              // Сумма включая НДС
 	FactureIn           *FactureIn    `json:"factureIn,omitempty"`           // Ссылка на Счет-фактуру
-	//Operations          *Operations   `json:"operations,omitempty"`          // Массив ссылок на связанные операции в формате Метаданных
+	Operations          *Operations   `json:"operations,omitempty"`          // Массив ссылок на связанные операции в формате Метаданных
 }
 
 func (p PaymentOut) String() string {
@@ -51,4 +51,35 @@ func (p PaymentOut) String() string {
 
 func (p PaymentOut) MetaType() MetaType {
 	return MetaTypePaymentOut
+}
+
+// BindDocuments Привязка платежей к документам.
+// Необходимо передать *Meta документов, к которым необходимо привязать платёж.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
+func (p *PaymentOut) BindDocuments(documentsMeta ...*Meta) *PaymentOut {
+	if p.Operations == nil {
+		p.Operations = new(Operations)
+	}
+
+	for _, meta := range documentsMeta {
+		*p.Operations = append(*p.Operations, Operation{Meta: Deref(meta)})
+	}
+
+	return p
+}
+
+// PaymentOutTemplateArg
+// Документ: Исходящий платеж (paymentout)
+// Основание, на котором он может быть создан:
+// - Возврат покупателя (salesreturn)
+// - Приемка (supply)
+// - Счет поставщика (invoicein)
+// - Заказ поставщику (purchaseorder)
+// - Выданный отчет комиссионера (commissionreportout)
+type PaymentOutTemplateArg struct {
+	SalesReturn         *MetaWrapper `json:"salesReturn,omitempty"`
+	Supply              *MetaWrapper `json:"supply,omitempty"`
+	InvoiceIn           *MetaWrapper `json:"invoiceIn,omitempty"`
+	PurchaseOrder       *MetaWrapper `json:"purchaseOrder,omitempty"`
+	CommissionReportOut *MetaWrapper `json:"commissionReportOut,omitempty"`
 }

@@ -70,3 +70,13 @@ func (l LossPosition) String() string {
 func (l LossPosition) MetaType() MetaType {
 	return MetaTypeLossPosition
 }
+
+// LossTemplateArg
+// Документ: Списание (loss)
+// Основание, на котором он может быть создан:
+// - Возврат покупателя (salesreturn)
+// - инвентаризация(inventory)
+type LossTemplateArg struct {
+	SalesReturn *MetaWrapper `json:"salesReturn,omitempty"`
+	Inventory   *MetaWrapper `json:"inventory,omitempty"`
+}

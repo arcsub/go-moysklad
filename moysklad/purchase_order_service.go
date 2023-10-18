@@ -10,6 +10,7 @@ type PurchaseOrderService struct {
 	endpointGetById[PurchaseOrder]
 	endpointUpdate[PurchaseOrder]
 	endpointTemplate[PurchaseOrder]
+	endpointTemplateBasedOn[PurchaseOrder, PurchaseOrderTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[PurchaseOrderPosition]
 	endpointAttributes
@@ -29,6 +30,7 @@ func NewPurchaseOrderService(client *Client) *PurchaseOrderService {
 		endpointGetById:                endpointGetById[PurchaseOrder]{e},
 		endpointUpdate:                 endpointUpdate[PurchaseOrder]{e},
 		endpointTemplate:               endpointTemplate[PurchaseOrder]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[PurchaseOrder, PurchaseOrderTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[PurchaseOrderPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

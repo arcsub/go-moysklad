@@ -63,11 +63,6 @@ func (i InvoiceOut) MetaType() MetaType {
 	return MetaTypeInvoiceOut
 }
 
-// ConvertToOperation удовлетворяет интерфейсу OperationInType
-func (i InvoiceOut) ConvertToOperation(linkedSum *float64) (*OperationIn, error) {
-	return &OperationIn{}, nil //OperationFromEntity(c, linkedSum)
-}
-
 type InvoicesOut = Iterator[InvoiceOut]
 
 // InvoiceOutPosition Позиция Счета покупателю.
@@ -83,4 +78,12 @@ func (i InvoiceOutPosition) String() string {
 
 func (i InvoiceOutPosition) MetaType() MetaType {
 	return MetaTypeInvoicePosition
+}
+
+// InvoiceOutTemplateArg
+// Документ: Cчет покупателю (invoiceout)
+// Основание, на котором он может быть создан:
+// - Заказ покупателя (customerorder)
+type InvoiceOutTemplateArg struct {
+	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
 }

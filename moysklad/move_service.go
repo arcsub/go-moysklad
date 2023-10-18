@@ -10,6 +10,7 @@ type MoveService struct {
 	endpointGetById[Move]
 	endpointUpdate[Move]
 	endpointTemplate[Move]
+	endpointTemplateBasedOn[Move, MoveTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[MovePosition]
 	endpointAttributes
@@ -28,6 +29,7 @@ func NewMoveService(client *Client) *MoveService {
 		endpointGetById:                endpointGetById[Move]{e},
 		endpointUpdate:                 endpointUpdate[Move]{e},
 		endpointTemplate:               endpointTemplate[Move]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[Move, MoveTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[MovePosition]{e},
 		endpointAttributes:             endpointAttributes{e},

@@ -9,6 +9,8 @@ type EnterService struct {
 	endpointDelete
 	endpointGetById[Enter]
 	endpointUpdate[Enter]
+	endpointTemplate[Enter]
+	endpointTemplateBasedOn[Enter, EnterTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[EnterPosition]
 	endpointAttributes
@@ -27,6 +29,8 @@ func NewEnterService(client *Client) *EnterService {
 		endpointDelete:                 endpointDelete{e},
 		endpointGetById:                endpointGetById[Enter]{e},
 		endpointUpdate:                 endpointUpdate[Enter]{e},
+		endpointTemplate:               endpointTemplate[Enter]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[Enter, EnterTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[EnterPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

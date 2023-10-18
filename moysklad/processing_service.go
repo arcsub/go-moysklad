@@ -17,6 +17,7 @@ type ProcessingService struct {
 	endpointGetById[Processing]
 	endpointUpdate[Processing]
 	endpointTemplate[Processing]
+	endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointSyncId[Processing]
@@ -34,6 +35,7 @@ func NewProcessingService(client *Client) *ProcessingService {
 		endpointGetById:                endpointGetById[Processing]{e},
 		endpointUpdate:                 endpointUpdate[Processing]{e},
 		endpointTemplate:               endpointTemplate[Processing]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[Processing, ProcessingTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointSyncId:                 endpointSyncId[Processing]{e},
