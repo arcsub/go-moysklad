@@ -90,3 +90,11 @@ func (p PurchaseReturnPosition) String() string {
 func (p PurchaseReturnPosition) MetaType() MetaType {
 	return MetaTypePurchaseReturnPosition
 }
+
+// PurchaseReturnTemplateArg
+// Документ: Возврат поставщику (purchasereturn)
+// Основание, на котором он может быть создан:
+// - Приемка (supply)
+type PurchaseReturnTemplateArg struct {
+	Supply *MetaWrapper `json:"supply,omitempty"`
+}

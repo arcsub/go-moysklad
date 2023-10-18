@@ -84,3 +84,13 @@ type RetailDemandPosition struct {
 func (r RetailDemandPosition) MetaType() MetaType {
 	return MetaTypeRetailDemandPosition
 }
+
+// RetailDemandTemplateArg
+// Документ: Розничная продажа (retaildemand)
+// Основание, на котором он может быть создан:
+// - Розничная смена
+// - Заказ покупателя
+type RetailDemandTemplateArg struct {
+	RetailShift   *MetaWrapper `json:"retailShift,omitempty"`
+	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
+}

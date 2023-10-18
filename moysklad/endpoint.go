@@ -51,11 +51,28 @@ func (s *endpointMetadata[T]) GetMetadata(ctx context.Context) (*T, *Response, e
 type endpointTemplate[T MetaTyper] struct{ Endpoint }
 
 // Template Получить предзаполненный стандартными полями JSON-объект
-// TODO: basedOn
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-shablony-dokumentow
-func (s *endpointTemplate[T]) Template(ctx context.Context, basedOn ...HasMeta) (*T, *Response, error) {
+func (s *endpointTemplate[T]) Template(ctx context.Context) (*T, *Response, error) {
 	path := "new"
 	return NewRequestBuilder[T](s.Endpoint, ctx).WithPath(path).Put()
+}
+
+// TemplateArg типы, которые могут быть использованы в качестве документа-основания
+// при запросе на создание шаблона документа
+type TemplateArg interface {
+	InvoiceOutTemplateArg | SalesReturnTemplateArg | PurchaseReturnTemplateArg |
+		PaymentInTemplateArg | ProcessingOrderTemplateArg | PurchaseOrderTemplateArg |
+		PaymentOutTemplateArg | EnterTemplateArg | DemandTemplateArg | MoveTemplateArg |
+		CashInTemplateArg | CashOutTemplateArg | RetailDemandTemplateArg | LossTemplateArg |
+		InvoiceInTemplateArg | ProcessingTemplateArg
+}
+
+type endpointTemplateBasedOn[T MetaTyper, A TemplateArg] struct{ Endpoint }
+
+// TemplateBasedOn Получить предзаполненный стандартными полями JSON-объект на основании документа(-ов)
+func (s *endpointTemplateBasedOn[T, A]) TemplateBasedOn(ctx context.Context, arg *A) (*T, *Response, error) {
+	path := "new"
+	return NewRequestBuilder[T](s.Endpoint, ctx).WithPath(path).WithBody(arg).Put()
 }
 
 type endpointCreate[T any] struct{ Endpoint }

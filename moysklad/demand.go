@@ -106,3 +106,11 @@ func (d DemandPosition) String() string {
 func (d DemandPosition) MetaType() MetaType {
 	return MetaTypeDemandPosition
 }
+
+// DemandTemplateArg
+// Документ: Отгрузка (demand)
+// Основание, на котором он может быть создан:
+// - Заказ покупателя (customerorder)
+type DemandTemplateArg struct {
+	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
+}

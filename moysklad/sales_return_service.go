@@ -10,6 +10,7 @@ type SalesReturnService struct {
 	endpointGetById[SalesReturn]
 	endpointUpdate[SalesReturn]
 	endpointTemplate[SalesReturn]
+	endpointTemplateBasedOn[SalesReturn, SalesReturnTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[SalesReturnPosition]
 	endpointAttributes
@@ -29,6 +30,7 @@ func NewSalesReturnService(client *Client) *SalesReturnService {
 		endpointGetById:                endpointGetById[SalesReturn]{e},
 		endpointUpdate:                 endpointUpdate[SalesReturn]{e},
 		endpointTemplate:               endpointTemplate[SalesReturn]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[SalesReturn, SalesReturnTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[SalesReturnPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

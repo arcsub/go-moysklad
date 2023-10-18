@@ -10,6 +10,7 @@ type InvoiceInService struct {
 	endpointGetById[InvoiceIn]
 	endpointUpdate[InvoiceIn]
 	endpointTemplate[InvoiceIn]
+	endpointTemplateBasedOn[InvoiceIn, InvoiceInTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[InvoiceInPosition]
 	endpointAttributes
@@ -28,6 +29,7 @@ func NewInvoiceInService(client *Client) *InvoiceInService {
 		endpointGetById:                endpointGetById[InvoiceIn]{e},
 		endpointUpdate:                 endpointUpdate[InvoiceIn]{e},
 		endpointTemplate:               endpointTemplate[InvoiceIn]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[InvoiceIn, InvoiceInTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[InvoiceInPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

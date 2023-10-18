@@ -71,3 +71,11 @@ func (e EnterPosition) String() string {
 func (e EnterPosition) MetaType() MetaType {
 	return MetaTypeEnterPosition
 }
+
+// EnterTemplateArg
+// Документ: Оприходование (enter)
+// Основание, на котором он может быть создан:
+// - Инвентаризация(inventory)
+type EnterTemplateArg struct {
+	Inventory *MetaWrapper `json:"inventory,omitempty"`
+}

@@ -11,6 +11,7 @@ type CashInService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointTemplate[CashIn]
+	endpointTemplateBasedOn[CashIn, CashInTemplateArg]
 	endpointGetById[CashIn]
 	endpointUpdate[CashIn]
 	endpointPublication
@@ -29,6 +30,7 @@ func NewCashInService(client *Client) *CashInService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointTemplate:               endpointTemplate[CashIn]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[CashIn, CashInTemplateArg]{e},
 		endpointGetById:                endpointGetById[CashIn]{e},
 		endpointUpdate:                 endpointUpdate[CashIn]{e},
 		endpointPublication:            endpointPublication{e},

@@ -79,3 +79,11 @@ func (i InvoiceOutPosition) String() string {
 func (i InvoiceOutPosition) MetaType() MetaType {
 	return MetaTypeInvoicePosition
 }
+
+// InvoiceOutTemplateArg
+// Документ: Cчет покупателю (invoiceout)
+// Основание, на котором он может быть создан:
+// - Заказ покупателя (customerorder)
+type InvoiceOutTemplateArg struct {
+	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
+}

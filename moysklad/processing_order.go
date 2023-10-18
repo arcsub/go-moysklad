@@ -67,3 +67,11 @@ func (p ProcessingOrderPosition) String() string {
 func (p ProcessingOrderPosition) MetaType() MetaType {
 	return MetaTypeProcessingOrderPosition
 }
+
+// ProcessingOrderTemplateArg
+// Документ: Заказ на производство (processingorder)
+// Основание, на котором он может быть создан:
+// - Техкарта (processingplan)
+type ProcessingOrderTemplateArg struct {
+	ProcessingPlan *MetaWrapper `json:"processingPlan,omitempty"`
+}

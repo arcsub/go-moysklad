@@ -81,3 +81,11 @@ func (i InvoiceInPosition) String() string {
 func (i InvoiceInPosition) MetaType() MetaType {
 	return MetaTypeInvoicePosition
 }
+
+// InvoiceInTemplateArg
+// Документ: Счет поставщика (invoicein)
+// Основание, на котором он может быть создан:
+// - Заказ поставщику (purchaseorder)
+type InvoiceInTemplateArg struct {
+	PurchaseOrder *MetaWrapper `json:"purchaseOrder,omitempty"`
+}

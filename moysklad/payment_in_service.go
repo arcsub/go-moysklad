@@ -10,6 +10,7 @@ type PaymentInService struct {
 	endpointGetById[PaymentIn]
 	endpointUpdate[PaymentIn]
 	endpointTemplate[PaymentIn]
+	endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointPublication
@@ -27,6 +28,7 @@ func NewPaymentInService(client *Client) *PaymentInService {
 		endpointGetById:                endpointGetById[PaymentIn]{e},
 		endpointUpdate:                 endpointUpdate[PaymentIn]{e},
 		endpointTemplate:               endpointTemplate[PaymentIn]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},

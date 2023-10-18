@@ -64,3 +64,19 @@ func (c *CashIn) BindDocuments(documentsMeta ...*Meta) *CashIn {
 
 	return c
 }
+
+// CashInTemplateArg
+// Документ: Приходный ордер (cashin)
+// Основание, на котором он может быть создан:
+// - Заказ покупателя (customerorder)
+// - Возврат поставщику (purchasereturn)
+// - Отгрузка (demand)
+// - Счет покупателю (invoiceout)
+// - Полученный отчет комиссионера (commissionreportin)
+type CashInTemplateArg struct {
+	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
+	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
+	Demand             *MetaWrapper `json:"demand,omitempty"`
+	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
+	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
+}

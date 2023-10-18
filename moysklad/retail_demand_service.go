@@ -10,6 +10,7 @@ type RetailDemandService struct {
 	endpointGetById[RetailDemand]
 	endpointUpdate[RetailDemand]
 	endpointTemplate[RetailDemand]
+	endpointTemplateBasedOn[RetailDemand, RetailDemandTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[RetailPosition]
 	endpointAttributes
@@ -29,6 +30,7 @@ func NewRetailDemandService(client *Client) *RetailDemandService {
 		endpointGetById:                endpointGetById[RetailDemand]{e},
 		endpointUpdate:                 endpointUpdate[RetailDemand]{e},
 		endpointTemplate:               endpointTemplate[RetailDemand]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[RetailDemand, RetailDemandTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[RetailPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

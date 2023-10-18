@@ -10,6 +10,7 @@ type DemandService struct {
 	endpointGetById[Demand]
 	endpointUpdate[Demand]
 	endpointTemplate[Demand]
+	endpointTemplateBasedOn[Demand, DemandTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[DemandPosition]
 	endpointAttributes
@@ -29,6 +30,7 @@ func NewDemandService(client *Client) *DemandService {
 		endpointGetById:                endpointGetById[Demand]{e},
 		endpointUpdate:                 endpointUpdate[Demand]{e},
 		endpointTemplate:               endpointTemplate[Demand]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[Demand, DemandTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[DemandPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

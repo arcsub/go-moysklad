@@ -10,6 +10,7 @@ type ProcessingOrderService struct {
 	endpointGetById[ProcessingOrder]
 	endpointUpdate[ProcessingOrder]
 	endpointTemplate[ProcessingOrder]
+	endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[ProcessingOrderPosition]
 	endpointAttributes
@@ -27,6 +28,7 @@ func NewProcessingOrderService(client *Client) *ProcessingOrderService {
 		endpointGetById:                endpointGetById[ProcessingOrder]{e},
 		endpointUpdate:                 endpointUpdate[ProcessingOrder]{e},
 		endpointTemplate:               endpointTemplate[ProcessingOrder]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[ProcessingOrderPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

@@ -65,3 +65,19 @@ func (c *CashOut) BindDocuments(documentsMeta ...*Meta) *CashOut {
 
 	return c
 }
+
+// CashOutTemplateArg
+// Документ: Расходный ордер (cashout)
+// Основание, на котором он может быть создан:
+// - Возврат покупателя (salesreturn)
+// - Приемка (supply)
+// - Счет поставщика (invoicein)
+// - Заказ поставщику (purchaseorder)
+// - Выданный отчет комиссионера (commissionreportout)
+type CashOutTemplateArg struct {
+	SalesReturn         *MetaWrapper `json:"salesReturn,omitempty"`
+	Supply              *MetaWrapper `json:"supply,omitempty"`
+	InvoiceIn           *MetaWrapper `json:"invoiceIn,omitempty"`
+	PurchaseOrder       *MetaWrapper `json:"purchaseOrder,omitempty"`
+	CommissionReportOut *MetaWrapper `json:"commissionReportOut,omitempty"`
+}

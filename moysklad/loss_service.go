@@ -10,6 +10,7 @@ type LossService struct {
 	endpointGetById[Loss]
 	endpointUpdate[Loss]
 	endpointTemplate[Loss]
+	endpointTemplateBasedOn[Loss, LossTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[LossPosition]
 	endpointAttributes
@@ -28,6 +29,7 @@ func NewLossService(client *Client) *LossService {
 		endpointGetById:                endpointGetById[Loss]{e},
 		endpointUpdate:                 endpointUpdate[Loss]{e},
 		endpointTemplate:               endpointTemplate[Loss]{e},
+		endpointTemplateBasedOn:        endpointTemplateBasedOn[Loss, LossTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[LossPosition]{e},
 		endpointAttributes:             endpointAttributes{e},

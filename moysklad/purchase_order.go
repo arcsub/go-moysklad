@@ -95,3 +95,11 @@ func (p PurchaseOrderPosition) String() string {
 func (p PurchaseOrderPosition) MetaType() MetaType {
 	return MetaTypePurchaseOrderPosition
 }
+
+// PurchaseOrderTemplateArg
+// Документ: Заказ поставщику (purchaseorder)
+// Основание, на котором он может быть создан:
+// - Внутренний заказ (internalorder)
+type PurchaseOrderTemplateArg struct {
+	InternalOrder *MetaWrapper `json:"internalOrder,omitempty"`
+}
