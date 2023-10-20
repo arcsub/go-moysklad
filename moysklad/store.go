@@ -8,7 +8,7 @@ import (
 // Ключевое слово: store
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad
 type Store struct {
-	AccountId    *uuid.UUID       `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учетной записи
 	Address      *string          `json:"address,omitempty"`      // Адрес склада
 	AddressFull  *Address         `json:"addressFull,omitempty"`  // Адрес с детализацией по отдельным полям
 	Archived     *bool            `json:"archived,omitempty"`     // Добавлен ли Склад в архив
@@ -17,7 +17,7 @@ type Store struct {
 	Description  *string          `json:"description,omitempty"`  // Комментарий к Складу
 	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Склада
 	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID       `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID       `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные
 	Name         *string          `json:"name,omitempty"`         // Наименование Склада
 	Owner        *Employee        `json:"owner,omitempty"`        // Владелец (Сотрудник)

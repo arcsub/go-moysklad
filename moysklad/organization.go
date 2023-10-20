@@ -8,7 +8,7 @@ import (
 // Ключевое слово: organization
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-jurlico
 type Organization struct {
-	AccountId              *uuid.UUID     `json:"accountId,omitempty"`              // ID учетной записи
+	AccountID              *uuid.UUID     `json:"accountId,omitempty"`              // ID учетной записи
 	ActualAddress          *string        `json:"actualAddress,omitempty"`          // Фактический адрес Юрлица
 	ActualAddressFull      *Address       `json:"actualAddressFull,omitempty"`      // Фактический адрес Юрлица с детализацией по отдельным полям
 	Archived               *bool          `json:"archived,omitempty"`               // Добавлено ли Юрлицо в архив
@@ -20,12 +20,12 @@ type Organization struct {
 	Description            *string        `json:"description,omitempty"`            // Комментарий к Юрлицу
 	ExternalCode           *string        `json:"externalCode,omitempty"`           // Внешний код Юрлица
 	Group                  *Group         `json:"group,omitempty"`                  // Отдел сотрудника
-	Id                     *uuid.UUID     `json:"id,omitempty"`                     // ID сущности
+	ID                     *uuid.UUID     `json:"id,omitempty"`                     // ID сущности
 	Meta                   *Meta          `json:"meta,omitempty"`                   // Метаданные
 	Name                   *string        `json:"name,omitempty"`                   // Наименование
 	Owner                  *Employee      `json:"owner,omitempty"`                  // Владелец (Сотрудник)
 	Shared                 *bool          `json:"shared,omitempty"`                 // Общий доступ
-	SyncId                 *uuid.UUID     `json:"syncId,omitempty"`                 // ID синхронизации
+	SyncID                 *uuid.UUID     `json:"syncId,omitempty"`                 // ID синхронизации
 	TrackingContractDate   *Timestamp     `json:"trackingContractDate,omitempty"`   // Дата договора с ЦРПТ
 	TrackingContractNumber *string        `json:"trackingContractNumber,omitempty"` // Номер договора с ЦРПТ
 	Updated                *Timestamp     `json:"updated,omitempty"`                // Момент последнего обновления Юрлица

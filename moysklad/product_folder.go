@@ -8,7 +8,7 @@ import (
 // Ключевое слово: productfolder
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-gruppa-towarow
 type ProductFolder struct {
-	AccountId           *uuid.UUID     `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID     `json:"accountId,omitempty"`           // ID учетной записи
 	Archived            *bool          `json:"archived,omitempty"`            // Добавлена ли Группа товаров в архив
 	Code                *string        `json:"code,omitempty"`                // Код Группы товаров
 	Description         *string        `json:"description,omitempty"`         // Описание Группы товаров
@@ -16,7 +16,7 @@ type ProductFolder struct {
 	EffectiveVatEnabled *bool          `json:"effectiveVatEnabled,omitempty"` // Дополнительный признак для определения разграничения реального НДС = 0 или "без НДС". (effectiveVat = 0, effectiveVatEnabled = false) -> "без НДС", (effectiveVat = 0, effectiveVatEnabled = true) -> 0%.
 	ExternalCode        *string        `json:"externalCode,omitempty"`        // Внешний код Группы товаров
 	Group               *Group         `json:"group,omitempty"`               // Метаданные отдела сотрудника
-	Id                  *uuid.UUID     `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID     `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta          `json:"meta,omitempty"`                // Метаданные
 	Name                *string        `json:"name,omitempty"`                // Название
 	Owner               *Employee      `json:"owner,omitempty"`               // Метаданные владельца (Сотрудника)

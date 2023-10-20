@@ -9,7 +9,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen
 type PriceType struct {
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Типа цены
-	Id           *uuid.UUID `json:"id,omitempty"`           // ID типа цены
+	ID           *uuid.UUID `json:"id,omitempty"`           // ID типа цены
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Типа цены
 	Name         *string    `json:"name,omitempty"`         // Наименование Типа цены
 }

@@ -5,8 +5,8 @@ package moysklad
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-kontext-zaprosa-sotrudnika-poluchit-kontext-sotrudnika
 type ContextEmployee struct {
 	Meta         Meta      `json:"meta"`
-	Id           string    `json:"id"`
-	AccountId    string    `json:"accountId"`
+	ID           string    `json:"id"`
+	AccountID    string    `json:"accountId"`
 	Owner        Employee  `json:"owner"`
 	Shared       bool      `json:"shared"`
 	Group        Group     `json:"group"`

@@ -8,7 +8,7 @@ import (
 // Ключевое слово: task
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha
 type Task struct {
-	AccountId         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
+	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
 	Agent             *Counterparty `json:"agent,omitempty"`             // Метаданные Контрагента или юрлица, связанного с задачей. Задача может быть привязана либо к конрагенту, либо к юрлицу, либо к документу
 	Assignee          *Employee     `json:"assignee,omitempty"`          // Метаданные ответственного за выполнение задачи
 	Author            *Employee     `json:"author,omitempty"`            // Метаданные Сотрудника, создавшего задачу (администратор аккаунта, если автор - Приложение)
@@ -19,7 +19,7 @@ type Task struct {
 	Done              *bool         `json:"done,omitempty"`              // Отметка о выполнении задачи
 	DueToDate         *Timestamp    `json:"dueToDate,omitempty"`         // Срок задачи
 	Files             *Files        `json:"files,omitempty"`             // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Id                *uuid.UUID    `json:"id,omitempty"`                // ID Задачи
+	ID                *uuid.UUID    `json:"id,omitempty"`                // ID Задачи
 	Implementer       *Employee     `json:"implementer,omitempty"`       // Метаданные Сотрудника, выполнившего задачу
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные
 	Notes             *TaskNotes    `json:"notes,omitempty"`             // Метаданные комментария к задаче

@@ -8,7 +8,7 @@ import (
 // Ключевое слово: employee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik
 type Employee struct {
-	AccountId    *uuid.UUID  `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID  `json:"accountId,omitempty"`    // ID учетной записи
 	Archived     *bool       `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
 	Attributes   *Attributes `json:"attributes,omitempty"`   // Дополнительные поля Сотрудника
 	Cashiers     *Cashiers   `json:"cashiers,omitempty"`     // Массив кассиров
@@ -20,7 +20,7 @@ type Employee struct {
 	FirstName    *string     `json:"firstName,omitempty"`    // Имя
 	FullName     *string     `json:"fullName,omitempty"`     // Имя Отчество Фамилия
 	Group        *Group      `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID  `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID  `json:"id,omitempty"`           // ID сущности
 	Image        *Image      `json:"image,omitempty"`        // Фотография сотрудника
 	INN          *string     `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
 	LastName     *string     `json:"lastName,omitempty"`     // Фамилия

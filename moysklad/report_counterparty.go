@@ -27,7 +27,7 @@ type ReportCounterparty struct {
 type CounterpartyData struct {
 	CompanyType  CompanyType `json:"companyType"`  // Тип контрагента
 	ExternalCode string      `json:"externalCode"` // Внешний код контрагента
-	Id           string      `json:"id"`           // ID Контрагента
+	ID           string      `json:"id"`           // ID Контрагента
 	Meta         Meta        `json:"meta"`         // Метаданные Контрагента
 	Name         string      `json:"name"`         // Наименование Контрагента
 }

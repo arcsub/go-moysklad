@@ -8,7 +8,7 @@ import (
 // Ключевое слово: pricelist
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list
 type PriceList struct {
-	AccountId    *uuid.UUID                    `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID                    `json:"accountId,omitempty"`    // ID учетной записи
 	Applicable   *bool                         `json:"applicable,omitempty"`   // Отметка о проведении
 	Attributes   *Attributes                   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей
 	Code         *string                       `json:"code,omitempty"`         // Код
@@ -19,7 +19,7 @@ type PriceList struct {
 	ExternalCode *string                       `json:"externalCode,omitempty"` // Внешний код
 	Files        *Files                        `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group                        `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID                    `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID                    `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta                         `json:"meta,omitempty"`         // Метаданные
 	Moment       *Timestamp                    `json:"moment,omitempty"`       // Дата документа
 	Name         *string                       `json:"name,omitempty"`         // Наименование
@@ -31,7 +31,7 @@ type PriceList struct {
 	Published    *bool                         `json:"published,omitempty"`    // Опубликован ли документ
 	Shared       *bool                         `json:"shared,omitempty"`       // Общий доступ
 	State        *State                        `json:"state,omitempty"`        // Метаданные статуса Прайс-листа
-	SyncId       *uuid.UUID                    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
+	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
 	Updated      *Timestamp                    `json:"updated,omitempty"`      // Момент последнего обновления
 }
 
@@ -73,10 +73,10 @@ type PriceListColumns = Iterator[PriceListColumn]
 // Ключевое слово: pricelistrow
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-pozicii-prajs-lista
 type PriceListPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Товар/услуга/модификация, которую представляет собой позиция
 	Cells      *PriceListCells     `json:"cells,omitempty"`      // Значения столбцов
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка товара
 }
 

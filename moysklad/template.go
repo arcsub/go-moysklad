@@ -11,7 +11,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy
 type Template struct {
 	Content *string      `json:"content,omitempty"` // Ссылка на скачивание
-	Id      *uuid.UUID   `json:"id,omitempty"`      // ID сущности
+	ID      *uuid.UUID   `json:"id,omitempty"`      // ID сущности
 	Meta    *Meta        `json:"meta,omitempty"`    // Метаданные Стандартного шаблона
 	Name    *string      `json:"name,omitempty"`    // Наименование шаблона
 	Type    TemplateType `json:"type,omitempty"`    // Тип шаблона (entity - документ, mxtemplate - новый тип шаблона для ценников и этикеток)

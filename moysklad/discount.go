@@ -26,8 +26,8 @@ type Discounts = Iterator[Discount]
 // RoundOffDiscount Округление копеек.
 type RoundOffDiscount struct {
 	Meta      *Meta      `json:"meta,omitempty"`
-	Id        *uuid.UUID `json:"id,omitempty"`
-	AccountId *uuid.UUID `json:"accountId,omitempty"`
+	ID        *uuid.UUID `json:"id,omitempty"`
+	AccountID *uuid.UUID `json:"accountId,omitempty"`
 	Name      *string    `json:"name,omitempty"`
 	Active    *bool      `json:"active,omitempty"`
 	AllAgents *bool      `json:"allAgents,omitempty"`
@@ -85,8 +85,8 @@ func (d *Discount) SpecialPriceDiscount() (*SpecialPriceDiscount, error) {
 // Ключевое слово: accumulationdiscount
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-nakopitel-nyh-skidok
 type AccumulationDiscount struct {
-	AccountId      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	Id             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
+	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
+	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
 	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
 	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
 	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
@@ -118,8 +118,8 @@ type Levels = Iterator[AccumulationLevel]
 // PersonalDiscount Персональная скидка.
 // Ключевое слово: personaldiscount
 type PersonalDiscount struct {
-	AccountId      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	Id             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
+	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
+	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
 	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
 	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
 	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
@@ -142,8 +142,8 @@ func (p PersonalDiscount) MetaType() MetaType {
 // Ключевое слово: specialpricediscount
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
 type SpecialPriceDiscount struct {
-	AccountId      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	Id             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
+	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
+	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
 	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
 	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
 	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент

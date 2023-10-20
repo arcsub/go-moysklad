@@ -8,11 +8,11 @@ import (
 // Ключевое слово: expenseitem
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-stat-q-rashodow
 type ExpenseItem struct {
-	AccountId    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
 	Code         *string    `json:"code,omitempty"`         // Код Статьи расходов
 	Description  *string    `json:"description,omitempty"`  // Описание Статьи расходов
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Статьи расходов
-	Id           *uuid.UUID `json:"id,omitempty"`           // ID Статьи расходов
+	ID           *uuid.UUID `json:"id,omitempty"`           // ID Статьи расходов
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные о Статье расходов
 	Name         *string    `json:"name,omitempty"`         // Наименование Статьи расходов
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности

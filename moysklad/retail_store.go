@@ -8,7 +8,7 @@ import (
 // Ключевое слово: retailstore
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh
 type RetailStore struct {
-	AccountId                           *uuid.UUID            `json:"accountId,omitempty"`                           // ID учетной записи
+	AccountID                           *uuid.UUID            `json:"accountId,omitempty"`                           // ID учетной записи
 	Acquire                             *Counterparty         `json:"acquire,omitempty"`                             // Метаданные Банка-эквайера по операциям по карте
 	Active                              *bool                 `json:"active,omitempty"`                              // Состояние точки продаж (Включена/Отключена)
 	Address                             *string               `json:"address,omitempty"`                             // Адрес Точки продаж
@@ -39,7 +39,7 @@ type RetailStore struct {
 	FilterAgentsTags                    *Tags                 `json:"filterAgentsTags,omitempty"`                    // Коллекция групп покупателей, представленных в формате строк. Определяет группы, из которых выгружаются покупатели. Значения null игнорируются
 	FiscalType                          FiscalType            `json:"fiscalType,omitempty"`                          // Тип формирования чеков
 	Group                               *Group                `json:"group,omitempty"`                               // Отдел сотрудника
-	Id                                  *uuid.UUID            `json:"id,omitempty"`                                  // ID сущности
+	ID                                  *uuid.UUID            `json:"id,omitempty"`                                  // ID сущности
 	IdQR                                *string               `json:"idQR,omitempty"`                                // Идентификатор устройства QR (IdQR) для приложения оплаты по QR
 	IssueOrders                         *bool                 `json:"issueOrders,omitempty"`                         // Выдача заказов
 	LastOperationNames                  *LastOperations       `json:"lastOperationNames,omitempty"`                  // Последние операции

@@ -3,7 +3,7 @@ package moysklad
 // TrackingCode Коды маркировки
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-kod-markirowki-atributy-suschnosti
 type TrackingCode struct {
-	Id               *string                `json:"id,omitempty"`                 // ID кода маркировки
+	ID               *string                `json:"id,omitempty"`                 // ID кода маркировки
 	Cis              *string                `json:"cis,omitempty"`                // Код маркировки в стандартном формате
 	Cis1162          *string                `json:"cis_1162,omitempty"`           // Код маркировки в формате тега 1162
 	Type             TrackingCodeType       `json:"type,omitempty"`               // Тип кода маркировки

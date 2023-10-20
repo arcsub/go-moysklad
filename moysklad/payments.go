@@ -7,7 +7,7 @@ import (
 
 type Payment struct {
 	// Общие поля
-	AccountId      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
+	AccountID      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
 	Agent          *Counterparty `json:"agent,omitempty"`          // Метаданные контрагента
 	Applicable     *bool         `json:"applicable,omitempty"`     // Отметка о проведении
 	Attributes     *Attributes   `json:"attributes,omitempty"`     // Коллекция метаданных доп. полей. Поля объекта
@@ -19,7 +19,7 @@ type Payment struct {
 	ExternalCode   *string       `json:"externalCode,omitempty"`   // Внешний код
 	Files          *Files        `json:"files,omitempty"`          // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group          *Group        `json:"group,omitempty"`          // Отдел сотрудника
-	Id             *uuid.UUID    `json:"id,omitempty"`             // ID сущности
+	ID             *uuid.UUID    `json:"id,omitempty"`             // ID сущности
 	Meta           Meta          `json:"meta"`                     // Метаданные
 	Moment         *Timestamp    `json:"moment,omitempty"`         // Дата документа
 	Name           *string       `json:"name,omitempty"`           // Наименование
@@ -34,7 +34,7 @@ type Payment struct {
 	Shared         *bool         `json:"shared,omitempty"`         // Общий доступ
 	State          *State        `json:"state,omitempty"`          // Метаданные статуса
 	Sum            *float64      `json:"sum,omitempty"`            // Сумма
-	SyncId         *uuid.UUID    `json:"syncId,omitempty"`         // ID синхронизации. После заполнения недоступен для изменения
+	SyncID         *uuid.UUID    `json:"syncId,omitempty"`         // ID синхронизации. После заполнения недоступен для изменения
 	Updated        *Timestamp    `json:"updated,omitempty"`        // Момент последнего обновления
 	VatSum         *float64      `json:"vatSum,omitempty"`         // Сумма включая НДС
 	LinkedSum      *float64      `json:"linkedSum,omitempty"`      // Сумма, оплаченная по документу из этого платежа

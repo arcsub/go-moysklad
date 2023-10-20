@@ -8,7 +8,7 @@ import (
 // Ключевое слово: contract
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-dogowor
 type Contract struct {
-	AccountId           *uuid.UUID    `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID    `json:"accountId,omitempty"`           // ID учетной записи
 	Agent               *Counterparty `json:"agent,omitempty"`               // Метаданные Контрагента
 	AgentAccount        *AgentAccount `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
 	Archived            *bool         `json:"archived,omitempty"`            // Добавлен ли Договор в архив
@@ -18,7 +18,7 @@ type Contract struct {
 	Description         *string       `json:"description,omitempty"`         // Описание Договора
 	ExternalCode        *string       `json:"externalCode,omitempty"`        // Внешний код Договора
 	Group               *Group        `json:"group,omitempty"`               // Метаданные отдела сотрудника
-	Id                  *uuid.UUID    `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID    `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta         `json:"meta,omitempty"`                // Метаданные
 	Moment              *Timestamp    `json:"moment,omitempty"`              // Дата Договора
 	Name                *string       `json:"name,omitempty"`                // Наименование
@@ -31,7 +31,7 @@ type Contract struct {
 	Shared              *bool         `json:"shared,omitempty"`              // Общий доступ
 	State               *State        `json:"state,omitempty"`               // Метаданные статуса договора
 	Sum                 *float64      `json:"sum,omitempty"`                 // Сумма Договора
-	SyncId              *uuid.UUID    `json:"syncId,omitempty"`
+	SyncID              *uuid.UUID    `json:"syncId,omitempty"`
 	Printed             *bool         `json:"printed,omitempty"`   // Напечатан ли документ
 	Published           *bool         `json:"published,omitempty"` // Опубликован ли документ
 	Updated             *Timestamp    `json:"updated,omitempty"`   // Момент последнего обновления сущности

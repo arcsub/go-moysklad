@@ -8,13 +8,13 @@ import (
 // Ключевое слово: webhook
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki
 type Webhook struct {
-	AccountId         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
+	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
 	Action            WebhookAction `json:"action,omitempty"`            // Действие, которое отслеживается веб-хуком. Возможные значения: [CREATE, UPDATE, DELETE, PROCESSED]. Задать значение PROCESSED возможно только для асинхронных задач
 	AuthorApplication *Application  `json:"authorApplication,omitempty"` // Метаданные Приложения, создавшего веб-хук
 	DiffType          WebhookDiff   `json:"diffType,omitempty"`          // Режим отображения изменения сущности. Указывается только для действия UPDATE. Возможные значения: [NONE, FIELDS] (по умолчанию NONE)
 	Enabled           *bool         `json:"enabled,omitempty"`           // Флажок состояние веб-хука (включен / отключен)
 	EntityType        *MetaType     `json:"entityType,omitempty"`        // Тип сущности, к которой привязан веб-хук
-	Id                *uuid.UUID    `json:"id,omitempty"`                // ID Веб-хука
+	ID                *uuid.UUID    `json:"id,omitempty"`                // ID Веб-хука
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные
 	Method            WebhookMethod `json:"method,omitempty"`            // HTTP метод, с которым будет происходить запрос. Возможные значения: POST
 	URL               *string       `json:"url,omitempty"`               // URL, по которому будет происходить запрос. Допустимая длина до 255 символов

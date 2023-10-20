@@ -8,7 +8,7 @@ import (
 // Ключевое слово: commissionreportin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera
 type CommissionReportIn struct {
-	AccountId                     *uuid.UUID                                   `json:"accountId,omitempty"`                     // ID учетной записи
+	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`                     // ID учетной записи
 	Agent                         *Counterparty                                `json:"agent,omitempty"`                         // Метаданные контрагента
 	AgentAccount                  *AgentAccount                                `json:"agentAccount,omitempty"`                  // Метаданные счета контрагента
 	Applicable                    *bool                                        `json:"applicable,omitempty"`                    // Отметка о проведении
@@ -25,7 +25,7 @@ type CommissionReportIn struct {
 	ExternalCode                  *string                                      `json:"externalCode,omitempty"`                  // Внешний код отчета комиссионера
 	Files                         *Files                                       `json:"files,omitempty"`                         // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                         *Group                                       `json:"group,omitempty"`                         // Отдел сотрудника
-	Id                            *uuid.UUID                                   `json:"id,omitempty"`                            // ID сущности
+	ID                            *uuid.UUID                                   `json:"id,omitempty"`                            // ID сущности
 	Meta                          *Meta                                        `json:"meta,omitempty"`                          // Метаданные
 	Moment                        *Timestamp                                   `json:"moment,omitempty"`                        // Дата документа
 	Name                          *string                                      `json:"name,omitempty"`                          // Наименование
@@ -45,7 +45,7 @@ type CommissionReportIn struct {
 	Shared                        *bool                                        `json:"shared,omitempty"`                        // Общий доступ
 	State                         *State                                       `json:"state,omitempty"`                         // Метаданные статуса отчета комиссионера
 	Sum                           *float64                                     `json:"sum,omitempty"`                           // Сумма
-	SyncId                        *uuid.UUID                                   `json:"syncId,omitempty"`                        // ID синхронизации. После заполнения недоступен для изменения
+	SyncID                        *uuid.UUID                                   `json:"syncId,omitempty"`                        // ID синхронизации. После заполнения недоступен для изменения
 	Updated                       *Timestamp                                   `json:"updated,omitempty"`                       // Момент последнего обновления
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`                    // Учитывается ли НДС
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`                   // Включен ли НДС в цену
@@ -80,9 +80,9 @@ func (c CommissionOverhead) String() string {
 // Ключевое слово: commissionreportinposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-pozicii-poluchennogo-otcheta-komissionera
 type CommissionReportInPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Meta       *Meta               `json:"meta,omitempty"`       // Метаданные
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
@@ -104,9 +104,9 @@ func (c CommissionReportInPosition) MetaType() MetaType {
 // Ключевое слово: commissionreportinreturnedposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-pozicii-poluchennogo-otcheta-komissionera-ob-ekt-pozicii-wozwrata-na-sklad-komissionera-soderzhit-sleduuschie-polq
 type CommissionReportInReturnPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Meta       *Meta               `json:"meta,omitempty"`       // Метаданные
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.

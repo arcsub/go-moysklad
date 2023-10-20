@@ -8,7 +8,7 @@ import (
 // Ключевое слово: role
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skie-roli
 type Role struct {
-	Id          *uuid.UUID           `json:"id,omitempty"`          // ID пользовательской роли
+	ID          *uuid.UUID           `json:"id,omitempty"`          // ID пользовательской роли
 	Meta        *Meta                `json:"meta,omitempty"`        // Метаданные пользовательской роли
 	Name        *string              `json:"name,omitempty"`        // Наименование пользовательской роли
 	Permissions *EmployeePermissions `json:"permissions,omitempty"` // Список пермиссий

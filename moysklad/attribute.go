@@ -10,7 +10,7 @@ import (
 type Attribute struct {
 	CustomEntityMeta *Meta         `json:"customEntityMeta,omitempty"` // Ссылка на метаданные пользовательского справочника
 	Description      *string       `json:"description,omitempty"`      // Описание доп. поля
-	Id               *uuid.UUID    `json:"id,omitempty"`               // ID доп. поля
+	ID               *uuid.UUID    `json:"id,omitempty"`               // ID доп. поля
 	Meta             *Meta         `json:"meta,omitempty"`             // Ссылка на метаданные доп. поля
 	Name             *string       `json:"name,omitempty"`             // Наименование доп. поля
 	Required         *bool         `json:"required,omitempty"`         // Является ли доп. поле обязательным

@@ -8,7 +8,7 @@ import (
 // Ключевое слово: retailsalesreturn
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-roznichnyj-wozwrat
 type RetailSalesReturn struct {
-	AccountId           *uuid.UUID                 `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID                 `json:"accountId,omitempty"`           // ID учетной записи
 	Agent               *Counterparty              `json:"agent,omitempty"`               // Метаданные контрагента
 	AgentAccount        *AgentAccount              `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
 	Applicable          *bool                      `json:"applicable,omitempty"`          // Отметка о проведении
@@ -22,7 +22,7 @@ type RetailSalesReturn struct {
 	Description         *string                    `json:"description,omitempty"`         // Комментарий Розничного возврата
 	ExternalCode        *string                    `json:"externalCode,omitempty"`        // Внешний код Розничного возврата
 	Group               *Group                     `json:"group,omitempty"`               // Отдел сотрудника
-	Id                  *uuid.UUID                 `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID                 `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta                      `json:"meta,omitempty"`                // Метаданные
 	Moment              *Timestamp                 `json:"moment,omitempty"`              // Дата документа
 	Name                *string                    `json:"name,omitempty"`                // Наименование
@@ -42,7 +42,7 @@ type RetailSalesReturn struct {
 	State               *State                     `json:"state,omitempty"`               // Метаданные статуса Розничного возврата
 	Store               *Store                     `json:"store,omitempty"`               // Метаданные склада
 	Sum                 *float64                   `json:"sum,omitempty"`                 // Сумма
-	SyncId              *uuid.UUID                 `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
+	SyncID              *uuid.UUID                 `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
 	TaxSystem           TaxSystem                  `json:"taxSystem,omitempty"`           // Код системы налогообложения
 	Updated             *Timestamp                 `json:"updated,omitempty"`             // Момент последнего обновления
 	VatEnabled          *bool                      `json:"vatEnabled,omitempty"`          // Учитывается ли НДС

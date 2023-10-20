@@ -11,7 +11,7 @@ type Audit struct {
 	EntityType    string           `json:"entityType"`    // Название сущности (поле присутствует, только если оно одинаково у всех Событий в рамках данного Контекста)
 	EventType     AuditEventType   `json:"eventType"`     // Действие Событий (поле присутствует, только если оно одинаково у всех Событий в рамках данного Контекста)
 	Events        MetaWrapper      `json:"events"`        // Список метаданных Событий аудита
-	Id            uuid.UUID        `json:"id"`            // ID Контекста
+	ID            uuid.UUID        `json:"id"`            // ID Контекста
 	Info          AuditContextInfo `json:"info"`          // Краткое описание
 	Meta          Meta             `json:"meta"`          // Метаданные сущности Контекста
 	Moment        Timestamp        `json:"moment"`        // Дата изменения

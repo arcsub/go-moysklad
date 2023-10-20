@@ -8,12 +8,12 @@ import (
 // Ключевое слово: bundle
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt
 type Bundle struct {
-	AccountId           *uuid.UUID                  `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`           // ID учетной записи
 	Barcodes            *Barcodes                   `json:"barcodes,omitempty"`            // Штрихкоды
 	Code                *string                     `json:"code,omitempty"`                // Код
 	Description         *string                     `json:"description,omitempty"`         // Описание
 	ExternalCode        *string                     `json:"externalCode,omitempty"`        // Внешний код
-	Id                  *uuid.UUID                  `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID                  `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta                       `json:"meta,omitempty"`                // Метаданные
 	Name                *string                     `json:"name,omitempty"`                // Наименование
 	Archived            *bool                       `json:"archived,omitempty"`            // Добавлен ли Комплект в архив
@@ -36,7 +36,7 @@ type Bundle struct {
 	SalePrices          *SalePrices                 `json:"salePrices,omitempty"`          // Цены продажи
 	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`       // Метаданные группы
 	Shared              *bool                       `json:"shared,omitempty"`              // Общий доступ
-	SyncId              *uuid.UUID                  `json:"syncId,omitempty"`              // Общий доступ
+	SyncID              *uuid.UUID                  `json:"syncId,omitempty"`              // Общий доступ
 	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`           // Код системы налогообложения
 	Tnved               *string                     `json:"tnved,omitempty"`               // Код ТН ВЭД
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`        // Тип маркируемой продукции
@@ -81,9 +81,9 @@ func (b BundleOverhead) String() string {
 // Ключевое слово: bundlecomponent
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-komponenty-komplekta
 type BundleComponent struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги, которую представляет собой компонент
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
 }
 

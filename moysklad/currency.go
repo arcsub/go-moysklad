@@ -12,7 +12,7 @@ type Currency struct {
 	Code           *string        `json:"code,omitempty"`           // Цифровой код Валюты
 	Default        *bool          `json:"default,omitempty"`        // Является ли валюта валютой учета
 	FullName       *string        `json:"fullName,omitempty"`       // Полное наименование Валюты
-	Id             *uuid.UUID     `json:"id,omitempty"`             // ID сущности
+	ID             *uuid.UUID     `json:"id,omitempty"`             // ID сущности
 	Indirect       *bool          `json:"indirect,omitempty"`       // Признак обратного курса Валюты
 	ISOCode        *string        `json:"isoCode,omitempty"`        // Буквенный код Валюты
 	MajorUnit      *CurrencyUnit  `json:"majorUnit,omitempty"`      // Формы единиц целой части Валюты

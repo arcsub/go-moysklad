@@ -8,10 +8,10 @@ import (
 // Ключевое слово: async
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
 type Async struct {
-	AccountId    uuid.UUID       `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    uuid.UUID       `json:"accountId,omitempty"`    // ID учетной записи
 	DeletionDate Timestamp       `json:"deletionDate,omitempty"` // Дата, после которой результат выполнения задачи станет недоступен. Содержится в ответе, если поле state имеет значение DONE
 	ApiErrors    Slice[ApiError] `json:"errors,omitempty"`       // json ошибки апи, если поле state имеет значение API_ERROR
-	Id           uuid.UUID       `json:"id,omitempty"`           // ID Асинхронной задачи
+	ID           uuid.UUID       `json:"id,omitempty"`           // ID Асинхронной задачи
 	Meta         Meta            `json:"meta,omitempty"`         // Метаданные Асинхронной задачи
 	Owner        Meta            `json:"owner,omitempty"`        // Пользователь или приложение, которые создали Асинхронную задачу
 	RequestURL   string          `json:"request,omitempty"`      // URL запроса, по которому создана Асинхронная задача

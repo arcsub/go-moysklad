@@ -8,12 +8,12 @@ import (
 // Ключевое слово: product
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar
 type Product struct {
-	AccountId           *uuid.UUID     `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID     `json:"accountId,omitempty"`           // ID учетной записи
 	Barcodes            *Barcodes      `json:"barcodes,omitempty"`            // Штрихкоды
 	Code                *string        `json:"code,omitempty"`                // Код
 	Description         *string        `json:"description,omitempty"`         // Описание
 	ExternalCode        *string        `json:"externalCode,omitempty"`        // Внешний код
-	Id                  *uuid.UUID     `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID     `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta          `json:"meta,omitempty"`                // Метаданные
 	Name                *string        `json:"name,omitempty"`                // Наименование
 	Alcoholic           *Alcoholic     `json:"alcoholic,omitempty"`           // Объект, содержащий поля алкогольной продукции
@@ -42,7 +42,7 @@ type Product struct {
 	SalePrices          *SalePrices    `json:"salePrices,omitempty"`          // Цены продажи
 	Shared              *bool          `json:"shared,omitempty"`              // Общий доступ
 	Supplier            *Counterparty  `json:"supplier,omitempty"`            // Метаданные контрагента-поставщика
-	SyncId              *uuid.UUID     `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *uuid.UUID     `json:"syncId,omitempty"`              // ID синхронизации
 	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`           // Код системы налогообложения
 	Things              *Things        `json:"things,omitempty"`              // Серийные номера
 	Tnved               *string        `json:"tnved,omitempty"`               // Код ТН ВЭД

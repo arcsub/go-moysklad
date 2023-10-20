@@ -8,12 +8,12 @@ import (
 // Ключевое слово: service
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-usluga
 type Service struct {
-	AccountId           *uuid.UUID     `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID     `json:"accountId,omitempty"`           // ID учетной записи
 	Barcodes            *Barcodes      `json:"barcodes,omitempty"`            // Штрихкоды
 	Code                *string        `json:"code,omitempty"`                // Код
 	Description         *string        `json:"description,omitempty"`         // Описание
 	ExternalCode        *string        `json:"externalCode,omitempty"`        // Внешний код
-	Id                  *uuid.UUID     `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID     `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta          `json:"meta,omitempty"`                // Метаданные
 	Name                *string        `json:"name,omitempty"`                // Наименование
 	Archived            *bool          `json:"archived,omitempty"`            // Добавлена ли Услуга в архив
@@ -31,7 +31,7 @@ type Service struct {
 	ProductFolder       *ProductFolder `json:"productFolder,omitempty"`       // Метаданные группы
 	SalePrices          *SalePrices    `json:"salePrices,omitempty"`          // Цены продажи
 	Shared              *bool          `json:"shared,omitempty"`              // Общий доступ
-	SyncId              *uuid.UUID     `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *uuid.UUID     `json:"syncId,omitempty"`              // ID синхронизации
 	TaxSystem           TaxSystem      `json:"taxSystem,omitempty"`           // Код системы налогообложения
 	Uom                 *Uom           `json:"uom,omitempty"`                 // Единицы измерения
 	Updated             *Timestamp     `json:"updated,omitempty"`             // Момент последнего обновления сущности

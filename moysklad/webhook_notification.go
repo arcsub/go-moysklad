@@ -15,7 +15,7 @@ type AuditContext struct {
 
 // Event Данные о событии, вызвавшем срабатывание вебхука
 type Event struct {
-	AccountId     string        `json:"accountId,omitempty"`     // ID учетной записи
+	AccountID     string        `json:"accountId,omitempty"`     // ID учетной записи
 	Action        WebhookAction `json:"action,omitempty"`        // Действие, которое вызвало срабатывание вебхука.
 	Meta          Meta          `json:"meta,omitempty"`          // Метаданные измененной сущности
 	UpdatedFields []string      `json:"updatedFields,omitempty"` // Поля сущности, измененные пользователем

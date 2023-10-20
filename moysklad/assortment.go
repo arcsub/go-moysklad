@@ -22,12 +22,12 @@ func (a Assortment) MetaType() MetaType {
 // Product | Variant | Bundle | Service | Consignment
 type AssortmentPosition struct {
 	// Общие поля
-	AccountId    uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
 	Barcodes     Barcodes  `json:"barcodes,omitempty"`     // Штрихкоды
 	Code         string    `json:"code,omitempty"`         // Код
 	Description  string    `json:"description,omitempty"`  // Описание
 	ExternalCode string    `json:"externalCode,omitempty"` // Внешний код
-	Id           uuid.UUID `json:"id,omitempty"`           // ID сущности
+	ID           uuid.UUID `json:"id,omitempty"`           // ID сущности
 	Meta         Meta      `json:"meta"`                   // Метаданные
 	Name         string    `json:"name,omitempty"`         // Наименование
 

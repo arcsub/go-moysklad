@@ -8,7 +8,7 @@ import (
 // Ключевое слово: prepayment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-predoplata
 type Prepayment struct {
-	AccountId     *uuid.UUID                     `json:"accountId,omitempty"`     // ID учетной записи
+	AccountID     *uuid.UUID                     `json:"accountId,omitempty"`     // ID учетной записи
 	Agent         *Counterparty                  `json:"agent,omitempty"`         // Ссылка на контрагента
 	Applicable    *bool                          `json:"applicable,omitempty"`    // Отметка о проведении
 	Attributes    *Attributes                    `json:"attributes,omitempty"`    // Коллекция метаданных доп. полей. Поля объекта
@@ -21,7 +21,7 @@ type Prepayment struct {
 	ExternalCode  *string                        `json:"externalCode,omitempty"`  // Внешний код
 	Files         *Files                         `json:"files,omitempty"`         // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group         *Group                         `json:"group,omitempty"`         // Отдел сотрудника
-	Id            *uuid.UUID                     `json:"id,omitempty"`            // ID сущности
+	ID            *uuid.UUID                     `json:"id,omitempty"`            // ID сущности
 	Meta          *Meta                          `json:"meta,omitempty"`          // Метаданные
 	Moment        *Timestamp                     `json:"moment,omitempty"`        // Дата документа
 	Name          *string                        `json:"name,omitempty"`          // Наименование
@@ -39,7 +39,7 @@ type Prepayment struct {
 	Shared        *bool                          `json:"shared,omitempty"`        // Общий доступ
 	State         *State                         `json:"state,omitempty"`         // Метаданные статуса
 	Sum           *float64                       `json:"sum,omitempty"`           // Сумма
-	SyncId        *uuid.UUID                     `json:"syncId,omitempty"`        // ID синхронизации. После заполнения недоступен для изменения
+	SyncID        *uuid.UUID                     `json:"syncId,omitempty"`        // ID синхронизации. После заполнения недоступен для изменения
 	TaxSystem     TaxSystem                      `json:"taxSystem,omitempty"`     // Код системы налогообложения
 	Updated       *Timestamp                     `json:"updated,omitempty"`       // Момент последнего обновления
 	VatEnabled    *bool                          `json:"vatEnabled,omitempty"`    // Учитывается ли НДС
@@ -66,10 +66,10 @@ type Prepayments = Iterator[Prepayment]
 // Ключевое слово: prepaymentposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-predoplata-predoplaty-pozicii-predoplaty
 type PrepaymentPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Discount   *float64            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.

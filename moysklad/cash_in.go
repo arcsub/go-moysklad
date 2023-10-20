@@ -8,7 +8,7 @@ import (
 // Ключевое слово: cashin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prihodnyj-order
 type CashIn struct {
-	AccountId      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
+	AccountID      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
 	Agent          *Counterparty `json:"agent,omitempty"`          // Метаданные контрагента
 	Applicable     *bool         `json:"applicable,omitempty"`     // Отметка о проведении
 	Attributes     *Attributes   `json:"attributes,omitempty"`     // Коллекция метаданных доп. полей. Поля объекта
@@ -20,7 +20,7 @@ type CashIn struct {
 	ExternalCode   *string       `json:"externalCode,omitempty"`   // Внешний код
 	Files          *Files        `json:"files,omitempty"`          // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group          *Group        `json:"group,omitempty"`          // Отдел сотрудника
-	Id             *uuid.UUID    `json:"id,omitempty"`             // ID сущности
+	ID             *uuid.UUID    `json:"id,omitempty"`             // ID сущности
 	Meta           *Meta         `json:"meta,omitempty"`           // Метаданные
 	Moment         *Timestamp    `json:"moment,omitempty"`         // Дата документа
 	Name           *string       `json:"name,omitempty"`           // Наименование
@@ -35,7 +35,7 @@ type CashIn struct {
 	Shared         *bool         `json:"shared,omitempty"`         // Общий доступ
 	State          *State        `json:"state,omitempty"`          // Метаданные статуса
 	Sum            *float64      `json:"sum,omitempty"`            // Сумма
-	SyncId         *uuid.UUID    `json:"syncId,omitempty"`         // ID синхронизации. После заполнения недоступен для изменения
+	SyncID         *uuid.UUID    `json:"syncId,omitempty"`         // ID синхронизации. После заполнения недоступен для изменения
 	Updated        *Timestamp    `json:"updated,omitempty"`        // Момент последнего обновления
 	VatSum         *float64      `json:"vatSum,omitempty"`         // Сумма включая НДС
 	FactureIn      *FactureIn    `json:"factureIn,omitempty"`      // Ссылка на Счет-фактуру полученный, с которым связан этот платеж в формате Метаданных

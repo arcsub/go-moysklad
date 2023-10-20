@@ -399,8 +399,8 @@ func main() {
   productCreated.Name = moysklad.String("Updated Product")
 
   // отправим запрос на изменение товара
-  // в качестве аргументов передадим контекст, указатель на Id изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
-  productUpdated, _, err := productService.Update(context.Background(), productCreated.Id, productCreated, nil)
+  // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
+  productUpdated, _, err := productService.Update(context.Background(), productCreated.ID, productCreated, nil)
   if err != nil {
     panic(err)
   }
@@ -409,8 +409,8 @@ func main() {
   fmt.Println(moysklad.Deref(productUpdated.Name))
 
   // отправим запрос на удаление товара
-  // в качестве аргументов передадим контекст и указатель на Id удаляемой сущности
-  success, _, err := productService.Delete(context.Background(), productUpdated.Id)
+  // в качестве аргументов передадим контекст и указатель на ID удаляемой сущности
+  success, _, err := productService.Delete(context.Background(), productUpdated.ID)
   if err != nil {
     panic(err)
   }

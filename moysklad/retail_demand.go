@@ -8,7 +8,7 @@ import (
 // Ключевое слово: retaildemand
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-roznichnaq-prodazha
 type RetailDemand struct {
-	AccountId           *uuid.UUID                 `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID                 `json:"accountId,omitempty"`           // ID учетной записи
 	Agent               *Counterparty              `json:"agent,omitempty"`               // Метаданные контрагента
 	AgentAccount        *AgentAccount              `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
 	Applicable          *bool                      `json:"applicable,omitempty"`          // Отметка о проведении
@@ -28,7 +28,7 @@ type RetailDemand struct {
 	Fiscal              *bool                      `json:"fiscal,omitempty"`              // Отметка о том, был ли использован ФР
 	FiscalPrinterInfo   *string                    `json:"fiscalPrinterInfo,omitempty"`   // Информация о фискальном регистраторе
 	Group               *Group                     `json:"group,omitempty"`               // Отдел сотрудника
-	Id                  *uuid.UUID                 `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID                 `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta                      `json:"meta,omitempty"`                // Метаданные
 	Moment              *Timestamp                 `json:"moment,omitempty"`              // Дата документа
 	Name                *string                    `json:"name,omitempty"`                // Наименование
@@ -54,7 +54,7 @@ type RetailDemand struct {
 	State               *State                     `json:"state,omitempty"`               // Метаданные статуса Розничной продажи
 	Store               *Store                     `json:"store,omitempty"`               // Метаданные склада
 	Sum                 *float64                   `json:"sum,omitempty"`                 // Сумма
-	SyncId              *uuid.UUID                 `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
+	SyncID              *uuid.UUID                 `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
 	TaxSystem           TaxSystem                  `json:"taxSystem,omitempty"`           // Код системы налогообложения
 	Updated             *Timestamp                 `json:"updated,omitempty"`             // Момент последнего обновления
 	VatEnabled          *bool                      `json:"vatEnabled,omitempty"`          // Учитывается ли НДС

@@ -8,12 +8,12 @@ import (
 // Ключевое слово: variant
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq
 type Variant struct {
-	AccountId          *uuid.UUID       `json:"accountId,omitempty"`          // ID учетной записи
+	AccountID          *uuid.UUID       `json:"accountId,omitempty"`          // ID учетной записи
 	Barcodes           *Barcodes        `json:"barcodes,omitempty"`           // Штрихкоды
 	Code               *string          `json:"code,omitempty"`               // Код
 	Description        *string          `json:"description,omitempty"`        // Описание
 	ExternalCode       *string          `json:"externalCode,omitempty"`       // Внешний код
-	Id                 *uuid.UUID       `json:"id,omitempty"`                 // ID сущности
+	ID                 *uuid.UUID       `json:"id,omitempty"`                 // ID сущности
 	Meta               *Meta            `json:"meta,omitempty"`               // Метаданные
 	Name               *string          `json:"name,omitempty"`               // Наименование
 	Archived           *bool            `json:"archived,omitempty"`           // Добавлен ли товар в архив
@@ -50,7 +50,7 @@ func (v Variant) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-upakowki-modifikacii
 type VariantPack struct {
 	Barcodes   *Barcodes  `json:"barcodes,omitempty"`   // Массив штрихкодов упаковки модификации. Данный массив может содержать только один штрихкод
-	Id         *uuid.UUID `json:"id,omitempty"`         // ID упаковки модификации
+	ID         *uuid.UUID `json:"id,omitempty"`         // ID упаковки модификации
 	ParentPack *Pack      `json:"parentpack,omitempty"` // Метаданные родительской упаковки (упаковки товара), для которой переопределяется штрихкод
 }
 

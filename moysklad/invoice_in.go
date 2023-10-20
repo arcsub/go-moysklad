@@ -8,7 +8,7 @@ import (
 // Ключевое слово: invoicein
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-postawschika
 type InvoiceIn struct {
-	AccountId            *uuid.UUID                  `json:"accountId,omitempty"`            // ID учетной записи
+	AccountID            *uuid.UUID                  `json:"accountId,omitempty"`            // ID учетной записи
 	Agent                *Counterparty               `json:"agent,omitempty"`                // Метаданные контрагента
 	AgentAccount         *AgentAccount               `json:"agentAccount,omitempty"`         // Метаданные счета контрагента
 	Applicable           *bool                       `json:"applicable,omitempty"`           // Отметка о проведении
@@ -21,7 +21,7 @@ type InvoiceIn struct {
 	ExternalCode         *string                     `json:"externalCode,omitempty"`         // Внешний код
 	Files                *Files                      `json:"files,omitempty"`                // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                *Group                      `json:"group,omitempty"`                // Отдел сотрудника
-	Id                   *uuid.UUID                  `json:"id,omitempty"`                   // ID сущности
+	ID                   *uuid.UUID                  `json:"id,omitempty"`                   // ID сущности
 	IncomingDate         *Timestamp                  `json:"incomingDate,omitempty"`         // Входящая дата
 	IncomingNumber       *string                     `json:"incomingNumber,omitempty"`       // Входящий номер
 	Meta                 *Meta                       `json:"meta,omitempty"`                 // Метаданные
@@ -42,7 +42,7 @@ type InvoiceIn struct {
 	State                *State                      `json:"state,omitempty"`                // Метаданные статуса
 	Store                *Store                      `json:"store,omitempty"`                // Метаданные склада
 	Sum                  *float64                    `json:"sum,omitempty"`                  // Сумма
-	SyncId               *uuid.UUID                  `json:"syncId,omitempty"`               // ID синхронизации. После заполнения недоступен для изменения
+	SyncID               *uuid.UUID                  `json:"syncId,omitempty"`               // ID синхронизации. После заполнения недоступен для изменения
 	Updated              *Timestamp                  `json:"updated,omitempty"`              // Момент последнего обновления
 	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`           // Учитывается ли НДС
 	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`          // Включен ли НДС в цену

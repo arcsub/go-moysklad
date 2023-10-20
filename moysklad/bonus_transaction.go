@@ -8,7 +8,7 @@ import (
 // Ключевое слово: bonustransaction
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-bonusnaq-operaciq
 type BonusTransaction struct {
-	AccountId         *uuid.UUID               `json:"accountId,omitempty"`         // ID учетной записи
+	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учетной записи
 	Agent             *Counterparty            `json:"agent,omitempty"`             // Метаданные Контрагента, связанного с бонусной операцией
 	Applicable        *bool                    `json:"applicable,omitempty"`        // Отметка о проведении
 	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные бонусной программы
@@ -19,7 +19,7 @@ type BonusTransaction struct {
 	ExecutionDate     *Timestamp               `json:"executionDate,omitempty"`     // Дата начисления бонусной операции.
 	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Бонусной операции
 	Group             *Group                   `json:"group,omitempty"`             // Отдел сотрудника
-	Id                *uuid.UUID               `json:"id,omitempty"`                // ID сущности
+	ID                *uuid.UUID               `json:"id,omitempty"`                // ID сущности
 	Meta              *Meta                    `json:"meta,omitempty"`              // Метаданные
 	Moment            *Timestamp               `json:"moment,omitempty"`            // Время проведения бонусной операции
 	Name              *string                  `json:"name,omitempty"`              // Наименование
