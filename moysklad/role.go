@@ -178,3 +178,42 @@ type EmployeePermissions struct {
 	Warehouse                       BasePermission             `json:"warehouse"`                       // Склады
 	Script                          ScriptPermission           `json:"script"`
 }
+
+// AdminRole Роль администратора
+type AdminRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (r AdminRole) String() string {
+	return Stringify(r)
+}
+
+func (r AdminRole) MetaType() MetaType {
+	return MetaTypeSystemRole
+}
+
+// IndividualRole Индивидуальная роль
+type IndividualRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (r IndividualRole) String() string {
+	return Stringify(r)
+}
+
+func (r IndividualRole) MetaType() MetaType {
+	return MetaTypeIndividualRole
+}
+
+// CashierRole Роль кассира
+type CashierRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (r CashierRole) String() string {
+	return Stringify(r)
+}
+
+func (r CashierRole) MetaType() MetaType {
+	return MetaTypeSystemRole
+}
