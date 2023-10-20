@@ -1,6 +1,7 @@
 package moysklad
 
 import (
+	"encoding/json"
 	"reflect"
 )
 
@@ -71,11 +72,16 @@ func (m AssortmentResult) String() string {
 // MetaArray Объект с полями meta и rows, где rows - массив объектов
 type MetaArray[T any] struct {
 	Meta MetaCollection `json:"meta,omitempty"`
-	Rows Slice[T]       `json:"rows,omitempty"`
+	Rows Slice[*T]      `json:"rows,omitempty"`
 }
 
 func (m MetaArray[T]) String() string {
 	return Stringify(m)
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (m MetaArray[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(m.Rows)
 }
 
 type MetaType string

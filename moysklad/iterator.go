@@ -2,16 +2,14 @@ package moysklad
 
 import (
 	"encoding/json"
-	"fmt"
 	"sync"
 )
 
 // Iterator структура итератора
 type Iterator[E any] struct {
-	idx  int // счётчик
-	size int // максимальный лимит среза (при 0 лимит не установлен)
-	mu   sync.Mutex
-	el   Slice[E]
+	idx int // счётчик
+	mu  sync.Mutex
+	el  Slice[E]
 }
 
 // Len возвращает количество элементов
@@ -38,17 +36,6 @@ func (r *Iterator[E]) Next() *E {
 
 // Push добавляет элементы в срез
 func (r *Iterator[E]) Push(elements ...E) error {
-	if r.size > 0 {
-		if len(r.el) > r.size {
-			return fmt.Errorf("количество добавляемых элементов превышает допустимый лимит: %d", r.size)
-		}
-
-		limit := r.size - len(r.el)
-		if limit < 0 {
-			limit = 0
-		}
-		elements = elements[:limit]
-	}
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.el = append(r.el, elements...)
@@ -85,10 +72,6 @@ func (r *Iterator[E]) UnmarshalJSON(data []byte) error {
 type Slice[E any] []E
 
 // Iter возвращает итератор
-func (s Slice[E]) Iter(opt ...int) *Iterator[E] {
-	var size int
-	if len(opt) > 0 {
-		size = opt[0]
-	}
-	return &Iterator[E]{el: s, size: size}
+func (s Slice[E]) Iter() *Iterator[E] {
+	return &Iterator[E]{el: s}
 }
