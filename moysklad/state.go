@@ -20,7 +20,7 @@ func (s State) String() string {
 	return Stringify(s)
 }
 
-type States = Iterator[State]
+type States = Slice[State]
 
 // StateType Тип статуса.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-statusy-atributy-suschnosti-tip-statusa

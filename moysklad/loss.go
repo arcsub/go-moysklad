@@ -46,7 +46,7 @@ func (l Loss) MetaType() MetaType {
 	return MetaTypeLoss
 }
 
-type Losses = Iterator[Loss]
+type Losses = Slice[Loss]
 
 // LossPosition Позиция Списания.
 // Ключевое слово: lossposition

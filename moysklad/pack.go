@@ -15,4 +15,4 @@ func (p Pack) String() string {
 	return Stringify(p)
 }
 
-type Packs = Iterator[Pack]
+type Packs = Slice[Pack]

@@ -22,4 +22,4 @@ func (p PriceType) MetaType() MetaType {
 	return MetaTypePriceType
 }
 
-type PriceTypes = Iterator[PriceType]
+type PriceTypes = Slice[PriceType]

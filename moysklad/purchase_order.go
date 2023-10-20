@@ -50,7 +50,7 @@ type PurchaseOrder struct {
 	CustomerOrders        *CustomerOrders                   `json:"customerOrders,omitempty"`        // Массив ссылок на связанные заказы покупателей в формате Метаданных
 	InvoicesIn            *InvoicesIn                       `json:"invoicesIn,omitempty"`            // Массив ссылок на связанные счета поставщиков в формате Метаданных
 	Payments              *Payments                         `json:"payments,omitempty"`              // Массив ссылок на связанные платежи в формате Метаданных
-	Supplies              Iterator[Supply]                  `json:"supplies,omitempty"`              // Массив ссылок на связанные приемки в формате Метаданных
+	Supplies              *Supplies                         `json:"supplies,omitempty"`              // Массив ссылок на связанные приемки в формате Метаданных
 	InternalOrder         *InternalOrder                    `json:"internalOrder,omitempty"`         // Внутренний заказ, связанный с заказом поставщику, в формате Метаданных
 }
 
@@ -67,7 +67,7 @@ func (p PurchaseOrder) MetaType() MetaType {
 	return MetaTypePurchaseOrder
 }
 
-type PurchaseOrders = Iterator[PurchaseOrder]
+type PurchaseOrders = Slice[PurchaseOrder]
 
 // PurchaseOrderPosition Позиция Заказа поставщику.
 // Ключевое слово: purchaseorderposition

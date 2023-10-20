@@ -53,4 +53,4 @@ func (t TaskNote) MetaType() MetaType {
 	return MetaTypeTaskNote
 }
 
-type TaskNotes = Iterator[TaskNote]
+type TaskNotes = Slice[TaskNote]

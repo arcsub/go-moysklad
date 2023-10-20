@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Attribute Доп поле
+// Attribute Доп поле.
 // Ключевое слово: attributemetadata
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-rabota-s-dopolnitel-nymi-polqmi-cherez-json-api
 type Attribute struct {
@@ -28,7 +28,13 @@ func (a Attribute) MetaType() MetaType {
 	return MetaTypeAttribute
 }
 
-type Attributes = Iterator[Attribute]
+type Attributes []*Attribute
+
+// Push добавляет элементы в срез.
+func (a *Attributes) Push(elements ...*Attribute) *Attributes {
+	*a = append(*a, elements...)
+	return a
+}
 
 // AttributeType Тип доп. поля
 type AttributeType string

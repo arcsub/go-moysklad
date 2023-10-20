@@ -24,16 +24,10 @@ func (i Image) MetaType() MetaType {
 
 type Images MetaArray[Image]
 
-// Push добавляет элементы в срез
+// Push добавляет элементы в срез.
+// Элементы, превышающее максимальное значение MaxImages, игнорируются
 func (i *Images) Push(elements ...*Image) *Images {
-	if len(elements) > MaxImages {
-		elements = elements[:MaxImages]
-	}
-	limit := MaxImages - len(i.Rows)
-	if limit < 0 {
-		limit = 0
-	}
-	elements = elements[:limit]
-	i.Rows = append(i.Rows, elements...)
+	limit := min(MaxImages, MaxImages-len(i.Rows), len(elements))
+	i.Rows = append(i.Rows, elements[:limit]...)
 	return i
 }

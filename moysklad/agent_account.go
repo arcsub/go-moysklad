@@ -23,4 +23,4 @@ func (a AgentAccount) String() string {
 	return Stringify(a)
 }
 
-type AgentAccounts = Iterator[AgentAccount]
+type AgentAccounts = Slice[AgentAccount]

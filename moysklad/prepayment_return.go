@@ -59,7 +59,7 @@ func (p PrepaymentReturn) MetaType() MetaType {
 	return MetaTypePrepaymentReturn
 }
 
-type PrepaymentReturns = Iterator[PrepaymentReturn]
+type PrepaymentReturns = Slice[PrepaymentReturn]
 
 // PrepaymentReturnPosition Позиция Возврата предоплаты.
 // Ключевое слово: prepaymentreturnposition

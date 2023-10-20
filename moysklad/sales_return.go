@@ -63,7 +63,7 @@ func (s SalesReturn) MetaType() MetaType {
 	return MetaTypeSalesReturn
 }
 
-type SalesReturns = Iterator[SalesReturn]
+type SalesReturns = Slice[SalesReturn]
 
 // SalesReturnPosition Позиция Возврата покупателя.
 // Ключевое слово: salesreturnposition

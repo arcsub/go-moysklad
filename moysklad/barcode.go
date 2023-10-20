@@ -51,4 +51,4 @@ func (b *Barcode) UnmarshalJSON(bytes []byte) (err error) {
 	return
 }
 
-type Barcodes = Iterator[Barcode]
+type Barcodes = Slice[Barcode]

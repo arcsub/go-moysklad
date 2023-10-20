@@ -47,7 +47,7 @@ type InvoiceOut struct {
 	VatSum               *float64                    `json:"vatSum,omitempty"`               // Сумма включая НДС
 	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`        // Ссылка на Заказ Покупателя, с которым связан этот Счет покупателю в формате Метаданных
 	Payments             *Payments                   `json:"payments,omitempty"`             // Массив ссылок на связанные операции в формате Метаданных
-	Demands              Iterator[Demand]            `json:"demands,omitempty"`              // Массив ссылок на связанные отгрузки в формате Метаданных
+	Demands              *Demands                    `json:"demands,omitempty"`              // Массив ссылок на связанные отгрузки в формате Метаданных
 }
 
 func (i InvoiceOut) String() string {
@@ -63,7 +63,7 @@ func (i InvoiceOut) MetaType() MetaType {
 	return MetaTypeInvoiceOut
 }
 
-type InvoicesOut = Iterator[InvoiceOut]
+type InvoicesOut = Slice[InvoiceOut]
 
 // InvoiceOutPosition Позиция Счета покупателю.
 // Ключевое слово: invoiceposition

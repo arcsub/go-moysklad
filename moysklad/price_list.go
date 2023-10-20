@@ -54,7 +54,7 @@ func (p PriceListCell) String() string {
 	return Stringify(p)
 }
 
-type PriceListCells = Iterator[PriceListCell]
+type PriceListCells = Slice[PriceListCell]
 
 // PriceListColumn Столбец прайс листа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-stolbcy
@@ -67,7 +67,7 @@ func (p PriceListColumn) String() string {
 	return Stringify(p)
 }
 
-type PriceListColumns = Iterator[PriceListColumn]
+type PriceListColumns = Slice[PriceListColumn]
 
 // PriceListPosition Позиция прайс листа.
 // Ключевое слово: pricelistrow

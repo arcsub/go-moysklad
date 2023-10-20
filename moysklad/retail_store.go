@@ -88,7 +88,7 @@ func (r RetailStore) MetaType() MetaType {
 	return MetaTypeRetailStore
 }
 
-type RetailStores = Iterator[RetailStore]
+type RetailStores = Slice[RetailStore]
 
 // RetailStoreState Информация статусе точки продаж
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-attributy-suschnosti-status
@@ -160,7 +160,7 @@ func (l LastOperation) String() string {
 	return Stringify(l)
 }
 
-type LastOperations = Iterator[LastOperation]
+type LastOperations = Slice[LastOperation]
 
 // ChequePrinter Данные о ККТ.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-okruzhenie-attributy-suschnosti-kkt

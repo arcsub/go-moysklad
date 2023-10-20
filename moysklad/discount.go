@@ -21,7 +21,7 @@ func (d Discount) String() string {
 	return Stringify(d.Meta)
 }
 
-type Discounts = Iterator[Discount]
+type Discounts = Slice[Discount]
 
 // RoundOffDiscount Округление копеек.
 type RoundOffDiscount struct {
@@ -113,7 +113,7 @@ type AccumulationLevel struct {
 	Discount *float64 `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
 }
 
-type Levels = Iterator[AccumulationLevel]
+type Levels = Slice[AccumulationLevel]
 
 // PersonalDiscount Персональная скидка.
 // Ключевое слово: personaldiscount

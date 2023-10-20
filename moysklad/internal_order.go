@@ -22,7 +22,7 @@ type InternalOrder struct {
 	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID сущности
 	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные
 	Moment                *Timestamp                        `json:"moment,omitempty"`                // Дата документа
-	Moves                 Iterator[Move]                    `json:"moves,omitempty"`                 // Коллекция метаданных на связанные заказы перемещения
+	Moves                 *Moves                            `json:"moves,omitempty"`                 // Коллекция метаданных на связанные заказы перемещения
 	Name                  *string                           `json:"name,omitempty"`                  // Наименование
 	Organization          *Organization                     `json:"organization,omitempty"`          // Метаданные юрлица
 	Owner                 *Employee                         `json:"owner,omitempty"`                 // Владелец (Сотрудник)

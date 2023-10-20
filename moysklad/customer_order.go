@@ -72,7 +72,7 @@ func (c CustomerOrder) MetaType() MetaType {
 	return MetaTypeCustomerOrder
 }
 
-type CustomerOrders = Iterator[CustomerOrder]
+type CustomerOrders = Slice[CustomerOrder]
 
 // CustomerOrderPosition Позиция Заказа покупателя.
 // Ключевое слово: customerorderposition

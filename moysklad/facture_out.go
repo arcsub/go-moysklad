@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// FactureOut Счет-фактура выданный
+// FactureOut Счет-фактура выданный.
 // Ключевое слово: factureout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-faktura-wydannyj
 type FactureOut struct {
@@ -35,7 +35,7 @@ type FactureOut struct {
 	Sum             *float64         `json:"sum,omitempty"`             // Сумма
 	SyncID          *uuid.UUID       `json:"syncId,omitempty"`          // ID синхронизации. После заполнения недоступен для изменения
 	Updated         *Timestamp       `json:"updated,omitempty"`         // Момент последнего обновления
-	Demands         Iterator[Demand] `json:"demands,omitempty"`         // Массив ссылок на связанные отгрузки в формате Метаданных
+	Demands         *Demands         `json:"demands,omitempty"`         // Массив ссылок на связанные отгрузки в формате Метаданных
 	Payments        *Payments        `json:"payments,omitempty"`        // Массив ссылок на связанные входящие платежи в формате Метаданных
 	Returns         *PurchaseReturns `json:"returns,omitempty"`         // Массив ссылок на связанные возвраты поставщикам в формате Метаданных
 	Consignee       *Counterparty    `json:"consignee,omitempty"`       // Грузополучатель

@@ -49,7 +49,7 @@ func (m Move) MetaType() MetaType {
 	return MetaTypeMove
 }
 
-type Moves = Iterator[Move]
+type Moves Slice[Move]
 
 // MovePosition Позиция перемещения.
 // Ключевое слово: moveposition

@@ -63,7 +63,7 @@ func (p PurchaseReturn) MetaType() MetaType {
 	return MetaTypePurchaseReturn
 }
 
-type PurchaseReturns = Iterator[PurchaseReturn]
+type PurchaseReturns = Slice[PurchaseReturn]
 
 // PurchaseReturnPosition Позиция Возврата поставщику.
 // Ключевое слово: purchasereturnposition

@@ -66,7 +66,7 @@ func (s Supply) MetaType() MetaType {
 	return MetaTypeSupply
 }
 
-type Supplies = Iterator[Supply]
+type Supplies Slice[Supply]
 
 // SupplyPosition Позиция Приемки.
 // Ключевое слово: supplyposition

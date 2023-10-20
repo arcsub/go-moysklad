@@ -29,26 +29,17 @@ func (r *Iterator[E]) Next() *E {
 		defer r.mu.Unlock()
 		row := r.el[r.idx]
 		r.idx += 1
-		return &row
+		return row
 	}
 	return nil
 }
 
 // Push добавляет элементы в срез
-func (r *Iterator[E]) Push(elements ...E) error {
+func (r *Iterator[E]) Push(elements ...*E) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.el = append(r.el, elements...)
 	return nil
-}
-
-// PushPtr добавляет элементы в срез
-func (r *Iterator[E]) PushPtr(elements ...*E) error {
-	var elements2 []E
-	for _, element := range elements {
-		elements2 = append(elements2, *element)
-	}
-	return r.Push(elements2...)
 }
 
 // Stop сбрасывает текущее значение индекса
@@ -69,9 +60,15 @@ func (r *Iterator[E]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &r.el)
 }
 
-type Slice[E any] []E
+type Slice[E any] []*E
 
 // Iter возвращает итератор
 func (s Slice[E]) Iter() *Iterator[E] {
 	return &Iterator[E]{el: s}
+}
+
+// Push добавляет элементы в срез.
+func (s *Slice[E]) Push(elements ...*E) *Slice[E] {
+	*s = append(*s, elements...)
+	return s
 }

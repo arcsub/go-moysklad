@@ -109,35 +109,35 @@ func convertToAssortmentPosition[E AssortmentPositionTypes](element E) (*Assortm
 }
 
 // FilterBundle фильтрует позиции по типу Bundle (Комплект)
-func (a Assortment) FilterBundle() []Bundle {
+func (a Assortment) FilterBundle() Slice[Bundle] {
 	return filterEntity[Bundle](a)
 }
 
 // FilterProduct фильтрует позиции по типу Product (Товар)
-func (a Assortment) FilterProduct() []Product {
+func (a Assortment) FilterProduct() Slice[Product] {
 	return filterEntity[Product](a)
 }
 
 // FilterVariant фильтрует позиции по типу Variant (Модификация)
-func (a Assortment) FilterVariant() []Variant {
+func (a Assortment) FilterVariant() Slice[Variant] {
 	return filterEntity[Variant](a)
 }
 
 // FilterConsignment фильтрует позиции по типу Consignment (Серия)
-func (a Assortment) FilterConsignment() []Consignment {
+func (a Assortment) FilterConsignment() Slice[Consignment] {
 	return filterEntity[Consignment](a)
 }
 
 // FilterService фильтрует позиции по типу Service (Услуга)
-func (a Assortment) FilterService() []Service {
+func (a Assortment) FilterService() Slice[Service] {
 	return filterEntity[Service](a)
 }
 
-func filterEntity[E MetaTyper, A DataMetaTyper](elements []A) []E {
-	var n []E
+func filterEntity[E MetaTyper, A DataMetaTyper](elements []A) Slice[E] {
+	var n Slice[E]
 	for _, el := range elements {
 		if e, err := unmarshalTo[E](el); err == nil {
-			n = append(n, *e)
+			n = append(n, e)
 		}
 	}
 	return n

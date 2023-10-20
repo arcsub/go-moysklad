@@ -127,4 +127,4 @@ const (
 	SexFemale SexType = "FEMALE" // Женский
 )
 
-type Tags = Iterator[string]
+type Tags = []string

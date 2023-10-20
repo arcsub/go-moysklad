@@ -175,7 +175,7 @@ func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributes []
 	if len(attributes) == 1 {
 		attribute, response, err := NewRequestBuilder[Attribute](s.Endpoint, ctx).
 			WithPath(path).WithBody(attributes[0]).Post()
-		return &Slice[Attribute]{*attribute}, response, err
+		return &Slice[Attribute]{attribute}, response, err
 	}
 	return NewRequestBuilder[Slice[Attribute]](s.Endpoint, ctx).WithPath(path).WithBody(attributes).Post()
 }

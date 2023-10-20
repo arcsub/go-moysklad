@@ -60,7 +60,7 @@ func (p Prepayment) MetaType() MetaType {
 	return MetaTypePrepayment
 }
 
-type Prepayments = Iterator[Prepayment]
+type Prepayments = Slice[Prepayment]
 
 // PrepaymentPosition Позиция Предоплаты.
 // Ключевое слово: prepaymentposition

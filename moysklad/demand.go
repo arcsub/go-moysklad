@@ -75,7 +75,9 @@ func (d Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
 
-type Demands = Iterator[Demand]
+// type = Demands Slice[Demand] // go.dev/issue/50729
+
+type Demands Slice[Demand]
 
 // DemandPosition Позиция Отгрузки
 // Ключевое слово: demandposition

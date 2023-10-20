@@ -50,7 +50,7 @@ func (p Processing) MetaType() MetaType {
 	return MetaTypeProcessing
 }
 
-type Processings = Iterator[Processing]
+type Processings = Slice[Processing]
 
 // ProcessingPositionMaterial Материал Техоперации.
 // Ключевое слово: processingpositionmaterial

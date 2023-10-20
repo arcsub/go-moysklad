@@ -46,7 +46,7 @@ type CounterpartiesMeta struct {
 
 func (c *CounterpartiesMeta) Push(elements ...*Counterparty) {
 	for _, element := range elements {
-		ce := CounterpartyElement{
+		ce := &CounterpartyElement{
 			Counterparty: MetaWrapper{
 				Meta: *element.GetMeta(),
 			},

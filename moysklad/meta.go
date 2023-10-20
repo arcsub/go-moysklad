@@ -72,7 +72,7 @@ func (m AssortmentResult) String() string {
 // MetaArray Объект с полями meta и rows, где rows - массив объектов
 type MetaArray[T any] struct {
 	Meta MetaCollection `json:"meta,omitempty"`
-	Rows Slice[*T]      `json:"rows,omitempty"`
+	Rows Slice[T]       `json:"rows,omitempty"`
 }
 
 func (m MetaArray[T]) String() string {

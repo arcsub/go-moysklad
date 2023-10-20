@@ -1,4 +1,4 @@
 package moysklad
 
 // Things серийные номера.
-type Things = Iterator[string]
+type Things = []string

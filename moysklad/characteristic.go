@@ -24,4 +24,4 @@ func (c Characteristic) MetaType() MetaType {
 	return MetaTypeCharacteristic
 }
 
-type Characteristics = Iterator[Characteristic]
+type Characteristics = Slice[Characteristic]
