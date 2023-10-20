@@ -22,5 +22,3 @@ type AgentAccount struct {
 func (a AgentAccount) String() string {
 	return Stringify(a)
 }
-
-type AgentAccounts = Slice[AgentAccount]

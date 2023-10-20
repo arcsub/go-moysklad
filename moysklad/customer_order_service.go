@@ -17,6 +17,7 @@ type CustomerOrderService struct {
 	endpointSyncId[CustomerOrder]
 	endpointNamedFilter
 	endpointRemove
+	endpointTemplates
 }
 
 func NewCustomerOrderService(client *Client) *CustomerOrderService {
@@ -36,5 +37,6 @@ func NewCustomerOrderService(client *Client) *CustomerOrderService {
 		endpointSyncId:                 endpointSyncId[CustomerOrder]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
+		endpointTemplates:              endpointTemplates{e},
 	}
 }

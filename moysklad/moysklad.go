@@ -180,7 +180,9 @@ func (c *Client) Do(ctx context.Context, req *http.Request) (*Response, error) {
 	resp, err := c.client.Do(retryableReq)
 
 	defer func() {
-		_ = resp.Body.Close()
+		if req.Header.Get(headerGetContent) != "true" {
+			_ = resp.Body.Close()
+		}
 	}()
 
 	if err != nil {

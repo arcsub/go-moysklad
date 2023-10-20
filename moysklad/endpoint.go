@@ -362,7 +362,7 @@ func (s *endpointPositions[T]) DeletePositionTrackingCodes(ctx context.Context, 
 
 type endpointPrintDoc struct{ Endpoint }
 
-// PrintDoc Запрос на печать документа
+// PrintDoc Запрос на печать документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-pechat-dokumentow-zapros-na-pechat
 func (s *endpointPrintDoc) PrintDoc(ctx context.Context, id *uuid.UUID, printDocRequest *PrintDocRequest) (*PrintFile, *Response, error) {
 	path := fmt.Sprintf("%s/export", id)
@@ -376,7 +376,6 @@ func (s *endpointPrintDoc) PrintDoc(ctx context.Context, id *uuid.UUID, printDoc
 	if err != nil {
 		return nil, resp, err
 	}
-
 	return file, resp, err
 }
 
@@ -384,9 +383,9 @@ type endpointPrintPrice struct{ Endpoint }
 
 // PrintPrice Запрос на печать этикеток и ценников.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pechat-atiketok-i-cennikow
-func (s *endpointPrintPrice) PrintPrice(ctx context.Context, id *uuid.UUID, printPriceRequest *PrintPriceRequest) (*PrintFile, *Response, error) {
+func (s *endpointPrintPrice) PrintPrice(ctx context.Context, id *uuid.UUID, printPriceArg *PrintPriceArg) (*PrintFile, *Response, error) {
 	path := fmt.Sprintf("%s/export", id)
-	rb := NewRequestBuilder[CustomTemplate](s.Endpoint, ctx).WithPath(path).WithBody(printPriceRequest).setContentHeader()
+	rb := NewRequestBuilder[CustomTemplate](s.Endpoint, ctx).WithPath(path).WithBody(printPriceArg).setContentHeader()
 	resp, err := rb.do(http.MethodPost)
 	if err != nil {
 		return nil, resp, err
@@ -396,27 +395,26 @@ func (s *endpointPrintPrice) PrintPrice(ctx context.Context, id *uuid.UUID, prin
 	if err != nil {
 		return nil, resp, err
 	}
-
 	return file, resp, err
 }
 
 type endpointPublication struct{ Endpoint }
 
-// GetPublications Запрос на получение списка Публикаций по указанному документу
+// GetPublications Запрос на получение списка Публикаций по указанному документу.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-poluchit-publikacii
 func (s *endpointPublication) GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *Response, error) {
 	path := fmt.Sprintf("%s/publication", id)
 	return NewRequestBuilder[MetaArray[Publication]](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// GetPublicationById Запрос на получение Публикации с указанным id
+// GetPublicationById Запрос на получение Публикации с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-poluchit-publikaciu
 func (s *endpointPublication) GetPublicationById(ctx context.Context, id, publicationId uuid.UUID) (*Publication, *Response, error) {
 	path := fmt.Sprintf("%s/publication/%s", id, publicationId)
 	return NewRequestBuilder[Publication](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// Publish Запрос на публикацию документа
+// Publish Запрос на публикацию документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-sozdat-publikaciu
 func (s *endpointPublication) Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *Response, error) {
 	path := fmt.Sprintf("%s/publication", id)
@@ -424,7 +422,7 @@ func (s *endpointPublication) Publish(ctx context.Context, id *uuid.UUID, templa
 	return NewRequestBuilder[Publication](s.Endpoint, ctx).WithPath(path).WithBody(publication).Post()
 }
 
-// DeletePublication Запрос на удаление Публикации с указанным id
+// DeletePublication Запрос на удаление Публикации с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-udalit-publikaciu
 func (s *endpointPublication) DeletePublication(ctx context.Context, id, publicationId uuid.UUID) (bool, *Response, error) {
 	path := fmt.Sprintf("%s/publication/%s", id, publicationId)
@@ -433,13 +431,13 @@ func (s *endpointPublication) DeletePublication(ctx context.Context, id, publica
 
 type endpointSettings[T any] struct{ Endpoint }
 
-// GetSettings Запрос на получение настроек справочника
+// GetSettings Запрос на получение настроек справочника.
 func (s *endpointSettings[T]) GetSettings(ctx context.Context) (*T, *Response, error) {
 	path := "settings"
 	return NewRequestBuilder[T](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// UpdateSettings Изменить настройки справочника
+// UpdateSettings Изменить настройки справочника.
 func (s *endpointSettings[T]) UpdateSettings(ctx context.Context, settings *T) (*T, *Response, error) {
 	path := "settings"
 	return NewRequestBuilder[T](s.Endpoint, ctx).WithPath(path).WithBody(settings).Put()
@@ -447,34 +445,34 @@ func (s *endpointSettings[T]) UpdateSettings(ctx context.Context, settings *T) (
 
 type endpointStates struct{ Endpoint }
 
-// GetStateById Запрос на получение статуса по id
+// GetStateById Запрос на получение статуса по id.
 func (s *endpointStates) GetStateById(ctx context.Context, id *uuid.UUID) (*State, *Response, error) {
 	path := fmt.Sprintf("metadata/states/%s", id)
 	return NewRequestBuilder[State](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// CreateState Создать новый статус
+// CreateState Создать новый статус.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-sozdat-status
 func (s *endpointStates) CreateState(ctx context.Context, state *State) (*State, *Response, error) {
 	path := "metadata/states"
 	return NewRequestBuilder[State](s.Endpoint, ctx).WithPath(path).WithBody(state).Post()
 }
 
-// UpdateState Изменить существующий статус
+// UpdateState Изменить существующий статус.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-izmenit-status
 func (s *endpointStates) UpdateState(ctx context.Context, id *uuid.UUID, state *State) (*State, *Response, error) {
 	path := fmt.Sprintf("metadata/states/%s", id)
 	return NewRequestBuilder[State](s.Endpoint, ctx).WithPath(path).WithBody(state).Put()
 }
 
-// CreateOrUpdateStates Массовое создание и обновление Статусов
+// CreateOrUpdateStates Массовое создание и обновление Статусов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-massowoe-sozdanie-i-obnowlenie-statusow
 func (s *endpointStates) CreateOrUpdateStates(ctx context.Context, id *uuid.UUID, states []*State) (*Slice[State], *Response, error) {
 	path := fmt.Sprintf("metadata/states/%s", id)
 	return NewRequestBuilder[Slice[State]](s.Endpoint, ctx).WithPath(path).WithBody(states).Post()
 }
 
-// DeleteState Запрос на удаление Статуса с указанным id
+// DeleteState Запрос на удаление Статуса с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-udalit-status
 func (s *endpointStates) DeleteState(ctx context.Context, id *uuid.UUID) (bool, *Response, error) {
 	path := fmt.Sprintf("metadata/states/%s", id)
@@ -495,28 +493,28 @@ func (s *endpointSyncId[T]) DeleteBySyncId(ctx context.Context, syncId uuid.UUID
 
 type endpointTemplates struct{ Endpoint }
 
-// GetEmbeddedTemplates Запрос на получение информации о стандартных шаблонах печатных форм для указанного типа сущности
+// GetEmbeddedTemplates Запрос на получение информации о стандартных шаблонах печатных форм для указанного типа сущности.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-spisok-standartnyh-shablonow
 func (s *endpointTemplates) GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *Response, error) {
 	path := "metadata/embeddedtemplate"
 	return NewRequestBuilder[List[EmbeddedTemplate]](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// GetEmbeddedTemplateById Запрос на получение информации об отдельном стандартном шаблоне печатной формы для указанного типа сущности по его id
+// GetEmbeddedTemplateById Запрос на получение информации об отдельном стандартном шаблоне печатной формы для указанного типа сущности по его id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-otdel-nyj-standartnyj-shablon
 func (s *endpointTemplates) GetEmbeddedTemplateById(ctx context.Context, id *uuid.UUID) (*EmbeddedTemplate, *Response, error) {
 	path := fmt.Sprintf("metadata/embeddedtemplate/%s", id)
 	return NewRequestBuilder[EmbeddedTemplate](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// GetCustomTemplates Запрос на получение информации о пользовательских шаблонах печатных форм для указанного типа сущности
+// GetCustomTemplates Запрос на получение информации о пользовательских шаблонах печатных форм для указанного типа сущности.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-spisok-pol-zowatel-skih-shablonow
 func (s *endpointTemplates) GetCustomTemplates(ctx context.Context) (*List[CustomTemplate], *Response, error) {
 	path := "metadata/customtemplate"
 	return NewRequestBuilder[List[CustomTemplate]](s.Endpoint, ctx).WithPath(path).Get()
 }
 
-// GetCustomTemplateById Запрос на получение информации об отдельном пользовательском шаблоне печатной формы для указанного типа сущности по его id
+// GetCustomTemplateById Запрос на получение информации об отдельном пользовательском шаблоне печатной формы для указанного типа сущности по его id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-otdel-nyj-pol-zowatel-skij-shablon
 func (s *endpointTemplates) GetCustomTemplateById(ctx context.Context, id *uuid.UUID) (*CustomTemplate, *Response, error) {
 	path := fmt.Sprintf("metadata/customtemplate/%s", id)
@@ -525,7 +523,7 @@ func (s *endpointTemplates) GetCustomTemplateById(ctx context.Context, id *uuid.
 
 type endpointRemove struct{ Endpoint }
 
-// Remove Запрос на перемещение документа с указанным id в корзину
+// Remove Запрос на перемещение документа с указанным id в корзину.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-udalenie-w-korzinu
 func (s *endpointRemove) Remove(ctx context.Context, id *uuid.UUID) (bool, *Response, error) {
 	path := fmt.Sprintf("%s/trash", id)

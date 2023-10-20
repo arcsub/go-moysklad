@@ -5,6 +5,8 @@ import (
 	"github.com/google/uuid"
 	"io"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 // Template Общие поля для шаблонов.
@@ -21,9 +23,47 @@ func (t Template) String() string {
 	return Stringify(t)
 }
 
+func (t Template) GetType() TemplateType {
+	return t.Type
+}
+
+func (t Template) GetMeta() *Meta {
+	return t.Meta
+}
+
+// CustomTemplate Пользовательский Шаблон.
+// Ключевое слово: customtemplate
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-atributy-suschnosti
+type CustomTemplate struct {
+	Template
+}
+
+func (c CustomTemplate) String() string {
+	return Stringify(c)
+}
+
+func (c CustomTemplate) MetaType() MetaType {
+	return MetaTypeCustomTemplate
+}
+
+// EmbeddedTemplate Стандартный шаблон
+// Ключевое слово: embeddedtemplate
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-atributy-suschnosti
+type EmbeddedTemplate struct {
+	Template
+}
+
+func (e EmbeddedTemplate) String() string {
+	return Stringify(e)
+}
+
+func (e EmbeddedTemplate) MetaType() MetaType {
+	return MetaTypeEmbeddedTemplate
+}
+
 type Templater interface {
 	HasMeta
-	Type() TemplateType
+	GetType() TemplateType
 }
 
 type TemplateType string
@@ -58,15 +98,26 @@ type PrintDocTemplate struct {
 
 // Ценники
 
-type PrintPriceRequest struct {
-	Organization MetaWrapper                       `json:"organization,omitempty"` // Метаданные Юрлица
-	Count        int                               `json:"count,omitempty"`        // Количество ценников/термоэтикеток
-	SalePrice    PrintPriceRequestPriceTypeWrapper `json:"salePrice,omitempty"`    // Цена продажи
-	Template     MetaWrapper                       `json:"template,omitempty"`     // Метаданные Шаблона печати
+type PrintPriceArg struct {
+	Organization MetaWrapper            `json:"organization,omitempty"` // Метаданные Юрлица
+	Count        int                    `json:"count,omitempty"`        // Количество ценников/термоэтикеток
+	SalePrice    PrintPriceArgSalePrice `json:"salePrice,omitempty"`    // Цена продажи
+	Template     MetaWrapper            `json:"template,omitempty"`     // Метаданные Шаблона печати
 }
 
-type PrintPriceRequestPriceTypeWrapper struct {
+type PrintPriceArgSalePrice struct {
 	PriceType MetaWrapper `json:"priceType,omitempty"` // Метаданные типа цены
+}
+
+// NewPrintPriceArg создаёт и возвращает заполненный объект для запроса печати ценников.
+// Аргументы: организация, тип цен, шаблон и кол-во ценников
+func NewPrintPriceArg(organization *Organization, priceType *PriceType, template Templater, count int) *PrintPriceArg {
+	return &PrintPriceArg{
+		Organization: MetaWrapper{Meta: Deref(organization.Meta)},
+		SalePrice:    PrintPriceArgSalePrice{PriceType: MetaWrapper{Meta: Deref(priceType.Meta)}},
+		Template:     MetaWrapper{Meta: Deref(template.GetMeta())},
+		Count:        count,
+	}
 }
 
 type PrintFile struct {
@@ -74,11 +125,22 @@ type PrintFile struct {
 	FileName string
 }
 
-func (f *PrintFile) SaveToFile(filename string) error {
-	if len(filename) == 0 {
-		filename = f.FileName
+// Save сохраняет полученный файл в указанную папку.
+// Аргументом является директория, в которую необходимо сохранить файл.
+func (f *PrintFile) Save(path string) error {
+	if !strings.HasSuffix(path, "/") {
+		path += "/"
 	}
 
+	if err := os.MkdirAll(filepath.Dir(path), 0770); err != nil {
+		return err
+	}
+
+	if !strings.HasSuffix(f.FileName, ".pdf") {
+		f.FileName += ".pdf"
+	}
+
+	filename := path + f.FileName
 	fo, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -103,6 +165,5 @@ func (f *PrintFile) SaveToFile(filename string) error {
 			return err
 		}
 	}
-
 	return nil
 }
