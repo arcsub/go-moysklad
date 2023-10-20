@@ -59,16 +59,3 @@ func (r Iterator[E]) MarshalJSON() ([]byte, error) {
 func (r *Iterator[E]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &r.el)
 }
-
-type Slice[E any] []*E
-
-// Iter возвращает итератор
-func (s Slice[E]) Iter() *Iterator[E] {
-	return &Iterator[E]{el: s}
-}
-
-// Push добавляет элементы в срез.
-func (s *Slice[E]) Push(elements ...*E) *Slice[E] {
-	*s = append(*s, elements...)
-	return s
-}
