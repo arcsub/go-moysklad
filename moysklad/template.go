@@ -85,15 +85,47 @@ const (
 
 // Документы
 
-type PrintDocRequest struct {
-	Template  *MetaWrapper             `json:"template,omitempty"`
-	Templates *Slice[PrintDocTemplate] `json:"templates,omitempty"`
-	Extension Extension                `json:"extension,omitempty"`
+type PrintDocArg struct {
+	Template  *MetaWrapper                   `json:"template,omitempty"`
+	Templates *Slice[PrintDocArgManyElement] `json:"templates,omitempty"`
+	Extension Extension                      `json:"extension,omitempty"`
 }
 
-type PrintDocTemplate struct {
+type PrintDocArgManyElement struct {
 	Template *MetaWrapper `json:"template,omitempty"`
 	Count    int          `json:"count,omitempty"`
+}
+
+// NewPrintDocArgOne создаёт и возвращает заполненный объект для запроса печати документов.
+// Применяется только для запроса 1 документа.
+// Возможные расширения:
+// – ExtensionXLS для документа с расширением .xls
+// – ExtensionPDF для документа с расширением .pdf
+// – ExtensionHTML для документа с расширением .html
+// – ExtensionODS для документа с расширением .ods
+func NewPrintDocArgOne(template Templater, ext Extension) *PrintDocArg {
+	return &PrintDocArg{
+		Template:  &MetaWrapper{Meta: Deref(template.GetMeta())},
+		Extension: ext,
+	}
+}
+
+// NewPrintDocArgManyElement создаёт и возвращает *PrintDocArgManyElement,
+// который служит аргументом для метода NewPrintDocArgMany
+func NewPrintDocArgManyElement(template Templater, count int) *PrintDocArgManyElement {
+	return &PrintDocArgManyElement{
+		Template: &MetaWrapper{Deref(template.GetMeta())},
+		Count:    count,
+	}
+}
+
+// NewPrintDocArgMany создаёт и возвращает заполненный объект для запроса печати документов.
+// Применяется для запроса комплекта документов.
+// Каждый аргумент создаётся с помощью метода NewPrintDocArgManyElement
+func NewPrintDocArgMany(templates ...*PrintDocArgManyElement) *PrintDocArg {
+	return &PrintDocArg{
+		Templates: (new(Slice[PrintDocArgManyElement])).Push(templates...),
+	}
 }
 
 // Ценники
@@ -134,10 +166,6 @@ func (f *PrintFile) Save(path string) error {
 
 	if err := os.MkdirAll(filepath.Dir(path), 0770); err != nil {
 		return err
-	}
-
-	if !strings.HasSuffix(f.FileName, ".pdf") {
-		f.FileName += ".pdf"
 	}
 
 	filename := path + f.FileName

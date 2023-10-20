@@ -364,9 +364,9 @@ type endpointPrintDoc struct{ Endpoint }
 
 // PrintDoc Запрос на печать документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-pechat-dokumentow-zapros-na-pechat
-func (s *endpointPrintDoc) PrintDoc(ctx context.Context, id *uuid.UUID, printDocRequest *PrintDocRequest) (*PrintFile, *Response, error) {
+func (s *endpointPrintDoc) PrintDoc(ctx context.Context, id *uuid.UUID, printDocArg *PrintDocArg) (*PrintFile, *Response, error) {
 	path := fmt.Sprintf("%s/export", id)
-	rb := NewRequestBuilder[CustomTemplate](s.Endpoint, ctx).WithPath(path).WithBody(printDocRequest).setContentHeader()
+	rb := NewRequestBuilder[CustomTemplate](s.Endpoint, ctx).WithPath(path).WithBody(printDocArg).setContentHeader()
 	resp, err := rb.do(http.MethodPost)
 	if err != nil {
 		return nil, resp, err
