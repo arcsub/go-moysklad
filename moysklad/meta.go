@@ -1,7 +1,6 @@
 package moysklad
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -56,14 +55,6 @@ type MetaCollection struct {
 }
 
 func (m MetaCollection) String() string {
-	return Stringify(m)
-}
-
-type Context struct {
-	Employee MetaWrapper `json:"employee,omitempty"`
-}
-
-func (m Context) String() string {
 	return Stringify(m)
 }
 
@@ -247,12 +238,11 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 	var err error
 
 	val := reflect.ValueOf(v)
-	if val.Kind() == reflect.Ptr {
+	for val.Kind() == reflect.Ptr {
 		v = val.Elem().Interface()
+		val = reflect.ValueOf(v)
 	}
 
-	// TODO
-	//switch any(*new(T)).(type) {
 	switch v.(type) {
 	case ContextEmployee:
 		metaType = MetaTypeEmployeeContext
@@ -484,7 +474,7 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 	case Async:
 		metaType = MetaTypeAsync
 	default:
-		err = fmt.Errorf("unrecognized meta type %T", v)
+		err = ErrUnknownEntity{v}
 	}
 	return metaType, err
 }

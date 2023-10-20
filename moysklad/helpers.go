@@ -95,10 +95,6 @@ func unmarshalAny[T any](data []byte) (*T, error) {
 	return v, nil
 }
 
-const errWrongMetaTypeMessage = "meta type mismatch! have %s, need %s\n"
-
-var ErrWrongMetaType = func(h, n MetaType) error { return fmt.Errorf(errWrongMetaTypeMessage, h, n) }
-
 type DataMetaTyper interface {
 	MetaTyper
 	Data() json.RawMessage
@@ -112,7 +108,7 @@ func unmarshalTo[T MetaTyper, E DataMetaTyper](element E) (*T, error) {
 	haveType := element.MetaType()
 
 	if haveType != needType {
-		return t, ErrWrongMetaType(haveType, needType)
+		return t, ErrWrongMetaType{haveType, needType}
 	}
 	data := element.Data()
 	if data == nil {

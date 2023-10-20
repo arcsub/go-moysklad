@@ -33,3 +33,19 @@ func (e ApiErrors) Error() string {
 	}
 	return message
 }
+
+type ErrUnknownEntity struct {
+	t any
+}
+
+func (e ErrUnknownEntity) Error() string {
+	return fmt.Sprintf("unrecognized entity: %v", e.t)
+}
+
+type ErrWrongMetaType struct {
+	have, need MetaType
+}
+
+func (e ErrWrongMetaType) Error() string {
+	return fmt.Sprintf("meta type mismatch! have %s, need %s", e.have, e.need)
+}
