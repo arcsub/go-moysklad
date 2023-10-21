@@ -13,7 +13,7 @@ type RetailDrawerCashOutService struct {
 	endpointTemplate[RetailDrawerCashOut]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[RetailDrawerCashOut]
+	endpointSyncID[RetailDrawerCashOut]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -31,7 +31,7 @@ func NewRetailDrawerCashOutService(client *Client) *RetailDrawerCashOutService {
 		endpointTemplate:               endpointTemplate[RetailDrawerCashOut]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[RetailDrawerCashOut]{e},
+		endpointSyncID:                 endpointSyncID[RetailDrawerCashOut]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
 	}

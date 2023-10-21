@@ -15,7 +15,7 @@ type EnterService struct {
 	endpointPositions[EnterPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[Enter]
+	endpointSyncID[Enter]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -35,7 +35,7 @@ func NewEnterService(client *Client) *EnterService {
 		endpointPositions:              endpointPositions[EnterPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[Enter]{e},
+		endpointSyncID:                 endpointSyncID[Enter]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
 	}

@@ -15,7 +15,7 @@ type CashInService struct {
 	endpointGetById[CashIn]
 	endpointUpdate[CashIn]
 	endpointPublication
-	endpointSyncId[CashIn]
+	endpointSyncID[CashIn]
 	endpointRemove
 }
 
@@ -34,7 +34,7 @@ func NewCashInService(client *Client) *CashInService {
 		endpointGetById:                endpointGetById[CashIn]{e},
 		endpointUpdate:                 endpointUpdate[CashIn]{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[CashIn]{e},
+		endpointSyncID:                 endpointSyncID[CashIn]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

@@ -85,7 +85,7 @@ const (
 
 // Документы
 
-type PrintDocArg struct {
+type PrintDocumentArg struct {
 	Template  *MetaWrapper                   `json:"template,omitempty"`
 	Templates *Slice[PrintDocArgManyElement] `json:"templates,omitempty"`
 	Extension Extension                      `json:"extension,omitempty"`
@@ -103,8 +103,8 @@ type PrintDocArgManyElement struct {
 // – ExtensionPDF для документа с расширением .pdf
 // – ExtensionHTML для документа с расширением .html
 // – ExtensionODS для документа с расширением .ods
-func NewPrintDocArgOne(template Templater, ext Extension) *PrintDocArg {
-	return &PrintDocArg{
+func NewPrintDocArgOne(template Templater, ext Extension) *PrintDocumentArg {
+	return &PrintDocumentArg{
 		Template:  &MetaWrapper{Meta: Deref(template.GetMeta())},
 		Extension: ext,
 	}
@@ -122,31 +122,31 @@ func NewPrintDocArgManyElement(template Templater, count int) *PrintDocArgManyEl
 // NewPrintDocArgMany создаёт и возвращает заполненный объект для запроса печати документов.
 // Применяется для запроса комплекта документов.
 // Каждый аргумент создаётся с помощью метода NewPrintDocArgManyElement
-func NewPrintDocArgMany(templates ...*PrintDocArgManyElement) *PrintDocArg {
-	return &PrintDocArg{
+func NewPrintDocArgMany(templates ...*PrintDocArgManyElement) *PrintDocumentArg {
+	return &PrintDocumentArg{
 		Templates: (new(Slice[PrintDocArgManyElement])).Push(templates...),
 	}
 }
 
 // Ценники
 
-type PrintPriceArg struct {
+type PrintLabelArg struct {
 	Organization MetaWrapper            `json:"organization,omitempty"` // Метаданные Юрлица
 	Count        int                    `json:"count,omitempty"`        // Количество ценников/термоэтикеток
-	SalePrice    PrintPriceArgSalePrice `json:"salePrice,omitempty"`    // Цена продажи
+	SalePrice    PrintLabelArgSalePrice `json:"salePrice,omitempty"`    // Цена продажи
 	Template     MetaWrapper            `json:"template,omitempty"`     // Метаданные Шаблона печати
 }
 
-type PrintPriceArgSalePrice struct {
+type PrintLabelArgSalePrice struct {
 	PriceType MetaWrapper `json:"priceType,omitempty"` // Метаданные типа цены
 }
 
-// NewPrintPriceArg создаёт и возвращает заполненный объект для запроса печати ценников.
+// NewPrintLabelArg создаёт и возвращает заполненный объект для запроса печати ценников.
 // Аргументы: организация, тип цен, шаблон и кол-во ценников
-func NewPrintPriceArg(organization *Organization, priceType *PriceType, template Templater, count int) *PrintPriceArg {
-	return &PrintPriceArg{
+func NewPrintLabelArg(organization *Organization, priceType *PriceType, template Templater, count int) *PrintLabelArg {
+	return &PrintLabelArg{
 		Organization: MetaWrapper{Meta: Deref(organization.Meta)},
-		SalePrice:    PrintPriceArgSalePrice{PriceType: MetaWrapper{Meta: Deref(priceType.Meta)}},
+		SalePrice:    PrintLabelArgSalePrice{PriceType: MetaWrapper{Meta: Deref(priceType.Meta)}},
 		Template:     MetaWrapper{Meta: Deref(template.GetMeta())},
 		Count:        count,
 	}

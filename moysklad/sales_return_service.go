@@ -15,7 +15,7 @@ type SalesReturnService struct {
 	endpointPositions[SalesReturnPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[SalesReturn]
+	endpointSyncID[SalesReturn]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -35,7 +35,7 @@ func NewSalesReturnService(client *Client) *SalesReturnService {
 		endpointPositions:              endpointPositions[SalesReturnPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[SalesReturn]{e},
+		endpointSyncID:                 endpointSyncID[SalesReturn]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
 	}

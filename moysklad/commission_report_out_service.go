@@ -12,7 +12,7 @@ type CommissionReportOutService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[CommissionReportOutPosition]
 	endpointAttributes
-	endpointSyncId[CommissionReportOut]
+	endpointSyncID[CommissionReportOut]
 	endpointNamedFilter
 	endpointTemplate[CommissionReportOut]
 	endpointPublication
@@ -31,7 +31,7 @@ func NewCommissionReportOutService(client *Client) *CommissionReportOutService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[CommissionReportOutPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
-		endpointSyncId:                 endpointSyncId[CommissionReportOut]{e},
+		endpointSyncID:                 endpointSyncID[CommissionReportOut]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointTemplate:               endpointTemplate[CommissionReportOut]{e},
 		endpointPublication:            endpointPublication{e},

@@ -15,11 +15,11 @@ type DemandService struct {
 	endpointPositions[DemandPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[Demand]
+	endpointSyncID[Demand]
 	endpointNamedFilter
 	endpointRemove
-	endpointTemplates
-	endpointPrintDoc
+	endpointPrintTemplates
+	endpointPrintDocument
 }
 
 func NewDemandService(client *Client) *DemandService {
@@ -37,10 +37,10 @@ func NewDemandService(client *Client) *DemandService {
 		endpointPositions:              endpointPositions[DemandPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[Demand]{e},
+		endpointSyncID:                 endpointSyncID[Demand]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
-		endpointTemplates:              endpointTemplates{e},
-		endpointPrintDoc:               endpointPrintDoc{e},
+		endpointPrintTemplates:         endpointPrintTemplates{e},
+		endpointPrintDocument:          endpointPrintDocument{e},
 	}
 }

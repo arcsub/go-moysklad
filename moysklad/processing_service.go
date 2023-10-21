@@ -20,7 +20,7 @@ type ProcessingService struct {
 	endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
-	endpointSyncId[Processing]
+	endpointSyncID[Processing]
 	endpointRemove
 }
 
@@ -38,7 +38,7 @@ func NewProcessingService(client *Client) *ProcessingService {
 		endpointTemplateBasedOn:        endpointTemplateBasedOn[Processing, ProcessingTemplateArg]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
-		endpointSyncId:                 endpointSyncId[Processing]{e},
+		endpointSyncID:                 endpointSyncID[Processing]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

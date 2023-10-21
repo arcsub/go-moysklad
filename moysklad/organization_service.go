@@ -12,7 +12,7 @@ type OrganizationService struct {
 	endpointMetadata[MetadataAttributeShared]
 	endpointAttributes
 	endpointAccounts
-	endpointSyncId[Organization]
+	endpointSyncID[Organization]
 }
 
 func NewOrganizationService(client *Client) *OrganizationService {
@@ -27,6 +27,6 @@ func NewOrganizationService(client *Client) *OrganizationService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeShared]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointAccounts:               endpointAccounts{e},
-		endpointSyncId:                 endpointSyncId[Organization]{e},
+		endpointSyncID:                 endpointSyncID[Organization]{e},
 	}
 }

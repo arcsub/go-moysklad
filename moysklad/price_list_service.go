@@ -12,7 +12,7 @@ type PriceListService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[PriceListPosition]
 	endpointAttributes
-	endpointSyncId[PriceList]
+	endpointSyncID[PriceList]
 	endpointRemove
 }
 
@@ -28,7 +28,7 @@ func NewPriceListService(client *Client) *PriceListService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[PriceListPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
-		endpointSyncId:                 endpointSyncId[PriceList]{e},
+		endpointSyncID:                 endpointSyncID[PriceList]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

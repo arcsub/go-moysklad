@@ -14,7 +14,7 @@ type ProcessingOrderService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[ProcessingOrderPosition]
 	endpointAttributes
-	endpointSyncId[ProcessingOrder]
+	endpointSyncID[ProcessingOrder]
 	endpointRemove
 }
 
@@ -32,7 +32,7 @@ func NewProcessingOrderService(client *Client) *ProcessingOrderService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[ProcessingOrderPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
-		endpointSyncId:                 endpointSyncId[ProcessingOrder]{e},
+		endpointSyncID:                 endpointSyncID[ProcessingOrder]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

@@ -13,10 +13,10 @@ type ProductService struct {
 	endpointGetById[Product]
 	endpointUpdate[Product]
 	endpointImages
-	endpointSyncId[Product]
+	endpointSyncID[Product]
 	endpointNamedFilter
 	endpointAudit
-	endpointPrintPrice
+	endpointPrintLabel
 }
 
 func NewProductService(client *Client) *ProductService {
@@ -32,9 +32,9 @@ func NewProductService(client *Client) *ProductService {
 		endpointGetById:                endpointGetById[Product]{e},
 		endpointUpdate:                 endpointUpdate[Product]{e},
 		endpointImages:                 endpointImages{e},
-		endpointSyncId:                 endpointSyncId[Product]{e},
+		endpointSyncID:                 endpointSyncID[Product]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointAudit:                  endpointAudit{e},
-		endpointPrintPrice:             endpointPrintPrice{e},
+		endpointPrintLabel:             endpointPrintLabel{e},
 	}
 }

@@ -15,7 +15,7 @@ type MoveService struct {
 	endpointPositions[MovePosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[Move]
+	endpointSyncID[Move]
 	endpointRemove
 }
 
@@ -34,7 +34,7 @@ func NewMoveService(client *Client) *MoveService {
 		endpointPositions:              endpointPositions[MovePosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[Move]{e},
+		endpointSyncID:                 endpointSyncID[Move]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

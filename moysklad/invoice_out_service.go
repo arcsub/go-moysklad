@@ -15,7 +15,7 @@ type InvoiceOutService struct {
 	endpointPositions[InvoiceOutPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[InvoiceOut]
+	endpointSyncID[InvoiceOut]
 	endpointRemove
 }
 
@@ -34,7 +34,7 @@ func NewInvoiceOutService(client *Client) *InvoiceOutService {
 		endpointPositions:              endpointPositions[InvoiceOutPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[InvoiceOut]{e},
+		endpointSyncID:                 endpointSyncID[InvoiceOut]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }
