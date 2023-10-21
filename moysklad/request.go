@@ -12,12 +12,12 @@ import (
 )
 
 type RequestBuilder[T any] struct {
-	client        *Client
 	ctx           context.Context
+	body          any
+	client        *Client
 	params        *Params
 	url           string
 	uri           string
-	body          any
 	contentHeader bool
 }
 

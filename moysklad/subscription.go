@@ -4,10 +4,10 @@ package moysklad
 // Ключевое слово: subscription
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-podpiska-kompanii
 type Subscription struct {
-	Role                          *string `json:"role,omitempty"`                          // Роль авторизованного пользователя (USER/ADMIN)
-	Tariff                        Tariff  `json:"tariff,omitempty"`                        // Действующий тариф Аккаунта
-	IsSubscriptionChangeAvailable *bool   `json:"isSubscriptionChangeAvailable,omitempty"` // Доступность изменения подписки
-	SubscriptionEndDate           *int64  `json:"subscriptionEndDate,omitempty"`           // Дата (в миллисекундах) окончания действия текущего тарифа, если тариф отличается от “Пробный” и “Бесплатный”
+	Role                          *string `json:"role,omitempty"`
+	IsSubscriptionChangeAvailable *bool   `json:"isSubscriptionChangeAvailable,omitempty"`
+	SubscriptionEndDate           *int64  `json:"subscriptionEndDate,omitempty"`
+	Tariff                        Tariff  `json:"tariff,omitempty"`
 }
 
 func (s Subscription) String() string {

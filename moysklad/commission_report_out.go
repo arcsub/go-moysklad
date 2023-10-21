@@ -8,47 +8,47 @@ import (
 // Ключевое слово: commissionreportout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vydannyj-otchet-komissionera
 type CommissionReportOut struct {
-	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`             // ID учетной записи
-	Agent                 *Counterparty                           `json:"agent,omitempty"`                 // Метаданные контрагента
-	AgentAccount          *AgentAccount                           `json:"agentAccount,omitempty"`          // Метаданные счета контрагента
-	Applicable            *bool                                   `json:"applicable,omitempty"`            // Отметка о проведении
-	Attributes            *Attributes                             `json:"attributes,omitempty"`            // Коллекция метаданных доп. полей. Поля объекта
-	Code                  *string                                 `json:"code,omitempty"`                  // Код Полученного отчета комиссионера
-	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`   // Конец периода
-	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"` // Начало периода
-	CommitentSum          *float64                                `json:"commitentSum,omitempty"`          // Сумма коммитента в установленной валюте
-	Contract              *Contract                               `json:"contract,omitempty"`              // Метаданные договора
-	Created               *Timestamp                              `json:"created,omitempty"`               // Дата создания
-	Deleted               *Timestamp                              `json:"deleted,omitempty"`               // Момент последнего удаления отчета комиссионера
-	Description           *string                                 `json:"description,omitempty"`           // Комментарий отчета комиссионера
-	ExternalCode          *string                                 `json:"externalCode,omitempty"`          // Внешний код отчета комиссионера
-	Files                 *Files                                  `json:"files,omitempty"`                 // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group                 *Group                                  `json:"group,omitempty"`                 // Отдел сотрудника
-	ID                    *uuid.UUID                              `json:"id,omitempty"`                    // ID сущности
-	Meta                  *Meta                                   `json:"meta,omitempty"`                  // Метаданные
-	Moment                *Timestamp                              `json:"moment,omitempty"`                // Дата документа
-	Name                  *string                                 `json:"name,omitempty"`                  // Наименование
-	Organization          *Organization                           `json:"organization,omitempty"`          // Метаданные юрлица
-	OrganizationAccount   *AgentAccount                           `json:"organizationAccount,omitempty"`   // Метаданные счета юрлица
-	Owner                 *Employee                               `json:"owner,omitempty"`                 // Владелец (Сотрудник)
-	PayedSum              *float64                                `json:"payedSum,omitempty"`              // Оплаченная сумма
-	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`             // Метаданные позиций отчета
-	Printed               *bool                                   `json:"printed,omitempty"`               // Напечатан ли документ
-	Project               *Project                                `json:"project,omitempty"`               // Метаданные проекта
-	Published             *bool                                   `json:"published,omitempty"`             // Опубликован ли документ
-	Rate                  *Rate                                   `json:"rate,omitempty"`                  // Валюта
-	RewardPercent         *int                                    `json:"rewardPercent,omitempty"`         // Процент вознаграждения (всегда 0 если вознаграждение не рассчитывается)
-	RewardType            RewardType                              `json:"rewardType,omitempty"`            // Тип вознаграждения
-	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`          // Метаданные канала продаж
-	Shared                *bool                                   `json:"shared,omitempty"`                // Общий доступ
-	State                 *State                                  `json:"state,omitempty"`                 // Метаданные статуса отчета комиссионера
-	Sum                   *float64                                `json:"sum,omitempty"`                   // Сумма
-	SyncID                *uuid.UUID                              `json:"syncId,omitempty"`                // ID синхронизации. После заполнения недоступен для изменения
-	Updated               *Timestamp                              `json:"updated,omitempty"`               // Момент последнего обновления
-	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`            // Учитывается ли НДС
-	VatIncluded           *bool                                   `json:"vatIncluded,omitempty"`           // Включен ли НДС в цену
-	VatSum                *float64                                `json:"vatSum,omitempty"`                // Сумма включая НДС
-	Payments              *Payments                               `json:"payments,omitempty"`              // Массив ссылок на связанные платежи в формате Метаданных
+	Organization          *Organization                           `json:"organization,omitempty"`
+	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"`
+	AgentAccount          *AgentAccount                           `json:"agentAccount,omitempty"`
+	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`
+	Attributes            *Attributes                             `json:"attributes,omitempty"`
+	Owner                 *Employee                               `json:"owner,omitempty"`
+	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`
+	OrganizationAccount   *AgentAccount                           `json:"organizationAccount,omitempty"`
+	CommitentSum          *float64                                `json:"commitentSum,omitempty"`
+	Contract              *Contract                               `json:"contract,omitempty"`
+	Created               *Timestamp                              `json:"created,omitempty"`
+	Deleted               *Timestamp                              `json:"deleted,omitempty"`
+	Description           *string                                 `json:"description,omitempty"`
+	ExternalCode          *string                                 `json:"externalCode,omitempty"`
+	Files                 *Files                                  `json:"files,omitempty"`
+	Group                 *Group                                  `json:"group,omitempty"`
+	ID                    *uuid.UUID                              `json:"id,omitempty"`
+	Meta                  *Meta                                   `json:"meta,omitempty"`
+	Moment                *Timestamp                              `json:"moment,omitempty"`
+	Name                  *string                                 `json:"name,omitempty"`
+	Applicable            *bool                                   `json:"applicable,omitempty"`
+	Agent                 *Counterparty                           `json:"agent,omitempty"`
+	Code                  *string                                 `json:"code,omitempty"`
+	PayedSum              *float64                                `json:"payedSum,omitempty"`
+	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`
+	Printed               *bool                                   `json:"printed,omitempty"`
+	Project               *Project                                `json:"project,omitempty"`
+	Published             *bool                                   `json:"published,omitempty"`
+	Rate                  *Rate                                   `json:"rate,omitempty"`
+	RewardPercent         *int                                    `json:"rewardPercent,omitempty"`
+	Payments              *Payments                               `json:"payments,omitempty"`
+	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`
+	Shared                *bool                                   `json:"shared,omitempty"`
+	State                 *State                                  `json:"state,omitempty"`
+	Sum                   *float64                                `json:"sum,omitempty"`
+	SyncID                *uuid.UUID                              `json:"syncId,omitempty"`
+	Updated               *Timestamp                              `json:"updated,omitempty"`
+	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`
+	VatIncluded           *bool                                   `json:"vatIncluded,omitempty"`
+	VatSum                *float64                                `json:"vatSum,omitempty"`
+	RewardType            RewardType                              `json:"rewardType,omitempty"`
 }
 
 func (c CommissionReportOut) String() string {

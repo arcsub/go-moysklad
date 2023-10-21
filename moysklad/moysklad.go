@@ -34,9 +34,9 @@ const (
 
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
-	clientMu              sync.Mutex
 	client                *RetryableClient
-	disableWebhookContent bool // Отключить уведомления вебхуков в контексте данного клиента
+	clientMu              sync.Mutex
+	disableWebhookContent bool
 }
 
 // NewClient возвращает новый клиент для работы с API МойСклад.
@@ -140,7 +140,7 @@ type Response struct {
 func newResponse(r *http.Response) (*Response, error) {
 	resp := &Response{r}
 
-	// заголовок Content-Encoding (01.12.2023)
+	// заголовок Content-Encoding [01.12.2023]
 	if !resp.Uncompressed && resp.Header.Get("Content-Encoding") == "gzip" {
 		body, err := gzip.NewReader(resp.Body)
 		if err != nil {

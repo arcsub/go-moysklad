@@ -4,29 +4,12 @@ package moysklad
 // Ключевое слово: employee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-kontext-zaprosa-sotrudnika-poluchit-kontext-sotrudnika
 type ContextEmployee struct {
-	Meta         Meta      `json:"meta"`
-	ID           string    `json:"id"`
-	AccountID    string    `json:"accountId"`
-	Owner        Employee  `json:"owner"`
-	Shared       bool      `json:"shared"`
-	Group        Group     `json:"group"`
-	Updated      Timestamp `json:"updated"`
-	Name         string    `json:"name"`
-	ExternalCode string    `json:"externalCode"`
-	Archived     bool      `json:"archived"`
-	Created      string    `json:"created"`
-	Uid          string    `json:"uid"`
-	Email        string    `json:"email"`
-	Phone        string    `json:"phone"`
-	FirstName    string    `json:"firstName"`
-	MiddleName   string    `json:"middleName"`
-	LastName     string    `json:"lastName"`
-	FullName     string    `json:"fullName"`
-	ShortFio     string    `json:"shortFio"`
-	Cashiers     Cashiers  `json:"cashiers"`
-	Image        Image     `json:"image"`
-	Position     string    `json:"position"`
-	Permissions  struct {
+	Owner       Employee  `json:"owner"`
+	Image       Image     `json:"image"`
+	Meta        Meta      `json:"meta"`
+	Group       Group     `json:"group"`
+	Updated     Timestamp `json:"updated"`
+	Permissions struct {
 		Currency struct {
 			View   string `json:"view"`
 			Create string `json:"create"`
@@ -515,6 +498,23 @@ type ContextEmployee struct {
 			View string `json:"view"`
 		} `json:"viewCashFlow"`
 	} `json:"permissions,omitempty"`
+	Created      string   `json:"created"`
+	MiddleName   string   `json:"middleName"`
+	ExternalCode string   `json:"externalCode"`
+	ID           string   `json:"id"`
+	Position     string   `json:"position"`
+	Uid          string   `json:"uid"`
+	Email        string   `json:"email"`
+	Phone        string   `json:"phone"`
+	FirstName    string   `json:"firstName"`
+	Name         string   `json:"name"`
+	LastName     string   `json:"lastName"`
+	FullName     string   `json:"fullName"`
+	ShortFio     string   `json:"shortFio"`
+	AccountID    string   `json:"accountId"`
+	Cashiers     Cashiers `json:"cashiers"`
+	Shared       bool     `json:"shared"`
+	Archived     bool     `json:"archived"`
 }
 
 func (c ContextEmployee) String() string {

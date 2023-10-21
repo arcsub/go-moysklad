@@ -4,21 +4,21 @@ package moysklad
 // Ключевое слово: stock
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-rasshirennyj-otchet-ob-ostatkah
 type StockAll struct {
-	Article      string      `json:"article"`      // Артикул
-	Code         string      `json:"code"`         // Код
-	ExternalCode string      `json:"externalCode"` // Внешний код сущности, по которой выводится остаток
-	Folder       StockFolder `json:"folder"`       // Группа Товара/Модификации/Серии
-	Image        Meta        `json:"image"`        // Метаданные изображения Товара/Модификации/Серии
-	InTransit    float64     `json:"inTransit"`    // Ожидание
-	Meta         Meta        `json:"meta"`         // Метаданные Товара/Модификации/Серии по которой выдается остаток
-	Name         string      `json:"name"`         // Наименование
-	Price        float64     `json:"price"`        // Себестоимость
-	Quantity     float64     `json:"quantity"`     // Доступно
-	Reserve      float64     `json:"reserve"`      // Резерв
-	SalePrice    float64     `json:"salePrice"`    // Цена продажи
-	Stock        float64     `json:"stock"`        // Остаток
-	StockDays    int         `json:"stockDays"`    // Количество дней на складе
-	Uom          MetaName    `json:"uom"`          // Единица измерения
+	Image        Meta        `json:"image"`
+	Meta         Meta        `json:"meta"`
+	Folder       StockFolder `json:"folder"`
+	Uom          MetaName    `json:"uom"`
+	Article      string      `json:"article"`
+	ExternalCode string      `json:"externalCode"`
+	Code         string      `json:"code"`
+	Name         string      `json:"name"`
+	InTransit    float64     `json:"inTransit"`
+	Price        float64     `json:"price"`
+	Quantity     float64     `json:"quantity"`
+	Reserve      float64     `json:"reserve"`
+	SalePrice    float64     `json:"salePrice"`
+	Stock        float64     `json:"stock"`
+	StockDays    int         `json:"stockDays"`
 }
 
 func (s StockAll) MetaType() MetaType {
@@ -64,11 +64,11 @@ func (s StockByStore) MetaType() MetaType {
 // StockByStorePosition Остатки по складам (позиция)
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-ostatki-po-skladam-ostatki-po-skladam
 type StockByStorePosition struct {
-	Meta      Meta    `json:"meta"`      // Метаданные склада, по которому выводится Остаток
-	Stock     float64 `json:"stock"`     // Остаток
-	InTransit float64 `json:"inTransit"` // Ожидание
-	Reserve   float64 `json:"reserve"`   // Резерв
-	Name      string  `json:"name"`      // Наименование склада
+	Meta      Meta    `json:"meta"`
+	Name      string  `json:"name"`
+	Stock     float64 `json:"stock"`
+	InTransit float64 `json:"inTransit"`
+	Reserve   float64 `json:"reserve"`
 }
 
 // StockCurrentAll Краткий отчет об остатках

@@ -7,15 +7,15 @@ import (
 // ApiError Структура ошибки API МойСклад.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-obrabotka-oshibok
 type ApiError struct {
-	Message      string `json:"error"`         // Заголовок ошибки (обязательное при ответе)
-	Parameter    string `json:"parameter"`     // Параметр, на котором произошла ошибка
-	Code         int    `json:"code"`          // Код ошибки (Если поле ничего не содержит, смотрите HTTP status code)
-	ErrorMessage string `json:"error_message"` // Сообщение, прилагаемое к ошибке
-	MoreInfo     string `json:"moreInfo"`      // Ссылка на документацию с описанием полученной ошибки
-	Line         int    `json:"line"`          // Строка JSON, на которой произошла ошибка
-	Column       int    `json:"column"`        // Координата элемента в строке line, на котором произошла ошибка
-	Dependencies []Meta `json:"dependencies"`  // Список метаданных зависимых сущностей или документов. Выводится при невозможности удаления сущности, документа, если имеются зависимости от удаляемой сущности, документа
-	Meta         Meta   `json:"meta"`          // Метаданные сущности, документа на котором произошла ошибка
+	Meta         Meta   `json:"meta"`
+	Message      string `json:"error"`
+	Parameter    string `json:"parameter"`
+	ErrorMessage string `json:"error_message"`
+	MoreInfo     string `json:"moreInfo"`
+	Dependencies []Meta `json:"dependencies"`
+	Code         int    `json:"code"`
+	Line         int    `json:"line"`
+	Column       int    `json:"column"`
 }
 
 func (e ApiError) Error() string {

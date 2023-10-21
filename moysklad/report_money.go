@@ -19,9 +19,9 @@ func (m Money) MetaType() MetaType {
 type MoneyPlotSeries struct {
 	Context Context             `json:"context"`
 	Meta    Meta                `json:"meta"`
-	Credit  float64             `json:"credit"` // Доход
-	Debit   float64             `json:"debit"`  // Расход
-	Series  []PlotSeriesElement `json:"series"` // Массив показателей
+	Series  []PlotSeriesElement `json:"series"`
+	Credit  float64             `json:"credit"`
+	Debit   float64             `json:"debit"`
 }
 
 func (m MoneyPlotSeries) MetaType() MetaType {
