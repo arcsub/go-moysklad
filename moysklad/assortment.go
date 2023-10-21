@@ -21,18 +21,15 @@ func (a Assortment) MetaType() MetaType {
 // data для хранения сырых данных
 // Product | Variant | Bundle | Service | Consignment
 type AssortmentPosition struct {
-	// Общие поля
-	AccountID    uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
-	Barcodes     Barcodes  `json:"barcodes,omitempty"`     // Штрихкоды
-	Code         string    `json:"code,omitempty"`         // Код
-	Description  string    `json:"description,omitempty"`  // Описание
-	ExternalCode string    `json:"externalCode,omitempty"` // Внешний код
-	ID           uuid.UUID `json:"id,omitempty"`           // ID сущности
-	Meta         Meta      `json:"meta"`                   // Метаданные
-	Name         string    `json:"name,omitempty"`         // Наименование
-
-	// сырые данные
-	data json.RawMessage
+	Meta         Meta     `json:"meta"`
+	Code         string   `json:"code,omitempty"`
+	Description  string   `json:"description,omitempty"`
+	ExternalCode string   `json:"externalCode,omitempty"`
+	Name         string   `json:"name,omitempty"`
+	Barcodes     Barcodes `json:"barcodes,omitempty"`
+	data         json.RawMessage
+	AccountID    uuid.UUID `json:"accountId,omitempty"`
+	ID           uuid.UUID `json:"id,omitempty"`
 }
 
 type AssortmentPositionTypes interface {

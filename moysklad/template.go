@@ -131,10 +131,10 @@ func NewPrintDocArgMany(templates ...*PrintDocArgManyElement) *PrintDocumentArg 
 // Ценники
 
 type PrintLabelArg struct {
-	Organization MetaWrapper            `json:"organization,omitempty"` // Метаданные Юрлица
-	Count        int                    `json:"count,omitempty"`        // Количество ценников/термоэтикеток
-	SalePrice    PrintLabelArgSalePrice `json:"salePrice,omitempty"`    // Цена продажи
-	Template     MetaWrapper            `json:"template,omitempty"`     // Метаданные Шаблона печати
+	Organization MetaWrapper            `json:"organization,omitempty"`
+	SalePrice    PrintLabelArgSalePrice `json:"salePrice,omitempty"`
+	Template     MetaWrapper            `json:"template,omitempty"`
+	Count        int                    `json:"count,omitempty"`
 }
 
 type PrintLabelArgSalePrice struct {

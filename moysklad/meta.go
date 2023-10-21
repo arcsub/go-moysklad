@@ -17,12 +17,12 @@ type MetaTyper interface {
 // Meta Метаданные объекта.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-ob-ekta
 type Meta struct {
-	Href         *string  `json:"href,omitempty"`         // Ссылка на объект
-	MetadataHref *string  `json:"metadataHref,omitempty"` // Ссылка на метаданные сущности (Другой вид метаданных. Присутствует не во всех сущностях)
-	Type         MetaType `json:"type,omitempty"`         // Тип объекта
-	MediaType    *string  `json:"mediaType,omitempty"`    // Тип данных, который приходят в ответ от сервиса, либо отправляется в теле запроса
-	UUIDHref     *string  `json:"uuidHref,omitempty"`     // Ссылка на объект на UI. Присутствует не во всех сущностях. Может быть использована для получения uuid
-	DownloadHref *string  `json:"downloadHref,omitempty"` // Ссылка на скачивание Изображения и миниатюр изображений. Данный параметр указывается только в meta для Изображения у Товара или Комплекта, а также в поле miniature везде, где используются изображения. Если миниатюра не была создана, то значение данного поля равно null. Для создания миниатюры нужно перейти по ссылке, указанной в href в миниатюре.
+	Href         *string  `json:"href,omitempty"`
+	MetadataHref *string  `json:"metadataHref,omitempty"`
+	MediaType    *string  `json:"mediaType,omitempty"`
+	UUIDHref     *string  `json:"uuidHref,omitempty"`
+	DownloadHref *string  `json:"downloadHref,omitempty"`
+	Type         MetaType `json:"type,omitempty"`
 }
 
 func (m Meta) String() string {
@@ -45,14 +45,14 @@ func (m MetaWrapper) String() string {
 // MetaCollection Метаданные коллекции.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-kollekcii
 type MetaCollection struct {
-	Href         string `json:"href,omitempty"`         // Ссылка на объект
-	Type         string `json:"type,omitempty"`         // Тип объекта
-	MediaType    string `json:"mediaType,omitempty"`    // Тип данных, который приходят в ответ от сервиса, либо отправляется в теле запроса
-	Size         int    `json:"size,omitempty"`         // Количество элементов в коллекции
-	Limit        int    `json:"limit,omitempty"`        // Максимальное число элементов в коллекции, возвращаемых за один запрос
-	Offset       int    `json:"offset,omitempty"`       // Смещение выборки коллекции от первого элемента
-	NextHref     string `json:"nextHref,omitempty"`     // Ссылка на следующую страницу коллекции
-	PreviousHref string `json:"previousHref,omitempty"` // Ссылка на предыдущую страницу коллекции
+	Href         string `json:"href,omitempty"`
+	Type         string `json:"type,omitempty"`
+	MediaType    string `json:"mediaType,omitempty"`
+	NextHref     string `json:"nextHref,omitempty"`
+	PreviousHref string `json:"previousHref,omitempty"`
+	Size         int    `json:"size,omitempty"`
+	Limit        int    `json:"limit,omitempty"`
+	Offset       int    `json:"offset,omitempty"`
 }
 
 func (m MetaCollection) String() string {
@@ -61,8 +61,8 @@ func (m MetaCollection) String() string {
 
 type AssortmentResult struct {
 	Context Context        `json:"context,omitempty"`
-	Meta    MetaCollection `json:"meta,omitempty"`
 	Rows    Assortment     `json:"rows,omitempty"`
+	Meta    MetaCollection `json:"meta,omitempty"`
 }
 
 func (m AssortmentResult) String() string {
@@ -71,8 +71,8 @@ func (m AssortmentResult) String() string {
 
 // MetaArray Объект с полями meta и rows, где rows - массив объектов
 type MetaArray[T any] struct {
-	Meta MetaCollection `json:"meta,omitempty"`
 	Rows Slice[T]       `json:"rows,omitempty"`
+	Meta MetaCollection `json:"meta,omitempty"`
 }
 
 func (m MetaArray[T]) String() string {

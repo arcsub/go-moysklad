@@ -7,18 +7,18 @@ import (
 
 // Iterator структура итератора
 type Iterator[E any] struct {
-	idx int // счётчик
-	mu  sync.Mutex
 	el  Slice[E]
+	idx int
+	mu  sync.Mutex
 }
 
 // Len возвращает количество элементов
-func (r Iterator[E]) Len() int {
+func (r *Iterator[E]) Len() int {
 	return len(r.el)
 }
 
 // HasNext возвращает true, если текущее значение счётчика меньше длины среза
-func (r Iterator[E]) HasNext() bool {
+func (r *Iterator[E]) HasNext() bool {
 	return r.idx < r.Len()
 }
 
@@ -52,7 +52,7 @@ func (r *Iterator[E]) Slice() Slice[E] {
 	return r.el
 }
 
-func (r Iterator[E]) MarshalJSON() ([]byte, error) {
+func (r *Iterator[E]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(r.el)
 }
 

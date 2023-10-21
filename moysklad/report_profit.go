@@ -35,11 +35,11 @@ type ProfitByAssortment struct {
 // ProfitReportAssortment Структура объекта assortment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-struktura-ob-ekta-assortment
 type ProfitReportAssortment struct {
-	MetaName          // Метаданные/Наименование Товара или Услуги
-	Code     string   `json:"code"`          // Код товара или услуги
-	Uom      MetaName `json:"uom,omitempty"` // Единица измерения
-	Article  string   `json:"article"`       // Артикул товара
-	Image    Meta     `json:"image"`         // Изображение товара
+	Image Meta `json:"image"`
+	MetaName
+	Uom     MetaName `json:"uom,omitempty"`
+	Code    string   `json:"code"`
+	Article string   `json:"article"`
 }
 
 // ProfitByCounterparty Прибыльность по покупателям

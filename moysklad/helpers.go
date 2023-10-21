@@ -87,14 +87,6 @@ func NewImageFromFilepath(filePath string) (*Image, error) {
 	return f, nil
 }
 
-func unmarshalAny[T any](data []byte) (*T, error) {
-	v := new(T)
-	if err := json.Unmarshal(data, v); err != nil {
-		return nil, err
-	}
-	return v, nil
-}
-
 type DataMetaTyper interface {
 	MetaTyper
 	Data() json.RawMessage

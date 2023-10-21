@@ -77,12 +77,12 @@ func (c Cheque) String() string {
 // ChequeStart Информация об открытии смены ККТ
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-roznichnaq-smena-roznichnye-smeny-informaciq-ob-otkrytii-smeny-kkt
 type ChequeStart struct {
-	FnNumber        string    `json:"fnNumber,omitempty"`        // Номер фискального накопителя
-	KktRegNumber    string    `json:"kktRegNumber,omitempty"`    // Регистрационный номер ККТ
-	FiscalDocSign   string    `json:"fiscalDocSign,omitempty"`   // Фискальный признак документа
-	ShiftNumber     string    `json:"shiftNumber,omitempty"`     // Номер смены ККТ
-	FiscalDocNumber string    `json:"fiscalDocNumber,omitempty"` // Номер фискального документа
-	Time            Timestamp `json:"time,omitempty"`            // Дата и время открытия смены
+	Time            Timestamp `json:"time,omitempty"`
+	FnNumber        string    `json:"fnNumber,omitempty"`
+	KktRegNumber    string    `json:"kktRegNumber,omitempty"`
+	FiscalDocSign   string    `json:"fiscalDocSign,omitempty"`
+	ShiftNumber     string    `json:"shiftNumber,omitempty"`
+	FiscalDocNumber string    `json:"fiscalDocNumber,omitempty"`
 }
 
 func (c ChequeStart) String() string {

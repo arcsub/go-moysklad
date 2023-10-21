@@ -41,7 +41,7 @@ type Counterparty struct {
 	SyncID             *uuid.UUID                `json:"syncId,omitempty"`             // ID синхронизации
 	Tags               *Tags                     `json:"tags,omitempty"`               // Группы контрагента
 	Updated            *Timestamp                `json:"updated,omitempty"`            // Момент последнего обновления Контрагента
-	BirthDate          *Timestamp                `json:"birthDate,omitempty"`          // Дата рождения
+	BirthDate          *Timestamp                `json:"birthDate,omitempty"`          // Дата рождения [15-08-2023]
 	CertificateDate    *Timestamp                `json:"certificateDate,omitempty"`    // Дата свидетельства
 	CertificateNumber  *string                   `json:"certificateNumber,omitempty"`  // Номер свидетельства
 	INN                *string                   `json:"inn,omitempty"`                // ИНН
@@ -52,7 +52,7 @@ type Counterparty struct {
 	OGRN               *string                   `json:"ogrn,omitempty"`               // ОГРН
 	OGRNIP             *string                   `json:"ogrnip,omitempty"`             // ОГРНИП
 	OKPO               *string                   `json:"okpo,omitempty"`               // ОКПО
-	Sex                SexType                   `json:"sex,omitempty"`                // Пол Контрагента
+	Sex                SexType                   `json:"sex,omitempty"`                // Пол Контрагента [15-08-2023]
 }
 
 func (c Counterparty) String() string {

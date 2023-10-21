@@ -283,33 +283,18 @@ type ErrorHandler func(resp *http.Response, err error, numTries int) (*http.Resp
 // RetryableClient is used to make HTTP requests. It adds additional functionality
 // like automatic retries to tolerate minor outages.
 type RetryableClient struct {
-	HTTPClient *http.Client // Internal HTTP client.
-	Logger     any          // Customer logger instance. Can be either Logger or LeveledLogger
-
-	RetryWaitMin time.Duration // Minimum time to wait
-	RetryWaitMax time.Duration // Maximum time to wait
-	RetryMax     int           // Maximum number of retries
-
-	// RequestLogHook allows a user-supplied function to be called
-	// before each retry.
-	RequestLogHook RequestLogHook
-
-	// ResponseLogHook allows a user-supplied function to be called
-	// with the response from each HTTP request executed.
+	Logger          any
+	HTTPClient      *http.Client
+	RequestLogHook  RequestLogHook
 	ResponseLogHook ResponseLogHook
-
-	// CheckRetry specifies the policy for handling retries, and is called
-	// after each request. The default policy is DefaultRetryPolicy.
-	CheckRetry CheckRetry
-
-	// Backoff specifies the policy for how long to wait between retries
-	Backoff Backoff
-
-	// ErrorHandler specifies the custom error handler to use, if any
-	ErrorHandler ErrorHandler
-
-	loggerInit sync.Once
-	clientInit sync.Once
+	CheckRetry      CheckRetry
+	Backoff         Backoff
+	ErrorHandler    ErrorHandler
+	RetryWaitMin    time.Duration
+	RetryWaitMax    time.Duration
+	RetryMax        int
+	loggerInit      sync.Once
+	clientInit      sync.Once
 }
 
 // newRetryableClient creates a new RetryableClient with default settings.

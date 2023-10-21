@@ -9,6 +9,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-yachejki-sklada
 type Slot struct {
 	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	Barcode      *string    `json:"barcode,omitempty"`      // Штрихкод ячейки [16-10-2023]
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Ячейки
 	ID           *uuid.UUID `json:"id,omitempty"`           // ID Ячейки
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Ячейки

@@ -9,20 +9,20 @@ import (
 
 // Params структура параметров запроса.
 type Params struct {
-	Limit       int         `url:"limit,omitempty"`
-	Offset      int         `url:"offset,omitempty"`
-	Filter      []string    `url:"filter,omitempty" del:";"`
-	Expand      []string    `url:"expand,omitempty" del:","`
-	Search      string      `url:"search,omitempty"`
-	Order       []string    `url:"order,omitempty" del:";"`
-	GroupBy     GroupByType `url:"groupBy,omitempty"`
-	StockType   StockType   `url:"stockType,omitempty"`
-	NamedFilter string      `url:"namedfilter,omitempty"`
 	MomentFrom  string      `url:"momentFrom,omitempty"`
-	MomentTo    string      `url:"momentTo,omitempty"`
-	Interval    Interval    `url:"interval,omitempty"`
-	Async       bool        `url:"async,omitempty"`
+	GroupBy     GroupByType `url:"groupBy,omitempty"`
 	Fields      string      `url:"fields,omitempty"`
+	Interval    Interval    `url:"interval,omitempty"`
+	Search      string      `url:"search,omitempty"`
+	NamedFilter string      `url:"namedfilter,omitempty"`
+	MomentTo    string      `url:"momentTo,omitempty"`
+	StockType   StockType   `url:"stockType,omitempty"`
+	Order       []string    `url:"order,omitempty" del:";"`
+	Expand      []string    `url:"expand,omitempty" del:","`
+	Filter      []string    `url:"filter,omitempty" del:";"`
+	Offset      int         `url:"offset,omitempty"`
+	Limit       int         `url:"limit,omitempty"`
+	Async       bool        `url:"async,omitempty"`
 }
 
 // WithMomentFrom Начало периода.
@@ -298,6 +298,8 @@ const (
 	StockDefault   StockType = "stock"     // Физический остаток на складах, без учёта резерва и ожидания
 	StockFreeStock StockType = "freeStock" // Остаток на складах за вычетом резерва
 	StockQuantity  StockType = "quantity"  // Доступно. Учитывает резерв и ожидания
+	StockReserve   StockType = "reserve"   // Резерв [05-10-2023]
+	StockInTransit StockType = "inTransit" // Ожидание [05-10-2023]
 )
 
 func (s StockType) String() string {

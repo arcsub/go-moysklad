@@ -8,76 +8,77 @@ import (
 // Ключевое слово: retailstore
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh
 type RetailStore struct {
-	AccountID                           *uuid.UUID            `json:"accountId,omitempty"`                           // ID учетной записи
-	Acquire                             *Counterparty         `json:"acquire,omitempty"`                             // Метаданные Банка-эквайера по операциям по карте
-	Active                              *bool                 `json:"active,omitempty"`                              // Состояние точки продаж (Включена/Отключена)
-	Address                             *string               `json:"address,omitempty"`                             // Адрес Точки продаж
-	AddressFull                         *Address              `json:"addressFull,omitempty"`                         // Адрес с детализацией по отдельным полям
-	AllowCreateProducts                 *bool                 `json:"allowCreateProducts,omitempty"`                 // Контроль остатков. Не может быть true, если controlShippingStock имеет значение true
-	AllowCustomPrice                    *bool                 `json:"allowCustomPrice,omitempty"`                    // Разрешить продажу по свободной цене
-	AllowDeleteReceiptPositions         *bool                 `json:"allowDeleteReceiptPositions,omitempty"`         // Разрешить удалять позиции в чеке
-	AllowSellTobaccoWithoutMRC          *bool                 `json:"allowSellTobaccoWithoutMRC,omitempty"`          // Разрешить продавать табачную продукцию не по МРЦ
-	Archived                            *bool                 `json:"archived,omitempty"`                            // Добавлена ли Точка продаж в архив
-	AuthTokenAttached                   *bool                 `json:"authTokenAttached,omitempty"`                   // Создан ли токен для точки продаж
-	BankPercent                         *float64              `json:"bankPercent,omitempty"`                         // Комиссия банка-эквайера по операциям по карте (в процентах)
-	Cashiers                            *Cashiers             `json:"cashiers,omitempty"`                            // Метаданные Кассиров
-	ControlCashierChoice                *bool                 `json:"controlCashierChoice,omitempty"`                // Выбор продавца
-	ControlShippingStock                *bool                 `json:"controlShippingStock,omitempty"`                // Контроль остатков. Не может быть true, если AllowCreateProducts имеет значение true
-	CreateAgentsTags                    *Tags                 `json:"createAgentsTags,omitempty"`                    // Коллекция групп покупателей, представленных в формате строк. Определяет группы, в которые добавляются новые покупатели. Значения null игнорируются
-	CreateCashInOnRetailShiftClosing    *bool                 `json:"createCashInOnRetailShiftClosing,omitempty"`    // Создавать ПКО при закрытии смены
-	CreateOrderWithState                *State                `json:"createOrderWithState,omitempty"`                // Метаданные статуса, который будет указан при создании заказа
-	CreatePaymentInOnRetailShiftClosing *bool                 `json:"createPaymentInOnRetailShiftClosing,omitempty"` // Создавать входящий платеж при закрытии смены
-	CustomerOrderStates                 *States               `json:"customerOrderStates,omitempty"`                 // Метаданные статусов, в которых выгружаются заказы в точку продаж (если указано)
-	DefaultTaxSystem                    TaxSystem             `json:"defaulTaxSystem,omitempty"`                     // Код системы налогообложения по умолчанию
-	DemandPrefix                        *string               `json:"demandPrefix,omitempty"`                        // Префикс номера продаж
-	Description                         *string               `json:"description,omitempty"`                         // Комментарий к Точке продаж
-	DiscountEnable                      *bool                 `json:"discountEnable,omitempty"`                      // Разрешить скидки
-	DiscountMaxPercent                  *float64              `json:"discountMaxPercent,omitempty"`                  // Максимальная скидка (в процентах)
-	EnableReturnsWithNoReason           *bool                 `json:"enableReturnsWithNoReason,omitempty"`           // Разрешить возвраты без основания
-	Environment                         *Environment          `json:"environment,omitempty"`                         // Информация об окружении
-	ExternalCode                        *string               `json:"externalCode,omitempty"`                        // Внешний код Точки продаж
-	FilterAgentsTags                    *Tags                 `json:"filterAgentsTags,omitempty"`                    // Коллекция групп покупателей, представленных в формате строк. Определяет группы, из которых выгружаются покупатели. Значения null игнорируются
-	FiscalType                          FiscalType            `json:"fiscalType,omitempty"`                          // Тип формирования чеков
-	Group                               *Group                `json:"group,omitempty"`                               // Отдел сотрудника
-	ID                                  *uuid.UUID            `json:"id,omitempty"`                                  // ID сущности
-	IdQR                                *string               `json:"idQR,omitempty"`                                // Идентификатор устройства QR (IdQR) для приложения оплаты по QR
-	IssueOrders                         *bool                 `json:"issueOrders,omitempty"`                         // Выдача заказов
-	LastOperationNames                  *LastOperations       `json:"lastOperationNames,omitempty"`                  // Последние операции
-	MarkingSellingMode                  MarkingSellingMode    `json:"markingSellingMode,omitempty"`                  // Режим продажи маркированной продукции, если используется формат фискальных документов версии 1.2
-	MasterRetailStores                  *RetailStores         `json:"masterRetailStores,omitempty"`                  // Ссылка на точки продаж, которые могут фискализировать операции с текущей точки продаж, если minionToMaster = CHOSEN
-	Meta                                *Meta                 `json:"meta,omitempty"`                                // Метаданные
-	MinionToMasterType                  MinionToMaster        `json:"minionToMasterType,omitempty"`                  // Стратегия выбора кассы для фискализации облачных чеков
-	Name                                *string               `json:"name,omitempty"`                                // Название
-	OFDEnabled                          *bool                 `json:"ofdEnabled,omitempty"`                          // Отправлять электронный чек через ОФД
-	OnlyInStock                         *bool                 `json:"onlyInStock,omitempty"`                         // Выгружать только товары в наличии. Доступно только при активном контроле остатков. Влияет только на выгрузку остатков в POS API
-	OrderTaxSystem                      TaxSystem             `json:"orderTaxSystem,omitempty"`                      // Код системы налогообложения для заказов
-	OrderToState                        *State                `json:"orderToState,omitempty"`                        // Метаданные статуса, который проставится заказу после проведения продажи на его основании (если указано)
-	Organization                        *Organization         `json:"organization,omitempty"`                        // Метаданные Юрлица
-	Owner                               *Employee             `json:"owner,omitempty"`                               // Владелец (Сотрудник)
-	PriceType                           *PriceType            `json:"priceType,omitempty"`                           // Тип цен, с которыми будут продаваться товары в рознице
-	PrintAlways                         *bool                 `json:"printAlways,omitempty"`                         // Всегда печатать кассовые чеки
-	PriorityOFDSend                     PriorityOfdSend       `json:"priorityOfdSend,omitempty"`                     // Приоритет отправки электронного чека. Активен только, когда отправка электронных чеков через ОФД включена
-	ProductFolders                      *ProductFolders       `json:"productFolders,omitempty"`                      // Коллекция Метаданных групп товаров, из которых можно выгружать товары
-	QRAcquire                           *Counterparty         `json:"qrAcquire,omitempty"`                           // Метаданные Банка-эквайера по операциям по QR-коду
-	QRBankPercent                       *float64              `json:"qrBankPercent,omitempty"`                       // Комиссия банка-эквайера по операция по QR-коду (в процентах)
-	QRPayEnabled                        *bool                 `json:"qrPayEnabled,omitempty"`                        // Возможность оплаты по QR-коду на точке продаж
-	QRTerminalId                        *string               `json:"qrTerminalId,omitempty"`                        // Идентификатор терминала (TerminalID) для приложения оплаты по QR
-	ReceiptTemplate                     *Meta                 `json:"receiptTemplate,omitempty"`                     // Метаданные шаблона печати кассовых чеков TODO: expand не работает
-	RequiredFio                         *bool                 `json:"requiredFio,omitempty"`                         // Обязательность поля ФИО при создании контрагента
-	RequiredPhone                       *bool                 `json:"requiredPhone,omitempty"`                       // Обязательность поля телефон при создании контрагента
-	RequiredEmail                       *bool                 `json:"requiredEmail,omitempty"`                       // Обязательность поля эл. почта при создании контрагента
-	RequiredBirthdate                   *bool                 `json:"RequiredBirthdate,omitempty"`                   // Обязательность поля дата рождения при создании контрагента
-	RequiredSex                         *bool                 `json:"requiredSex,omitempty"`                         // Обязательность поля пол при создании контрагента
-	RequiredDiscountCardNumber          *bool                 `json:"requiredDiscountCardNumber,omitempty"`          // Обязательность поля номер бонусной карты при создании контрагента
-	ReservePrepaidGoods                 *bool                 `json:"reservePrepaidGoods,omitempty"`                 // Резервировать товары, за которые внесена предоплата
-	ReturnFromClosedShiftEnabled        *bool                 `json:"returnFromClosedShiftEnabled,omitempty"`        // Разрешить возвраты в закрытых сменах
-	SellReserves                        *bool                 `json:"sellReserves,omitempty"`                        // Учёт резервов
-	SendMarksForCheck                   *bool                 `json:"sendMarksForCheck,omitempty"`                   // Для облачных точек — до продажи отправлять коды маркировки на проверку на точку с ККТ
-	Shared                              *bool                 `json:"shared,omitempty"`                              // Общий доступ
-	State                               *RetailStoreState     `json:"state,omitempty"`                               // Информация статусе точки продаж
-	Store                               *Store                `json:"store,omitempty"`                               // Метаданные Склада
-	TobaccoMRCControlType               TobaccoMRCControlType `json:"tobaccoMrcControlType,omitempty"`               // Контроль МРЦ для табачной продукции
-	Updated                             *Timestamp            `json:"updated,omitempty"`                             // Момент последнего обновления Точки продаж
+	Meta                                *Meta                 `json:"meta,omitempty"`
+	AllowCreateProducts                 *bool                 `json:"allowCreateProducts,omitempty"`
+	Active                              *bool                 `json:"active,omitempty"`
+	AccountID                           *uuid.UUID            `json:"accountId,omitempty"`
+	AddressFull                         *Address              `json:"addressFull,omitempty"`
+	Updated                             *Timestamp            `json:"updated,omitempty"`
+	AllowCustomPrice                    *bool                 `json:"allowCustomPrice,omitempty"`
+	AllowDeleteReceiptPositions         *bool                 `json:"allowDeleteReceiptPositions,omitempty"`
+	AllowSellTobaccoWithoutMRC          *bool                 `json:"allowSellTobaccoWithoutMRC,omitempty"`
+	Archived                            *bool                 `json:"archived,omitempty"`
+	AuthTokenAttached                   *bool                 `json:"authTokenAttached,omitempty"`
+	BankPercent                         *float64              `json:"bankPercent,omitempty"`
+	Cashiers                            *Cashiers             `json:"cashiers,omitempty"`
+	ControlCashierChoice                *bool                 `json:"controlCashierChoice,omitempty"`
+	ControlShippingStock                *bool                 `json:"controlShippingStock,omitempty"`
+	CreateAgentsTags                    *Tags                 `json:"createAgentsTags,omitempty"`
+	CreateCashInOnRetailShiftClosing    *bool                 `json:"createCashInOnRetailShiftClosing,omitempty"`
+	CreateOrderWithState                *State                `json:"createOrderWithState,omitempty"`
+	CreatePaymentInOnRetailShiftClosing *bool                 `json:"createPaymentInOnRetailShiftClosing,omitempty"`
+	CustomerOrderStates                 *States               `json:"customerOrderStates,omitempty"`
+	DemandPrefix                        *string               `json:"demandPrefix,omitempty"`
+	Description                         *string               `json:"description,omitempty"`
+	DiscountEnable                      *bool                 `json:"discountEnable,omitempty"`
+	DiscountMaxPercent                  *float64              `json:"discountMaxPercent,omitempty"`
+	EnableReturnsWithNoReason           *bool                 `json:"enableReturnsWithNoReason,omitempty"`
+	Environment                         *Environment          `json:"environment,omitempty"`
+	ExternalCode                        *string               `json:"externalCode,omitempty"`
+	FilterAgentsTags                    *Tags                 `json:"filterAgentsTags,omitempty"`
+	Group                               *Group                `json:"group,omitempty"`
+	ID                                  *uuid.UUID            `json:"id,omitempty"`
+	IdQR                                *string               `json:"idQR,omitempty"`
+	IssueOrders                         *bool                 `json:"issueOrders,omitempty"`
+	LastOperationNames                  *LastOperations       `json:"lastOperationNames,omitempty"`
+	MasterRetailStores                  *RetailStores         `json:"masterRetailStores,omitempty"`
+	Address                             *string               `json:"address,omitempty"`
+	SyncAgents                          *bool                 `json:"syncAgents,omitempty"`
+	Acquire                             *Counterparty         `json:"acquire,omitempty"`
+	Store                               *Store                `json:"store,omitempty"`
+	State                               *RetailStoreState     `json:"state,omitempty"`
+	Name                                *string               `json:"name,omitempty"`
+	OFDEnabled                          *bool                 `json:"ofdEnabled,omitempty"`
+	OnlyInStock                         *bool                 `json:"onlyInStock,omitempty"`
+	Shared                              *bool                 `json:"shared,omitempty"`
+	OrderToState                        *State                `json:"orderToState,omitempty"`
+	Organization                        *Organization         `json:"organization,omitempty"`
+	Owner                               *Employee             `json:"owner,omitempty"`
+	PriceType                           *PriceType            `json:"priceType,omitempty"`
+	PrintAlways                         *bool                 `json:"printAlways,omitempty"`
+	SendMarksForCheck                   *bool                 `json:"sendMarksForCheck,omitempty"`
+	ProductFolders                      *ProductFolders       `json:"productFolders,omitempty"`
+	QRAcquire                           *Counterparty         `json:"qrAcquire,omitempty"`
+	QRBankPercent                       *float64              `json:"qrBankPercent,omitempty"`
+	QRPayEnabled                        *bool                 `json:"qrPayEnabled,omitempty"`
+	QRTerminalId                        *string               `json:"qrTerminalId,omitempty"`
+	ReceiptTemplate                     *Meta                 `json:"receiptTemplate,omitempty"`
+	RequiredFio                         *bool                 `json:"requiredFio,omitempty"`
+	RequiredPhone                       *bool                 `json:"requiredPhone,omitempty"`
+	RequiredEmail                       *bool                 `json:"requiredEmail,omitempty"`
+	RequiredBirthdate                   *bool                 `json:"RequiredBirthdate,omitempty"`
+	RequiredSex                         *bool                 `json:"requiredSex,omitempty"`
+	RequiredDiscountCardNumber          *bool                 `json:"requiredDiscountCardNumber,omitempty"`
+	ReservePrepaidGoods                 *bool                 `json:"reservePrepaidGoods,omitempty"`
+	ReturnFromClosedShiftEnabled        *bool                 `json:"returnFromClosedShiftEnabled,omitempty"`
+	SellReserves                        *bool                 `json:"sellReserves,omitempty"`
+	PriorityOFDSend                     PriorityOfdSend       `json:"priorityOfdSend,omitempty"`
+	OrderTaxSystem                      TaxSystem             `json:"orderTaxSystem,omitempty"`
+	MinionToMasterType                  MinionToMaster        `json:"minionToMasterType,omitempty"`
+	MarkingSellingMode                  MarkingSellingMode    `json:"markingSellingMode,omitempty"`
+	FiscalType                          FiscalType            `json:"fiscalType,omitempty"`
+	TobaccoMRCControlType               TobaccoMRCControlType `json:"tobaccoMrcControlType,omitempty"`
+	DefaultTaxSystem                    TaxSystem             `json:"defaulTaxSystem,omitempty"`
 }
 
 func (r RetailStore) String() string {
@@ -105,8 +106,8 @@ func (r RetailStoreState) String() string {
 // RetailStoreStateSync Состояние синхронизации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-attributy-suschnosti-status-attributy-suschnosti-sinhronizaciq
 type RetailStoreStateSync struct {
-	Message           string    `json:"message,omitempty"`          // Состояние синхронизации
-	LastAttemptMoment Timestamp `json:"lastAttempMoment,omitempty"` // Дата последней сихронизации (не обязательно успешной)
+	LastAttemptMoment Timestamp `json:"lastAttempMoment,omitempty"`
+	Message           string    `json:"message,omitempty"`
 }
 
 func (r RetailStoreStateSync) String() string {
@@ -192,8 +193,8 @@ func (d Driver) String() string {
 // FiscalMemory Атрибуты сущности Фискальный накопитель.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-okruzhenie-attributy-suschnosti-fiskal-nyj-nakopitel
 type FiscalMemory struct {
-	FiscalDataVersion  string    `json:"fiscalDataVersion,omitempty"`  // Версия фискальной памяти
-	FiscalValidityDate Timestamp `json:"fiscalValidityDate,omitempty"` // Версия фискальной памяти
+	FiscalValidityDate Timestamp `json:"fiscalValidityDate,omitempty"`
+	FiscalDataVersion  string    `json:"fiscalDataVersion,omitempty"`
 }
 
 func (f FiscalMemory) String() string {
@@ -203,9 +204,9 @@ func (f FiscalMemory) String() string {
 // FiscalMemoryState Информация о фискальном накопителе.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-attributy-suschnosti-status-attributy-suschnosti-fiskal-naq-pamqt
 type FiscalMemoryState struct {
+	NotSendFirstDocMoment Timestamp              `json:"notSendFirstDocMoment,omitempty"` // Дата последнего неотправленного документа (?)
 	Error                 FiscalMemoryStateError `json:"error,omitempty"`                 // Информация об ошибке ФН
 	NotSendDocCount       int                    `json:"notSendDocCount,omitempty"`       // Количество неотправленных документов в ОФД
-	NotSendFirstDocMoment Timestamp              `json:"notSendFirstDocMoment,omitempty"` // Дата последнего неотправленного документа (?)
 }
 
 func (f FiscalMemoryState) String() string {

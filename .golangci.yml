@@ -1,0 +1,17 @@
+run:
+  allow-parallel-runners: true
+
+output:
+  sort-results: true
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+
+linters-settings:
+  govet:
+    enable:
+      - fieldalignment
+  fieldalignment:
+    suggest-new: true

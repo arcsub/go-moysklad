@@ -5,13 +5,13 @@ import "github.com/google/uuid"
 // Notification TODO: Общие атрибуты уведомлений.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-lenta-uwedomlenij-obschie-atributy-uwedomlenij
 type Notification struct {
-	AccountID   uuid.UUID `json:"accountId"`   // ID учетной записи
-	Created     Timestamp `json:"created"`     // Дата и время формирования Уведомления
-	Description string    `json:"description"` // Описание уведомления
-	ID          uuid.UUID `json:"id"`          // ID Уведомления
-	Meta        Meta      `json:"meta"`        // Метаданные объекта. Содержит тип конкретного уведомления
-	Read        bool      `json:"read"`        // Признак того, было ли Уведомление прочитано
-	Title       string    `json:"title"`       // Краткий текст уведомления
+	Meta        Meta      `json:"meta"`
+	Created     Timestamp `json:"created"`
+	Description string    `json:"description"`
+	Title       string    `json:"title"`
+	AccountID   uuid.UUID `json:"accountId"`
+	ID          uuid.UUID `json:"id"`
+	Read        bool      `json:"read"`
 }
 
 func (n Notification) String() string {

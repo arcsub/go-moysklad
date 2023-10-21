@@ -8,18 +8,18 @@ import (
 // Ключевое слово: audit
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-kontexty
 type Audit struct {
-	EntityType    string           `json:"entityType"`    // Название сущности (поле присутствует, только если оно одинаково у всех Событий в рамках данного Контекста)
-	EventType     AuditEventType   `json:"eventType"`     // Действие Событий (поле присутствует, только если оно одинаково у всех Событий в рамках данного Контекста)
-	Events        MetaWrapper      `json:"events"`        // Список метаданных Событий аудита
-	ID            uuid.UUID        `json:"id"`            // ID Контекста
-	Info          AuditContextInfo `json:"info"`          // Краткое описание
-	Meta          Meta             `json:"meta"`          // Метаданные сущности Контекста
-	Moment        Timestamp        `json:"moment"`        // Дата изменения
-	ObjectCount   int              `json:"objectCount"`   // Количество измененных объектов
-	ObjectType    string           `json:"objectType"`    // Тип сущностей, с которыми связанно данное изменение. Поле присутствует только для entityType = entitysettings или statesettings или templatesettings
-	Source        string           `json:"source"`        // Тип изменения
-	SupportAccess bool             `json:"supportAccess"` // Был ли доступ произведен поддержкой от имени пользователя. Флаг отсутствует, если значение false
-	UID           string           `json:"uid"`           // Логин Сотрудника
+	Events        MetaWrapper      `json:"events"`
+	Meta          Meta             `json:"meta"`
+	Moment        Timestamp        `json:"moment"`
+	EntityType    string           `json:"entityType"`
+	EventType     AuditEventType   `json:"eventType"`
+	Info          AuditContextInfo `json:"info"`
+	ObjectType    string           `json:"objectType"`
+	Source        string           `json:"source"`
+	UID           string           `json:"uid"`
+	ObjectCount   int              `json:"objectCount"`
+	ID            uuid.UUID        `json:"id"`
+	SupportAccess bool             `json:"supportAccess"`
 }
 
 func (a Audit) String() string {
@@ -38,19 +38,19 @@ type AuditContextInfo struct {
 // Ключевое слово: auditevent
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq
 type AuditEvent struct {
-	AdditionalInfo string         `json:"additionalInfo"` // Дополнительная информация о Событии
-	Audit          MetaWrapper    `json:"audit"`          // Метаданные контекста
-	Diff           any            `json:"diff"`           // TODO Изменения, произошедшие в Событии, в специальном формате diff, описанном в разделе Формат поля diff
-	Entity         MetaWrapper    `json:"entity"`         // Метаданные сущности. Не будет выводиться только для товаров, услуг, модификаций, комплектов удаленных до 20.08.2017
-	EntityType     string         `json:"entityType"`     // Название сущности
-	EventType      AuditEventType `json:"eventType"`      // Действие События
-	Moment         Timestamp      `json:"moment"`         // Время создания события
-	Name           string         `json:"name"`           // Имя сущности
-	ObjectCount    int            `json:"objectCount"`    // Количество измененных объектов
-	ObjectType     string         `json:"objectType"`     // Тип сущностей, с которыми связанно данное изменение. Поле присутствует только для entityType = entitysettings или statesettings или templatesettings
-	Source         string         `json:"source"`         // Тип изменения
-	SupportAccess  bool           `json:"supportAccess"`  // Был ли доступ произведен поддержкой от имени пользователя. Флаг отсутствует, если значение false
-	UID            string         `json:"uid"`            // Логин Сотрудника
+	Entity         MetaWrapper    `json:"entity"`
+	Audit          MetaWrapper    `json:"audit"`
+	Moment         Timestamp      `json:"moment"`
+	Diff           any            `json:"diff"`
+	EntityType     string         `json:"entityType"`
+	EventType      AuditEventType `json:"eventType"`
+	AdditionalInfo string         `json:"additionalInfo"`
+	Name           string         `json:"name"`
+	ObjectType     string         `json:"objectType"`
+	Source         string         `json:"source"`
+	UID            string         `json:"uid"`
+	ObjectCount    int            `json:"objectCount"`
+	SupportAccess  bool           `json:"supportAccess"`
 }
 
 func (a AuditEvent) String() string {
@@ -67,31 +67,17 @@ func (a AuditEvent) MetaType() MetaType {
 //
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq-format-polq-diff
 type AuditEventDiff struct {
-	// Событие регистрации
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq-sobytie-registracii
-	Account string `json:"account,omitempty"` // Название аккаунта
-	Country string `json:"country,omitempty"` // Конфигурация аккаунта (страна)
-
-	// События публикации документов
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq-sobytiq-publikacii-dokumentow
-	TemplateName    string `json:"templateName,omitempty"`    // Название шаблона
-	PublicationHref string `json:"publicationHref,omitempty"` // Ссылка на публикацию
-
-	// События отправки писем
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq-sobytiq-otprawki-pisem
-	SenderEmail  string `json:"senderEmail,omitempty"`  // Почта отправителя письма
-	TargetEmail  string `json:"targetEmail,omitempty"`  // Почта получателя письма
-	SubjectEmail string `json:"subjectEmail,omitempty"` // Тема письма
-	Text         string `json:"text,omitempty"`         // Текст письма
-
-	// События удаления сущностей
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq-sobytiq-udaleniq-suschnostej
-	AttributeName string `json:"attributeName,omitempty"` // Название атрибута сущности
-	OldValue      any    `json:"oldValue,omitempty"`      // Значение атрибута до удаления
-
-	// События обновления сущностей, перемещения/восстановления из корзины, перемещение/восстановление из архива
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq-sobytiq-obnowleniq-suschnostej-peremescheniq-wosstanowleniq-iz-korziny-peremeschenie-wosstanowlenie-iz-arhiwa
-	NewValue any `json:"newValue,omitempty"` // Значение атрибута после обновления
+	OldValue        any    `json:"oldValue,omitempty"`
+	NewValue        any    `json:"newValue,omitempty"`
+	Account         string `json:"account,omitempty"`
+	Country         string `json:"country,omitempty"`
+	TemplateName    string `json:"templateName,omitempty"`
+	PublicationHref string `json:"publicationHref,omitempty"`
+	SenderEmail     string `json:"senderEmail,omitempty"`
+	TargetEmail     string `json:"targetEmail,omitempty"`
+	SubjectEmail    string `json:"subjectEmail,omitempty"`
+	Text            string `json:"text,omitempty"`
+	AttributeName   string `json:"attributeName,omitempty"`
 }
 
 func (a AuditEventDiff) String() string {

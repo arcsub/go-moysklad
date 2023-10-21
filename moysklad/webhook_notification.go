@@ -2,8 +2,8 @@ package moysklad
 
 // WebhookNotification уведомление вебхука.
 type WebhookNotification struct {
-	Events       Slice[Event] `json:"events,omitempty"`       // Данные о событии, вызвавшем срабатывание вебхука
-	AuditContext AuditContext `json:"auditContext,omitempty"` // Контекст аудита, соответствующий событию вебхука
+	AuditContext AuditContext `json:"auditContext,omitempty"`
+	Events       Slice[Event] `json:"events,omitempty"`
 }
 
 // AuditContext Контекст аудита, соответствующий событию вебхука
