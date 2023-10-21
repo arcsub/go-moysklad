@@ -14,10 +14,10 @@ type CustomerOrderService struct {
 	endpointPositions[CustomerOrderPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[CustomerOrder]
+	endpointSyncID[CustomerOrder]
 	endpointNamedFilter
 	endpointRemove
-	endpointTemplates
+	endpointPrintTemplates
 }
 
 func NewCustomerOrderService(client *Client) *CustomerOrderService {
@@ -34,9 +34,9 @@ func NewCustomerOrderService(client *Client) *CustomerOrderService {
 		endpointPositions:              endpointPositions[CustomerOrderPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[CustomerOrder]{e},
+		endpointSyncID:                 endpointSyncID[CustomerOrder]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
-		endpointTemplates:              endpointTemplates{e},
+		endpointPrintTemplates:         endpointPrintTemplates{e},
 	}
 }

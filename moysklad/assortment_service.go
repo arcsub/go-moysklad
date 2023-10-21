@@ -7,16 +7,16 @@ type AssortmentService struct {
 	endpointGetOneAsync[AssortmentResult]
 	endpointDeleteMany[AssortmentPosition]
 	endpointSettings[AssortmentSettings]
-	endpointTemplates
+	endpointPrintTemplates
 }
 
 func NewAssortmentService(client *Client) *AssortmentService {
 	e := NewEndpoint(client, "entity/assortment")
 	return &AssortmentService{
-		endpointGetOne:      endpointGetOne[AssortmentResult]{e},
-		endpointGetOneAsync: endpointGetOneAsync[AssortmentResult]{e},
-		endpointDeleteMany:  endpointDeleteMany[AssortmentPosition]{e},
-		endpointSettings:    endpointSettings[AssortmentSettings]{e},
-		endpointTemplates:   endpointTemplates{e},
+		endpointGetOne:         endpointGetOne[AssortmentResult]{e},
+		endpointGetOneAsync:    endpointGetOneAsync[AssortmentResult]{e},
+		endpointDeleteMany:     endpointDeleteMany[AssortmentPosition]{e},
+		endpointSettings:       endpointSettings[AssortmentSettings]{e},
+		endpointPrintTemplates: endpointPrintTemplates{e},
 	}
 }

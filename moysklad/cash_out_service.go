@@ -15,7 +15,7 @@ type CashOutService struct {
 	endpointGetById[CashOut]
 	endpointUpdate[CashOut]
 	endpointPublication
-	endpointSyncId[CashOut]
+	endpointSyncID[CashOut]
 	endpointRemove
 }
 
@@ -34,7 +34,7 @@ func NewCashOutService(client *Client) *CashOutService {
 		endpointGetById:                endpointGetById[CashOut]{e},
 		endpointUpdate:                 endpointUpdate[CashOut]{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[CashOut]{e},
+		endpointSyncID:                 endpointSyncID[CashOut]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

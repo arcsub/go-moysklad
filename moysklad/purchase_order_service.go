@@ -15,7 +15,7 @@ type PurchaseOrderService struct {
 	endpointPositions[PurchaseOrderPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[PurchaseOrder]
+	endpointSyncID[PurchaseOrder]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -35,7 +35,7 @@ func NewPurchaseOrderService(client *Client) *PurchaseOrderService {
 		endpointPositions:              endpointPositions[PurchaseOrderPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[PurchaseOrder]{e},
+		endpointSyncID:                 endpointSyncID[PurchaseOrder]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
 	}

@@ -8,7 +8,7 @@ type PrepaymentReturnService struct {
 	endpointAttributes
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[PrepaymentReturnPosition]
-	endpointSyncId[PrepaymentReturn]
+	endpointSyncID[PrepaymentReturn]
 	endpointRemove
 }
 
@@ -20,7 +20,7 @@ func NewPrepaymentReturnService(client *Client) *PrepaymentReturnService {
 		endpointAttributes: endpointAttributes{e},
 		endpointMetadata:   endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:  endpointPositions[PrepaymentReturnPosition]{e},
-		endpointSyncId:     endpointSyncId[PrepaymentReturn]{e},
+		endpointSyncID:     endpointSyncID[PrepaymentReturn]{e},
 		endpointRemove:     endpointRemove{e},
 	}
 }

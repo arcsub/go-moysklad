@@ -13,7 +13,7 @@ type FactureInService struct {
 	endpointAttributes
 	endpointTemplate[FactureIn]
 	endpointPublication
-	endpointSyncId[FactureIn]
+	endpointSyncID[FactureIn]
 	endpointRemove
 }
 
@@ -30,7 +30,7 @@ func NewFactureInService(client *Client) *FactureInService {
 		endpointAttributes:             endpointAttributes{e},
 		endpointTemplate:               endpointTemplate[FactureIn]{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[FactureIn]{e},
+		endpointSyncID:                 endpointSyncID[FactureIn]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

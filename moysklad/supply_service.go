@@ -14,11 +14,11 @@ type SupplyService struct {
 	endpointPositions[SupplyPosition]
 	endpointAttributes
 	endpointPublication
-	endpointPrintDoc
+	endpointPrintDocument
 	endpointFiles
 	endpointNamedFilter
 	endpointStates
-	endpointSyncId[Supply]
+	endpointSyncID[Supply]
 	endpointRemove
 }
 
@@ -36,11 +36,11 @@ func NewSupplyService(client *Client) *SupplyService {
 		endpointPositions:              endpointPositions[SupplyPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointPrintDoc:               endpointPrintDoc{e},
+		endpointPrintDocument:          endpointPrintDocument{e},
 		endpointFiles:                  endpointFiles{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointStates:                 endpointStates{e},
-		endpointSyncId:                 endpointSyncId[Supply]{e},
+		endpointSyncID:                 endpointSyncID[Supply]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }
