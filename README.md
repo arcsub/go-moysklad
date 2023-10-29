@@ -96,49 +96,6 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
   client := moysklad.NewClient().WithDisabledWebhookContent(true)
 ```
 
-### Async()
-Методы для работы с асинхронными задачами.
-
-Относительный путь: `/async`
-```go
-  asyncService := clientExt.Async
-```
-### Audit()
-Методы для работы с аудитом.
-
-Относительный путь: `/audit`
-```go
-  auditService := clientExt.Audit
-```
-### Context()
-Методы для работы с контекстом.
-
-Относительный путь: `/context`
-```go
-  contextService := clientExt.Context
-```
-### Entity()
-Методы для работы с сущностями и документами.
-
-Относительный путь: `/entity`
-```go
-  entityService := clientExt.Entity
-```
-### Report()
-Методы для работы с отчётами.
-
-Относительный путь: `/report`
-```go
-  reportService := clientExt.Report
-```
-### Security()
-Относительный путь: `/security`
-
-Методы для получения токена.
-```go
-  securityService := clientExt.Security
-```
-
 ## Параметры запроса
 ### Создать экземпляр для работы с параметрами запроса
 ```go
