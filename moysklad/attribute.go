@@ -4,20 +4,20 @@ import (
 	"github.com/google/uuid"
 )
 
-// Attribute Доп поле
+// Attribute Доп поле.
 // Ключевое слово: attributemetadata
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-rabota-s-dopolnitel-nymi-polqmi-cherez-json-api
 type Attribute struct {
-	CustomEntityMeta *Meta         `json:"customEntityMeta,omitempty"` // Ссылка на метаданные пользовательского справочника
-	Description      *string       `json:"description,omitempty"`      // Описание доп. поля
-	Id               *uuid.UUID    `json:"id,omitempty"`               // ID доп. поля
-	Meta             *Meta         `json:"meta,omitempty"`             // Ссылка на метаданные доп. поля
-	Name             *string       `json:"name,omitempty"`             // Наименование доп. поля
-	Required         *bool         `json:"required,omitempty"`         // Является ли доп. поле обязательным
-	Show             *bool         `json:"show,omitempty"`             // Показывать ли доп. поле на UI. Не может быть скрытым и обязательным одновременно. Только для операций
-	Type             AttributeType `json:"type,omitempty"`             // Тип доп. поля
-	Value            any           `json:"value,omitempty"`            // Значение доп. поля
+	Value            any           `json:"value,omitempty"`
+	CustomEntityMeta *Meta         `json:"customEntityMeta,omitempty"`
+	Description      *string       `json:"description,omitempty"`
+	ID               *uuid.UUID    `json:"id,omitempty"`
+	Meta             *Meta         `json:"meta,omitempty"`
+	Name             *string       `json:"name,omitempty"`
+	Required         *bool         `json:"required,omitempty"`
+	Show             *bool         `json:"show,omitempty"`
 	File             *File         `json:"file,omitempty"`
+	Type             AttributeType `json:"type,omitempty"`
 }
 
 func (a Attribute) String() string {
@@ -28,7 +28,13 @@ func (a Attribute) MetaType() MetaType {
 	return MetaTypeAttribute
 }
 
-type Attributes = Iterator[Attribute]
+type Attributes []*Attribute
+
+// Push добавляет элементы в срез.
+func (a *Attributes) Push(elements ...*Attribute) *Attributes {
+	*a = append(*a, elements...)
+	return a
+}
 
 // AttributeType Тип доп. поля
 type AttributeType string

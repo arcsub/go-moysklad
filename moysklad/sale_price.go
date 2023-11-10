@@ -12,4 +12,4 @@ func (s SalePrice) String() string {
 	return Stringify(s)
 }
 
-type SalePrices = Iterator[SalePrice]
+type SalePrices = Slice[SalePrice]

@@ -6,7 +6,7 @@ package moysklad
 type File struct {
 	Created   *Timestamp `json:"created,omitempty"`   // Время загрузки Файла на сервер
 	CreatedBy *Employee  `json:"createdBy,omitempty"` // Метаданные сотрудника, загрузившего Файл
-	Content   *string    `json:"conten,omitemptyt"`   // Файл, закодированный в формате Base64.
+	Content   *string    `json:"content,omitempty"`   // Файл, закодированный в формате Base64.
 	Filename  *string    `json:"filename,omitempty"`  // Имя Файла
 	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные объекта
 	Miniature *Meta      `json:"miniature,omitempty"` // Метаданные миниатюры изображения (поле передается только для Файлов изображений)
@@ -23,8 +23,12 @@ func (f File) MetaType() MetaType {
 	return MetaTypeFiles
 }
 
-type Files Positions[File]
+type Files MetaArray[File]
 
-func (f *Files) Iter() *Iterator[File] {
-	return f.Rows.Iter(MaxFiles)
+// Push добавляет элементы в срез.
+// Элементы, превышающее максимальное значение MaxImages, игнорируются
+func (f *Files) Push(elements ...*File) *Files {
+	limit := min(MaxFiles, MaxImages-len(f.Rows), len(elements))
+	f.Rows = append(f.Rows, elements[:limit]...)
+	return f
 }

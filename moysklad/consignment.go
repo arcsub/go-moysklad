@@ -8,12 +8,12 @@ import (
 // Ключевое слово: consignment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-seriq
 type Consignment struct {
-	AccountId    *uuid.UUID          `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID          `json:"accountId,omitempty"`    // ID учетной записи
 	Barcodes     *Barcodes           `json:"barcodes,omitempty"`     // Штрихкоды
 	Code         *string             `json:"code,omitempty"`         // Код
 	Description  *string             `json:"description,omitempty"`  // Описание
 	ExternalCode *string             `json:"externalCode,omitempty"` // Внешний код
-	Id           *uuid.UUID          `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID          `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta               `json:"meta,omitempty"`         // Метаданные
 	Name         *string             `json:"name,omitempty"`         // Наименование
 	Assortment   *AssortmentPosition `json:"assortment,omitempty"`   //

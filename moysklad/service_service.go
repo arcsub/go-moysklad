@@ -9,7 +9,7 @@ type ServiceService struct {
 	endpointDelete
 	endpointGetById[Service]
 	endpointUpdate[Service]
-	endpointSyncId[Service]
+	endpointSyncID[Service]
 	endpointNamedFilter
 }
 
@@ -22,7 +22,7 @@ func NewServiceService(client *Client) *ServiceService {
 		endpointDelete:                 endpointDelete{e},
 		endpointGetById:                endpointGetById[Service]{e},
 		endpointUpdate:                 endpointUpdate[Service]{e},
-		endpointSyncId:                 endpointSyncId[Service]{e},
+		endpointSyncID:                 endpointSyncID[Service]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 	}
 }

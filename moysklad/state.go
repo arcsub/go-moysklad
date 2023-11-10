@@ -7,10 +7,10 @@ import (
 // State Статус документов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow
 type State struct {
-	AccountId  *uuid.UUID `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID `json:"accountId,omitempty"`  // ID учетной записи
 	Color      *uint64    `json:"color,omitempty"`      // Цвет Статуса
 	EntityType *string    `json:"entityType,omitempty"` // Тип сущности, к которой относится Статус (ключевое слово в рамках JSON API)
-	Id         *uuid.UUID `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID `json:"id,omitempty"`         // ID сущности
 	Meta       *Meta      `json:"meta,omitempty"`       // Метаданные
 	Name       *string    `json:"name,omitempty"`       // Наименование Статуса
 	StateType  StateType  `json:"stateType,omitempty"`  // Тип Статуса
@@ -20,7 +20,7 @@ func (s State) String() string {
 	return Stringify(s)
 }
 
-type States = Iterator[State]
+type States = Slice[State]
 
 // StateType Тип статуса.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-statusy-atributy-suschnosti-tip-statusa

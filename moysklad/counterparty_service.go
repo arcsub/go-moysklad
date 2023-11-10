@@ -20,7 +20,7 @@ type CounterpartyService struct {
 	endpointAttributes
 	endpointSettings[CounterpartySettings]
 	endpointAccounts
-	endpointSyncId[Counterparty]
+	endpointSyncID[Counterparty]
 	endpointNamedFilter
 }
 
@@ -38,7 +38,7 @@ func NewCounterpartyService(client *Client) *CounterpartyService {
 		endpointAttributes:             endpointAttributes{e},
 		endpointSettings:               endpointSettings[CounterpartySettings]{e},
 		endpointAccounts:               endpointAccounts{e},
-		endpointSyncId:                 endpointSyncId[Counterparty]{e},
+		endpointSyncID:                 endpointSyncID[Counterparty]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 	}
 }

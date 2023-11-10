@@ -8,7 +8,7 @@ import (
 // Ключевое слово: employee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik
 type Employee struct {
-	AccountId    *uuid.UUID  `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID  `json:"accountId,omitempty"`    // ID учетной записи
 	Archived     *bool       `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
 	Attributes   *Attributes `json:"attributes,omitempty"`   // Дополнительные поля Сотрудника
 	Cashiers     *Cashiers   `json:"cashiers,omitempty"`     // Массив кассиров
@@ -20,7 +20,7 @@ type Employee struct {
 	FirstName    *string     `json:"firstName,omitempty"`    // Имя
 	FullName     *string     `json:"fullName,omitempty"`     // Имя Отчество Фамилия
 	Group        *Group      `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID  `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID  `json:"id,omitempty"`           // ID сущности
 	Image        *Image      `json:"image,omitempty"`        // Фотография сотрудника
 	INN          *string     `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
 	LastName     *string     `json:"lastName,omitempty"`     // Фамилия
@@ -54,14 +54,14 @@ type MailActivationRequired struct {
 // EmployeePermission Права Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-rabota-s-prawami-sotrudnika
 type EmployeePermission struct {
-	AuthorizedHosts     []string `json:"authorizedHosts,omitempty"`     // Список ipv4 адресов, с которых разрешен доступ на аккаунт
-	AuthorizedIpNetmask *string  `json:"authorizedIpNetmask,omitempty"` // Маска подсети с правом доступа на аккаунт
-	AuthorizedIpNetwork *string  `json:"authorizedIpNetwork,omitempty"` // Ipv4 адрес, идентифицирующий соответствующую подсеть, с правом доступа на аккаунт
-	Email               *string  `json:"email,omitempty"`               // Почта сотрудника
-	Group               *Group   `json:"group,omitempty"`               // Метаданные Группы, а также ее идентификатор и имя
-	IsActive            *bool    `json:"isActive,omitempty"`            // Доступ к сервису МойСклад
-	Login               *string  `json:"login,omitempty"`               // Логин сотрудника для входа в МойСклад
-	Role                *Role    `json:"role,omitempty"`                // Информация о роли Сотрудника
+	AuthorizedIpNetmask *string  `json:"authorizedIpNetmask,omitempty"`
+	AuthorizedIpNetwork *string  `json:"authorizedIpNetwork,omitempty"`
+	Email               *string  `json:"email,omitempty"`
+	Group               *Group   `json:"group,omitempty"`
+	IsActive            *bool    `json:"isActive,omitempty"`
+	Login               *string  `json:"login,omitempty"`
+	Role                *Role    `json:"role,omitempty"`
+	AuthorizedHosts     []string `json:"authorizedHosts,omitempty"`
 }
 
 func (e EmployeePermission) String() string {

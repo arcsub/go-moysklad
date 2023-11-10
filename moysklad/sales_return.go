@@ -8,7 +8,7 @@ import (
 // Ключевое слово: salesreturn
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-pokupatelq
 type SalesReturn struct {
-	AccountId           *uuid.UUID                      `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID                      `json:"accountId,omitempty"`           // ID учетной записи
 	Agent               *Counterparty                   `json:"agent,omitempty"`               // Метаданные контрагента
 	AgentAccount        *AgentAccount                   `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
 	Applicable          *bool                           `json:"applicable,omitempty"`          // Отметка о проведении
@@ -21,7 +21,7 @@ type SalesReturn struct {
 	ExternalCode        *string                         `json:"externalCode,omitempty"`        // Внешний код Возврата Покупателя
 	Files               *Files                          `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group               *Group                          `json:"group,omitempty"`               // Отдел сотрудника
-	Id                  *uuid.UUID                      `json:"id,omitempty"`                  // ID сущности
+	ID                  *uuid.UUID                      `json:"id,omitempty"`                  // ID сущности
 	Meta                *Meta                           `json:"meta,omitempty"`                // Метаданные
 	Moment              *Timestamp                      `json:"moment,omitempty"`              // Дата документа
 	Name                *string                         `json:"name,omitempty"`                // Наименование
@@ -38,7 +38,7 @@ type SalesReturn struct {
 	State               *State                          `json:"state,omitempty"`               // Метаданные статуса Возврата Покупателя
 	Store               *Store                          `json:"store,omitempty"`               // Метаданные склада
 	Sum                 *float64                        `json:"sum,omitempty"`                 // Сумма
-	SyncId              *uuid.UUID                      `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
+	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
 	Updated             *Timestamp                      `json:"updated,omitempty"`             // Момент последнего обновления
 	VatEnabled          *bool                           `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
 	VatIncluded         *bool                           `json:"vatIncluded,omitempty"`         // Включен ли НДС в цену
@@ -63,19 +63,19 @@ func (s SalesReturn) MetaType() MetaType {
 	return MetaTypeSalesReturn
 }
 
-type SalesReturns = Iterator[SalesReturn]
+type SalesReturns = Slice[SalesReturn]
 
 // SalesReturnPosition Позиция Возврата покупателя.
 // Ключевое слово: salesreturnposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-pokupatelq-vozwraty-pokupatelej-pozicii-vozwrata-pokupatelq
 type SalesReturnPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Cost       *float64            `json:"cost,omitempty"`       // Себестоимость (выводится, если документ был создан без основания)
 	Country    *Country            `json:"country,omitempty"`    // Метаданные Страны
 	Discount   *float64            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.

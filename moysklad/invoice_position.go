@@ -4,10 +4,10 @@ import "github.com/google/uuid"
 
 // InvoicePosition общие поля для счетов.
 type InvoicePosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Discount   *float64            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Meta       *Meta               `json:"meta,omitempty"`       // Метаданные
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках

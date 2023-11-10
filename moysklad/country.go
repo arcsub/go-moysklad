@@ -8,12 +8,12 @@ import (
 // Ключевое слово: country
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-strana
 type Country struct {
-	AccountId    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
 	Code         *string    `json:"code,omitempty"`         // Код Страны
 	Description  *string    `json:"description,omitempty"`  // Описание Страны
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Страны
 	Group        *Group     `json:"group,omitempty"`        // Отдел-владелец
-	Id           *uuid.UUID `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные
 	Name         *string    `json:"name,omitempty"`         // Наименование
 	Owner        *Employee  `json:"owner,omitempty"`        // Сотрудник-владелец

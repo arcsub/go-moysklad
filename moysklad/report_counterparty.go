@@ -4,22 +4,22 @@ package moysklad
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-pokazateli-kontragentow
 type ReportCounterparty struct {
-	AverageReceipt  float64          `json:"averageReceipt"`  // Средний чек
-	Balance         float64          `json:"balance"`         // Баланс
-	BonusBalance    float64          `json:"bonusBalance"`    // Баллы
-	Counterparty    CounterpartyData `json:"counterparty"`    // Контрагент
-	DemandsCount    int              `json:"demandsCount"`    // Количество продаж
-	DemandsSum      float64          `json:"demandsSum"`      // Сумма продаж
-	DiscountsSum    float64          `json:"discountsSum"`    // Сумма скидок
-	FirstDemandDate Timestamp        `json:"firstDemandDate"` // Дата первой продажи
-	LastDemandDate  Timestamp        `json:"lastDemandDate"`  // Дата последней продажи
-	LastEventDate   Timestamp        `json:"lastEventDate"`   // Дата последнего события
-	LastEventText   string           `json:"lastEventText"`   // Текст последнего события
-	Meta            Meta             `json:"meta"`            // Метаданные Отчета по данному контрагенту
-	Profit          float64          `json:"profit"`          // Прибыль
-	ReturnsCount    int              `json:"returnsCount"`    // Количество возвратов
-	ReturnsSum      float64          `json:"returnsSum"`      // Сумма возвратов
-	Updated         Timestamp        `json:"updated"`         // Момент последнего изменения контрагента
+	Meta            Meta             `json:"meta"`
+	FirstDemandDate Timestamp        `json:"firstDemandDate"`
+	Updated         Timestamp        `json:"updated"`
+	LastEventDate   Timestamp        `json:"lastEventDate"`
+	LastDemandDate  Timestamp        `json:"lastDemandDate"`
+	Counterparty    CounterpartyData `json:"counterparty"`
+	LastEventText   string           `json:"lastEventText"`
+	DemandsCount    int              `json:"demandsCount"`
+	DiscountsSum    float64          `json:"discountsSum"`
+	DemandsSum      float64          `json:"demandsSum"`
+	AverageReceipt  float64          `json:"averageReceipt"`
+	BonusBalance    float64          `json:"bonusBalance"`
+	Profit          float64          `json:"profit"`
+	ReturnsCount    int              `json:"returnsCount"`
+	ReturnsSum      float64          `json:"returnsSum"`
+	Balance         float64          `json:"balance"`
 }
 
 // CounterpartyData Контрагент
@@ -27,7 +27,7 @@ type ReportCounterparty struct {
 type CounterpartyData struct {
 	CompanyType  CompanyType `json:"companyType"`  // Тип контрагента
 	ExternalCode string      `json:"externalCode"` // Внешний код контрагента
-	Id           string      `json:"id"`           // ID Контрагента
+	ID           string      `json:"id"`           // ID Контрагента
 	Meta         Meta        `json:"meta"`         // Метаданные Контрагента
 	Name         string      `json:"name"`         // Наименование Контрагента
 }
@@ -46,7 +46,7 @@ type CounterpartiesMeta struct {
 
 func (c *CounterpartiesMeta) Push(elements ...*Counterparty) {
 	for _, element := range elements {
-		ce := CounterpartyElement{
+		ce := &CounterpartyElement{
 			Counterparty: MetaWrapper{
 				Meta: *element.GetMeta(),
 			},

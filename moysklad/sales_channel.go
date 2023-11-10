@@ -8,19 +8,19 @@ import (
 // Ключевое слово: saleschannel
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kanal-prodazh
 type SalesChannel struct {
-	AccountId        *uuid.UUID       `json:"accountId,omitempty"`    // ID учетной записи
-	Archived         *bool            `json:"archived,omitempty"`     // Добавлен ли Канал продаж в архив
-	Code             *string          `json:"code,omitempty"`         // Код Канала продаж
-	Description      *string          `json:"description,omitempty"`  // Описание Канала продаж
-	ExternalCode     *string          `json:"externalCode,omitempty"` // Внешний код Канала продаж
-	Group            *Group           `json:"group,omitempty"`        // Метаданные отдела сотрудника
-	Id               *uuid.UUID       `json:"id,omitempty"`           // ID Канала продаж
-	Meta             *Meta            `json:"meta,omitempty"`         // Метаданные
-	Name             *string          `json:"name,omitempty"`         // Наименование Канала продаж
-	Owner            *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
-	Shared           *bool            `json:"shared,omitempty"`       // Общий доступ
-	SalesChannelType SalesChannelType `json:"type,omitempty"`         // Тип Канала продаж
-	Updated          *Timestamp       `json:"update,omitempty"`       // Момент последнего обновления сущности
+	ID               *uuid.UUID       `json:"id,omitempty"`
+	Archived         *bool            `json:"archived,omitempty"`
+	Code             *string          `json:"code,omitempty"`
+	Description      *string          `json:"description,omitempty"`
+	ExternalCode     *string          `json:"externalCode,omitempty"`
+	Group            *Group           `json:"group,omitempty"`
+	AccountID        *uuid.UUID       `json:"accountId,omitempty"`
+	Meta             *Meta            `json:"meta,omitempty"`
+	Name             *string          `json:"name,omitempty"`
+	Owner            *Employee        `json:"owner,omitempty"`
+	Shared           *bool            `json:"shared,omitempty"`
+	Updated          *Timestamp       `json:"update,omitempty"`
+	SalesChannelType SalesChannelType `json:"type,omitempty"`
 }
 
 func (s SalesChannel) String() string {

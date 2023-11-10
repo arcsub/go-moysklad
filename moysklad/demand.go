@@ -8,7 +8,7 @@ import (
 // Ключевое слово: demand
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-otgruzka
 type Demand struct {
-	AccountId               *uuid.UUID                 `json:"accountId,omitempty"`               // ID учетной записи
+	AccountID               *uuid.UUID                 `json:"accountId,omitempty"`               // ID учетной записи
 	Agent                   *Counterparty              `json:"agent,omitempty"`                   // Метаданные контрагента
 	AgentAccount            *AgentAccount              `json:"agentAccount,omitempty"`            // Метаданные счета контрагента
 	Applicable              *bool                      `json:"applicable,omitempty"`              // Отметка о проведении
@@ -21,7 +21,7 @@ type Demand struct {
 	ExternalCode            *string                    `json:"externalCode,omitempty"`            // Внешний код Отгрузки
 	Files                   *Files                     `json:"files,omitempty"`                   // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                   *Group                     `json:"group,omitempty"`                   // Отдел сотрудника
-	Id                      *uuid.UUID                 `json:"id,omitempty"`                      // ID сущности
+	ID                      *uuid.UUID                 `json:"id,omitempty"`                      // ID сущности
 	Meta                    *Meta                      `json:"meta,omitempty"`                    // Метаданные
 	Moment                  *Timestamp                 `json:"moment,omitempty"`                  // Дата документа
 	Name                    *string                    `json:"name,omitempty"`                    // Наименование
@@ -42,7 +42,7 @@ type Demand struct {
 	State                   *State                     `json:"state,omitempty"`                   // Метаданные статуса Отгрузки
 	Store                   *Store                     `json:"store,omitempty"`                   // Метаданные склада
 	Sum                     *float64                   `json:"sum,omitempty"`                     // Сумма
-	SyncId                  *uuid.UUID                 `json:"syncId,omitempty"`                  // ID синхронизации. После заполнения недоступен для изменения
+	SyncID                  *uuid.UUID                 `json:"syncId,omitempty"`                  // ID синхронизации. После заполнения недоступен для изменения
 	Updated                 *Timestamp                 `json:"updated,omitempty"`                 // Момент последнего обновления
 	VatEnabled              *bool                      `json:"vatEnabled,omitempty"`              // Учитывается ли НДС
 	VatIncluded             *bool                      `json:"vatIncluded,omitempty"`             // Включен ли НДС в цену
@@ -75,17 +75,19 @@ func (d Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
 
-type Demands = Iterator[Demand]
+// type = Demands Slice[Demand] // go.dev/issue/50729
+
+type Demands Slice[Demand]
 
 // DemandPosition Позиция Отгрузки
 // Ключевое слово: demandposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-otgruzka-otgruzki-pozicii-otgruzki
 type DemandPosition struct {
-	AccountId         *uuid.UUID          `json:"accountId,omitempty"`          // ID учетной записи
+	AccountID         *uuid.UUID          `json:"accountId,omitempty"`          // ID учетной записи
 	Assortment        *AssortmentPosition `json:"assortment,omitempty"`         // Метаданные товара/услуги/серии/модификации/комплекта, которую представляет собой позиция
 	Cost              *int                `json:"cost,omitempty"`               // Себестоимость (только для услуг)
 	Discount          *int                `json:"discount,omitempty"`           // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
-	Id                *uuid.UUID          `json:"id,omitempty"`                 // ID сущности
+	ID                *uuid.UUID          `json:"id,omitempty"`                 // ID сущности
 	Pack              *Pack               `json:"pack,omitempty"`               // Упаковка Товара
 	Price             *float64            `json:"price,omitempty"`              // Цена товара/услуги в копейках
 	Quantity          *float64            `json:"quantity,omitempty"`           // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.

@@ -21,7 +21,7 @@ type InventoryService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[InventoryPosition]
 	endpointAttributes
-	endpointSyncId[Inventory]
+	endpointSyncID[Inventory]
 	endpointRemove
 }
 
@@ -39,7 +39,7 @@ func NewInventoryService(client *Client) *InventoryService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:              endpointPositions[InventoryPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
-		endpointSyncId:                 endpointSyncId[Inventory]{e},
+		endpointSyncID:                 endpointSyncID[Inventory]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

@@ -15,7 +15,7 @@ type PurchaseReturnService struct {
 	endpointPositions[PurchaseReturnPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[PurchaseReturn]
+	endpointSyncID[PurchaseReturn]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -35,7 +35,7 @@ func NewPurchaseReturnService(client *Client) *PurchaseReturnService {
 		endpointPositions:              endpointPositions[PurchaseReturnPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[PurchaseReturn]{e},
+		endpointSyncID:                 endpointSyncID[PurchaseReturn]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
 	}

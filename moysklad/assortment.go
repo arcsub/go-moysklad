@@ -21,18 +21,15 @@ func (a Assortment) MetaType() MetaType {
 // data для хранения сырых данных
 // Product | Variant | Bundle | Service | Consignment
 type AssortmentPosition struct {
-	// Общие поля
-	AccountId    uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
-	Barcodes     Barcodes  `json:"barcodes,omitempty"`     // Штрихкоды
-	Code         string    `json:"code,omitempty"`         // Код
-	Description  string    `json:"description,omitempty"`  // Описание
-	ExternalCode string    `json:"externalCode,omitempty"` // Внешний код
-	Id           uuid.UUID `json:"id,omitempty"`           // ID сущности
-	Meta         Meta      `json:"meta"`                   // Метаданные
-	Name         string    `json:"name,omitempty"`         // Наименование
-
-	// сырые данные
-	data json.RawMessage
+	Meta         Meta     `json:"meta"`
+	Code         string   `json:"code,omitempty"`
+	Description  string   `json:"description,omitempty"`
+	ExternalCode string   `json:"externalCode,omitempty"`
+	Name         string   `json:"name,omitempty"`
+	Barcodes     Barcodes `json:"barcodes,omitempty"`
+	data         json.RawMessage
+	AccountID    uuid.UUID `json:"accountId,omitempty"`
+	ID           uuid.UUID `json:"id,omitempty"`
 }
 
 type AssortmentPositionTypes interface {
@@ -109,35 +106,35 @@ func convertToAssortmentPosition[E AssortmentPositionTypes](element E) (*Assortm
 }
 
 // FilterBundle фильтрует позиции по типу Bundle (Комплект)
-func (a Assortment) FilterBundle() []Bundle {
+func (a Assortment) FilterBundle() Slice[Bundle] {
 	return filterEntity[Bundle](a)
 }
 
 // FilterProduct фильтрует позиции по типу Product (Товар)
-func (a Assortment) FilterProduct() []Product {
+func (a Assortment) FilterProduct() Slice[Product] {
 	return filterEntity[Product](a)
 }
 
 // FilterVariant фильтрует позиции по типу Variant (Модификация)
-func (a Assortment) FilterVariant() []Variant {
+func (a Assortment) FilterVariant() Slice[Variant] {
 	return filterEntity[Variant](a)
 }
 
 // FilterConsignment фильтрует позиции по типу Consignment (Серия)
-func (a Assortment) FilterConsignment() []Consignment {
+func (a Assortment) FilterConsignment() Slice[Consignment] {
 	return filterEntity[Consignment](a)
 }
 
 // FilterService фильтрует позиции по типу Service (Услуга)
-func (a Assortment) FilterService() []Service {
+func (a Assortment) FilterService() Slice[Service] {
 	return filterEntity[Service](a)
 }
 
-func filterEntity[E MetaTyper, A DataMetaTyper](elements []A) []E {
-	var n []E
+func filterEntity[E MetaTyper, A DataMetaTyper](elements []A) Slice[E] {
+	var n Slice[E]
 	for _, el := range elements {
 		if e, err := unmarshalTo[E](el); err == nil {
-			n = append(n, *e)
+			n = append(n, e)
 		}
 	}
 	return n

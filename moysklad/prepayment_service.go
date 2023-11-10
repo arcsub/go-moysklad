@@ -9,7 +9,7 @@ type PrepaymentService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[PrepaymentPosition]
 	endpointAttributes
-	endpointSyncId[Prepayment]
+	endpointSyncID[Prepayment]
 	endpointRemove
 }
 
@@ -22,7 +22,7 @@ func NewPrepaymentService(client *Client) *PrepaymentService {
 		endpointMetadata:   endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:  endpointPositions[PrepaymentPosition]{e},
 		endpointAttributes: endpointAttributes{e},
-		endpointSyncId:     endpointSyncId[Prepayment]{e},
+		endpointSyncID:     endpointSyncID[Prepayment]{e},
 		endpointRemove:     endpointRemove{e},
 	}
 }

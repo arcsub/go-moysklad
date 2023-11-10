@@ -12,7 +12,7 @@ type FactureOutService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[FactureOut]
+	endpointSyncID[FactureOut]
 	endpointRemove
 }
 
@@ -28,7 +28,7 @@ func NewFactureOutService(client *Client) *FactureOutService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[FactureOut]{e},
+		endpointSyncID:                 endpointSyncID[FactureOut]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

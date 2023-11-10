@@ -14,7 +14,7 @@ type InternalOrderService struct {
 	endpointPositions[InternalOrderPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[InternalOrder]
+	endpointSyncID[InternalOrder]
 	endpointRemove
 }
 
@@ -32,7 +32,7 @@ func NewInternalOrderService(client *Client) *InternalOrderService {
 		endpointPositions:              endpointPositions[InternalOrderPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[InternalOrder]{e},
+		endpointSyncID:                 endpointSyncID[InternalOrder]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

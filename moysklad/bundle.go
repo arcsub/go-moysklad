@@ -8,45 +8,45 @@ import (
 // Ключевое слово: bundle
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt
 type Bundle struct {
-	AccountId           *uuid.UUID                  `json:"accountId,omitempty"`           // ID учетной записи
-	Barcodes            *Barcodes                   `json:"barcodes,omitempty"`            // Штрихкоды
-	Code                *string                     `json:"code,omitempty"`                // Код
-	Description         *string                     `json:"description,omitempty"`         // Описание
-	ExternalCode        *string                     `json:"externalCode,omitempty"`        // Внешний код
-	Id                  *uuid.UUID                  `json:"id,omitempty"`                  // ID сущности
-	Meta                *Meta                       `json:"meta,omitempty"`                // Метаданные
-	Name                *string                     `json:"name,omitempty"`                // Наименование
-	Archived            *bool                       `json:"archived,omitempty"`            // Добавлен ли Комплект в архив
-	Article             *string                     `json:"article,omitempty"`             // Артикул
-	Attributes          *Attributes                 `json:"attributes,omitempty"`          // Коллекция доп. полей
-	Components          *Positions[BundleComponent] `json:"components,omitempty"`          // Массив компонентов Комплекта
-	Country             *Country                    `json:"country,omitempty"`             // Метаданные Страны
-	DiscountProhibited  *bool                       `json:"discountProhibited"`            // Признак запрета скидок
-	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`        // Реальный НДС %
-	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"` // Дополнительный признак для определения разграничения реального НДС = 0 или "без НДС". (effectiveVat = 0, effectiveVatEnabled = false) -> "без НДС", (effectiveVat = 0, effectiveVatEnabled = true) -> 0%.
-	Files               *Files                      `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group               *Group                      `json:"group,omitempty"`               // Метаданные отдела сотрудника
-	Images              *Images                     `json:"images,omitempty"`              // Массив метаданных Изображений (Максимальное количество изображений - 10)
-	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`            // Минимальная цена
-	Overhead            *BundleOverhead             `json:"overhead,omitempty"`            // Дополнительные расходы
-	Owner               *Employee                   `json:"owner,omitempty"`               // Метаданные владельца (Сотрудника)
-	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`     // Управление состоянием частичного выбытия маркированного товара. «true» - возможность включена.
-	PathName            *string                     `json:"pathName,omitempty"`            // Наименование группы, в которую входит Комплект
-	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`     // Признак предмета расчета
-	SalePrices          *SalePrices                 `json:"salePrices,omitempty"`          // Цены продажи
-	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`       // Метаданные группы
-	Shared              *bool                       `json:"shared,omitempty"`              // Общий доступ
-	SyncId              *uuid.UUID                  `json:"syncId,omitempty"`              // Общий доступ
-	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`           // Код системы налогообложения
-	Tnved               *string                     `json:"tnved,omitempty"`               // Код ТН ВЭД
-	TrackingType        TrackingType                `json:"trackingType,omitempty"`        // Тип маркируемой продукции
-	Uom                 *Uom                        `json:"uom,omitempty"`                 // Единицы измерения
-	Updated             *Timestamp                  `json:"updated,omitempty"`             // Момент последнего обновления сущности
-	UseParentVat        *bool                       `json:"useParentVat,omitempty"`        // Используется ли ставка НДС родительской группы. Если true для единицы ассортимента будет применена ставка, установленная для родительской группы.
-	Vat                 *int                        `json:"vat,omitempty"`                 // НДС %
-	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`          // Включен ли НДС для товара. С помощью этого флага для товара можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
-	Volume              *float64                    `json:"volume,omitempty"`              // Объем
-	Weight              *float64                    `json:"weight,omitempty"`              // Вес
+	Images              *Images                     `json:"images,omitempty"`
+	Updated             *Timestamp                  `json:"updated,omitempty"`
+	Code                *string                     `json:"code,omitempty"`
+	Description         *string                     `json:"description,omitempty"`
+	ExternalCode        *string                     `json:"externalCode,omitempty"`
+	ID                  *uuid.UUID                  `json:"id,omitempty"`
+	Meta                *Meta                       `json:"meta,omitempty"`
+	Name                *string                     `json:"name,omitempty"`
+	Archived            *bool                       `json:"archived,omitempty"`
+	Article             *string                     `json:"article,omitempty"`
+	Attributes          *Attributes                 `json:"attributes,omitempty"`
+	Components          *Positions[BundleComponent] `json:"components,omitempty"`
+	Country             *Country                    `json:"country,omitempty"`
+	Overhead            *BundleOverhead             `json:"overhead,omitempty"`
+	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`
+	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"`
+	Files               *Files                      `json:"files,omitempty"`
+	Group               *Group                      `json:"group,omitempty"`
+	Volume              *float64                    `json:"volume,omitempty"`
+	Barcodes            *Barcodes                   `json:"barcodes,omitempty"`
+	DiscountProhibited  *bool                       `json:"discountProhibited"`
+	Owner               *Employee                   `json:"owner,omitempty"`
+	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`
+	PathName            *string                     `json:"pathName,omitempty"`
+	Weight              *float64                    `json:"weight,omitempty"`
+	SalePrices          *SalePrices                 `json:"salePrices,omitempty"`
+	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`
+	Shared              *bool                       `json:"shared,omitempty"`
+	SyncID              *uuid.UUID                  `json:"syncId,omitempty"`
+	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`
+	Tnved               *string                     `json:"tnved,omitempty"`
+	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
+	Uom                 *Uom                        `json:"uom,omitempty"`
+	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`
+	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
+	Vat                 *int                        `json:"vat,omitempty"`
+	TrackingType        TrackingType                `json:"trackingType,omitempty"`
+	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
+	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`
 }
 
 func (b Bundle) String() string {
@@ -81,9 +81,9 @@ func (b BundleOverhead) String() string {
 // Ключевое слово: bundlecomponent
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-komponenty-komplekta
 type BundleComponent struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги, которую представляет собой компонент
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
 }
 

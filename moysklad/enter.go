@@ -8,7 +8,7 @@ import (
 // Ключевое слово: enter
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-oprihodowanie
 type Enter struct {
-	AccountId    *uuid.UUID                `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID                `json:"accountId,omitempty"`    // ID учетной записи
 	Applicable   *bool                     `json:"applicable,omitempty"`   // Отметка о проведении
 	Attributes   *Attributes               `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
 	Code         *string                   `json:"code,omitempty"`         // Код Оприходования
@@ -18,7 +18,7 @@ type Enter struct {
 	ExternalCode *string                   `json:"externalCode,omitempty"` // Внешний код Оприходования
 	Files        *Files                    `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group                    `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID                `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID                `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta                     `json:"meta,omitempty"`         // Метаданные
 	Moment       *Timestamp                `json:"moment,omitempty"`       // Дата документа
 	Name         *string                   `json:"name,omitempty"`         // Наименование
@@ -34,7 +34,7 @@ type Enter struct {
 	State        *State                    `json:"state,omitempty"`        // Метаданные статуса оприходования
 	Store        *Store                    `json:"store,omitempty"`        // Метаданные склада
 	Sum          *float64                  `json:"sum,omitempty"`          // Сумма
-	SyncId       *uuid.UUID                `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
+	SyncID       *uuid.UUID                `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
 	Updated      *Timestamp                `json:"updated,omitempty"`      // Момент последнего обновления
 }
 
@@ -50,11 +50,11 @@ func (e Enter) MetaType() MetaType {
 // Ключевое слово: enterposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-oprihodowanie-oprihodowaniq-pozicii-oprihodowaniq
 type EnterPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Country    *Country            `json:"country,omitempty"`    // Метаданные страны
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Overhead   *float64            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках

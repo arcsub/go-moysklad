@@ -8,7 +8,7 @@ import (
 // Ключевое слово: loss
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-spisanie
 type Loss struct {
-	AccountId    *uuid.UUID               `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID               `json:"accountId,omitempty"`    // ID учетной записи
 	Applicable   *bool                    `json:"applicable,omitempty"`   // Отметка о проведении
 	Attributes   *Attributes              `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
 	Code         *string                  `json:"code,omitempty"`         // Код
@@ -18,7 +18,7 @@ type Loss struct {
 	ExternalCode *string                  `json:"externalCode,omitempty"` // Внешний код
 	Files        *Files                   `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group                   `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID               `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID               `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta                    `json:"meta,omitempty"`         // Метаданные
 	Moment       *Timestamp               `json:"moment,omitempty"`       // Дата документа
 	Name         *string                  `json:"name,omitempty"`         // Наименование
@@ -33,7 +33,7 @@ type Loss struct {
 	State        *State                   `json:"state,omitempty"`        // Метаданные статуса
 	Store        *Store                   `json:"store,omitempty"`        // Метаданные склада
 	Sum          *float64                 `json:"sum,omitempty"`          // Сумма
-	SyncId       *uuid.UUID               `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
+	SyncID       *uuid.UUID               `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
 	Updated      *Timestamp               `json:"updated,omitempty"`      // Момент последнего обновления
 	SalesReturn  *SalesReturn             `json:"salesReturn,omitempty"`  // Ссылка на связанный со списанием возврат покупателя в формате Метаданных
 }
@@ -46,15 +46,15 @@ func (l Loss) MetaType() MetaType {
 	return MetaTypeLoss
 }
 
-type Losses = Iterator[Loss]
+type Losses = Slice[Loss]
 
 // LossPosition Позиция Списания.
 // Ключевое слово: lossposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-spisanie-spisaniq-pozicii-spisaniq
 type LossPosition struct {
-	AccountId  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Id         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.

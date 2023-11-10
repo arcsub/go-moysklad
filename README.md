@@ -96,49 +96,6 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
   client := moysklad.NewClient().WithDisabledWebhookContent(true)
 ```
 
-### Async()
-Методы для работы с асинхронными задачами.
-
-Относительный путь: `/async`
-```go
-  asyncService := clientExt.Async
-```
-### Audit()
-Методы для работы с аудитом.
-
-Относительный путь: `/audit`
-```go
-  auditService := clientExt.Audit
-```
-### Context()
-Методы для работы с контекстом.
-
-Относительный путь: `/context`
-```go
-  contextService := clientExt.Context
-```
-### Entity()
-Методы для работы с сущностями и документами.
-
-Относительный путь: `/entity`
-```go
-  entityService := clientExt.Entity
-```
-### Report()
-Методы для работы с отчётами.
-
-Относительный путь: `/report`
-```go
-  reportService := clientExt.Report
-```
-### Security()
-Относительный путь: `/security`
-
-Методы для получения токена.
-```go
-  securityService := clientExt.Security
-```
-
 ## Параметры запроса
 ### Создать экземпляр для работы с параметрами запроса
 ```go
@@ -399,8 +356,8 @@ func main() {
   productCreated.Name = moysklad.String("Updated Product")
 
   // отправим запрос на изменение товара
-  // в качестве аргументов передадим контекст, указатель на Id изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
-  productUpdated, _, err := productService.Update(context.Background(), productCreated.Id, productCreated, nil)
+  // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
+  productUpdated, _, err := productService.Update(context.Background(), productCreated.ID, productCreated, nil)
   if err != nil {
     panic(err)
   }
@@ -409,8 +366,8 @@ func main() {
   fmt.Println(moysklad.Deref(productUpdated.Name))
 
   // отправим запрос на удаление товара
-  // в качестве аргументов передадим контекст и указатель на Id удаляемой сущности
-  success, _, err := productService.Delete(context.Background(), productUpdated.Id)
+  // в качестве аргументов передадим контекст и указатель на ID удаляемой сущности
+  success, _, err := productService.Delete(context.Background(), productUpdated.ID)
   if err != nil {
     panic(err)
   }

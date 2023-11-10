@@ -8,7 +8,7 @@ import (
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent
 type Counterparty struct {
-	AccountId          *uuid.UUID                `json:"accountId,omitempty"`          // ID учетной записи
+	AccountID          *uuid.UUID                `json:"accountId,omitempty"`          // ID учетной записи
 	Accounts           *MetaArray[AgentAccount]  `json:"accounts,omitempty"`           // Массив счетов Контрагентов
 	ActualAddress      *string                   `json:"actualAddress,omitempty"`      // Фактический адрес Контрагента
 	ActualAddressFull  *Address                  `json:"actualAddressFull,omitempty"`  // Фактический адрес Контрагента с детализацией по отдельным полям
@@ -28,7 +28,7 @@ type Counterparty struct {
 	Fax                *string                   `json:"fax,omitempty"`                // Номер факса
 	Files              *Files                    `json:"files,omitempty"`              // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group              *Group                    `json:"group,omitempty"`              // Отдел сотрудника
-	Id                 *uuid.UUID                `json:"id,omitempty"`                 // ID сущности
+	ID                 *uuid.UUID                `json:"id,omitempty"`                 // ID сущности
 	Meta               *Meta                     `json:"meta,omitempty"`               // Метаданные
 	Name               *string                   `json:"name,omitempty"`               // Наименование
 	Notes              *MetaArray[Note]          `json:"notes,omitempty"`              // Массив событий Контрагента
@@ -38,10 +38,10 @@ type Counterparty struct {
 	SalesAmount        *float64                  `json:"salesAmount,omitempty"`        // Сумма продаж
 	Shared             *bool                     `json:"shared,omitempty"`             // Общий доступ
 	State              *State                    `json:"state,omitempty"`              // Метаданные Статуса Контрагента
-	SyncId             *uuid.UUID                `json:"syncId,omitempty"`             // ID синхронизации
+	SyncID             *uuid.UUID                `json:"syncId,omitempty"`             // ID синхронизации
 	Tags               *Tags                     `json:"tags,omitempty"`               // Группы контрагента
 	Updated            *Timestamp                `json:"updated,omitempty"`            // Момент последнего обновления Контрагента
-	BirthDate          *Timestamp                `json:"birthDate,omitempty"`          // Дата рождения
+	BirthDate          *Timestamp                `json:"birthDate,omitempty"`          // Дата рождения [15-08-2023]
 	CertificateDate    *Timestamp                `json:"certificateDate,omitempty"`    // Дата свидетельства
 	CertificateNumber  *string                   `json:"certificateNumber,omitempty"`  // Номер свидетельства
 	INN                *string                   `json:"inn,omitempty"`                // ИНН
@@ -52,7 +52,7 @@ type Counterparty struct {
 	OGRN               *string                   `json:"ogrn,omitempty"`               // ОГРН
 	OGRNIP             *string                   `json:"ogrnip,omitempty"`             // ОГРНИП
 	OKPO               *string                   `json:"okpo,omitempty"`               // ОКПО
-	Sex                SexType                   `json:"sex,omitempty"`                // Пол Контрагента
+	Sex                SexType                   `json:"sex,omitempty"`                // Пол Контрагента [15-08-2023]
 }
 
 func (c Counterparty) String() string {
@@ -100,13 +100,13 @@ func (c CounterpartySettings) MetaType() MetaType {
 // Ключевое слово: note
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-kontragenty-attributy-suschnosti-adres-sobytiq-kontragenta
 type Note struct {
-	AccountId         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
+	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
 	Agent             *Counterparty `json:"agent,omitempty"`             // Метаданные Контрагента
 	Author            *Employee     `json:"author,omitempty"`            // Метаданные Сотрудника - создателя события (администратор аккаунта, если автор - приложение)
 	AuthorApplication *Application  `json:"authorApplication,omitempty"` // Метаданные Приложения - создателя события
 	Created           *Timestamp    `json:"created,omitempty"`           // Момент создания события Контрагента
 	Description       *string       `json:"description,omitempty"`       // Текст события Контрагента
-	Id                *uuid.UUID    `json:"id,omitempty"`                // ID сущности
+	ID                *uuid.UUID    `json:"id,omitempty"`                // ID сущности
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные
 }
 
@@ -127,4 +127,4 @@ const (
 	SexFemale SexType = "FEMALE" // Женский
 )
 
-type Tags = Iterator[string]
+type Tags = []string

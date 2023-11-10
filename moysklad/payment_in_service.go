@@ -14,7 +14,7 @@ type PaymentInService struct {
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[PaymentIn]
+	endpointSyncID[PaymentIn]
 	endpointRemove
 }
 
@@ -32,7 +32,7 @@ func NewPaymentInService(client *Client) *PaymentInService {
 		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[PaymentIn]{e},
+		endpointSyncID:                 endpointSyncID[PaymentIn]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

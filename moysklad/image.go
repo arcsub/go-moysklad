@@ -22,8 +22,12 @@ func (i Image) MetaType() MetaType {
 	return MetaTypeImage
 }
 
-type Images Positions[Image]
+type Images MetaArray[Image]
 
-func (i *Images) Iter() *Iterator[Image] {
-	return i.Rows.Iter(MaxImages)
+// Push добавляет элементы в срез.
+// Элементы, превышающее максимальное значение MaxImages, игнорируются
+func (i *Images) Push(elements ...*Image) *Images {
+	limit := min(MaxImages, MaxImages-len(i.Rows), len(elements))
+	i.Rows = append(i.Rows, elements[:limit]...)
+	return i
 }

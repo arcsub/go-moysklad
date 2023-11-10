@@ -8,12 +8,12 @@ import (
 // Ключевое слово: processingstage
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-jetap-proizwodstwa
 type ProcessingStage struct {
-	AccountId    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
 	Archived     *bool      `json:"archived,omitempty"`     // Добавлен ли Этап в архив
 	Description  *string    `json:"description,omitempty"`  // Комментарий Этапа
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Этапа
 	Group        *Group     `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID `json:"id,omitempty"`           // ID Этапа
+	ID           *uuid.UUID `json:"id,omitempty"`           // ID Этапа
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Этапа
 	Name         *string    `json:"name,omitempty"`         // Наименование Этапа
 	Owner        *Employee  `json:"owner,omitempty"`        // Владелец (Сотрудник)

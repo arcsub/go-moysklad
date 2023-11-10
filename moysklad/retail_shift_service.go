@@ -10,7 +10,7 @@ type RetailShiftService struct {
 	endpointUpdate[RetailShift]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
-	endpointSyncId[RetailShift]
+	endpointSyncID[RetailShift]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -25,7 +25,7 @@ func NewRetailShiftService(client *Client) *RetailShiftService {
 		endpointUpdate:      endpointUpdate[RetailShift]{e},
 		endpointMetadata:    endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:  endpointAttributes{e},
-		endpointSyncId:      endpointSyncId[RetailShift]{e},
+		endpointSyncID:      endpointSyncID[RetailShift]{e},
 		endpointNamedFilter: endpointNamedFilter{e},
 		endpointRemove:      endpointRemove{e},
 	}

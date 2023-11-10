@@ -15,7 +15,7 @@ type RetailDemandService struct {
 	endpointPositions[RetailPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[RetailDemand]
+	endpointSyncID[RetailDemand]
 	endpointNamedFilter
 	endpointRemove
 }
@@ -35,7 +35,7 @@ func NewRetailDemandService(client *Client) *RetailDemandService {
 		endpointPositions:              endpointPositions[RetailPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[RetailDemand]{e},
+		endpointSyncID:                 endpointSyncID[RetailDemand]{e},
 		endpointNamedFilter:            endpointNamedFilter{e},
 		endpointRemove:                 endpointRemove{e},
 	}

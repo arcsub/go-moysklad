@@ -8,8 +8,8 @@ import (
 // Ключевое слово: counterpartyadjustment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-korrektirowka-balansa-kontragenta
 type CounterPartyAdjustment struct {
-	AccountId    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
-	Id           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
+	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
+	ID           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
 	Name         *string       `json:"name,omitempty"`         // Наименование
 	Meta         *Meta         `json:"meta,omitempty"`         // Метаданные
 	Agent        *Counterparty `json:"agent,omitempty"`        // Метаданные контрагента

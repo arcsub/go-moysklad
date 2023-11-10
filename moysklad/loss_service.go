@@ -15,7 +15,7 @@ type LossService struct {
 	endpointPositions[LossPosition]
 	endpointAttributes
 	endpointPublication
-	endpointSyncId[Loss]
+	endpointSyncID[Loss]
 	endpointRemove
 }
 
@@ -34,7 +34,7 @@ func NewLossService(client *Client) *LossService {
 		endpointPositions:              endpointPositions[LossPosition]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointPublication:            endpointPublication{e},
-		endpointSyncId:                 endpointSyncId[Loss]{e},
+		endpointSyncID:                 endpointSyncID[Loss]{e},
 		endpointRemove:                 endpointRemove{e},
 	}
 }

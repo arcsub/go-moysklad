@@ -12,7 +12,7 @@ import (
 // `data` для хранения сырых данных
 type Operation struct {
 	// Общие поля
-	AccountId    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
 	Attributes   *Attributes   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
 	Created      *Timestamp    `json:"created,omitempty"`      // Дата создания
 	Deleted      *Timestamp    `json:"deleted,omitempty"`      // Момент последнего удаления
@@ -20,7 +20,7 @@ type Operation struct {
 	ExternalCode *string       `json:"externalCode,omitempty"` // Внешний код
 	Files        *Files        `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group        `json:"group,omitempty"`        // Отдел сотрудника
-	Id           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
+	ID           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
 	Meta         Meta          `json:"meta,omitempty"`         // Метаданные
 	Name         *string       `json:"name,omitempty"`         // Наименование
 	Organization *Organization `json:"organization,omitempty"` // Метаданные юрлица
@@ -28,7 +28,7 @@ type Operation struct {
 	Printed      *bool         `json:"printed,omitempty"`      // Напечатан ли документ
 	Published    *bool         `json:"published,omitempty"`    // Опубликован ли документ
 	Shared       *bool         `json:"shared,omitempty"`       // Общий доступ
-	SyncId       *uuid.UUID    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
+	SyncID       *uuid.UUID    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
 	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
 	VatEnabled   *bool         `json:"vatEnabled,omitempty"`   // Учитывается ли НДС
 	VatIncluded  *bool         `json:"vatIncluded,omitempty"`  // Включен ли НДС в цену
