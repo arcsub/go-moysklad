@@ -5,6 +5,7 @@ package moysklad
 type TrackingType string
 
 const (
+	TrackingTypeBeerAlcohol TrackingType = "BEER_ALCOHOL" // [26-10-2023]
 	TrackingTypeElectronics TrackingType = "ELECTRONICS"
 	TrackingTypeClothes     TrackingType = "LP_CLOTHES"
 	TrackingTypeLinens      TrackingType = "LP_LINENS"
