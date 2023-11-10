@@ -8,7 +8,7 @@ SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.
 > 
 > Некоторые методы могут отсутствовать или работать неправильно!
 
-# Установка
+## Установка
 
 > Требуемая версия go >= 1.9
 > 
@@ -16,12 +16,12 @@ SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.
 go get github.com/arcsub/go-moysklad
 ```
 
-# Особенности
-## [go-retryablehttp](https://github.com/hashicorp/go-retryablehttp/)
+## Особенности
+### [go-retryablehttp](https://github.com/hashicorp/go-retryablehttp/)
 - В данном решении используется go-retryablehttp с корректировкой в необходимом для работы API МойСклад заголовке.
 - При получении ошибки 429 запрос будет повторяться N количество раз (по умолчанию 5). Изменить количество попыток можно с помощью метода клиента `WithMaxRetries()`
 
-## Возвращаемые аргументы
+### Возвращаемые аргументы
 Каждый запрос на создание/изменение/удаление возвращает 3 аргумента.
 Рассмотрим объявление функции 
 ```go
@@ -32,7 +32,7 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 2. `*Response` – сырой ответ на запрос, *http.Response, обёрнутый в *Response.
 3. `error` – ошибки, если они были. При возникновении ошибок от API МойСклад в качестве ошибки будет заполненная структура `ApiErrors`
 
-## Указатели
+### Указатели
 Поля структур сущностей и документов являются указателями.
 - Для безопасного разыменовывания указателя необходимо передать указатель в метод `Deref()`
 ```go
@@ -52,13 +52,13 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
     Active: moysklad.Bool(false),
   }
 ```
-# Использование
-## Создание экземпляра клиента
+## Использование
+### Создание экземпляра клиента
 ```go
   client := moysklad.NewClient()
 ```
 
-## Аутентификация
+### Аутентификация
 Имеется два способа аутентификации.
 - С помощью токена. Метод клиента `WithTokenAuth()`
 ```go
@@ -70,41 +70,41 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
   client := moysklad.NewClient().WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
 ```
 
-## Методы клиента
-### WithTokenAuth(token)
+### Методы клиента
+#### WithTokenAuth(token)
 Получить простой клиент с авторизацией через токен.
 ```go
   client := moysklad.NewClient().WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN"))
 ```
-### WithBasicAuth(username, password)
+#### WithBasicAuth(username, password)
 Получить простой клиент с авторизацией через пару логин/пароль.
 ```go
   client := moysklad.NewClient().
 	  WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
 ```
-### WithMaxRetries(retries)
+#### WithMaxRetries(retries)
 Устанавливает максимальное кол-во попыток для одного запроса и возвращает простой клиент.
 По умолчанию у запроса 5 попыток.
 ```go
   // установим 10 попыток для каждого запроса
   client := moysklad.NewClient().WithMaxRetries(10)
 ```
-### WithDisabledWebhookContent(value)
+#### WithDisabledWebhookContent(value)
 Временное отключение уведомлений вебхуков
 ```go
   // отключим уведомления вебхуков на данном клиенте
   client := moysklad.NewClient().WithDisabledWebhookContent(true)
 ```
 
-## Параметры запроса
-### Создать экземпляр для работы с параметрами запроса
+### Параметры запроса
+#### Создать экземпляр для работы с параметрами запроса
 ```go
 params := new(moysklad.Params)
 ```
 
-### Методы для работы с параметрами запроса
+#### Методы для работы с параметрами запроса
 
-#### Количество элементов на странице `limit=val`
+Количество элементов на странице `limit=val`
 Пример:
 ```go
 params.WithLimit(100)
@@ -281,10 +281,10 @@ params.WithMomentFrom(time.Now())
 params.WithMomentTo(time.Now())
 ```
 
-## Сервисы
+### Сервисы
 Для перехода к определённому сервису необходимо вызвать цепочку методов, аналогично пути запроса.
 
-### Пример: ProductService
+#### Пример: ProductService
 Сервис для работы с товарами.
 
 Относительный путь: `/entity/product`
@@ -304,7 +304,7 @@ _ = client.Context().CompanySettings()
 // `/report/dashboard`
 _ = client.Report().Dashboard()
 ```
-## Пример работы
+### Пример работы
 ```go
 package main
 
