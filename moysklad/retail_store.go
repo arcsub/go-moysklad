@@ -72,6 +72,7 @@ type RetailStore struct {
 	ReservePrepaidGoods                 *bool                 `json:"reservePrepaidGoods,omitempty"`
 	ReturnFromClosedShiftEnabled        *bool                 `json:"returnFromClosedShiftEnabled,omitempty"`
 	SellReserves                        *bool                 `json:"sellReserves,omitempty"`
+	ShowBeerOnTap                       *bool                 `json:"showBeerOnTap,omitempty"` // [28-11-2023]
 	PriorityOFDSend                     PriorityOfdSend       `json:"priorityOfdSend,omitempty"`
 	OrderTaxSystem                      TaxSystem             `json:"orderTaxSystem,omitempty"`
 	MinionToMasterType                  MinionToMaster        `json:"minionToMasterType,omitempty"`
