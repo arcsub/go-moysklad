@@ -14,6 +14,7 @@ type ProcessingPlanMaterial struct {
 	Product                   *Product            `json:"product,omitempty"`                   // Метаданные товара позиции. В случае, если в поле assortment указана модификация, то это поле содержит товар, к которому относится эта модификация
 	Quantity                  *float64            `json:"quantity,omitempty"`                  // Количество товаров данного вида в позиции
 	ProcessingProcessPosition *Meta               `json:"processingProcessPosition,omitempty"` // Метаданные позиции Тех. процесса
+	MaterialProcessingPlan    *Meta               `json:"materialProcessingPlan"`              // Метаданные техкарты материала [11-01-2024]
 }
 
 func (p ProcessingPlanMaterial) String() string {
