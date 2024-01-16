@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"image/color"
 	"io"
 	"os"
@@ -181,14 +182,14 @@ func RGBtoUint64(str string) (uint64, error) {
 
 var reContentDisposition = regexp.MustCompile(`filename="(.*)"`)
 
-func GetFileFromResponse(resp *Response) (*PrintFile, error) {
+func GetFileFromResponse(resp *resty.Response) (*PrintFile, error) {
 	buf := new(bytes.Buffer)
-	if _, err := io.Copy(buf, resp.Body); err != nil {
+	if _, err := io.Copy(buf, resp.RawBody()); err != nil {
 		return nil, err
 	}
 
 	var fileName string
-	headerStr := resp.Header.Get(headerContentDisposition)
+	headerStr := resp.Header().Get(headerContentDisposition)
 	if match := reContentDisposition.FindStringSubmatch(headerStr); len(match) > 1 {
 		fileName = match[1]
 	}

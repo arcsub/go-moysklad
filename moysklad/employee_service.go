@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
 )
@@ -38,47 +39,45 @@ func NewEmployeeService(client *Client) *EmployeeService {
 
 // GetPermissions Запрос на получение информации о правах Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-poluchit-informaciu-o-prawah-sotrudnika
-func (s *EmployeeService) GetPermissions(ctx context.Context, id *uuid.UUID) (*EmployeePermission, *Response, error) {
-	path := fmt.Sprintf("%s/security", id)
-	return NewRequestBuilder[EmployeePermission](s.Endpoint, ctx).WithPath(path).Get()
+func (s *EmployeeService) GetPermissions(ctx context.Context, id *uuid.UUID) (*EmployeePermission, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/security", s.uri, id)
+	return NewRequestBuilder[EmployeePermission](s.client, path).Get(ctx)
 }
 
 // UpdatePermissions Запрос на изменение информации о правах Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-izmenit-informaciu-o-prawah-sotrudnika
-func (s *EmployeeService) UpdatePermissions(ctx context.Context, id *uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *Response, error) {
-	path := fmt.Sprintf("%s/security", id)
-	return NewRequestBuilder[EmployeePermission](s.Endpoint, ctx).WithPath(path).WithBody(permissions).Put()
+func (s *EmployeeService) UpdatePermissions(ctx context.Context, id *uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/security", s.uri, id)
+	return NewRequestBuilder[EmployeePermission](s.client, path).Put(ctx, permissions)
 }
 
 // Activate Активация Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-aktiwaciq-sotrudnika
-func (s *EmployeeService) Activate(ctx context.Context, id *uuid.UUID, permissions *EmployeePermission) (*MailActivationRequired, *Response, error) {
-	path := fmt.Sprintf("%s/access/activate", id)
-	return NewRequestBuilder[MailActivationRequired](s.Endpoint, ctx).WithPath(path).WithBody(permissions).Put()
+func (s *EmployeeService) Activate(ctx context.Context, id *uuid.UUID, permissions *EmployeePermission) (*MailActivationRequired, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/access/activate", s.uri, id)
+	return NewRequestBuilder[MailActivationRequired](s.client, path).Put(ctx, permissions)
 }
 
 // Deactivate Деактивация Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-deaktiwaciq-sotrudnika
-func (s *EmployeeService) Deactivate(ctx context.Context, id *uuid.UUID) (bool, *Response, error) {
-	path := fmt.Sprintf("%s/access/deactivate", id)
-	rb := NewRequestBuilder[any](s.Endpoint, ctx).WithPath(path)
-	response, err := rb.do(http.MethodPut)
+func (s *EmployeeService) Deactivate(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/access/deactivate", s.uri, id)
+	response, err := s.client.client.R().SetContext(ctx).Put(path)
 	if err != nil {
 		return false, response, err
 	}
-	ok := response.StatusCode == http.StatusNoContent
+	ok := response.StatusCode() == http.StatusNoContent
 	return ok, response, nil
 }
 
 // ResetPassword Сброс пароля Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-sbros-parolq-sotrudnika
-func (s *EmployeeService) ResetPassword(ctx context.Context, id *uuid.UUID) (bool, *Response, error) {
+func (s *EmployeeService) ResetPassword(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/access/resetpassword", id)
-	rb := NewRequestBuilder[any](s.Endpoint, ctx).WithPath(path)
-	response, err := rb.do(http.MethodPut)
+	response, err := s.client.client.R().SetContext(ctx).Put(path)
 	if err != nil {
 		return false, response, err
 	}
-	ok := response.StatusCode == http.StatusNoContent
+	ok := response.StatusCode() == http.StatusNoContent
 	return ok, response, nil
 }

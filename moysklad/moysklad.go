@@ -1,18 +1,15 @@
 package moysklad
 
 import (
-	"compress/gzip"
-	"context"
-	"encoding/json"
 	"fmt"
-	"io"
+	"github.com/go-resty/resty/v2"
 	"net/http"
-	"net/url"
+	"strconv"
 	"sync"
 )
 
 const (
-	Version          = "v0.0.7"
+	Version          = "v0.0.10"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -32,18 +29,32 @@ const (
 	MaxPrintCount = 1000 // TODO: Максимальное количество ценников/термоэтикеток
 )
 
+func getUserAgent() string {
+	return fmt.Sprintf("%s (https://github.com/arcsub/go-moysklad)", defaultUserAgent)
+}
+
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
-	client                *RetryableClient
-	clientMu              sync.Mutex
-	disableWebhookContent bool
+	client   *resty.Client
+	clientMu sync.Mutex
 }
 
 // NewClient возвращает новый клиент для работы с API МойСклад.
 // Данный клиент не имеет встроенных сервисов.
 // Его необходимо передавать при создании каждого нового экземпляра сервиса.
 func NewClient() *Client {
-	rc := newRetryableClient()
+	rc := resty.New().
+		SetBaseURL(baseApiURL).
+		SetHeaders(map[string]string{
+			"Accept-Encoding": "gzip",
+			"User-Agent":      getUserAgent(),
+		}).
+		AddRetryCondition(
+			func(r *resty.Response, err error) bool {
+				// Including "err != nil" emulates the default retry behavior for errors encountered during the request.
+				return err != nil || r.StatusCode() == http.StatusTooManyRequests
+			},
+		)
 	return &Client{client: rc}
 }
 
@@ -74,49 +85,24 @@ func (c *Client) Security() *SecurityTokenService {
 // WithTokenAuth возвращает клиент с авторизацией через токен.
 func (c *Client) WithTokenAuth(token string) *Client {
 	c2 := c.copy()
-	transport := c2.client.HTTPClient.Transport
-	if transport == nil {
-		transport = http.DefaultTransport
-	}
-	c2.client.HTTPClient.Transport = roundTripperFunc(
-		func(req *http.Request) (*http.Response, error) {
-			req = req.Clone(req.Context())
-			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-			return transport.RoundTrip(req)
-		},
-	)
+	c2.client.SetAuthToken(token)
 	return c2
 }
 
 // WithBasicAuth возвращает клиент с базовой авторизацией логин/пароль.
 func (c *Client) WithBasicAuth(username, password string) *Client {
 	c2 := c.copy()
-	transport := c2.client.HTTPClient.Transport
-	if transport == nil {
-		transport = http.DefaultTransport
-	}
-	c2.client.HTTPClient.Transport = roundTripperFunc(
-		func(req *http.Request) (*http.Response, error) {
-			req = req.Clone(req.Context())
-			req.SetBasicAuth(username, password)
-			return transport.RoundTrip(req)
-		},
-	)
+	c2.client.SetBasicAuth(username, password)
 	return c2
-}
-
-// WithMaxRetries устанавливает максимальное кол-во попыток для одного запроса.
-func (c *Client) WithMaxRetries(retries int) *Client {
-	c.client.RetryMax = retries
-	return c
 }
 
 // WithDisabledWebhookContent устанавливает флаг, который отвечает
 // за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
 // Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
 func (c *Client) WithDisabledWebhookContent(value bool) *Client {
-	c.disableWebhookContent = value
-	return c
+	c2 := c.copy()
+	c2.client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
+	return c2
 }
 
 // copy возвращает копию клиента.
@@ -124,84 +110,9 @@ func (c *Client) copy() *Client {
 	c.clientMu.Lock()
 	defer c.clientMu.Unlock()
 	clone := Client{
-		client:                c.client,
-		disableWebhookContent: c.disableWebhookContent,
+		client: c.client,
 	}
 	return &clone
-}
-
-// Response Ответ от API МойСклад.
-// Оборачивает стандартный http.Response, полученный от API МойСклад.
-type Response struct {
-	*http.Response
-}
-
-// newResponse создаёт экземпляр Response с http.Response.
-func newResponse(r *http.Response) (*Response, error) {
-	resp := &Response{r}
-
-	// заголовок Content-Encoding [01.12.2023]
-	if !resp.Uncompressed && resp.Header.Get("Content-Encoding") == "gzip" {
-		body, err := gzip.NewReader(resp.Body)
-		if err != nil {
-			return resp, err
-		}
-		resp.Body = body
-	}
-
-	// проверяем ответ от сервиса на наличие ошибок API.
-	if code := r.StatusCode; code <= http.StatusFound {
-		return resp, nil
-	}
-
-	apiErrs := &ApiErrors{}
-	data, err := io.ReadAll(r.Body)
-	if err == nil && data != nil {
-		_ = json.Unmarshal(data, apiErrs)
-	}
-	return resp, apiErrs
-}
-
-// Do отправляет запрос в API и обрабатывает ответ.
-// В случае получения в ответе ошибки API возвращаемая ошибка будет содержать дополнительную информацию.
-func (c *Client) Do(ctx context.Context, req *http.Request) (*Response, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
-
-	req.WithContext(ctx)
-
-	// Convert the request to be retryable.
-	retryableReq, err := FromRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := c.client.Do(retryableReq)
-
-	defer func() {
-		if req.Header.Get(headerGetContent) != "true" {
-			_ = resp.Body.Close()
-		}
-	}()
-
-	if err != nil {
-		select {
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		default:
-		}
-
-		if e, ok := err.(*url.Error); ok {
-			if u, err := url.Parse(e.URL); err == nil {
-				e.URL = u.String()
-				return nil, e
-			}
-		}
-		return nil, err
-	}
-
-	return newResponse(resp)
 }
 
 // EntityService
@@ -540,10 +451,4 @@ func (s *ReportService) Stock() *ReportStockService {
 
 func (s *ReportService) Turnover() *ReportTurnoverService {
 	return NewReportTurnoverService(s.client)
-}
-
-type roundTripperFunc func(*http.Request) (*http.Response, error)
-
-func (fn roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) {
-	return fn(r)
 }

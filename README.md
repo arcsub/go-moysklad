@@ -25,9 +25,9 @@ go get github.com/arcsub/go-moysklad
 Каждый запрос на создание/изменение/удаление возвращает 3 аргумента.
 Рассмотрим объявление функции 
 ```go
-func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Params) (*T, *Response, error)
+func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Params) (*T, *resty.Response, error)
 ```
-В примере выше нас интересуют возвращаемые аргументы: `(*T, *Response, error)`
+В примере выше нас интересуют возвращаемые аргументы: `(*T, *resty.Response, error)`
 1. `*T` – указатель на сущность/документ, например *Product при вызове `Create()` (возвращает `bool` при вызове метода `Delete()`).
 2. `*Response` – сырой ответ на запрос, *http.Response, обёрнутый в *Response.
 3. `error` – ошибки, если они были. При возникновении ошибок от API МойСклад в качестве ошибки будет заполненная структура `ApiErrors`

@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"context"
+	"github.com/go-resty/resty/v2"
 )
 
 // ReportSalesService
@@ -17,16 +18,16 @@ func NewReportSalesService(client *Client) *ReportSalesService {
 
 // GetPlotSeries Запрос на получение показателей продаж.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *ReportSalesService) GetPlotSeries(ctx context.Context, params *Params) (*SalesPlotSeries, *Response, error) {
-	path := "plotseries"
-	return NewRequestBuilder[SalesPlotSeries](s.Endpoint, ctx).WithPath(path).WithParams(params).Get()
+func (s *ReportSalesService) GetPlotSeries(ctx context.Context, params *Params) (*SalesPlotSeries, *resty.Response, error) {
+	path := "report/sales/plotseries"
+	return NewRequestBuilder[SalesPlotSeries](s.client, path).SetParams(params).Get(ctx)
 }
 
 // GetPlotSeriesAsync Запрос на получение показателей продаж (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *ReportSalesService) GetPlotSeriesAsync(ctx context.Context, params *Params) (*AsyncResultService[SalesPlotSeries], *Response, error) {
-	path := "plotseries"
-	return NewRequestBuilder[SalesPlotSeries](s.Endpoint, ctx).WithPath(path).WithParams(params).Async()
+func (s *ReportSalesService) GetPlotSeriesAsync(ctx context.Context, params *Params) (*AsyncResultService[SalesPlotSeries], *resty.Response, error) {
+	path := "report/sales/plotseries"
+	return NewRequestBuilder[SalesPlotSeries](s.client, path).SetParams(params).Async(ctx)
 }
 
 // ReportOrdersService
@@ -42,14 +43,14 @@ func NewReportOrdersService(client *Client) *ReportOrdersService {
 
 // GetPlotSeries Запрос на получение показателей заказов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *ReportOrdersService) GetPlotSeries(ctx context.Context, params *Params) (*OrdersPlotSeries, *Response, error) {
-	path := "plotseries"
-	return NewRequestBuilder[OrdersPlotSeries](s.Endpoint, ctx).WithPath(path).WithParams(params).Get()
+func (s *ReportOrdersService) GetPlotSeries(ctx context.Context, params *Params) (*OrdersPlotSeries, *resty.Response, error) {
+	path := "report/orders/plotseries"
+	return NewRequestBuilder[OrdersPlotSeries](s.client, path).SetParams(params).Get(ctx)
 }
 
 // GetPlotSeriesAsync Запрос на получение показателей заказов (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *ReportOrdersService) GetPlotSeriesAsync(ctx context.Context, params *Params) (*AsyncResultService[OrdersPlotSeries], *Response, error) {
-	path := "plotseries"
-	return NewRequestBuilder[OrdersPlotSeries](s.Endpoint, ctx).WithPath(path).WithParams(params).Async()
+func (s *ReportOrdersService) GetPlotSeriesAsync(ctx context.Context, params *Params) (*AsyncResultService[OrdersPlotSeries], *resty.Response, error) {
+	path := "report/orders/plotseries"
+	return NewRequestBuilder[OrdersPlotSeries](s.client, path).SetParams(params).Async(ctx)
 }

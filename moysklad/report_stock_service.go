@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
 
@@ -19,30 +20,30 @@ func NewReportStockService(client *Client) *ReportStockService {
 
 // GetAll Запрос на получение Расширенного отчета об остатках.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-rasshirennyj-otchet-ob-ostatkah
-func (s *ReportStockService) GetAll(ctx context.Context) (*List[StockAll], *Response, error) {
-	path := "all"
-	return NewRequestBuilder[List[StockAll]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ReportStockService) GetAll(ctx context.Context) (*List[StockAll], *resty.Response, error) {
+	path := fmt.Sprintf("%s/all", s.uri)
+	return NewRequestBuilder[List[StockAll]](s.client, path).Get(ctx)
 }
 
 // GetByStore Запрос на получение отчета "Остатки по складам".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-ostatki-po-skladam
-func (s *ReportStockService) GetByStore(ctx context.Context) (*List[StockByStore], *Response, error) {
-	path := "bystore"
-	return NewRequestBuilder[List[StockByStore]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ReportStockService) GetByStore(ctx context.Context) (*List[StockByStore], *resty.Response, error) {
+	path := fmt.Sprintf("%s/bystore", s.uri)
+	return NewRequestBuilder[List[StockByStore]](s.client, path).Get(ctx)
 }
 
 // GetCurrentAll Запрос на получение текущих остатков без разбиения по складам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-kratkij-otchet-ob-ostatkah
-func (s *ReportStockService) GetCurrentAll(ctx context.Context) (*Slice[StockCurrentAll], *Response, error) {
-	path := "all/current"
-	return NewRequestBuilder[Slice[StockCurrentAll]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ReportStockService) GetCurrentAll(ctx context.Context) (*[]StockCurrentAll, *resty.Response, error) {
+	path := fmt.Sprintf("%s/all/current", s.uri)
+	return NewRequestBuilder[[]StockCurrentAll](s.client, path).Get(ctx)
 }
 
 // GetCurrentByStore Запрос на получение текущих остатков без разбиения по складам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-kratkij-otchet-ob-ostatkah
-func (s *ReportStockService) GetCurrentByStore(ctx context.Context) (*Slice[StockCurrentByStore], *Response, error) {
-	path := "bystore/current"
-	return NewRequestBuilder[Slice[StockCurrentByStore]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ReportStockService) GetCurrentByStore(ctx context.Context) (*[]StockCurrentByStore, *resty.Response, error) {
+	path := fmt.Sprintf("%s/bystore/current", s.uri)
+	return NewRequestBuilder[[]StockCurrentByStore](s.client, path).Get(ctx)
 }
 
 // GetByOperationId
@@ -59,21 +60,21 @@ func (s *ReportStockService) GetCurrentByStore(ctx context.Context) (*Slice[Stoc
 // – Возврат поставщику
 // – Возврат покупателя
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-ostatki-po-dokumentu
-func (s *ReportStockService) GetByOperationId(ctx context.Context, operationId uuid.UUID) (*List[StockByOperation], *Response, error) {
-	path := fmt.Sprintf("byoperation?operation.id=%s", operationId)
-	return NewRequestBuilder[List[StockByOperation]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ReportStockService) GetByOperationId(ctx context.Context, operationId uuid.UUID) (*List[StockByOperation], *resty.Response, error) {
+	path := fmt.Sprintf("%s/byoperation?operation.id=%s", s.uri, operationId)
+	return NewRequestBuilder[List[StockByOperation]](s.client, path).Get(ctx)
 }
 
 // GetAllAsync Запрос на получение Расширенного отчета об остатках (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-rasshirennyj-otchet-ob-ostatkah
-func (s *ReportStockService) GetAllAsync(ctx context.Context) (*AsyncResultService[List[StockAll]], *Response, error) {
-	path := "all"
-	return NewRequestBuilder[List[StockAll]](s.Endpoint, ctx).WithPath(path).Async()
+func (s *ReportStockService) GetAllAsync(ctx context.Context) (*AsyncResultService[List[StockAll]], *resty.Response, error) {
+	path := fmt.Sprintf("%s/all", s.uri)
+	return NewRequestBuilder[List[StockAll]](s.client, path).Async(ctx)
 }
 
 // GetByStoreAsync Запрос на получение отчета "Остатки по складам" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-ostatki-po-skladam
-func (s *ReportStockService) GetByStoreAsync(ctx context.Context) (*AsyncResultService[List[StockByStore]], *Response, error) {
-	path := "bystore"
-	return NewRequestBuilder[List[StockByStore]](s.Endpoint, ctx).WithPath(path).Async()
+func (s *ReportStockService) GetByStoreAsync(ctx context.Context) (*AsyncResultService[List[StockByStore]], *resty.Response, error) {
+	path := fmt.Sprintf("%s/bystore", s.uri)
+	return NewRequestBuilder[List[StockByStore]](s.client, path).Async(ctx)
 }

@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
 
@@ -35,67 +36,67 @@ func NewProcessingPlanService(client *Client) *ProcessingPlanService {
 	}
 }
 
-func (s *ProcessingPlanService) GetStages(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[ProcessingStage], *Response, error) {
-	path := fmt.Sprintf("%s/stages", id)
-	return NewRequestBuilder[MetaArray[ProcessingStage]](s.Endpoint, ctx).WithPath(path).WithParams(params).Get()
+func (s *ProcessingPlanService) GetStages(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[ProcessingStage], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/stages", s.uri, id)
+	return NewRequestBuilder[MetaArray[ProcessingStage]](s.client, path).SetParams(params).Get(ctx)
 }
 
-func (s *ProcessingPlanService) GetStageById(ctx context.Context, id, stageId uuid.UUID) (*ProcessingStage, *Response, error) {
-	path := fmt.Sprintf("%s/stages/%s", id, stageId)
-	return NewRequestBuilder[ProcessingStage](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ProcessingPlanService) GetStageById(ctx context.Context, id, stageId uuid.UUID) (*ProcessingStage, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/stages/%s", s.uri, id, stageId)
+	return NewRequestBuilder[ProcessingStage](s.client, path).Get(ctx)
 }
 
-func (s *ProcessingPlanService) UpdateStage(ctx context.Context, id, stageId uuid.UUID, stage *ProcessingStage) (*ProcessingStage, *Response, error) {
-	path := fmt.Sprintf("%s/stages/%s", id, stageId)
-	return NewRequestBuilder[ProcessingStage](s.Endpoint, ctx).WithPath(path).Put()
+func (s *ProcessingPlanService) UpdateStage(ctx context.Context, id, stageId uuid.UUID, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/stages/%s", s.uri, id, stageId)
+	return NewRequestBuilder[ProcessingStage](s.client, path).Put(ctx, stage)
 }
 
-func (s *ProcessingPlanService) GetMaterials(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanMaterial], *Response, error) {
-	path := fmt.Sprintf("%s/materials", id)
-	return NewRequestBuilder[List[ProcessingPlanMaterial]](s.Endpoint, ctx).WithPath(path).Put()
+func (s *ProcessingPlanService) GetMaterials(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
+	return NewRequestBuilder[List[ProcessingPlanMaterial]](s.client, path).Get(ctx)
 }
 
-func (s *ProcessingPlanService) CreateMaterial(ctx context.Context, id *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *Response, error) {
-	path := fmt.Sprintf("%s/materials", id)
-	return NewRequestBuilder[ProcessingPlanMaterial](s.Endpoint, ctx).WithPath(path).WithBody(material).Post()
+func (s *ProcessingPlanService) CreateMaterial(ctx context.Context, id *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
+	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Post(ctx, material)
 }
 
-func (s *ProcessingPlanService) GetMaterialById(ctx context.Context, id, materialId uuid.UUID) (*ProcessingPlanMaterial, *Response, error) {
-	path := fmt.Sprintf("%s/materials/%s", id, materialId)
-	return NewRequestBuilder[ProcessingPlanMaterial](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ProcessingPlanService) GetMaterialById(ctx context.Context, id, materialId uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials/%s", s.uri, id, materialId)
+	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Get(ctx)
 }
 
-func (s *ProcessingPlanService) UpdateMaterial(ctx context.Context, id, materialId uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *Response, error) {
-	path := fmt.Sprintf("%s/materials/%s", id, materialId)
-	return NewRequestBuilder[ProcessingPlanMaterial](s.Endpoint, ctx).WithPath(path).WithBody(material).Put()
+func (s *ProcessingPlanService) UpdateMaterial(ctx context.Context, id, materialId uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials/%s", s.uri, id, materialId)
+	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Put(ctx, material)
 }
 
-func (s *ProcessingPlanService) DeleteMaterial(ctx context.Context, id, materialId uuid.UUID) (bool, *Response, error) {
-	path := fmt.Sprintf("%s/materials/%s", id, materialId)
-	return NewRequestBuilder[any](s.Endpoint, ctx).WithPath(path).Delete()
+func (s *ProcessingPlanService) DeleteMaterial(ctx context.Context, id, materialId uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials/%s", s.uri, id, materialId)
+	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
-func (s *ProcessingPlanService) GetProducts(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanProduct], *Response, error) {
-	path := fmt.Sprintf("%s/products", id)
-	return NewRequestBuilder[List[ProcessingPlanProduct]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ProcessingPlanService) GetProducts(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products", s.uri, id)
+	return NewRequestBuilder[List[ProcessingPlanProduct]](s.client, path).Get(ctx)
 }
 
-func (s *ProcessingPlanService) CreateProduct(ctx context.Context, id *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *Response, error) {
-	path := fmt.Sprintf("%s/products", id)
-	return NewRequestBuilder[ProcessingPlanProduct](s.Endpoint, ctx).WithPath(path).WithBody(product).Post()
+func (s *ProcessingPlanService) CreateProduct(ctx context.Context, id *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products", s.uri, id)
+	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Post(ctx, product)
 }
 
-func (s *ProcessingPlanService) GetProductById(ctx context.Context, id, productId uuid.UUID) (*ProcessingPlanProduct, *Response, error) {
-	path := fmt.Sprintf("%s/products/%s", id, productId)
-	return NewRequestBuilder[ProcessingPlanProduct](s.Endpoint, ctx).WithPath(path).Get()
+func (s *ProcessingPlanService) GetProductById(ctx context.Context, id, productId uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products/%s", s.uri, id, productId)
+	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Get(ctx)
 }
 
-func (s *ProcessingPlanService) UpdateProduct(ctx context.Context, id, productId uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *Response, error) {
-	path := fmt.Sprintf("%s/products/%s", id, productId)
-	return NewRequestBuilder[ProcessingPlanProduct](s.Endpoint, ctx).WithPath(path).WithBody(product).Put()
+func (s *ProcessingPlanService) UpdateProduct(ctx context.Context, id, productId uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products/%s", s.uri, id, productId)
+	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Put(ctx, product)
 }
 
-func (s *ProcessingPlanService) DeleteProduct(ctx context.Context, id, productId uuid.UUID) (bool, *Response, error) {
-	path := fmt.Sprintf("%s/products/%s", id, productId)
-	return NewRequestBuilder[any](s.Endpoint, ctx).WithPath(path).Delete()
+func (s *ProcessingPlanService) DeleteProduct(ctx context.Context, id, productId uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products/%s", s.uri, id, productId)
+	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
 )
@@ -46,13 +47,12 @@ func NewInventoryService(client *Client) *InventoryService {
 
 // Recalculate Запрос на пересчёт расчётных остатков у позиций инвентаризации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-pereschet-raschetnogo-ostatka-w-inwentarizacii
-func (s *InventoryService) Recalculate(ctx context.Context, id *uuid.UUID) (bool, *Response, error) {
-	uri := fmt.Sprintf("rpc/inventory/%s/recalcCalculatedQuantity", id)
-	e := NewEndpoint(s.client, uri)
-	resp, err := NewRequestBuilder[any](e, ctx).do(http.MethodPut)
+func (s *InventoryService) Recalculate(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("rpc/inventory/%s/recalcCalculatedQuantity", id)
+	resp, err := s.client.client.R().SetContext(ctx).Put(path)
 	if err != nil {
 		return false, resp, err
 	}
-	ok := resp.StatusCode == http.StatusCreated
+	ok := resp.StatusCode() == http.StatusCreated
 	return ok, resp, nil
 }

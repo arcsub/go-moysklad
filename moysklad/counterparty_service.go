@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
 
@@ -45,69 +46,69 @@ func NewCounterpartyService(client *Client) *CounterpartyService {
 
 // GetAsync Запрос на получения списка Контрагентов (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-spisok-kontragentow
-func (s *CounterpartyService) GetAsync(ctx context.Context, params *Params) (*AsyncResultService[List[Counterparty]], *Response, error) {
-	return NewRequestBuilder[List[Counterparty]](s.Endpoint, ctx).WithParams(params).Async()
+func (s *CounterpartyService) GetAsync(ctx context.Context, params *Params) (*AsyncResultService[List[Counterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[Counterparty]](s.client, s.uri).SetParams(params).Async(ctx)
 }
 
 // GetContactPersons Список контактных лиц.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-kontaktnyh-lic
-func (s *CounterpartyService) GetContactPersons(ctx context.Context, id *uuid.UUID, params *Params) (*List[ContactPerson], *Response, error) {
-	path := fmt.Sprintf("%s/contactpersons", id)
-	return NewRequestBuilder[List[ContactPerson]](s.Endpoint, ctx).WithPath(path).WithParams(params).Get()
+func (s *CounterpartyService) GetContactPersons(ctx context.Context, id *uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/contactpersons", s.uri, id)
+	return NewRequestBuilder[List[ContactPerson]](s.client, path).SetParams(params).Get(ctx)
 }
 
 // GetContactPersonById Получить контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-kontaktnoe-lico
-func (s *CounterpartyService) GetContactPersonById(ctx context.Context, id, contactPersonId uuid.UUID) (*ContactPerson, *Response, error) {
-	path := fmt.Sprintf("%s/contactpersons/%s", id, contactPersonId)
-	return NewRequestBuilder[ContactPerson](s.Endpoint, ctx).WithPath(path).Get()
+func (s *CounterpartyService) GetContactPersonById(ctx context.Context, id, contactPersonId uuid.UUID) (*ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/contactpersons/%s", s.uri, id, contactPersonId)
+	return NewRequestBuilder[ContactPerson](s.client, path).Get(ctx)
 }
 
 // CreateContactPerson Создать контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-sozdat-kontaktnoe-lico
-func (s *CounterpartyService) CreateContactPerson(ctx context.Context, id *uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *Response, error) {
-	path := fmt.Sprintf("%s/contactpersons", id)
-	return NewRequestBuilder[Slice[ContactPerson]](s.Endpoint, ctx).WithPath(path).WithBody(contactPerson).Post()
+func (s *CounterpartyService) CreateContactPerson(ctx context.Context, id *uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/contactpersons", s.uri, id)
+	return NewRequestBuilder[[]ContactPerson](s.client, path).Post(ctx, contactPerson)
 }
 
 // UpdateContactPerson Изменить контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-izmenit-kontaktnoe-lico
-func (s *CounterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonId uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *Response, error) {
-	path := fmt.Sprintf("%s/contactpersons/%s", id, contactPersonId)
-	return NewRequestBuilder[ContactPerson](s.Endpoint, ctx).WithPath(path).WithBody(contactPerson).Put()
+func (s *CounterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonId uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/contactpersons/%s", s.uri, id, contactPersonId)
+	return NewRequestBuilder[ContactPerson](s.client, path).Put(ctx, contactPerson)
 }
 
 // GetNotes Список событий.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-sobytij
-func (s *CounterpartyService) GetNotes(ctx context.Context, id *uuid.UUID) (*List[Note], *Response, error) {
-	path := fmt.Sprintf("%s/notes", id)
-	return NewRequestBuilder[List[Note]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *CounterpartyService) GetNotes(ctx context.Context, id *uuid.UUID) (*List[Note], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", s.uri, id)
+	return NewRequestBuilder[List[Note]](s.client, path).Get(ctx)
 }
 
 // GetNoteById Получить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-sobytie
-func (s *CounterpartyService) GetNoteById(ctx context.Context, id, noteId uuid.UUID) (*Note, *Response, error) {
-	path := fmt.Sprintf("%s/notes/%s", id, noteId)
-	return NewRequestBuilder[Note](s.Endpoint, ctx).WithPath(path).Get()
+func (s *CounterpartyService) GetNoteById(ctx context.Context, id, noteId uuid.UUID) (*Note, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, id, noteId)
+	return NewRequestBuilder[Note](s.client, path).Get(ctx)
 }
 
 // CreateNote Добавить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-dobawit-sobytie
-func (s *CounterpartyService) CreateNote(ctx context.Context, id *uuid.UUID, note *Note) (*Slice[Note], *Response, error) {
-	path := fmt.Sprintf("%s/notes", id)
-	return NewRequestBuilder[Slice[Note]](s.Endpoint, ctx).WithPath(path).WithBody(note).Post()
+func (s *CounterpartyService) CreateNote(ctx context.Context, id *uuid.UUID, note *Note) (*[]Note, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", s.uri, id)
+	return NewRequestBuilder[[]Note](s.client, path).Post(ctx, note)
 }
 
 // UpdateNote Изменить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-izmenit-sobytie
-func (s *CounterpartyService) UpdateNote(ctx context.Context, id, noteId uuid.UUID, note *Note) (*Note, *Response, error) {
-	path := fmt.Sprintf("%s/notes/%s", id, noteId)
-	return NewRequestBuilder[Note](s.Endpoint, ctx).WithPath(path).WithBody(note).Put()
+func (s *CounterpartyService) UpdateNote(ctx context.Context, id, noteId uuid.UUID, note *Note) (*Note, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, id, noteId)
+	return NewRequestBuilder[Note](s.client, path).Put(ctx, note)
 }
 
 // DeleteNote Удалить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-udalit-sobytie
-func (s *CounterpartyService) DeleteNote(ctx context.Context, id, noteId uuid.UUID) (bool, *Response, error) {
-	path := fmt.Sprintf("%s/notes/%s", id, noteId)
-	return NewRequestBuilder[any](s.Endpoint, ctx).WithPath(path).Delete()
+func (s *CounterpartyService) DeleteNote(ctx context.Context, id, noteId uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, id, noteId)
+	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

@@ -1,87 +1,11 @@
 package moysklad
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"errors"
-	"io"
+	"github.com/go-resty/resty/v2"
+	"github.com/google/go-querystring/query"
 	"net/http"
-	"net/url"
-	"strings"
 )
-
-type RequestBuilder[T any] struct {
-	ctx           context.Context
-	body          any
-	client        *Client
-	params        *Params
-	url           string
-	uri           string
-	contentHeader bool
-}
-
-func NewRequestBuilder[T any](e Endpoint, ctx context.Context) *RequestBuilder[T] {
-	return &RequestBuilder[T]{client: e.client, ctx: ctx, uri: e.uri}
-}
-
-func (rb *RequestBuilder[T]) WithContext(ctx context.Context) *RequestBuilder[T] {
-	rb.ctx = ctx
-	return rb
-}
-
-func (rb *RequestBuilder[T]) WithPath(path string) *RequestBuilder[T] {
-	if strings.HasPrefix(path, "/") {
-		rb.uri += path
-	} else {
-		rb.uri += "/" + path
-	}
-	return rb
-}
-
-func (rb *RequestBuilder[T]) WithParams(params *Params) *RequestBuilder[T] {
-	rb.params = params
-	return rb
-}
-
-func (rb *RequestBuilder[T]) WithBody(body any) *RequestBuilder[T] {
-	rb.body = body
-	return rb
-}
-
-func (rb *RequestBuilder[T]) WithURL(url *url.URL) *RequestBuilder[T] {
-	rb.url = url.String()
-	return rb
-}
-
-func (rb *RequestBuilder[T]) setContentHeader() *RequestBuilder[T] {
-	rb.contentHeader = true
-	return rb
-}
-
-func (rb *RequestBuilder[T]) buildUrlString() error {
-	u, err := url.Parse(baseApiURL + rb.uri)
-	if err != nil {
-		return err
-	}
-	u.RawQuery = rb.params.QueryString()
-	rb.url = u.String()
-	return nil
-}
-
-func (rb *RequestBuilder[T]) setHeaders(req *http.Request) {
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", defaultUserAgent)
-	req.Header.Set("Accept-Encoding", "gzip")
-
-	if rb.client.disableWebhookContent {
-		req.Header.Set(headerWebHookDisable, "true")
-	}
-
-	if rb.contentHeader {
-		req.Header.Set(headerGetContent, "true")
-	}
-}
 
 type Endpoint struct {
 	client *Client
@@ -89,105 +13,81 @@ type Endpoint struct {
 }
 
 func NewEndpoint(client *Client, uri string) Endpoint {
-	return Endpoint{client: client, uri: uri}
+	return Endpoint{client, uri}
 }
 
-// Создаёт запрос к API МойСклад.
-func (rb *RequestBuilder[T]) newRequest(method string) (*http.Request, error) {
-	buf := new(bytes.Buffer)
-	if rb.body != nil {
-		encoder := json.NewEncoder(buf)
-		encoder.SetEscapeHTML(false)
+type RequestBuilder[T any] struct {
+	req *resty.Request
+	uri string
+}
 
-		if err := encoder.Encode(rb.body); err != nil {
-			return nil, err
-		}
+func NewRequestBuilder[T any](client *Client, uri string) *RequestBuilder[T] {
+	return &RequestBuilder[T]{client.client.R(), uri}
+}
+
+func (rb *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
+	v, _ := query.Values(params)
+	rb.req.SetQueryParamsFromValues(v)
+	return rb
+}
+
+func (rb *RequestBuilder[T]) Get(ctx context.Context) (*T, *resty.Response, error) {
+	data := new(T)
+	apiErrors := new(ApiErrors)
+	resp, err := rb.req.SetContext(ctx).SetResult(data).SetError(apiErrors).Get(rb.uri)
+
+	if resp.Error() != nil {
+		return data, resp, apiErrors
 	}
 
-	if err := rb.buildUrlString(); err != nil {
-		return nil, err
+	return data, resp, err
+}
+
+func (rb *RequestBuilder[T]) Put(ctx context.Context, body any) (*T, *resty.Response, error) {
+	data := new(T)
+	apiErrors := new(ApiErrors)
+	resp, err := rb.req.SetContext(ctx).SetBody(body).SetResult(data).SetError(apiErrors).Put(rb.uri)
+
+	if resp.Error() != nil {
+		return data, resp, apiErrors
 	}
 
-	req, err := http.NewRequest(method, rb.url, buf)
-	if err != nil {
-		return nil, err
+	return data, resp, err
+}
+
+func (rb *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Response, error) {
+	data := new(T)
+	apiErrors := new(ApiErrors)
+	resp, err := rb.req.SetContext(ctx).SetBody(body).SetResult(data).SetError(apiErrors).Post(rb.uri)
+
+	if resp.Error() != nil {
+		return data, resp, apiErrors
 	}
 
-	return req, nil
+	return data, resp, err
 }
 
-// Отправляет запрос с необходимыми данными
-func (rb *RequestBuilder[T]) do(method string) (*Response, error) {
-	req, err := rb.newRequest(method)
-	if err != nil {
-		return nil, err
-	}
-	rb.setHeaders(req)
-	return rb.client.Do(rb.ctx, req)
-}
+func (rb *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
+	apiErrors := new(ApiErrors)
+	resp, err := rb.req.SetContext(ctx).SetError(apiErrors).Delete(rb.uri)
 
-// Отправляет запрос с необходимыми данными и парсит результат.
-func requestWithUnmarshal[T any](rb *RequestBuilder[T], method string) (*T, *Response, error) {
-	resp, err := rb.do(method)
-	if err != nil {
-		return nil, nil, err
+	ok := resp.StatusCode() == http.StatusOK
+
+	if resp.Error() != nil {
+		return ok, resp, apiErrors
 	}
 
-	o, err := unmarshalResponse[T](resp)
-	if err != nil {
-		return nil, resp, err
-	}
-	return o, resp, nil
+	return ok, resp, err
 }
 
-// Get Отправляет GET запрос и парсит ответ
-func (rb *RequestBuilder[T]) Get() (*T, *Response, error) {
-	return requestWithUnmarshal[T](rb, http.MethodGet)
-}
+func (rb *RequestBuilder[T]) Async(ctx context.Context) (*AsyncResultService[T], *resty.Response, error) {
+	// устанавливаем флаг async=true на создание асинхронной операции
+	rb.req.SetContext(ctx).SetQueryParam("async", "true")
 
-// Post Отправляет POST запрос и парсит ответ
-func (rb *RequestBuilder[T]) Post() (*T, *Response, error) {
-	return requestWithUnmarshal[T](rb, http.MethodPost)
-}
-
-// Put Отправляет PUT запрос и парсит ответ
-func (rb *RequestBuilder[T]) Put() (*T, *Response, error) {
-	return requestWithUnmarshal[T](rb, http.MethodPut)
-}
-
-// Delete Отправляет DELETE запрос
-// Возвращает true в случае успешного удаления
-func (rb *RequestBuilder[T]) Delete() (bool, *Response, error) {
-	resp, err := rb.do(http.MethodDelete)
-	if err != nil {
-		return false, resp, err
-	}
-	ok := resp.StatusCode == http.StatusOK
-	return ok, resp, nil
-}
-
-// Async Отправляет запрос на создание асинхронной операции.
-// Возвращает сервис *AsyncResultService, который можно использовать
-// для получения результата выполнения асинхронного запроса.
-func (rb *RequestBuilder[T]) Async() (*AsyncResultService[T], *Response, error) {
-	// устанавливаем флаг запроса на создание асинхронной операции
-	// async=true
-	rb.params.withAsync()
-
-	resp, err := rb.do(http.MethodGet)
+	resp, err := rb.req.Get(rb.uri)
 	if err != nil {
 		return nil, resp, err
 	}
-	async := NewAsyncResultService[T](rb, resp)
+	async := NewAsyncResultService[T](rb.req, resp)
 	return async, resp, nil
-}
-
-func unmarshalResponse[T any](resp *Response) (*T, error) {
-	v := new(T)
-	decErr := json.NewDecoder(resp.Body).Decode(v)
-	// ignore EOF errors caused by empty response body
-	if decErr != nil && !errors.Is(decErr, io.EOF) {
-		return nil, decErr
-	}
-	return v, nil
 }

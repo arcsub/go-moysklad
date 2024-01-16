@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
 
@@ -19,20 +20,20 @@ func NewAuditService(client *Client) *AuditService {
 
 // GetContexts Получить Контексты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-kontexty
-func (s *AuditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *Response, error) {
-	return NewRequestBuilder[List[Audit]](s.Endpoint, ctx).WithParams(params).Get()
+func (s *AuditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error) {
+	return NewRequestBuilder[List[Audit]](s.client, s.uri).SetParams(params).Get(ctx)
 }
 
 // GetEvents Получить События по Контексту.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-kontextu
-func (s *AuditService) GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *Response, error) {
-	path := fmt.Sprintf("%s/events", id)
-	return NewRequestBuilder[List[AuditEvent]](s.Endpoint, ctx).WithPath(path).Get()
+func (s *AuditService) GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
+	path := fmt.Sprintf("audit/%s/events", id)
+	return NewRequestBuilder[List[AuditEvent]](s.client, path).Get(ctx)
 }
 
 // GetFilters Получить Фильтры.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-fil-try
-func (s *AuditService) GetFilters(ctx context.Context) (*AuditFilters, *Response, error) {
-	path := "metadata/filters"
-	return NewRequestBuilder[AuditFilters](s.Endpoint, ctx).WithPath(path).Get()
+func (s *AuditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
+	path := "audit/metadata/filters"
+	return NewRequestBuilder[AuditFilters](s.client, path).Get(ctx)
 }
