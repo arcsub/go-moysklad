@@ -52,7 +52,7 @@ func (s *CounterpartyService) GetAsync(ctx context.Context, params *Params) (*As
 
 // GetContactPersons Список контактных лиц.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-kontaktnyh-lic
-func (s *CounterpartyService) GetContactPersons(ctx context.Context, id *uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error) {
+func (s *CounterpartyService) GetContactPersons(ctx context.Context, id uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons", s.uri, id)
 	return NewRequestBuilder[List[ContactPerson]](s.client, path).SetParams(params).Get(ctx)
 }
@@ -66,7 +66,7 @@ func (s *CounterpartyService) GetContactPersonById(ctx context.Context, id, cont
 
 // CreateContactPerson Создать контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-sozdat-kontaktnoe-lico
-func (s *CounterpartyService) CreateContactPerson(ctx context.Context, id *uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error) {
+func (s *CounterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons", s.uri, id)
 	return NewRequestBuilder[[]ContactPerson](s.client, path).Post(ctx, contactPerson)
 }
@@ -80,7 +80,7 @@ func (s *CounterpartyService) UpdateContactPerson(ctx context.Context, id, conta
 
 // GetNotes Список событий.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-sobytij
-func (s *CounterpartyService) GetNotes(ctx context.Context, id *uuid.UUID) (*List[Note], *resty.Response, error) {
+func (s *CounterpartyService) GetNotes(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", s.uri, id)
 	return NewRequestBuilder[List[Note]](s.client, path).Get(ctx)
 }
@@ -94,7 +94,7 @@ func (s *CounterpartyService) GetNoteById(ctx context.Context, id, noteId uuid.U
 
 // CreateNote Добавить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-dobawit-sobytie
-func (s *CounterpartyService) CreateNote(ctx context.Context, id *uuid.UUID, note *Note) (*[]Note, *resty.Response, error) {
+func (s *CounterpartyService) CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*[]Note, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", s.uri, id)
 	return NewRequestBuilder[[]Note](s.client, path).Post(ctx, note)
 }

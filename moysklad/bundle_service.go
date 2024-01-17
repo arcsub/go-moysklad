@@ -36,14 +36,14 @@ func NewBundleService(client *Client) *BundleService {
 
 // GetComponents Получить компоненты Комплекта.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-poluchit-komponenty-komplekta
-func (s *BundleService) GetComponents(ctx context.Context, id *uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
+func (s *BundleService) GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
 	path := fmt.Sprintf("entity/bundle/%s/components", id)
 	return NewRequestBuilder[List[BundleComponent]](s.client, path).Get(ctx)
 }
 
 // CreateComponent Добавить компонент Комплекта.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-dobawit-komponent-komplekta
-func (s *BundleService) CreateComponent(ctx context.Context, id *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+func (s *BundleService) CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
 	path := fmt.Sprintf("entity/bundle/%s/components", id)
 	return NewRequestBuilder[BundleComponent](s.client, path).Post(ctx, bundleComponent)
 }

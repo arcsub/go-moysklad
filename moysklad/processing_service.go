@@ -46,20 +46,20 @@ func NewProcessingService(client *Client) *ProcessingService {
 
 // GetMaterials Получить материалы Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-poluchit-materialy-teh-karty
-func (s *ProcessingService) GetMaterials(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
+func (s *ProcessingService) GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
 	return NewRequestBuilder[List[ProcessingPlanMaterial]](s.client, path).Get(ctx)
 }
 
 // CreateMaterial Создать материал Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-sozdat-material-teh-karty
-func (s *ProcessingService) CreateMaterial(ctx context.Context, id *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+func (s *ProcessingService) CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
 	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Post(ctx, material)
 }
 
 // CreateMaterials Создать несколько материалов Тех. карты.
-func (s *ProcessingService) CreateMaterials(ctx context.Context, id *uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error) {
+func (s *ProcessingService) CreateMaterials(ctx context.Context, id uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
 	return NewRequestBuilder[[]ProcessingPlanMaterial](s.client, path).Post(ctx, materials)
 }
@@ -87,20 +87,20 @@ func (s *ProcessingService) DeleteMaterial(ctx context.Context, id, materialId u
 
 // GetProducts Получить продукты Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-poluchit-produkty-teh-karty
-func (s *ProcessingService) GetProducts(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
+func (s *ProcessingService) GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/products", s.uri, id)
 	return NewRequestBuilder[List[ProcessingPlanProduct]](s.client, path).Get(ctx)
 }
 
 // CreateProduct Создать продукт Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-sozdat-produkt-teh-karty
-func (s *ProcessingService) CreateProduct(ctx context.Context, id *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+func (s *ProcessingService) CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/products", s.uri, id)
 	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Post(ctx, product)
 }
 
 // CreateProducts Создать несколько продуктов Тех. карты.
-func (s *ProcessingService) CreateProducts(ctx context.Context, id *uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error) {
+func (s *ProcessingService) CreateProducts(ctx context.Context, id uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/products", s.uri, id)
 	return NewRequestBuilder[[]ProcessingPlanProduct](s.client, path).Post(ctx, products)
 }

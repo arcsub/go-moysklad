@@ -47,7 +47,7 @@ func NewInventoryService(client *Client) *InventoryService {
 
 // Recalculate Запрос на пересчёт расчётных остатков у позиций инвентаризации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-pereschet-raschetnogo-ostatka-w-inwentarizacii
-func (s *InventoryService) Recalculate(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *InventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("rpc/inventory/%s/recalcCalculatedQuantity", id)
 	resp, err := s.client.client.R().SetContext(ctx).Put(path)
 	if err != nil {

@@ -26,7 +26,7 @@ func (s *AuditService) GetContexts(ctx context.Context, params *Params) (*List[A
 
 // GetEvents Получить События по Контексту.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-kontextu
-func (s *AuditService) GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
+func (s *AuditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf("audit/%s/events", id)
 	return NewRequestBuilder[List[AuditEvent]](s.client, path).Get(ctx)
 }

@@ -28,14 +28,14 @@ func NewCustomEntityService(client *Client) *CustomEntityService {
 
 // GetElements Получить элементы справочника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skij-sprawochnik-poluchit-alementy-sprawochnika
-func (s *CustomEntityService) GetElements(ctx context.Context, id *uuid.UUID) (*List[CustomEntityElement], *resty.Response, error) {
+func (s *CustomEntityService) GetElements(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[List[CustomEntityElement]](s.client, path).Get(ctx)
 }
 
 // CreateElement Создать элемент справочника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skij-sprawochnik-sozdat-alement-sprawochnika
-func (s *CustomEntityService) CreateElement(ctx context.Context, id *uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
+func (s *CustomEntityService) CreateElement(ctx context.Context, id uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[CustomEntityElement](s.client, path).Post(ctx, element)
 }
