@@ -3,6 +3,7 @@ package moysklad
 import (
 	"context"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
 
@@ -27,35 +28,35 @@ func NewContextCompanySettingsService(client *Client) *ContextCompanySettingsSer
 
 // GetPriceTypes Получить список всех типов цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-spisok-wseh-tipow-cen
-func (s *ContextCompanySettingsService) GetPriceTypes(ctx context.Context) (*Slice[PriceType], *Response, error) {
+func (s *ContextCompanySettingsService) GetPriceTypes(ctx context.Context) (*[]PriceType, *resty.Response, error) {
 	path := "pricetype"
-	return NewRequestBuilder[Slice[PriceType]](s.Endpoint, ctx).WithPath(path).Get()
+	return NewRequestBuilder[[]PriceType](s.client, path).Get(ctx)
 }
 
 // CreatePriceType Создать тип цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-redaktirowanie-spiska-tipow-cen
-func (s *ContextCompanySettingsService) CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *Response, error) {
+func (s *ContextCompanySettingsService) CreatePriceType(ctx context.Context, priceType *PriceType) (*[]PriceType, *resty.Response, error) {
 	path := "pricetype"
-	return NewRequestBuilder[Slice[PriceType]](s.Endpoint, ctx).WithPath(path).WithBody(priceType).Post()
+	return NewRequestBuilder[[]PriceType](s.client, path).Post(ctx, priceType)
 }
 
 // UpdatePriceTypes Редактирование списка типов цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-redaktirowanie-spiska-tipow-cen
-func (s *ContextCompanySettingsService) UpdatePriceTypes(ctx context.Context, priceTypes []*PriceType) (*Slice[PriceType], *Response, error) {
+func (s *ContextCompanySettingsService) UpdatePriceTypes(ctx context.Context, priceTypes []*PriceType) (*[]PriceType, *resty.Response, error) {
 	path := "pricetype"
-	return NewRequestBuilder[Slice[PriceType]](s.Endpoint, ctx).WithPath(path).WithBody(priceTypes).Post()
+	return NewRequestBuilder[[]PriceType](s.client, path).Post(ctx, priceTypes)
 }
 
 // GetPriceTypeById Получить тип цены по ID.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-tip-ceny-po-id
-func (s *ContextCompanySettingsService) GetPriceTypeById(ctx context.Context, id *uuid.UUID) (*PriceType, *Response, error) {
+func (s *ContextCompanySettingsService) GetPriceTypeById(ctx context.Context, id *uuid.UUID) (*PriceType, *resty.Response, error) {
 	path := fmt.Sprintf("pricetype/%s", id)
-	return NewRequestBuilder[PriceType](s.Endpoint, ctx).WithPath(path).Get()
+	return NewRequestBuilder[PriceType](s.client, path).Get(ctx)
 }
 
 // GetPriceTypeDefault Получить тип цены по умолчанию.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-tip-ceny-po-umolchaniu
-func (s *ContextCompanySettingsService) GetPriceTypeDefault(ctx context.Context) (*PriceType, *Response, error) {
+func (s *ContextCompanySettingsService) GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error) {
 	path := "pricetype/default"
-	return NewRequestBuilder[PriceType](s.Endpoint, ctx).WithPath(path).Get()
+	return NewRequestBuilder[PriceType](s.client, path).Get(ctx)
 }

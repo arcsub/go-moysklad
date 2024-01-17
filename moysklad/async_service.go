@@ -2,6 +2,8 @@ package moysklad
 
 import (
 	"context"
+	"fmt"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
 	"net/url"
@@ -20,32 +22,32 @@ func NewAsyncService(client *Client) *AsyncService {
 
 // GetStatuses Статусы Асинхронных задач.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-statusy-asinhronnyh-zadach
-func (s *AsyncService) GetStatuses(ctx context.Context, params *Params) (*List[Async], *Response, error) {
-	return NewRequestBuilder[List[Async]](s.Endpoint, ctx).WithParams(params).Get()
+func (s *AsyncService) GetStatuses(ctx context.Context, params *Params) (*List[Async], *resty.Response, error) {
+	return NewRequestBuilder[List[Async]](s.client, s.uri).SetParams(params).Get(ctx)
 }
 
 // GetStatusById Получение статуса Асинхронной задачи.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-poluchenie-statusa-asinhronnoj-zadachi
-func (s *AsyncService) GetStatusById(ctx context.Context, id *uuid.UUID, params *Params) (*Async, *Response, error) {
-	path := id.String()
-	return NewRequestBuilder[Async](s.Endpoint, ctx).WithPath(path).WithParams(params).Get()
+func (s *AsyncService) GetStatusById(ctx context.Context, id uuid.UUID, params *Params) (*Async, *resty.Response, error) {
+	path := fmt.Sprintf("async/%s", id)
+	return NewRequestBuilder[Async](s.client, path).SetParams(params).Get(ctx)
 }
 
 type AsyncResultService[T any] struct {
-	rb        *RequestBuilder[T]
+	req       *resty.Request
 	statusURL *url.URL // URL статуса Асинхронной задачи.
 	resultURL *url.URL // URL результата выполнения Асинхронной задачи.
 }
 
 // NewAsyncResultService Сервис для работы с асинхронной задачей.
-func NewAsyncResultService[T any](rb *RequestBuilder[T], resp *Response) *AsyncResultService[T] {
-	statusUrlStr := resp.Header.Get("Location")
-	resultUrlStr := resp.Header.Get("Content-Location")
+func NewAsyncResultService[T any](req *resty.Request, resp *resty.Response) *AsyncResultService[T] {
+	statusUrlStr := resp.Header().Get("Location")
+	resultUrlStr := resp.Header().Get("Content-Location")
 	statusUrl, _ := url.Parse(statusUrlStr)
 	resultUrl, _ := url.Parse(resultUrlStr)
 
 	return &AsyncResultService[T]{
-		rb:        rb,
+		req:       req,
 		statusURL: statusUrl,
 		resultURL: resultUrl,
 	}
@@ -63,32 +65,33 @@ func (s *AsyncResultService[T]) ResultURL() *url.URL {
 
 // Check Проверяет статус асинхронной задачи.
 // Если статус задачи = DONE, возвращает true, иначе false
-func (s *AsyncResultService[T]) Check(ctx context.Context) (bool, *Response, error) {
-	rb := NewRequestBuilder[Async](Endpoint{client: s.rb.client}, ctx).WithURL(s.StatusURL())
-	res, response, err := rb.Get()
+func (s *AsyncResultService[T]) Check(ctx context.Context) (bool, *resty.Response, error) {
+	async := new(Async)
+	resp, err := s.req.SetContext(ctx).SetBody(async).Get(s.StatusURL().String())
 	if err != nil {
-		return false, response, err
+		return false, resp, err
 	}
-	ok := res.State == AsyncStateDone
-	return ok, response, nil
+	ok := async.State == AsyncStateDone
+	return ok, resp, nil
 }
 
 // Result Запрос на получение результата.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-poluchenie-rezul-tata-wypolneniq-asinhronnoj-zadachi
-func (s *AsyncResultService[T]) Result(ctx context.Context) (*T, *Response, error) {
-	rb := NewRequestBuilder[T](Endpoint{client: s.rb.client}, ctx).WithURL(s.ResultURL())
-	return rb.Get()
+func (s *AsyncResultService[T]) Result(ctx context.Context) (*T, *resty.Response, error) {
+	data := new(T)
+	resp, err := s.req.SetContext(ctx).SetBody(data).Get(s.ResultURL().String())
+	return data, resp, err
 }
 
 // Cancel Отмена Асинхронной задачи.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-otmena-asinhronnoj-zadachi
-func (s *AsyncResultService[T]) Cancel(ctx context.Context) (bool, *Response, error) {
+func (s *AsyncResultService[T]) Cancel(ctx context.Context) (bool, *resty.Response, error) {
 	u, _ := s.StatusURL().Parse("/cancel")
-	rb := NewRequestBuilder[any](Endpoint{client: s.rb.client}, ctx).WithURL(u)
-	resp, err := rb.do(http.MethodPut)
+	resp, err := s.req.SetContext(ctx).Post(u.String())
 	if err != nil {
 		return false, resp, err
 	}
-	ok := resp.StatusCode == http.StatusNoContent
+
+	ok := resp.StatusCode() == http.StatusNoContent
 	return ok, resp, nil
 }

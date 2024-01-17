@@ -28,8 +28,8 @@ type ApiErrors struct {
 
 func (e ApiErrors) Error() string {
 	var message string
-	for i, er := range e.ApiErrors {
-		message += fmt.Sprintf("%d) %v %v %v %v\n", i+1, er.Code, er.Message, er.ErrorMessage, er.MoreInfo)
+	for _, er := range e.ApiErrors {
+		message += fmt.Sprintf("%v %v %v %v\n", er.Code, er.Message, er.ErrorMessage, er.MoreInfo)
 	}
 	return message
 }
