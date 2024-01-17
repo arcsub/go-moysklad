@@ -17,9 +17,6 @@ go get github.com/arcsub/go-moysklad
 ```
 
 ## Особенности
-### [go-retryablehttp](https://github.com/hashicorp/go-retryablehttp/)
-- В данном решении используется go-retryablehttp с корректировкой в необходимом для работы API МойСклад заголовке.
-- При получении ошибки 429 запрос будет повторяться N количество раз (по умолчанию 5). Изменить количество попыток можно с помощью метода клиента `WithMaxRetries()`
 
 ### Возвращаемые аргументы
 Каждый запрос на создание/изменение/удаление возвращает 3 аргумента.
@@ -29,7 +26,7 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 ```
 В примере выше нас интересуют возвращаемые аргументы: `(*T, *resty.Response, error)`
 1. `*T` – указатель на сущность/документ, например *Product при вызове `Create()` (возвращает `bool` при вызове метода `Delete()`).
-2. `*Response` – сырой ответ на запрос, *http.Response, обёрнутый в *Response.
+2. `*resty.Response` – ответ на запрос, содержащий *http.Response и некоторую другую информацию.
 3. `error` – ошибки, если они были. При возникновении ошибок от API МойСклад в качестве ошибки будет заполненная структура `ApiErrors`
 
 ### Указатели
@@ -81,13 +78,6 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 ```go
   client := moysklad.NewClient().
 	  WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
-```
-#### WithMaxRetries(retries)
-Устанавливает максимальное кол-во попыток для одного запроса и возвращает простой клиент.
-По умолчанию у запроса 5 попыток.
-```go
-  // установим 10 попыток для каждого запроса
-  client := moysklad.NewClient().WithMaxRetries(10)
 ```
 #### WithDisabledWebhookContent(value)
 Временное отключение уведомлений вебхуков
@@ -325,7 +315,7 @@ func main() {
   productService := client.Entity().Product()
 
   // выполняем запрос на получение списка товаров без дополнительных параметров (nil)
-  products, _, err := productService.Get(context.Background(), nil)
+  products, _, err := productService.GetList(context.Background(), nil)
   if err != nil {
     panic(err)
   }
