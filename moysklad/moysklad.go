@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.11"
+	Version          = "v0.0.12"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -52,7 +52,7 @@ func NewClient() *Client {
 		AddRetryCondition(
 			func(r *resty.Response, err error) bool {
 				// Including "err != nil" emulates the default retry behavior for errors encountered during the request.
-				return err != nil || r.StatusCode() == http.StatusTooManyRequests
+				return r.StatusCode() == http.StatusTooManyRequests
 			},
 		)
 	return &Client{client: rc}
