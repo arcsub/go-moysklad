@@ -80,6 +80,7 @@ type RetailStore struct {
 	FiscalType                          FiscalType            `json:"fiscalType,omitempty"`
 	TobaccoMRCControlType               TobaccoMRCControlType `json:"tobaccoMrcControlType,omitempty"`
 	DefaultTaxSystem                    TaxSystem             `json:"defaulTaxSystem,omitempty"`
+	MarksCheckMode                      MarksCheckMode        `json:"marksCheckMode,omitempty"` // [07-02-2024]
 }
 
 func (r RetailStore) String() string {
@@ -233,6 +234,16 @@ const (
 	FiscalTypeStandart FiscalType = "STANDARD" // Стандартное
 	FiscalTypeMaster   FiscalType = "MASTER"   // Стандартное с обработкой облачных операций
 	FiscalTypeCloud    FiscalType = "CLOUD"    // Облачное
+)
+
+// MarksCheckMode Продажа маркированных товаров
+// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-prodazha-markirowannyh-towarow
+type MarksCheckMode string
+
+const (
+	MarksCheckModeCorrectMarksOnly MarksCheckMode = "CORRECT_MARKS_ONLY" // Только проверенные и правильные коды маркировки
+	MarksCheckModeWithoutErrors    MarksCheckMode = "WITHOUT_ERRORS"     // Правильные коды и те, которые не удалось проверить
+	MarksCheckModeAll              MarksCheckMode = "ALL"                // Все — независимо от результатов проверки кодов
 )
 
 // MarkingSellingMode Продажа маркированных товаров.
