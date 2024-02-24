@@ -8,15 +8,15 @@ import (
 // Ключевое слово: async
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
 type Async struct {
-	Meta         Meta            `json:"meta,omitempty"`
-	Owner        Meta            `json:"owner,omitempty"`
-	DeletionDate Timestamp       `json:"deletionDate,omitempty"`
-	RequestURL   string          `json:"request,omitempty"`
-	ResultURL    string          `json:"resultUrl,omitempty"`
-	State        AsyncState      `json:"state,omitempty"`
-	ApiErrors    Slice[ApiError] `json:"errors,omitempty"`
-	AccountID    uuid.UUID       `json:"accountId,omitempty"`
-	ID           uuid.UUID       `json:"id,omitempty"`
+	Meta         Meta       `json:"meta,omitempty"`
+	Owner        Meta       `json:"owner,omitempty"`
+	DeletionDate Timestamp  `json:"deletionDate,omitempty"`
+	RequestURL   string     `json:"request,omitempty"`
+	ResultURL    string     `json:"resultUrl,omitempty"`
+	State        AsyncState `json:"state,omitempty"`
+	ApiErrors    []ApiError `json:"errors,omitempty"`
+	AccountID    uuid.UUID  `json:"accountId,omitempty"`
+	ID           uuid.UUID  `json:"id,omitempty"`
 }
 
 func (a Async) String() string {
