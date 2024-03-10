@@ -381,6 +381,10 @@ func (s *EntityService) TaxRate() *TaxRateService {
 	return NewTaxRateService(s.client)
 }
 
+func (s *EntityService) Thing() *ThingService {
+	return NewThingService(s.client)
+}
+
 func (s *EntityService) Uom() *UomService {
 	return NewUomService(s.client)
 }
