@@ -305,6 +305,18 @@ func (s *EntityService) ProductFolder() *ProductFolderService {
 	return NewProductFolderService(s.client)
 }
 
+func (s *EntityService) ProductionTask() *ProductionTaskService {
+	return NewProductionTaskService(s.client)
+}
+
+func (s *EntityService) ProductionStage() *ProductionStageService {
+	return NewProductionStageService(s.client)
+}
+
+func (s *EntityService) ProductionStageCompletion() *ProductionStageCompletionService {
+	return NewProductionStageCompletionService(s.client)
+}
+
 func (s *EntityService) Project() *ProjectService {
 	return NewProjectService(s.client)
 }
