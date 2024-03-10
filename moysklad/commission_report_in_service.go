@@ -50,7 +50,6 @@ func NewCommissionReportInService(client *Client) *CommissionReportInService {
 
 // GetReturnPositions Получить позиции возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-pozicii-wozwrata-na-sklad-komissionera
-
 func (s *CommissionReportInService) GetReturnPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
 	return NewRequestBuilder[MetaArray[CommissionReportInReturnPosition]](s.client, path).SetParams(params).Get(ctx)
@@ -58,7 +57,6 @@ func (s *CommissionReportInService) GetReturnPositions(ctx context.Context, id *
 
 // GetReturnPositionById Получить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-poziciu-wozwrata-na-sklad-komissionera
-
 func (s *CommissionReportInService) GetReturnPositionById(ctx context.Context, id, positionId uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionId)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).SetParams(params).Get(ctx)
@@ -66,7 +64,6 @@ func (s *CommissionReportInService) GetReturnPositionById(ctx context.Context, i
 
 // CreateReturnPosition Создать позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-sozdat-poziciu-wozwrata-na-sklad-komissionera
-
 func (s *CommissionReportInService) CreateReturnPosition(ctx context.Context, id *uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).Post(ctx, position)
@@ -74,7 +71,6 @@ func (s *CommissionReportInService) CreateReturnPosition(ctx context.Context, id
 
 // UpdateReturnPosition Изменить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-izmenit-poziciu-wozwrata-na-sklad-komissionera
-
 func (s *CommissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionId uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionId)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).SetParams(params).Put(ctx, position)
@@ -82,7 +78,6 @@ func (s *CommissionReportInService) UpdateReturnPosition(ctx context.Context, id
 
 // DeleteReturnPosition Удалить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-udalit-poziciu-wozwrata-na-sklad-komissionera
-
 func (s *CommissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionId uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/positions/%s", id, positionId)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)

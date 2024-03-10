@@ -6,7 +6,8 @@ type PositionTypes interface {
 		InternalOrderPosition | InventoryPosition | InvoicePosition | LossPosition | MovePosition |
 		PrepaymentPosition | PrepaymentReturnPosition | PriceListPosition | ProcessingOrderPosition |
 		ProcessingPlanMaterial | ProcessingPlanProduct | ProcessingProcessPosition | PurchaseOrderPosition |
-		PurchaseReturnPosition | RetailPosition | SalesReturnPosition | SupplyPosition
+		PurchaseReturnPosition | RetailPosition | SalesReturnPosition | SupplyPosition | ProductionTaskMaterial |
+		ProductionStageCompletionMaterial | ProductionStageCompletionResult | ProductionRow | ProductionTaskResult
 }
 
 type Positions[T PositionTypes] MetaArray[T]
