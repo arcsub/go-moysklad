@@ -219,6 +219,7 @@ const (
 	MetaTypeSalesChannel                      MetaType = "saleschannel"
 	MetaTypeMetadata                          MetaType = "metadata"
 	MetaTypeTaxRate                           MetaType = "taxrate"
+	MetaTypeThing                             MetaType = "thing"
 	MetaTypeToken                             MetaType = "token"
 	MetaTypeReportStock                       MetaType = "stock"
 	MetaTypeReportStockByOperation            MetaType = "stockbyoperation"
@@ -472,6 +473,8 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeToken
 	case TaxRate:
 		metaType = MetaTypeTaxRate
+	case Thing:
+		metaType = MetaTypeThing
 	case WebhookStock:
 		metaType = MetaTypeWebhookStock
 	case CustomTemplate:
