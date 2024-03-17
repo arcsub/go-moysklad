@@ -126,7 +126,13 @@ type MetadataAttributeSharedPriceTypes struct {
 	MetadataAttributeShared // Наименование
 }
 
+type MetaNameShared struct {
+	Meta         Meta   `json:"meta,omitempty"`
+	Name         string `json:"name,omitempty"`
+	CreateShared bool   `json:"createShared,omitempty"`
+}
+
 type MetadataCompanySettings struct {
-	CustomEntities []CustomEntityElement `json:"customEntities"`
+	CustomEntities []MetaNameShared `json:"customEntities"`
 	MetadataAttribute
 }

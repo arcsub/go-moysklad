@@ -2,7 +2,9 @@ package moysklad
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
 	"reflect"
+	"strings"
 )
 
 type HasMeta interface {
@@ -27,6 +29,30 @@ type Meta struct {
 
 func (m Meta) String() string {
 	return Stringify(m)
+}
+
+// ID возвращает UUID из поля Href
+// Возвращает nil, если поле Href пусто или не содержит id
+func (m Meta) ID() *uuid.UUID {
+	href := Deref(m.Href)
+	if href == "" {
+		return nil
+	}
+
+	sep := strings.Split(href, "/")
+
+	var uuids []uuid.UUID
+	for _, part := range sep {
+		if id, err := uuid.Parse(part); err == nil {
+			uuids = append(uuids, id)
+		}
+	}
+
+	if len(uuids) == 0 {
+		return nil
+	}
+
+	return &uuids[len(uuids)-1]
 }
 
 type MetaWrapper struct {
