@@ -55,6 +55,13 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
   client := moysklad.NewClient()
 ```
 
+### Создание экземпляра клиента со своим http клиентом
+
+```go
+  custom := &http.Client{Timeout: 5 * time.Minute}
+  client := moysklad.NewClientCustom(custom)
+```
+
 ### Аутентификация
 Имеется два способа аутентификации.
 - С помощью токена. Метод клиента `WithTokenAuth()`
@@ -68,6 +75,14 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 ```
 
 ### Методы клиента
+
+#### WithTimeout(timeout)
+
+Установить необходимый таймаут для http клиента.
+
+```go
+  client := moysklad.NewClient().WithTimeout(5 * time.Minute)
+```
 #### WithTokenAuth(token)
 Получить простой клиент с авторизацией через токен.
 ```go

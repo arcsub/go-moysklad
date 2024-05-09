@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 )
 
 const (
-	Version          = "v0.0.13"
+	Version          = "v0.0.18"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -39,12 +40,8 @@ type Client struct {
 	clientMu sync.Mutex
 }
 
-// NewClient возвращает новый клиент для работы с API МойСклад.
-// Данный клиент не имеет встроенных сервисов.
-// Его необходимо передавать при создании каждого нового экземпляра сервиса.
-func NewClient() *Client {
-	rc := resty.New().
-		SetBaseURL(baseApiURL).
+func setupClient(client *resty.Client) {
+	client.SetBaseURL(baseApiURL).
 		SetHeaders(map[string]string{
 			"Accept-Encoding": "gzip",
 			"User-Agent":      getUserAgent(),
@@ -55,6 +52,23 @@ func NewClient() *Client {
 				return r.StatusCode() == http.StatusTooManyRequests
 			},
 		)
+}
+
+// NewClient возвращает новый клиент для работы с API МойСклад.
+// Данный клиент не имеет встроенных сервисов.
+// Его необходимо передавать при создании каждого нового экземпляра сервиса.
+func NewClient() *Client {
+	rc := resty.New()
+	setupClient(rc)
+	return &Client{client: rc}
+}
+
+// NewClientCustom принимает *http.Client и возвращает новый клиент для работы с API МойСклад.
+// Данный клиент не имеет встроенных сервисов.
+// Его необходимо передавать при создании каждого нового экземпляра сервиса.
+func NewClientCustom(client *http.Client) *Client {
+	rc := resty.NewWithClient(client)
+	setupClient(rc)
 	return &Client{client: rc}
 }
 
@@ -80,6 +94,12 @@ func (c *Client) Report() *ReportService {
 
 func (c *Client) Security() *SecurityTokenService {
 	return NewSecurityTokenService(c)
+}
+
+// WithTimeout устанавливает необходимый таймаут для http клиента.
+func (c *Client) WithTimeout(timeout time.Duration) *Client {
+	c.client.SetTimeout(timeout)
+	return c
 }
 
 // WithTokenAuth возвращает клиент с авторизацией через токен.
