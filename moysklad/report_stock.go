@@ -18,7 +18,7 @@ type StockAll struct {
 	Reserve      float64     `json:"reserve"`
 	SalePrice    float64     `json:"salePrice"`
 	Stock        float64     `json:"stock"`
-	StockDays    int         `json:"stockDays"`
+	StockDays    float64     `json:"stockDays"`
 }
 
 func (s StockAll) MetaType() MetaType {
