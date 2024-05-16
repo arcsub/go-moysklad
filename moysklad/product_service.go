@@ -7,7 +7,6 @@ type ProductService struct {
 	endpointCreate[Product]
 	endpointCreateUpdateDeleteMany[Product]
 	endpointDelete
-	endpointDeleteMany[Product]
 	endpointMetadata[MetadataAttributeShared]
 	endpointAttributes
 	endpointGetById[Product]
@@ -26,7 +25,6 @@ func NewProductService(client *Client) *ProductService {
 		endpointCreate:                 endpointCreate[Product]{e},
 		endpointCreateUpdateDeleteMany: endpointCreateUpdateDeleteMany[Product]{e},
 		endpointDelete:                 endpointDelete{e},
-		endpointDeleteMany:             endpointDeleteMany[Product]{e},
 		endpointMetadata:               endpointMetadata[MetadataAttributeShared]{e},
 		endpointAttributes:             endpointAttributes{e},
 		endpointGetById:                endpointGetById[Product]{e},
