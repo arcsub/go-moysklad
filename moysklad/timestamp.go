@@ -13,6 +13,10 @@ type Timestamp struct {
 	time.Time
 }
 
+func NewTimestamp(time time.Time) *Timestamp {
+	return &Timestamp{Time: time}
+}
+
 func (t Timestamp) String() string {
 	return t.Time.String()
 }
