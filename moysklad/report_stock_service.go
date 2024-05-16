@@ -60,7 +60,7 @@ func (s *ReportStockService) GetCurrentByStore(ctx context.Context, params *Para
 // – Возврат поставщику
 // – Возврат покупателя
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-ostatki-po-dokumentu
-func (s *ReportStockService) GetByOperationId(ctx context.Context, operationId uuid.UUID, params *Params) (*List[StockByOperation], *resty.Response, error) {
+func (s *ReportStockService) GetByOperationId(ctx context.Context, operationId *uuid.UUID, params *Params) (*List[StockByOperation], *resty.Response, error) {
 	path := fmt.Sprintf("%s/byoperation?operation.id=%s", s.uri, operationId)
 	return NewRequestBuilder[List[StockByOperation]](s.client, path).SetParams(params).Get(ctx)
 }
