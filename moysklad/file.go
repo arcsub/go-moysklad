@@ -26,9 +26,11 @@ func (f File) MetaType() MetaType {
 type Files MetaArray[File]
 
 // Push добавляет элементы в срез.
-// Элементы, превышающее максимальное значение MaxImages, игнорируются
+// Элементы, превышающее максимальное значение MaxFiles, игнорируются
 func (f *Files) Push(elements ...*File) *Files {
-	limit := min(MaxFiles, MaxImages-len(f.Rows), len(elements))
-	f.Rows = append(f.Rows, elements[:limit]...)
+	f.Rows = append(f.Rows, elements...)
+	if len(f.Rows) > MaxFiles {
+		f.Rows = f.Rows[:MaxFiles]
+	}
 	return f
 }
