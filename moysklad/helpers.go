@@ -205,3 +205,8 @@ func Deref[T any](ptr *T) T {
 	}
 	return *ptr
 }
+
+// IsEqualPtr сравнивает значения указателей типа T
+func IsEqualPtr[T comparable](left *T, right *T) bool {
+	return Deref(left) == Deref(right)
+}
