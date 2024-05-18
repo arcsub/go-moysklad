@@ -8,7 +8,7 @@ import (
 // Ключевое слово: contract
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-dogowor
 type Contract struct {
-	RewardPercent       *int          `json:"rewardPercent,omitempty"`
+	RewardPercent       *float64      `json:"rewardPercent,omitempty"`
 	Updated             *Timestamp    `json:"updated,omitempty"`
 	Moment              *Timestamp    `json:"moment,omitempty"`
 	Archived            *bool         `json:"archived,omitempty"`
