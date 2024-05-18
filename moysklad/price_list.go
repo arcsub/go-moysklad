@@ -59,8 +59,8 @@ type PriceListCells = Slice[PriceListCell]
 // PriceListColumn Столбец прайс листа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-stolbcy
 type PriceListColumn struct {
-	Name               *string `json:"name,omitempty"`               // Название столбца
-	PercentageDiscount *int    `json:"percentageDiscount,omitempty"` // Процентная наценка или скидка по умолчанию для столбца
+	Name               *string  `json:"name,omitempty"`               // Название столбца
+	PercentageDiscount *float64 `json:"percentageDiscount,omitempty"` // Процентная наценка или скидка по умолчанию для столбца
 }
 
 func (p PriceListColumn) String() string {
