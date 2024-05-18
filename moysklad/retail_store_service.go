@@ -43,7 +43,7 @@ func (s *RetailStoreService) GetCashiers(ctx context.Context, id *uuid.UUID) (*M
 
 // GetCashierById Получить Кассира.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassira
-func (s *RetailStoreService) GetCashierById(ctx context.Context, id, cashierId uuid.UUID) (*Cashier, *resty.Response, error) {
+func (s *RetailStoreService) GetCashierById(ctx context.Context, id, cashierId *uuid.UUID) (*Cashier, *resty.Response, error) {
 	path := fmt.Sprintf("entity/retailstore/%s/cashiers/%s", id, cashierId)
 	return NewRequestBuilder[Cashier](s.client, path).Get(ctx)
 }

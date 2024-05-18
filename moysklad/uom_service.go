@@ -12,7 +12,7 @@ type UomService struct {
 }
 
 func NewUomService(client *Client) *UomService {
-	e := NewEndpoint(client, "security/uom")
+	e := NewEndpoint(client, "entity/uom")
 	return &UomService{
 		endpointGetList:                endpointGetList[Uom]{e},
 		endpointCreate:                 endpointCreate[Uom]{e},

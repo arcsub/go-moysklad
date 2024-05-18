@@ -57,7 +57,7 @@ func (s *CommissionReportInService) GetReturnPositions(ctx context.Context, id *
 
 // GetReturnPositionById Получить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-poziciu-wozwrata-na-sklad-komissionera
-func (s *CommissionReportInService) GetReturnPositionById(ctx context.Context, id, positionId uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (s *CommissionReportInService) GetReturnPositionById(ctx context.Context, id, positionId *uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionId)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).SetParams(params).Get(ctx)
 }
@@ -71,14 +71,14 @@ func (s *CommissionReportInService) CreateReturnPosition(ctx context.Context, id
 
 // UpdateReturnPosition Изменить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-izmenit-poziciu-wozwrata-na-sklad-komissionera
-func (s *CommissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionId uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (s *CommissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionId *uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionId)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).SetParams(params).Put(ctx, position)
 }
 
 // DeleteReturnPosition Удалить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-udalit-poziciu-wozwrata-na-sklad-komissionera
-func (s *CommissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionId uuid.UUID) (bool, *resty.Response, error) {
+func (s *CommissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionId *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/positions/%s", id, positionId)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

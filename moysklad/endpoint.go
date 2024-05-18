@@ -18,7 +18,7 @@ func (s *endpointGetList[T]) GetList(ctx context.Context, params *Params) (*List
 type endpointDelete struct{ Endpoint }
 
 // Delete Запрос на удаление объекта по id.
-func (s *endpointDelete) Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointDelete) Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
@@ -26,7 +26,7 @@ func (s *endpointDelete) Delete(ctx context.Context, id uuid.UUID) (bool, *resty
 type endpointGetById[T any] struct{ Endpoint }
 
 // GetByID Запрос на получение объекта по id.
-func (s *endpointGetById[T]) GetByID(ctx context.Context, id uuid.UUID, params *Params) (*T, *resty.Response, error) {
+func (s *endpointGetById[T]) GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Get(ctx)
 }
@@ -136,7 +136,7 @@ func (s *endpointCreateUpdateDeleteMany[T]) DeleteMany(ctx context.Context, enti
 type endpointUpdate[T any] struct{ Endpoint }
 
 // Update Запрос на обновление объекта.
-func (s *endpointUpdate[T]) Update(ctx context.Context, id uuid.UUID, entity *T, params *Params) (*T, *resty.Response, error) {
+func (s *endpointUpdate[T]) Update(ctx context.Context, id *uuid.UUID, entity *T, params *Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Put(ctx, entity)
 }
@@ -145,21 +145,21 @@ type endpointAccounts struct{ Endpoint }
 
 // GetAccounts Получить все счета.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-scheta-kontragenta
-func (s *endpointAccounts) GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error) {
+func (s *endpointAccounts) GetAccounts(ctx context.Context, id *uuid.UUID) (*List[AgentAccount], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/accounts", s.uri, id)
 	return NewRequestBuilder[List[AgentAccount]](s.client, path).Get(ctx)
 }
 
 // GetAccountByID Получить отдельный счёт.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-schet-kontragenta
-func (s *endpointAccounts) GetAccountByID(ctx context.Context, id, accountId uuid.UUID) (*AgentAccount, *resty.Response, error) {
+func (s *endpointAccounts) GetAccountByID(ctx context.Context, id, accountId *uuid.UUID) (*AgentAccount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/accounts/%s", s.uri, id, accountId)
 	return NewRequestBuilder[AgentAccount](s.client, path).Get(ctx)
 }
 
 // UpdateAccounts Изменить счета (списком).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-jurlico-izmenit-scheta-urlica
-func (s *endpointAccounts) UpdateAccounts(ctx context.Context, id uuid.UUID, accounts []*AgentAccount) (*[]AgentAccount, *resty.Response, error) {
+func (s *endpointAccounts) UpdateAccounts(ctx context.Context, id *uuid.UUID, accounts []*AgentAccount) (*[]AgentAccount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/accounts", s.uri, id)
 	return NewRequestBuilder[[]AgentAccount](s.client, path).Post(ctx, accounts)
 }
@@ -175,7 +175,7 @@ func (s *endpointAttributes) GetAttributes(ctx context.Context) (*MetaArray[Attr
 
 // GetAttributeByID Получить дополнительное поле по id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-noe-pole-poluchit-dopolnitel-noe-pole
-func (s *endpointAttributes) GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error) {
+func (s *endpointAttributes) GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes/%s", s.uri, id)
 	return NewRequestBuilder[Attribute](s.client, path).Get(ctx)
 }
@@ -202,14 +202,14 @@ func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributes []
 
 // UpdateAttribute Изменить дополнительное поле.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-noe-pole-izmenit-dopolnitel-noe-pole
-func (s *endpointAttributes) UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error) {
+func (s *endpointAttributes) UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes/%d", s.uri, id)
 	return NewRequestBuilder[Attribute](s.client, path).Put(ctx, attribute)
 }
 
 // DeleteAttribute Удалить дополнительное поле.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-noe-pole-udalit-dopolnitel-noe-pole
-func (s *endpointAttributes) DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointAttributes) DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes/%d", s.uri, id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
@@ -225,7 +225,7 @@ type endpointAudit struct{ Endpoint }
 
 // GetAudit Запрос на получение событий по сущности с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-suschnosti
-func (s *endpointAudit) GetAudit(ctx context.Context, id uuid.UUID, params *Params) (*List[AuditEvent], *resty.Response, error) {
+func (s *endpointAudit) GetAudit(ctx context.Context, id *uuid.UUID, params *Params) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/audit", s.uri, id)
 	return NewRequestBuilder[List[AuditEvent]](s.client, path).SetParams(params).Get(ctx)
 }
@@ -234,33 +234,33 @@ type endpointFiles struct{ Endpoint }
 
 // GetFiles Получить список Файлов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-poluchit-spisok-fajlow-operacii-nomenklatury-zadachi-ili-kontragenta
-func (s *endpointFiles) GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error) {
+func (s *endpointFiles) GetFiles(ctx context.Context, id *uuid.UUID) (*MetaArray[File], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files", s.uri, id)
 	return NewRequestBuilder[MetaArray[File]](s.client, path).Get(ctx)
 }
 
 // CreateFile Добавить Файл.
-func (s *endpointFiles) CreateFile(ctx context.Context, id uuid.UUID, file *File) (*[]File, *resty.Response, error) {
+func (s *endpointFiles) CreateFile(ctx context.Context, id *uuid.UUID, file *File) (*[]File, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files", s.uri, id)
 	return NewRequestBuilder[[]File](s.client, path).Get(ctx)
 }
 
 // UpdateFiles Добавить/обновить Файлы.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-dobawit-fajly-k-operacii-nomenklature-ili-kontragentu
-func (s *endpointFiles) UpdateFiles(ctx context.Context, id uuid.UUID, files []File) (*[]File, *resty.Response, error) {
+func (s *endpointFiles) UpdateFiles(ctx context.Context, id *uuid.UUID, files []File) (*[]File, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files", s.uri, id)
 	return NewRequestBuilder[[]File](s.client, path).Post(ctx, files)
 }
 
 // DeleteFile Удалить Файл.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-udalit-fajl
-func (s *endpointFiles) DeleteFile(ctx context.Context, id, fileId uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointFiles) DeleteFile(ctx context.Context, id, fileId *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files/%d", s.uri, id, fileId)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
 // DeleteFiles Удалить несколько Файлов.
-func (s *endpointFiles) DeleteFiles(ctx context.Context, id uuid.UUID, files []*File) (*DeleteManyResponse, *resty.Response, error) {
+func (s *endpointFiles) DeleteFiles(ctx context.Context, id *uuid.UUID, files []*File) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files/delete", s.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, files)
 }
@@ -269,35 +269,35 @@ type endpointImages struct{ Endpoint }
 
 // GetImages Получить список Изображений.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-poluchit-spisok-izobrazhenij-towara-komplekta-i-modifikacii
-func (s *endpointImages) GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error) {
+func (s *endpointImages) GetImages(ctx context.Context, id *uuid.UUID) (*MetaArray[Image], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images", s.uri, id)
 	return NewRequestBuilder[MetaArray[Image]](s.client, path).Get(ctx)
 }
 
 // CreateImage Добавить Изображение.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-dobawit-izobrazhenie-k-towaru-komplektu-ili-modifikacii
-func (s *endpointImages) CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*[]Image, *resty.Response, error) {
+func (s *endpointImages) CreateImage(ctx context.Context, id *uuid.UUID, image *Image) (*[]Image, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images", s.uri, id)
 	return NewRequestBuilder[[]Image](s.client, path).Post(ctx, image)
 }
 
 // UpdateImages Изменение Изображений (списком).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-izmenenie-spiska-izobrazhenij-u-towara-komplekta-ili-modifikacii
-func (s *endpointImages) UpdateImages(ctx context.Context, id uuid.UUID, images []*Image) (*[]Image, *resty.Response, error) {
+func (s *endpointImages) UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) (*[]Image, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images", s.uri, id)
 	return NewRequestBuilder[[]Image](s.client, path).Post(ctx, images)
 }
 
 // DeleteImage Удалить Изображение.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-udalit-izobrazhenie
-func (s *endpointImages) DeleteImage(ctx context.Context, id, imageId uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointImages) DeleteImage(ctx context.Context, id, imageId *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images/%d", s.uri, id, imageId)
 	return NewRequestBuilder[[]Image](s.client, path).Delete(ctx)
 }
 
 // DeleteImages Удалить несколько Изображений.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-udalit-gruppu-izobrazhenij
-func (s *endpointImages) DeleteImages(ctx context.Context, id uuid.UUID, images []*Image) (*DeleteManyResponse, *resty.Response, error) {
+func (s *endpointImages) DeleteImages(ctx context.Context, id *uuid.UUID, images []*Image) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images/delete", s.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, images)
 }
@@ -313,7 +313,7 @@ func (s *endpointNamedFilter) GetNamedFilters(ctx context.Context, params *Param
 
 // GetNamedFilterByID Получить отдельный фильтр по id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sohranennye-fil-try-poluchit-fil-tr-po-id
-func (s *endpointNamedFilter) GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error) {
+func (s *endpointNamedFilter) GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error) {
 	path := fmt.Sprintf("%s/namedfilter/%d", s.uri, id)
 	return NewRequestBuilder[NamedFilter](s.client, path).Get(ctx)
 }
@@ -321,58 +321,58 @@ func (s *endpointNamedFilter) GetNamedFilterByID(ctx context.Context, id uuid.UU
 type endpointPositions[T any] struct{ Endpoint }
 
 // GetPositions Получить все позиции документа.
-func (s *endpointPositions[T]) GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[T], *resty.Response, error) {
+func (s *endpointPositions[T]) GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[T], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions", s.uri, id)
 	return NewRequestBuilder[MetaArray[T]](s.client, path).SetParams(params).Get(ctx)
 }
 
 // GetPositionByID Получение отдельной позиции.
-func (s *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionId uuid.UUID, params *Params) (*T, *resty.Response, error) {
+func (s *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionId *uuid.UUID, params *Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionId)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdatePosition Обновление позиции.
-func (s *endpointPositions[T]) UpdatePosition(ctx context.Context, id, positionId uuid.UUID, position *T, params *Params) (*T, *resty.Response, error) {
+func (s *endpointPositions[T]) UpdatePosition(ctx context.Context, id, positionId *uuid.UUID, position *T, params *Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionId)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Put(ctx, position)
 }
 
 // CreatePosition Создание позиции документа.
-func (s *endpointPositions[T]) CreatePosition(ctx context.Context, id uuid.UUID, position *T) (*T, *resty.Response, error) {
+func (s *endpointPositions[T]) CreatePosition(ctx context.Context, id *uuid.UUID, position *T) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions", s.uri, id)
 	return NewRequestBuilder[T](s.client, path).Post(ctx, position)
 }
 
 // CreatePositions Массово создаёт позиции документа.
-func (s *endpointPositions[T]) CreatePositions(ctx context.Context, id uuid.UUID, positions []*T) (*[]T, *resty.Response, error) {
+func (s *endpointPositions[T]) CreatePositions(ctx context.Context, id *uuid.UUID, positions []*T) (*[]T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions", s.uri, id)
 	return NewRequestBuilder[[]T](s.client, path).Post(ctx, positions)
 }
 
 // DeletePosition Удаляет позицию документа.
-func (s *endpointPositions[T]) DeletePosition(ctx context.Context, id, positionId uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointPositions[T]) DeletePosition(ctx context.Context, id, positionId *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionId)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
 // GetPositionTrackingCodes Получить Коды маркировки позиции документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-poluchit-kody-markirowki-pozicii-dokumenta
-func (s *endpointPositions[T]) GetPositionTrackingCodes(ctx context.Context, id, positionId uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error) {
+func (s *endpointPositions[T]) GetPositionTrackingCodes(ctx context.Context, id, positionId *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", s.uri, id, positionId)
 	return NewRequestBuilder[MetaArray[TrackingCode]](s.client, path).Get(ctx)
 }
 
 // CreateOrUpdatePositionTrackingCodes Массовое создание и обновление Кодов маркировки.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-sozdanie-i-obnowlenie-kodow-markirowki
-func (s *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionId uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error) {
+func (s *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionId *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", s.uri, id, positionId)
 	return NewRequestBuilder[[]TrackingCode](s.client, path).Post(ctx, trackingCodes)
 }
 
 // DeletePositionTrackingCodes Массовое удаление Кодов маркировки.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-udalenie-kodow-markirowki
-func (s *endpointPositions[T]) DeletePositionTrackingCodes(ctx context.Context, id, positionId uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error) {
+func (s *endpointPositions[T]) DeletePositionTrackingCodes(ctx context.Context, id, positionId *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes/delete", s.uri, id, positionId)
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, trackingCodes)
 }
@@ -381,7 +381,7 @@ type endpointPrintDocument struct{ Endpoint }
 
 // PrintDocument Запрос на печать документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-pechat-dokumentow-zapros-na-pechat
-func (s *endpointPrintDocument) PrintDocument(ctx context.Context, id uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error) {
+func (s *endpointPrintDocument) PrintDocument(ctx context.Context, id *uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error) {
 	apiErrors := new(ApiErrors)
 
 	path := fmt.Sprintf("%s/%s/export", s.uri, id)
@@ -408,7 +408,7 @@ type endpointPrintLabel struct{ Endpoint }
 
 // PrintLabel Запрос на печать этикеток и ценников.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pechat-atiketok-i-cennikow
-func (s *endpointPrintLabel) PrintLabel(ctx context.Context, id uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error) {
+func (s *endpointPrintLabel) PrintLabel(ctx context.Context, id *uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error) {
 	apiErrors := new(ApiErrors)
 
 	path := fmt.Sprintf("%s/%s/export", s.uri, id)
@@ -435,21 +435,21 @@ type endpointPublication struct{ Endpoint }
 
 // GetPublications Запрос на получение списка Публикаций по указанному документу.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-poluchit-publikacii
-func (s *endpointPublication) GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error) {
+func (s *endpointPublication) GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/publication", s.uri, id)
 	return NewRequestBuilder[MetaArray[Publication]](s.client, path).Get(ctx)
 }
 
 // GetPublicationByID Запрос на получение Публикации с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-poluchit-publikaciu
-func (s *endpointPublication) GetPublicationByID(ctx context.Context, id, publicationId uuid.UUID) (*Publication, *resty.Response, error) {
+func (s *endpointPublication) GetPublicationByID(ctx context.Context, id, publicationId *uuid.UUID) (*Publication, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/publication/%s", s.uri, id, publicationId)
 	return NewRequestBuilder[Publication](s.client, path).Get(ctx)
 }
 
 // Publish Запрос на публикацию документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-sozdat-publikaciu
-func (s *endpointPublication) Publish(ctx context.Context, id uuid.UUID, template *Templater) (*Publication, *resty.Response, error) {
+func (s *endpointPublication) Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error) {
 	publication := new(Publication).SetTemplate(template)
 	path := fmt.Sprintf("%s/%s/publication", s.uri, id)
 	return NewRequestBuilder[Publication](s.client, path).Post(ctx, publication)
@@ -457,7 +457,7 @@ func (s *endpointPublication) Publish(ctx context.Context, id uuid.UUID, templat
 
 // DeletePublication Запрос на удаление Публикации с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-udalit-publikaciu
-func (s *endpointPublication) DeletePublication(ctx context.Context, id, publicationId uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointPublication) DeletePublication(ctx context.Context, id, publicationId *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/publication/%s", s.uri, id, publicationId)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
@@ -479,7 +479,7 @@ func (s *endpointSettings[T]) UpdateSettings(ctx context.Context, settings *T) (
 type endpointStates struct{ Endpoint }
 
 // GetStateByID Запрос на получение статуса по id.
-func (s *endpointStates) GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error) {
+func (s *endpointStates) GetStateByID(ctx context.Context, id *uuid.UUID) (*State, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/states/%s", s.uri, id)
 	return NewRequestBuilder[State](s.client, path).Get(ctx)
 }
@@ -493,21 +493,21 @@ func (s *endpointStates) CreateState(ctx context.Context, state *State) (*State,
 
 // UpdateState Изменить существующий статус.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-izmenit-status
-func (s *endpointStates) UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error) {
+func (s *endpointStates) UpdateState(ctx context.Context, id *uuid.UUID, state *State) (*State, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/states/%s", s.uri, id)
 	return NewRequestBuilder[State](s.client, path).Put(ctx, state)
 }
 
 // CreateOrUpdateStates Массовое создание и обновление Статусов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-massowoe-sozdanie-i-obnowlenie-statusow
-func (s *endpointStates) CreateOrUpdateStates(ctx context.Context, id uuid.UUID, states []*State) (*[]State, *resty.Response, error) {
+func (s *endpointStates) CreateOrUpdateStates(ctx context.Context, id *uuid.UUID, states []*State) (*[]State, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/states/%s", s.uri, id)
 	return NewRequestBuilder[[]State](s.client, path).Post(ctx, states)
 }
 
 // DeleteState Запрос на удаление Статуса с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-udalit-status
-func (s *endpointStates) DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointStates) DeleteState(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/states/%s", s.uri, id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
@@ -515,13 +515,13 @@ func (s *endpointStates) DeleteState(ctx context.Context, id uuid.UUID) (bool, *
 type endpointSyncID[T any] struct{ Endpoint }
 
 // GetBySyncID Запрос на получение объекта по syncID.
-func (s *endpointSyncID[T]) GetBySyncID(ctx context.Context, syncID uuid.UUID) (*T, *resty.Response, error) {
+func (s *endpointSyncID[T]) GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/syncid/%s", s.uri, syncID)
 	return NewRequestBuilder[T](s.client, path).Get(ctx)
 }
 
 // DeleteBySyncID Запрос на удаление объекта по syncID.
-func (s *endpointSyncID[T]) DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointSyncID[T]) DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/syncid/%s", s.uri, syncID)
 	return NewRequestBuilder[T](s.client, path).Delete(ctx)
 }
@@ -537,7 +537,7 @@ func (s *endpointPrintTemplates) GetEmbeddedTemplates(ctx context.Context) (*Lis
 
 // GetEmbeddedTemplateByID Запрос на получение информации об отдельном стандартном шаблоне печатной формы для указанного типа сущности по его id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-otdel-nyj-standartnyj-shablon
-func (s *endpointPrintTemplates) GetEmbeddedTemplateByID(ctx context.Context, id uuid.UUID) (*EmbeddedTemplate, *resty.Response, error) {
+func (s *endpointPrintTemplates) GetEmbeddedTemplateByID(ctx context.Context, id *uuid.UUID) (*EmbeddedTemplate, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/embeddedtemplate/%s", s.uri, id)
 	return NewRequestBuilder[EmbeddedTemplate](s.client, path).Get(ctx)
 }
@@ -551,7 +551,7 @@ func (s *endpointPrintTemplates) GetCustomTemplates(ctx context.Context) (*List[
 
 // GetCustomTemplateByID Запрос на получение информации об отдельном пользовательском шаблоне печатной формы для указанного типа сущности по его id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy-otdel-nyj-pol-zowatel-skij-shablon
-func (s *endpointPrintTemplates) GetCustomTemplateByID(ctx context.Context, id uuid.UUID) (*CustomTemplate, *resty.Response, error) {
+func (s *endpointPrintTemplates) GetCustomTemplateByID(ctx context.Context, id *uuid.UUID) (*CustomTemplate, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/embeddedtemplate/%s", s.uri, id)
 	return NewRequestBuilder[CustomTemplate](s.client, path).Get(ctx)
 }
@@ -560,7 +560,7 @@ type endpointRemove struct{ Endpoint }
 
 // Remove Запрос на перемещение документа с указанным id в корзину.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-udalenie-w-korzinu
-func (s *endpointRemove) Remove(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointRemove) Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	apiErrors := new(ApiErrors)
 
 	path := fmt.Sprintf("%s/%s/trash", s.uri, id)
