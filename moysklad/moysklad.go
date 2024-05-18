@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.26"
+	Version          = "v0.0.28"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 

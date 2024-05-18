@@ -27,7 +27,9 @@ type Images MetaArray[Image]
 // Push добавляет элементы в срез.
 // Элементы, превышающее максимальное значение MaxImages, игнорируются
 func (i *Images) Push(elements ...*Image) *Images {
-	limit := min(MaxImages, MaxImages-len(i.Rows), len(elements))
-	i.Rows = append(i.Rows, elements[:limit]...)
+	i.Rows = append(i.Rows, elements...)
+	if len(i.Rows) > MaxImages {
+		i.Rows = i.Rows[:MaxImages]
+	}
 	return i
 }
