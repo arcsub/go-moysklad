@@ -37,7 +37,7 @@ type CommissionReportOut struct {
 	Project               *Project                                `json:"project,omitempty"`
 	Published             *bool                                   `json:"published,omitempty"`
 	Rate                  *Rate                                   `json:"rate,omitempty"`
-	RewardPercent         *int                                    `json:"rewardPercent,omitempty"`
+	RewardPercent         *float64                                `json:"rewardPercent,omitempty"`
 	Payments              *Payments                               `json:"payments,omitempty"`
 	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`
 	Shared                *bool                                   `json:"shared,omitempty"`
