@@ -16,6 +16,10 @@ type State struct {
 	StateType  StateType  `json:"stateType,omitempty"`  // Тип Статуса
 }
 
+func (s *State) IsEqual(state *State) bool {
+	return s.Meta.IsEqual(state.Meta)
+}
+
 func (s State) String() string {
 	return Stringify(s)
 }

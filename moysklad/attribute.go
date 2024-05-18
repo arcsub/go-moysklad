@@ -20,6 +20,10 @@ type Attribute struct {
 	Type             AttributeType `json:"type,omitempty"`
 }
 
+func (a *Attribute) IsEqual(attr *Attribute) bool {
+	return a.Meta.IsEqual(attr.Meta)
+}
+
 func (a Attribute) String() string {
 	return Stringify(a)
 }

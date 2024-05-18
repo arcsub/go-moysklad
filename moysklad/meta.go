@@ -31,6 +31,10 @@ func (m Meta) String() string {
 	return Stringify(m)
 }
 
+func (m *Meta) IsEqual(meta *Meta) bool {
+	return IsEqualPtr(m.Href, meta.Href)
+}
+
 // ID возвращает UUID из поля Href
 // Возвращает nil, если поле Href пусто или не содержит id
 func (m Meta) ID() *uuid.UUID {
