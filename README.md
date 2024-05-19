@@ -47,7 +47,7 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 Примеры использования:
 
 ```go
-  salePrice.Value = moysklad.DecimalIntPtr(100)
+salePrice.Value = moysklad.DecimalIntPtr(100)
 salePrice.Value = moysklad.DecimalFloatPtr(165.7)
 
 dv := decimal.NewFromInt(745)
