@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // PurchaseOrder Заказ поставщику.
@@ -23,7 +24,7 @@ type PurchaseOrder struct {
 	Files                 *Files                            `json:"files,omitempty"`                 // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                 *Group                            `json:"group,omitempty"`                 // Отдел сотрудника
 	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID сущности
-	InvoicedSum           *float64                          `json:"invoicedSum,omitempty"`           // Сумма счетов поставщику
+	InvoicedSum           *decimal.Decimal                  `json:"invoicedSum,omitempty"`           // Сумма счетов поставщику
 	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные
 	Moment                *Timestamp                        `json:"moment,omitempty"`                // Дата документа
 	Name                  *string                           `json:"name,omitempty"`                  // Наименование

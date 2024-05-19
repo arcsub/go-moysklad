@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // CommissionReportOut Выданный отчет комиссионера.
@@ -16,7 +17,7 @@ type CommissionReportOut struct {
 	Owner                 *Employee                               `json:"owner,omitempty"`
 	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`
 	OrganizationAccount   *AgentAccount                           `json:"organizationAccount,omitempty"`
-	CommitentSum          *float64                                `json:"commitentSum,omitempty"`
+	CommitentSum          *decimal.Decimal                        `json:"commitentSum,omitempty"`
 	Contract              *Contract                               `json:"contract,omitempty"`
 	Created               *Timestamp                              `json:"created,omitempty"`
 	Deleted               *Timestamp                              `json:"deleted,omitempty"`
@@ -31,7 +32,7 @@ type CommissionReportOut struct {
 	Applicable            *bool                                   `json:"applicable,omitempty"`
 	Agent                 *Counterparty                           `json:"agent,omitempty"`
 	Code                  *string                                 `json:"code,omitempty"`
-	PayedSum              *float64                                `json:"payedSum,omitempty"`
+	PayedSum              *decimal.Decimal                        `json:"payedSum,omitempty"`
 	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`
 	Printed               *bool                                   `json:"printed,omitempty"`
 	Project               *Project                                `json:"project,omitempty"`
@@ -42,12 +43,12 @@ type CommissionReportOut struct {
 	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`
 	Shared                *bool                                   `json:"shared,omitempty"`
 	State                 *State                                  `json:"state,omitempty"`
-	Sum                   *float64                                `json:"sum,omitempty"`
+	Sum                   *decimal.Decimal                        `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                              `json:"syncId,omitempty"`
 	Updated               *Timestamp                              `json:"updated,omitempty"`
 	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                                   `json:"vatIncluded,omitempty"`
-	VatSum                *float64                                `json:"vatSum,omitempty"`
+	VatSum                *decimal.Decimal                        `json:"vatSum,omitempty"`
 	RewardType            RewardType                              `json:"rewardType,omitempty"`
 }
 

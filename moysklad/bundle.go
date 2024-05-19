@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Bundle Комплект.
@@ -69,8 +70,8 @@ func (b Bundle) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
 // BundleOverhead Дополнительные расходы
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-atributy-wlozhennyh-suschnostej-dopolnitel-nye-rashody
 type BundleOverhead struct {
-	Value    *float64  `json:"value,omitempty"`    // Значение цены
-	Currency *Currency `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
+	Value    *decimal.Decimal `json:"value,omitempty"`    // Значение цены
+	Currency *Currency        `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
 }
 
 func (b BundleOverhead) String() string {

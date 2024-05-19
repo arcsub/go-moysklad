@@ -1,35 +1,37 @@
 package moysklad
 
+import "github.com/shopspring/decimal"
+
 // Profit общие поля для структур отчёта "Прибыльность"
 type Profit struct {
-	Margin         float64 `json:"margin"`         // Рентабельность
-	Profit         float64 `json:"profit"`         // Прибыль
-	ReturnAvgCheck float64 `json:"returnAvgCheck"` // Средний чек возврата
-	ReturnCostSum  float64 `json:"returnCostSum"`  // Сумма себестоимостей возвратов
-	ReturnCount    float64 `json:"returnCount"`    // Количество возвратов
-	ReturnSum      float64 `json:"returnSum"`      // Сумма возвратов
-	SalesAvgCheck  float64 `json:"salesAvgCheck"`  // Средний чек продаж
-	SalesCount     float64 `json:"salesCount"`     // Количество продаж
-	SellCostSum    float64 `json:"sellCostSum"`    // Сумма себестоимостей продаж
-	SellSum        float64 `json:"sellSum"`        // Сумма продаж
+	Margin         decimal.Decimal `json:"margin"`
+	Profit         decimal.Decimal `json:"profit"`
+	ReturnAvgCheck decimal.Decimal `json:"returnAvgCheck"`
+	ReturnCostSum  decimal.Decimal `json:"returnCostSum"`
+	ReturnSum      decimal.Decimal `json:"returnSum"`
+	SalesAvgCheck  decimal.Decimal `json:"salesAvgCheck"`
+	SellCostSum    decimal.Decimal `json:"sellCostSum"`
+	SellSum        decimal.Decimal `json:"sellSum"`
+	ReturnCount    float64         `json:"returnCount"`
+	SalesCount     float64         `json:"salesCount"`
 }
 
 // ProfitByAssortment Прибыльность по товарам
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
 type ProfitByAssortment struct {
-	Assortment     ProfitReportAssortment `json:"assortment"`     // Краткое представление Товара или Услуги в отчете
-	Margin         float64                `json:"margin"`         // Рентабельность
-	Profit         float64                `json:"profit"`         // Прибыль
-	ReturnCost     float64                `json:"returnCost"`     // Себестоимость возвратов
-	ReturnCostSum  float64                `json:"returnCostSum"`  // Сумма себестоимостей возвратов
-	ReturnPrice    float64                `json:"returnPrice"`    // Цена возвратов
-	ReturnQuantity float64                `json:"returnQuantity"` // Количество возвратов
-	ReturnSum      float64                `json:"returnSum"`      // Сумма возвратов
-	SellCost       float64                `json:"sellCost"`       // Себестоимость
-	SellCostSum    float64                `json:"sellCostSum"`    // Сумма себестоимостей продаж
-	SellPrice      float64                `json:"SellPrice"`      // Цена продаж (средняя)
-	SellQuantity   float64                `json:"sellQuantity"`   // Проданное количество
-	SellSum        float64                `json:"sellSum"`        // Сумма продаж
+	Assortment     ProfitReportAssortment `json:"assortment"`
+	SellCostSum    decimal.Decimal        `json:"sellCostSum"`
+	Profit         decimal.Decimal        `json:"profit"`
+	ReturnCost     decimal.Decimal        `json:"returnCost"`
+	ReturnCostSum  decimal.Decimal        `json:"returnCostSum"`
+	ReturnPrice    decimal.Decimal        `json:"returnPrice"`
+	ReturnSum      decimal.Decimal        `json:"returnSum"`
+	SellCost       decimal.Decimal        `json:"sellCost"`
+	Margin         decimal.Decimal        `json:"margin"`
+	SellPrice      decimal.Decimal        `json:"SellPrice"`
+	SellSum        decimal.Decimal        `json:"sellSum"`
+	ReturnQuantity float64                `json:"returnQuantity"`
+	SellQuantity   float64                `json:"sellQuantity"`
 }
 
 // ProfitReportAssortment Структура объекта assortment

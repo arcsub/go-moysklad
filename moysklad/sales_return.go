@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // SalesReturn Возврат покупателя.
@@ -37,16 +38,16 @@ type SalesReturn struct {
 	Shared              *bool                           `json:"shared,omitempty"`              // Общий доступ
 	State               *State                          `json:"state,omitempty"`               // Метаданные статуса Возврата Покупателя
 	Store               *Store                          `json:"store,omitempty"`               // Метаданные склада
-	Sum                 *float64                        `json:"sum,omitempty"`                 // Сумма
+	Sum                 *decimal.Decimal                `json:"sum,omitempty"`                 // Сумма
 	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
 	Updated             *Timestamp                      `json:"updated,omitempty"`             // Момент последнего обновления
 	VatEnabled          *bool                           `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
 	VatIncluded         *bool                           `json:"vatIncluded,omitempty"`         // Включен ли НДС в цену
-	VatSum              *float64                        `json:"vatSum,omitempty"`              // Сумма включая НДС
+	VatSum              *decimal.Decimal                `json:"vatSum,omitempty"`              // Сумма включая НДС
 	Demand              *Demand                         `json:"demand,omitempty"`              // Ссылка на отгрузку, по которой произошел возврат в формате Метаданных
 	Losses              *Losses                         `json:"losses,omitempty"`              // Массив ссылок на связанные списания в формате Метаданных
 	Payments            *Payments                       `json:"payments,omitempty"`            // Массив ссылок на связанные операции в формате Метаданных
-	PayedSum            *float64                        `json:"payedSum,omitempty"`            // Сумма исходящих платежей по возврату покупателя
+	PayedSum            *decimal.Decimal                `json:"payedSum,omitempty"`            // Сумма исходящих платежей по возврату покупателя
 	FactureOut          *FactureOut                     `json:"factureOut,omitempty"`          // Ссылка на Счет-фактуру выданный, с которым связан этот возврат, в формате Метаданных
 }
 
@@ -71,13 +72,13 @@ type SalesReturns = Slice[SalesReturn]
 type SalesReturnPosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Cost       *float64            `json:"cost,omitempty"`       // Себестоимость (выводится, если документ был создан без основания)
+	Cost       *decimal.Decimal    `json:"cost,omitempty"`       // Себестоимость (выводится, если документ был создан без основания)
 	Country    *Country            `json:"country,omitempty"`    // Метаданные Страны
 	Discount   *float64            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *decimal.Decimal    `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Slot       *Slot               `json:"slot,omitempty"`       // Метаданные
 	Things     *Things             `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
