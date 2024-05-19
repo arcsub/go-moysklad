@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.30"
+	Version          = "v0.0.33"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -63,13 +63,21 @@ func NewClient() *Client {
 	return &Client{client: rc}
 }
 
-// NewClientCustom принимает *http.Client и возвращает новый клиент для работы с API МойСклад.
+// NewHTTPClient принимает *http.Client и возвращает новый клиент для работы с API МойСклад.
 // Данный клиент не имеет встроенных сервисов.
 // Его необходимо передавать при создании каждого нового экземпляра сервиса.
-func NewClientCustom(client *http.Client) *Client {
+func NewHTTPClient(client *http.Client) *Client {
 	rc := resty.NewWithClient(client)
 	setupClient(rc)
 	return &Client{client: rc}
+}
+
+// NewRestyClient принимает *resty.Client и возвращает новый клиент для работы с API МойСклад.
+// Данный клиент не имеет встроенных сервисов.
+// Его необходимо передавать при создании каждого нового экземпляра сервиса.
+func NewRestyClient(client *resty.Client) *Client {
+	setupClient(client)
+	return &Client{client: client}
 }
 
 func (c *Client) Async() *AsyncService {

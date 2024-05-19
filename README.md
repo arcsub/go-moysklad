@@ -58,8 +58,15 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 ### Создание экземпляра клиента со своим http клиентом
 
 ```go
-  custom := &http.Client{Timeout: 5 * time.Minute}
-  client := moysklad.NewClientCustom(custom)
+  httpClient := &http.Client{Timeout: 5 * time.Minute}
+  client := moysklad.NewHTTPClient(httpClient)
+```
+
+### Создание экземпляра клиента с resty клиентом
+
+```go
+  restyClient := resty.New()
+  client := moysklad.NewRestyClient(restyClient)
 ```
 
 ### Аутентификация
