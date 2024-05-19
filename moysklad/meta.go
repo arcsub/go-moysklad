@@ -9,11 +9,15 @@ import (
 
 type HasMeta interface {
 	MetaTyper
-	GetMeta() *Meta
+	MetaOwner
 }
 
 type MetaTyper interface {
 	MetaType() MetaType
+}
+
+type MetaOwner interface {
+	GetMeta() *Meta
 }
 
 // Meta Метаданные объекта.
