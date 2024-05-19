@@ -207,6 +207,11 @@ func Deref[T any](ptr *T) T {
 }
 
 // IsEqualPtr сравнивает значения указателей типа T
-func IsEqualPtr[T comparable](left *T, right *T) bool {
-	return Deref(left) == Deref(right)
+func IsEqualPtr[T comparable](l *T, r *T) bool {
+	return l != nil && r != nil && Deref(l) == Deref(r)
+}
+
+// IsMetaEqual сравнивает `meta.href` двух сущностей типа *T
+func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
+	return l != nil && r != nil && Deref(l).GetMeta().IsEqual(Deref(r).GetMeta())
 }

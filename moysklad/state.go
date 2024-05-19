@@ -16,12 +16,13 @@ type State struct {
 	StateType  StateType  `json:"stateType,omitempty"`  // Тип Статуса
 }
 
-func (s *State) IsEqual(state *State) bool {
-	return s.Meta.IsEqual(state.Meta)
-}
-
 func (s State) String() string {
 	return Stringify(s)
+}
+
+// GetMeta удовлетворяет интерфейсу HasMeta
+func (s State) GetMeta() *Meta {
+	return s.Meta
 }
 
 type States = Slice[State]
