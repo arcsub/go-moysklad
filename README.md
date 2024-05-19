@@ -29,6 +29,31 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 2. `*resty.Response` – ответ на запрос, содержащий *http.Response и некоторую другую информацию.
 3. `error` – ошибки, если они были. При возникновении ошибок от API МойСклад в качестве ошибки будет заполненная структура `ApiErrors`
 
+### Поддержка `decimal`
+
+[Подробнее здесь](https://github.com/shopspring/decimal)
+
+У полей сумм, цен, себестоимости и др. указан тип `decimal.Decimal`.
+
+
+> В будущем планируется переход на другую библиотеку.
+
+Вспомогательные функции:
+
+- `DecimalIntPtr(int64) *decimal.Decimal`
+- `DecimalFloatPtr(float64) *decimal.Decimal`
+- `DecimalPtr(decimal.Decimal) *decimal.Decimal`
+
+Примеры использования:
+
+```go
+  salePrice.Value = moysklad.DecimalIntPtr(100)
+salePrice.Value = moysklad.DecimalFloatPtr(165.7)
+
+dv := decimal.NewFromInt(745)
+salePrice.Value = moysklad.DecimalPtr(dv)
+```
+
 ### Указатели
 Поля структур сущностей и документов являются указателями.
 - Для безопасного разыменовывания указателя необходимо передать указатель в метод `Deref()`
