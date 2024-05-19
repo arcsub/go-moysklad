@@ -1,11 +1,13 @@
 package moysklad
 
+import "github.com/shopspring/decimal"
+
 // SeriesElement Показатели (series).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-series
 type SeriesElement struct {
-	Date     Timestamp `json:"date"`     // Дата
-	Quantity float64   `json:"quantity"` // Количество
-	Sum      float64   `json:"sum"`      // Сумма
+	Date     Timestamp       `json:"date"`
+	Sum      decimal.Decimal `json:"sum"`
+	Quantity float64         `json:"quantity"`
 }
 
 // SalesPlotSeries Показатели продаж.

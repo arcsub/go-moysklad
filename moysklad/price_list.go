@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // PriceList Прайс-лист.
@@ -46,8 +47,8 @@ func (p PriceList) MetaType() MetaType {
 // PriceListCell Ячейка прайс листа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-yachejki
 type PriceListCell struct {
-	Column *string  `json:"column,omitempty"` // Название столбца, к которому относится данная ячейка
-	Sum    *float64 `json:"sum,omitempty"`    // Числовое значение ячейки
+	Column *string          `json:"column,omitempty"` // Название столбца, к которому относится данная ячейка
+	Sum    *decimal.Decimal `json:"sum,omitempty"`    // Числовое значение ячейки
 }
 
 func (p PriceListCell) String() string {

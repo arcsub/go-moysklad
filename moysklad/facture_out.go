@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // FactureOut Счет-фактура выданный.
@@ -32,7 +33,7 @@ type FactureOut struct {
 	Shared          *bool            `json:"shared,omitempty"`          // Общий доступ
 	State           *State           `json:"state,omitempty"`           // Метаданные статуса Счета-фактуры
 	StateContractId *string          `json:"stateContractId,omitempty"` // Идентификатор гос. контракта
-	Sum             *float64         `json:"sum,omitempty"`             // Сумма
+	Sum             *decimal.Decimal `json:"sum,omitempty"`             // Сумма
 	SyncID          *uuid.UUID       `json:"syncId,omitempty"`          // ID синхронизации. После заполнения недоступен для изменения
 	Updated         *Timestamp       `json:"updated,omitempty"`         // Момент последнего обновления
 	Demands         *Demands         `json:"demands,omitempty"`         // Массив ссылок на связанные отгрузки в формате Метаданных

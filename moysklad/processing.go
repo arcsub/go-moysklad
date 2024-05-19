@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Processing Техоперация.
@@ -29,7 +30,7 @@ type Processing struct {
 	Owner               *Employee                         `json:"owner,omitempty"`
 	Printed             *bool                             `json:"printed,omitempty"`
 	ProcessingPlan      *ProcessingPlan                   `json:"processingPlan,omitempty"`
-	ProcessingSum       *float64                          `json:"processingSum,omitempty"`
+	ProcessingSum       *decimal.Decimal                  `json:"processingSum,omitempty"`
 	Updated             *Timestamp                        `json:"updated,omitempty"`
 	ProductsStore       *Store                            `json:"productsStore,omitempty"`
 	Project             *Project                          `json:"project,omitempty"`

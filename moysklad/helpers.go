@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"github.com/shopspring/decimal"
 	"image/color"
 	"io"
 	"os"
@@ -35,6 +36,24 @@ func Float(v float64) *float64 { return &v }
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
+
+// DecimalPtr is a helper routine that allocates a new decimal value
+// to store v and returns a pointer to it.
+func DecimalPtr(v decimal.Decimal) *decimal.Decimal { return &v }
+
+// DecimalFloatPtr is a helper routine that allocates a new decimal value
+// to store v and returns a pointer to it.
+func DecimalFloatPtr(v float64) *decimal.Decimal {
+	d := decimal.NewFromFloat(v)
+	return &d
+}
+
+// DecimalIntPtr is a helper routine that allocates a new decimal value
+// to store v and returns a pointer to it.
+func DecimalIntPtr(v int64) *decimal.Decimal {
+	d := decimal.NewFromInt(v)
+	return &d
+}
 
 // Clamp задаёт значение в диапазоне между указанными нижней и верхней границами
 func Clamp(val, min, max int) int {
