@@ -1,5 +1,7 @@
 package moysklad
 
+import "github.com/shopspring/decimal"
+
 // Turnover Атрибуты объекта отчета.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaram-atributy-ob-ekta-otcheta
 type Turnover struct {
@@ -12,8 +14,8 @@ type Turnover struct {
 // TurnoverIncomeOutcome Структура объекта показатели (onPeriodStart, onPeriodEnd, income, outcome).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaram-struktura-ob-ekta-pokazateli-onperiodstart-onperiodend-income-outcome
 type TurnoverIncomeOutcome struct {
-	Sum      float64 `json:"sum"`      // Сумма себестоимости
-	Quantity float64 `json:"quantity"` // Количество единиц товара
+	Sum      decimal.Decimal `json:"sum"`      // Сумма себестоимости
+	Quantity float64         `json:"quantity"` // Количество единиц товара
 }
 
 // TurnoverAll Обороты по товарам.
@@ -38,12 +40,12 @@ type TurnoverAssortment struct {
 // TurnoverByOperation Обороты по товару с детализацией по документам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaru-s-detalizaciej-po-dokumentam
 type TurnoverByOperation struct {
-	Assortment TurnoverAssortment `json:"assortment"` // Краткое представление Товара или Модификации в отчете
-	Store      MetaName           `json:"store"`      // Склад
-	Operation  TurnoverOperation  `json:"operation"`  // Документ, связанный с Товаром
-	Quantity   float64            `json:"quantity"`   // Количество товара в документе.
-	Cost       float64            `json:"cost"`       // Себестоимость товара в документе.
-	Sum        float64            `json:"sum"`        // Сумма себестоимостей.
+	Assortment TurnoverAssortment `json:"assortment"`
+	Operation  TurnoverOperation  `json:"operation"`
+	Store      MetaName           `json:"store"`
+	Cost       decimal.Decimal    `json:"cost"`
+	Sum        decimal.Decimal    `json:"sum"`
+	Quantity   float64            `json:"quantity"`
 }
 
 // TurnoverOperation Структура объекта operation.

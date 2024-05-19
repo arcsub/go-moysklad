@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // RetailSalesReturn Розничный возврат.
@@ -13,8 +14,8 @@ type RetailSalesReturn struct {
 	AgentAccount        *AgentAccount              `json:"agentAccount,omitempty"`
 	Applicable          *bool                      `json:"applicable,omitempty"`
 	Attributes          *Attributes                `json:"attributes,omitempty"`
-	CashSum             *float64                   `json:"cashSum,omitempty"`
-	NoCashSum           *float64                   `json:"noCashSum,omitempty"`
+	CashSum             *decimal.Decimal           `json:"cashSum,omitempty"`
+	NoCashSum           *decimal.Decimal           `json:"noCashSum,omitempty"`
 	Contract            *Contract                  `json:"contract,omitempty"`
 	Created             *Timestamp                 `json:"created,omitempty"`
 	Deleted             *Timestamp                 `json:"deleted,omitempty"`
@@ -34,16 +35,16 @@ type RetailSalesReturn struct {
 	Printed             *bool                      `json:"printed,omitempty"`
 	Project             *Project                   `json:"project,omitempty"`
 	Published           *bool                      `json:"published,omitempty"`
-	QrSum               *float64                   `json:"qrSum,omitempty"`
+	QrSum               *decimal.Decimal           `json:"qrSum,omitempty"`
 	Rate                *Rate                      `json:"rate,omitempty"`
 	RetailShift         *RetailShift               `json:"retailShift,omitempty"`
 	RetailStore         *RetailStore               `json:"retailStore,omitempty"`
 	Shared              *bool                      `json:"shared,omitempty"`
 	State               *State                     `json:"state,omitempty"`
 	Store               *Store                     `json:"store,omitempty"`
-	Sum                 *float64                   `json:"sum,omitempty"`
+	Sum                 *decimal.Decimal           `json:"sum,omitempty"`
 	Organization        *Organization              `json:"organization,omitempty"`
-	VatSum              *float64                   `json:"vatSum,omitempty"`
+	VatSum              *decimal.Decimal           `json:"vatSum,omitempty"`
 	Updated             *Timestamp                 `json:"updated,omitempty"`
 	VatEnabled          *bool                      `json:"vatEnabled,omitempty"`
 	VatIncluded         *bool                      `json:"vatIncluded,omitempty"`

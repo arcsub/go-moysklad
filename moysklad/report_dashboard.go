@@ -1,21 +1,23 @@
 package moysklad
 
+import "github.com/shopspring/decimal"
+
 // Dashboard Структура объекта показателей
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-struktura-ob-ekta-pokazatelej
 type Dashboard struct {
-	Sales  DashboardSalesOrders // Вложенный объект, представляющий собой информацию о продажах за указанный период
-	Orders DashboardSalesOrders // Вложенный объект, представляющий собой информацию о заказах за указанный период
-	Money  DashboardMoney       // Вложенный объект, представляющий собой информацию о деньгах за указанный период
+	Money  DashboardMoney
+	Sales  DashboardSalesOrders
+	Orders DashboardSalesOrders
 }
 
 // DashboardMoney Деньги за период.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-struktura-ob-ekta-pokazatelej-den-gi-za-period
 type DashboardMoney struct {
-	Income        float64 `json:"income"`        // Доходы за период
-	Outcome       float64 `json:"outcome"`       // Расходы за период
-	Balance       float64 `json:"balance"`       // Текущий баланс
-	TodayMovement float64 `json:"todayMovement"` // Дельта за сегодня
-	Movement      float64 `json:"movement"`      // Дельта за период
+	Income        decimal.Decimal `json:"income"`        // Доходы за период
+	Outcome       decimal.Decimal `json:"outcome"`       // Расходы за период
+	Balance       decimal.Decimal `json:"balance"`       // Текущий баланс
+	TodayMovement decimal.Decimal `json:"todayMovement"` // Дельта за сегодня
+	Movement      decimal.Decimal `json:"movement"`      // Дельта за период
 }
 
 // DashboardSalesOrders Продажи/Заказы за период.

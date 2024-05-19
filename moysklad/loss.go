@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Loss Списание.
@@ -32,7 +33,7 @@ type Loss struct {
 	Shared       *bool                    `json:"shared,omitempty"`       // Общий доступ
 	State        *State                   `json:"state,omitempty"`        // Метаданные статуса
 	Store        *Store                   `json:"store,omitempty"`        // Метаданные склада
-	Sum          *float64                 `json:"sum,omitempty"`          // Сумма
+	Sum          *decimal.Decimal         `json:"sum,omitempty"`          // Сумма
 	SyncID       *uuid.UUID               `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
 	Updated      *Timestamp               `json:"updated,omitempty"`      // Момент последнего обновления
 	SalesReturn  *SalesReturn             `json:"salesReturn,omitempty"`  // Ссылка на связанный со списанием возврат покупателя в формате Метаданных
@@ -56,7 +57,7 @@ type LossPosition struct {
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *decimal.Decimal    `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина списания данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
