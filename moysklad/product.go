@@ -52,9 +52,9 @@ type Product struct {
 	OnTap               *bool          `json:"onTap,omitempty"`
 	VariantsCount       *int           `json:"variantsCount,omitempty"`
 	Vat                 *int           `json:"vat,omitempty"`
-	TrackingType        TrackingType   `json:"trackingType,omitempty"`
-	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
-	PaymentItemType     PaymentItem    `json:"paymentItemType,omitempty"`
+	TrackingType        *TrackingType  `json:"trackingType,omitempty"`
+	TaxSystem           *GoodTaxSystem `json:"taxSystem,omitempty"`
+	PaymentItemType     *PaymentItem   `json:"paymentItemType,omitempty"`
 }
 
 func (p Product) String() string {

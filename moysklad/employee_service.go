@@ -62,7 +62,7 @@ func (s *EmployeeService) Activate(ctx context.Context, id *uuid.UUID, permissio
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-deaktiwaciq-sotrudnika
 func (s *EmployeeService) Deactivate(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/access/deactivate", s.uri, id)
-	response, err := s.client.client.R().SetContext(ctx).Put(path)
+	response, err := s.client.R().SetContext(ctx).Put(path)
 	if err != nil {
 		return false, response, err
 	}
@@ -74,7 +74,7 @@ func (s *EmployeeService) Deactivate(ctx context.Context, id *uuid.UUID) (bool, 
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-sbros-parolq-sotrudnika
 func (s *EmployeeService) ResetPassword(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/access/resetpassword", id)
-	response, err := s.client.client.R().SetContext(ctx).Put(path)
+	response, err := s.client.R().SetContext(ctx).Put(path)
 	if err != nil {
 		return false, response, err
 	}

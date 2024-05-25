@@ -2,9 +2,13 @@ package moysklad
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/go-querystring/query"
 	"net/http"
+	"reflect"
+	"strings"
 )
 
 type Endpoint struct {
@@ -22,7 +26,7 @@ type RequestBuilder[T any] struct {
 }
 
 func NewRequestBuilder[T any](client *Client, uri string) *RequestBuilder[T] {
-	return &RequestBuilder[T]{client.client.R(), uri}
+	return &RequestBuilder[T]{client.R(), uri}
 }
 
 func (rb *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
@@ -58,6 +62,55 @@ func (rb *RequestBuilder[T]) Put(ctx context.Context, body any) (*T, *resty.Resp
 
 func (rb *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Response, error) {
 	return rb.send(ctx, http.MethodPost, body)
+}
+
+func (rb *RequestBuilder[T]) PostMany(ctx context.Context, body any) ([]*T, *resty.Response, error) {
+	var result []*T
+
+	resp, err := rb.req.SetContext(ctx).SetBody(body).SetResult(result).Execute(http.MethodPost, rb.uri)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	result, err = parsePostMany[T](resp.Body())
+
+	return result, resp, err
+}
+
+func parsePostMany[T any](b []byte) ([]*T, error) {
+	bytesToStr := string(b)
+
+	if bytesToStr == "" || bytesToStr == "[]" {
+		return nil, errors.New("parsePostMany: body is empty")
+	}
+
+	if !strings.HasPrefix(bytesToStr, "[") {
+		return nil, errors.New("parsePostMany: body is not an array")
+	}
+
+	var anyObjects []json.RawMessage
+	if err := json.Unmarshal(b, &anyObjects); err != nil {
+		return nil, err
+	}
+
+	var entities []*T
+	var apiErrors []ApiError
+
+	for _, object := range anyObjects {
+		t := *new(T)
+		if err := json.Unmarshal(object, &t); err == nil &&
+			!reflect.ValueOf(&t).Elem().IsZero() {
+			entities = append(entities, &t)
+			continue
+		}
+
+		var e ApiErrors
+		if err := json.Unmarshal(object, &e); err == nil {
+			apiErrors = append(apiErrors, e.ApiErrors...)
+		}
+	}
+
+	return entities, ApiErrors{ApiErrors: apiErrors}
 }
 
 func (rb *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
