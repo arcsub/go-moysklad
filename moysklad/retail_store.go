@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // RetailStore Точка продаж.
@@ -20,7 +19,7 @@ type RetailStore struct {
 	AllowSellTobaccoWithoutMRC          *bool                 `json:"allowSellTobaccoWithoutMRC,omitempty"`
 	Archived                            *bool                 `json:"archived,omitempty"`
 	AuthTokenAttached                   *bool                 `json:"authTokenAttached,omitempty"`
-	BankPercent                         *decimal.Decimal      `json:"bankPercent,omitempty"`
+	BankPercent                         *Decimal              `json:"bankPercent,omitempty"`
 	Cashiers                            *Cashiers             `json:"cashiers,omitempty"`
 	ControlCashierChoice                *bool                 `json:"controlCashierChoice,omitempty"`
 	ControlShippingStock                *bool                 `json:"controlShippingStock,omitempty"`
@@ -32,7 +31,7 @@ type RetailStore struct {
 	DemandPrefix                        *string               `json:"demandPrefix,omitempty"`
 	Description                         *string               `json:"description,omitempty"`
 	DiscountEnable                      *bool                 `json:"discountEnable,omitempty"`
-	DiscountMaxPercent                  *decimal.Decimal      `json:"discountMaxPercent,omitempty"`
+	DiscountMaxPercent                  *Decimal              `json:"discountMaxPercent,omitempty"`
 	EnableReturnsWithNoReason           *bool                 `json:"enableReturnsWithNoReason,omitempty"`
 	Environment                         *Environment          `json:"environment,omitempty"`
 	ExternalCode                        *string               `json:"externalCode,omitempty"`
@@ -60,7 +59,7 @@ type RetailStore struct {
 	SendMarksForCheck                   *bool                 `json:"sendMarksForCheck,omitempty"`
 	ProductFolders                      *ProductFolders       `json:"productFolders,omitempty"`
 	QRAcquire                           *Counterparty         `json:"qrAcquire,omitempty"`
-	QRBankPercent                       *decimal.Decimal      `json:"qrBankPercent,omitempty"`
+	QRBankPercent                       *Decimal              `json:"qrBankPercent,omitempty"`
 	QRPayEnabled                        *bool                 `json:"qrPayEnabled,omitempty"`
 	QRTerminalId                        *string               `json:"qrTerminalId,omitempty"`
 	ReceiptTemplate                     *Meta                 `json:"receiptTemplate,omitempty"`

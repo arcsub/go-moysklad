@@ -1,7 +1,5 @@
 package moysklad
 
-import "github.com/shopspring/decimal"
-
 // ReportCounterparty Показатели контрагентов.
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-pokazateli-kontragentow
@@ -12,14 +10,14 @@ type ReportCounterparty struct {
 	LastDemandDate  Timestamp        `json:"lastDemandDate"`
 	Counterparty    CounterpartyData `json:"counterparty"`
 	Meta            Meta             `json:"meta"`
-	DiscountsSum    decimal.Decimal  `json:"discountsSum"`
+	DiscountsSum    Decimal          `json:"discountsSum"`
 	LastEventText   string           `json:"lastEventText"`
-	DemandsSum      decimal.Decimal  `json:"demandsSum"`
-	AverageReceipt  decimal.Decimal  `json:"averageReceipt"`
-	BonusBalance    decimal.Decimal  `json:"bonusBalance"`
-	Profit          decimal.Decimal  `json:"profit"`
-	ReturnsSum      decimal.Decimal  `json:"returnsSum"`
-	Balance         decimal.Decimal  `json:"balance"`
+	DemandsSum      Decimal          `json:"demandsSum"`
+	AverageReceipt  Decimal          `json:"averageReceipt"`
+	BonusBalance    Decimal          `json:"bonusBalance"`
+	Profit          Decimal          `json:"profit"`
+	ReturnsSum      Decimal          `json:"returnsSum"`
+	Balance         Decimal          `json:"balance"`
 	DemandsCount    int              `json:"demandsCount"`
 	ReturnsCount    int              `json:"returnsCount"`
 }

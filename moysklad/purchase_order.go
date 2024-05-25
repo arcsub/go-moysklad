@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // PurchaseOrder Заказ поставщику.
@@ -24,30 +23,30 @@ type PurchaseOrder struct {
 	Files                 *Files                            `json:"files,omitempty"`                 // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                 *Group                            `json:"group,omitempty"`                 // Отдел сотрудника
 	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID сущности
-	InvoicedSum           *decimal.Decimal                  `json:"invoicedSum,omitempty"`           // Сумма счетов поставщику
+	InvoicedSum           *Decimal                          `json:"invoicedSum,omitempty"`           // Сумма счетов поставщику
 	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные
 	Moment                *Timestamp                        `json:"moment,omitempty"`                // Дата документа
 	Name                  *string                           `json:"name,omitempty"`                  // Наименование
 	Organization          *Organization                     `json:"organization,omitempty"`          // Метаданные юрлица
 	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`   // Метаданные счета юрлица
 	Owner                 *Employee                         `json:"owner,omitempty"`                 // Владелец (Сотрудник)
-	PayedSum              *decimal.Decimal                  `json:"payedSum,omitempty"`              // Сумма входящих платежей по Счету поставщика
+	PayedSum              *Decimal                          `json:"payedSum,omitempty"`              // Сумма входящих платежей по Счету поставщика
 	Positions             *Positions[PurchaseOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Заказа поставщику
 	Printed               *bool                             `json:"printed,omitempty"`               // Напечатан ли документ
 	Project               *Project                          `json:"project,omitempty"`               // Проект
 	Published             *bool                             `json:"published,omitempty"`             // Опубликован ли документ
 	Rate                  *Rate                             `json:"rate,omitempty"`                  // Валюта
 	Shared                *bool                             `json:"shared,omitempty"`                // Общий доступ
-	ShippedSum            *decimal.Decimal                  `json:"shippedSum,omitempty"`            // Сумма отгруженного
+	ShippedSum            *Decimal                          `json:"shippedSum,omitempty"`            // Сумма отгруженного
 	State                 *State                            `json:"state,omitempty"`                 // Метаданные статуса
 	Store                 *Store                            `json:"store,omitempty"`                 // Метаданные склада
-	Sum                   *decimal.Decimal                  `json:"sum,omitempty"`                   // Сумма
+	Sum                   *Decimal                          `json:"sum,omitempty"`                   // Сумма
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`                // ID синхронизации. После заполнения недоступен для изменения
 	Updated               *Timestamp                        `json:"updated,omitempty"`               // Момент последнего обновления
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`            // Учитывается ли НДС
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`           // Включен ли НДС в цену
-	VatSum                *decimal.Decimal                  `json:"vatSum,omitempty"`                // Сумма включая НДС
-	WaitSum               *decimal.Decimal                  `json:"waitSum,omitempty"`               // Сумма товаров в пути
+	VatSum                *Decimal                          `json:"vatSum,omitempty"`                // Сумма включая НДС
+	WaitSum               *Decimal                          `json:"waitSum,omitempty"`               // Сумма товаров в пути
 	CustomerOrders        *CustomerOrders                   `json:"customerOrders,omitempty"`        // Массив ссылок на связанные заказы покупателей в формате Метаданных
 	InvoicesIn            *InvoicesIn                       `json:"invoicesIn,omitempty"`            // Массив ссылок на связанные счета поставщиков в формате Метаданных
 	Payments              *Payments                         `json:"payments,omitempty"`              // Массив ссылок на связанные платежи в формате Метаданных
@@ -76,13 +75,13 @@ type PurchaseOrders = Slice[PurchaseOrder]
 type PurchaseOrderPosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Discount   *decimal.Decimal    `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
+	Discount   *Decimal            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *decimal.Decimal    `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
-	Shipped    *decimal.Decimal    `json:"shipped,omitempty"`    // Принято
-	InTransit  *decimal.Decimal    `json:"inTransit,omitempty"`  // Ожидание
+	Shipped    *Decimal            `json:"shipped,omitempty"`    // Принято
+	InTransit  *Decimal            `json:"inTransit,omitempty"`  // Ожидание
 	Vat        *float64            `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Wait       *bool               `json:"wait,omitempty"`       // Ожидается данной позиции

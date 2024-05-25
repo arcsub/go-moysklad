@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // RetailShift Розничная смена.
@@ -13,8 +12,8 @@ type RetailShift struct {
 	Acquire             *Counterparty     `json:"acquire,omitempty"`             // Метаданные Банка-эквайера по операциям по карте
 	AgentAccount        *AgentAccount     `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
 	Attributes          *Attributes       `json:"attributes,omitempty"`          // Коллекция метаданных доп. полей. Поля объекта
-	BankCommission      *decimal.Decimal  `json:"bankComission,omitempty"`       // Сумма комиссии эквайера за проведение безналичных платежей по банковской карте. Не может превышать общую сумму безналичных платежей по карте. Если не указано, заполняется 0 автоматически.
-	BankPercent         *decimal.Decimal  `json:"bankPercent,omitempty"`         // Комиссия банка-эквайера по операциям по карте (в процентах)
+	BankCommission      *Decimal          `json:"bankComission,omitempty"`       // Сумма комиссии эквайера за проведение безналичных платежей по банковской карте. Не может превышать общую сумму безналичных платежей по карте. Если не указано, заполняется 0 автоматически.
+	BankPercent         *Decimal          `json:"bankPercent,omitempty"`         // Комиссия банка-эквайера по операциям по карте (в процентах)
 	Cheque              *Cheque           `json:"cheque,omitempty"`              // Информация о смене ККТ
 	CloseDate           *Timestamp        `json:"closeDate,omitempty"`           // Дата закрытия смены
 	Contract            *Contract         `json:"contract,omitempty"`            // Метаданные договора
@@ -34,14 +33,14 @@ type RetailShift struct {
 	Owner               *Employee         `json:"owner,omitempty"`               // Владелец (Сотрудник)
 	Payments            *Payments         `json:"paymentOperations,omitempty"`   // Коллекция метаданных платежных операций
 	Printed             *bool             `json:"printed,omitempty"`             // Напечатан ли документ
-	ProceedsCash        *decimal.Decimal  `json:"proceedsCash,omitempty"`        // Выручка наличными
-	ProceedsNoCash      *decimal.Decimal  `json:"proceedsNoCash,omitempty"`      // Выручка безнал
+	ProceedsCash        *Decimal          `json:"proceedsCash,omitempty"`        // Выручка наличными
+	ProceedsNoCash      *Decimal          `json:"proceedsNoCash,omitempty"`      // Выручка безнал
 	Published           *bool             `json:"published,omitempty"`           // Опубликован ли документ
 	QRAcquire           *Counterparty     `json:"qrAcquire,omitempty"`           // Метаданные Банка-эквайера по операциям по QR-коду
-	QRBankCommission    *decimal.Decimal  `json:"qrBankComission,omitempty"`     // Сумма комиссии эквайера за проведение безналичных платежей по QR-коду. Не может превышать общую сумму безналичных платежей по QR-коду. Если не указано, заполняется 0 автоматически.
-	QRBankPercent       *decimal.Decimal  `json:"qrBankPercent,omitempty"`       // Комиссия банка-эквайера по операция по QR-коду (в процентах)
-	ReceivedCash        *decimal.Decimal  `json:"receivedCash,omitempty"`        // Получено наличными
-	ReceivedNoCash      *decimal.Decimal  `json:"receivedNoCash,omitempty"`      // Получено безнал
+	QRBankCommission    *Decimal          `json:"qrBankComission,omitempty"`     // Сумма комиссии эквайера за проведение безналичных платежей по QR-коду. Не может превышать общую сумму безналичных платежей по QR-коду. Если не указано, заполняется 0 автоматически.
+	QRBankPercent       *Decimal          `json:"qrBankPercent,omitempty"`       // Комиссия банка-эквайера по операция по QR-коду (в процентах)
+	ReceivedCash        *Decimal          `json:"receivedCash,omitempty"`        // Получено наличными
+	ReceivedNoCash      *Decimal          `json:"receivedNoCash,omitempty"`      // Получено безнал
 	RetailStore         *RetailStore      `json:"retailStore,omitempty"`         // Метаданные точки продаж
 	Shared              *bool             `json:"shared,omitempty"`              // Общий доступ
 	Store               *Store            `json:"store,omitempty"`               // Метаданные склада. Если не указано, заполняется с точки продаж автоматически
