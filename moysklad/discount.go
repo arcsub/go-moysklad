@@ -3,6 +3,7 @@ package moysklad
 import (
 	"encoding/json"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Discount Скидка.
@@ -109,8 +110,8 @@ func (a AccumulationDiscount) MetaType() MetaType {
 // AccumulationLevel Проценты скидок при определенной сумме продаж.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-levels
 type AccumulationLevel struct {
-	Amount   *float64 `json:"amount,omitempty"`   // Сумма накоплений в копейках
-	Discount *float64 `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
+	Amount   *decimal.Decimal `json:"amount,omitempty"`   // Сумма накоплений в копейках
+	Discount *decimal.Decimal `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
 }
 
 type Levels = Slice[AccumulationLevel]
@@ -142,19 +143,19 @@ func (p PersonalDiscount) MetaType() MetaType {
 // Ключевое слово: specialpricediscount
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
 type SpecialPriceDiscount struct {
-	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
-	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
-	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
-	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
-	AgentTags      *Tags           `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
-	AllProducts    *bool           `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
-	AllAgents      *bool           `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
-	UsePriceType   *bool           `json:"usePriceType,omitempty"`   // Использовать специальную цену
-	Assortment     *Assortment     `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
-	ProductFolders *ProductFolders `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
-	Discount       *float64        `json:"discount,omitempty"`       // Процент скидки если выбран фиксированный процент
-	SpecialPrice   *SpecialPrice   `json:"specialPrice,omitempty"`   // Спец. цена (если выбран тип цен)
+	AccountID      *uuid.UUID       `json:"accountId,omitempty"`      // ID учетной записи
+	ID             *uuid.UUID       `json:"id,omitempty"`             // ID сущности
+	Name           *string          `json:"name,omitempty"`           // Наименование Скидки
+	Meta           *Meta            `json:"meta,omitempty"`           // Метаданные
+	Active         *bool            `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
+	AgentTags      *Tags            `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
+	AllProducts    *bool            `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
+	AllAgents      *bool            `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
+	UsePriceType   *bool            `json:"usePriceType,omitempty"`   // Использовать специальную цену
+	Assortment     *Assortment      `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
+	ProductFolders *ProductFolders  `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
+	Discount       *decimal.Decimal `json:"discount,omitempty"`       // Процент скидки если выбран фиксированный процент
+	SpecialPrice   *SpecialPrice    `json:"specialPrice,omitempty"`   // Спец. цена (если выбран тип цен)
 }
 
 func (s SpecialPriceDiscount) String() string {

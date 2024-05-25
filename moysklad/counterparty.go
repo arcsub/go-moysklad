@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // Counterparty Контрагент.
@@ -35,7 +36,7 @@ type Counterparty struct {
 	Owner              *Employee                 `json:"owner,omitempty"`              // Владелец (Сотрудник)
 	Phone              *string                   `json:"phone,omitempty"`              // Номер городского телефона
 	PriceType          *PriceType                `json:"priceType,omitempty"`          // Тип цены Контрагента
-	SalesAmount        *float64                  `json:"salesAmount,omitempty"`        // Сумма продаж
+	SalesAmount        *decimal.Decimal          `json:"salesAmount,omitempty"`        // Сумма продаж
 	Shared             *bool                     `json:"shared,omitempty"`             // Общий доступ
 	State              *State                    `json:"state,omitempty"`              // Метаданные Статуса Контрагента
 	SyncID             *uuid.UUID                `json:"syncId,omitempty"`             // ID синхронизации

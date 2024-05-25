@@ -45,7 +45,7 @@ type InvoiceOut struct {
 	Updated              *Timestamp                  `json:"updated,omitempty"`              // Момент последнего обновления
 	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`           // Учитывается ли НДС
 	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`          // Включен ли НДС в цену
-	VatSum               *float64                    `json:"vatSum,omitempty"`               // Сумма включая НДС
+	VatSum               *decimal.Decimal            `json:"vatSum,omitempty"`               // Сумма включая НДС
 	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`        // Ссылка на Заказ Покупателя, с которым связан этот Счет покупателю в формате Метаданных
 	Payments             *Payments                   `json:"payments,omitempty"`             // Массив ссылок на связанные операции в формате Метаданных
 	Demands              *Demands                    `json:"demands,omitempty"`              // Массив ссылок на связанные отгрузки в формате Метаданных

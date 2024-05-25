@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // CommissionReportIn Полученный отчет комиссионера.
@@ -17,7 +18,7 @@ type CommissionReportIn struct {
 	CommissionOverhead            *CommissionOverhead                          `json:"commissionOverhead,omitempty"`
 	CommissionPeriodEnd           *Timestamp                                   `json:"commissionPeriodEnd,omitempty"`
 	CommissionPeriodStart         *Timestamp                                   `json:"commissionPeriodStart,omitempty"`
-	CommitentSum                  *float64                                     `json:"commitentSum,omitempty"`
+	CommitentSum                  *decimal.Decimal                             `json:"commitentSum,omitempty"`
 	Contract                      *Contract                                    `json:"contract,omitempty"`
 	Created                       *Timestamp                                   `json:"created,omitempty"`
 	Deleted                       *Timestamp                                   `json:"deleted,omitempty"`
@@ -28,7 +29,7 @@ type CommissionReportIn struct {
 	ID                            *uuid.UUID                                   `json:"id,omitempty"`
 	Meta                          *Meta                                        `json:"meta,omitempty"`
 	Moment                        *Timestamp                                   `json:"moment,omitempty"`
-	VatSum                        *float64                                     `json:"vatSum,omitempty"`
+	VatSum                        *decimal.Decimal                             `json:"vatSum,omitempty"`
 	Agent                         *Counterparty                                `json:"agent,omitempty"`
 	Files                         *Files                                       `json:"files,omitempty"`
 	Owner                         *Employee                                    `json:"owner,omitempty"`

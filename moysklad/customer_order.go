@@ -81,7 +81,7 @@ type CustomerOrders = Slice[CustomerOrder]
 type CustomerOrderPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`
 	Assortment *AssortmentPosition `json:"assortment,omitempty"`
-	Discount   *float64            `json:"discount,omitempty"`
+	Discount   *decimal.Decimal    `json:"discount,omitempty"`
 	ID         *uuid.UUID          `json:"id,omitempty"`
 	Pack       *Pack               `json:"pack,omitempty"`
 	Price      *decimal.Decimal    `json:"price,omitempty"`

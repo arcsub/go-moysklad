@@ -87,7 +87,7 @@ type DemandPosition struct {
 	AccountID         *uuid.UUID          `json:"accountId,omitempty"`          // ID учетной записи
 	Assortment        *AssortmentPosition `json:"assortment,omitempty"`         // Метаданные товара/услуги/серии/модификации/комплекта, которую представляет собой позиция
 	Cost              *int                `json:"cost,omitempty"`               // Себестоимость (только для услуг)
-	Discount          *float64            `json:"discount,omitempty"`           // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
+	Discount          *decimal.Decimal    `json:"discount,omitempty"`           // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	ID                *uuid.UUID          `json:"id,omitempty"`                 // ID сущности
 	Pack              *Pack               `json:"pack,omitempty"`               // Упаковка Товара
 	Price             *decimal.Decimal    `json:"price,omitempty"`              // Цена товара/услуги в копейках

@@ -76,7 +76,7 @@ type SupplyPosition struct {
 	AccountID     *uuid.UUID          `json:"accountId,omitempty"`     // ID учетной записи
 	Assortment    *AssortmentPosition `json:"assortment,omitempty"`    // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Country       *Country            `json:"country,omitempty"`       // Метаданные страны
-	Discount      *float64            `json:"discount,omitempty"`      // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
+	Discount      *decimal.Decimal    `json:"discount,omitempty"`      // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	GTD           *GTD                `json:"gtd,omitempty"`           // ГТД
 	ID            *uuid.UUID          `json:"id,omitempty"`            // ID позиции
 	Pack          *Pack               `json:"pack,omitempty"`          // Упаковка Товара
