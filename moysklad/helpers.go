@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/shopspring/decimal"
+
 	"image/color"
 	"io"
 	"os"
@@ -39,20 +40,20 @@ func String(v string) *string { return &v }
 
 // DecimalPtr is a helper routine that allocates a new decimal value
 // to store v and returns a pointer to it.
-func DecimalPtr(v decimal.Decimal) *decimal.Decimal { return &v }
+func DecimalPtr(v Decimal) *Decimal { return &v }
 
 // DecimalFloatPtr is a helper routine that allocates a new decimal value
 // to store v and returns a pointer to it.
-func DecimalFloatPtr(v float64) *decimal.Decimal {
+func DecimalFloatPtr(v float64) *Decimal {
 	d := decimal.NewFromFloat(v)
-	return &d
+	return &Decimal{d}
 }
 
 // DecimalIntPtr is a helper routine that allocates a new decimal value
 // to store v and returns a pointer to it.
-func DecimalIntPtr(v int64) *decimal.Decimal {
+func DecimalIntPtr(v int64) *Decimal {
 	d := decimal.NewFromInt(v)
-	return &d
+	return &Decimal{d}
 }
 
 // Clamp задаёт значение в диапазоне между указанными нижней и верхней границами
@@ -233,4 +234,12 @@ func IsEqualPtr[T comparable](l *T, r *T) bool {
 // IsMetaEqual сравнивает `meta.href` двух сущностей типа *T
 func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
 	return l != nil && r != nil && Deref(l).GetMeta().IsEqual(Deref(r).GetMeta())
+}
+
+type Decimal struct {
+	decimal.Decimal
+}
+
+func (d Decimal) MarshalJSON() ([]byte, error) {
+	return []byte(d.StringFixed(2)), nil
 }

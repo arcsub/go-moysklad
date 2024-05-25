@@ -1,7 +1,5 @@
 package moysklad
 
-import "github.com/shopspring/decimal"
-
 // Turnover Атрибуты объекта отчета.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaram-atributy-ob-ekta-otcheta
 type Turnover struct {
@@ -14,8 +12,8 @@ type Turnover struct {
 // TurnoverIncomeOutcome Структура объекта показатели (onPeriodStart, onPeriodEnd, income, outcome).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaram-struktura-ob-ekta-pokazateli-onperiodstart-onperiodend-income-outcome
 type TurnoverIncomeOutcome struct {
-	Sum      decimal.Decimal `json:"sum"`      // Сумма себестоимости
-	Quantity float64         `json:"quantity"` // Количество единиц товара
+	Sum      Decimal `json:"sum"`      // Сумма себестоимости
+	Quantity float64 `json:"quantity"` // Количество единиц товара
 }
 
 // TurnoverAll Обороты по товарам.
@@ -43,8 +41,8 @@ type TurnoverByOperation struct {
 	Assortment TurnoverAssortment `json:"assortment"`
 	Operation  TurnoverOperation  `json:"operation"`
 	Store      MetaName           `json:"store"`
-	Cost       decimal.Decimal    `json:"cost"`
-	Sum        decimal.Decimal    `json:"sum"`
+	Cost       Decimal            `json:"cost"`
+	Sum        Decimal            `json:"sum"`
 	Quantity   float64            `json:"quantity"`
 }
 

@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // ProcessingPlan Техкарта.
@@ -12,7 +11,7 @@ type ProcessingPlan struct {
 	AccountID         *uuid.UUID                         `json:"accountId,omitempty"`         // ID учетной записи
 	Archived          *bool                              `json:"archived,omitempty"`          // Добавлена ли Тех. карта в архив
 	Code              *string                            `json:"code,omitempty"`              // Код Тех. карты
-	Cost              *decimal.Decimal                   `json:"cost,omitempty"`              // Стоимость производства
+	Cost              *Decimal                           `json:"cost,omitempty"`              // Стоимость производства
 	ExternalCode      *string                            `json:"externalCode,omitempty"`      // Внешний код
 	Group             *Group                             `json:"group,omitempty"`             // Отдел сотрудника
 	ID                *uuid.UUID                         `json:"id,omitempty"`                // ID сущности

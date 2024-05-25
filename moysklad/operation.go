@@ -3,7 +3,6 @@ package moysklad
 import (
 	"encoding/json"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Operation операция, к которой привязан платёж
@@ -13,28 +12,28 @@ import (
 // `data` для хранения сырых данных
 type Operation struct {
 	// Общие поля
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учетной записи
-	Attributes   *Attributes      `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
-	Created      *Timestamp       `json:"created,omitempty"`      // Дата создания
-	Deleted      *Timestamp       `json:"deleted,omitempty"`      // Момент последнего удаления
-	Description  *string          `json:"description,omitempty"`  // Комментарий
-	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код
-	Files        *Files           `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID сущности
-	Meta         Meta             `json:"meta,omitempty"`         // Метаданные
-	Name         *string          `json:"name,omitempty"`         // Наименование
-	Organization *Organization    `json:"organization,omitempty"` // Метаданные юрлица
-	Owner        *Employee        `json:"owner,omitempty"`        // Владелец (Сотрудник)
-	Printed      *bool            `json:"printed,omitempty"`      // Напечатан ли документ
-	Published    *bool            `json:"published,omitempty"`    // Опубликован ли документ
-	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
-	SyncID       *uuid.UUID       `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
-	Updated      *Timestamp       `json:"updated,omitempty"`      // Момент последнего обновления
-	VatEnabled   *bool            `json:"vatEnabled,omitempty"`   // Учитывается ли НДС
-	VatIncluded  *bool            `json:"vatIncluded,omitempty"`  // Включен ли НДС в цену
-	LinkedSum    *decimal.Decimal `json:"linkedSum,omitempty"`    // Сумма, оплаченная по данному документу
-	Payments     *Payments        `json:"payments,omitempty"`     // Массив ссылок на связанные платежи в формате Метаданных
+	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
+	Attributes   *Attributes   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
+	Created      *Timestamp    `json:"created,omitempty"`      // Дата создания
+	Deleted      *Timestamp    `json:"deleted,omitempty"`      // Момент последнего удаления
+	Description  *string       `json:"description,omitempty"`  // Комментарий
+	ExternalCode *string       `json:"externalCode,omitempty"` // Внешний код
+	Files        *Files        `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
+	Group        *Group        `json:"group,omitempty"`        // Отдел сотрудника
+	ID           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
+	Meta         Meta          `json:"meta,omitempty"`         // Метаданные
+	Name         *string       `json:"name,omitempty"`         // Наименование
+	Organization *Organization `json:"organization,omitempty"` // Метаданные юрлица
+	Owner        *Employee     `json:"owner,omitempty"`        // Владелец (Сотрудник)
+	Printed      *bool         `json:"printed,omitempty"`      // Напечатан ли документ
+	Published    *bool         `json:"published,omitempty"`    // Опубликован ли документ
+	Shared       *bool         `json:"shared,omitempty"`       // Общий доступ
+	SyncID       *uuid.UUID    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
+	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
+	VatEnabled   *bool         `json:"vatEnabled,omitempty"`   // Учитывается ли НДС
+	VatIncluded  *bool         `json:"vatIncluded,omitempty"`  // Включен ли НДС в цену
+	LinkedSum    *Decimal      `json:"linkedSum,omitempty"`    // Сумма, оплаченная по данному документу
+	Payments     *Payments     `json:"payments,omitempty"`     // Массив ссылок на связанные платежи в формате Метаданных
 
 	// сырые данные
 	data json.RawMessage

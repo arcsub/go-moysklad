@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // InvoiceOut Счет покупателю.
@@ -29,7 +28,7 @@ type InvoiceOut struct {
 	Organization         *Organization               `json:"organization,omitempty"`         // Метаданные юрлица
 	OrganizationAccount  *AgentAccount               `json:"organizationAccount,omitempty"`  // Метаданные счета юрлица
 	Owner                *Employee                   `json:"owner,omitempty"`                // Владелец (Сотрудник)
-	PayedSum             *decimal.Decimal            `json:"payedSum,omitempty"`             // Сумма входящих платежей по Счету
+	PayedSum             *Decimal                    `json:"payedSum,omitempty"`             // Сумма входящих платежей по Счету
 	PaymentPlannedMoment *Timestamp                  `json:"paymentPlannedMoment,omitempty"` // Планируемая дата оплаты
 	Positions            *Positions[InvoicePosition] `json:"positions,omitempty"`            // Метаданные позиций
 	Printed              *bool                       `json:"printed,omitempty"`              // Напечатан ли документ
@@ -37,15 +36,15 @@ type InvoiceOut struct {
 	Published            *bool                       `json:"published,omitempty"`            // Опубликован ли документ
 	Rate                 *Rate                       `json:"rate,omitempty"`                 // Валюта
 	Shared               *bool                       `json:"shared,omitempty"`               // Общий доступ
-	ShippedSum           *decimal.Decimal            `json:"shippedSum,omitempty"`           // Сумма отгруженного
+	ShippedSum           *Decimal                    `json:"shippedSum,omitempty"`           // Сумма отгруженного
 	State                *State                      `json:"state,omitempty"`                // Метаданные статуса
 	Store                *Store                      `json:"store,omitempty"`                // Метаданные склада
-	Sum                  *decimal.Decimal            `json:"sum,omitempty"`                  // Сумма
+	Sum                  *Decimal                    `json:"sum,omitempty"`                  // Сумма
 	SyncID               *uuid.UUID                  `json:"syncId,omitempty"`               // ID синхронизации. После заполнения недоступен для изменения
 	Updated              *Timestamp                  `json:"updated,omitempty"`              // Момент последнего обновления
 	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`           // Учитывается ли НДС
 	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`          // Включен ли НДС в цену
-	VatSum               *decimal.Decimal            `json:"vatSum,omitempty"`               // Сумма включая НДС
+	VatSum               *Decimal                    `json:"vatSum,omitempty"`               // Сумма включая НДС
 	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`        // Ссылка на Заказ Покупателя, с которым связан этот Счет покупателю в формате Метаданных
 	Payments             *Payments                   `json:"payments,omitempty"`             // Массив ссылок на связанные операции в формате Метаданных
 	Demands              *Demands                    `json:"demands,omitempty"`              // Массив ссылок на связанные отгрузки в формате Метаданных

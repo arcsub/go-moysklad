@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // InternalOrder Внутренний заказ.
@@ -36,12 +35,12 @@ type InternalOrder struct {
 	Shared                *bool                             `json:"shared,omitempty"`                // Общий доступ
 	State                 *State                            `json:"state,omitempty"`                 // Метаданные статуса
 	Store                 *Store                            `json:"store,omitempty"`                 // Метаданные склада
-	Sum                   *decimal.Decimal                  `json:"sum,omitempty"`                   // Сумма
+	Sum                   *Decimal                          `json:"sum,omitempty"`                   // Сумма
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`                // ID синхронизации. После заполнения недоступен для изменения
 	Updated               *Timestamp                        `json:"updated,omitempty"`               // Момент последнего обновления
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`            // Учитывается ли НДС
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`           // Включен ли НДС в цену
-	VatSum                *decimal.Decimal                  `json:"vatSum,omitempty"`                // Сумма включая НДС
+	VatSum                *Decimal                          `json:"vatSum,omitempty"`                // Сумма включая НДС
 }
 
 func (i InternalOrder) String() string {
@@ -60,7 +59,7 @@ type InternalOrderPosition struct {
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *decimal.Decimal    `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Vat        *int                `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.

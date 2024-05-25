@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // CommissionReportOut Выданный отчет комиссионера.
@@ -17,7 +16,7 @@ type CommissionReportOut struct {
 	Owner                 *Employee                               `json:"owner,omitempty"`
 	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`
 	OrganizationAccount   *AgentAccount                           `json:"organizationAccount,omitempty"`
-	CommitentSum          *decimal.Decimal                        `json:"commitentSum,omitempty"`
+	CommitentSum          *Decimal                                `json:"commitentSum,omitempty"`
 	Contract              *Contract                               `json:"contract,omitempty"`
 	Created               *Timestamp                              `json:"created,omitempty"`
 	Deleted               *Timestamp                              `json:"deleted,omitempty"`
@@ -32,7 +31,7 @@ type CommissionReportOut struct {
 	Applicable            *bool                                   `json:"applicable,omitempty"`
 	Agent                 *Counterparty                           `json:"agent,omitempty"`
 	Code                  *string                                 `json:"code,omitempty"`
-	PayedSum              *decimal.Decimal                        `json:"payedSum,omitempty"`
+	PayedSum              *Decimal                                `json:"payedSum,omitempty"`
 	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`
 	Printed               *bool                                   `json:"printed,omitempty"`
 	Project               *Project                                `json:"project,omitempty"`
@@ -43,12 +42,12 @@ type CommissionReportOut struct {
 	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`
 	Shared                *bool                                   `json:"shared,omitempty"`
 	State                 *State                                  `json:"state,omitempty"`
-	Sum                   *decimal.Decimal                        `json:"sum,omitempty"`
+	Sum                   *Decimal                                `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                              `json:"syncId,omitempty"`
 	Updated               *Timestamp                              `json:"updated,omitempty"`
 	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                                   `json:"vatIncluded,omitempty"`
-	VatSum                *decimal.Decimal                        `json:"vatSum,omitempty"`
+	VatSum                *Decimal                                `json:"vatSum,omitempty"`
 	RewardType            RewardType                              `json:"rewardType,omitempty"`
 }
 
@@ -74,9 +73,9 @@ type CommissionReportOutPosition struct {
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Meta       *Meta               `json:"meta,omitempty"`       // Метаданные
-	Price      *decimal.Decimal    `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
-	Reward     *decimal.Decimal    `json:"reward,omitempty"`     // Вознаграждение
+	Reward     *Decimal            `json:"reward,omitempty"`     // Вознаграждение
 	Vat        *int                `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }

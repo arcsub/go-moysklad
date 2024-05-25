@@ -1,35 +1,33 @@
 package moysklad
 
-import "github.com/shopspring/decimal"
-
 // Profit общие поля для структур отчёта "Прибыльность"
 type Profit struct {
-	Margin         decimal.Decimal `json:"margin"`
-	Profit         decimal.Decimal `json:"profit"`
-	ReturnAvgCheck decimal.Decimal `json:"returnAvgCheck"`
-	ReturnCostSum  decimal.Decimal `json:"returnCostSum"`
-	ReturnSum      decimal.Decimal `json:"returnSum"`
-	SalesAvgCheck  decimal.Decimal `json:"salesAvgCheck"`
-	SellCostSum    decimal.Decimal `json:"sellCostSum"`
-	SellSum        decimal.Decimal `json:"sellSum"`
-	ReturnCount    float64         `json:"returnCount"`
-	SalesCount     float64         `json:"salesCount"`
+	Margin         Decimal `json:"margin"`
+	Profit         Decimal `json:"profit"`
+	ReturnAvgCheck Decimal `json:"returnAvgCheck"`
+	ReturnCostSum  Decimal `json:"returnCostSum"`
+	ReturnSum      Decimal `json:"returnSum"`
+	SalesAvgCheck  Decimal `json:"salesAvgCheck"`
+	SellCostSum    Decimal `json:"sellCostSum"`
+	SellSum        Decimal `json:"sellSum"`
+	ReturnCount    float64 `json:"returnCount"`
+	SalesCount     float64 `json:"salesCount"`
 }
 
 // ProfitByAssortment Прибыльность по товарам
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
 type ProfitByAssortment struct {
 	Assortment     ProfitReportAssortment `json:"assortment"`
-	SellCostSum    decimal.Decimal        `json:"sellCostSum"`
-	Profit         decimal.Decimal        `json:"profit"`
-	ReturnCost     decimal.Decimal        `json:"returnCost"`
-	ReturnCostSum  decimal.Decimal        `json:"returnCostSum"`
-	ReturnPrice    decimal.Decimal        `json:"returnPrice"`
-	ReturnSum      decimal.Decimal        `json:"returnSum"`
-	SellCost       decimal.Decimal        `json:"sellCost"`
-	Margin         decimal.Decimal        `json:"margin"`
-	SellPrice      decimal.Decimal        `json:"SellPrice"`
-	SellSum        decimal.Decimal        `json:"sellSum"`
+	SellCostSum    Decimal                `json:"sellCostSum"`
+	Profit         Decimal                `json:"profit"`
+	ReturnCost     Decimal                `json:"returnCost"`
+	ReturnCostSum  Decimal                `json:"returnCostSum"`
+	ReturnPrice    Decimal                `json:"returnPrice"`
+	ReturnSum      Decimal                `json:"returnSum"`
+	SellCost       Decimal                `json:"sellCost"`
+	Margin         Decimal                `json:"margin"`
+	SellPrice      Decimal                `json:"SellPrice"`
+	SellSum        Decimal                `json:"sellSum"`
 	ReturnQuantity float64                `json:"returnQuantity"`
 	SellQuantity   float64                `json:"sellQuantity"`
 }

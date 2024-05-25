@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Prepayment Предоплата.
@@ -13,7 +12,7 @@ type Prepayment struct {
 	VatIncluded   *bool                          `json:"vatIncluded,omitempty"`
 	Applicable    *bool                          `json:"applicable,omitempty"`
 	AccountID     *uuid.UUID                     `json:"accountId,omitempty"`
-	CashSum       *decimal.Decimal               `json:"cashSum,omitempty"`
+	CashSum       *Decimal                       `json:"cashSum,omitempty"`
 	Code          *string                        `json:"code,omitempty"`
 	Created       *Timestamp                     `json:"created,omitempty"`
 	CustomerOrder *CustomerOrder                 `json:"customerOrder,omitempty"`
@@ -26,13 +25,13 @@ type Prepayment struct {
 	Meta          *Meta                          `json:"meta,omitempty"`
 	Moment        *Timestamp                     `json:"moment,omitempty"`
 	Name          *string                        `json:"name,omitempty"`
-	NoCashSum     *decimal.Decimal               `json:"noCashSum,omitempty"`
+	NoCashSum     *Decimal                       `json:"noCashSum,omitempty"`
 	Attributes    *Attributes                    `json:"attributes,omitempty"`
 	Agent         *Counterparty                  `json:"agent,omitempty"`
 	Printed       *bool                          `json:"printed,omitempty"`
 	Positions     *Positions[PrepaymentPosition] `json:"positions,omitempty"`
 	Published     *bool                          `json:"published,omitempty"`
-	QRSum         *decimal.Decimal               `json:"qrSum,omitempty"`
+	QRSum         *Decimal                       `json:"qrSum,omitempty"`
 	Rate          *Rate                          `json:"rate,omitempty"`
 	RetailShift   *RetailShift                   `json:"retailShift,omitempty"`
 	RetailStore   *RetailStore                   `json:"retailStore,omitempty"`

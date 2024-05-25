@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Enter Оприходование.
@@ -34,7 +33,7 @@ type Enter struct {
 	Shared       *bool                     `json:"shared,omitempty"`       // Общий доступ
 	State        *State                    `json:"state,omitempty"`        // Метаданные статуса оприходования
 	Store        *Store                    `json:"store,omitempty"`        // Метаданные склада
-	Sum          *decimal.Decimal          `json:"sum,omitempty"`          // Сумма
+	Sum          *Decimal                  `json:"sum,omitempty"`          // Сумма
 	SyncID       *uuid.UUID                `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
 	Updated      *Timestamp                `json:"updated,omitempty"`      // Момент последнего обновления
 }
@@ -56,9 +55,9 @@ type EnterPosition struct {
 	Country    *Country            `json:"country,omitempty"`    // Метаданные страны
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
-	Overhead   *decimal.Decimal    `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
+	Overhead   *Decimal            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *decimal.Decimal    `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина оприходования данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
