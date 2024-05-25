@@ -110,7 +110,11 @@ func parsePostMany[T any](b []byte) ([]*T, error) {
 		}
 	}
 
-	return entities, ApiErrors{ApiErrors: apiErrors}
+	if len(apiErrors) > 0 {
+		return entities, ApiErrors{ApiErrors: apiErrors}
+	}
+
+	return entities, nil
 }
 
 func (rb *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
