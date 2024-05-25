@@ -31,7 +31,7 @@ func NewNotificationService(client *Client) *NotificationService {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-uwedomlenie-kak-prochitannoe
 func (s *NotificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/markasread", s.uri, id)
-	resp, err := s.client.client.R().SetContext(ctx).Put(path)
+	resp, err := s.client.R().SetContext(ctx).Put(path)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }
 
@@ -39,6 +39,6 @@ func (s *NotificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bo
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-wse-uwedomleniq-kak-prochitannye
 func (s *NotificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/markasreadall", s.uri)
-	resp, err := s.client.client.R().SetContext(ctx).Put(path)
+	resp, err := s.client.R().SetContext(ctx).Put(path)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }

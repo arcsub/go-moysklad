@@ -3,6 +3,7 @@ package moysklad
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"go.uber.org/ratelimit"
 	"net/http"
 	"strconv"
 	"sync"
@@ -10,7 +11,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.36"
+	Version          = "v0.0.37"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -36,48 +37,95 @@ func getUserAgent() string {
 
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
-	client   *resty.Client
+	*resty.Client
+	rl       ratelimit.Limiter
 	clientMu sync.Mutex
 }
 
-func setupClient(client *resty.Client) {
-	client.SetBaseURL(baseApiURL).
-		SetHeaders(map[string]string{
-			"Accept-Encoding": "gzip",
-			"User-Agent":      getUserAgent(),
-		}).
-		AddRetryCondition(
-			func(r *resty.Response, err error) bool {
-				// Including "err != nil" emulates the default retry behavior for errors encountered during the request.
-				return r.StatusCode() == http.StatusTooManyRequests
-			},
-		)
+func (c *Client) setup() *Client {
+	c.rl = ratelimit.New(15) // 15 per second
+
+	c.SetBaseURL(baseApiURL)
+
+	c.SetHeaders(map[string]string{"Accept-Encoding": "gzip", "User-Agent": getUserAgent()})
+
+	c.OnBeforeRequest(func(*resty.Client, *resty.Request) error {
+		c.rl.Take()
+		return nil
+	})
+
+	c.AddRetryCondition(
+		func(r *resty.Response, err error) bool {
+			// Including "err != nil" emulates the default retry behavior for errors encountered during the request.
+			return r.StatusCode() == http.StatusTooManyRequests
+		},
+	)
+
+	return c
 }
 
 // NewClient возвращает новый клиент для работы с API МойСклад.
 // Данный клиент не имеет встроенных сервисов.
 // Его необходимо передавать при создании каждого нового экземпляра сервиса.
 func NewClient() *Client {
-	rc := resty.New()
-	setupClient(rc)
-	return &Client{client: rc}
+	c := &Client{Client: resty.New()}
+	return c.setup()
 }
 
 // NewHTTPClient принимает *http.Client и возвращает новый клиент для работы с API МойСклад.
 // Данный клиент не имеет встроенных сервисов.
 // Его необходимо передавать при создании каждого нового экземпляра сервиса.
 func NewHTTPClient(client *http.Client) *Client {
-	rc := resty.NewWithClient(client)
-	setupClient(rc)
-	return &Client{client: rc}
+	c := &Client{Client: resty.NewWithClient(client)}
+	return c.setup()
 }
 
 // NewRestyClient принимает *resty.Client и возвращает новый клиент для работы с API МойСклад.
 // Данный клиент не имеет встроенных сервисов.
 // Его необходимо передавать при создании каждого нового экземпляра сервиса.
 func NewRestyClient(client *resty.Client) *Client {
-	setupClient(client)
-	return &Client{client: client}
+	c := &Client{Client: client}
+	return c.setup()
+}
+
+// WithTimeout устанавливает необходимый таймаут для http клиента.
+func (c *Client) WithTimeout(timeout time.Duration) *Client {
+	c.SetTimeout(timeout)
+	return c
+}
+
+// WithTokenAuth возвращает клиент с авторизацией через токен.
+func (c *Client) WithTokenAuth(token string) *Client {
+	c2 := c.copy()
+	c2.SetAuthToken(token)
+	return c2
+}
+
+// WithBasicAuth возвращает клиент с базовой авторизацией логин/пароль.
+func (c *Client) WithBasicAuth(username, password string) *Client {
+	c2 := c.copy()
+	c2.SetBasicAuth(username, password)
+	return c2
+}
+
+// WithDisabledWebhookContent устанавливает флаг, который отвечает
+// за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
+// Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
+func (c *Client) WithDisabledWebhookContent(value bool) *Client {
+	c2 := c.copy()
+	c2.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
+	return c2
+}
+
+// copy возвращает копию клиента.
+func (c *Client) copy() *Client {
+	c.clientMu.Lock()
+	defer c.clientMu.Unlock()
+	clone := Client{
+		Client: c.Client,
+		rl:     c.rl,
+	}
+	return &clone
 }
 
 func (c *Client) Async() *AsyncService {
@@ -102,45 +150,6 @@ func (c *Client) Report() *ReportService {
 
 func (c *Client) Security() *SecurityTokenService {
 	return NewSecurityTokenService(c)
-}
-
-// WithTimeout устанавливает необходимый таймаут для http клиента.
-func (c *Client) WithTimeout(timeout time.Duration) *Client {
-	c.client.SetTimeout(timeout)
-	return c
-}
-
-// WithTokenAuth возвращает клиент с авторизацией через токен.
-func (c *Client) WithTokenAuth(token string) *Client {
-	c2 := c.copy()
-	c2.client.SetAuthToken(token)
-	return c2
-}
-
-// WithBasicAuth возвращает клиент с базовой авторизацией логин/пароль.
-func (c *Client) WithBasicAuth(username, password string) *Client {
-	c2 := c.copy()
-	c2.client.SetBasicAuth(username, password)
-	return c2
-}
-
-// WithDisabledWebhookContent устанавливает флаг, который отвечает
-// за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
-// Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
-func (c *Client) WithDisabledWebhookContent(value bool) *Client {
-	c2 := c.copy()
-	c2.client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
-	return c2
-}
-
-// copy возвращает копию клиента.
-func (c *Client) copy() *Client {
-	c.clientMu.Lock()
-	defer c.clientMu.Unlock()
-	clone := Client{
-		client: c.client,
-	}
-	return &clone
 }
 
 // EntityService
