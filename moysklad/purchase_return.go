@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 // PurchaseReturn Возврат поставщику.
@@ -35,12 +36,12 @@ type PurchaseReturn struct {
 	Shared              *bool                              `json:"shared,omitempty"`              // Общий доступ
 	State               *State                             `json:"state,omitempty"`               // Метаданные статуса
 	Store               *Store                             `json:"store,omitempty"`               // Метаданные склада
-	Sum                 *float64                           `json:"sum,omitempty"`                 // Сумма
+	Sum                 *decimal.Decimal                   `json:"sum,omitempty"`                 // Сумма
 	SyncID              *uuid.UUID                         `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
 	Updated             *Timestamp                         `json:"updated,omitempty"`             // Момент последнего обновления
 	VatEnabled          *bool                              `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
 	VatIncluded         *bool                              `json:"vatIncluded,omitempty"`         // Включен ли НДС в цену
-	VatSum              *float64                           `json:"vatSum,omitempty"`              // Сумма включая НДС
+	VatSum              *decimal.Decimal                   `json:"vatSum,omitempty"`              // Сумма включая НДС
 	Positions           *Positions[PurchaseReturnPosition] `json:"positions,omitempty"`           // Метаданные позиций Заказа поставщику
 	Supply              *Supply                            `json:"supply,omitempty"`              // Ссылка на приемку, по которой произошел возврат в формате Метаданных Поле является необходимым для возврата с основанием.
 	FactureIn           *FactureIn                         `json:"factureIn,omitempty"`           // Ссылка на Счет-фактуру полученный в формате Метаданных
