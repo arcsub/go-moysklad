@@ -40,7 +40,7 @@ func String(v string) *string { return &v }
 
 // DecimalPtr is a helper routine that allocates a new decimal value
 // to store v and returns a pointer to it.
-func DecimalPtr(v Decimal) *Decimal { return &v }
+func DecimalPtr(v decimal.Decimal) *Decimal { return &Decimal{v} }
 
 // DecimalFloatPtr is a helper routine that allocates a new decimal value
 // to store v and returns a pointer to it.
