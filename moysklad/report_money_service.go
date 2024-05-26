@@ -42,7 +42,6 @@ func (s *ReportMoneyService) GetPlotSeriesAsync(ctx context.Context, params *Par
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-ostatki-denezhnyh-sredstw
 func (s *ReportMoneyService) GetMoneyReportAsync(ctx context.Context) (*AsyncResultService[List[Money]], *resty.Response, error) {
 	path := "report/money/byaccount"
-	params := new(Params)
-	params.withAsync()
+	params := new(Params).withAsync()
 	return NewRequestBuilder[List[Money]](s.client, path).SetParams(params).Async(ctx)
 }

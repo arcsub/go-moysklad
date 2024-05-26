@@ -43,7 +43,7 @@ type endpointGetOneAsync[T any] struct{ Endpoint }
 // GetAsync Запрос на асинхронное выполнение задачи.
 // Первым возвращаемым аргументом является сервис для дальнейшей работы с конкретной асинхронной задачей.
 func (s *endpointGetOneAsync[T]) GetAsync(ctx context.Context) (*AsyncResultService[T], *resty.Response, error) {
-	apiErrors := new(ApiErrors)
+	apiErrors := &ApiErrors{}
 
 	path := s.uri
 
@@ -247,7 +247,7 @@ func (s *endpointFiles) CreateFile(ctx context.Context, id *uuid.UUID, file *Fil
 
 // UpdateFiles Добавить/обновить Файлы.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-dobawit-fajly-k-operacii-nomenklature-ili-kontragentu
-func (s *endpointFiles) UpdateFiles(ctx context.Context, id *uuid.UUID, files []File) ([]*File, *resty.Response, error) {
+func (s *endpointFiles) UpdateFiles(ctx context.Context, id *uuid.UUID, files []*File) ([]*File, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files", s.uri, id)
 	return NewRequestBuilder[File](s.client, path).PostMany(ctx, files)
 }
@@ -276,9 +276,9 @@ func (s *endpointImages) GetImages(ctx context.Context, id *uuid.UUID) (*MetaArr
 
 // CreateImage Добавить Изображение.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-dobawit-izobrazhenie-k-towaru-komplektu-ili-modifikacii
-func (s *endpointImages) CreateImage(ctx context.Context, id *uuid.UUID, image *Image) ([]*Image, *resty.Response, error) {
+func (s *endpointImages) CreateImage(ctx context.Context, id *uuid.UUID, image *Image) (*[]*Image, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images", s.uri, id)
-	return NewRequestBuilder[Image](s.client, path).PostMany(ctx, image)
+	return NewRequestBuilder[[]*Image](s.client, path).Post(ctx, image)
 }
 
 // UpdateImages Изменение Изображений (списком).
@@ -382,7 +382,7 @@ type endpointPrintDocument struct{ Endpoint }
 // PrintDocument Запрос на печать документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-pechat-dokumentow-zapros-na-pechat
 func (s *endpointPrintDocument) PrintDocument(ctx context.Context, id *uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error) {
-	apiErrors := new(ApiErrors)
+	apiErrors := &ApiErrors{}
 
 	path := fmt.Sprintf("%s/%s/export", s.uri, id)
 
@@ -409,7 +409,7 @@ type endpointPrintLabel struct{ Endpoint }
 // PrintLabel Запрос на печать этикеток и ценников.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pechat-atiketok-i-cennikow
 func (s *endpointPrintLabel) PrintLabel(ctx context.Context, id *uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error) {
-	apiErrors := new(ApiErrors)
+	apiErrors := &ApiErrors{}
 
 	path := fmt.Sprintf("%s/%s/export", s.uri, id)
 
@@ -561,7 +561,7 @@ type endpointRemove struct{ Endpoint }
 // Remove Запрос на перемещение документа с указанным id в корзину.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-udalenie-w-korzinu
 func (s *endpointRemove) Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
-	apiErrors := new(ApiErrors)
+	apiErrors := &ApiErrors{}
 
 	path := fmt.Sprintf("%s/%s/trash", s.uri, id)
 
