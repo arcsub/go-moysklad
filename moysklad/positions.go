@@ -28,7 +28,7 @@ func (p *Positions[T]) Push(elements ...*T) {
 }
 
 func newPositions[T PositionTypes]() *Positions[T] {
-	return &Positions[T]{Rows: make(Slice[T], 0)}
+	return &Positions[T]{Rows: make(Slice[T], 0, 1000)}
 }
 
 func NewBundleComponents() *Positions[BundleComponent] {
