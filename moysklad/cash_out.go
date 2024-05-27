@@ -56,7 +56,7 @@ func (c CashOut) MetaType() MetaType {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
 func (c *CashOut) BindDocuments(documentsMeta ...*Meta) *CashOut {
 	if c.Operations == nil {
-		c.Operations = new(Operations)
+		c.Operations = &Operations{}
 	}
 
 	for _, meta := range documentsMeta {

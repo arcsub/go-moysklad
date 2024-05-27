@@ -66,7 +66,7 @@ func (s *AsyncResultService[T]) ResultURL() *url.URL {
 // Check Проверяет статус асинхронной задачи.
 // Если статус задачи = DONE, возвращает true, иначе false
 func (s *AsyncResultService[T]) Check(ctx context.Context) (bool, *resty.Response, error) {
-	async := new(Async)
+	async := &Async{}
 	resp, err := s.req.SetContext(ctx).SetBody(async).Get(s.StatusURL().String())
 	if err != nil {
 		return false, resp, err

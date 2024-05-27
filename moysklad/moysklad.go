@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.39"
+	Version          = "v0.0.42"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -29,28 +29,53 @@ const (
 	MaxImages     = 10   // Максимальное количество изображений
 	MaxPositions  = 1000 // Максимальное число объектов, передаваемых в одном массиве в запросе
 	MaxPrintCount = 1000 // TODO: Максимальное количество ценников/термоэтикеток
+
+	MaxQueriesPerSecond = 15 // Не более 45 запросов за 3 секундный период от аккаунта (45/3)
+	MaxQueriesPerUser   = 5  // Не более 5 параллельных запросов от одного пользователя
 )
 
 func getUserAgent() string {
 	return fmt.Sprintf("%s (https://github.com/arcsub/go-moysklad)", defaultUserAgent)
 }
 
+type queryLimits struct {
+	rl       ratelimit.Limiter
+	queryBuf chan struct{}
+}
+
+func (rl *queryLimits) Wait() {
+	rl.queryBuf <- struct{}{}
+	rl.rl.Take()
+}
+
+func (rl *queryLimits) Done() {
+	<-rl.queryBuf
+}
+
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
 	*resty.Client
-	rl       ratelimit.Limiter
+	limits   *queryLimits
 	clientMu sync.Mutex
 }
 
 func (c *Client) setup() *Client {
-	c.rl = ratelimit.New(15) // 15 per second
+	c.setQueryLimits()
 
 	c.SetBaseURL(baseApiURL)
 
-	c.SetHeaders(map[string]string{"Accept-Encoding": "gzip", "User-Agent": getUserAgent()})
+	c.SetHeaders(map[string]string{
+		"Accept-Encoding": "gzip", // Обязательное использование сжатия содержимого ответов
+		"User-Agent":      getUserAgent(),
+	})
 
 	c.OnBeforeRequest(func(*resty.Client, *resty.Request) error {
-		c.rl.Take()
+		c.limits.Wait()
+		return nil
+	})
+
+	c.OnAfterResponse(func(*resty.Client, *resty.Response) error {
+		c.limits.Done()
 		return nil
 	})
 
@@ -88,6 +113,13 @@ func NewRestyClient(client *resty.Client) *Client {
 	return c.setup()
 }
 
+func (c *Client) setQueryLimits() {
+	c.limits = &queryLimits{
+		rl:       ratelimit.New(MaxQueriesPerSecond),
+		queryBuf: make(chan struct{}, MaxQueriesPerUser),
+	}
+}
+
 // WithTimeout устанавливает необходимый таймаут для http клиента.
 func (c *Client) WithTimeout(timeout time.Duration) *Client {
 	c.SetTimeout(timeout)
@@ -123,7 +155,7 @@ func (c *Client) copy() *Client {
 	defer c.clientMu.Unlock()
 	clone := Client{
 		Client: c.Client,
-		rl:     c.rl,
+		limits: c.limits,
 	}
 	return &clone
 }
