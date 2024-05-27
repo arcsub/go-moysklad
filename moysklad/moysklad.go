@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.42"
+	Version          = "v0.0.43"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -81,8 +81,8 @@ func (c *Client) setup() *Client {
 
 	c.AddRetryCondition(
 		func(r *resty.Response, err error) bool {
-			// Including "err != nil" emulates the default retry behavior for errors encountered during the request.
-			return r.StatusCode() == http.StatusTooManyRequests
+			return r.StatusCode() == http.StatusTooManyRequests ||
+				r.StatusCode() >= http.StatusBadGateway
 		},
 	)
 
