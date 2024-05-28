@@ -122,8 +122,8 @@ type endpointCreateUpdateDeleteMany[T any] struct{ Endpoint }
 
 // CreateUpdateMany Запрос на создание и обновление нескольких объектов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (s *endpointCreateUpdateDeleteMany[T]) CreateUpdateMany(ctx context.Context, entities []*T, params *Params) ([]*T, *resty.Response, error) {
-	return NewRequestBuilder[T](s.client, s.uri).SetParams(params).PostMany(ctx, entities)
+func (s *endpointCreateUpdateDeleteMany[T]) CreateUpdateMany(ctx context.Context, entities []*T, params *Params) (*[]T, *resty.Response, error) {
+	return NewRequestBuilder[[]T](s.client, s.uri).SetParams(params).Post(ctx, entities)
 }
 
 // DeleteMany Запрос на удаление нескольких объектов.
@@ -159,9 +159,9 @@ func (s *endpointAccounts) GetAccountByID(ctx context.Context, id, accountId *uu
 
 // UpdateAccounts Изменить счета (списком).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-jurlico-izmenit-scheta-urlica
-func (s *endpointAccounts) UpdateAccounts(ctx context.Context, id *uuid.UUID, accounts []*AgentAccount) ([]*AgentAccount, *resty.Response, error) {
+func (s *endpointAccounts) UpdateAccounts(ctx context.Context, id *uuid.UUID, accounts []*AgentAccount) (*[]AgentAccount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/accounts", s.uri, id)
-	return NewRequestBuilder[AgentAccount](s.client, path).PostMany(ctx, accounts)
+	return NewRequestBuilder[[]AgentAccount](s.client, path).Post(ctx, accounts)
 }
 
 type endpointAttributes struct{ Endpoint }
@@ -189,15 +189,15 @@ func (s *endpointAttributes) CreateAttribute(ctx context.Context, attribute *Att
 
 // CreateAttributes Создать несколько дополнительных полей.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-nye-polq-suschnostej-sozdat-dopolnitel-nye-polq
-func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributes []*Attribute) ([]*Attribute, *resty.Response, error) {
+func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributes []*Attribute) (*[]Attribute, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes", s.uri)
 	// при передаче массива из 1-го доп поля сервис возвращает 1 доп поле, а не массив доп полей.
 	// если количество передаваемых доп полей равняется 1, то дополнительно оборачиваем в срез.
 	if len(attributes) == 1 {
 		attribute, resp, err := NewRequestBuilder[Attribute](s.client, path).Post(ctx, attributes[0])
-		return []*Attribute{attribute}, resp, err
+		return &[]Attribute{*attribute}, resp, err
 	}
-	return NewRequestBuilder[Attribute](s.client, path).PostMany(ctx, attributes)
+	return NewRequestBuilder[[]Attribute](s.client, path).Post(ctx, attributes)
 }
 
 // UpdateAttribute Изменить дополнительное поле.
@@ -247,9 +247,9 @@ func (s *endpointFiles) CreateFile(ctx context.Context, id *uuid.UUID, file *Fil
 
 // UpdateFiles Добавить/обновить Файлы.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-dobawit-fajly-k-operacii-nomenklature-ili-kontragentu
-func (s *endpointFiles) UpdateFiles(ctx context.Context, id *uuid.UUID, files []*File) ([]*File, *resty.Response, error) {
+func (s *endpointFiles) UpdateFiles(ctx context.Context, id *uuid.UUID, files []*File) (*[]File, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/files", s.uri, id)
-	return NewRequestBuilder[File](s.client, path).PostMany(ctx, files)
+	return NewRequestBuilder[[]File](s.client, path).Post(ctx, files)
 }
 
 // DeleteFile Удалить Файл.
@@ -283,9 +283,9 @@ func (s *endpointImages) CreateImage(ctx context.Context, id *uuid.UUID, image *
 
 // UpdateImages Изменение Изображений (списком).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-izmenenie-spiska-izobrazhenij-u-towara-komplekta-ili-modifikacii
-func (s *endpointImages) UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) ([]*Image, *resty.Response, error) {
+func (s *endpointImages) UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) (*[]Image, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%d/images", s.uri, id)
-	return NewRequestBuilder[Image](s.client, path).PostMany(ctx, images)
+	return NewRequestBuilder[[]Image](s.client, path).Post(ctx, images)
 }
 
 // DeleteImage Удалить Изображение.
@@ -345,9 +345,9 @@ func (s *endpointPositions[T]) CreatePosition(ctx context.Context, id *uuid.UUID
 }
 
 // CreatePositions Массово создаёт позиции документа.
-func (s *endpointPositions[T]) CreatePositions(ctx context.Context, id *uuid.UUID, positions []*T) ([]*T, *resty.Response, error) {
+func (s *endpointPositions[T]) CreatePositions(ctx context.Context, id *uuid.UUID, positions []*T) (*[]T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions", s.uri, id)
-	return NewRequestBuilder[T](s.client, path).PostMany(ctx, positions)
+	return NewRequestBuilder[[]T](s.client, path).Post(ctx, positions)
 }
 
 // DeletePosition Удаляет позицию документа.
@@ -500,9 +500,9 @@ func (s *endpointStates) UpdateState(ctx context.Context, id *uuid.UUID, state *
 
 // CreateOrUpdateStates Массовое создание и обновление Статусов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-massowoe-sozdanie-i-obnowlenie-statusow
-func (s *endpointStates) CreateOrUpdateStates(ctx context.Context, id *uuid.UUID, states []*State) ([]*State, *resty.Response, error) {
+func (s *endpointStates) CreateOrUpdateStates(ctx context.Context, id *uuid.UUID, states []*State) (*[]State, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/states/%s", s.uri, id)
-	return NewRequestBuilder[State](s.client, path).PostMany(ctx, states)
+	return NewRequestBuilder[[]State](s.client, path).Post(ctx, states)
 }
 
 // DeleteState Запрос на удаление Статуса с указанным id.
