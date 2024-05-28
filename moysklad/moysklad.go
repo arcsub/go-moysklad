@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Version          = "v0.0.44"
+	Version          = "v0.0.45"
 	baseApiURL       = "https://api.moysklad.ru/api/remap/1.2/"
 	defaultUserAgent = "go-moysklad/" + Version
 
@@ -65,7 +65,8 @@ func (c *Client) setup() *Client {
 	c.SetBaseURL(baseApiURL)
 
 	c.SetHeaders(map[string]string{
-		"Accept-Encoding": "gzip", // Обязательное использование сжатия содержимого ответов
+		"Accept":          "application/json;charset=utf-8", // https://dev.moysklad.ru/doc/api/remap/1.2/index.html#error_1062
+		"Accept-Encoding": "gzip",                           // Обязательное использование сжатия содержимого ответов
 		"User-Agent":      getUserAgent(),
 	})
 
