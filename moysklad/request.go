@@ -21,12 +21,13 @@ func NewEndpoint(client *Client, uri string) Endpoint {
 }
 
 type RequestBuilder[T any] struct {
-	req *resty.Request
-	uri string
+	client *Client
+	req    *resty.Request
+	uri    string
 }
 
 func NewRequestBuilder[T any](client *Client, uri string) *RequestBuilder[T] {
-	return &RequestBuilder[T]{client.R(), uri}
+	return &RequestBuilder[T]{client, client.R(), uri}
 }
 
 // TODO: improve
@@ -150,6 +151,11 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 	return &result, r, nil
 }
 
+func (rb *RequestBuilder[T]) SetHeader(header, value string) *RequestBuilder[T] {
+	rb.req.Header.Set(header, value)
+	return rb
+}
+
 func (rb *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
 	v, _ := query.Values(params)
 	rb.req.SetQueryParamsFromValues(v)
@@ -157,6 +163,10 @@ func (rb *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
 }
 
 func (rb *RequestBuilder[T]) send(ctx context.Context, method string, body any) (*T, *resty.Response, error) {
+	// Ограничения на количество запросов
+	rb.client.limits.Wait()
+	defer rb.client.limits.Done()
+
 	resp, err := rb.req.SetContext(ctx).SetBody(body).Execute(method, rb.uri)
 	if err != nil {
 		return nil, resp, err
@@ -178,11 +188,19 @@ func (rb *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Res
 }
 
 func (rb *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
+	// Ограничения на количество запросов
+	rb.client.limits.Wait()
+	defer rb.client.limits.Done()
+
 	_, resp, err := rb.send(ctx, http.MethodDelete, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }
 
-func (rb *RequestBuilder[T]) Async(ctx context.Context) (*AsyncResultService[T], *resty.Response, error) {
+func (rb *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
+	// Ограничения на количество запросов
+	rb.client.limits.Wait()
+	defer rb.client.limits.Done()
+
 	// устанавливаем флаг async=true на создание асинхронной операции
 	rb.req.SetContext(ctx).SetQueryParam("async", "true")
 

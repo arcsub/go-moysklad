@@ -70,16 +70,6 @@ func (c *Client) setup() *Client {
 		"User-Agent":      getUserAgent(),
 	})
 
-	c.OnBeforeRequest(func(*resty.Client, *resty.Request) error {
-		c.limits.Wait()
-		return nil
-	})
-
-	c.OnAfterResponse(func(*resty.Client, *resty.Response) error {
-		c.limits.Done()
-		return nil
-	})
-
 	c.AddRetryCondition(
 		func(r *resty.Response, err error) bool {
 			return r.StatusCode() == http.StatusTooManyRequests ||
