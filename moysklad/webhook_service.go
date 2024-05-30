@@ -1,24 +1,24 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
+)
+
 // WebhookService
 // Сервис для работы с вебхуками.
-type WebhookService struct {
-	endpointGetList[Webhook]
-	endpointCreate[Webhook]
-	endpointCreateUpdateDeleteMany[Webhook]
-	endpointDelete
-	endpointGetById[Webhook]
-	endpointUpdate[Webhook]
+type WebhookService interface {
+	GetList(ctx context.Context, params *Params) (*List[Webhook], *resty.Response, error)
+	Create(ctx context.Context, webhook *Webhook, params *Params) (*Webhook, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, webhookList []*Webhook, params *Params) (*[]Webhook, *resty.Response, error)
+	DeleteMany(ctx context.Context, webhookList []*Webhook) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Webhook, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, webhook *Webhook, params *Params) (*Webhook, *resty.Response, error)
 }
 
-func NewWebhookService(client *Client) *WebhookService {
+func NewWebhookService(client *Client) WebhookService {
 	e := NewEndpoint(client, "entity/webhook")
-	return &WebhookService{
-		endpointGetList:                endpointGetList[Webhook]{e},
-		endpointCreate:                 endpointCreate[Webhook]{e},
-		endpointCreateUpdateDeleteMany: endpointCreateUpdateDeleteMany[Webhook]{e},
-		endpointDelete:                 endpointDelete{e},
-		endpointGetById:                endpointGetById[Webhook]{e},
-		endpointUpdate:                 endpointUpdate[Webhook]{e},
-	}
+	return newMainService[Webhook, any, any, any](e)
 }

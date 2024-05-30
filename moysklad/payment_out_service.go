@@ -1,38 +1,41 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
+)
+
 // PaymentOutService
 // Сервис для работы с исходящими платежами.
-type PaymentOutService struct {
-	endpointGetList[PaymentOut]
-	endpointCreate[PaymentOut]
-	endpointCreateUpdateDeleteMany[PaymentOut]
-	endpointDelete
-	endpointGetById[PaymentOut]
-	endpointUpdate[PaymentOut]
-	endpointTemplate[PaymentOut]
-	endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]
-	endpointMetadata[MetadataAttributeSharedStates]
-	endpointAttributes
-	endpointPublication
-	endpointSyncID[PaymentOut]
-	endpointRemove
+type PaymentOutService interface {
+	GetList(ctx context.Context, params *Params) (*List[PaymentOut], *resty.Response, error)
+	Create(ctx context.Context, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, paymentOutList []*PaymentOut, params *Params) (*[]PaymentOut, *resty.Response, error)
+	DeleteMany(ctx context.Context, paymentOutList []*PaymentOut) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*PaymentOut, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
+	//endpointTemplate[PaymentOut]
+	//endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]
+	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error)
+	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*PaymentOut, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
-func NewPaymentOutService(client *Client) *PaymentOutService {
+func NewPaymentOutService(client *Client) PaymentOutService {
 	e := NewEndpoint(client, "entity/paymentout")
-	return &PaymentOutService{
-		endpointGetList:                endpointGetList[PaymentOut]{e},
-		endpointCreate:                 endpointCreate[PaymentOut]{e},
-		endpointCreateUpdateDeleteMany: endpointCreateUpdateDeleteMany[PaymentOut]{e},
-		endpointDelete:                 endpointDelete{e},
-		endpointGetById:                endpointGetById[PaymentOut]{e},
-		endpointUpdate:                 endpointUpdate[PaymentOut]{e},
-		endpointTemplate:               endpointTemplate[PaymentOut]{e},
-		endpointTemplateBasedOn:        endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]{e},
-		endpointMetadata:               endpointMetadata[MetadataAttributeSharedStates]{e},
-		endpointAttributes:             endpointAttributes{e},
-		endpointPublication:            endpointPublication{e},
-		endpointSyncID:                 endpointSyncID[PaymentOut]{e},
-		endpointRemove:                 endpointRemove{e},
-	}
+	return newMainService[PaymentOut, any, MetadataAttributeSharedStates, any](e)
 }

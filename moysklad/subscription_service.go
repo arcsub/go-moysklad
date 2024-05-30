@@ -1,14 +1,17 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+)
+
 // SubscriptionService
 // Сервис для работы с подпиской компании.
-type SubscriptionService struct {
-	endpointGetOne[Subscription]
+type SubscriptionService interface {
+	Get(ctx context.Context, params *Params) (*Subscription, *resty.Response, error)
 }
 
-func NewSubscriptionService(client *Client) *SubscriptionService {
+func NewSubscriptionService(client *Client) SubscriptionService {
 	e := NewEndpoint(client, "entity/subscription")
-	return &SubscriptionService{
-		endpointGetOne: endpointGetOne[Subscription]{e},
-	}
+	return newMainService[Subscription, any, any, any](e)
 }

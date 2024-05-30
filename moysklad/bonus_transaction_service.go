@@ -1,26 +1,24 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
+)
+
 // BonusTransactionService
 // Сервис для работы с бонусными операциями.
-type BonusTransactionService struct {
-	endpointGetList[BonusTransaction]
-	endpointCreate[BonusTransaction]
-	endpointCreateUpdateDeleteMany[BonusTransaction]
-	endpointDelete
-	endpointDeleteMany[BonusTransaction]
-	endpointGetById[BonusTransaction]
-	endpointUpdate[BonusTransaction]
+type BonusTransactionService interface {
+	GetList(ctx context.Context, params *Params) (*List[BonusTransaction], *resty.Response, error)
+	Create(ctx context.Context, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bonusTransactionList []*BonusTransaction, params *Params) (*[]BonusTransaction, *resty.Response, error)
+	DeleteMany(ctx context.Context, bonusTransactionList []*BonusTransaction) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*BonusTransaction, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
 }
 
-func NewBonusTransactionService(client *Client) *BonusTransactionService {
+func NewBonusTransactionService(client *Client) BonusTransactionService {
 	e := NewEndpoint(client, "entity/bonustransaction")
-	return &BonusTransactionService{
-		endpointGetList:                endpointGetList[BonusTransaction]{e},
-		endpointCreate:                 endpointCreate[BonusTransaction]{e},
-		endpointCreateUpdateDeleteMany: endpointCreateUpdateDeleteMany[BonusTransaction]{e},
-		endpointDelete:                 endpointDelete{e},
-		endpointDeleteMany:             endpointDeleteMany[BonusTransaction]{e},
-		endpointGetById:                endpointGetById[BonusTransaction]{e},
-		endpointUpdate:                 endpointUpdate[BonusTransaction]{e},
-	}
+	return newMainService[BonusTransaction, any, any, any](e)
 }

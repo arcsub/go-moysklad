@@ -1,24 +1,23 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
+)
+
 // BonusProgramService
 // Сервис для работы с бонусными программами.
-type BonusProgramService struct {
-	endpointGetList[BonusProgram]
-	endpointCreate[BonusProgram]
-	endpointUpdate[BonusProgram]
-	endpointGetById[BonusProgram]
-	endpointDelete
-	endpointDeleteMany[BonusProgram]
+type BonusProgramService interface {
+	GetList(ctx context.Context, params *Params) (*List[BonusProgram], *resty.Response, error)
+	Create(ctx context.Context, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
+	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*BonusProgram, *resty.Response, error)
+	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	DeleteMany(ctx context.Context, bonusProgramList []*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
 }
 
-func NewBonusProgramService(client *Client) *BonusProgramService {
+func NewBonusProgramService(client *Client) BonusProgramService {
 	e := NewEndpoint(client, "entity/bonusprogram")
-	return &BonusProgramService{
-		endpointGetList:    endpointGetList[BonusProgram]{e},
-		endpointCreate:     endpointCreate[BonusProgram]{e},
-		endpointUpdate:     endpointUpdate[BonusProgram]{e},
-		endpointGetById:    endpointGetById[BonusProgram]{e},
-		endpointDelete:     endpointDelete{e},
-		endpointDeleteMany: endpointDeleteMany[BonusProgram]{e},
-	}
+	return newMainService[BonusProgram, any, any, any](e)
 }

@@ -9,31 +9,36 @@ import (
 
 // AuditService
 // Сервис для работы с аудитом.
-type AuditService struct {
+type AuditService interface {
+	GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error)
+	GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error)
+	GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error)
+}
+type auditService struct {
 	Endpoint
 }
 
-func NewAuditService(client *Client) *AuditService {
+func NewAuditService(client *Client) AuditService {
 	e := NewEndpoint(client, "audit")
-	return &AuditService{e}
+	return &auditService{e}
 }
 
 // GetContexts Получить Контексты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-kontexty
-func (s *AuditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error) {
+func (s *auditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error) {
 	return NewRequestBuilder[List[Audit]](s.client, s.uri).SetParams(params).Get(ctx)
 }
 
 // GetEvents Получить События по Контексту.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-kontextu
-func (s *AuditService) GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
+func (s *auditService) GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf("audit/%s/events", id)
 	return NewRequestBuilder[List[AuditEvent]](s.client, path).Get(ctx)
 }
 
 // GetFilters Получить Фильтры.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-fil-try
-func (s *AuditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
+func (s *auditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
 	path := "audit/metadata/filters"
 	return NewRequestBuilder[AuditFilters](s.client, path).Get(ctx)
 }

@@ -10,16 +10,24 @@ import (
 
 // NotificationService
 // Сервис для работы с уведомлениями.
-type NotificationService struct {
+type NotificationService interface {
+	GetList(ctx context.Context, params *Params) (*List[Notification], *resty.Response, error)
+	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Notification, *resty.Response, error)
+	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error)
+}
+
+type notificationService struct {
 	Endpoint
 	endpointGetList[Notification]
 	endpointGetById[Notification]
 	endpointDelete
 }
 
-func NewNotificationService(client *Client) *NotificationService {
+func NewNotificationService(client *Client) NotificationService {
 	e := NewEndpoint(client, "notification")
-	return &NotificationService{
+	return &notificationService{
 		Endpoint:        e,
 		endpointGetList: endpointGetList[Notification]{e},
 		endpointGetById: endpointGetById[Notification]{e},
@@ -29,16 +37,16 @@ func NewNotificationService(client *Client) *NotificationService {
 
 // MarkAsRead Отметить Уведомление как прочитанное.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-uwedomlenie-kak-prochitannoe
-func (s *NotificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *notificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/markasread", s.uri, id)
-	resp, err := s.client.R().SetContext(ctx).Put(path)
+	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }
 
 // MarkAsReadAll Отметить все Уведомления как прочитанные.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-wse-uwedomleniq-kak-prochitannye
-func (s *NotificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
+func (s *notificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/markasreadall", s.uri)
-	resp, err := s.client.R().SetContext(ctx).Put(path)
+	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }

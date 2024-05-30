@@ -1,14 +1,17 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+)
+
 // MetadataService
 // Сервис для работы с метаданными.
-type MetadataService struct {
-	endpointGetOne[Metadata]
+type MetadataService interface {
+	Get(ctx context.Context, params *Params) (*Metadata, *resty.Response, error)
 }
 
-func NewMetadataService(client *Client) *MetadataService {
+func NewMetadataService(client *Client) MetadataService {
 	e := NewEndpoint(client, "entity/metadata")
-	return &MetadataService{
-		endpointGetOne: endpointGetOne[Metadata]{e},
-	}
+	return newMainService[Metadata, any, any, any](e)
 }

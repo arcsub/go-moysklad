@@ -8,6 +8,65 @@ import (
 	"net/http"
 )
 
+type mainService[E any, P any, M any, S any] struct {
+	endpointGetOne[E]
+	endpointGetList[E]
+	endpointCreate[E]
+	endpointCreateUpdateMany[E]
+	endpointDeleteMany[E]
+	endpointDelete
+	endpointGetById[E]
+	endpointUpdate[E]
+	endpointMetadata[M]
+	endpointAttributes
+	endpointNamedFilter
+	endpointImages
+	endpointSyncID[E]
+	endpointAudit
+	endpointPrintLabel
+	endpointPositions[P]
+	//endpointTemplate[E]
+	endpointPublication
+	endpointSettings[S]
+	endpointGetOneAsync[E]
+	endpointPrintTemplates
+	endpointRemove
+	endpointPrintDocument
+	endpointAccounts
+	endpointStates
+	endpointFiles
+}
+
+func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M, S] {
+	return &mainService[E, P, M, S]{
+		endpointGetOne:           endpointGetOne[E]{e},
+		endpointGetList:          endpointGetList[E]{e},
+		endpointCreate:           endpointCreate[E]{e},
+		endpointCreateUpdateMany: endpointCreateUpdateMany[E]{e},
+		endpointDeleteMany:       endpointDeleteMany[E]{e},
+		endpointDelete:           endpointDelete{e},
+		endpointGetById:          endpointGetById[E]{e},
+		endpointUpdate:           endpointUpdate[E]{e},
+		endpointMetadata:         endpointMetadata[M]{e},
+		endpointAttributes:       endpointAttributes{e},
+		endpointNamedFilter:      endpointNamedFilter{e},
+		endpointImages:           endpointImages{e},
+		endpointSyncID:           endpointSyncID[E]{e},
+		endpointAudit:            endpointAudit{e},
+		endpointPrintLabel:       endpointPrintLabel{e},
+		endpointPositions:        endpointPositions[P]{e},
+		endpointPublication:      endpointPublication{e},
+		endpointSettings:         endpointSettings[S]{e},
+		endpointGetOneAsync:      endpointGetOneAsync[E]{e},
+		endpointPrintTemplates:   endpointPrintTemplates{e},
+		endpointRemove:           endpointRemove{e},
+		endpointPrintDocument:    endpointPrintDocument{e},
+		endpointAccounts:         endpointAccounts{e},
+		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
+	}
+}
+
 type endpointGetList[T any] struct{ Endpoint }
 
 // GetList Запрос на получение списка объектов.
@@ -42,18 +101,13 @@ type endpointGetOneAsync[T any] struct{ Endpoint }
 
 // GetAsync Запрос на асинхронное выполнение задачи.
 // Первым возвращаемым аргументом является сервис для дальнейшей работы с конкретной асинхронной задачей.
-func (s *endpointGetOneAsync[T]) GetAsync(ctx context.Context) (*AsyncResultService[T], *resty.Response, error) {
-	apiErrors := &ApiErrors{}
+func (s *endpointGetOneAsync[T]) GetAsync(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
+	_, resp, err := NewRequestBuilder[PrintFile](s.client, s.uri).
+		SetParams(new(Params).withAsync()).
+		Get(ctx)
 
-	path := s.uri
-
-	resp, err := s.client.R().SetContext(ctx).
-		SetQueryParam("async", "true").
-		SetError(apiErrors).
-		Get(path)
-
-	if resp.Error() != nil {
-		return nil, resp, apiErrors
+	if err != nil {
+		return nil, resp, nil
 	}
 
 	async := NewAsyncResultService[T](s.client.R(), resp)
@@ -118,19 +172,12 @@ func (s *endpointDeleteMany[T]) DeleteMany(ctx context.Context, entities []*T) (
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, entities)
 }
 
-type endpointCreateUpdateDeleteMany[T any] struct{ Endpoint }
+type endpointCreateUpdateMany[T any] struct{ Endpoint }
 
 // CreateUpdateMany Запрос на создание и обновление нескольких объектов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (s *endpointCreateUpdateDeleteMany[T]) CreateUpdateMany(ctx context.Context, entities []*T, params *Params) (*[]T, *resty.Response, error) {
+func (s *endpointCreateUpdateMany[T]) CreateUpdateMany(ctx context.Context, entities []*T, params *Params) (*[]T, *resty.Response, error) {
 	return NewRequestBuilder[[]T](s.client, s.uri).SetParams(params).Post(ctx, entities)
-}
-
-// DeleteMany Запрос на удаление нескольких объектов.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (s *endpointCreateUpdateDeleteMany[T]) DeleteMany(ctx context.Context, entities []*T) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/delete", s.uri)
-	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, entities)
 }
 
 type endpointUpdate[T any] struct{ Endpoint }
@@ -189,15 +236,15 @@ func (s *endpointAttributes) CreateAttribute(ctx context.Context, attribute *Att
 
 // CreateAttributes Создать несколько дополнительных полей.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-nye-polq-suschnostej-sozdat-dopolnitel-nye-polq
-func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributes []*Attribute) (*[]Attribute, *resty.Response, error) {
+func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes", s.uri)
 	// при передаче массива из 1-го доп поля сервис возвращает 1 доп поле, а не массив доп полей.
 	// если количество передаваемых доп полей равняется 1, то дополнительно оборачиваем в срез.
-	if len(attributes) == 1 {
-		attribute, resp, err := NewRequestBuilder[Attribute](s.client, path).Post(ctx, attributes[0])
+	if len(attributeList) == 1 {
+		attribute, resp, err := NewRequestBuilder[Attribute](s.client, path).Post(ctx, attributeList[0])
 		return &[]Attribute{*attribute}, resp, err
 	}
-	return NewRequestBuilder[[]Attribute](s.client, path).Post(ctx, attributes)
+	return NewRequestBuilder[[]Attribute](s.client, path).Post(ctx, attributeList)
 }
 
 // UpdateAttribute Изменить дополнительное поле.
@@ -216,9 +263,9 @@ func (s *endpointAttributes) DeleteAttribute(ctx context.Context, id *uuid.UUID)
 
 // DeleteAttributes Удалить несколько дополнительных полей.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-nye-polq-suschnostej-udalit-dopolnitel-nye-polq
-func (s *endpointAttributes) DeleteAttributes(ctx context.Context, attributes []*Attribute) (*DeleteManyResponse, *resty.Response, error) {
+func (s *endpointAttributes) DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes/delete", s.uri)
-	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, attributes)
+	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, attributeList)
 }
 
 type endpointAudit struct{ Endpoint }
@@ -327,14 +374,14 @@ func (s *endpointPositions[T]) GetPositions(ctx context.Context, id *uuid.UUID, 
 }
 
 // GetPositionByID Получение отдельной позиции.
-func (s *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionId *uuid.UUID, params *Params) (*T, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionId)
+func (s *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionID *uuid.UUID, params *Params) (*T, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionID)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdatePosition Обновление позиции.
-func (s *endpointPositions[T]) UpdatePosition(ctx context.Context, id, positionId *uuid.UUID, position *T, params *Params) (*T, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionId)
+func (s *endpointPositions[T]) UpdatePosition(ctx context.Context, id, positionID *uuid.UUID, position *T, params *Params) (*T, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionID)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Put(ctx, position)
 }
 
@@ -351,29 +398,29 @@ func (s *endpointPositions[T]) CreatePositions(ctx context.Context, id *uuid.UUI
 }
 
 // DeletePosition Удаляет позицию документа.
-func (s *endpointPositions[T]) DeletePosition(ctx context.Context, id, positionId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionId)
+func (s *endpointPositions[T]) DeletePosition(ctx context.Context, id, positionID *uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/positions/%s", s.uri, id, positionID)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
 // GetPositionTrackingCodes Получить Коды маркировки позиции документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-poluchit-kody-markirowki-pozicii-dokumenta
-func (s *endpointPositions[T]) GetPositionTrackingCodes(ctx context.Context, id, positionId *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", s.uri, id, positionId)
+func (s *endpointPositions[T]) GetPositionTrackingCodes(ctx context.Context, id, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", s.uri, id, positionID)
 	return NewRequestBuilder[MetaArray[TrackingCode]](s.client, path).Get(ctx)
 }
 
 // CreateOrUpdatePositionTrackingCodes Массовое создание и обновление Кодов маркировки.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-sozdanie-i-obnowlenie-kodow-markirowki
-func (s *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionId *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", s.uri, id, positionId)
+func (s *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", s.uri, id, positionID)
 	return NewRequestBuilder[[]TrackingCode](s.client, path).Post(ctx, trackingCodes)
 }
 
 // DeletePositionTrackingCodes Массовое удаление Кодов маркировки.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-udalenie-kodow-markirowki
-func (s *endpointPositions[T]) DeletePositionTrackingCodes(ctx context.Context, id, positionId *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes/delete", s.uri, id, positionId)
+func (s *endpointPositions[T]) DeletePositionTrackingCodes(ctx context.Context, id, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes/delete", s.uri, id, positionID)
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, trackingCodes)
 }
 
@@ -382,25 +429,20 @@ type endpointPrintDocument struct{ Endpoint }
 // PrintDocument Запрос на печать документа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-pechat-dokumentow-zapros-na-pechat
 func (s *endpointPrintDocument) PrintDocument(ctx context.Context, id *uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error) {
-	apiErrors := &ApiErrors{}
-
 	path := fmt.Sprintf("%s/%s/export", s.uri, id)
 
-	resp, err := s.client.R().SetContext(ctx).
+	_, resp, err := NewRequestBuilder[PrintFile](s.client, path).
 		SetHeader(headerGetContent, "true").
-		SetBody(PrintDocumentArg).
-		SetError(apiErrors).
-		Post(path)
+		Post(ctx, PrintDocumentArg)
 
-	if resp.Error() != nil {
-		return nil, resp, apiErrors
+	if err != nil {
+		return nil, resp, err
 	}
 
 	file, err := GetFileFromResponse(resp)
 	if err != nil {
 		return nil, resp, err
 	}
-
 	return file, resp, err
 }
 
@@ -409,25 +451,20 @@ type endpointPrintLabel struct{ Endpoint }
 // PrintLabel Запрос на печать этикеток и ценников.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pechat-atiketok-i-cennikow
 func (s *endpointPrintLabel) PrintLabel(ctx context.Context, id *uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error) {
-	apiErrors := &ApiErrors{}
-
 	path := fmt.Sprintf("%s/%s/export", s.uri, id)
 
-	resp, err := s.client.R().SetContext(ctx).
+	_, resp, err := NewRequestBuilder[PrintFile](s.client, path).
 		SetHeader(headerGetContent, "true").
-		SetBody(PrintLabelArg).
-		SetError(apiErrors).
-		Post(path)
+		Post(ctx, PrintLabelArg)
 
-	if resp.Error() != nil {
-		return nil, resp, apiErrors
+	if err != nil {
+		return nil, resp, err
 	}
 
 	file, err := GetFileFromResponse(resp)
 	if err != nil {
 		return nil, resp, err
 	}
-
 	return file, resp, err
 }
 
@@ -442,8 +479,8 @@ func (s *endpointPublication) GetPublications(ctx context.Context, id *uuid.UUID
 
 // GetPublicationByID Запрос на получение Публикации с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-poluchit-publikaciu
-func (s *endpointPublication) GetPublicationByID(ctx context.Context, id, publicationId *uuid.UUID) (*Publication, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/publication/%s", s.uri, id, publicationId)
+func (s *endpointPublication) GetPublicationByID(ctx context.Context, id, publicationID *uuid.UUID) (*Publication, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/publication/%s", s.uri, id, publicationID)
 	return NewRequestBuilder[Publication](s.client, path).Get(ctx)
 }
 
@@ -457,8 +494,8 @@ func (s *endpointPublication) Publish(ctx context.Context, id *uuid.UUID, templa
 
 // DeletePublication Запрос на удаление Публикации с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-udalit-publikaciu
-func (s *endpointPublication) DeletePublication(ctx context.Context, id, publicationId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/publication/%s", s.uri, id, publicationId)
+func (s *endpointPublication) DeletePublication(ctx context.Context, id, publicationID *uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/publication/%s", s.uri, id, publicationID)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
@@ -561,19 +598,7 @@ type endpointRemove struct{ Endpoint }
 // Remove Запрос на перемещение документа с указанным id в корзину.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-udalenie-w-korzinu
 func (s *endpointRemove) Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
-	apiErrors := &ApiErrors{}
-
 	path := fmt.Sprintf("%s/%s/trash", s.uri, id)
-
-	resp, err := s.client.R().SetContext(ctx).
-		SetError(apiErrors).
-		Post(path)
-
-	ok := resp.StatusCode() == http.StatusOK
-
-	if resp.Error() != nil {
-		return ok, resp, apiErrors
-	}
-
-	return ok, resp, err
+	_, resp, err := NewRequestBuilder[any](s.client, path).Post(ctx, nil)
+	return resp.StatusCode() == http.StatusOK, resp, err
 }
