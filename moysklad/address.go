@@ -75,8 +75,8 @@ func (address Address) GetComment() string {
 	return Deref(address.Comment)
 }
 
-func (address Address) GetCountry() *Country {
-	return address.Country
+func (address Address) GetCountry() Country {
+	return Deref(address.Country)
 }
 
 func (address Address) GetHouse() string {
@@ -87,8 +87,8 @@ func (address Address) GetPostalCode() string {
 	return Deref(address.PostalCode)
 }
 
-func (address Address) GetRegion() *Region {
-	return address.Region
+func (address Address) GetRegion() Region {
+	return Deref(address.Region)
 }
 
 func (address Address) GetStreet() string {
