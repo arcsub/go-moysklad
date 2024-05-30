@@ -250,14 +250,14 @@ func (s *endpointAttributes) CreateAttributes(ctx context.Context, attributeList
 // UpdateAttribute Изменить дополнительное поле.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-noe-pole-izmenit-dopolnitel-noe-pole
 func (s *endpointAttributes) UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/attributes/%d", s.uri, id)
+	path := fmt.Sprintf("%s/metadata/attributes/%s", s.uri, id)
 	return NewRequestBuilder[Attribute](s.client, path).Put(ctx, attribute)
 }
 
 // DeleteAttribute Удалить дополнительное поле.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-noe-pole-udalit-dopolnitel-noe-pole
 func (s *endpointAttributes) DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/attributes/%d", s.uri, id)
+	path := fmt.Sprintf("%s/metadata/attributes/%s", s.uri, id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
@@ -273,7 +273,7 @@ type endpointAudit struct{ Endpoint }
 // GetAudit Запрос на получение событий по сущности с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-suschnosti
 func (s *endpointAudit) GetAudit(ctx context.Context, id *uuid.UUID, params *Params) (*List[AuditEvent], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/audit", s.uri, id)
+	path := fmt.Sprintf("%s/%s/audit", s.uri, id)
 	return NewRequestBuilder[List[AuditEvent]](s.client, path).SetParams(params).Get(ctx)
 }
 
@@ -282,33 +282,33 @@ type endpointFiles struct{ Endpoint }
 // GetFiles Получить список Файлов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-poluchit-spisok-fajlow-operacii-nomenklatury-zadachi-ili-kontragenta
 func (s *endpointFiles) GetFiles(ctx context.Context, id *uuid.UUID) (*MetaArray[File], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/files", s.uri, id)
+	path := fmt.Sprintf("%s/%s/files", s.uri, id)
 	return NewRequestBuilder[MetaArray[File]](s.client, path).Get(ctx)
 }
 
 // CreateFile Добавить Файл.
 func (s *endpointFiles) CreateFile(ctx context.Context, id *uuid.UUID, file *File) (*[]File, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/files", s.uri, id)
+	path := fmt.Sprintf("%s/%s/files", s.uri, id)
 	return NewRequestBuilder[[]File](s.client, path).Get(ctx)
 }
 
 // UpdateFiles Добавить/обновить Файлы.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-dobawit-fajly-k-operacii-nomenklature-ili-kontragentu
 func (s *endpointFiles) UpdateFiles(ctx context.Context, id *uuid.UUID, files []*File) (*[]File, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/files", s.uri, id)
+	path := fmt.Sprintf("%s/%s/files", s.uri, id)
 	return NewRequestBuilder[[]File](s.client, path).Post(ctx, files)
 }
 
 // DeleteFile Удалить Файл.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-udalit-fajl
 func (s *endpointFiles) DeleteFile(ctx context.Context, id, fileId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/files/%d", s.uri, id, fileId)
+	path := fmt.Sprintf("%s/%s/files/%s", s.uri, id, fileId)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
 // DeleteFiles Удалить несколько Файлов.
 func (s *endpointFiles) DeleteFiles(ctx context.Context, id *uuid.UUID, files []*File) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/files/delete", s.uri, id)
+	path := fmt.Sprintf("%s/%s/files/delete", s.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, files)
 }
 
@@ -317,35 +317,35 @@ type endpointImages struct{ Endpoint }
 // GetImages Получить список Изображений.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-poluchit-spisok-izobrazhenij-towara-komplekta-i-modifikacii
 func (s *endpointImages) GetImages(ctx context.Context, id *uuid.UUID) (*MetaArray[Image], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/images", s.uri, id)
+	path := fmt.Sprintf("%s/%s/images", s.uri, id)
 	return NewRequestBuilder[MetaArray[Image]](s.client, path).Get(ctx)
 }
 
 // CreateImage Добавить Изображение.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-dobawit-izobrazhenie-k-towaru-komplektu-ili-modifikacii
 func (s *endpointImages) CreateImage(ctx context.Context, id *uuid.UUID, image *Image) (*[]*Image, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/images", s.uri, id)
+	path := fmt.Sprintf("%s/%s/images", s.uri, id)
 	return NewRequestBuilder[[]*Image](s.client, path).Post(ctx, image)
 }
 
 // UpdateImages Изменение Изображений (списком).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-izmenenie-spiska-izobrazhenij-u-towara-komplekta-ili-modifikacii
 func (s *endpointImages) UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) (*[]Image, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/images", s.uri, id)
+	path := fmt.Sprintf("%s/%s/images", s.uri, id)
 	return NewRequestBuilder[[]Image](s.client, path).Post(ctx, images)
 }
 
 // DeleteImage Удалить Изображение.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-udalit-izobrazhenie
 func (s *endpointImages) DeleteImage(ctx context.Context, id, imageId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/images/%d", s.uri, id, imageId)
+	path := fmt.Sprintf("%s/%s/images/%s", s.uri, id, imageId)
 	return NewRequestBuilder[[]Image](s.client, path).Delete(ctx)
 }
 
 // DeleteImages Удалить несколько Изображений.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-udalit-gruppu-izobrazhenij
 func (s *endpointImages) DeleteImages(ctx context.Context, id *uuid.UUID, images []*Image) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%d/images/delete", s.uri, id)
+	path := fmt.Sprintf("%s/%s/images/delete", s.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, images)
 }
 
@@ -361,7 +361,7 @@ func (s *endpointNamedFilter) GetNamedFilters(ctx context.Context, params *Param
 // GetNamedFilterByID Получить отдельный фильтр по id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sohranennye-fil-try-poluchit-fil-tr-po-id
 func (s *endpointNamedFilter) GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error) {
-	path := fmt.Sprintf("%s/namedfilter/%d", s.uri, id)
+	path := fmt.Sprintf("%s/namedfilter/%s", s.uri, id)
 	return NewRequestBuilder[NamedFilter](s.client, path).Get(ctx)
 }
 
