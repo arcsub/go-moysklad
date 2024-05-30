@@ -14,14 +14,34 @@ type Application struct {
 	ID        *uuid.UUID `json:"id,omitempty"`        // ID сущности
 	Name      *string    `json:"name,omitempty"`      // Наименование
 	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные
-	AppUid    *uuid.UUID `json:"appUid,omitempty"`    // UID приложения
+	AppUID    *uuid.UUID `json:"appUid,omitempty"`    // UID приложения
 }
 
-func (a Application) String() string {
-	return Stringify(a)
+func (application Application) GetAccountID() uuid.UUID {
+	return Deref(application.AccountID)
 }
 
-func (a Application) MetaType() MetaType {
+func (application Application) GetID() uuid.UUID {
+	return Deref(application.ID)
+}
+
+func (application Application) GetName() string {
+	return Deref(application.Name)
+}
+
+func (application Application) GetMeta() Meta {
+	return Deref(application.Meta)
+}
+
+func (application Application) GetAppUID() uuid.UUID {
+	return Deref(application.AppUID)
+}
+
+func (application Application) String() string {
+	return Stringify(application)
+}
+
+func (application Application) MetaType() MetaType {
 	return MetaTypeApplication
 }
 
