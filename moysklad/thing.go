@@ -1,6 +1,10 @@
 package moysklad
 
-import "github.com/google/uuid"
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
+)
 
 // Thing Серийный номер
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-serijnyj-nomer
@@ -22,3 +26,15 @@ func (t Thing) MetaType() MetaType {
 
 // Things серийные номера.
 type Things = []string
+
+// ThingService
+// Сервис для работы с серийными номерами.
+type ThingService interface {
+	GetList(ctx context.Context, params *Params) (*List[Thing], *resty.Response, error)
+	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Thing, *resty.Response, error)
+}
+
+func NewThingService(client *Client) ThingService {
+	e := NewEndpoint(client, "entity/thing")
+	return newMainService[Thing, any, any, any](e)
+}

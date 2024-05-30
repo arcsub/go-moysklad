@@ -1,5 +1,10 @@
 package moysklad
 
+import (
+	"context"
+	"github.com/go-resty/resty/v2"
+)
+
 // ContextEmployee Контекст сотрудника.
 // Ключевое слово: employee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-kontext-zaprosa-sotrudnika-poluchit-kontext-sotrudnika
@@ -523,4 +528,15 @@ func (c ContextEmployee) String() string {
 
 func (c ContextEmployee) MetaType() MetaType {
 	return MetaTypeEmployeeContext
+}
+
+// ContextEmployeeService
+// Сервис для работы с контекстом сотрудника.
+type ContextEmployeeService interface {
+	Get(ctx context.Context, params *Params) (*ContextEmployee, *resty.Response, error)
+}
+
+func NewContextEmployeeService(client *Client) ContextEmployeeService {
+	e := NewEndpoint(client, "context/employee")
+	return newMainService[ContextEmployee, any, any, any](e)
 }
