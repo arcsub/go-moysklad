@@ -10,29 +10,29 @@ import (
 // Ключевое слово: bonusprogram
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-bonusnaq-programma
 type BonusProgram struct {
-	MaxPaidRatePercents       *int               `json:"maxPaidRatePercents,omitempty"`
-	EarnWhileRedeeming        *bool              `json:"earnWhileRedeeming,omitempty"`
-	AgentTags                 *Tags              `json:"agentTags,omitempty"`
-	AllAgents                 *bool              `json:"allAgents,omitempty"`
-	AccountID                 *uuid.UUID         `json:"accountId,omitempty"`
-	EarnRateRoublesToPoint    *int               `json:"earnRateRoublesToPoint,omitempty"`
-	Active                    *bool              `json:"active,omitempty"`
-	ID                        *uuid.UUID         `json:"id,omitempty"`
 	AllProducts               *bool              `json:"allProducts,omitempty"`
+	Active                    *bool              `json:"active,omitempty"`
+	WelcomeBonusesValue       *int               `json:"welcomeBonusesValue,omitempty"`
+	AllAgents                 *bool              `json:"allAgents,omitempty"`
+	MaxPaidRatePercents       *int               `json:"maxPaidRatePercents,omitempty"`
+	EarnRateRoublesToPoint    *int               `json:"earnRateRoublesToPoint,omitempty"`
+	EarnWhileRedeeming        *bool              `json:"earnWhileRedeeming,omitempty"`
+	ID                        *uuid.UUID         `json:"id,omitempty"`
+	AccountID                 *uuid.UUID         `json:"accountId,omitempty"`
 	Meta                      *Meta              `json:"meta,omitempty"`
 	Name                      *string            `json:"name,omitempty"`
 	PostponedBonusesDelayDays *int               `json:"postponedBonusesDelayDays,omitempty"`
 	SpendRatePointsToRouble   *int               `json:"spendRatePointsToRouble,omitempty"`
 	WelcomeBonusesEnabled     *bool              `json:"welcomeBonusesEnabled,omitempty"`
-	WelcomeBonusesValue       *int               `json:"welcomeBonusesValue,omitempty"`
 	WelcomeBonusesMode        WelcomeBonusesMode `json:"welcomeBonusesMode,omitempty"`
+	AgentTags                 Tags               `json:"agentTags,omitempty"`
 }
 
-func (b BonusProgram) String() string {
-	return Stringify(b)
+func (bonusProgram BonusProgram) String() string {
+	return Stringify(bonusProgram)
 }
 
-func (b BonusProgram) MetaType() MetaType {
+func (bonusProgram BonusProgram) MetaType() MetaType {
 	return MetaTypeBonusProgram
 }
 
@@ -53,7 +53,7 @@ type BonusProgramService interface {
 	Update(ctx context.Context, id *uuid.UUID, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*BonusProgram, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, bonusProgramList []*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, bonusProgramList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewBonusProgramService(client *Client) BonusProgramService {
