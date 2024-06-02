@@ -13,9 +13,9 @@ import (
 // Ключевое слово: async
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
 type Async struct {
+	DeletionDate Timestamp  `json:"deletionDate,omitempty"`
 	Meta         Meta       `json:"meta,omitempty"`
 	Owner        Meta       `json:"owner,omitempty"`
-	DeletionDate Timestamp  `json:"deletionDate,omitempty"`
 	RequestURL   string     `json:"request,omitempty"`
 	ResultURL    string     `json:"resultUrl,omitempty"`
 	State        AsyncState `json:"state,omitempty"`
@@ -96,20 +96,20 @@ type AsyncResultService[T any] interface {
 }
 
 type asyncResultService[T any] struct {
-	req       *resty.Request
+	client    *Client
 	statusURL *url.URL // URL статуса Асинхронной задачи.
 	resultURL *url.URL // URL результата выполнения Асинхронной задачи.
 }
 
 // NewAsyncResultService Сервис для работы с асинхронной задачей.
-func NewAsyncResultService[T any](req *resty.Request, resp *resty.Response) AsyncResultService[T] {
+func NewAsyncResultService[T any](client *Client, resp *resty.Response) AsyncResultService[T] {
 	statusUrlStr := resp.Header().Get("Location")
 	resultUrlStr := resp.Header().Get("Content-Location")
 	statusUrl, _ := url.Parse(statusUrlStr)
 	resultUrl, _ := url.Parse(resultUrlStr)
 
 	return &asyncResultService[T]{
-		req:       req,
+		client:    client,
 		statusURL: statusUrl,
 		resultURL: resultUrl,
 	}
@@ -123,27 +123,25 @@ func (s *asyncResultService[T]) ResultURL() *url.URL {
 	return s.resultURL
 }
 
-// TODO: client, NewRequestBuilder
 func (s *asyncResultService[T]) Check(ctx context.Context) (bool, *resty.Response, error) {
-	var async Async
-	resp, err := s.req.SetContext(ctx).SetResult(async).Get(s.StatusURL().String())
+	async, resp, err := NewRequestBuilder[Async](s.client, s.StatusURL().String()).Get(ctx)
 	if err != nil {
 		return false, resp, err
 	}
 	return async.State == AsyncStateDone, resp, nil
 }
 
-// TODO: client, NewRequestBuilder
 func (s *asyncResultService[T]) Result(ctx context.Context) (*T, *resty.Response, error) {
-	var data = new(T)
-	resp, err := s.req.SetContext(ctx).SetResult(data).Get(s.ResultURL().String())
-	return data, resp, err
+	data, resp, err := NewRequestBuilder[T](s.client, s.ResultURL().String()).Get(ctx)
+	if err != nil {
+		return nil, resp, err
+	}
+	return data, resp, nil
 }
 
-// TODO: client, NewRequestBuilder
 func (s *asyncResultService[T]) Cancel(ctx context.Context) (bool, *resty.Response, error) {
 	u, _ := s.StatusURL().Parse("/cancel")
-	resp, err := s.req.SetContext(ctx).Post(u.String())
+	_, resp, err := NewRequestBuilder[any](s.client, u.String()).Post(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}

@@ -208,6 +208,6 @@ func (rb *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], 
 	if err != nil {
 		return nil, resp, err
 	}
-	async := NewAsyncResultService[T](rb.req, resp)
+	async := NewAsyncResultService[T](rb.client, resp)
 	return async, resp, nil
 }

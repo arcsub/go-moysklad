@@ -110,7 +110,7 @@ func (s *endpointGetOneAsync[T]) GetAsync(ctx context.Context) (AsyncResultServi
 		return nil, resp, nil
 	}
 
-	async := NewAsyncResultService[T](s.client.R(), resp)
+	async := NewAsyncResultService[T](s.client, resp)
 	return async, resp, err
 }
 
