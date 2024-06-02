@@ -10,37 +10,37 @@ import (
 // Ключевое слово: move
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-peremeschenie
 type Move struct {
-	AccountID     *uuid.UUID               `json:"accountId,omitempty"`     // ID учетной записи
-	Applicable    *bool                    `json:"applicable,omitempty"`    // Отметка о проведении
-	Attributes    *Attributes              `json:"attributes,omitempty"`    // Коллекция метаданных доп. полей. Поля объекта
-	Code          *string                  `json:"code,omitempty"`          // Код
-	Created       *Timestamp               `json:"created,omitempty"`       // Дата создания
-	Deleted       *Timestamp               `json:"deleted,omitempty"`       // Момент последнего удаления
-	Description   *string                  `json:"description,omitempty"`   // Комментарий
-	ExternalCode  *string                  `json:"externalCode,omitempty"`  // Внешний код
-	Files         *Files                   `json:"files,omitempty"`         // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group         *Group                   `json:"group,omitempty"`         // Отдел сотрудника
-	ID            *uuid.UUID               `json:"id,omitempty"`            // ID сущности
-	InternalOrder *InternalOrder           `json:"internalOrder,omitempty"` // Метаданные Внутреннего заказа, связанного с Перемещением
-	CustomerOrder *CustomerOrder           `json:"customerOrder,omitempty"` // Метаданные Заказа покупателя, связанного с Перемещением
-	Meta          *Meta                    `json:"meta,omitempty"`          // Метаданные
-	Moment        *Timestamp               `json:"moment,omitempty"`        // Дата документа
-	Name          *string                  `json:"name,omitempty"`          // Наименование
-	Organization  *Organization            `json:"organization,omitempty"`  // Метаданные юрлица
-	Overhead      *Overhead                `json:"overhead,omitempty"`      // Накладные расходы. Если Позиции Перемещения не заданы, то накладные расходы нельзя задать
-	Owner         *Employee                `json:"owner,omitempty"`         // Владелец (Сотрудник)
-	Positions     *Positions[MovePosition] `json:"positions,omitempty"`     // Метаданные позиций Перемещения
-	Printed       *bool                    `json:"printed,omitempty"`       // Напечатан ли документ
-	Project       *Project                 `json:"project,omitempty"`       // Проект
-	Published     *bool                    `json:"published,omitempty"`     // Опубликован ли документ
-	Rate          *Rate                    `json:"rate,omitempty"`          // Валюта
-	Shared        *bool                    `json:"shared,omitempty"`        // Общий доступ
-	SourceStore   *Store                   `json:"sourceStore,omitempty"`   // Метаданные склада, с которого совершается перемещение
-	State         *State                   `json:"state,omitempty"`         // Метаданные статуса
-	Sum           *Decimal                 `json:"sum,omitempty"`           // Сумма
-	SyncID        *uuid.UUID               `json:"syncId,omitempty"`        // ID синхронизации. После заполнения недоступен для изменения
-	TargetStore   *Store                   `json:"targetStore,omitempty"`   // Метаданные склада, на который совершается перемещение
-	Updated       *Timestamp               `json:"updated,omitempty"`       // Момент последнего обновления
+	Moment        *Timestamp               `json:"moment,omitempty"`
+	Updated       *Timestamp               `json:"updated,omitempty"`
+	AccountID     *uuid.UUID               `json:"accountId,omitempty"`
+	Code          *string                  `json:"code,omitempty"`
+	Created       *Timestamp               `json:"created,omitempty"`
+	Deleted       *Timestamp               `json:"deleted,omitempty"`
+	Description   *string                  `json:"description,omitempty"`
+	ExternalCode  *string                  `json:"externalCode,omitempty"`
+	Files         *Files                   `json:"files,omitempty"`
+	Group         *Group                   `json:"group,omitempty"`
+	ID            *uuid.UUID               `json:"id,omitempty"`
+	InternalOrder *InternalOrder           `json:"internalOrder,omitempty"`
+	CustomerOrder *CustomerOrder           `json:"customerOrder,omitempty"`
+	Meta          *Meta                    `json:"meta,omitempty"`
+	Name          *string                  `json:"name,omitempty"`
+	Organization  *Organization            `json:"organization,omitempty"`
+	Applicable    *bool                    `json:"applicable,omitempty"`
+	Overhead      *Overhead                `json:"overhead,omitempty"`
+	Owner         *Employee                `json:"owner,omitempty"`
+	Positions     *Positions[MovePosition] `json:"positions,omitempty"`
+	Printed       *bool                    `json:"printed,omitempty"`
+	Project       *Project                 `json:"project,omitempty"`
+	Published     *bool                    `json:"published,omitempty"`
+	Rate          *Rate                    `json:"rate,omitempty"`
+	Shared        *bool                    `json:"shared,omitempty"`
+	SourceStore   *Store                   `json:"sourceStore,omitempty"`
+	State         *State                   `json:"state,omitempty"`
+	Sum           *Decimal                 `json:"sum,omitempty"`
+	SyncID        *uuid.UUID               `json:"syncId,omitempty"`
+	TargetStore   *Store                   `json:"targetStore,omitempty"`
+	Attributes    Attributes               `json:"attributes,omitempty"`
 }
 
 func (m Move) String() string {

@@ -10,7 +10,7 @@ type Payment struct {
 	AccountID      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
 	Agent          *Counterparty `json:"agent,omitempty"`          // Метаданные контрагента
 	Applicable     *bool         `json:"applicable,omitempty"`     // Отметка о проведении
-	Attributes     *Attributes   `json:"attributes,omitempty"`     // Коллекция метаданных доп. полей. Поля объекта
+	Attributes     Attributes    `json:"attributes,omitempty"`     // Коллекция метаданных доп. полей. Поля объекта
 	Code           *string       `json:"code,omitempty"`           // Код выданного
 	Contract       *Contract     `json:"contract,omitempty"`       // Метаданные договора
 	Created        *Timestamp    `json:"created,omitempty"`        // Дата создания

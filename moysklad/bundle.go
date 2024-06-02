@@ -11,8 +11,8 @@ import (
 // Ключевое слово: bundle
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt
 type Bundle struct {
-	Images              *Images                     `json:"images,omitempty"`
-	Updated             *Timestamp                  `json:"updated,omitempty"`
+	Volume              *float64                    `json:"volume,omitempty"`
+	SyncID              *uuid.UUID                  `json:"syncId,omitempty"`
 	Code                *string                     `json:"code,omitempty"`
 	Description         *string                     `json:"description,omitempty"`
 	ExternalCode        *string                     `json:"externalCode,omitempty"`
@@ -21,17 +21,17 @@ type Bundle struct {
 	Name                *string                     `json:"name,omitempty"`
 	Archived            *bool                       `json:"archived,omitempty"`
 	Article             *string                     `json:"article,omitempty"`
-	Attributes          *Attributes                 `json:"attributes,omitempty"`
+	Images              *Images                     `json:"images,omitempty"`
 	Components          *Positions[BundleComponent] `json:"components,omitempty"`
 	Country             *Country                    `json:"country,omitempty"`
-	Overhead            *BundleOverhead             `json:"overhead,omitempty"`
+	DiscountProhibited  *bool                       `json:"discountProhibited"`
 	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`
 	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"`
 	Files               *Files                      `json:"files,omitempty"`
 	Group               *Group                      `json:"group,omitempty"`
-	Volume              *float64                    `json:"volume,omitempty"`
-	Barcodes            *Barcodes                   `json:"barcodes,omitempty"`
-	DiscountProhibited  *bool                       `json:"discountProhibited"`
+	Vat                 *int                        `json:"vat,omitempty"`
+	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`
+	Overhead            *BundleOverhead             `json:"overhead,omitempty"`
 	Owner               *Employee                   `json:"owner,omitempty"`
 	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`
 	PathName            *string                     `json:"pathName,omitempty"`
@@ -39,17 +39,17 @@ type Bundle struct {
 	SalePrices          *SalePrices                 `json:"salePrices,omitempty"`
 	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`
 	Shared              *bool                       `json:"shared,omitempty"`
-	SyncID              *uuid.UUID                  `json:"syncId,omitempty"`
+	Updated             *Timestamp                  `json:"updated,omitempty"`
 	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`
 	Tnved               *string                     `json:"tnved,omitempty"`
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
 	Uom                 *Uom                        `json:"uom,omitempty"`
-	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`
+	Barcodes            *Barcodes                   `json:"barcodes,omitempty"`
 	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
-	Vat                 *int                        `json:"vat,omitempty"`
-	TrackingType        TrackingType                `json:"trackingType,omitempty"`
 	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
+	TrackingType        TrackingType                `json:"trackingType,omitempty"`
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`
+	Attributes          Attributes                  `json:"attributes,omitempty"`
 }
 
 func (b Bundle) String() string {
@@ -61,8 +61,8 @@ func (b Bundle) MetaType() MetaType {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (b Bundle) GetMeta() *Meta {
-	return b.Meta
+func (b Bundle) GetMeta() Meta {
+	return Deref(b.Meta)
 }
 
 func (b Bundle) ConvertToAssortmentPosition() (*AssortmentPosition, error) {

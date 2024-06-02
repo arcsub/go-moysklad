@@ -24,6 +24,6 @@ func (p Publication) MetaType() MetaType {
 }
 
 func (p *Publication) SetTemplate(template *Templater) *Publication {
-	p.Template = &MetaWrapper{Meta: *(*template).GetMeta()}
+	p.Template = &MetaWrapper{Meta: (*template).GetMeta()}
 	return p
 }

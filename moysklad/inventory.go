@@ -12,30 +12,30 @@ import (
 // Ключевое слово: inventory
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-inwentarizaciq
 type Inventory struct {
-	AccountID    *uuid.UUID                    `json:"accountId,omitempty"`    // ID учетной записи
-	Attributes   *Attributes                   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
-	Code         *string                       `json:"code,omitempty"`         // Код выданного
-	Created      *Timestamp                    `json:"created,omitempty"`      // Дата создания
-	Deleted      *Timestamp                    `json:"deleted,omitempty"`      // Момент последнего удаления Счета-фактуры полученного
-	Description  *string                       `json:"description,omitempty"`  // Комментарий выданного Счета-фактуры полученного
-	ExternalCode *string                       `json:"externalCode,omitempty"` // Внешний код выданного Счета-фактуры полученного
-	Files        *Files                        `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group        *Group                        `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID                    `json:"id,omitempty"`           // ID сущности
-	Meta         *Meta                         `json:"meta,omitempty"`         // Метаданные
-	Moment       *Timestamp                    `json:"moment,omitempty"`       // Дата документа
-	Name         *string                       `json:"name,omitempty"`         // Наименование
-	Organization *Organization                 `json:"organization,omitempty"` // Метаданные юрлица
-	Owner        *Employee                     `json:"owner,omitempty"`        // Владелец (Сотрудник)
-	Positions    *Positions[InventoryPosition] `json:"positions,omitempty"`    // Метаданные позиций Инвентаризации
-	Printed      *bool                         `json:"printed,omitempty"`      // Напечатан ли документ
-	Published    *bool                         `json:"published,omitempty"`    // Опубликован ли документ
-	Shared       *bool                         `json:"shared,omitempty"`       // Общий доступ
-	State        *State                        `json:"state,omitempty"`        // Метаданные статуса
-	Store        *Store                        `json:"store,omitempty"`        // Метаданные склада
-	Sum          *Decimal                      `json:"sum,omitempty"`          // Сумма
-	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
-	Updated      *Timestamp                    `json:"updated,omitempty"`      // Момент последнего обновления
+	Name         *string                       `json:"name,omitempty"`
+	Sum          *Decimal                      `json:"sum,omitempty"`
+	Code         *string                       `json:"code,omitempty"`
+	Created      *Timestamp                    `json:"created,omitempty"`
+	Deleted      *Timestamp                    `json:"deleted,omitempty"`
+	Description  *string                       `json:"description,omitempty"`
+	ExternalCode *string                       `json:"externalCode,omitempty"`
+	Files        *Files                        `json:"files,omitempty"`
+	Group        *Group                        `json:"group,omitempty"`
+	ID           *uuid.UUID                    `json:"id,omitempty"`
+	Updated      *Timestamp                    `json:"updated,omitempty"`
+	Meta         *Meta                         `json:"meta,omitempty"`
+	Owner        *Employee                     `json:"owner,omitempty"`
+	Organization *Organization                 `json:"organization,omitempty"`
+	AccountID    *uuid.UUID                    `json:"accountId,omitempty"`
+	Positions    *Positions[InventoryPosition] `json:"positions,omitempty"`
+	Printed      *bool                         `json:"printed,omitempty"`
+	Published    *bool                         `json:"published,omitempty"`
+	Shared       *bool                         `json:"shared,omitempty"`
+	State        *State                        `json:"state,omitempty"`
+	Store        *Store                        `json:"store,omitempty"`
+	Moment       *Timestamp                    `json:"moment,omitempty"`
+	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`
+	Attributes   Attributes                    `json:"attributes,omitempty"`
 }
 
 func (i Inventory) String() string {

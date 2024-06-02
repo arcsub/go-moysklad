@@ -10,18 +10,18 @@ import (
 // Ключевое слово: customerorder
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-pokupatelq
 type CustomerOrder struct {
-	Printed               *bool                             `json:"printed,omitempty"`
-	Contract              *Contract                         `json:"contract,omitempty"`
+	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`
+	Project               *Project                          `json:"project,omitempty"`
 	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`
 	Applicable            *bool                             `json:"applicable,omitempty"`
-	Attributes            *Attributes                       `json:"attributes,omitempty"`
+	Moves                 *Moves                            `json:"moves,omitempty"`
 	Code                  *string                           `json:"code,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Agent                 *Counterparty                     `json:"agent,omitempty"`
 	Created               *Timestamp                        `json:"created,omitempty"`
 	Deleted               *Timestamp                        `json:"deleted,omitempty"`
 	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
 	Description           *string                           `json:"description,omitempty"`
-	Published             *bool                             `json:"published,omitempty"`
+	ExternalCode          *string                           `json:"externalCode,omitempty"`
 	Files                 *Files                            `json:"files,omitempty"`
 	Group                 *Group                            `json:"group,omitempty"`
 	ID                    *uuid.UUID                        `json:"id,omitempty"`
@@ -30,13 +30,13 @@ type CustomerOrder struct {
 	Name                  *string                           `json:"name,omitempty"`
 	Moment                *Timestamp                        `json:"moment,omitempty"`
 	Organization          *Organization                     `json:"organization,omitempty"`
-	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
+	Printed               *bool                             `json:"printed,omitempty"`
 	Owner                 *Employee                         `json:"owner,omitempty"`
 	PayedSum              *Decimal                          `json:"payedSum,omitempty"`
 	Positions             *Positions[CustomerOrderPosition] `json:"positions,omitempty"`
-	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`
-	Agent                 *Counterparty                     `json:"agent,omitempty"`
-	ExternalCode          *string                           `json:"externalCode,omitempty"`
+	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
+	Contract              *Contract                         `json:"contract,omitempty"`
+	Published             *bool                             `json:"published,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
 	ReservedSum           *Decimal                          `json:"reservedSum,omitempty"`
 	SalesChannel          *SalesChannel                     `json:"salesChannel,omitempty"`
@@ -57,8 +57,8 @@ type CustomerOrder struct {
 	Demands               *Demands                          `json:"demands,omitempty"`
 	Payments              *Payments                         `json:"payments,omitempty"`
 	InvoicesOut           *InvoicesOut                      `json:"invoicesOut,omitempty"`
-	Moves                 *Moves                            `json:"moves,omitempty"`
 	TaxSystem             TaxSystem                         `json:"taxSystem,omitempty"`
+	Attributes            Attributes                        `json:"attributes,omitempty"`
 }
 
 func (c CustomerOrder) String() string {
@@ -66,8 +66,8 @@ func (c CustomerOrder) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (c CustomerOrder) GetMeta() *Meta {
-	return c.Meta
+func (c CustomerOrder) GetMeta() Meta {
+	return Deref(c.Meta)
 }
 
 func (c CustomerOrder) MetaType() MetaType {

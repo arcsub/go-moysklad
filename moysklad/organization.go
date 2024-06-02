@@ -10,18 +10,18 @@ import (
 // Ключевое слово: organization
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-jurlico
 type Organization struct {
-	CertificateNumber      *string                  `json:"certificateNumber,omitempty"`
-	Code                   *string                  `json:"code,omitempty"`
+	Updated                *Timestamp               `json:"updated,omitempty"`
+	ChiefAccountSign       *Image                   `json:"chiefAccountSign,omitempty"`
 	ActualAddressFull      *Address                 `json:"actualAddressFull,omitempty"`
 	Archived               *bool                    `json:"archived,omitempty"`
 	BonusPoints            *int                     `json:"bonusPoints,omitempty"`
 	BonusProgram           *BonusProgram            `json:"bonusProgram,omitempty"`
-	ChiefAccountSign       *Image                   `json:"chiefAccountSign,omitempty"`
+	ActualAddress          *string                  `json:"actualAddress,omitempty"`
 	UTMUrl                 *string                  `json:"utmUrl,omitempty"`
 	Created                *Timestamp               `json:"created,omitempty"`
 	Description            *string                  `json:"description,omitempty"`
 	ExternalCode           *string                  `json:"externalCode,omitempty"`
-	ChiefAccountant        *string                  `json:"chiefAccountant,omitempty"`
+	Group                  *Group                   `json:"group,omitempty"`
 	ID                     *uuid.UUID               `json:"id,omitempty"`
 	Meta                   *Meta                    `json:"meta,omitempty"`
 	Name                   *string                  `json:"name,omitempty"`
@@ -30,13 +30,13 @@ type Organization struct {
 	SyncID                 *uuid.UUID               `json:"syncId,omitempty"`
 	TrackingContractDate   *Timestamp               `json:"trackingContractDate,omitempty"`
 	TrackingContractNumber *string                  `json:"trackingContractNumber,omitempty"`
-	AccountID              *uuid.UUID               `json:"accountId,omitempty"`
+	CertificateNumber      *string                  `json:"certificateNumber,omitempty"`
 	Accounts               *MetaArray[AgentAccount] `json:"accounts,omitempty"`
-	Attributes             *Attributes              `json:"attributes,omitempty"`
+	Stamp                  *Image                   `json:"stamp,omitempty"`
 	CertificateDate        *Timestamp               `json:"certificateDate,omitempty"`
-	Updated                *Timestamp               `json:"updated,omitempty"`
-	ActualAddress          *string                  `json:"actualAddress,omitempty"`
-	Group                  *Group                   `json:"group,omitempty"`
+	AccountID              *uuid.UUID               `json:"accountId,omitempty"`
+	Code                   *string                  `json:"code,omitempty"`
+	ChiefAccountant        *string                  `json:"chiefAccountant,omitempty"`
 	Director               *string                  `json:"director,omitempty"`
 	DirectorPosition       *string                  `json:"directorPosition,omitempty"`
 	DirectorSign           *Image                   `json:"directorSign,omitempty"`
@@ -57,8 +57,8 @@ type Organization struct {
 	OKPO                   *string                  `json:"okpo,omitempty"`
 	PayerVat               *bool                    `json:"payerVat,omitempty"`
 	Phone                  *string                  `json:"phone,omitempty"`
-	Stamp                  *Image                   `json:"stamp,omitempty"`
 	CompanyType            CompanyType              `json:"companyType,omitempty"`
+	Attributes             Attributes               `json:"attributes,omitempty"`
 }
 
 func (o Organization) String() string {
@@ -66,8 +66,8 @@ func (o Organization) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (o Organization) GetMeta() *Meta {
-	return o.Meta
+func (o Organization) GetMeta() Meta {
+	return Deref(o.Meta)
 }
 
 func (o Organization) MetaType() MetaType {

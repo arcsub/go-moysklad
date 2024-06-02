@@ -10,8 +10,8 @@ import (
 // Ключевое слово: product
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar
 type Product struct {
-	MinimumBalance      *float64       `json:"minimumBalance,omitempty"`
-	UseParentVat        *bool          `json:"useParentVat,omitempty"`
+	Supplier            *Counterparty  `json:"supplier,omitempty"`
+	OnTap               *bool          `json:"onTap,omitempty"`
 	Code                *string        `json:"code,omitempty"`
 	Description         *string        `json:"description,omitempty"`
 	ExternalCode        *string        `json:"externalCode,omitempty"`
@@ -21,7 +21,7 @@ type Product struct {
 	Alcoholic           *Alcoholic     `json:"alcoholic,omitempty"`
 	Archived            *bool          `json:"archived,omitempty"`
 	Article             *string        `json:"article,omitempty"`
-	Attributes          *Attributes    `json:"attributes,omitempty"`
+	PaymentItemType     *PaymentItem   `json:"paymentItemType,omitempty"`
 	BuyPrice            *BuyPrice      `json:"buyPrice,omitempty"`
 	Country             *Country       `json:"country,omitempty"`
 	DiscountProhibited  *bool          `json:"discountProhibited,omitempty"`
@@ -32,18 +32,18 @@ type Product struct {
 	Images              *Images        `json:"images,omitempty"`
 	IsSerialTrackable   *bool          `json:"isSerialTrackable,omitempty"`
 	MinPrice            *MinPrice      `json:"minPrice,omitempty"`
-	Volume              *float64       `json:"volume,omitempty"`
-	Barcodes            *Barcodes      `json:"barcodes,omitempty"`
-	PathName            *string        `json:"pathName,omitempty"`
+	TaxSystem           *GoodTaxSystem `json:"taxSystem,omitempty"`
+	UseParentVat        *bool          `json:"useParentVat,omitempty"`
+	Owner               *Employee      `json:"owner,omitempty"`
 	Packs               *Packs         `json:"packs,omitempty"`
 	PartialDisposal     *bool          `json:"partialDisposal,omitempty"`
-	Owner               *Employee      `json:"owner,omitempty"`
+	PathName            *string        `json:"pathName,omitempty"`
 	Weight              *float64       `json:"weight,omitempty"`
 	PpeType             *string        `json:"ppeType,omitempty"`
 	ProductFolder       *ProductFolder `json:"productFolder,omitempty"`
 	SalePrices          *SalePrices    `json:"salePrices,omitempty"`
 	Shared              *bool          `json:"shared,omitempty"`
-	Supplier            *Counterparty  `json:"supplier,omitempty"`
+	MinimumBalance      *float64       `json:"minimumBalance,omitempty"`
 	SyncID              *uuid.UUID     `json:"syncId,omitempty"`
 	AccountID           *uuid.UUID     `json:"accountId,omitempty"`
 	Things              *Things        `json:"things,omitempty"`
@@ -51,12 +51,12 @@ type Product struct {
 	VatEnabled          *bool          `json:"vatEnabled,omitempty"`
 	Uom                 *Uom           `json:"uom,omitempty"`
 	Updated             *Timestamp     `json:"updated,omitempty"`
-	OnTap               *bool          `json:"onTap,omitempty"`
+	Barcodes            *Barcodes      `json:"barcodes,omitempty"`
 	VariantsCount       *int           `json:"variantsCount,omitempty"`
 	Vat                 *int           `json:"vat,omitempty"`
 	TrackingType        *TrackingType  `json:"trackingType,omitempty"`
-	TaxSystem           *GoodTaxSystem `json:"taxSystem,omitempty"`
-	PaymentItemType     *PaymentItem   `json:"paymentItemType,omitempty"`
+	Volume              *float64       `json:"volume,omitempty"`
+	Attributes          Attributes     `json:"attributes,omitempty"`
 }
 
 func (p Product) String() string {
@@ -64,8 +64,8 @@ func (p Product) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (p Product) GetMeta() *Meta {
-	return p.Meta
+func (p Product) GetMeta() Meta {
+	return Deref(p.Meta)
 }
 
 func (p Product) MetaType() MetaType {

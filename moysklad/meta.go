@@ -17,7 +17,7 @@ type MetaTyper interface {
 }
 
 type MetaOwner interface {
-	GetMeta() *Meta
+	GetMeta() Meta
 }
 
 // Meta Метаданные объекта.

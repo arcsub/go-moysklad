@@ -10,46 +10,46 @@ import (
 // Ключевое слово: salesreturn
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-pokupatelq
 type SalesReturn struct {
-	AccountID           *uuid.UUID                      `json:"accountId,omitempty"`           // ID учетной записи
-	Agent               *Counterparty                   `json:"agent,omitempty"`               // Метаданные контрагента
-	AgentAccount        *AgentAccount                   `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
-	Applicable          *bool                           `json:"applicable,omitempty"`          // Отметка о проведении
-	Attributes          *Attributes                     `json:"attributes,omitempty"`          // Коллекция метаданных доп. полей. Поля объекта
-	Code                *string                         `json:"code,omitempty"`                // Код Возврата Покупателя
-	Contract            *Contract                       `json:"contract,omitempty"`            // Метаданные договора
-	Created             *Timestamp                      `json:"created,omitempty"`             // Дата создания
-	Deleted             *Timestamp                      `json:"deleted,omitempty"`             // Момент последнего удаления Возврата Покупателя
-	Description         *string                         `json:"description,omitempty"`         // Комментарий Возврата Покупателя
-	ExternalCode        *string                         `json:"externalCode,omitempty"`        // Внешний код Возврата Покупателя
-	Files               *Files                          `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group               *Group                          `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID                      `json:"id,omitempty"`                  // ID сущности
-	Meta                *Meta                           `json:"meta,omitempty"`                // Метаданные
-	Moment              *Timestamp                      `json:"moment,omitempty"`              // Дата документа
-	Name                *string                         `json:"name,omitempty"`                // Наименование
-	Organization        *Organization                   `json:"organization,omitempty"`        // Метаданные юрлица
-	OrganizationAccount *AgentAccount                   `json:"organizationAccount,omitempty"` // Метаданные счета юрлица
-	Owner               *Employee                       `json:"owner,omitempty"`               // Владелец (Сотрудник)
-	Positions           *Positions[SalesReturnPosition] `json:"positions,omitempty"`           // Метаданные позиций Возврата Покупателя
-	Printed             *bool                           `json:"printed,omitempty"`             // Напечатан ли документ
-	Project             *Project                        `json:"project,omitempty"`             // Метаданные проекта
-	Published           *bool                           `json:"published,omitempty"`           // Опубликован ли документ
-	Rate                *Rate                           `json:"rate,omitempty"`                // Валюта
-	SalesChannel        *SalesChannel                   `json:"salesChannel,omitempty"`        // Метаданные канала продаж
-	Shared              *bool                           `json:"shared,omitempty"`              // Общий доступ
-	State               *State                          `json:"state,omitempty"`               // Метаданные статуса Возврата Покупателя
-	Store               *Store                          `json:"store,omitempty"`               // Метаданные склада
-	Sum                 *Decimal                        `json:"sum,omitempty"`                 // Сумма
-	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
-	Updated             *Timestamp                      `json:"updated,omitempty"`             // Момент последнего обновления
-	VatEnabled          *bool                           `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
-	VatIncluded         *bool                           `json:"vatIncluded,omitempty"`         // Включен ли НДС в цену
-	VatSum              *Decimal                        `json:"vatSum,omitempty"`              // Сумма включая НДС
-	Demand              *Demand                         `json:"demand,omitempty"`              // Ссылка на отгрузку, по которой произошел возврат в формате Метаданных
-	Losses              *Losses                         `json:"losses,omitempty"`              // Массив ссылок на связанные списания в формате Метаданных
-	Payments            *Payments                       `json:"payments,omitempty"`            // Массив ссылок на связанные операции в формате Метаданных
-	PayedSum            *Decimal                        `json:"payedSum,omitempty"`            // Сумма исходящих платежей по возврату покупателя
-	FactureOut          *FactureOut                     `json:"factureOut,omitempty"`          // Ссылка на Счет-фактуру выданный, с которым связан этот возврат, в формате Метаданных
+	Positions           *Positions[SalesReturnPosition] `json:"positions,omitempty"`
+	VatSum              *Decimal                        `json:"vatSum,omitempty"`
+	AgentAccount        *AgentAccount                   `json:"agentAccount,omitempty"`
+	Applicable          *bool                           `json:"applicable,omitempty"`
+	FactureOut          *FactureOut                     `json:"factureOut,omitempty"`
+	Code                *string                         `json:"code,omitempty"`
+	OrganizationAccount *AgentAccount                   `json:"organizationAccount,omitempty"`
+	Created             *Timestamp                      `json:"created,omitempty"`
+	Deleted             *Timestamp                      `json:"deleted,omitempty"`
+	Description         *string                         `json:"description,omitempty"`
+	ExternalCode        *string                         `json:"externalCode,omitempty"`
+	Files               *Files                          `json:"files,omitempty"`
+	Group               *Group                          `json:"group,omitempty"`
+	ID                  *uuid.UUID                      `json:"id,omitempty"`
+	Meta                *Meta                           `json:"meta,omitempty"`
+	Moment              *Timestamp                      `json:"moment,omitempty"`
+	Name                *string                         `json:"name,omitempty"`
+	AccountID           *uuid.UUID                      `json:"accountId,omitempty"`
+	Contract            *Contract                       `json:"contract,omitempty"`
+	Agent               *Counterparty                   `json:"agent,omitempty"`
+	Organization        *Organization                   `json:"organization,omitempty"`
+	Printed             *bool                           `json:"printed,omitempty"`
+	Project             *Project                        `json:"project,omitempty"`
+	Published           *bool                           `json:"published,omitempty"`
+	Rate                *Rate                           `json:"rate,omitempty"`
+	SalesChannel        *SalesChannel                   `json:"salesChannel,omitempty"`
+	Shared              *bool                           `json:"shared,omitempty"`
+	State               *State                          `json:"state,omitempty"`
+	Store               *Store                          `json:"store,omitempty"`
+	Sum                 *Decimal                        `json:"sum,omitempty"`
+	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`
+	Updated             *Timestamp                      `json:"updated,omitempty"`
+	VatEnabled          *bool                           `json:"vatEnabled,omitempty"`
+	VatIncluded         *bool                           `json:"vatIncluded,omitempty"`
+	Owner               *Employee                       `json:"owner,omitempty"`
+	Demand              *Demand                         `json:"demand,omitempty"`
+	Losses              *Losses                         `json:"losses,omitempty"`
+	Payments            *Payments                       `json:"payments,omitempty"`
+	PayedSum            *Decimal                        `json:"payedSum,omitempty"`
+	Attributes          Attributes                      `json:"attributes,omitempty"`
 }
 
 func (s SalesReturn) String() string {
@@ -57,8 +57,8 @@ func (s SalesReturn) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (s SalesReturn) GetMeta() *Meta {
-	return s.Meta
+func (s SalesReturn) GetMeta() Meta {
+	return Deref(s.Meta)
 }
 
 func (s SalesReturn) MetaType() MetaType {

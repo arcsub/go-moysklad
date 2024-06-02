@@ -96,14 +96,14 @@ func (a *AssortmentPosition) ConvertToConsignment() (*Consignment, error) {
 
 func convertToAssortmentPosition[E AssortmentPositionTypes](element E) (*AssortmentPosition, error) {
 	meta := element.GetMeta()
-	if meta == nil {
+	if meta.Href == nil {
 		return nil, errors.New("meta is nil")
 	}
 	data, err := json.Marshal(element)
 	if err != nil {
 		return nil, err
 	}
-	position := &AssortmentPosition{Meta: *meta, data: data}
+	position := &AssortmentPosition{Meta: meta, data: data}
 	return position, nil
 }
 

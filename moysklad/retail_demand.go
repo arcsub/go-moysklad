@@ -14,7 +14,6 @@ type RetailDemand struct {
 	Agent               *Counterparty              `json:"agent,omitempty"`
 	AgentAccount        *AgentAccount              `json:"agentAccount,omitempty"`
 	Applicable          *bool                      `json:"applicable,omitempty"`
-	Attributes          *Attributes                `json:"attributes,omitempty"`
 	CashSum             *float64                   `json:"cashSum,omitempty"`
 	CheckNumber         *string                    `json:"checkNumber,omitempty"`
 	CheckSum            *float64                   `json:"checkSum,omitempty"`
@@ -62,6 +61,7 @@ type RetailDemand struct {
 	VatIncluded         *bool                      `json:"vatIncluded,omitempty"`
 	VatSum              *float64                   `json:"vatSum,omitempty"`
 	TaxSystem           TaxSystem                  `json:"taxSystem,omitempty"`
+	Attributes          Attributes                 `json:"attributes,omitempty"`
 }
 
 func (r RetailDemand) String() string {
@@ -69,8 +69,8 @@ func (r RetailDemand) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (r RetailDemand) GetMeta() *Meta {
-	return r.Meta
+func (r RetailDemand) GetMeta() Meta {
+	return Deref(r.Meta)
 }
 
 func (r RetailDemand) MetaType() MetaType {

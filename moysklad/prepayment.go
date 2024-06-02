@@ -10,10 +10,10 @@ import (
 // Ключевое слово: prepayment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-predoplata
 type Prepayment struct {
-	Organization  *Organization                  `json:"organization,omitempty"`
-	VatIncluded   *bool                          `json:"vatIncluded,omitempty"`
+	Returns       *PrepaymentReturns             `json:"returns,omitempty"`
+	Owner         *Employee                      `json:"owner,omitempty"`
 	Applicable    *bool                          `json:"applicable,omitempty"`
-	AccountID     *uuid.UUID                     `json:"accountId,omitempty"`
+	Agent         *Counterparty                  `json:"agent,omitempty"`
 	CashSum       *Decimal                       `json:"cashSum,omitempty"`
 	Code          *string                        `json:"code,omitempty"`
 	Created       *Timestamp                     `json:"created,omitempty"`
@@ -28,16 +28,16 @@ type Prepayment struct {
 	Moment        *Timestamp                     `json:"moment,omitempty"`
 	Name          *string                        `json:"name,omitempty"`
 	NoCashSum     *Decimal                       `json:"noCashSum,omitempty"`
-	Attributes    *Attributes                    `json:"attributes,omitempty"`
-	Agent         *Counterparty                  `json:"agent,omitempty"`
-	Printed       *bool                          `json:"printed,omitempty"`
+	AccountID     *uuid.UUID                     `json:"accountId,omitempty"`
+	VatIncluded   *bool                          `json:"vatIncluded,omitempty"`
 	Positions     *Positions[PrepaymentPosition] `json:"positions,omitempty"`
+	Printed       *bool                          `json:"printed,omitempty"`
 	Published     *bool                          `json:"published,omitempty"`
 	QRSum         *Decimal                       `json:"qrSum,omitempty"`
 	Rate          *Rate                          `json:"rate,omitempty"`
 	RetailShift   *RetailShift                   `json:"retailShift,omitempty"`
 	RetailStore   *RetailStore                   `json:"retailStore,omitempty"`
-	Returns       *PrepaymentReturns             `json:"returns,omitempty"`
+	Organization  *Organization                  `json:"organization,omitempty"`
 	Shared        *bool                          `json:"shared,omitempty"`
 	State         *State                         `json:"state,omitempty"`
 	Sum           *float64                       `json:"sum,omitempty"`
@@ -45,8 +45,8 @@ type Prepayment struct {
 	VatSum        *float64                       `json:"vatSum,omitempty"`
 	Updated       *Timestamp                     `json:"updated,omitempty"`
 	VatEnabled    *bool                          `json:"vatEnabled,omitempty"`
-	Owner         *Employee                      `json:"owner,omitempty"`
 	TaxSystem     TaxSystem                      `json:"taxSystem,omitempty"`
+	Attributes    Attributes                     `json:"attributes,omitempty"`
 }
 
 func (p Prepayment) String() string {
@@ -54,8 +54,8 @@ func (p Prepayment) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (p Prepayment) GetMeta() *Meta {
-	return p.Meta
+func (p Prepayment) GetMeta() Meta {
+	return Deref(p.Meta)
 }
 
 func (p Prepayment) MetaType() MetaType {

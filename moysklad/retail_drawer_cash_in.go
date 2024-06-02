@@ -10,31 +10,31 @@ import (
 // Ключевое слово: retaildrawercashin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vnesenie-deneg
 type RetailDrawerCashIn struct {
-	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
-	Agent        *Counterparty `json:"agent,omitempty"`        // Метаданные контрагента
-	Applicable   *bool         `json:"applicable,omitempty"`   // Отметка о проведении
-	Attributes   *Attributes   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей
-	Created      *Timestamp    `json:"created,omitempty"`      // Дата создания
-	Deleted      *Timestamp    `json:"deleted,omitempty"`      // Момент последнего удаления Внесения денег
-	Description  *string       `json:"description,omitempty"`  // Комментарий Внесения денег
-	ExternalCode *string       `json:"externalCode,omitempty"` // Внешний код Внесения денег
-	Files        *Files        `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group        *Group        `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
-	Meta         *Meta         `json:"meta,omitempty"`         // Метаданные
-	Moment       *Timestamp    `json:"moment,omitempty"`       // Дата документа
-	Name         *string       `json:"name,omitempty"`         // Наименование
-	Organization *Organization `json:"organization,omitempty"` // Метаданные юрлица
-	Owner        *Employee     `json:"owner,omitempty"`        // Владелец (Сотрудник)
-	Printed      *bool         `json:"printed,omitempty"`      // Напечатан ли документ
-	Published    *bool         `json:"published,omitempty"`    // Опубликован ли документ
-	Rate         *Rate         `json:"rate,omitempty"`         // Валюта
-	Shared       *bool         `json:"shared,omitempty"`       // Общий доступ
-	State        *State        `json:"state,omitempty"`        // Метаданные статуса Внесения денег
-	Sum          *Decimal      `json:"sum,omitempty"`          // Сумма
-	SyncID       *uuid.UUID    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
-	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
-	RetailShift  *RetailShift  `json:"retailShift,omitempty"`  // Ссылка на розничную смену
+	Moment       *Timestamp    `json:"moment,omitempty"`
+	Created      *Timestamp    `json:"created,omitempty"`
+	AccountID    *uuid.UUID    `json:"accountId,omitempty"`
+	RetailShift  *RetailShift  `json:"retailShift,omitempty"`
+	Name         *string       `json:"name,omitempty"`
+	Deleted      *Timestamp    `json:"deleted,omitempty"`
+	Description  *string       `json:"description,omitempty"`
+	Organization *Organization `json:"organization,omitempty"`
+	Files        *Files        `json:"files,omitempty"`
+	Group        *Group        `json:"group,omitempty"`
+	ID           *uuid.UUID    `json:"id,omitempty"`
+	Meta         *Meta         `json:"meta,omitempty"`
+	Applicable   *bool         `json:"applicable,omitempty"`
+	Agent        *Counterparty `json:"agent,omitempty"`
+	ExternalCode *string       `json:"externalCode,omitempty"`
+	Owner        *Employee     `json:"owner,omitempty"`
+	Printed      *bool         `json:"printed,omitempty"`
+	Published    *bool         `json:"published,omitempty"`
+	Rate         *Rate         `json:"rate,omitempty"`
+	Shared       *bool         `json:"shared,omitempty"`
+	State        *State        `json:"state,omitempty"`
+	Sum          *Decimal      `json:"sum,omitempty"`
+	SyncID       *uuid.UUID    `json:"syncId,omitempty"`
+	Updated      *Timestamp    `json:"updated,omitempty"`
+	Attributes   Attributes    `json:"attributes,omitempty"`
 }
 
 func (r RetailDrawerCashIn) String() string {
@@ -42,8 +42,8 @@ func (r RetailDrawerCashIn) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (r RetailDrawerCashIn) GetMeta() *Meta {
-	return r.Meta
+func (r RetailDrawerCashIn) GetMeta() Meta {
+	return Deref(r.Meta)
 }
 
 func (r RetailDrawerCashIn) MetaType() MetaType {

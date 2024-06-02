@@ -233,7 +233,9 @@ func IsEqualPtr[T comparable](l *T, r *T) bool {
 
 // IsMetaEqual сравнивает `meta.href` двух сущностей типа *T
 func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
-	return l != nil && r != nil && Deref(l).GetMeta().IsEqual(Deref(r).GetMeta())
+	lMeta := Deref(l).GetMeta()
+	rMeta := Deref(r).GetMeta()
+	return l != nil && r != nil && lMeta.IsEqual(&rMeta)
 }
 
 type Decimal struct {

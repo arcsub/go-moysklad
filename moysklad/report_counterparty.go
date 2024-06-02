@@ -55,7 +55,7 @@ func (c *CounterpartiesMeta) Push(elements ...*Counterparty) {
 	for _, element := range elements {
 		ce := &CounterpartyElement{
 			Counterparty: MetaWrapper{
-				Meta: *element.GetMeta(),
+				Meta: element.GetMeta(),
 			},
 		}
 		c.Counterparties = append(c.Counterparties, ce)

@@ -10,50 +10,50 @@ import (
 // Ключевое слово: purchaseorder
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-postawschiku
 type PurchaseOrder struct {
-	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`             // ID учетной записи
-	Agent                 *Counterparty                     `json:"agent,omitempty"`                 // Метаданные контрагента
-	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`          // Метаданные счета контрагента
-	Applicable            *bool                             `json:"applicable,omitempty"`            // Отметка о проведении
-	Attributes            *Attributes                       `json:"attributes,omitempty"`            // Коллекция метаданных доп. полей. Поля объекта
-	Code                  *string                           `json:"code,omitempty"`                  // Код
-	Contract              *Contract                         `json:"contract,omitempty"`              // Метаданные договора
-	Created               *Timestamp                        `json:"created,omitempty"`               // Дата создания
-	Deleted               *Timestamp                        `json:"deleted,omitempty"`               // Момент последнего удаления
-	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"` // Планируемая дата отгрузки
-	Description           *string                           `json:"description,omitempty"`           // Комментарий
-	ExternalCode          *string                           `json:"externalCode,omitempty"`          // Внешний код
-	Files                 *Files                            `json:"files,omitempty"`                 // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group                 *Group                            `json:"group,omitempty"`                 // Отдел сотрудника
-	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID сущности
-	InvoicedSum           *Decimal                          `json:"invoicedSum,omitempty"`           // Сумма счетов поставщику
-	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные
-	Moment                *Timestamp                        `json:"moment,omitempty"`                // Дата документа
-	Name                  *string                           `json:"name,omitempty"`                  // Наименование
-	Organization          *Organization                     `json:"organization,omitempty"`          // Метаданные юрлица
-	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`   // Метаданные счета юрлица
-	Owner                 *Employee                         `json:"owner,omitempty"`                 // Владелец (Сотрудник)
-	PayedSum              *Decimal                          `json:"payedSum,omitempty"`              // Сумма входящих платежей по Счету поставщика
-	Positions             *Positions[PurchaseOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Заказа поставщику
-	Printed               *bool                             `json:"printed,omitempty"`               // Напечатан ли документ
-	Project               *Project                          `json:"project,omitempty"`               // Проект
-	Published             *bool                             `json:"published,omitempty"`             // Опубликован ли документ
-	Rate                  *Rate                             `json:"rate,omitempty"`                  // Валюта
-	Shared                *bool                             `json:"shared,omitempty"`                // Общий доступ
-	ShippedSum            *Decimal                          `json:"shippedSum,omitempty"`            // Сумма отгруженного
-	State                 *State                            `json:"state,omitempty"`                 // Метаданные статуса
-	Store                 *Store                            `json:"store,omitempty"`                 // Метаданные склада
-	Sum                   *Decimal                          `json:"sum,omitempty"`                   // Сумма
-	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`                // ID синхронизации. После заполнения недоступен для изменения
-	Updated               *Timestamp                        `json:"updated,omitempty"`               // Момент последнего обновления
-	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`            // Учитывается ли НДС
-	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`           // Включен ли НДС в цену
-	VatSum                *Decimal                          `json:"vatSum,omitempty"`                // Сумма включая НДС
-	WaitSum               *Decimal                          `json:"waitSum,omitempty"`               // Сумма товаров в пути
-	CustomerOrders        *CustomerOrders                   `json:"customerOrders,omitempty"`        // Массив ссылок на связанные заказы покупателей в формате Метаданных
-	InvoicesIn            *InvoicesIn                       `json:"invoicesIn,omitempty"`            // Массив ссылок на связанные счета поставщиков в формате Метаданных
-	Payments              *Payments                         `json:"payments,omitempty"`              // Массив ссылок на связанные платежи в формате Метаданных
-	Supplies              *Supplies                         `json:"supplies,omitempty"`              // Массив ссылок на связанные приемки в формате Метаданных
-	InternalOrder         *InternalOrder                    `json:"internalOrder,omitempty"`         // Внутренний заказ, связанный с заказом поставщику, в формате Метаданных
+	PayedSum              *Decimal                          `json:"payedSum,omitempty"`
+	Applicable            *bool                             `json:"applicable,omitempty"`
+	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`
+	Owner                 *Employee                         `json:"owner,omitempty"`
+	InternalOrder         *InternalOrder                    `json:"internalOrder,omitempty"`
+	Code                  *string                           `json:"code,omitempty"`
+	Contract              *Contract                         `json:"contract,omitempty"`
+	Created               *Timestamp                        `json:"created,omitempty"`
+	Deleted               *Timestamp                        `json:"deleted,omitempty"`
+	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
+	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`
+	ExternalCode          *string                           `json:"externalCode,omitempty"`
+	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
+	Group                 *Group                            `json:"group,omitempty"`
+	ID                    *uuid.UUID                        `json:"id,omitempty"`
+	InvoicedSum           *Decimal                          `json:"invoicedSum,omitempty"`
+	Meta                  *Meta                             `json:"meta,omitempty"`
+	Moment                *Timestamp                        `json:"moment,omitempty"`
+	Name                  *string                           `json:"name,omitempty"`
+	Organization          *Organization                     `json:"organization,omitempty"`
+	Description           *string                           `json:"description,omitempty"`
+	Agent                 *Counterparty                     `json:"agent,omitempty"`
+	Files                 *Files                            `json:"files,omitempty"`
+	Positions             *Positions[PurchaseOrderPosition] `json:"positions,omitempty"`
+	Printed               *bool                             `json:"printed,omitempty"`
+	Project               *Project                          `json:"project,omitempty"`
+	Published             *bool                             `json:"published,omitempty"`
+	Rate                  *Rate                             `json:"rate,omitempty"`
+	Shared                *bool                             `json:"shared,omitempty"`
+	ShippedSum            *Decimal                          `json:"shippedSum,omitempty"`
+	State                 *State                            `json:"state,omitempty"`
+	Store                 *Store                            `json:"store,omitempty"`
+	Sum                   *Decimal                          `json:"sum,omitempty"`
+	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
+	Updated               *Timestamp                        `json:"updated,omitempty"`
+	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
+	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
+	VatSum                *Decimal                          `json:"vatSum,omitempty"`
+	WaitSum               *Decimal                          `json:"waitSum,omitempty"`
+	CustomerOrders        *CustomerOrders                   `json:"customerOrders,omitempty"`
+	InvoicesIn            *InvoicesIn                       `json:"invoicesIn,omitempty"`
+	Payments              *Payments                         `json:"payments,omitempty"`
+	Supplies              *Supplies                         `json:"supplies,omitempty"`
+	Attributes            Attributes                        `json:"attributes,omitempty"`
 }
 
 func (p PurchaseOrder) String() string {
@@ -61,8 +61,8 @@ func (p PurchaseOrder) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (p PurchaseOrder) GetMeta() *Meta {
-	return p.Meta
+func (p PurchaseOrder) GetMeta() Meta {
+	return Deref(p.Meta)
 }
 
 func (p PurchaseOrder) MetaType() MetaType {

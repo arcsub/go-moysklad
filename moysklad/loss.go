@@ -10,34 +10,34 @@ import (
 // Ключевое слово: loss
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-spisanie
 type Loss struct {
-	AccountID    *uuid.UUID               `json:"accountId,omitempty"`    // ID учетной записи
-	Applicable   *bool                    `json:"applicable,omitempty"`   // Отметка о проведении
-	Attributes   *Attributes              `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
-	Code         *string                  `json:"code,omitempty"`         // Код
-	Created      *Timestamp               `json:"created,omitempty"`      // Дата создания
-	Deleted      *Timestamp               `json:"deleted,omitempty"`      // Момент последнего удаления
-	Description  *string                  `json:"description,omitempty"`  // Комментарий
-	ExternalCode *string                  `json:"externalCode,omitempty"` // Внешний код
-	Files        *Files                   `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group        *Group                   `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID               `json:"id,omitempty"`           // ID сущности
-	Meta         *Meta                    `json:"meta,omitempty"`         // Метаданные
-	Moment       *Timestamp               `json:"moment,omitempty"`       // Дата документа
-	Name         *string                  `json:"name,omitempty"`         // Наименование
-	Organization *Organization            `json:"organization,omitempty"` // Метаданные юрлица
-	Owner        *Employee                `json:"owner,omitempty"`        // Владелец (Сотрудник)
-	Positions    *Positions[LossPosition] `json:"positions,omitempty"`    // Метаданные позиций Списания
-	Printed      *bool                    `json:"printed,omitempty"`      // Напечатан ли документ
-	Project      *Project                 `json:"project,omitempty"`      // Проект
-	Published    *bool                    `json:"published,omitempty"`    // Опубликован ли документ
-	Rate         *Rate                    `json:"rate,omitempty"`         // Валюта
-	Shared       *bool                    `json:"shared,omitempty"`       // Общий доступ
-	State        *State                   `json:"state,omitempty"`        // Метаданные статуса
-	Store        *Store                   `json:"store,omitempty"`        // Метаданные склада
-	Sum          *Decimal                 `json:"sum,omitempty"`          // Сумма
-	SyncID       *uuid.UUID               `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
-	Updated      *Timestamp               `json:"updated,omitempty"`      // Момент последнего обновления
-	SalesReturn  *SalesReturn             `json:"salesReturn,omitempty"`  // Ссылка на связанный со списанием возврат покупателя в формате Метаданных
+	Organization *Organization            `json:"organization,omitempty"`
+	SyncID       *uuid.UUID               `json:"syncId,omitempty"`
+	Moment       *Timestamp               `json:"moment,omitempty"`
+	Code         *string                  `json:"code,omitempty"`
+	Created      *Timestamp               `json:"created,omitempty"`
+	Deleted      *Timestamp               `json:"deleted,omitempty"`
+	Description  *string                  `json:"description,omitempty"`
+	ExternalCode *string                  `json:"externalCode,omitempty"`
+	Files        *Files                   `json:"files,omitempty"`
+	Group        *Group                   `json:"group,omitempty"`
+	ID           *uuid.UUID               `json:"id,omitempty"`
+	Meta         *Meta                    `json:"meta,omitempty"`
+	SalesReturn  *SalesReturn             `json:"salesReturn,omitempty"`
+	Applicable   *bool                    `json:"applicable,omitempty"`
+	Project      *Project                 `json:"project,omitempty"`
+	Owner        *Employee                `json:"owner,omitempty"`
+	Positions    *Positions[LossPosition] `json:"positions,omitempty"`
+	Printed      *bool                    `json:"printed,omitempty"`
+	AccountID    *uuid.UUID               `json:"accountId,omitempty"`
+	Published    *bool                    `json:"published,omitempty"`
+	Rate         *Rate                    `json:"rate,omitempty"`
+	Shared       *bool                    `json:"shared,omitempty"`
+	State        *State                   `json:"state,omitempty"`
+	Store        *Store                   `json:"store,omitempty"`
+	Sum          *Decimal                 `json:"sum,omitempty"`
+	Name         *string                  `json:"name,omitempty"`
+	Updated      *Timestamp               `json:"updated,omitempty"`
+	Attributes   Attributes               `json:"attributes,omitempty"`
 }
 
 func (l Loss) String() string {

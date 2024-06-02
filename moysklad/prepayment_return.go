@@ -10,10 +10,10 @@ import (
 // Ключевое слово: prepaymentreturn
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-predoplaty
 type PrepaymentReturn struct {
-	Owner        *Employee                            `json:"owner,omitempty"`
-	Attributes   *Attributes                          `json:"attributes,omitempty"`
-	NoCashSum    *float64                             `json:"noCashSum,omitempty"`
+	Agent        *Counterparty                        `json:"agent,omitempty"`
 	Organization *Organization                        `json:"organization,omitempty"`
+	Applicable   *bool                                `json:"applicable,omitempty"`
+	AccountID    *uuid.UUID                           `json:"accountId,omitempty"`
 	CashSum      *float64                             `json:"cashSum,omitempty"`
 	Code         *string                              `json:"code,omitempty"`
 	Created      *Timestamp                           `json:"created,omitempty"`
@@ -26,9 +26,9 @@ type PrepaymentReturn struct {
 	Meta         *Meta                                `json:"meta,omitempty"`
 	Moment       *Timestamp                           `json:"moment,omitempty"`
 	Name         *string                              `json:"name,omitempty"`
-	Applicable   *bool                                `json:"applicable,omitempty"`
-	AccountID    *uuid.UUID                           `json:"accountId,omitempty"`
-	Agent        *Counterparty                        `json:"agent,omitempty"`
+	NoCashSum    *float64                             `json:"noCashSum,omitempty"`
+	Owner        *Employee                            `json:"owner,omitempty"`
+	VatIncluded  *bool                                `json:"vatIncluded,omitempty"`
 	Positions    *Positions[PrepaymentReturnPosition] `json:"positions,omitempty"`
 	Prepayment   *Prepayment                          `json:"prepayment,omitempty"`
 	Printed      *bool                                `json:"printed,omitempty"`
@@ -44,8 +44,8 @@ type PrepaymentReturn struct {
 	VatSum       *float64                             `json:"vatSum,omitempty"`
 	Updated      *Timestamp                           `json:"updated,omitempty"`
 	VatEnabled   *bool                                `json:"vatEnabled,omitempty"`
-	VatIncluded  *bool                                `json:"vatIncluded,omitempty"`
 	TaxSystem    TaxSystem                            `json:"taxSystem,omitempty"`
+	Attributes   Attributes                           `json:"attributes,omitempty"`
 }
 
 func (p PrepaymentReturn) String() string {
@@ -53,8 +53,8 @@ func (p PrepaymentReturn) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (p PrepaymentReturn) GetMeta() *Meta {
-	return p.Meta
+func (p PrepaymentReturn) GetMeta() Meta {
+	return Deref(p.Meta)
 }
 
 func (p PrepaymentReturn) MetaType() MetaType {

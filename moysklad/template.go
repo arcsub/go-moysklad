@@ -27,8 +27,8 @@ func (t Template) GetType() TemplateType {
 	return t.Type
 }
 
-func (t Template) GetMeta() *Meta {
-	return t.Meta
+func (t Template) GetMeta() Meta {
+	return Deref(t.Meta)
 }
 
 // CustomTemplate Пользовательский Шаблон.
@@ -105,7 +105,7 @@ type PrintDocArgManyElement struct {
 // – ExtensionODS для документа с расширением .ods
 func NewPrintDocArgOne(template Templater, ext Extension) *PrintDocumentArg {
 	return &PrintDocumentArg{
-		Template:  &MetaWrapper{Meta: Deref(template.GetMeta())},
+		Template:  &MetaWrapper{Meta: template.GetMeta()},
 		Extension: ext,
 	}
 }
@@ -114,7 +114,7 @@ func NewPrintDocArgOne(template Templater, ext Extension) *PrintDocumentArg {
 // который служит аргументом для метода NewPrintDocArgMany
 func NewPrintDocArgManyElement(template Templater, count int) *PrintDocArgManyElement {
 	return &PrintDocArgManyElement{
-		Template: &MetaWrapper{Deref(template.GetMeta())},
+		Template: &MetaWrapper{template.GetMeta()},
 		Count:    count,
 	}
 }
@@ -147,7 +147,7 @@ func NewPrintLabelArg(organization *Organization, priceType *PriceType, template
 	return &PrintLabelArg{
 		Organization: MetaWrapper{Meta: Deref(organization.Meta)},
 		SalePrice:    PrintLabelArgSalePrice{PriceType: MetaWrapper{Meta: Deref(priceType.Meta)}},
-		Template:     MetaWrapper{Meta: Deref(template.GetMeta())},
+		Template:     MetaWrapper{Meta: template.GetMeta()},
 		Count:        count,
 	}
 }

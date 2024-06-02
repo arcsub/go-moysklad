@@ -10,46 +10,46 @@ import (
 // Ключевое слово: invoiceout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-pokupatelu
 type InvoiceOut struct {
-	AccountID            *uuid.UUID                  `json:"accountId,omitempty"`            // ID учетной записи
-	Agent                *Counterparty               `json:"agent,omitempty"`                // Метаданные контрагента
-	AgentAccount         *AgentAccount               `json:"agentAccount,omitempty"`         // Метаданные счета контрагента
-	Applicable           *bool                       `json:"applicable,omitempty"`           // Отметка о проведении
-	Attributes           *Attributes                 `json:"attributes,omitempty"`           // Коллекция метаданных доп. полей
-	Code                 *string                     `json:"code,omitempty"`                 // Код
-	Contract             *Contract                   `json:"contract,omitempty"`             // Метаданные договора
-	Created              *Timestamp                  `json:"created,omitempty"`              // Дата создания
-	Deleted              *Timestamp                  `json:"deleted,omitempty"`              // Момент последнего удаления
-	Description          *string                     `json:"description,omitempty"`          // Комментарий
-	ExternalCode         *string                     `json:"externalCode,omitempty"`         // Внешний код
-	Files                *Files                      `json:"files,omitempty"`                // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group                *Group                      `json:"group,omitempty"`                // Отдел сотрудника
-	ID                   *uuid.UUID                  `json:"id,omitempty"`                   // ID сущности
-	Meta                 *Meta                       `json:"meta,omitempty"`                 // Метаданные
-	Moment               *Timestamp                  `json:"moment,omitempty"`               // Дата документа
-	Name                 *string                     `json:"name,omitempty"`                 // Наименование
-	Organization         *Organization               `json:"organization,omitempty"`         // Метаданные юрлица
-	OrganizationAccount  *AgentAccount               `json:"organizationAccount,omitempty"`  // Метаданные счета юрлица
-	Owner                *Employee                   `json:"owner,omitempty"`                // Владелец (Сотрудник)
-	PayedSum             *Decimal                    `json:"payedSum,omitempty"`             // Сумма входящих платежей по Счету
-	PaymentPlannedMoment *Timestamp                  `json:"paymentPlannedMoment,omitempty"` // Планируемая дата оплаты
-	Positions            *Positions[InvoicePosition] `json:"positions,omitempty"`            // Метаданные позиций
-	Printed              *bool                       `json:"printed,omitempty"`              // Напечатан ли документ
-	Project              *Project                    `json:"project,omitempty"`              // Проект
-	Published            *bool                       `json:"published,omitempty"`            // Опубликован ли документ
-	Rate                 *Rate                       `json:"rate,omitempty"`                 // Валюта
-	Shared               *bool                       `json:"shared,omitempty"`               // Общий доступ
-	ShippedSum           *Decimal                    `json:"shippedSum,omitempty"`           // Сумма отгруженного
-	State                *State                      `json:"state,omitempty"`                // Метаданные статуса
-	Store                *Store                      `json:"store,omitempty"`                // Метаданные склада
-	Sum                  *Decimal                    `json:"sum,omitempty"`                  // Сумма
-	SyncID               *uuid.UUID                  `json:"syncId,omitempty"`               // ID синхронизации. После заполнения недоступен для изменения
-	Updated              *Timestamp                  `json:"updated,omitempty"`              // Момент последнего обновления
-	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`           // Учитывается ли НДС
-	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`          // Включен ли НДС в цену
-	VatSum               *Decimal                    `json:"vatSum,omitempty"`               // Сумма включая НДС
-	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`        // Ссылка на Заказ Покупателя, с которым связан этот Счет покупателю в формате Метаданных
-	Payments             *Payments                   `json:"payments,omitempty"`             // Массив ссылок на связанные операции в формате Метаданных
-	Demands              *Demands                    `json:"demands,omitempty"`              // Массив ссылок на связанные отгрузки в формате Метаданных
+	PayedSum             *Decimal                    `json:"payedSum,omitempty"`
+	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`
+	AgentAccount         *AgentAccount               `json:"agentAccount,omitempty"`
+	Applicable           *bool                       `json:"applicable,omitempty"`
+	Demands              *Demands                    `json:"demands,omitempty"`
+	Code                 *string                     `json:"code,omitempty"`
+	OrganizationAccount  *AgentAccount               `json:"organizationAccount,omitempty"`
+	Created              *Timestamp                  `json:"created,omitempty"`
+	Deleted              *Timestamp                  `json:"deleted,omitempty"`
+	Description          *string                     `json:"description,omitempty"`
+	ExternalCode         *string                     `json:"externalCode,omitempty"`
+	Files                *Files                      `json:"files,omitempty"`
+	Group                *Group                      `json:"group,omitempty"`
+	ID                   *uuid.UUID                  `json:"id,omitempty"`
+	Meta                 *Meta                       `json:"meta,omitempty"`
+	Moment               *Timestamp                  `json:"moment,omitempty"`
+	Name                 *string                     `json:"name,omitempty"`
+	AccountID            *uuid.UUID                  `json:"accountId,omitempty"`
+	Contract             *Contract                   `json:"contract,omitempty"`
+	Agent                *Counterparty               `json:"agent,omitempty"`
+	Organization         *Organization               `json:"organization,omitempty"`
+	PaymentPlannedMoment *Timestamp                  `json:"paymentPlannedMoment,omitempty"`
+	Positions            *Positions[InvoicePosition] `json:"positions,omitempty"`
+	Printed              *bool                       `json:"printed,omitempty"`
+	Project              *Project                    `json:"project,omitempty"`
+	Published            *bool                       `json:"published,omitempty"`
+	Rate                 *Rate                       `json:"rate,omitempty"`
+	Shared               *bool                       `json:"shared,omitempty"`
+	ShippedSum           *Decimal                    `json:"shippedSum,omitempty"`
+	State                *State                      `json:"state,omitempty"`
+	Store                *Store                      `json:"store,omitempty"`
+	Sum                  *Decimal                    `json:"sum,omitempty"`
+	SyncID               *uuid.UUID                  `json:"syncId,omitempty"`
+	Updated              *Timestamp                  `json:"updated,omitempty"`
+	Owner                *Employee                   `json:"owner,omitempty"`
+	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`
+	VatSum               *Decimal                    `json:"vatSum,omitempty"`
+	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`
+	Payments             *Payments                   `json:"payments,omitempty"`
+	Attributes           Attributes                  `json:"attributes,omitempty"`
 }
 
 func (i InvoiceOut) String() string {
@@ -57,8 +57,8 @@ func (i InvoiceOut) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (i InvoiceOut) GetMeta() *Meta {
-	return i.Meta
+func (i InvoiceOut) GetMeta() Meta {
+	return Deref(i.Meta)
 }
 
 func (i InvoiceOut) MetaType() MetaType {

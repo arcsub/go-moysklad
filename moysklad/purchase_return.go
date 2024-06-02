@@ -10,46 +10,46 @@ import (
 // Ключевое слово: purchasereturn
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-postawschiku
 type PurchaseReturn struct {
-	AccountID           *uuid.UUID                         `json:"accountId,omitempty"`           // ID учетной записи
-	Agent               *Counterparty                      `json:"agent,omitempty"`               // Метаданные контрагента
-	AgentAccount        *AgentAccount                      `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
-	Applicable          *bool                              `json:"applicable,omitempty"`          // Отметка о проведении
-	Attributes          *Attributes                        `json:"attributes,omitempty"`          // Коллекция метаданных доп. полей. Поля объекта
-	Code                *string                            `json:"code,omitempty"`                // Код
-	Contract            *Contract                          `json:"contract,omitempty"`            // Метаданные договора
-	Created             *Timestamp                         `json:"created,omitempty"`             // Дата создания
-	Deleted             *Timestamp                         `json:"deleted,omitempty"`             // Момент последнего удаления
-	Description         *string                            `json:"description,omitempty"`         // Комментарий
-	ExternalCode        *string                            `json:"externalCode,omitempty"`        // Внешний код
-	Files               *Files                             `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group               *Group                             `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID                         `json:"id,omitempty"`                  // ID сущности
-	Meta                *Meta                              `json:"meta,omitempty"`                // Метаданные
-	Moment              *Timestamp                         `json:"moment,omitempty"`              // Дата документа
-	Name                *string                            `json:"name,omitempty"`                // Наименование
-	Organization        *Organization                      `json:"organization,omitempty"`        // Метаданные юрлица
-	OrganizationAccount *AgentAccount                      `json:"organizationAccount,omitempty"` // Метаданные счета юрлица
-	Owner               *Employee                          `json:"owner,omitempty"`               // Владелец (Сотрудник)
-	Printed             *bool                              `json:"printed,omitempty"`             // Напечатан ли документ
-	Project             *Project                           `json:"project,omitempty"`             // Проект
-	Published           *bool                              `json:"published,omitempty"`           // Опубликован ли документ
-	Rate                *Rate                              `json:"rate,omitempty"`                // Валюта
-	Shared              *bool                              `json:"shared,omitempty"`              // Общий доступ
-	State               *State                             `json:"state,omitempty"`               // Метаданные статуса
-	Store               *Store                             `json:"store,omitempty"`               // Метаданные склада
-	Sum                 *Decimal                           `json:"sum,omitempty"`                 // Сумма
-	SyncID              *uuid.UUID                         `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
-	Updated             *Timestamp                         `json:"updated,omitempty"`             // Момент последнего обновления
-	VatEnabled          *bool                              `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
-	VatIncluded         *bool                              `json:"vatIncluded,omitempty"`         // Включен ли НДС в цену
-	VatSum              *Decimal                           `json:"vatSum,omitempty"`              // Сумма включая НДС
-	Positions           *Positions[PurchaseReturnPosition] `json:"positions,omitempty"`           // Метаданные позиций Заказа поставщику
-	Supply              *Supply                            `json:"supply,omitempty"`              // Ссылка на приемку, по которой произошел возврат в формате Метаданных Поле является необходимым для возврата с основанием.
-	FactureIn           *FactureIn                         `json:"factureIn,omitempty"`           // Ссылка на Счет-фактуру полученный в формате Метаданных
-	FactureOut          *FactureOut                        `json:"factureOut,omitempty"`          // Ссылка на Счет-фактуру выданный в формате Метаданных
-	InvoicedSum         *float64                           `json:"invoicedSum,omitempty"`         // Сумма счетов поставщику
-	PayedSum            *float64                           `json:"payedSum,omitempty"`            // Сумма входящих платежей по Счету поставщика
-	Payments            *Payments                          `json:"payments,omitempty"`            // Массив ссылок на связанные платежи в формате Метаданных
+	Printed             *bool                              `json:"printed,omitempty"`
+	Supply              *Supply                            `json:"supply,omitempty"`
+	AgentAccount        *AgentAccount                      `json:"agentAccount,omitempty"`
+	Applicable          *bool                              `json:"applicable,omitempty"`
+	Payments            *Payments                          `json:"payments,omitempty"`
+	Code                *string                            `json:"code,omitempty"`
+	OrganizationAccount *AgentAccount                      `json:"organizationAccount,omitempty"`
+	Created             *Timestamp                         `json:"created,omitempty"`
+	Deleted             *Timestamp                         `json:"deleted,omitempty"`
+	Description         *string                            `json:"description,omitempty"`
+	ExternalCode        *string                            `json:"externalCode,omitempty"`
+	Files               *Files                             `json:"files,omitempty"`
+	Group               *Group                             `json:"group,omitempty"`
+	ID                  *uuid.UUID                         `json:"id,omitempty"`
+	Meta                *Meta                              `json:"meta,omitempty"`
+	Moment              *Timestamp                         `json:"moment,omitempty"`
+	Name                *string                            `json:"name,omitempty"`
+	AccountID           *uuid.UUID                         `json:"accountId,omitempty"`
+	Contract            *Contract                          `json:"contract,omitempty"`
+	Agent               *Counterparty                      `json:"agent,omitempty"`
+	Organization        *Organization                      `json:"organization,omitempty"`
+	Project             *Project                           `json:"project,omitempty"`
+	Published           *bool                              `json:"published,omitempty"`
+	Rate                *Rate                              `json:"rate,omitempty"`
+	Shared              *bool                              `json:"shared,omitempty"`
+	State               *State                             `json:"state,omitempty"`
+	Store               *Store                             `json:"store,omitempty"`
+	Sum                 *Decimal                           `json:"sum,omitempty"`
+	SyncID              *uuid.UUID                         `json:"syncId,omitempty"`
+	Updated             *Timestamp                         `json:"updated,omitempty"`
+	VatEnabled          *bool                              `json:"vatEnabled,omitempty"`
+	VatIncluded         *bool                              `json:"vatIncluded,omitempty"`
+	VatSum              *Decimal                           `json:"vatSum,omitempty"`
+	Positions           *Positions[PurchaseReturnPosition] `json:"positions,omitempty"`
+	Owner               *Employee                          `json:"owner,omitempty"`
+	FactureIn           *FactureIn                         `json:"factureIn,omitempty"`
+	FactureOut          *FactureOut                        `json:"factureOut,omitempty"`
+	InvoicedSum         *float64                           `json:"invoicedSum,omitempty"`
+	PayedSum            *float64                           `json:"payedSum,omitempty"`
+	Attributes          Attributes                         `json:"attributes,omitempty"`
 }
 
 func (p PurchaseReturn) String() string {
@@ -57,8 +57,8 @@ func (p PurchaseReturn) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (p PurchaseReturn) GetMeta() *Meta {
-	return p.Meta
+func (p PurchaseReturn) GetMeta() Meta {
+	return Deref(p.Meta)
 }
 
 func (p PurchaseReturn) MetaType() MetaType {

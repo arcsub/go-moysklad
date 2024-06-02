@@ -37,8 +37,8 @@ func (v Variant) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (v Variant) GetMeta() *Meta {
-	return v.Meta
+func (v Variant) GetMeta() Meta {
+	return Deref(v.Meta)
 }
 
 func (v Variant) MetaType() MetaType {

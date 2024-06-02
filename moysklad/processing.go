@@ -13,7 +13,7 @@ import (
 type Processing struct {
 	Organization        *Organization                     `json:"organization,omitempty"`
 	SyncID              *uuid.UUID                        `json:"syncId,omitempty"`
-	Attributes          *Attributes                       `json:"attributes,omitempty"`
+	Attributes          Attributes                        `json:"attributes,omitempty"`
 	Code                *string                           `json:"code,omitempty"`
 	Created             *Timestamp                        `json:"created,omitempty"`
 	Deleted             *Timestamp                        `json:"deleted,omitempty"`

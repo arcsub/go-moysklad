@@ -11,51 +11,51 @@ import (
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent
 type Counterparty struct {
-	AccountID          *uuid.UUID                `json:"accountId,omitempty"`          // ID учетной записи
-	Accounts           *MetaArray[AgentAccount]  `json:"accounts,omitempty"`           // Массив счетов Контрагентов
-	ActualAddress      *string                   `json:"actualAddress,omitempty"`      // Фактический адрес Контрагента
-	ActualAddressFull  *Address                  `json:"actualAddressFull,omitempty"`  // Фактический адрес Контрагента с детализацией по отдельным полям
-	Archived           *bool                     `json:"archived,omitempty"`           // Добавлен ли Контрагент в архив
-	Attributes         *Attributes               `json:"attributes,omitempty"`         // Массив метаданных доп. полей
-	BonusPoints        *int                      `json:"bonusPoints,omitempty"`        // Бонусные баллы по активной бонусной программе
-	BonusProgram       *BonusProgram             `json:"bonusProgram,omitempty"`       // Метаданные активной Бонусной программы
-	Code               *string                   `json:"code,omitempty"`               // Код Контрагента
-	CompanyType        CompanyType               `json:"companyType,omitempty"`        // Тип Контрагента. В зависимости от значения данного поля набор выводимых реквизитов контрагента может меняться
-	ContactPersons     *MetaArray[ContactPerson] `json:"contactpersons,omitempty"`     // Массив контактных лиц фирмы Контрагента
-	Created            *Timestamp                `json:"created,omitempty"`            // Момент создания
-	Description        *string                   `json:"description,omitempty"`        // Комментарий к Контрагенту
-	DiscountCardNumber *string                   `json:"discountCardNumber,omitempty"` // Номер дисконтной карты Контрагента
-	Discounts          *Discounts                `json:"discounts,omitempty"`          // Массив скидок Контрагента. Массив может содержать персональные и накопительные скидки. Персональная скидка выводится, если хотя бы раз изменялся процент скидки для контрагента, значение будет указано в поле personalDiscount
-	Email              *string                   `json:"email,omitempty"`              // Адрес электронной почты
-	ExternalCode       *string                   `json:"externalCode,omitempty"`       // Внешний код Контрагента
-	Fax                *string                   `json:"fax,omitempty"`                // Номер факса
-	Files              *Files                    `json:"files,omitempty"`              // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group              *Group                    `json:"group,omitempty"`              // Отдел сотрудника
-	ID                 *uuid.UUID                `json:"id,omitempty"`                 // ID сущности
-	Meta               *Meta                     `json:"meta,omitempty"`               // Метаданные
-	Name               *string                   `json:"name,omitempty"`               // Наименование
-	Notes              *MetaArray[Note]          `json:"notes,omitempty"`              // Массив событий Контрагента
-	Owner              *Employee                 `json:"owner,omitempty"`              // Владелец (Сотрудник)
-	Phone              *string                   `json:"phone,omitempty"`              // Номер городского телефона
-	PriceType          *PriceType                `json:"priceType,omitempty"`          // Тип цены Контрагента
-	SalesAmount        *Decimal                  `json:"salesAmount,omitempty"`        // Сумма продаж
-	Shared             *bool                     `json:"shared,omitempty"`             // Общий доступ
-	State              *State                    `json:"state,omitempty"`              // Метаданные Статуса Контрагента
-	SyncID             *uuid.UUID                `json:"syncId,omitempty"`             // ID синхронизации
-	Tags               *Tags                     `json:"tags,omitempty"`               // Группы контрагента
-	Updated            *Timestamp                `json:"updated,omitempty"`            // Момент последнего обновления Контрагента
-	BirthDate          *Timestamp                `json:"birthDate,omitempty"`          // Дата рождения [15-08-2023]
-	CertificateDate    *Timestamp                `json:"certificateDate,omitempty"`    // Дата свидетельства
-	CertificateNumber  *string                   `json:"certificateNumber,omitempty"`  // Номер свидетельства
-	INN                *string                   `json:"inn,omitempty"`                // ИНН
-	KPP                *string                   `json:"kpp,omitempty"`                // КПП
-	LegalAddress       *string                   `json:"legalAddress,omitempty"`       // Юридический адрес
-	LegalAddressFull   *Address                  `json:"legalAddressFull,omitempty"`   // Структурированный Юридический адрес
-	LegalTitle         *string                   `json:"legalTitle,omitempty"`         // Полное наименование
-	OGRN               *string                   `json:"ogrn,omitempty"`               // ОГРН
-	OGRNIP             *string                   `json:"ogrnip,omitempty"`             // ОГРНИП
-	OKPO               *string                   `json:"okpo,omitempty"`               // ОКПО
-	Sex                SexType                   `json:"sex,omitempty"`                // Пол Контрагента [15-08-2023]
+	Name               *string                   `json:"name,omitempty"`
+	OKPO               *string                   `json:"okpo,omitempty"`
+	ActualAddress      *string                   `json:"actualAddress,omitempty"`
+	AccountID          *uuid.UUID                `json:"accountId,omitempty"`
+	Archived           *bool                     `json:"archived,omitempty"`
+	Notes              *MetaArray[Note]          `json:"notes,omitempty"`
+	BonusPoints        *int                      `json:"bonusPoints,omitempty"`
+	BonusProgram       *BonusProgram             `json:"bonusProgram,omitempty"`
+	Code               *string                   `json:"code,omitempty"`
+	OGRNIP             *string                   `json:"ogrnip,omitempty"`
+	ContactPersons     *MetaArray[ContactPerson] `json:"contactpersons,omitempty"`
+	Created            *Timestamp                `json:"created,omitempty"`
+	Description        *string                   `json:"description,omitempty"`
+	DiscountCardNumber *string                   `json:"discountCardNumber,omitempty"`
+	Discounts          *Discounts                `json:"discounts,omitempty"`
+	Email              *string                   `json:"email,omitempty"`
+	ExternalCode       *string                   `json:"externalCode,omitempty"`
+	Owner              *Employee                 `json:"owner,omitempty"`
+	Files              *Files                    `json:"files,omitempty"`
+	Group              *Group                    `json:"group,omitempty"`
+	ID                 *uuid.UUID                `json:"id,omitempty"`
+	Meta               *Meta                     `json:"meta,omitempty"`
+	ActualAddressFull  *Address                  `json:"actualAddressFull,omitempty"`
+	Accounts           *MetaArray[AgentAccount]  `json:"accounts,omitempty"`
+	Fax                *string                   `json:"fax,omitempty"`
+	Phone              *string                   `json:"phone,omitempty"`
+	PriceType          *PriceType                `json:"priceType,omitempty"`
+	SalesAmount        *Decimal                  `json:"salesAmount,omitempty"`
+	Shared             *bool                     `json:"shared,omitempty"`
+	State              *State                    `json:"state,omitempty"`
+	SyncID             *uuid.UUID                `json:"syncId,omitempty"`
+	Tags               *Tags                     `json:"tags,omitempty"`
+	Updated            *Timestamp                `json:"updated,omitempty"`
+	BirthDate          *Timestamp                `json:"birthDate,omitempty"`
+	CertificateDate    *Timestamp                `json:"certificateDate,omitempty"`
+	CertificateNumber  *string                   `json:"certificateNumber,omitempty"`
+	INN                *string                   `json:"inn,omitempty"`
+	KPP                *string                   `json:"kpp,omitempty"`
+	LegalAddress       *string                   `json:"legalAddress,omitempty"`
+	LegalAddressFull   *Address                  `json:"legalAddressFull,omitempty"`
+	LegalTitle         *string                   `json:"legalTitle,omitempty"`
+	OGRN               *string                   `json:"ogrn,omitempty"`
+	CompanyType        CompanyType               `json:"companyType,omitempty"`
+	Sex                SexType                   `json:"sex,omitempty"`
+	Attributes         Attributes                `json:"attributes,omitempty"`
 }
 
 func (c Counterparty) String() string {
@@ -63,8 +63,8 @@ func (c Counterparty) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (c Counterparty) GetMeta() *Meta {
-	return c.Meta
+func (c Counterparty) GetMeta() Meta {
+	return Deref(c.Meta)
 }
 
 func (c Counterparty) MetaType() MetaType {

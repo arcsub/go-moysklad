@@ -10,14 +10,14 @@ import (
 // Ключевое слово: commissionreportout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vydannyj-otchet-komissionera
 type CommissionReportOut struct {
-	Organization          *Organization                           `json:"organization,omitempty"`
-	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"`
-	AgentAccount          *AgentAccount                           `json:"agentAccount,omitempty"`
-	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`
-	Attributes            *Attributes                             `json:"attributes,omitempty"`
-	Owner                 *Employee                               `json:"owner,omitempty"`
-	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`
+	Applicable            *bool                                   `json:"applicable,omitempty"`
 	OrganizationAccount   *AgentAccount                           `json:"organizationAccount,omitempty"`
+	AgentAccount          *AgentAccount                           `json:"agentAccount,omitempty"`
+	Organization          *Organization                           `json:"organization,omitempty"`
+	VatSum                *Decimal                                `json:"vatSum,omitempty"`
+	Code                  *string                                 `json:"code,omitempty"`
+	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`
+	Agent                 *Counterparty                           `json:"agent,omitempty"`
 	CommitentSum          *Decimal                                `json:"commitentSum,omitempty"`
 	Contract              *Contract                               `json:"contract,omitempty"`
 	Created               *Timestamp                              `json:"created,omitempty"`
@@ -30,9 +30,9 @@ type CommissionReportOut struct {
 	Meta                  *Meta                                   `json:"meta,omitempty"`
 	Moment                *Timestamp                              `json:"moment,omitempty"`
 	Name                  *string                                 `json:"name,omitempty"`
-	Applicable            *bool                                   `json:"applicable,omitempty"`
-	Agent                 *Counterparty                           `json:"agent,omitempty"`
-	Code                  *string                                 `json:"code,omitempty"`
+	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`
+	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"`
+	Owner                 *Employee                               `json:"owner,omitempty"`
 	PayedSum              *Decimal                                `json:"payedSum,omitempty"`
 	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`
 	Printed               *bool                                   `json:"printed,omitempty"`
@@ -49,8 +49,8 @@ type CommissionReportOut struct {
 	Updated               *Timestamp                              `json:"updated,omitempty"`
 	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                                   `json:"vatIncluded,omitempty"`
-	VatSum                *Decimal                                `json:"vatSum,omitempty"`
 	RewardType            RewardType                              `json:"rewardType,omitempty"`
+	Attributes            Attributes                              `json:"attributes,omitempty"`
 }
 
 func (c CommissionReportOut) String() string {
@@ -58,8 +58,8 @@ func (c CommissionReportOut) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (c CommissionReportOut) GetMeta() *Meta {
-	return c.Meta
+func (c CommissionReportOut) GetMeta() Meta {
+	return Deref(c.Meta)
 }
 
 func (c CommissionReportOut) MetaType() MetaType {

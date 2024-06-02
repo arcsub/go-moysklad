@@ -11,11 +11,11 @@ import (
 // Ключевое слово: commissionreportin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera
 type CommissionReportIn struct {
-	Name                          *string                                      `json:"name,omitempty"`
-	Applicable                    *bool                                        `json:"applicable,omitempty"`
-	AgentAccount                  *AgentAccount                                `json:"agentAccount,omitempty"`
+	VatSum                        *Decimal                                     `json:"vatSum,omitempty"`
 	Organization                  *Organization                                `json:"organization,omitempty"`
-	Attributes                    *Attributes                                  `json:"attributes,omitempty"`
+	AgentAccount                  *AgentAccount                                `json:"agentAccount,omitempty"`
+	Agent                         *Counterparty                                `json:"agent,omitempty"`
+	Name                          *string                                      `json:"name,omitempty"`
 	Code                          *string                                      `json:"code,omitempty"`
 	CommissionOverhead            *CommissionOverhead                          `json:"commissionOverhead,omitempty"`
 	CommissionPeriodEnd           *Timestamp                                   `json:"commissionPeriodEnd,omitempty"`
@@ -26,14 +26,14 @@ type CommissionReportIn struct {
 	Deleted                       *Timestamp                                   `json:"deleted,omitempty"`
 	Description                   *string                                      `json:"description,omitempty"`
 	ExternalCode                  *string                                      `json:"externalCode,omitempty"`
-	OrganizationAccount           *AgentAccount                                `json:"organizationAccount,omitempty"`
+	Files                         *Files                                       `json:"files,omitempty"`
 	Group                         *Group                                       `json:"group,omitempty"`
 	ID                            *uuid.UUID                                   `json:"id,omitempty"`
 	Meta                          *Meta                                        `json:"meta,omitempty"`
 	Moment                        *Timestamp                                   `json:"moment,omitempty"`
-	VatSum                        *Decimal                                     `json:"vatSum,omitempty"`
-	Agent                         *Counterparty                                `json:"agent,omitempty"`
-	Files                         *Files                                       `json:"files,omitempty"`
+	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`
+	Applicable                    *bool                                        `json:"applicable,omitempty"`
+	OrganizationAccount           *AgentAccount                                `json:"organizationAccount,omitempty"`
 	Owner                         *Employee                                    `json:"owner,omitempty"`
 	PayedSum                      *float64                                     `json:"payedSum,omitempty"`
 	Positions                     *Positions[CommissionReportInPosition]       `json:"positions,omitempty"`
@@ -52,8 +52,8 @@ type CommissionReportIn struct {
 	Updated                       *Timestamp                                   `json:"updated,omitempty"`
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`
-	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`
 	RewardType                    RewardType                                   `json:"rewardType,omitempty"`
+	Attributes                    Attributes                                   `json:"attributes,omitempty"`
 }
 
 func (c CommissionReportIn) String() string {
@@ -61,8 +61,8 @@ func (c CommissionReportIn) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (c CommissionReportIn) GetMeta() *Meta {
-	return c.Meta
+func (c CommissionReportIn) GetMeta() Meta {
+	return Deref(c.Meta)
 }
 
 func (c CommissionReportIn) MetaType() MetaType {

@@ -21,8 +21,8 @@ func (s State) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (s State) GetMeta() *Meta {
-	return s.Meta
+func (s State) GetMeta() Meta {
+	return Deref(s.Meta)
 }
 
 type States = Slice[State]

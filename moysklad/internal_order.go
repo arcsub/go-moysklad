@@ -10,39 +10,39 @@ import (
 // Ключевое слово: internalorder
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vnutrennij-zakaz
 type InternalOrder struct {
-	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`             // ID учетной записи
-	Applicable            *bool                             `json:"applicable,omitempty"`            // Отметка о проведении
-	Attributes            *Attributes                       `json:"attributes,omitempty"`            // Коллекция метаданных доп. полей. Поля объекта
-	Code                  *string                           `json:"code,omitempty"`                  // Код
-	Created               *Timestamp                        `json:"created,omitempty"`               // Дата создания
-	Deleted               *Timestamp                        `json:"deleted,omitempty"`               // Момент последнего удаления
-	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"` // Планируемая дата приемки
-	Description           *string                           `json:"description,omitempty"`           // Комментарий
-	ExternalCode          *string                           `json:"externalCode,omitempty"`          // Внешний код
-	Files                 *Files                            `json:"files,omitempty"`                 // Метаданные массива Файлов
-	Group                 *Group                            `json:"group,omitempty"`                 // Отдел сотрудника
-	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID сущности
-	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные
-	Moment                *Timestamp                        `json:"moment,omitempty"`                // Дата документа
-	Moves                 *Moves                            `json:"moves,omitempty"`                 // Коллекция метаданных на связанные заказы перемещения
-	Name                  *string                           `json:"name,omitempty"`                  // Наименование
-	Organization          *Organization                     `json:"organization,omitempty"`          // Метаданные юрлица
-	Owner                 *Employee                         `json:"owner,omitempty"`                 // Владелец (Сотрудник)
-	Positions             *Positions[InternalOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Внутреннего заказа
-	Printed               *bool                             `json:"printed,omitempty"`               // Напечатан ли документ
-	Project               *Project                          `json:"project,omitempty"`               // Метаданные проекта
-	Published             *bool                             `json:"published,omitempty"`             // Опубликован ли документ
-	PurchaseOrders        *PurchaseOrders                   `json:"purchaseOrders,omitempty"`        // Коллекция метаданных на связанные заказы поставщику
-	Rate                  *Rate                             `json:"rate,omitempty"`                  // Валюта
-	Shared                *bool                             `json:"shared,omitempty"`                // Общий доступ
-	State                 *State                            `json:"state,omitempty"`                 // Метаданные статуса
-	Store                 *Store                            `json:"store,omitempty"`                 // Метаданные склада
-	Sum                   *Decimal                          `json:"sum,omitempty"`                   // Сумма
-	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`                // ID синхронизации. После заполнения недоступен для изменения
-	Updated               *Timestamp                        `json:"updated,omitempty"`               // Момент последнего обновления
-	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`            // Учитывается ли НДС
-	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`           // Включен ли НДС в цену
-	VatSum                *Decimal                          `json:"vatSum,omitempty"`                // Сумма включая НДС
+	Organization          *Organization                     `json:"organization,omitempty"`
+	Description           *string                           `json:"description,omitempty"`
+	VatSum                *Decimal                          `json:"vatSum,omitempty"`
+	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
+	Created               *Timestamp                        `json:"created,omitempty"`
+	Deleted               *Timestamp                        `json:"deleted,omitempty"`
+	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
+	Owner                 *Employee                         `json:"owner,omitempty"`
+	ExternalCode          *string                           `json:"externalCode,omitempty"`
+	Files                 *Files                            `json:"files,omitempty"`
+	Group                 *Group                            `json:"group,omitempty"`
+	ID                    *uuid.UUID                        `json:"id,omitempty"`
+	Meta                  *Meta                             `json:"meta,omitempty"`
+	Positions             *Positions[InternalOrderPosition] `json:"positions,omitempty"`
+	Moves                 *Moves                            `json:"moves,omitempty"`
+	Name                  *string                           `json:"name,omitempty"`
+	Code                  *string                           `json:"code,omitempty"`
+	Applicable            *bool                             `json:"applicable,omitempty"`
+	Moment                *Timestamp                        `json:"moment,omitempty"`
+	Printed               *bool                             `json:"printed,omitempty"`
+	Project               *Project                          `json:"project,omitempty"`
+	Published             *bool                             `json:"published,omitempty"`
+	PurchaseOrders        *PurchaseOrders                   `json:"purchaseOrders,omitempty"`
+	Rate                  *Rate                             `json:"rate,omitempty"`
+	Shared                *bool                             `json:"shared,omitempty"`
+	State                 *State                            `json:"state,omitempty"`
+	Store                 *Store                            `json:"store,omitempty"`
+	Sum                   *Decimal                          `json:"sum,omitempty"`
+	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
+	Updated               *Timestamp                        `json:"updated,omitempty"`
+	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
+	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
+	Attributes            Attributes                        `json:"attributes,omitempty"`
 }
 
 func (i InternalOrder) String() string {

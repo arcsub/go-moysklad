@@ -13,7 +13,7 @@ import (
 type Operation struct {
 	// Общие поля
 	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
-	Attributes   *Attributes   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
+	Attributes   Attributes    `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
 	Created      *Timestamp    `json:"created,omitempty"`      // Дата создания
 	Deleted      *Timestamp    `json:"deleted,omitempty"`      // Момент последнего удаления
 	Description  *string       `json:"description,omitempty"`  // Комментарий

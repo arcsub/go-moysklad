@@ -10,34 +10,34 @@ import (
 // Ключевое слово: enter
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-oprihodowanie
 type Enter struct {
-	AccountID    *uuid.UUID                `json:"accountId,omitempty"`    // ID учетной записи
-	Applicable   *bool                     `json:"applicable,omitempty"`   // Отметка о проведении
-	Attributes   *Attributes               `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
-	Code         *string                   `json:"code,omitempty"`         // Код Оприходования
-	Created      *Timestamp                `json:"created,omitempty"`      // Дата создания
-	Deleted      *Timestamp                `json:"deleted,omitempty"`      // Момент последнего удаления Оприходования
-	Description  *string                   `json:"description,omitempty"`  // Комментарий Оприходования
-	ExternalCode *string                   `json:"externalCode,omitempty"` // Внешний код Оприходования
-	Files        *Files                    `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group        *Group                    `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID                `json:"id,omitempty"`           // ID сущности
-	Meta         *Meta                     `json:"meta,omitempty"`         // Метаданные
-	Moment       *Timestamp                `json:"moment,omitempty"`       // Дата документа
-	Name         *string                   `json:"name,omitempty"`         // Наименование
-	Organization *Organization             `json:"organization,omitempty"` // Метаданные юрлица
-	Overhead     *Overhead                 `json:"overhead,omitempty"`     // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
-	Owner        *Employee                 `json:"owner,omitempty"`        // Владелец (Сотрудник)
-	Positions    *Positions[EnterPosition] `json:"positions,omitempty"`    // Метаданные позиций Оприходования
-	Printed      *bool                     `json:"printed,omitempty"`      // Напечатан ли документ
-	Project      *Project                  `json:"project,omitempty"`      // Метаданные проекта
-	Published    *bool                     `json:"published,omitempty"`    // Опубликован ли документ
-	Rate         *Rate                     `json:"rate,omitempty"`         // Валюта
-	Shared       *bool                     `json:"shared,omitempty"`       // Общий доступ
-	State        *State                    `json:"state,omitempty"`        // Метаданные статуса оприходования
-	Store        *Store                    `json:"store,omitempty"`        // Метаданные склада
-	Sum          *Decimal                  `json:"sum,omitempty"`          // Сумма
-	SyncID       *uuid.UUID                `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
-	Updated      *Timestamp                `json:"updated,omitempty"`      // Момент последнего обновления
+	Organization *Organization             `json:"organization,omitempty"`
+	Sum          *Decimal                  `json:"sum,omitempty"`
+	Moment       *Timestamp                `json:"moment,omitempty"`
+	Code         *string                   `json:"code,omitempty"`
+	Created      *Timestamp                `json:"created,omitempty"`
+	Deleted      *Timestamp                `json:"deleted,omitempty"`
+	Description  *string                   `json:"description,omitempty"`
+	ExternalCode *string                   `json:"externalCode,omitempty"`
+	Files        *Files                    `json:"files,omitempty"`
+	Group        *Group                    `json:"group,omitempty"`
+	ID           *uuid.UUID                `json:"id,omitempty"`
+	Meta         *Meta                     `json:"meta,omitempty"`
+	Updated      *Timestamp                `json:"updated,omitempty"`
+	Applicable   *bool                     `json:"applicable,omitempty"`
+	Printed      *bool                     `json:"printed,omitempty"`
+	Overhead     *Overhead                 `json:"overhead,omitempty"`
+	Owner        *Employee                 `json:"owner,omitempty"`
+	Positions    *Positions[EnterPosition] `json:"positions,omitempty"`
+	AccountID    *uuid.UUID                `json:"accountId,omitempty"`
+	Project      *Project                  `json:"project,omitempty"`
+	Published    *bool                     `json:"published,omitempty"`
+	Rate         *Rate                     `json:"rate,omitempty"`
+	Shared       *bool                     `json:"shared,omitempty"`
+	State        *State                    `json:"state,omitempty"`
+	Store        *Store                    `json:"store,omitempty"`
+	Name         *string                   `json:"name,omitempty"`
+	SyncID       *uuid.UUID                `json:"syncId,omitempty"`
+	Attributes   Attributes                `json:"attributes,omitempty"`
 }
 
 func (e Enter) String() string {

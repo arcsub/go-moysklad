@@ -10,58 +10,58 @@ import (
 // Ключевое слово: demand
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-otgruzka
 type Demand struct {
-	AccountID               *uuid.UUID                 `json:"accountId,omitempty"`               // ID учетной записи
-	Agent                   *Counterparty              `json:"agent,omitempty"`                   // Метаданные контрагента
-	AgentAccount            *AgentAccount              `json:"agentAccount,omitempty"`            // Метаданные счета контрагента
-	Applicable              *bool                      `json:"applicable,omitempty"`              // Отметка о проведении
-	Attributes              *Attributes                `json:"attributes,omitempty"`              // Коллекция метаданных доп. полей. Поля объекта
-	Code                    *string                    `json:"code,omitempty"`                    // Код Отгрузки
-	Contract                *Contract                  `json:"contract,omitempty"`                // Метаданные договора
-	Created                 *Timestamp                 `json:"created,omitempty"`                 // Дата создания
-	Deleted                 *Timestamp                 `json:"deleted,omitempty"`                 // Момент последнего удаления Отгрузки
-	Description             *string                    `json:"description,omitempty"`             // Комментарий Отгрузки
-	ExternalCode            *string                    `json:"externalCode,omitempty"`            // Внешний код Отгрузки
-	Files                   *Files                     `json:"files,omitempty"`                   // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group                   *Group                     `json:"group,omitempty"`                   // Отдел сотрудника
-	ID                      *uuid.UUID                 `json:"id,omitempty"`                      // ID сущности
-	Meta                    *Meta                      `json:"meta,omitempty"`                    // Метаданные
-	Moment                  *Timestamp                 `json:"moment,omitempty"`                  // Дата документа
-	Name                    *string                    `json:"name,omitempty"`                    // Наименование
-	Organization            *Organization              `json:"organization,omitempty"`            // Метаданные юрлица
-	OrganizationAccount     *AgentAccount              `json:"organizationAccount,omitempty"`     // Метаданные счета юрлица
-	Overhead                *Overhead                  `json:"overhead,omitempty"`                // Накладные расходы. Если Позиции Отгрузки не заданы, то накладные расходы нельзя задать
-	Owner                   *Employee                  `json:"owner,omitempty"`                   // Владелец (Сотрудник)
-	PayedSum                *Decimal                   `json:"payedSum,omitempty"`                // Сумма входящих платежей по Отгрузке
-	Positions               *Positions[DemandPosition] `json:"positions,omitempty"`               // Метаданные позиций Отгрузки
-	Printed                 *bool                      `json:"printed,omitempty"`                 // Напечатан ли документ
-	Project                 *Project                   `json:"project,omitempty"`                 // Метаданные проекта
-	Published               *bool                      `json:"published,omitempty"`               // Опубликован ли документ
-	Rate                    *Rate                      `json:"rate,omitempty"`                    // Валюта
-	SalesChannel            *SalesChannel              `json:"salesChannel,omitempty"`            // Метаданные канала продаж
-	Shared                  *bool                      `json:"shared,omitempty"`                  // Общий доступ
-	ShipmentAddress         *string                    `json:"shipmentAddress,omitempty"`         // Адрес доставки Отгрузки
-	ShipmentAddressFull     *Address                   `json:"shipmentAddressFull,omitempty"`     // Адрес доставки Отгрузки с детализацией по отдельным полям
-	State                   *State                     `json:"state,omitempty"`                   // Метаданные статуса Отгрузки
-	Store                   *Store                     `json:"store,omitempty"`                   // Метаданные склада
-	Sum                     *Decimal                   `json:"sum,omitempty"`                     // Сумма
-	SyncID                  *uuid.UUID                 `json:"syncId,omitempty"`                  // ID синхронизации. После заполнения недоступен для изменения
-	Updated                 *Timestamp                 `json:"updated,omitempty"`                 // Момент последнего обновления
-	VatEnabled              *bool                      `json:"vatEnabled,omitempty"`              // Учитывается ли НДС
-	VatIncluded             *bool                      `json:"vatIncluded,omitempty"`             // Включен ли НДС в цену
-	VatSum                  *Decimal                   `json:"vatSum,omitempty"`                  // Сумма включая НДС
-	CustomerOrder           *CustomerOrder             `json:"customerOrder,omitempty"`           // Ссылка на Заказ Покупателя, с которым связана эта Отгрузка в формате Метаданных
-	FactureOut              *FactureOut                `json:"factureOut,omitempty"`              // Ссылка на Счет-фактуру выданный, с которым связан этот платеж в формате Метаданных
-	Returns                 *SalesReturns              `json:"returns,omitempty"`                 // Массив ссылок на связанные возвраты в формате Метаданных
-	Payments                *Payments                  `json:"payments,omitempty"`                // Массив ссылок на связанные платежи в формате Метаданных
-	InvoicesOut             *InvoicesOut               `json:"invoicesOut,omitempty"`             // Массив ссылок на связанные счета покупателям в формате Метаданных
-	CargoName               *string                    `json:"cargoName,omitempty"`               // Наименование груза
-	Carrier                 *Counterparty              `json:"carrier,omitempty"`                 // Метаданные перевозчика (контрагент или юрлицо)
-	Consignee               *Counterparty              `json:"consignee,omitempty"`               // Метаданные грузополучателя (контрагент или юрлицо)
-	GoodPackQuantity        *int                       `json:"goodPackQuantity,omitempty"`        // Всего мест
-	ShippingInstructions    *string                    `json:"shippingInstructions,omitempty"`    // Указания грузоотправителя
-	StateContractId         *string                    `json:"stateContractId,omitempty"`         // Идентификатор государственного контракта, договора (соглашения)
-	TransportFacility       *string                    `json:"transportFacility,omitempty"`       // Транспортное средство
-	TransportFacilityNumber *string                    `json:"transportFacilityNumber,omitempty"` // Номер автомобиля
+	AccountID               *uuid.UUID                 `json:"accountId,omitempty"`
+	Agent                   *Counterparty              `json:"agent,omitempty"`
+	AgentAccount            *AgentAccount              `json:"agentAccount,omitempty"`
+	Applicable              *bool                      `json:"applicable,omitempty"`
+	Code                    *string                    `json:"code,omitempty"`
+	Contract                *Contract                  `json:"contract,omitempty"`
+	Created                 *Timestamp                 `json:"created,omitempty"`
+	Deleted                 *Timestamp                 `json:"deleted,omitempty"`
+	Description             *string                    `json:"description,omitempty"`
+	ExternalCode            *string                    `json:"externalCode,omitempty"`
+	Files                   *Files                     `json:"files,omitempty"`
+	Group                   *Group                     `json:"group,omitempty"`
+	ID                      *uuid.UUID                 `json:"id,omitempty"`
+	Meta                    *Meta                      `json:"meta,omitempty"`
+	Moment                  *Timestamp                 `json:"moment,omitempty"`
+	Name                    *string                    `json:"name,omitempty"`
+	Organization            *Organization              `json:"organization,omitempty"`
+	OrganizationAccount     *AgentAccount              `json:"organizationAccount,omitempty"`
+	Overhead                *Overhead                  `json:"overhead,omitempty"`
+	Owner                   *Employee                  `json:"owner,omitempty"`
+	PayedSum                *Decimal                   `json:"payedSum,omitempty"`
+	Positions               *Positions[DemandPosition] `json:"positions,omitempty"`
+	Printed                 *bool                      `json:"printed,omitempty"`
+	Project                 *Project                   `json:"project,omitempty"`
+	Published               *bool                      `json:"published,omitempty"`
+	Rate                    *Rate                      `json:"rate,omitempty"`
+	SalesChannel            *SalesChannel              `json:"salesChannel,omitempty"`
+	Shared                  *bool                      `json:"shared,omitempty"`
+	ShipmentAddress         *string                    `json:"shipmentAddress,omitempty"`
+	ShipmentAddressFull     *Address                   `json:"shipmentAddressFull,omitempty"`
+	State                   *State                     `json:"state,omitempty"`
+	Store                   *Store                     `json:"store,omitempty"`
+	Sum                     *Decimal                   `json:"sum,omitempty"`
+	SyncID                  *uuid.UUID                 `json:"syncId,omitempty"`
+	Updated                 *Timestamp                 `json:"updated,omitempty"`
+	VatEnabled              *bool                      `json:"vatEnabled,omitempty"`
+	VatIncluded             *bool                      `json:"vatIncluded,omitempty"`
+	VatSum                  *Decimal                   `json:"vatSum,omitempty"`
+	CustomerOrder           *CustomerOrder             `json:"customerOrder,omitempty"`
+	FactureOut              *FactureOut                `json:"factureOut,omitempty"`
+	Returns                 *SalesReturns              `json:"returns,omitempty"`
+	Payments                *Payments                  `json:"payments,omitempty"`
+	InvoicesOut             *InvoicesOut               `json:"invoicesOut,omitempty"`
+	CargoName               *string                    `json:"cargoName,omitempty"`
+	Carrier                 *Counterparty              `json:"carrier,omitempty"`
+	Consignee               *Counterparty              `json:"consignee,omitempty"`
+	GoodPackQuantity        *int                       `json:"goodPackQuantity,omitempty"`
+	ShippingInstructions    *string                    `json:"shippingInstructions,omitempty"`
+	StateContractId         *string                    `json:"stateContractId,omitempty"`
+	TransportFacility       *string                    `json:"transportFacility,omitempty"`
+	TransportFacilityNumber *string                    `json:"transportFacilityNumber,omitempty"`
+	Attributes              Attributes                 `json:"attributes,omitempty"`
 }
 
 func (d Demand) String() string {
@@ -69,8 +69,8 @@ func (d Demand) String() string {
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (d Demand) GetMeta() *Meta {
-	return d.Meta
+func (d Demand) GetMeta() Meta {
+	return Deref(d.Meta)
 }
 
 func (d Demand) MetaType() MetaType {
