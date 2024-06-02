@@ -12,7 +12,7 @@ import (
 type Service struct {
 	VatEnabled          *bool          `json:"vatEnabled,omitempty"`
 	Group               *Group         `json:"group,omitempty"`
-	Barcodes            *Barcodes      `json:"barcodes,omitempty"`
+	Barcodes            Barcodes       `json:"barcodes,omitempty"`
 	Description         *string        `json:"description,omitempty"`
 	ExternalCode        *string        `json:"externalCode,omitempty"`
 	ID                  *uuid.UUID     `json:"id,omitempty"`

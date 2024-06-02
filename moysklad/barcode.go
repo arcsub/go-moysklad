@@ -12,8 +12,28 @@ type Barcode struct {
 	Value string      // Штрихкод
 }
 
-func (b Barcode) String() string {
-	return Stringify(b)
+func (barcode Barcode) String() string {
+	return Stringify(barcode)
+}
+
+func NewBarcodeEAN13(value string) *Barcode {
+	return &Barcode{BarcodeEAN13, value}
+}
+
+func NewBarcodeEAN8(value string) *Barcode {
+	return &Barcode{BarcodeEAN8, value}
+}
+
+func NewBarcodeCode128(value string) *Barcode {
+	return &Barcode{BarcodeCode128, value}
+}
+
+func NewBarcodeGTIN(value string) *Barcode {
+	return &Barcode{BarcodeGTIN, value}
+}
+
+func NewBarcodeUPC(value string) *Barcode {
+	return &Barcode{BarcodeUPC, value}
 }
 
 // BarcodeType Тип штрихкода
@@ -27,11 +47,11 @@ const (
 	BarcodeUPC     BarcodeType = "upc"     // штрихкод в формате UPC, если требуется создать штрихкод в формате UPC
 )
 
-func (b Barcode) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]string{string(b.Type): b.Value})
+func (barcode Barcode) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]string{string(barcode.Type): barcode.Value})
 }
 
-func (b *Barcode) UnmarshalJSON(bytes []byte) (err error) {
+func (barcode *Barcode) UnmarshalJSON(bytes []byte) (err error) {
 	tmp := map[string]string{}
 	if err = json.Unmarshal(bytes, &tmp); err != nil {
 		return
@@ -45,10 +65,14 @@ func (b *Barcode) UnmarshalJSON(bytes []byte) (err error) {
 		bType := BarcodeType(key.String())
 		bValue := (rv.MapIndex(key)).String()
 
-		b.Type = bType
-		b.Value = bValue
+		barcode.Type = bType
+		barcode.Value = bValue
 	}
 	return
 }
 
 type Barcodes = Slice[Barcode]
+
+func NewBarcodes() Barcodes {
+	return make(Barcodes, 0)
+}

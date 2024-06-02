@@ -51,7 +51,7 @@ type Product struct {
 	VatEnabled          *bool          `json:"vatEnabled,omitempty"`
 	Uom                 *Uom           `json:"uom,omitempty"`
 	Updated             *Timestamp     `json:"updated,omitempty"`
-	Barcodes            *Barcodes      `json:"barcodes,omitempty"`
+	Barcodes            Barcodes       `json:"barcodes,omitempty"`
 	VariantsCount       *int           `json:"variantsCount,omitempty"`
 	Vat                 *int           `json:"vat,omitempty"`
 	TrackingType        *TrackingType  `json:"trackingType,omitempty"`

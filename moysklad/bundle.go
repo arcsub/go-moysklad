@@ -44,7 +44,7 @@ type Bundle struct {
 	Tnved               *string                     `json:"tnved,omitempty"`
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
 	Uom                 *Uom                        `json:"uom,omitempty"`
-	Barcodes            *Barcodes                   `json:"barcodes,omitempty"`
+	Barcodes            Barcodes                    `json:"barcodes,omitempty"`
 	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
 	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`

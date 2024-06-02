@@ -11,7 +11,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-seriq
 type Consignment struct {
 	Meta         *Meta               `json:"meta,omitempty"`
-	Barcodes     *Barcodes           `json:"barcodes,omitempty"`
+	Barcodes     Barcodes            `json:"barcodes,omitempty"`
 	Code         *string             `json:"code,omitempty"`
 	Description  *string             `json:"description,omitempty"`
 	ExternalCode *string             `json:"externalCode,omitempty"`

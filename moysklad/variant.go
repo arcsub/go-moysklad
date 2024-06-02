@@ -20,7 +20,7 @@ type Variant struct {
 	Meta               *Meta            `json:"meta,omitempty"`
 	Name               *string          `json:"name,omitempty"`
 	Code               *string          `json:"code,omitempty"`
-	Barcodes           *Barcodes        `json:"barcodes,omitempty"`
+	Barcodes           Barcodes         `json:"barcodes,omitempty"`
 	DiscountProhibited *bool            `json:"discountProhibited,omitempty"`
 	Characteristics    *Characteristics `json:"characteristics,omitempty"`
 	Images             *Images          `json:"images,omitempty"`
@@ -52,9 +52,9 @@ func (v Variant) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
 // VariantPack Упаковка модификации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-upakowki-modifikacii
 type VariantPack struct {
-	Barcodes   *Barcodes  `json:"barcodes,omitempty"`   // Массив штрихкодов упаковки модификации. Данный массив может содержать только один штрихкод
-	ID         *uuid.UUID `json:"id,omitempty"`         // ID упаковки модификации
-	ParentPack *Pack      `json:"parentpack,omitempty"` // Метаданные родительской упаковки (упаковки товара), для которой переопределяется штрихкод
+	ID         *uuid.UUID `json:"id,omitempty"`
+	ParentPack *Pack      `json:"parentpack,omitempty"`
+	Barcodes   Barcodes   `json:"barcodes,omitempty"`
 }
 
 func (v VariantPack) String() string {
