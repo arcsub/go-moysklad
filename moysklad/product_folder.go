@@ -48,7 +48,7 @@ type ProductFolderService interface {
 	GetList(ctx context.Context, params *Params) (*List[ProductFolder], *resty.Response, error)
 	Create(ctx context.Context, productFolder *ProductFolder, params *Params) (*ProductFolder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productFolderList []*ProductFolder, params *Params) (*[]ProductFolder, *resty.Response, error)
-	DeleteMany(ctx context.Context, productFolderList []*ProductFolder) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, productFolderList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetadataAttribute, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
@@ -57,7 +57,7 @@ type ProductFolderService interface {
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ProductFolder, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, productFolder *ProductFolder, params *Params) (*ProductFolder, *resty.Response, error)
 }

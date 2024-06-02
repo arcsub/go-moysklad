@@ -34,7 +34,7 @@ type ExpenseItemService interface {
 	GetList(ctx context.Context, params *Params) (*List[ExpenseItem], *resty.Response, error)
 	Create(ctx context.Context, expenseItem *ExpenseItem, params *Params) (*ExpenseItem, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, expenseItemList []*ExpenseItem, params *Params) (*[]ExpenseItem, *resty.Response, error)
-	DeleteMany(ctx context.Context, expenseItemList []*ExpenseItem) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, expenseItemList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ExpenseItem, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, expenseItem *ExpenseItem, params *Params) (*ExpenseItem, *resty.Response, error)

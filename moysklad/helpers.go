@@ -245,3 +245,25 @@ type Decimal struct {
 func (d Decimal) MarshalJSON() ([]byte, error) {
 	return []byte(d.StringFixed(2)), nil
 }
+
+type DeleteManyRequest []MetaWrapper
+
+func NewDeleteManyRequest() DeleteManyRequest {
+	return make(DeleteManyRequest, 0)
+}
+
+// Push добавляет элементы MetaOwner в конец среза.
+func (s *DeleteManyRequest) Push(entities ...MetaOwner) *DeleteManyRequest {
+	for _, entity := range entities {
+		*s = append(*s, MetaWrapper{entity.GetMeta()})
+	}
+	return s
+}
+
+// PushMeta добавляет элементы Meta в конец среза.
+func (s *DeleteManyRequest) PushMeta(entities ...Meta) *DeleteManyRequest {
+	for _, entity := range entities {
+		*s = append(*s, MetaWrapper{entity})
+	}
+	return s
+}

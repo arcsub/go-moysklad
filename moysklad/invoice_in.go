@@ -96,12 +96,12 @@ type InvoiceInTemplateArg struct {
 // Сервис для работы со счетами поставщиков.
 type InvoiceInService interface {
 	GetList(ctx context.Context, params *Params) (*List[InvoiceIn], *resty.Response, error)
-	Create(ctx context.Context, entity *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, entities []*InvoiceIn, params *Params) (*[]InvoiceIn, *resty.Response, error)
-	DeleteMany(ctx context.Context, entities []*InvoiceIn) (*DeleteManyResponse, *resty.Response, error)
+	Create(ctx context.Context, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, invoiceInList []*InvoiceIn, params *Params) (*[]InvoiceIn, *resty.Response, error)
+	DeleteMany(ctx context.Context, invoiceInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*InvoiceIn, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, entity *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
 	//endpointTemplate[InvoiceIn]
 	//endpointTemplateBasedOn[InvoiceIn, InvoiceInTemplateArg]
 	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
@@ -120,7 +120,7 @@ type InvoiceInService interface {
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
 	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)

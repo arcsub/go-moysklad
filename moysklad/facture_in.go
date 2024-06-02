@@ -56,7 +56,7 @@ type FactureInService interface {
 	GetList(ctx context.Context, params *Params) (*List[FactureIn], *resty.Response, error)
 	Create(ctx context.Context, factureIn *FactureIn, params *Params) (*FactureIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, factureInList []*FactureIn, params *Params) (*[]FactureIn, *resty.Response, error)
-	DeleteMany(ctx context.Context, factureInList []*FactureIn) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, factureInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*FactureIn, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, factureIn *FactureIn, params *Params) (*FactureIn, *resty.Response, error)
@@ -67,7 +67,7 @@ type FactureInService interface {
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	//endpointTemplate[FactureIn]
 	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)

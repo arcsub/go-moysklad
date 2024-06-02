@@ -39,7 +39,7 @@ type ProjectService interface {
 	GetList(ctx context.Context, params *Params) (*List[Project], *resty.Response, error)
 	Create(ctx context.Context, project *Project, params *Params) (*Project, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, projectList []*Project, params *Params) (*[]Project, *resty.Response, error)
-	DeleteMany(ctx context.Context, projectList []*Project) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, projectList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Project, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, project *Project, params *Params) (*Project, *resty.Response, error)
@@ -50,7 +50,7 @@ type ProjectService interface {
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
 }

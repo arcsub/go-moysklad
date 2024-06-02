@@ -107,7 +107,7 @@ type BundleService interface {
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Bundle, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, bundleList []*Bundle) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, bundleList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetComponents(ctx context.Context, id *uuid.UUID) (*List[BundleComponent], *resty.Response, error)
 	CreateComponent(ctx context.Context, id *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 	GetComponentById(ctx context.Context, id, componentID *uuid.UUID) (*BundleComponent, *resty.Response, error)

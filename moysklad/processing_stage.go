@@ -37,7 +37,7 @@ type ProcessingStageService interface {
 	GetList(ctx context.Context, params *Params) (*List[ProcessingStage], *resty.Response, error)
 	Create(ctx context.Context, processingStage *ProcessingStage, params *Params) (*ProcessingStage, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingStageList []*ProcessingStage, params *Params) (*[]ProcessingStage, *resty.Response, error)
-	DeleteMany(ctx context.Context, processingStageList []*ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, processingStageList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ProcessingStage, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, processingStage *ProcessingStage, params *Params) (*ProcessingStage, *resty.Response, error)
