@@ -65,7 +65,7 @@ func (p PurchaseReturn) MetaType() MetaType {
 	return MetaTypePurchaseReturn
 }
 
-type PurchaseReturns = Slice[PurchaseReturn]
+type PurchaseReturns []*PurchaseReturn
 
 // PurchaseReturnPosition Позиция Возврата поставщику.
 // Ключевое слово: purchasereturnposition
