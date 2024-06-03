@@ -123,12 +123,12 @@ type DemandTemplateArg struct {
 // Сервис для работы с отгрузками.
 type DemandService interface {
 	GetList(ctx context.Context, params *Params) (*List[Demand], *resty.Response, error)
-	Create(ctx context.Context, entity *Demand, params *Params) (*Demand, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, entities []*Demand, params *Params) (*[]Demand, *resty.Response, error)
-	DeleteMany(ctx context.Context, entities *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	Create(ctx context.Context, demand *Demand, params *Params) (*Demand, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, demandList []*Demand, params *Params) (*[]Demand, *resty.Response, error)
+	DeleteMany(ctx context.Context, demandList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Demand, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, entity *Demand, params *Params) (*Demand, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, demand *Demand, params *Params) (*Demand, *resty.Response, error)
 	//endpointTemplate[Demand]
 	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
 	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)

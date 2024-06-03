@@ -61,27 +61,30 @@ func (d *Discount) MetaType() MetaType {
 	return d.Meta.Type
 }
 
-// Data удовлетворяет интерфейсу DataMetaTyper
-func (d *Discount) Data() json.RawMessage {
+// Raw удовлетворяет интерфейсу RawMetaTyper
+func (d *Discount) Raw() json.RawMessage {
 	return d.data
 }
 
-// AccumulationDiscount структурирует сущность в *AccumulationDiscount
-// Возвращает ошибку в случае неудачи
-func (d *Discount) AccumulationDiscount() (*AccumulationDiscount, error) {
-	return unmarshalTo[AccumulationDiscount](d)
+// AccumulationDiscount десериализует сырые данные в тип *AccumulationDiscount
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
+func (d *Discount) AccumulationDiscount() *AccumulationDiscount {
+	return unmarshalAsType[AccumulationDiscount](d)
 }
 
-// PersonalDiscount структурирует сущность в *PersonalDiscount
-// Возвращает ошибку в случае неудачи
-func (d *Discount) PersonalDiscount() (*PersonalDiscount, error) {
-	return unmarshalTo[PersonalDiscount](d)
+// PersonalDiscount десериализует сырые данные в тип *PersonalDiscount
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
+func (d *Discount) PersonalDiscount() *PersonalDiscount {
+	return unmarshalAsType[PersonalDiscount](d)
 }
 
-// SpecialPriceDiscount структурирует сущность в *SpecialPriceDiscount
-// Возвращает ошибку в случае неудачи
-func (d *Discount) SpecialPriceDiscount() (*SpecialPriceDiscount, error) {
-	return unmarshalTo[SpecialPriceDiscount](d)
+// SpecialPriceDiscount десериализует сырые данные в тип *SpecialPriceDiscount
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
+func (d *Discount) SpecialPriceDiscount() *SpecialPriceDiscount {
+	return unmarshalAsType[SpecialPriceDiscount](d)
 }
 
 // AccumulationDiscount Накопительная скидка.

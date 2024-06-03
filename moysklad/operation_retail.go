@@ -16,8 +16,8 @@ func (o RetailOperation) MetaType() MetaType {
 	return o.Meta.Type
 }
 
-// Data удовлетворяет интерфейсу DataMetaTyper
-func (o RetailOperation) Data() json.RawMessage {
+// Raw удовлетворяет интерфейсу RawMetaTyper
+func (o RetailOperation) Raw() json.RawMessage {
 	return o.data
 }
 
@@ -34,34 +34,34 @@ func (o *RetailOperation) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// RetailDemand структурирует сущность в *RetailDemand
-func (o *RetailOperation) RetailDemand() (*RetailDemand, error) {
-	return unmarshalTo[RetailDemand](o)
+// RetailDemand десериализует сырые данные в тип *RetailDemand
+func (o *RetailOperation) RetailDemand() *RetailDemand {
+	return unmarshalAsType[RetailDemand](o)
 }
 
-// RetailDrawerCashIn структурирует сущность в *RetailDrawerCashIn
-func (o *RetailOperation) RetailDrawerCashIn() (*RetailDrawerCashIn, error) {
-	return unmarshalTo[RetailDrawerCashIn](o)
+// RetailDrawerCashIn десериализует сырые данные в тип *RetailDrawerCashIn
+func (o *RetailOperation) RetailDrawerCashIn() *RetailDrawerCashIn {
+	return unmarshalAsType[RetailDrawerCashIn](o)
 }
 
-// RetailDrawerCashOut структурирует сущность в *RetailDrawerCashOut
-func (o *RetailOperation) RetailDrawerCashOut() (*RetailDrawerCashOut, error) {
-	return unmarshalTo[RetailDrawerCashOut](o)
+// RetailDrawerCashOut десериализует сырые данные в тип *RetailDrawerCashOut
+func (o *RetailOperation) RetailDrawerCashOut() *RetailDrawerCashOut {
+	return unmarshalAsType[RetailDrawerCashOut](o)
 }
 
-// RetailSalesReturn структурирует сущность в *RetailSalesReturn
-func (o *RetailOperation) RetailSalesReturn() (*RetailSalesReturn, error) {
-	return unmarshalTo[RetailSalesReturn](o)
+// RetailSalesReturn десериализует сырые данные в тип *RetailSalesReturn
+func (o *RetailOperation) RetailSalesReturn() *RetailSalesReturn {
+	return unmarshalAsType[RetailSalesReturn](o)
 }
 
-// Prepayment структурирует сущность в *Prepayment
-func (o *RetailOperation) Prepayment() (*Prepayment, error) {
-	return unmarshalTo[Prepayment](o)
+// Prepayment десериализует сырые данные в тип *Prepayment
+func (o *RetailOperation) Prepayment() *Prepayment {
+	return unmarshalAsType[Prepayment](o)
 }
 
-// PrepaymentReturn структурирует сущность в *PrepaymentReturn
-func (o *RetailOperation) PrepaymentReturn() (*PrepaymentReturn, error) {
-	return unmarshalTo[PrepaymentReturn](o)
+// PrepaymentReturn десериализует сырые данные в тип *PrepaymentReturn
+func (o *RetailOperation) PrepaymentReturn() *PrepaymentReturn {
+	return unmarshalAsType[PrepaymentReturn](o)
 }
 
 type RetailOperations []RetailOperation

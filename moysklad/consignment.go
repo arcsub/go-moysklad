@@ -38,10 +38,6 @@ func (c Consignment) MetaType() MetaType {
 	return MetaTypeConsignment
 }
 
-func (c Consignment) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(c)
-}
-
 // ConsignmentService
 // Сервис для работы с сериями.
 type ConsignmentService interface {

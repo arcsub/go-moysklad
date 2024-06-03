@@ -187,29 +187,40 @@ func NewImageFromFilepath(filePath string) (*Image, error) {
 	return f, nil
 }
 
-type DataMetaTyper interface {
+type RawMetaTyper interface {
 	MetaTyper
-	Data() json.RawMessage
+	Raw() json.RawMessage
 }
 
-// unmarshalTo принимает объект, удовлетворяющий интерфейсу DataMetaTyper
-// и структурирует в тип T
-func unmarshalTo[T MetaTyper, E DataMetaTyper](element E) (*T, error) {
-	t := new(T)
-	needType := (*t).MetaType()
-	haveType := element.MetaType()
+func filterType[M MetaTyper, D RawMetaTyper](elements []D) Slice[M] {
+	var slice = Slice[M]{}
+	for _, el := range elements {
+		if e := unmarshalAsType[M](el); e != nil {
+			slice.Push(e)
+		}
+	}
+	return slice
+}
 
-	if haveType != needType {
-		return t, ErrWrongMetaType{haveType, needType}
+// unmarshalAsType принимает объект, удовлетворяющий интерфейсу RawMetaTyper
+// и структурирует в тип T
+func unmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
+	var t = *new(M)
+
+	if t.MetaType() != element.MetaType() {
+		return nil
 	}
-	data := element.Data()
+
+	data := element.Raw()
 	if data == nil {
-		return nil, errors.New("data is empty")
+		return nil
 	}
+
 	if err := json.Unmarshal(data, &t); err != nil {
-		return t, err
+		return nil
 	}
-	return t, nil
+
+	return &t
 }
 
 type Interval string

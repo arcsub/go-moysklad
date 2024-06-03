@@ -49,8 +49,8 @@ func (p Payment) MetaType() MetaType {
 	return p.Meta.Type
 }
 
-// Data удовлетворяет интерфейсу DataMetaTyper
-func (p Payment) Data() json.RawMessage {
+// Raw удовлетворяет интерфейсу RawMetaTyper
+func (p Payment) Raw() json.RawMessage {
 	return p.data
 }
 
@@ -72,24 +72,24 @@ func (p *Payment) UnmarshalJSON(data []byte) (err error) {
 	return nil
 }
 
-// ConvertToCashIn структурирует позицию в *CashIn
-func (p *Payment) ConvertToCashIn() (*CashIn, error) {
-	return unmarshalTo[CashIn](p)
+// AsCashIn десериализует сырые данные в тип *CashIn
+func (p *Payment) AsCashIn() *CashIn {
+	return unmarshalAsType[CashIn](p)
 }
 
-// ConvertToCashOut структурирует позицию в *CashOut
-func (p *Payment) ConvertToCashOut() (*CashOut, error) {
-	return unmarshalTo[CashOut](p)
+// AsCashOut десериализует сырые данные в тип *CashOut
+func (p *Payment) AsCashOut() *CashOut {
+	return unmarshalAsType[CashOut](p)
 }
 
-// ConvertToPaymentIn структурирует позицию в *PaymentIn
-func (p *Payment) ConvertToPaymentIn() (*PaymentIn, error) {
-	return unmarshalTo[PaymentIn](p)
+// AsPaymentIn десериализует сырые данные в тип *PaymentIn
+func (p *Payment) AsPaymentIn() *PaymentIn {
+	return unmarshalAsType[PaymentIn](p)
 }
 
-// ConvertToPaymentOut структурирует позицию в *PaymentOut
-func (p *Payment) ConvertToPaymentOut() (*PaymentOut, error) {
-	return unmarshalTo[PaymentOut](p)
+// AsPaymentOut десериализует сырые данные в тип *PaymentOut
+func (p *Payment) AsPaymentOut() *PaymentOut {
+	return unmarshalAsType[PaymentOut](p)
 }
 
 // Payments Входящий платеж, Приходный ордер, Исходящий платеж, Расходный ордер

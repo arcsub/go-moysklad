@@ -79,12 +79,12 @@ func (i InternalOrderPosition) MetaType() MetaType {
 // Сервис для работы с внутренними заказами.
 type InternalOrderService interface {
 	GetList(ctx context.Context, params *Params) (*List[InternalOrder], *resty.Response, error)
-	Create(ctx context.Context, entity *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, entities []*InternalOrder, params *Params) (*[]InternalOrder, *resty.Response, error)
-	DeleteMany(ctx context.Context, entities *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	Create(ctx context.Context, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, internalOrderList []*InternalOrder, params *Params) (*[]InternalOrder, *resty.Response, error)
+	DeleteMany(ctx context.Context, internalOrderList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*InternalOrder, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, entity *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
+	Update(ctx context.Context, id *uuid.UUID, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
 	//endpointTemplate[InternalOrder]
 	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)

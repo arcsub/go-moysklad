@@ -65,10 +65,6 @@ func (b Bundle) GetMeta() Meta {
 	return Deref(b.Meta)
 }
 
-func (b Bundle) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(b)
-}
-
 // BundleOverhead Дополнительные расходы
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-atributy-wlozhennyh-suschnostej-dopolnitel-nye-rashody
 type BundleOverhead struct {

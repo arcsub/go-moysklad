@@ -455,10 +455,6 @@ func (product Product) MetaType() MetaType {
 	return MetaTypeProduct
 }
 
-func (product Product) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(product)
-}
-
 // Alcoholic Объект, содержащий поля алкогольной продукции
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-ob-ekt-soderzhaschij-polq-alkogol-noj-produkcii
 type Alcoholic struct {

@@ -55,10 +55,6 @@ func (s Service) MetaType() MetaType {
 	return MetaTypeService
 }
 
-func (s Service) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(s)
-}
-
 // ServiceService
 // Сервис для работы с услугами.
 type ServiceService interface {

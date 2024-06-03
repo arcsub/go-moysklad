@@ -48,8 +48,8 @@ func (o Operation) MetaType() MetaType {
 	return o.Meta.Type
 }
 
-// Data удовлетворяет интерфейсу DataMetaTyper
-func (o Operation) Data() json.RawMessage {
+// Raw удовлетворяет интерфейсу RawMetaTyper
+func (o Operation) Raw() json.RawMessage {
 	return o.data
 }
 
@@ -66,101 +66,101 @@ func (o *Operation) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o Operation) CustomerOrder() (*CustomerOrder, error) {
-	return unmarshalTo[CustomerOrder](o)
+func (o Operation) CustomerOrder() *CustomerOrder {
+	return unmarshalAsType[CustomerOrder](o)
 }
 
-func (o Operation) PurchaseReturn() (*PurchaseReturn, error) {
-	return unmarshalTo[PurchaseReturn](o)
+func (o Operation) PurchaseReturn() *PurchaseReturn {
+	return unmarshalAsType[PurchaseReturn](o)
 }
 
-func (o Operation) Demand() (*Demand, error) {
-	return unmarshalTo[Demand](o)
+func (o Operation) Demand() *Demand {
+	return unmarshalAsType[Demand](o)
 }
 
-func (o Operation) InvoiceOut() (*InvoiceOut, error) {
-	return unmarshalTo[InvoiceOut](o)
+func (o Operation) InvoiceOut() *InvoiceOut {
+	return unmarshalAsType[InvoiceOut](o)
 }
 
-func (o Operation) RetailShift() (*RetailShift, error) {
-	return unmarshalTo[RetailShift](o)
+func (o Operation) RetailShift() *RetailShift {
+	return unmarshalAsType[RetailShift](o)
 }
 
-func (o Operation) CommissionReportIn() (*CommissionReportIn, error) {
-	return unmarshalTo[CommissionReportIn](o)
+func (o Operation) CommissionReportIn() *CommissionReportIn {
+	return unmarshalAsType[CommissionReportIn](o)
 }
 
-func (o Operation) SalesReturn() (*SalesReturn, error) {
-	return unmarshalTo[SalesReturn](o)
+func (o Operation) SalesReturn() *SalesReturn {
+	return unmarshalAsType[SalesReturn](o)
 }
 
-func (o Operation) Supply() (*Supply, error) {
-	return unmarshalTo[Supply](o)
+func (o Operation) Supply() *Supply {
+	return unmarshalAsType[Supply](o)
 }
 
-func (o Operation) InvoiceIn() (*InvoiceIn, error) {
-	return unmarshalTo[InvoiceIn](o)
+func (o Operation) InvoiceIn() *InvoiceIn {
+	return unmarshalAsType[InvoiceIn](o)
 }
 
-func (o Operation) PurchaseOrder() (*PurchaseOrder, error) {
-	return unmarshalTo[PurchaseOrder](o)
+func (o Operation) PurchaseOrder() *PurchaseOrder {
+	return unmarshalAsType[PurchaseOrder](o)
 }
 
-func (o Operation) CommissionReportOut() (*CommissionReportOut, error) {
-	return unmarshalTo[CommissionReportOut](o)
+func (o Operation) CommissionReportOut() *CommissionReportOut {
+	return unmarshalAsType[CommissionReportOut](o)
 }
 
 type Operations []Operation
 
 func (o Operations) FilterCustomerOrder() Slice[CustomerOrder] {
-	return filterEntity[CustomerOrder](o)
+	return filterType[CustomerOrder](o)
 }
 
 func (o Operations) FilterPurchaseReturn() Slice[PurchaseReturn] {
-	return filterEntity[PurchaseReturn](o)
+	return filterType[PurchaseReturn](o)
 }
 
 func (o Operations) FilterDemand() Slice[Demand] {
-	return filterEntity[Demand](o)
+	return filterType[Demand](o)
 }
 
 func (o Operations) FilterInvoiceOut() Slice[InvoiceOut] {
-	return filterEntity[InvoiceOut](o)
+	return filterType[InvoiceOut](o)
 }
 
 func (o Operations) FilterCommissionReportIn() Slice[CommissionReportIn] {
-	return filterEntity[CommissionReportIn](o)
+	return filterType[CommissionReportIn](o)
 }
 
 func (o Operations) FilterSalesReturn() Slice[SalesReturn] {
-	return filterEntity[SalesReturn](o)
+	return filterType[SalesReturn](o)
 }
 
 func (o Operations) FilterSupply() Slice[Supply] {
-	return filterEntity[Supply](o)
+	return filterType[Supply](o)
 }
 
 func (o Operations) FilterInvoiceIn() Slice[InvoiceIn] {
-	return filterEntity[InvoiceIn](o)
+	return filterType[InvoiceIn](o)
 }
 
 func (o Operations) FilterPurchaseOrder() Slice[PurchaseOrder] {
-	return filterEntity[PurchaseOrder](o)
+	return filterType[PurchaseOrder](o)
 }
 
 func (o Operations) FilterCommissionReportOut() Slice[CommissionReportOut] {
-	return filterEntity[CommissionReportOut](o)
+	return filterType[CommissionReportOut](o)
 }
 
 func (o Operations) FilterRetailShift() Slice[RetailShift] {
-	return filterEntity[RetailShift](o)
+	return filterType[RetailShift](o)
 }
 
 //
 //	func (o Operations) FilterCounterparty() Slice[Counterparty] {
-//		return filterEntity[Counterparty](o)
+//		return filterType[Counterparty](o)
 //	}
 //
 //	func (o Operations) FilterOrganization() Slice[Organization] {
-//		return filterEntity[Organization](o)
+//		return filterType[Organization](o)
 //	}

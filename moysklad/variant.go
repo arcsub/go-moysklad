@@ -191,10 +191,6 @@ func (variant Variant) MetaType() MetaType {
 	return MetaTypeVariant
 }
 
-func (variant Variant) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(variant)
-}
-
 // VariantPack Упаковка модификации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-upakowki-modifikacii
 type VariantPack struct {
