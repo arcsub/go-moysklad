@@ -7,6 +7,24 @@ type BuyPrice struct {
 	Currency *Currency `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
 }
 
-func (b BuyPrice) String() string {
-	return Stringify(b)
+func (buyPrice BuyPrice) GetValue() Decimal {
+	return Deref(buyPrice.Value)
+}
+
+func (buyPrice BuyPrice) GetCurrency() Currency {
+	return Deref(buyPrice.Currency)
+}
+
+func (buyPrice *BuyPrice) SetValue(value *Decimal) *BuyPrice {
+	buyPrice.Value = value
+	return buyPrice
+}
+
+func (buyPrice *BuyPrice) SetCurrency(currency *Currency) *BuyPrice {
+	buyPrice.Currency = currency
+	return buyPrice
+}
+
+func (buyPrice BuyPrice) String() string {
+	return Stringify(buyPrice)
 }
