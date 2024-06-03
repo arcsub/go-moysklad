@@ -468,8 +468,44 @@ type Alcoholic struct {
 	Volume   *float64 `json:"volume,omitempty"`   // Объём тары
 }
 
-func (a Alcoholic) String() string {
-	return Stringify(a)
+func (alcoholic Alcoholic) GetExcise() bool {
+	return Deref(alcoholic.Excise)
+}
+
+func (alcoholic Alcoholic) GetType() int {
+	return Deref(alcoholic.Type)
+}
+
+func (alcoholic Alcoholic) GetStrength() float64 {
+	return Deref(alcoholic.Strength)
+}
+
+func (alcoholic Alcoholic) GetVolume() float64 {
+	return Deref(alcoholic.Volume)
+}
+
+func (alcoholic *Alcoholic) SetExcise(excise bool) *Alcoholic {
+	alcoholic.Excise = &excise
+	return alcoholic
+}
+
+func (alcoholic *Alcoholic) SetType(value int) *Alcoholic {
+	alcoholic.Type = &value
+	return alcoholic
+}
+
+func (alcoholic *Alcoholic) SetStrength(strength float64) *Alcoholic {
+	alcoholic.Strength = &strength
+	return alcoholic
+}
+
+func (alcoholic *Alcoholic) SetVolume(volume float64) *Alcoholic {
+	alcoholic.Volume = &volume
+	return alcoholic
+}
+
+func (alcoholic Alcoholic) String() string {
+	return Stringify(alcoholic)
 }
 
 // ProductService
