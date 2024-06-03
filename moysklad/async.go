@@ -63,13 +63,13 @@ func NewAsyncService(client *Client) AsyncService {
 	return &asyncService{e}
 }
 
-func (s *asyncService) GetStatuses(ctx context.Context, params *Params) (*List[Async], *resty.Response, error) {
-	return NewRequestBuilder[List[Async]](s.client, s.uri).SetParams(params).Get(ctx)
+func (service *asyncService) GetStatuses(ctx context.Context, params *Params) (*List[Async], *resty.Response, error) {
+	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
-func (s *asyncService) GetStatusByID(ctx context.Context, id *uuid.UUID, params *Params) (*Async, *resty.Response, error) {
+func (service *asyncService) GetStatusByID(ctx context.Context, id *uuid.UUID, params *Params) (*Async, *resty.Response, error) {
 	path := fmt.Sprintf("async/%s", id)
-	return NewRequestBuilder[Async](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[Async](service.client, path).SetParams(params).Get(ctx)
 }
 
 type AsyncResultService[T any] interface {
@@ -115,33 +115,33 @@ func NewAsyncResultService[T any](client *Client, resp *resty.Response) AsyncRes
 	}
 }
 
-func (s *asyncResultService[T]) StatusURL() *url.URL {
-	return s.statusURL
+func (service *asyncResultService[T]) StatusURL() *url.URL {
+	return service.statusURL
 }
 
-func (s *asyncResultService[T]) ResultURL() *url.URL {
-	return s.resultURL
+func (service *asyncResultService[T]) ResultURL() *url.URL {
+	return service.resultURL
 }
 
-func (s *asyncResultService[T]) Check(ctx context.Context) (bool, *resty.Response, error) {
-	async, resp, err := NewRequestBuilder[Async](s.client, s.StatusURL().String()).Get(ctx)
+func (service *asyncResultService[T]) Check(ctx context.Context) (bool, *resty.Response, error) {
+	async, resp, err := NewRequestBuilder[Async](service.client, service.StatusURL().String()).Get(ctx)
 	if err != nil {
 		return false, resp, err
 	}
 	return async.State == AsyncStateDone, resp, nil
 }
 
-func (s *asyncResultService[T]) Result(ctx context.Context) (*T, *resty.Response, error) {
-	data, resp, err := NewRequestBuilder[T](s.client, s.ResultURL().String()).Get(ctx)
+func (service *asyncResultService[T]) Result(ctx context.Context) (*T, *resty.Response, error) {
+	data, resp, err := NewRequestBuilder[T](service.client, service.ResultURL().String()).Get(ctx)
 	if err != nil {
 		return nil, resp, err
 	}
 	return data, resp, nil
 }
 
-func (s *asyncResultService[T]) Cancel(ctx context.Context) (bool, *resty.Response, error) {
-	u, _ := s.StatusURL().Parse("/cancel")
-	_, resp, err := NewRequestBuilder[any](s.client, u.String()).Post(ctx, nil)
+func (service *asyncResultService[T]) Cancel(ctx context.Context) (bool, *resty.Response, error) {
+	u, _ := service.StatusURL().Parse("/cancel")
+	_, resp, err := NewRequestBuilder[any](service.client, u.String()).Post(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}
