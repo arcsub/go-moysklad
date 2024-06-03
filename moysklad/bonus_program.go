@@ -28,6 +28,140 @@ type BonusProgram struct {
 	AgentTags                 Tags               `json:"agentTags,omitempty"`
 }
 
+func (bonusProgram BonusProgram) GetAllProducts() bool {
+	return Deref(bonusProgram.AllProducts)
+}
+
+func (bonusProgram BonusProgram) GetActive() bool {
+	return Deref(bonusProgram.Active)
+}
+
+func (bonusProgram BonusProgram) GetWelcomeBonusesValue() int {
+	return Deref(bonusProgram.WelcomeBonusesValue)
+}
+
+func (bonusProgram BonusProgram) GetAllAgents() bool {
+	return Deref(bonusProgram.AllAgents)
+}
+
+func (bonusProgram BonusProgram) GetMaxPaidRatePercents() int {
+	return Deref(bonusProgram.MaxPaidRatePercents)
+}
+
+func (bonusProgram BonusProgram) GetEarnRateRoublesToPoint() int {
+	return Deref(bonusProgram.EarnRateRoublesToPoint)
+}
+
+func (bonusProgram BonusProgram) GetEarnWhileRedeeming() bool {
+	return Deref(bonusProgram.EarnWhileRedeeming)
+}
+
+func (bonusProgram BonusProgram) GetID() uuid.UUID {
+	return Deref(bonusProgram.ID)
+}
+
+func (bonusProgram BonusProgram) GetAccountID() uuid.UUID {
+	return Deref(bonusProgram.AccountID)
+}
+
+func (bonusProgram BonusProgram) GetMeta() Meta {
+	return Deref(bonusProgram.Meta)
+}
+
+func (bonusProgram BonusProgram) GetName() string {
+	return Deref(bonusProgram.Name)
+}
+
+func (bonusProgram BonusProgram) GetPostponedBonusesDelayDays() int {
+	return Deref(bonusProgram.PostponedBonusesDelayDays)
+}
+
+func (bonusProgram BonusProgram) GetSpendRatePointsToRouble() int {
+	return Deref(bonusProgram.SpendRatePointsToRouble)
+}
+
+func (bonusProgram BonusProgram) GetWelcomeBonusesEnabled() bool {
+	return Deref(bonusProgram.WelcomeBonusesEnabled)
+}
+
+func (bonusProgram BonusProgram) GetWelcomeBonusesMode() WelcomeBonusesMode {
+	return bonusProgram.WelcomeBonusesMode
+}
+
+func (bonusProgram BonusProgram) GetAgentTags() Tags {
+	return bonusProgram.AgentTags
+}
+
+func (bonusProgram *BonusProgram) SetAllProducts(allProducts bool) *BonusProgram {
+	bonusProgram.AllProducts = &allProducts
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetActive(active bool) *BonusProgram {
+	bonusProgram.Active = &active
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetWelcomeBonusesValue(welcomeBonusesValue int) *BonusProgram {
+	bonusProgram.WelcomeBonusesValue = &welcomeBonusesValue
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetAllAgents(allAgents bool) *BonusProgram {
+	bonusProgram.AllAgents = &allAgents
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetMaxPaidRatePercents(maxPaidRatePercents int) *BonusProgram {
+	bonusProgram.MaxPaidRatePercents = &maxPaidRatePercents
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetEarnRateRoublesToPoint(earnRateRoublesToPoint int) *BonusProgram {
+	bonusProgram.EarnRateRoublesToPoint = &earnRateRoublesToPoint
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetEarnWhileRedeeming(earnWhileRedeeming bool) *BonusProgram {
+	bonusProgram.EarnWhileRedeeming = &earnWhileRedeeming
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetMeta(meta *Meta) *BonusProgram {
+	bonusProgram.Meta = meta
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetName(name string) *BonusProgram {
+	bonusProgram.Name = &name
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetPostponedBonusesDelayDays(postponedBonusesDelayDays int) *BonusProgram {
+	bonusProgram.PostponedBonusesDelayDays = &postponedBonusesDelayDays
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetSpendRatePointsToRouble(spendRatePointsToRouble int) *BonusProgram {
+	bonusProgram.SpendRatePointsToRouble = &spendRatePointsToRouble
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetWelcomeBonusesEnabled(welcomeBonusesEnabled bool) *BonusProgram {
+	bonusProgram.WelcomeBonusesEnabled = &welcomeBonusesEnabled
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetWelcomeBonusesMode(welcomeBonusesMode WelcomeBonusesMode) *BonusProgram {
+	bonusProgram.WelcomeBonusesMode = welcomeBonusesMode
+	return bonusProgram
+}
+
+func (bonusProgram *BonusProgram) SetAgentTags(agentTags Tags) *BonusProgram {
+	bonusProgram.AgentTags = agentTags
+	return bonusProgram
+}
+
 func (bonusProgram BonusProgram) String() string {
 	return Stringify(bonusProgram)
 }
