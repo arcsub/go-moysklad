@@ -21,7 +21,7 @@ type Product struct {
 	Alcoholic           *Alcoholic     `json:"alcoholic,omitempty"`
 	Archived            *bool          `json:"archived,omitempty"`
 	Article             *string        `json:"article,omitempty"`
-	PaymentItemType     *PaymentItem   `json:"paymentItemType,omitempty"`
+	PaymentItemType     PaymentItem    `json:"paymentItemType,omitempty"`
 	BuyPrice            *BuyPrice      `json:"buyPrice,omitempty"`
 	Country             *Country       `json:"country,omitempty"`
 	DiscountProhibited  *bool          `json:"discountProhibited,omitempty"`
@@ -32,21 +32,21 @@ type Product struct {
 	Images              *Images        `json:"images,omitempty"`
 	IsSerialTrackable   *bool          `json:"isSerialTrackable,omitempty"`
 	MinPrice            *MinPrice      `json:"minPrice,omitempty"`
-	TaxSystem           *GoodTaxSystem `json:"taxSystem,omitempty"`
+	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
 	UseParentVat        *bool          `json:"useParentVat,omitempty"`
 	Owner               *Employee      `json:"owner,omitempty"`
-	Packs               *Packs         `json:"packs,omitempty"`
+	Packs               Packs          `json:"packs,omitempty"`
 	PartialDisposal     *bool          `json:"partialDisposal,omitempty"`
 	PathName            *string        `json:"pathName,omitempty"`
 	Weight              *float64       `json:"weight,omitempty"`
 	PpeType             *string        `json:"ppeType,omitempty"`
 	ProductFolder       *ProductFolder `json:"productFolder,omitempty"`
-	SalePrices          *SalePrices    `json:"salePrices,omitempty"`
+	SalePrices          SalePrices     `json:"salePrices,omitempty"`
 	Shared              *bool          `json:"shared,omitempty"`
 	MinimumBalance      *float64       `json:"minimumBalance,omitempty"`
 	SyncID              *uuid.UUID     `json:"syncId,omitempty"`
 	AccountID           *uuid.UUID     `json:"accountId,omitempty"`
-	Things              *Things        `json:"things,omitempty"`
+	Things              Things         `json:"things,omitempty"`
 	Tnved               *string        `json:"tnved,omitempty"`
 	VatEnabled          *bool          `json:"vatEnabled,omitempty"`
 	Uom                 *Uom           `json:"uom,omitempty"`
@@ -54,26 +54,409 @@ type Product struct {
 	Barcodes            Barcodes       `json:"barcodes,omitempty"`
 	VariantsCount       *int           `json:"variantsCount,omitempty"`
 	Vat                 *int           `json:"vat,omitempty"`
-	TrackingType        *TrackingType  `json:"trackingType,omitempty"`
+	TrackingType        TrackingType   `json:"trackingType,omitempty"`
 	Volume              *float64       `json:"volume,omitempty"`
 	Attributes          Attributes     `json:"attributes,omitempty"`
 }
 
-func (p Product) String() string {
-	return Stringify(p)
+func (product Product) GetSupplier() Counterparty {
+	return Deref(product.Supplier)
 }
 
-// GetMeta удовлетворяет интерфейсу HasMeta
-func (p Product) GetMeta() Meta {
-	return Deref(p.Meta)
+func (product Product) GetOnTap() bool {
+	return Deref(product.OnTap)
 }
 
-func (p Product) MetaType() MetaType {
+func (product Product) GetCode() string {
+	return Deref(product.Code)
+}
+
+func (product Product) GetDescription() string {
+	return Deref(product.Description)
+}
+
+func (product Product) GetExternalCode() string {
+	return Deref(product.ExternalCode)
+}
+
+func (product Product) GetID() uuid.UUID {
+	return Deref(product.ID)
+}
+
+func (product Product) GetMeta() Meta {
+	return Deref(product.Meta)
+}
+
+func (product Product) GetName() string {
+	return Deref(product.Name)
+}
+
+func (product Product) GetAlcoholic() Alcoholic {
+	return Deref(product.Alcoholic)
+}
+
+func (product Product) GetArchived() bool {
+	return Deref(product.Archived)
+}
+
+func (product Product) GetArticle() string {
+	return Deref(product.Article)
+}
+
+func (product Product) GetPaymentItemType() PaymentItem {
+	return product.PaymentItemType
+}
+
+func (product Product) GetBuyPrice() BuyPrice {
+	return Deref(product.BuyPrice)
+}
+
+func (product Product) GetCountry() Country {
+	return Deref(product.Country)
+}
+
+func (product Product) GetDiscountProhibited() bool {
+	return Deref(product.DiscountProhibited)
+}
+
+func (product Product) GetEffectiveVat() int {
+	return Deref(product.EffectiveVat)
+}
+
+func (product Product) GetEffectiveVatEnabled() bool {
+	return Deref(product.EffectiveVatEnabled)
+}
+
+func (product Product) GetFiles() Files {
+	return Deref(product.Files)
+}
+
+func (product Product) GetGroup() Group {
+	return Deref(product.Group)
+}
+
+func (product Product) GetImages() Images {
+	return Deref(product.Images)
+}
+
+func (product Product) GetIsSerialTrackable() bool {
+	return Deref(product.IsSerialTrackable)
+}
+
+func (product Product) GetMinPrice() MinPrice {
+	return Deref(product.MinPrice)
+}
+
+func (product Product) GetTaxSystem() GoodTaxSystem {
+	return product.TaxSystem
+}
+
+func (product Product) GetUseParentVat() bool {
+	return Deref(product.UseParentVat)
+}
+
+func (product Product) GetOwner() Employee {
+	return Deref(product.Owner)
+}
+
+func (product Product) GetPacks() Packs {
+	return product.Packs
+}
+
+func (product Product) GetPartialDisposal() bool {
+	return Deref(product.PartialDisposal)
+}
+
+func (product Product) GetPathName() string {
+	return Deref(product.PathName)
+}
+
+func (product Product) GetWeight() float64 {
+	return Deref(product.Weight)
+}
+
+func (product Product) GetPpeType() string {
+	return Deref(product.PpeType)
+}
+
+func (product Product) GetProductFolder() ProductFolder {
+	return Deref(product.ProductFolder)
+}
+
+func (product Product) GetSalePrices() SalePrices {
+	return product.SalePrices
+}
+
+func (product Product) GetShared() bool {
+	return Deref(product.Shared)
+}
+
+func (product Product) GetMinimumBalance() float64 {
+	return Deref(product.MinimumBalance)
+}
+
+func (product Product) GetSyncID() uuid.UUID {
+	return Deref(product.SyncID)
+}
+
+func (product Product) GetAccountID() uuid.UUID {
+	return Deref(product.AccountID)
+}
+
+func (product Product) GetThings() Things {
+	return product.Things
+}
+
+func (product Product) GetTnved() string {
+	return Deref(product.Tnved)
+}
+
+func (product Product) GetVatEnabled() bool {
+	return Deref(product.VatEnabled)
+}
+
+func (product Product) GetUom() Uom {
+	return Deref(product.Uom)
+}
+
+func (product Product) GetUpdated() Timestamp {
+	return Deref(product.Updated)
+}
+
+func (product Product) GetBarcodes() Barcodes {
+	return product.Barcodes
+}
+
+func (product Product) GetVariantsCount() int {
+	return Deref(product.VariantsCount)
+}
+
+func (product Product) GetVat() int {
+	return Deref(product.Vat)
+}
+
+func (product Product) GetTrackingType() TrackingType {
+	return product.TrackingType
+}
+
+func (product Product) GetVolume() float64 {
+	return Deref(product.Volume)
+}
+
+func (product Product) GetAttributes() Attributes {
+	return product.Attributes
+}
+
+func (product *Product) SetSupplier(supplier *Counterparty) *Product {
+	product.Supplier = supplier
+	return product
+}
+
+func (product *Product) SetOnTap(onTap bool) *Product {
+	product.OnTap = &onTap
+	return product
+}
+
+func (product *Product) SetCode(code string) *Product {
+	product.Code = &code
+	return product
+}
+
+func (product *Product) SetDescription(description string) *Product {
+	product.Description = &description
+	return product
+}
+
+func (product *Product) SetExternalCode(externalCode string) *Product {
+	product.ExternalCode = &externalCode
+	return product
+}
+
+func (product *Product) SetMeta(meta *Meta) *Product {
+	product.Meta = meta
+	return product
+}
+
+func (product *Product) SetName(name string) *Product {
+	product.Name = &name
+	return product
+}
+
+func (product *Product) SetAlcoholic(alcoholic *Alcoholic) *Product {
+	product.Alcoholic = alcoholic
+	return product
+}
+
+func (product *Product) SetArchived(archived bool) *Product {
+	product.Archived = &archived
+	return product
+}
+
+func (product *Product) SetArticle(article string) *Product {
+	product.Article = &article
+	return product
+}
+
+func (product *Product) SetPaymentItemType(paymentItem PaymentItem) *Product {
+	product.PaymentItemType = paymentItem
+	return product
+}
+
+func (product *Product) SetBuyPrice(buyPrice *BuyPrice) *Product {
+	product.BuyPrice = buyPrice
+	return product
+}
+
+func (product *Product) SetCountry(country *Country) *Product {
+	product.Country = country
+	return product
+}
+
+func (product *Product) SetDiscountProhibited(discountProhibited bool) *Product {
+	product.DiscountProhibited = &discountProhibited
+	return product
+}
+
+func (product *Product) SetFiles(files *Files) *Product {
+	product.Files = files
+	return product
+}
+
+func (product *Product) SetGroup(group *Group) *Product {
+	product.Group = group
+	return product
+}
+
+func (product *Product) SetImages(images *Images) *Product {
+	product.Images = images
+	return product
+}
+
+func (product *Product) SetIsSerialTrackable(isSerialTrackable bool) *Product {
+	product.IsSerialTrackable = &isSerialTrackable
+	return product
+}
+
+func (product *Product) SetMinPrice(minPrice *MinPrice) *Product {
+	product.MinPrice = minPrice
+	return product
+}
+
+func (product *Product) SetTaxSystem(taxSystem GoodTaxSystem) *Product {
+	product.TaxSystem = taxSystem
+	return product
+}
+
+func (product *Product) SetUseParentVat(useParentVat bool) *Product {
+	product.UseParentVat = &useParentVat
+	return product
+}
+
+func (product *Product) SetOwner(owner *Employee) *Product {
+	product.Owner = owner
+	return product
+}
+
+func (product *Product) SetPacks(packs Packs) *Product {
+	product.Packs = packs
+	return product
+}
+
+func (product *Product) SetPartialDisposal(partialDisposal bool) *Product {
+	product.PartialDisposal = &partialDisposal
+	return product
+}
+
+func (product *Product) SetWeight(weight float64) *Product {
+	product.Weight = &weight
+	return product
+}
+
+func (product *Product) SetPpeType(ppeType string) *Product {
+	product.PpeType = &ppeType
+	return product
+}
+
+func (product *Product) SetProductFolder(productFolder *ProductFolder) *Product {
+	product.ProductFolder = productFolder
+	return product
+}
+
+func (product *Product) SetSalePrices(salePrices SalePrices) *Product {
+	product.SalePrices = salePrices
+	return product
+}
+
+func (product *Product) SetShared(shared bool) *Product {
+	product.Shared = &shared
+	return product
+}
+
+func (product *Product) SetMinimumBalance(minimumBalance float64) *Product {
+	product.MinimumBalance = &minimumBalance
+	return product
+}
+
+func (product *Product) SetSyncID(syncID uuid.UUID) *Product {
+	product.SyncID = &syncID
+	return product
+}
+
+func (product *Product) SetThings(things Things) *Product {
+	product.Things = things
+	return product
+}
+
+func (product *Product) SetTnved(tnved string) *Product {
+	product.Tnved = &tnved
+	return product
+}
+
+func (product *Product) SetVatEnabled(vatEnabled bool) *Product {
+	product.VatEnabled = &vatEnabled
+	return product
+}
+
+func (product *Product) SetUom(uom *Uom) *Product {
+	product.Uom = uom
+	return product
+}
+
+func (product *Product) SetBarcodes(barcodes Barcodes) *Product {
+	product.Barcodes = barcodes
+	return product
+}
+
+func (product *Product) SetVat(vat int) *Product {
+	product.Vat = &vat
+	return product
+}
+
+func (product *Product) SetTrackingType(trackingType TrackingType) *Product {
+	product.TrackingType = trackingType
+	return product
+}
+
+func (product *Product) SetVolume(volume float64) *Product {
+	product.Volume = &volume
+	return product
+}
+
+func (product *Product) SetAttributes(attributes Attributes) *Product {
+	product.Attributes = attributes
+	return product
+}
+
+func (product Product) String() string {
+	return Stringify(product)
+}
+
+func (product Product) MetaType() MetaType {
 	return MetaTypeProduct
 }
 
-func (p Product) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(p)
+func (product Product) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
+	return convertToAssortmentPosition(product)
 }
 
 // Alcoholic Объект, содержащий поля алкогольной продукции
