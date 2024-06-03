@@ -36,7 +36,7 @@ type Bundle struct {
 	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`
 	PathName            *string                     `json:"pathName,omitempty"`
 	Weight              *float64                    `json:"weight,omitempty"`
-	SalePrices          *SalePrices                 `json:"salePrices,omitempty"`
+	SalePrices          SalePrices                  `json:"salePrices,omitempty"`
 	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`
 	Shared              *bool                       `json:"shared,omitempty"`
 	Updated             *Timestamp                  `json:"updated,omitempty"`
@@ -52,17 +52,333 @@ type Bundle struct {
 	Attributes          Attributes                  `json:"attributes,omitempty"`
 }
 
-func (b Bundle) String() string {
-	return Stringify(b)
+func (bundle Bundle) GetVolume() float64 {
+	return Deref(bundle.Volume)
 }
 
-func (b Bundle) MetaType() MetaType {
+func (bundle Bundle) GetSyncID() uuid.UUID {
+	return Deref(bundle.SyncID)
+}
+
+func (bundle Bundle) GetCode() string {
+	return Deref(bundle.Code)
+}
+
+func (bundle Bundle) GetDescription() string {
+	return Deref(bundle.Description)
+}
+
+func (bundle Bundle) GetExternalCode() string {
+	return Deref(bundle.ExternalCode)
+}
+
+func (bundle Bundle) GetID() uuid.UUID {
+	return Deref(bundle.ID)
+}
+
+func (bundle Bundle) GetMeta() Meta {
+	return Deref(bundle.Meta)
+}
+
+func (bundle Bundle) GetName() string {
+	return Deref(bundle.Name)
+}
+
+func (bundle Bundle) GetArchived() bool {
+	return Deref(bundle.Archived)
+}
+
+func (bundle Bundle) GetArticle() string {
+	return Deref(bundle.Article)
+}
+
+func (bundle Bundle) GetImages() Images {
+	return Deref(bundle.Images)
+}
+
+func (bundle Bundle) GetComponents() Positions[BundleComponent] {
+	return Deref(bundle.Components)
+}
+
+func (bundle Bundle) GetCountry() Country {
+	return Deref(bundle.Country)
+}
+
+func (bundle Bundle) GetDiscountProhibited() bool {
+	return Deref(bundle.DiscountProhibited)
+}
+
+func (bundle Bundle) GetEffectiveVat() int {
+	return Deref(bundle.EffectiveVat)
+}
+
+func (bundle Bundle) GetEffectiveVatEnabled() bool {
+	return Deref(bundle.EffectiveVatEnabled)
+}
+
+func (bundle Bundle) GetFiles() Files {
+	return Deref(bundle.Files)
+}
+
+func (bundle Bundle) GetGroup() Group {
+	return Deref(bundle.Group)
+}
+
+func (bundle Bundle) GetVat() int {
+	return Deref(bundle.Vat)
+}
+
+func (bundle Bundle) GetMinPrice() MinPrice {
+	return Deref(bundle.MinPrice)
+}
+
+func (bundle Bundle) GetOverhead() BundleOverhead {
+	return Deref(bundle.Overhead)
+}
+
+func (bundle Bundle) GetOwner() Employee {
+	return Deref(bundle.Owner)
+}
+
+func (bundle Bundle) GetPartialDisposal() bool {
+	return Deref(bundle.PartialDisposal)
+}
+
+func (bundle Bundle) GetPathName() string {
+	return Deref(bundle.PathName)
+}
+
+func (bundle Bundle) GetWeight() float64 {
+	return Deref(bundle.Weight)
+}
+
+func (bundle Bundle) GetSalePrices() SalePrices {
+	return bundle.SalePrices
+}
+
+func (bundle Bundle) GetProductFolder() ProductFolder {
+	return Deref(bundle.ProductFolder)
+}
+
+func (bundle Bundle) GetShared() bool {
+	return Deref(bundle.Shared)
+}
+
+func (bundle Bundle) GetUpdated() Timestamp {
+	return Deref(bundle.Updated)
+}
+
+func (bundle Bundle) GetAccountID() uuid.UUID {
+	return Deref(bundle.AccountID)
+}
+
+func (bundle Bundle) GetTnved() string {
+	return Deref(bundle.Tnved)
+}
+
+func (bundle Bundle) GetVatEnabled() bool {
+	return Deref(bundle.VatEnabled)
+}
+
+func (bundle Bundle) GetUom() Uom {
+	return Deref(bundle.Uom)
+}
+
+func (bundle Bundle) GetBarcodes() Barcodes {
+	return bundle.Barcodes
+}
+
+func (bundle Bundle) GetUseParentVat() bool {
+	return Deref(bundle.UseParentVat)
+}
+
+func (bundle Bundle) GetTaxSystem() GoodTaxSystem {
+	return bundle.TaxSystem
+}
+
+func (bundle Bundle) GetTrackingType() TrackingType {
+	return bundle.TrackingType
+}
+
+func (bundle Bundle) GetPaymentItemType() PaymentItem {
+	return bundle.PaymentItemType
+}
+
+func (bundle Bundle) GetAttributes() Attributes {
+	return bundle.Attributes
+}
+
+func (bundle *Bundle) SetVolume(volume float64) *Bundle {
+	bundle.Volume = &volume
+	return bundle
+}
+
+func (bundle *Bundle) SetSyncID(syncID *uuid.UUID) *Bundle {
+	bundle.SyncID = syncID
+	return bundle
+}
+
+func (bundle *Bundle) SetCode(code string) *Bundle {
+	bundle.Code = &code
+	return bundle
+}
+
+func (bundle *Bundle) SetDescription(description string) *Bundle {
+	bundle.Description = &description
+	return bundle
+}
+
+func (bundle *Bundle) SetExternalCode(externalCode string) *Bundle {
+	bundle.ExternalCode = &externalCode
+	return bundle
+}
+
+func (bundle *Bundle) SetMeta(meta *Meta) *Bundle {
+	bundle.Meta = meta
+	return bundle
+}
+
+func (bundle *Bundle) SetName(name string) *Bundle {
+	bundle.Name = &name
+	return bundle
+}
+
+func (bundle *Bundle) SetArchived(archived bool) *Bundle {
+	bundle.Archived = &archived
+	return bundle
+}
+
+func (bundle *Bundle) SetArticle(article string) *Bundle {
+	bundle.Article = &article
+	return bundle
+}
+
+func (bundle *Bundle) SetImages(images *Images) *Bundle {
+	bundle.Images = images
+	return bundle
+}
+
+func (bundle *Bundle) SetComponents(components *Positions[BundleComponent]) *Bundle {
+	bundle.Components = components
+	return bundle
+}
+
+func (bundle *Bundle) SetCountry(country *Country) *Bundle {
+	bundle.Country = country
+	return bundle
+}
+
+func (bundle *Bundle) SetDiscountProhibited(discountProhibited bool) *Bundle {
+	bundle.DiscountProhibited = &discountProhibited
+	return bundle
+}
+
+func (bundle *Bundle) SetFiles(files *Files) *Bundle {
+	bundle.Files = files
+	return bundle
+}
+
+func (bundle *Bundle) SetGroup(group *Group) *Bundle {
+	bundle.Group = group
+	return bundle
+}
+
+func (bundle *Bundle) SetVat(vat int) *Bundle {
+	bundle.Vat = &vat
+	return bundle
+}
+
+func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
+	bundle.MinPrice = minPrice
+	return bundle
+}
+
+func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
+	bundle.Overhead = overhead
+	return bundle
+}
+
+func (bundle *Bundle) SetOwner(owner *Employee) *Bundle {
+	bundle.Owner = owner
+	return bundle
+}
+
+func (bundle *Bundle) SetPartialDisposal(partialDisposal bool) *Bundle {
+	bundle.PartialDisposal = &partialDisposal
+	return bundle
+}
+
+func (bundle *Bundle) SetWeight(weight float64) *Bundle {
+	bundle.Weight = &weight
+	return bundle
+}
+
+func (bundle *Bundle) SetSalePrices(salePrices SalePrices) *Bundle {
+	bundle.SalePrices = salePrices
+	return bundle
+}
+
+func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
+	bundle.ProductFolder = productFolder
+	return bundle
+}
+
+func (bundle *Bundle) SetShared(shared bool) *Bundle {
+	bundle.Shared = &shared
+	return bundle
+}
+
+func (bundle *Bundle) SetTnved(tnved string) *Bundle {
+	bundle.Tnved = &tnved
+	return bundle
+}
+
+func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
+	bundle.VatEnabled = &vatEnabled
+	return bundle
+}
+
+func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
+	bundle.Uom = uom
+	return bundle
+}
+
+func (bundle *Bundle) SetBarcodes(barcodes Barcodes) *Bundle {
+	bundle.Barcodes = barcodes
+	return bundle
+}
+
+func (bundle *Bundle) SetUseParentVat(useParentVat bool) *Bundle {
+	bundle.UseParentVat = &useParentVat
+	return bundle
+}
+
+func (bundle *Bundle) SetTaxSystem(taxSystem GoodTaxSystem) *Bundle {
+	bundle.TaxSystem = taxSystem
+	return bundle
+}
+
+func (bundle *Bundle) SetTrackingType(trackingType TrackingType) *Bundle {
+	bundle.TrackingType = trackingType
+	return bundle
+}
+
+func (bundle *Bundle) SetPaymentItemType(paymentItemType PaymentItem) *Bundle {
+	bundle.PaymentItemType = paymentItemType
+	return bundle
+}
+
+func (bundle *Bundle) SetAttributes(attributes Attributes) *Bundle {
+	bundle.Attributes = attributes
+	return bundle
+}
+
+func (bundle Bundle) String() string {
+	return Stringify(bundle)
+}
+
+func (bundle Bundle) MetaType() MetaType {
 	return MetaTypeBundle
-}
-
-// GetMeta удовлетворяет интерфейсу HasMeta
-func (b Bundle) GetMeta() Meta {
-	return Deref(b.Meta)
 }
 
 // BundleOverhead Дополнительные расходы
@@ -72,8 +388,26 @@ type BundleOverhead struct {
 	Currency *Currency `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
 }
 
-func (b BundleOverhead) String() string {
-	return Stringify(b)
+func (bundleOverhead BundleOverhead) GetValue() Decimal {
+	return Deref(bundleOverhead.Value)
+}
+
+func (bundleOverhead BundleOverhead) GetCurrency() Currency {
+	return Deref(bundleOverhead.Currency)
+}
+
+func (bundleOverhead *BundleOverhead) SetValue(value *Decimal) *BundleOverhead {
+	bundleOverhead.Value = value
+	return bundleOverhead
+}
+
+func (bundleOverhead *BundleOverhead) SetCurrency(currency *Currency) *BundleOverhead {
+	bundleOverhead.Currency = currency
+	return bundleOverhead
+}
+
+func (bundleOverhead BundleOverhead) String() string {
+	return Stringify(bundleOverhead)
 }
 
 // BundleComponent Компонент комплекта.
@@ -86,11 +420,37 @@ type BundleComponent struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
 }
 
-func (b BundleComponent) String() string {
-	return Stringify(b)
+func (bundleComponent BundleComponent) GetAccountID() uuid.UUID {
+	return Deref(bundleComponent.AccountID)
 }
 
-func (b BundleComponent) MetaType() MetaType {
+func (bundleComponent BundleComponent) GetAssortment() AssortmentPosition {
+	return Deref(bundleComponent.Assortment)
+}
+
+func (bundleComponent BundleComponent) GetID() uuid.UUID {
+	return Deref(bundleComponent.ID)
+}
+
+func (bundleComponent BundleComponent) GetQuantity() float64 {
+	return Deref(bundleComponent.Quantity)
+}
+
+func (bundleComponent *BundleComponent) SetAssortment(assortment MetaOwner) *BundleComponent {
+	bundleComponent.Assortment = &AssortmentPosition{Meta: assortment.GetMeta()}
+	return bundleComponent
+}
+
+func (bundleComponent *BundleComponent) SetQuantity(quantity float64) *BundleComponent {
+	bundleComponent.Quantity = &quantity
+	return bundleComponent
+}
+
+func (bundleComponent BundleComponent) String() string {
+	return Stringify(bundleComponent)
+}
+
+func (bundleComponent BundleComponent) MetaType() MetaType {
 	return MetaTypeBundleComponent
 }
 
