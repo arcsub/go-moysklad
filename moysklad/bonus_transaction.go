@@ -35,11 +35,183 @@ type BonusTransaction struct {
 	CategoryType      BonusTransactionCategory `json:"categoryType,omitempty"`
 }
 
-func (b BonusTransaction) String() string {
-	return Stringify(b)
+func (bonusTransaction BonusTransaction) GetOrganization() Organization {
+	return Deref(bonusTransaction.Organization)
 }
 
-func (b BonusTransaction) MetaType() MetaType {
+func (bonusTransaction BonusTransaction) GetUpdatedBy() string {
+	return Deref(bonusTransaction.UpdatedBy)
+}
+
+func (bonusTransaction BonusTransaction) GetGroup() Group {
+	return Deref(bonusTransaction.Group)
+}
+
+func (bonusTransaction BonusTransaction) GetBonusProgram() BonusProgram {
+	return Deref(bonusTransaction.BonusProgram)
+}
+
+func (bonusTransaction BonusTransaction) GetBonusValue() int {
+	return Deref(bonusTransaction.BonusValue)
+}
+
+func (bonusTransaction BonusTransaction) GetID() uuid.UUID {
+	return Deref(bonusTransaction.ID)
+}
+
+func (bonusTransaction BonusTransaction) GetCode() string {
+	return Deref(bonusTransaction.Code)
+}
+
+func (bonusTransaction BonusTransaction) GetCreated() Timestamp {
+	return Deref(bonusTransaction.Created)
+}
+
+func (bonusTransaction BonusTransaction) GetExecutionDate() Timestamp {
+	return Deref(bonusTransaction.ExecutionDate)
+}
+
+func (bonusTransaction BonusTransaction) GetMeta() Meta {
+	return Deref(bonusTransaction.Meta)
+}
+
+func (bonusTransaction BonusTransaction) GetApplicable() bool {
+	return Deref(bonusTransaction.Applicable)
+}
+
+func (bonusTransaction BonusTransaction) GetAgent() Counterparty {
+	return Deref(bonusTransaction.Agent)
+}
+
+func (bonusTransaction BonusTransaction) GetExternalCode() string {
+	return Deref(bonusTransaction.ExternalCode)
+}
+
+func (bonusTransaction BonusTransaction) GetMoment() Timestamp {
+	return Deref(bonusTransaction.Moment)
+}
+
+func (bonusTransaction BonusTransaction) GetName() string {
+	return Deref(bonusTransaction.Name)
+}
+
+func (bonusTransaction BonusTransaction) GetAccountID() uuid.UUID {
+	return Deref(bonusTransaction.AccountID)
+}
+
+func (bonusTransaction BonusTransaction) GetOwner() Employee {
+	return Deref(bonusTransaction.Owner)
+}
+
+func (bonusTransaction BonusTransaction) GetParentDocument() BonusTransaction {
+	return Deref(bonusTransaction.ParentDocument)
+}
+
+func (bonusTransaction BonusTransaction) GetShared() bool {
+	return Deref(bonusTransaction.Shared)
+}
+
+func (bonusTransaction BonusTransaction) GetUpdated() Timestamp {
+	return Deref(bonusTransaction.Updated)
+}
+
+func (bonusTransaction BonusTransaction) GetTransactionType() BonusTransactionType {
+	return bonusTransaction.TransactionType
+}
+
+func (bonusTransaction BonusTransaction) GetTransactionStatus() BonusTransactionStatus {
+	return bonusTransaction.TransactionStatus
+}
+
+func (bonusTransaction BonusTransaction) GetCategoryType() BonusTransactionCategory {
+	return bonusTransaction.CategoryType
+}
+
+func (bonusTransaction *BonusTransaction) SetOrganization(organization *Organization) *BonusTransaction {
+	bonusTransaction.Organization = organization
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetGroup(group *Group) *BonusTransaction {
+	bonusTransaction.Group = group
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetBonusProgram(bonusProgram *BonusProgram) *BonusTransaction {
+	bonusTransaction.BonusProgram = bonusProgram
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetBonusValue(bonusValue int) *BonusTransaction {
+	bonusTransaction.BonusValue = &bonusValue
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetCode(code string) *BonusTransaction {
+	bonusTransaction.Code = &code
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetCreated(created *Timestamp) *BonusTransaction {
+	bonusTransaction.Created = created
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetMeta(meta *Meta) *BonusTransaction {
+	bonusTransaction.Meta = meta
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetApplicable(applicable bool) *BonusTransaction {
+	bonusTransaction.Applicable = &applicable
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetAgent(agent *Counterparty) *BonusTransaction {
+	bonusTransaction.Agent = agent
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetExternalCode(externalCode string) *BonusTransaction {
+	bonusTransaction.ExternalCode = &externalCode
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetMoment(moment *Timestamp) *BonusTransaction {
+	bonusTransaction.Moment = moment
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetName(name string) *BonusTransaction {
+	bonusTransaction.Name = &name
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetOwner(owner *Employee) *BonusTransaction {
+	bonusTransaction.Owner = owner
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetParentDocument(parentDocument *BonusTransaction) *BonusTransaction {
+	bonusTransaction.ParentDocument = parentDocument
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetShared(shared bool) *BonusTransaction {
+	bonusTransaction.Shared = &shared
+	return bonusTransaction
+}
+
+func (bonusTransaction *BonusTransaction) SetTransactionType(transactionType BonusTransactionType) *BonusTransaction {
+	bonusTransaction.TransactionType = transactionType
+	return bonusTransaction
+}
+
+func (bonusTransaction BonusTransaction) String() string {
+	return Stringify(bonusTransaction)
+}
+
+func (bonusTransaction BonusTransaction) MetaType() MetaType {
 	return MetaTypeBonusTransaction
 }
 
