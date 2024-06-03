@@ -11,42 +11,188 @@ import (
 // Ключевое слово: variant
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq
 type Variant struct {
-	Archived           *bool            `json:"archived,omitempty"`
-	Updated            *Timestamp       `json:"updated,omitempty"`
-	AccountID          *uuid.UUID       `json:"accountId,omitempty"`
-	Description        *string          `json:"description,omitempty"`
-	ExternalCode       *string          `json:"externalCode,omitempty"`
-	ID                 *uuid.UUID       `json:"id,omitempty"`
-	Meta               *Meta            `json:"meta,omitempty"`
-	Name               *string          `json:"name,omitempty"`
-	Code               *string          `json:"code,omitempty"`
-	Barcodes           Barcodes         `json:"barcodes,omitempty"`
-	DiscountProhibited *bool            `json:"discountProhibited,omitempty"`
-	Characteristics    *Characteristics `json:"characteristics,omitempty"`
-	Images             *Images          `json:"images,omitempty"`
-	MinPrice           *MinPrice        `json:"minPrice,omitempty"`
-	BuyPrice           *BuyPrice        `json:"buyPrice,omitempty"`
-	Product            *Product         `json:"product,omitempty"`
-	SalePrices         *SalePrices      `json:"salePrices,omitempty"`
-	Things             *Things          `json:"things,omitempty"`
-	Packs              []VariantPack    `json:"packs,omitempty"`
+	Archived           *bool           `json:"archived,omitempty"`
+	Updated            *Timestamp      `json:"updated,omitempty"`
+	AccountID          *uuid.UUID      `json:"accountId,omitempty"`
+	Description        *string         `json:"description,omitempty"`
+	ExternalCode       *string         `json:"externalCode,omitempty"`
+	ID                 *uuid.UUID      `json:"id,omitempty"`
+	Meta               *Meta           `json:"meta,omitempty"`
+	Name               *string         `json:"name,omitempty"`
+	Code               *string         `json:"code,omitempty"`
+	Barcodes           Barcodes        `json:"barcodes,omitempty"`
+	DiscountProhibited *bool           `json:"discountProhibited,omitempty"`
+	Characteristics    Characteristics `json:"characteristics,omitempty"`
+	Images             *Images         `json:"images,omitempty"`
+	MinPrice           *MinPrice       `json:"minPrice,omitempty"`
+	BuyPrice           *BuyPrice       `json:"buyPrice,omitempty"`
+	Product            *Product        `json:"product,omitempty"`
+	SalePrices         SalePrices      `json:"salePrices,omitempty"`
+	Things             Things          `json:"things,omitempty"`
+	Packs              VariantPacks    `json:"packs,omitempty"`
 }
 
-func (v Variant) String() string {
-	return Stringify(v)
+func (variant Variant) GetArchived() bool {
+	return Deref(variant.Archived)
 }
 
-// GetMeta удовлетворяет интерфейсу HasMeta
-func (v Variant) GetMeta() Meta {
-	return Deref(v.Meta)
+func (variant Variant) GetUpdated() Timestamp {
+	return Deref(variant.Updated)
 }
 
-func (v Variant) MetaType() MetaType {
+func (variant Variant) GetAccountID() uuid.UUID {
+	return Deref(variant.AccountID)
+}
+
+func (variant Variant) GetDescription() string {
+	return Deref(variant.Description)
+}
+
+func (variant Variant) GetExternalCode() string {
+	return Deref(variant.ExternalCode)
+}
+
+func (variant Variant) GetID() uuid.UUID {
+	return Deref(variant.ID)
+}
+
+func (variant Variant) GetMeta() Meta {
+	return Deref(variant.Meta)
+}
+
+func (variant Variant) GetName() string {
+	return Deref(variant.Name)
+}
+
+func (variant Variant) GetCode() string {
+	return Deref(variant.Code)
+}
+
+func (variant Variant) GetBarcodes() Barcodes {
+	return variant.Barcodes
+}
+
+func (variant Variant) GetDiscountProhibited() bool {
+	return Deref(variant.DiscountProhibited)
+}
+
+func (variant Variant) GetCharacteristics() Characteristics {
+	return variant.Characteristics
+}
+
+func (variant Variant) GetImages() Images {
+	return Deref(variant.Images)
+}
+
+func (variant Variant) GetMinPrice() MinPrice {
+	return Deref(variant.MinPrice)
+}
+
+func (variant Variant) GetBuyPrice() BuyPrice {
+	return Deref(variant.BuyPrice)
+}
+
+func (variant Variant) GetProduct() Product {
+	return Deref(variant.Product)
+}
+
+func (variant Variant) GetSalePrices() SalePrices {
+	return variant.SalePrices
+}
+
+func (variant Variant) GetThings() Things {
+	return variant.Things
+}
+
+func (variant Variant) GetPacks() VariantPacks {
+	return variant.Packs
+}
+
+func (variant *Variant) SetArchived(archived bool) *Variant {
+	variant.Archived = &archived
+	return variant
+}
+
+func (variant *Variant) SetDescription(description string) *Variant {
+	variant.Description = &description
+	return variant
+}
+
+func (variant *Variant) SetExternalCode(externalCode string) *Variant {
+	variant.ExternalCode = &externalCode
+	return variant
+}
+
+func (variant *Variant) SetMeta(meta *Meta) *Variant {
+	variant.Meta = meta
+	return variant
+}
+
+func (variant *Variant) SetName(name string) *Variant {
+	variant.Name = &name
+	return variant
+}
+
+func (variant *Variant) SetCode(code string) *Variant {
+	variant.Code = &code
+	return variant
+}
+
+func (variant *Variant) SetBarcodes(barcodes Barcodes) *Variant {
+	variant.Barcodes = barcodes
+	return variant
+}
+
+func (variant *Variant) SetDiscountProhibited(discountProhibited bool) *Variant {
+	variant.DiscountProhibited = &discountProhibited
+	return variant
+}
+
+func (variant *Variant) SetCharacteristics(characteristics Characteristics) *Variant {
+	variant.Characteristics = characteristics
+	return variant
+}
+
+func (variant *Variant) SetImages(images *Images) *Variant {
+	variant.Images = images
+	return variant
+}
+
+func (variant *Variant) SetMinPrice(minPrice *MinPrice) *Variant {
+	variant.MinPrice = minPrice
+	return variant
+}
+
+func (variant *Variant) SetBuyPrice(buyPrice *BuyPrice) *Variant {
+	variant.BuyPrice = buyPrice
+	return variant
+}
+
+func (variant *Variant) SetProduct(product *Product) *Variant {
+	variant.Product = product
+	return variant
+}
+
+func (variant *Variant) SetSalePrices(salePrices SalePrices) *Variant {
+	variant.SalePrices = salePrices
+	return variant
+}
+
+func (variant *Variant) SetPacks(packs VariantPacks) *Variant {
+	variant.Packs = packs
+	return variant
+}
+
+func (variant Variant) String() string {
+	return Stringify(variant)
+}
+
+func (variant Variant) MetaType() MetaType {
 	return MetaTypeVariant
 }
 
-func (v Variant) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
-	return convertToAssortmentPosition(v)
+func (variant Variant) ConvertToAssortmentPosition() (*AssortmentPosition, error) {
+	return convertToAssortmentPosition(variant)
 }
 
 // VariantPack Упаковка модификации.
@@ -57,8 +203,103 @@ type VariantPack struct {
 	Barcodes   Barcodes   `json:"barcodes,omitempty"`
 }
 
-func (v VariantPack) String() string {
-	return Stringify(v)
+type VariantPacks = Slice[VariantPack]
+
+func (variantPack VariantPack) GetID() uuid.UUID {
+	return Deref(variantPack.ID)
+}
+
+func (variantPack VariantPack) GetParentPack() Pack {
+	return Deref(variantPack.ParentPack)
+}
+
+func (variantPack VariantPack) GetBarcodes() Barcodes {
+	return variantPack.Barcodes
+}
+
+func (variantPack *VariantPack) SetParentPack(pack *Pack) *VariantPack {
+	variantPack.ParentPack = pack
+	return variantPack
+}
+
+func (variantPack *VariantPack) SetBarcodes(barcodes Barcodes) *VariantPack {
+	variantPack.Barcodes = barcodes
+	return variantPack
+}
+
+func (variantPack VariantPack) String() string {
+	return Stringify(variantPack)
+}
+
+// Characteristic Характеристика
+// Ключевое слово: attributemetadata
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-metadannye-modifikacij-harakteristiki-modifikacii
+type Characteristic struct {
+	ID       *uuid.UUID `json:"id,omitempty"`       // ID соответствующей характеристики
+	Meta     *Meta      `json:"meta,omitempty"`     // Метаданные характеристики
+	Name     *string    `json:"name,omitempty"`     // Наименование характеристики
+	Required *bool      `json:"required,omitempty"` // Флаг о том, является ли характеристика обязательной
+	Type     *string    `json:"type,omitempty"`     // Тип значения характеристики (значение всегда "string")
+	Value    *string    `json:"value,omitempty"`    // Значение характеристики
+}
+
+type Characteristics = Slice[Characteristic]
+
+func (characteristic Characteristic) GetID() uuid.UUID {
+	return Deref(characteristic.ID)
+}
+
+func (characteristic Characteristic) GetMeta() Meta {
+	return Deref(characteristic.Meta)
+}
+
+func (characteristic Characteristic) GetName() string {
+	return Deref(characteristic.Name)
+}
+
+func (characteristic Characteristic) GetRequired() bool {
+	return Deref(characteristic.Required)
+}
+
+func (characteristic Characteristic) GetType() string {
+	return Deref(characteristic.Type)
+}
+
+func (characteristic Characteristic) GetValue() string {
+	return Deref(characteristic.Value)
+}
+
+func (characteristic *Characteristic) SetMeta(meta *Meta) *Characteristic {
+	characteristic.Meta = meta
+	return characteristic
+}
+
+func (characteristic *Characteristic) SetName(name string) *Characteristic {
+	characteristic.Name = &name
+	return characteristic
+}
+
+func (characteristic *Characteristic) SetRequired(required bool) *Characteristic {
+	characteristic.Required = &required
+	return characteristic
+}
+
+func (characteristic *Characteristic) SetType(value string) *Characteristic {
+	characteristic.Type = &value
+	return characteristic
+}
+
+func (characteristic *Characteristic) SetValue(value string) *Characteristic {
+	characteristic.Value = &value
+	return characteristic
+}
+
+func (characteristic Characteristic) String() string {
+	return Stringify(characteristic)
+}
+
+func (characteristic Characteristic) MetaType() MetaType {
+	return MetaTypeCharacteristic
 }
 
 // VariantService
