@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/shopspring/decimal"
+	"reflect"
 
 	"image/color"
 	"io"
@@ -54,6 +55,84 @@ func DecimalFloatPtr(v float64) *Decimal {
 func DecimalIntPtr(v int64) *Decimal {
 	d := decimal.NewFromInt(v)
 	return &Decimal{d}
+}
+
+// Stringify attempts to create a reasonable string representation of types in
+// the Moysklad library. It does things like resolve pointers to their values
+// and omits struct fields with nil values.
+func Stringify(message any) string {
+	var buf bytes.Buffer
+	v := reflect.ValueOf(message)
+	stringifyValue(&buf, v)
+	return buf.String()
+}
+
+func stringifyValue(w io.Writer, val reflect.Value) {
+	if val.Kind() == reflect.Ptr && val.IsNil() {
+		w.Write([]byte("<nil>"))
+		return
+	}
+
+	v := reflect.Indirect(val)
+
+	switch v.Kind() {
+	case reflect.String:
+		fmt.Fprintf(w, `"%s"`, v)
+	case reflect.Slice:
+		w.Write([]byte{'['})
+		for i := 0; i < v.Len(); i++ {
+			if i > 0 {
+				w.Write([]byte{' '})
+			}
+
+			stringifyValue(w, v.Index(i))
+		}
+
+		w.Write([]byte{']'})
+		return
+	case reflect.Struct:
+		if v.Type().Name() != "" {
+			w.Write([]byte(v.Type().String()))
+		}
+
+		// special handling of Timestamp values
+		if v.Type() == reflect.TypeOf(Timestamp{}) {
+			fmt.Fprintf(w, "{%s}", v.Interface())
+			return
+		}
+
+		w.Write([]byte{'{'})
+
+		var sep bool
+		for i := 0; i < v.NumField(); i++ {
+			fv := v.Field(i)
+			if fv.Kind() == reflect.Ptr && fv.IsNil() {
+				continue
+			}
+			if fv.Kind() == reflect.Slice && fv.IsNil() {
+				continue
+			}
+			if fv.Kind() == reflect.Map && fv.IsNil() {
+				continue
+			}
+
+			if sep {
+				w.Write([]byte(", "))
+			} else {
+				sep = true
+			}
+
+			w.Write([]byte(v.Type().Field(i).Name))
+			w.Write([]byte{':'})
+			stringifyValue(w, fv)
+		}
+
+		w.Write([]byte{'}'})
+	default:
+		if v.CanInterface() {
+			fmt.Fprint(w, v.Interface())
+		}
+	}
 }
 
 // Clamp задаёт значение в диапазоне между указанными нижней и верхней границами
