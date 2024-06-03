@@ -601,9 +601,9 @@ func (s *endpointPrintTemplates) GetCustomTemplateByID(ctx context.Context, id *
 
 type endpointRemove struct{ Endpoint }
 
-// Remove Запрос на перемещение документа с указанным id в корзину.
+// MoveToTrash Запрос на перемещение документа с указанным id в корзину.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-udalenie-w-korzinu
-func (s *endpointRemove) Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *endpointRemove) MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/trash", s.uri, id)
 	_, resp, err := NewRequestBuilder[any](s.client, path).Post(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err

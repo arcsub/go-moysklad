@@ -38,7 +38,7 @@ type ExpenseItemService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ExpenseItem, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, expenseItem *ExpenseItem, params *Params) (*ExpenseItem, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewExpenseItemService(client *Client) ExpenseItemService {

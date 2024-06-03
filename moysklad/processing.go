@@ -117,7 +117,7 @@ type ProcessingService interface {
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Processing, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetMaterials(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
 	CreateMaterial(ctx context.Context, id *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
 	CreateMaterials(ctx context.Context, id *uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error)

@@ -43,7 +43,7 @@ type ProcessingStageService interface {
 	Update(ctx context.Context, id *uuid.UUID, processingStage *ProcessingStage, params *Params) (*ProcessingStage, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewProcessingStageService(client *Client) ProcessingStageService {

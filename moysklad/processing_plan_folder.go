@@ -44,7 +44,7 @@ type ProcessingPlanFolderService interface {
 	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewProcessingPlanFolderService(client *Client) ProcessingPlanFolderService {

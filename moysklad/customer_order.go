@@ -139,7 +139,7 @@ type CustomerOrderService interface {
 	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)
 	GetEmbeddedTemplateByID(ctx context.Context, id *uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
 	GetCustomTemplates(ctx context.Context) (*List[CustomTemplate], *resty.Response, error)

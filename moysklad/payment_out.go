@@ -112,7 +112,7 @@ type PaymentOutService interface {
 	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*PaymentOut, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewPaymentOutService(client *Client) PaymentOutService {

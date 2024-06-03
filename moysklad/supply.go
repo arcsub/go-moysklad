@@ -147,7 +147,7 @@ type SupplyService interface {
 	DeleteState(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Supply, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewSupplyService(client *Client) SupplyService {

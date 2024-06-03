@@ -108,7 +108,7 @@ type CashInService interface {
 	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*CashIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewCashInService(client *Client) CashInService {

@@ -58,7 +58,7 @@ type ProcessingPlanService interface {
 	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
 	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
 	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetStages(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[ProcessingStage], *resty.Response, error)
 	GetStageById(ctx context.Context, id, stageID *uuid.UUID) (*ProcessingStage, *resty.Response, error)
 	UpdateStage(ctx context.Context, id, stageID *uuid.UUID, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error)

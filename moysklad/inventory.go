@@ -99,7 +99,7 @@ type InventoryService interface {
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Inventory, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	Recalculate(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
 
