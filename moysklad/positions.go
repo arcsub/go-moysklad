@@ -20,11 +20,7 @@ func (positions Positions[T]) MarshalJSON() ([]byte, error) {
 }
 
 func (positions *Positions[T]) Push(elements ...*T) {
-	positions.Rows = append(positions.Rows, elements...)
-
-	if len(positions.Rows) > MaxPositions {
-		positions.Rows = positions.Rows[:MaxPositions]
-	}
+	positions.Rows.Push(elements...)
 }
 
 func newPositions[T PositionType]() *Positions[T] {
