@@ -53,6 +53,7 @@ func (o Operation) Raw() json.RawMessage {
 	return o.data
 }
 
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (o *Operation) UnmarshalJSON(data []byte) error {
 	type alias Operation
 	var t alias

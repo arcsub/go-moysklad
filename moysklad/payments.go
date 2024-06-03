@@ -58,7 +58,7 @@ func (p Payment) String() string {
 	return Stringify(p.Meta)
 }
 
-// UnmarshalJSON анмаршалит Входящий платеж, Приходный ордер, при expand=payments
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (p *Payment) UnmarshalJSON(data []byte) (err error) {
 	type alias Payment
 	var t alias

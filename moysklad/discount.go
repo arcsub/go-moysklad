@@ -45,6 +45,7 @@ func (r RoundOffDiscount) MetaType() MetaType {
 	return MetaTypeRoundOffDiscount
 }
 
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (d *Discount) UnmarshalJSON(data []byte) error {
 	type alias Discount
 	var t alias

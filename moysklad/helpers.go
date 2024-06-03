@@ -332,6 +332,7 @@ type Decimal struct {
 	decimal.Decimal
 }
 
+// MarshalJSON implements the json.Marshaler interface.
 func (d Decimal) MarshalJSON() ([]byte, error) {
 	return []byte(d.StringFixed(2)), nil
 }

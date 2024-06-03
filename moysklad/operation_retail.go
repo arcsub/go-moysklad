@@ -21,6 +21,7 @@ func (o RetailOperation) Raw() json.RawMessage {
 	return o.data
 }
 
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (o *RetailOperation) UnmarshalJSON(data []byte) error {
 	type alias RetailOperation
 	var t alias

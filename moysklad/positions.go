@@ -2,7 +2,7 @@ package moysklad
 
 import "encoding/json"
 
-type PositionTypes interface {
+type PositionType interface {
 	BundleComponent | CommissionReportInPosition | CommissionReportInReturnPosition |
 		CommissionReportOutPosition | CustomerOrderPosition | DemandPosition | EnterPosition |
 		InternalOrderPosition | InventoryPosition | InvoicePosition | LossPosition | MovePosition |
@@ -12,22 +12,22 @@ type PositionTypes interface {
 		ProductionStageCompletionMaterial | ProductionStageCompletionResult | ProductionRow | ProductionTaskResult
 }
 
-type Positions[T PositionTypes] MetaArray[T]
+type Positions[T PositionType] MetaArray[T]
 
 // MarshalJSON implements the json.Marshaler interface.
-func (p Positions[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.Rows)
+func (positions Positions[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(positions.Rows)
 }
 
-func (p *Positions[T]) Push(elements ...*T) {
-	p.Rows = append(p.Rows, elements...)
+func (positions *Positions[T]) Push(elements ...*T) {
+	positions.Rows = append(positions.Rows, elements...)
 
-	if len(p.Rows) > MaxPositions {
-		p.Rows = p.Rows[:MaxPositions]
+	if len(positions.Rows) > MaxPositions {
+		positions.Rows = positions.Rows[:MaxPositions]
 	}
 }
 
-func newPositions[T PositionTypes]() *Positions[T] {
+func newPositions[T PositionType]() *Positions[T] {
 	return &Positions[T]{Rows: make(Slice[T], 0, 1000)}
 }
 
