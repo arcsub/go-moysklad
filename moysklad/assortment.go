@@ -16,8 +16,10 @@ func (assortment Assortment) MetaType() MetaType {
 	return MetaTypeAssortment
 }
 
-// AssortmentPosition позиция ассортимента.
-// Product | Variant | Bundle | Service | Consignment
+// AssortmentPosition представляет позицию ассортимента.
+//
+// Создать позицию можно с помощью NewAssortmentPosition, передав в качестве аргумента объект,
+// удовлетворяющий интерфейсу AssortmentType.
 type AssortmentPosition struct {
 	Meta         Meta            `json:"meta"`
 	Code         string          `json:"code,omitempty"`
@@ -30,11 +32,15 @@ type AssortmentPosition struct {
 	ID           uuid.UUID       `json:"id,omitempty"`
 }
 
+// AssortmentType описывает типы, которые входят в состав ассортимента.
 type AssortmentType interface {
 	Product | Variant | Bundle | Service | Consignment
 	MetaOwner
 }
 
+// NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу AssortmentType.
+//
+// Возвращает позицию ассортимента с заполненным полем Meta.
 func NewAssortmentPosition[T AssortmentType](entity T) *AssortmentPosition {
 	return &AssortmentPosition{Meta: entity.GetMeta()}
 }
