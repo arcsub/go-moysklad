@@ -405,8 +405,8 @@ func (product *Product) SetMinimumBalance(minimumBalance float64) *Product {
 	return product
 }
 
-func (product *Product) SetSyncID(syncID uuid.UUID) *Product {
-	product.SyncID = &syncID
+func (product *Product) SetSyncID(syncID *uuid.UUID) *Product {
+	product.SyncID = syncID
 	return product
 }
 

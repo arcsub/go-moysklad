@@ -44,11 +44,264 @@ type CashIn struct {
 	Attributes     Attributes    `json:"attributes,omitempty"`
 }
 
-func (c CashIn) String() string {
-	return Stringify(c)
+func (cashIn CashIn) GetOrganization() Organization {
+	return Deref(cashIn.Organization)
 }
 
-func (c CashIn) MetaType() MetaType {
+func (cashIn CashIn) GetVatSum() Decimal {
+	return Deref(cashIn.VatSum)
+}
+
+func (cashIn CashIn) GetApplicable() bool {
+	return Deref(cashIn.Applicable)
+}
+
+func (cashIn CashIn) GetMoment() Timestamp {
+	return Deref(cashIn.Moment)
+}
+
+func (cashIn CashIn) GetCode() string {
+	return Deref(cashIn.Code)
+}
+
+func (cashIn CashIn) GetContract() Contract {
+	return Deref(cashIn.Contract)
+}
+
+func (cashIn CashIn) GetAccountID() uuid.UUID {
+	return Deref(cashIn.AccountID)
+}
+
+func (cashIn CashIn) GetDeleted() Timestamp {
+	return Deref(cashIn.Deleted)
+}
+
+func (cashIn CashIn) GetDescription() string {
+	return Deref(cashIn.Description)
+}
+
+func (cashIn CashIn) GetExternalCode() string {
+	return Deref(cashIn.ExternalCode)
+}
+
+func (cashIn CashIn) GetFiles() Files {
+	return Deref(cashIn.Files)
+}
+
+func (cashIn CashIn) GetGroup() Group {
+	return Deref(cashIn.Group)
+}
+
+func (cashIn CashIn) GetID() uuid.UUID {
+	return Deref(cashIn.ID)
+}
+
+func (cashIn CashIn) GetMeta() Meta {
+	return Deref(cashIn.Meta)
+}
+
+func (cashIn CashIn) GetOperations() Operations {
+	return cashIn.Operations
+}
+
+func (cashIn CashIn) GetAgent() Counterparty {
+	return Deref(cashIn.Agent)
+}
+
+func (cashIn CashIn) GetCreated() Timestamp {
+	return Deref(cashIn.Created)
+}
+
+func (cashIn CashIn) GetOwner() Employee {
+	return Deref(cashIn.Owner)
+}
+
+func (cashIn CashIn) GetPaymentPurpose() string {
+	return Deref(cashIn.PaymentPurpose)
+}
+
+func (cashIn CashIn) GetPrinted() bool {
+	return Deref(cashIn.Printed)
+}
+
+func (cashIn CashIn) GetProject() Project {
+	return Deref(cashIn.Project)
+}
+
+func (cashIn CashIn) GetPublished() bool {
+	return Deref(cashIn.Published)
+}
+
+func (cashIn CashIn) GetRate() Rate {
+	return Deref(cashIn.Rate)
+}
+
+func (cashIn CashIn) GetSalesChannel() SalesChannel {
+	return Deref(cashIn.SalesChannel)
+}
+
+func (cashIn CashIn) GetShared() bool {
+	return Deref(cashIn.Shared)
+}
+
+func (cashIn CashIn) GetState() State {
+	return Deref(cashIn.State)
+}
+
+func (cashIn CashIn) GetSum() Decimal {
+	return Deref(cashIn.Sum)
+}
+
+func (cashIn CashIn) GetSyncID() uuid.UUID {
+	return Deref(cashIn.SyncID)
+}
+
+func (cashIn CashIn) GetUpdated() Timestamp {
+	return Deref(cashIn.Updated)
+}
+
+func (cashIn CashIn) GetName() string {
+	return Deref(cashIn.Name)
+}
+
+func (cashIn CashIn) GetFactureIn() FactureIn {
+	return Deref(cashIn.FactureIn)
+}
+
+func (cashIn CashIn) GetAttributes() Attributes {
+	return cashIn.Attributes
+}
+
+func (cashIn *CashIn) SetOrganization(organization *Organization) *CashIn {
+	cashIn.Organization = organization
+	return cashIn
+}
+
+func (cashIn *CashIn) SetVatSum(vatSum *Decimal) *CashIn {
+	cashIn.VatSum = vatSum
+	return cashIn
+}
+
+func (cashIn *CashIn) SetApplicable(applicable bool) *CashIn {
+	cashIn.Applicable = &applicable
+	return cashIn
+}
+
+func (cashIn *CashIn) SetMoment(moment *Timestamp) *CashIn {
+	cashIn.Moment = moment
+	return cashIn
+}
+
+func (cashIn *CashIn) SetCode(code string) *CashIn {
+	cashIn.Code = &code
+	return cashIn
+}
+
+func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
+	cashIn.Contract = contract
+	return cashIn
+}
+
+func (cashIn *CashIn) SetDescription(description string) *CashIn {
+	cashIn.Description = &description
+	return cashIn
+}
+
+func (cashIn *CashIn) SetExternalCode(externalCode string) *CashIn {
+	cashIn.ExternalCode = &externalCode
+	return cashIn
+}
+
+func (cashIn *CashIn) SetFiles(files *Files) *CashIn {
+	cashIn.Files = files
+	return cashIn
+}
+
+func (cashIn *CashIn) SetGroup(group *Group) *CashIn {
+	cashIn.Group = group
+	return cashIn
+}
+
+func (cashIn *CashIn) SetMeta(meta *Meta) *CashIn {
+	cashIn.Meta = meta
+	return cashIn
+}
+
+func (cashIn *CashIn) SetOperations(operations Operations) *CashIn {
+	cashIn.Operations = operations
+	return cashIn
+}
+
+func (cashIn *CashIn) SetAgent(agent *Counterparty) *CashIn {
+	cashIn.Agent = agent
+	return cashIn
+}
+
+func (cashIn *CashIn) SetOwner(owner *Employee) *CashIn {
+	cashIn.Owner = owner
+	return cashIn
+}
+
+func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
+	cashIn.PaymentPurpose = &paymentPurpose
+	return cashIn
+}
+
+func (cashIn *CashIn) SetProject(project *Project) *CashIn {
+	cashIn.Project = project
+	return cashIn
+}
+
+func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
+	cashIn.Rate = rate
+	return cashIn
+}
+
+func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
+	cashIn.SalesChannel = salesChannel
+	return cashIn
+}
+
+func (cashIn *CashIn) SetShared(shared bool) *CashIn {
+	cashIn.Shared = &shared
+	return cashIn
+}
+
+func (cashIn *CashIn) SetState(state *State) *CashIn {
+	cashIn.State = state
+	return cashIn
+}
+
+func (cashIn *CashIn) SetSum(sum *Decimal) *CashIn {
+	cashIn.Sum = sum
+	return cashIn
+}
+
+func (cashIn *CashIn) SetSyncID(syncID *uuid.UUID) *CashIn {
+	cashIn.SyncID = syncID
+	return cashIn
+}
+
+func (cashIn *CashIn) SetName(name string) *CashIn {
+	cashIn.Name = &name
+	return cashIn
+}
+
+func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
+	cashIn.FactureIn = factureIn
+	return cashIn
+}
+
+func (cashIn *CashIn) SetAttributes(attributes Attributes) *CashIn {
+	cashIn.Attributes = attributes
+	return cashIn
+}
+
+func (cashIn CashIn) String() string {
+	return Stringify(cashIn)
+}
+
+func (cashIn CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
 }
 
