@@ -60,6 +60,10 @@ func (bundle Bundle) FromAssortment(assortmentPosition AssortmentPosition) *Bund
 	return unmarshalAsType[Bundle](assortmentPosition)
 }
 
+func (bundle Bundle) AsAssortment() *AssortmentPosition {
+	return &AssortmentPosition{Meta: bundle.GetMeta()}
+}
+
 func (bundle Bundle) GetVolume() float64 {
 	return Deref(bundle.Volume)
 }

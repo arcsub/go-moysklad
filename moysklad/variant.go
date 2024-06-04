@@ -40,6 +40,10 @@ func (variant Variant) FromAssortment(assortmentPosition AssortmentPosition) *Va
 	return unmarshalAsType[Variant](assortmentPosition)
 }
 
+func (variant Variant) AsAssortment() *AssortmentPosition {
+	return &AssortmentPosition{Meta: variant.GetMeta()}
+}
+
 func (variant Variant) GetArchived() bool {
 	return Deref(variant.Archived)
 }

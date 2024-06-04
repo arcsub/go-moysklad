@@ -67,6 +67,10 @@ func (product Product) FromAssortment(assortmentPosition AssortmentPosition) *Pr
 	return unmarshalAsType[Product](assortmentPosition)
 }
 
+func (product Product) AsAssortment() *AssortmentPosition {
+	return &AssortmentPosition{Meta: product.GetMeta()}
+}
+
 func (product Product) GetSupplier() Counterparty {
 	return Deref(product.Supplier)
 }

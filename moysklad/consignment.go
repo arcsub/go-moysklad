@@ -33,6 +33,10 @@ func (consignment Consignment) FromAssortment(assortmentPosition AssortmentPosit
 	return unmarshalAsType[Consignment](assortmentPosition)
 }
 
+func (consignment Consignment) AsAssortment() *AssortmentPosition {
+	return &AssortmentPosition{Meta: consignment.GetMeta()}
+}
+
 func (consignment Consignment) String() string {
 	return Stringify(consignment)
 }

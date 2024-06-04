@@ -50,6 +50,10 @@ func (service Service) FromAssortment(assortmentPosition AssortmentPosition) *Se
 	return unmarshalAsType[Service](assortmentPosition)
 }
 
+func (service Service) AsAssortment() *AssortmentPosition {
+	return &AssortmentPosition{Meta: service.GetMeta()}
+}
+
 func (service Service) String() string {
 	return Stringify(service)
 }
