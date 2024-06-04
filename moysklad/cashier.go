@@ -15,11 +15,46 @@ type Cashier struct {
 	RetailStore *RetailStore `json:"retailStore,omitempty"` // Метаданные точки продаж, к которой прикреплен кассир
 }
 
-func (c Cashier) String() string {
-	return Stringify(c)
+func (cashier Cashier) GetAccountID() uuid.UUID {
+	return Deref(cashier.AccountID)
 }
 
-func (c Cashier) MetaType() MetaType {
+func (cashier Cashier) GetEmployee() Employee {
+	return Deref(cashier.Employee)
+}
+
+func (cashier Cashier) GetID() uuid.UUID {
+	return Deref(cashier.ID)
+}
+
+func (cashier Cashier) GetMeta() Meta {
+	return Deref(cashier.Meta)
+}
+
+func (cashier Cashier) GetRetailStore() RetailStore {
+	return Deref(cashier.RetailStore)
+}
+
+func (cashier *Cashier) SetEmployee(employee *Employee) *Cashier {
+	cashier.Employee = employee
+	return cashier
+}
+
+func (cashier *Cashier) SetMeta(meta *Meta) *Cashier {
+	cashier.Meta = meta
+	return cashier
+}
+
+func (cashier *Cashier) SetRetailStore(retailStore *RetailStore) *Cashier {
+	cashier.RetailStore = retailStore
+	return cashier
+}
+
+func (cashier Cashier) String() string {
+	return Stringify(cashier)
+}
+
+func (cashier Cashier) MetaType() MetaType {
 	return MetaTypeCashier
 }
 
