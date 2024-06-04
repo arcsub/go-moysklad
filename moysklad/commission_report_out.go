@@ -53,16 +53,325 @@ type CommissionReportOut struct {
 	Attributes            Attributes                              `json:"attributes,omitempty"`
 }
 
-func (c CommissionReportOut) String() string {
-	return Stringify(c)
+func (commissionReportOut CommissionReportOut) GetApplicable() bool {
+	return Deref(commissionReportOut.Applicable)
 }
 
-// GetMeta удовлетворяет интерфейсу HasMeta
-func (c CommissionReportOut) GetMeta() Meta {
-	return Deref(c.Meta)
+func (commissionReportOut CommissionReportOut) GetOrganizationAccount() AgentAccount {
+	return Deref(commissionReportOut.OrganizationAccount)
 }
 
-func (c CommissionReportOut) MetaType() MetaType {
+func (commissionReportOut CommissionReportOut) GetAgentAccount() AgentAccount {
+	return Deref(commissionReportOut.AgentAccount)
+}
+
+func (commissionReportOut CommissionReportOut) GetOrganization() Organization {
+	return Deref(commissionReportOut.Organization)
+}
+
+func (commissionReportOut CommissionReportOut) GetVatSum() Decimal {
+	return Deref(commissionReportOut.VatSum)
+}
+
+func (commissionReportOut CommissionReportOut) GetCode() string {
+	return Deref(commissionReportOut.Code)
+}
+
+func (commissionReportOut CommissionReportOut) GetCommissionPeriodEnd() Timestamp {
+	return Deref(commissionReportOut.CommissionPeriodEnd)
+}
+
+func (commissionReportOut CommissionReportOut) GetAgent() Counterparty {
+	return Deref(commissionReportOut.Agent)
+}
+
+func (commissionReportOut CommissionReportOut) GetCommitentSum() Decimal {
+	return Deref(commissionReportOut.CommitentSum)
+}
+
+func (commissionReportOut CommissionReportOut) GetContract() Contract {
+	return Deref(commissionReportOut.Contract)
+}
+
+func (commissionReportOut CommissionReportOut) GetCreated() Timestamp {
+	return Deref(commissionReportOut.Created)
+}
+
+func (commissionReportOut CommissionReportOut) GetDeleted() Timestamp {
+	return Deref(commissionReportOut.Deleted)
+}
+
+func (commissionReportOut CommissionReportOut) GetDescription() string {
+	return Deref(commissionReportOut.Description)
+}
+
+func (commissionReportOut CommissionReportOut) GetExternalCode() string {
+	return Deref(commissionReportOut.ExternalCode)
+}
+
+func (commissionReportOut CommissionReportOut) GetFiles() Files {
+	return Deref(commissionReportOut.Files)
+}
+
+func (commissionReportOut CommissionReportOut) GetGroup() Group {
+	return Deref(commissionReportOut.Group)
+}
+
+func (commissionReportOut CommissionReportOut) GetID() uuid.UUID {
+	return Deref(commissionReportOut.ID)
+}
+
+func (commissionReportOut CommissionReportOut) GetMeta() Meta {
+	return Deref(commissionReportOut.Meta)
+}
+
+func (commissionReportOut CommissionReportOut) GetMoment() Timestamp {
+	return Deref(commissionReportOut.Moment)
+}
+
+func (commissionReportOut CommissionReportOut) GetName() string {
+	return Deref(commissionReportOut.Name)
+}
+
+func (commissionReportOut CommissionReportOut) GetAccountID() uuid.UUID {
+	return Deref(commissionReportOut.AccountID)
+}
+
+func (commissionReportOut CommissionReportOut) GetCommissionPeriodStart() Timestamp {
+	return Deref(commissionReportOut.CommissionPeriodStart)
+}
+
+func (commissionReportOut CommissionReportOut) GetOwner() Employee {
+	return Deref(commissionReportOut.Owner)
+}
+
+func (commissionReportOut CommissionReportOut) GetPayedSum() Decimal {
+	return Deref(commissionReportOut.PayedSum)
+}
+
+func (commissionReportOut CommissionReportOut) GetPositions() Positions[CommissionReportOutPosition] {
+	return Deref(commissionReportOut.Positions)
+}
+
+func (commissionReportOut CommissionReportOut) GetPrinted() bool {
+	return Deref(commissionReportOut.Printed)
+}
+
+func (commissionReportOut CommissionReportOut) GetProject() Project {
+	return Deref(commissionReportOut.Project)
+}
+
+func (commissionReportOut CommissionReportOut) GetPublished() bool {
+	return Deref(commissionReportOut.Published)
+}
+
+func (commissionReportOut CommissionReportOut) GetRate() Rate {
+	return Deref(commissionReportOut.Rate)
+}
+
+func (commissionReportOut CommissionReportOut) GetRewardPercent() float64 {
+	return Deref(commissionReportOut.RewardPercent)
+}
+
+func (commissionReportOut CommissionReportOut) GetPayments() Payments {
+	return Deref(commissionReportOut.Payments)
+}
+
+func (commissionReportOut CommissionReportOut) GetSalesChannel() SalesChannel {
+	return Deref(commissionReportOut.SalesChannel)
+}
+
+func (commissionReportOut CommissionReportOut) GetShared() bool {
+	return Deref(commissionReportOut.Shared)
+}
+
+func (commissionReportOut CommissionReportOut) GetState() State {
+	return Deref(commissionReportOut.State)
+}
+
+func (commissionReportOut CommissionReportOut) GetSum() Decimal {
+	return Deref(commissionReportOut.Sum)
+}
+
+func (commissionReportOut CommissionReportOut) GetSyncID() uuid.UUID {
+	return Deref(commissionReportOut.SyncID)
+}
+
+func (commissionReportOut CommissionReportOut) GetUpdated() Timestamp {
+	return Deref(commissionReportOut.Updated)
+}
+
+func (commissionReportOut CommissionReportOut) GetVatEnabled() bool {
+	return Deref(commissionReportOut.VatEnabled)
+}
+
+func (commissionReportOut CommissionReportOut) GetVatIncluded() bool {
+	return Deref(commissionReportOut.VatIncluded)
+}
+
+func (commissionReportOut CommissionReportOut) GetRewardType() RewardType {
+	return commissionReportOut.RewardType
+}
+
+func (commissionReportOut CommissionReportOut) GetAttributes() Attributes {
+	return commissionReportOut.Attributes
+}
+
+func (commissionReportOut *CommissionReportOut) SetApplicable(applicable bool) *CommissionReportOut {
+	commissionReportOut.Applicable = &applicable
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetOrganizationAccount(organizationAccount *AgentAccount) *CommissionReportOut {
+	commissionReportOut.OrganizationAccount = organizationAccount
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetAgentAccount(agentAccount *AgentAccount) *CommissionReportOut {
+	commissionReportOut.AgentAccount = agentAccount
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetOrganization(organization *Organization) *CommissionReportOut {
+	commissionReportOut.Organization = organization
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetCode(code string) *CommissionReportOut {
+	commissionReportOut.Code = &code
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetCommissionPeriodEnd(commissionPeriodEnd *Timestamp) *CommissionReportOut {
+	commissionReportOut.CommissionPeriodEnd = commissionPeriodEnd
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetAgent(agent *Counterparty) *CommissionReportOut {
+	commissionReportOut.Agent = agent
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetContract(contract *Contract) *CommissionReportOut {
+	commissionReportOut.Contract = contract
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetDescription(description string) *CommissionReportOut {
+	commissionReportOut.Description = &description
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetExternalCode(externalCode string) *CommissionReportOut {
+	commissionReportOut.ExternalCode = &externalCode
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetFiles(files *Files) *CommissionReportOut {
+	commissionReportOut.Files = files
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetGroup(group *Group) *CommissionReportOut {
+	commissionReportOut.Group = group
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetMeta(meta *Meta) *CommissionReportOut {
+	commissionReportOut.Meta = meta
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetMoment(moment *Timestamp) *CommissionReportOut {
+	commissionReportOut.Moment = moment
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetName(name string) *CommissionReportOut {
+	commissionReportOut.Name = &name
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetCommissionPeriodStart(commissionPeriodStart *Timestamp) *CommissionReportOut {
+	commissionReportOut.CommissionPeriodStart = commissionPeriodStart
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetOwner(owner *Employee) *CommissionReportOut {
+	commissionReportOut.Owner = owner
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetPositions(positions *Positions[CommissionReportOutPosition]) *CommissionReportOut {
+	commissionReportOut.Positions = positions
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *CommissionReportOut {
+	commissionReportOut.Project = project
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetRate(rate *Rate) *CommissionReportOut {
+	commissionReportOut.Rate = rate
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetRewardPercent(rewardPercent float64) *CommissionReportOut {
+	commissionReportOut.RewardPercent = &rewardPercent
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetPayments(payments *Payments) *CommissionReportOut {
+	commissionReportOut.Payments = payments
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportOut {
+	commissionReportOut.SalesChannel = salesChannel
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetShared(shared bool) *CommissionReportOut {
+	commissionReportOut.Shared = &shared
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetState(state *State) *CommissionReportOut {
+	commissionReportOut.State = state
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetSyncID(syncID *uuid.UUID) *CommissionReportOut {
+	commissionReportOut.SyncID = syncID
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetVatEnabled(vatEnabled bool) *CommissionReportOut {
+	commissionReportOut.VatEnabled = &vatEnabled
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetVatIncluded(vatIncluded bool) *CommissionReportOut {
+	commissionReportOut.VatIncluded = &vatIncluded
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetRewardType(rewardType RewardType) *CommissionReportOut {
+	commissionReportOut.RewardType = rewardType
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetAttributes(attributes Attributes) *CommissionReportOut {
+	commissionReportOut.Attributes = attributes
+	return commissionReportOut
+}
+
+func (commissionReportOut CommissionReportOut) String() string {
+	return Stringify(commissionReportOut)
+}
+
+func (commissionReportOut CommissionReportOut) MetaType() MetaType {
 	return MetaTypeCommissionReportOut
 }
 
@@ -82,11 +391,91 @@ type CommissionReportOutPosition struct {
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }
 
-func (c CommissionReportOutPosition) String() string {
-	return Stringify(c)
+func (commissionReportOutPosition CommissionReportOutPosition) GetAccountID() uuid.UUID {
+	return Deref(commissionReportOutPosition.AccountID)
 }
 
-func (c CommissionReportOutPosition) MetaType() MetaType {
+func (commissionReportOutPosition CommissionReportOutPosition) GetAssortment() AssortmentPosition {
+	return Deref(commissionReportOutPosition.Assortment)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetID() uuid.UUID {
+	return Deref(commissionReportOutPosition.ID)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetPack() Pack {
+	return Deref(commissionReportOutPosition.Pack)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetMeta() Meta {
+	return Deref(commissionReportOutPosition.Meta)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetPrice() Decimal {
+	return Deref(commissionReportOutPosition.Price)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetQuantity() float64 {
+	return Deref(commissionReportOutPosition.Quantity)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetReward() Decimal {
+	return Deref(commissionReportOutPosition.Reward)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetVat() int {
+	return Deref(commissionReportOutPosition.Vat)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() bool {
+	return Deref(commissionReportOutPosition.VatEnabled)
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment *AssortmentPosition) *CommissionReportOutPosition {
+	commissionReportOutPosition.Assortment = assortment
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetPack(pack *Pack) *CommissionReportOutPosition {
+	commissionReportOutPosition.Pack = pack
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetMeta(meta *Meta) *CommissionReportOutPosition {
+	commissionReportOutPosition.Meta = meta
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetPrice(price *Decimal) *CommissionReportOutPosition {
+	commissionReportOutPosition.Price = price
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetQuantity(quantity float64) *CommissionReportOutPosition {
+	commissionReportOutPosition.Quantity = &quantity
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetReward(reward *Decimal) *CommissionReportOutPosition {
+	commissionReportOutPosition.Reward = reward
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetVat(vat int) *CommissionReportOutPosition {
+	commissionReportOutPosition.Vat = &vat
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition *CommissionReportOutPosition) SetVatEnabled(vatEnabled bool) *CommissionReportOutPosition {
+	commissionReportOutPosition.VatEnabled = &vatEnabled
+	return commissionReportOutPosition
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) String() string {
+	return Stringify(commissionReportOutPosition)
+}
+
+func (commissionReportOutPosition CommissionReportOutPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportOutPosition
 }
 

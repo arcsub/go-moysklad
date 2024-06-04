@@ -424,9 +424,9 @@ type CommissionReportInPosition struct {
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Meta       *Meta               `json:"meta,omitempty"`       // Метаданные
-	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
-	Reward     *float64            `json:"reward,omitempty"`     // Вознаграждение
+	Reward     *Decimal            `json:"reward,omitempty"`     // Вознаграждение
 	Vat        *int                `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }
@@ -451,7 +451,7 @@ func (commissionReportInPosition CommissionReportInPosition) GetMeta() Meta {
 	return Deref(commissionReportInPosition.Meta)
 }
 
-func (commissionReportInPosition CommissionReportInPosition) GetPrice() float64 {
+func (commissionReportInPosition CommissionReportInPosition) GetPrice() Decimal {
 	return Deref(commissionReportInPosition.Price)
 }
 
@@ -459,7 +459,7 @@ func (commissionReportInPosition CommissionReportInPosition) GetQuantity() float
 	return Deref(commissionReportInPosition.Quantity)
 }
 
-func (commissionReportInPosition CommissionReportInPosition) GetReward() float64 {
+func (commissionReportInPosition CommissionReportInPosition) GetReward() Decimal {
 	return Deref(commissionReportInPosition.Reward)
 }
 
@@ -486,8 +486,8 @@ func (commissionReportInPosition *CommissionReportInPosition) SetMeta(meta *Meta
 	return commissionReportInPosition
 }
 
-func (commissionReportInPosition *CommissionReportInPosition) SetPrice(price float64) *CommissionReportInPosition {
-	commissionReportInPosition.Price = &price
+func (commissionReportInPosition *CommissionReportInPosition) SetPrice(price *Decimal) *CommissionReportInPosition {
+	commissionReportInPosition.Price = price
 	return commissionReportInPosition
 }
 
@@ -496,8 +496,8 @@ func (commissionReportInPosition *CommissionReportInPosition) SetQuantity(quanti
 	return commissionReportInPosition
 }
 
-func (commissionReportInPosition *CommissionReportInPosition) SetReward(reward float64) *CommissionReportInPosition {
-	commissionReportInPosition.Reward = &reward
+func (commissionReportInPosition *CommissionReportInPosition) SetReward(reward *Decimal) *CommissionReportInPosition {
+	commissionReportInPosition.Reward = reward
 	return commissionReportInPosition
 }
 
