@@ -37,13 +37,105 @@ func (consignment Consignment) AsAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: consignment.GetMeta()}
 }
 
-func (consignment Consignment) String() string {
-	return Stringify(consignment)
-}
-
-// GetMeta удовлетворяет интерфейсу HasMeta
 func (consignment Consignment) GetMeta() Meta {
 	return Deref(consignment.Meta)
+}
+
+func (consignment Consignment) GetBarcodes() Barcodes {
+	return consignment.Barcodes
+}
+
+func (consignment Consignment) GetCode() string {
+	return Deref(consignment.Code)
+}
+
+func (consignment Consignment) GetDescription() string {
+	return Deref(consignment.Description)
+}
+
+func (consignment Consignment) GetExternalCode() string {
+	return Deref(consignment.ExternalCode)
+}
+
+func (consignment Consignment) GetID() uuid.UUID {
+	return Deref(consignment.ID)
+}
+
+func (consignment Consignment) GetAccountID() uuid.UUID {
+	return Deref(consignment.AccountID)
+}
+
+func (consignment Consignment) GetName() string {
+	return Deref(consignment.Name)
+}
+
+func (consignment Consignment) GetAssortment() AssortmentPosition {
+	return Deref(consignment.Assortment)
+}
+
+func (consignment Consignment) GetImage() Image {
+	return Deref(consignment.Image)
+}
+
+func (consignment Consignment) GetLabel() string {
+	return Deref(consignment.Label)
+}
+
+func (consignment Consignment) GetUpdated() Timestamp {
+	return Deref(consignment.Updated)
+}
+
+func (consignment Consignment) GetAttributes() Attributes {
+	return consignment.Attributes
+}
+
+func (consignment *Consignment) SetMeta(meta *Meta) *Consignment {
+	consignment.Meta = meta
+	return consignment
+}
+
+func (consignment *Consignment) SetBarcodes(barcodes Barcodes) *Consignment {
+	consignment.Barcodes = barcodes
+	return consignment
+}
+
+func (consignment *Consignment) SetCode(code string) *Consignment {
+	consignment.Code = &code
+	return consignment
+}
+
+func (consignment *Consignment) SetDescription(description string) *Consignment {
+	consignment.Description = &description
+	return consignment
+}
+
+func (consignment *Consignment) SetExternalCode(externalCode string) *Consignment {
+	consignment.ExternalCode = &externalCode
+	return consignment
+}
+
+func (consignment *Consignment) SetAssortment(assortment *AssortmentPosition) *Consignment {
+	consignment.Assortment = assortment
+	return consignment
+}
+
+func (consignment *Consignment) SetImage(image *Image) *Consignment {
+	consignment.Image = image
+	return consignment
+}
+
+func (consignment *Consignment) SetLabel(label string) *Consignment {
+	consignment.Label = &label
+	return consignment
+}
+
+func (consignment *Consignment) SetAttributes(attributes Attributes) *Consignment {
+	consignment.Attributes = attributes
+	return consignment
+}
+
+func (consignment Consignment) String() string {
+	return Stringify(consignment)
 }
 
 func (consignment Consignment) MetaType() MetaType {
