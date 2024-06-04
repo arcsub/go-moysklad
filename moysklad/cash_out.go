@@ -26,7 +26,7 @@ type CashOut struct {
 	Owner          *Employee     `json:"owner,omitempty"`
 	Meta           *Meta         `json:"meta,omitempty"`
 	Moment         *Timestamp    `json:"moment,omitempty"`
-	Operations     *Operations   `json:"operations,omitempty"`
+	Operations     Operations    `json:"operations,omitempty"`
 	Agent          *Counterparty `json:"agent,omitempty"`
 	ID             *uuid.UUID    `json:"id,omitempty"`
 	PaymentPurpose *string       `json:"paymentPurpose,omitempty"`
@@ -45,11 +45,143 @@ type CashOut struct {
 	Attributes     Attributes    `json:"attributes,omitempty"`
 }
 
-func (c CashOut) String() string {
-	return Stringify(c)
+func (cashOut CashOut) GetName() string {
+	return Deref(cashOut.Name)
 }
 
-func (c CashOut) MetaType() MetaType {
+func (cashOut CashOut) GetDeleted() Timestamp {
+	return Deref(cashOut.Deleted)
+}
+
+func (cashOut CashOut) GetApplicable() bool {
+	return Deref(cashOut.Applicable)
+}
+
+func (cashOut CashOut) GetAccountID() uuid.UUID {
+	return Deref(cashOut.AccountID)
+}
+
+func (cashOut CashOut) GetCode() string {
+	return Deref(cashOut.Code)
+}
+
+func (cashOut CashOut) GetContract() Contract {
+	return Deref(cashOut.Contract)
+}
+
+func (cashOut CashOut) GetCreated() Timestamp {
+	return Deref(cashOut.Created)
+}
+
+func (cashOut CashOut) GetOrganization() Organization {
+	return Deref(cashOut.Organization)
+}
+
+func (cashOut CashOut) GetDescription() string {
+	return Deref(cashOut.Description)
+}
+
+func (cashOut CashOut) GetExpenseItem() ExpenseItem {
+	return Deref(cashOut.ExpenseItem)
+}
+
+func (cashOut CashOut) GetExternalCode() string {
+	return Deref(cashOut.ExternalCode)
+}
+
+func (cashOut CashOut) GetFiles() Files {
+	return Deref(cashOut.Files)
+}
+
+func (cashOut CashOut) GetGroup() Group {
+	return Deref(cashOut.Group)
+}
+
+func (cashOut CashOut) GetOwner() Employee {
+	return Deref(cashOut.Owner)
+}
+
+func (cashOut CashOut) GetMeta() Meta {
+	return Deref(cashOut.Meta)
+}
+
+func (cashOut CashOut) GetMoment() Timestamp {
+	return Deref(cashOut.Moment)
+}
+
+func (cashOut CashOut) GetOperations() Operations {
+	return cashOut.Operations
+}
+
+func (cashOut CashOut) GetAgent() Counterparty {
+	return Deref(cashOut.Agent)
+}
+
+func (cashOut CashOut) GetID() uuid.UUID {
+	return Deref(cashOut.ID)
+}
+
+func (cashOut CashOut) GetPaymentPurpose() string {
+	return Deref(cashOut.PaymentPurpose)
+}
+
+func (cashOut CashOut) GetPrinted() bool {
+	return Deref(cashOut.Printed)
+}
+
+func (cashOut CashOut) GetProject() Project {
+	return Deref(cashOut.Project)
+}
+
+func (cashOut CashOut) GetPublished() bool {
+	return Deref(cashOut.Published)
+}
+
+func (cashOut CashOut) GetRate() Rate {
+	return Deref(cashOut.Rate)
+}
+
+func (cashOut CashOut) GetSalesChannel() SalesChannel {
+	return Deref(cashOut.SalesChannel)
+}
+
+func (cashOut CashOut) GetShared() bool {
+	return Deref(cashOut.Shared)
+}
+
+func (cashOut CashOut) GetState() State {
+	return Deref(cashOut.State)
+}
+
+func (cashOut CashOut) GetSum() Decimal {
+	return Deref(cashOut.Sum)
+}
+
+func (cashOut CashOut) GetSyncID() uuid.UUID {
+	return Deref(cashOut.SyncID)
+}
+
+func (cashOut CashOut) GetUpdated() Timestamp {
+	return Deref(cashOut.Updated)
+}
+
+func (cashOut CashOut) GetVatSum() Decimal {
+	return Deref(cashOut.VatSum)
+}
+
+func (cashOut CashOut) GetFactureOut() FactureOut {
+	return Deref(cashOut.FactureOut)
+}
+
+func (cashOut CashOut) GetAttributes() Attributes {
+	return cashOut.Attributes
+}
+
+func (cashOut CashOut) String() string {
+	return Stringify(cashOut)
+}
+
+func (cashOut CashOut) MetaType() MetaType {
 	return MetaTypeCashOut
 }
 
