@@ -42,7 +42,7 @@ type OperationType interface {
 	MetaOwner
 }
 
-func NewOperation[T OperationType](entity MetaOwner) *Operation {
+func NewOperation[T OperationType](entity T) *Operation {
 	return &Operation{Meta: entity.GetMeta()}
 }
 
