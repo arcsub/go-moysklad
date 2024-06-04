@@ -17,11 +17,11 @@ type CompanySettings struct {
 	CompanyAddress           *string          `json:"companyAddress,omitempty"`
 	Currency                 *Currency        `json:"currency,omitempty"`
 	GlobalOperationNumbering *bool            `json:"globalOperationNumbering,omitempty"`
-	PriceTypes               PriceTypes       `json:"priceTypes,omitempty"`
 	UseCompanyAddress        *bool            `json:"useCompanyAddress,omitempty"`
 	UseRecycleBin            *bool            `json:"useRecycleBin,omitempty"`
 	DiscountStrategy         DiscountStrategy `json:"discountStrategy,omitempty"`
 	AccountCountry           AccountCountry   `json:"accountCountry,omitempty"`
+	PriceTypes               PriceTypes       `json:"priceTypes,omitempty"`
 }
 
 func (companySettings CompanySettings) GetMeta() Meta {
