@@ -55,21 +55,6 @@ func (p PaymentIn) MetaType() MetaType {
 	return MetaTypePaymentIn
 }
 
-// BindDocuments Привязка платежей к документам.
-// Необходимо передать *Meta документов, к которым необходимо привязать платёж.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
-func (p *PaymentIn) BindDocuments(documentsMeta ...*Meta) *PaymentIn {
-	if p.Operations == nil {
-		p.Operations = &Operations{}
-	}
-
-	for _, meta := range documentsMeta {
-		*p.Operations = append(*p.Operations, Operation{Meta: Deref(meta)})
-	}
-
-	return p
-}
-
 // PaymentInTemplateArg
 // Документ: Входящий платеж (paymentin)
 // Основание, на котором он может быть создан:

@@ -25,16 +25,24 @@ type Consignment struct {
 	Attributes   Attributes          `json:"attributes,omitempty"`
 }
 
-func (c Consignment) String() string {
-	return Stringify(c)
+func NewConsignmentFromAssortment(assortmentPosition AssortmentPosition) *Consignment {
+	return unmarshalAsType[Consignment](assortmentPosition)
+}
+
+func (consignment Consignment) FromAssortment(assortmentPosition AssortmentPosition) *Consignment {
+	return unmarshalAsType[Consignment](assortmentPosition)
+}
+
+func (consignment Consignment) String() string {
+	return Stringify(consignment)
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (c Consignment) GetMeta() Meta {
-	return Deref(c.Meta)
+func (consignment Consignment) GetMeta() Meta {
+	return Deref(consignment.Meta)
 }
 
-func (c Consignment) MetaType() MetaType {
+func (consignment Consignment) MetaType() MetaType {
 	return MetaTypeConsignment
 }
 

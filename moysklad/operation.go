@@ -39,22 +39,26 @@ type Operation struct {
 	data json.RawMessage
 }
 
-func (o Operation) String() string {
-	return Stringify(o.Meta)
+func NewOperation(metaOwner MetaOwner) *Operation {
+	return &Operation{Meta: metaOwner.GetMeta()}
+}
+
+func (operation Operation) String() string {
+	return Stringify(operation.Meta)
 }
 
 // MetaType удовлетворяет интерфейсу MetaTyper
-func (o Operation) MetaType() MetaType {
-	return o.Meta.Type
+func (operation Operation) MetaType() MetaType {
+	return operation.Meta.Type
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
-func (o Operation) Raw() json.RawMessage {
-	return o.data
+func (operation Operation) Raw() json.RawMessage {
+	return operation.data
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
-func (o *Operation) UnmarshalJSON(data []byte) error {
+func (operation *Operation) UnmarshalJSON(data []byte) error {
 	type alias Operation
 	var t alias
 
@@ -63,98 +67,106 @@ func (o *Operation) UnmarshalJSON(data []byte) error {
 	}
 	t.data = data
 
-	*o = Operation(t)
+	*operation = Operation(t)
 	return nil
 }
 
-func (o Operation) CustomerOrder() *CustomerOrder {
-	return unmarshalAsType[CustomerOrder](o)
+func (operation Operation) AsCustomerOrder() *CustomerOrder {
+	return unmarshalAsType[CustomerOrder](operation)
 }
 
-func (o Operation) PurchaseReturn() *PurchaseReturn {
-	return unmarshalAsType[PurchaseReturn](o)
+func (operation Operation) AsPurchaseReturn() *PurchaseReturn {
+	return unmarshalAsType[PurchaseReturn](operation)
 }
 
-func (o Operation) Demand() *Demand {
-	return unmarshalAsType[Demand](o)
+func (operation Operation) AsDemand() *Demand {
+	return unmarshalAsType[Demand](operation)
 }
 
-func (o Operation) InvoiceOut() *InvoiceOut {
-	return unmarshalAsType[InvoiceOut](o)
+func (operation Operation) AsInvoiceOut() *InvoiceOut {
+	return unmarshalAsType[InvoiceOut](operation)
 }
 
-func (o Operation) RetailShift() *RetailShift {
-	return unmarshalAsType[RetailShift](o)
+func (operation Operation) AsRetailShift() *RetailShift {
+	return unmarshalAsType[RetailShift](operation)
 }
 
-func (o Operation) CommissionReportIn() *CommissionReportIn {
-	return unmarshalAsType[CommissionReportIn](o)
+func (operation Operation) AsCommissionReportIn() *CommissionReportIn {
+	return unmarshalAsType[CommissionReportIn](operation)
 }
 
-func (o Operation) SalesReturn() *SalesReturn {
-	return unmarshalAsType[SalesReturn](o)
+func (operation Operation) AsSalesReturn() *SalesReturn {
+	return unmarshalAsType[SalesReturn](operation)
 }
 
-func (o Operation) Supply() *Supply {
-	return unmarshalAsType[Supply](o)
+func (operation Operation) AsSupply() *Supply {
+	return unmarshalAsType[Supply](operation)
 }
 
-func (o Operation) InvoiceIn() *InvoiceIn {
-	return unmarshalAsType[InvoiceIn](o)
+func (operation Operation) AsInvoiceIn() *InvoiceIn {
+	return unmarshalAsType[InvoiceIn](operation)
 }
 
-func (o Operation) PurchaseOrder() *PurchaseOrder {
-	return unmarshalAsType[PurchaseOrder](o)
+func (operation Operation) AsPurchaseOrder() *PurchaseOrder {
+	return unmarshalAsType[PurchaseOrder](operation)
 }
 
-func (o Operation) CommissionReportOut() *CommissionReportOut {
-	return unmarshalAsType[CommissionReportOut](o)
+func (operation Operation) AsCommissionReportOut() *CommissionReportOut {
+	return unmarshalAsType[CommissionReportOut](operation)
 }
 
-type Operations []Operation
+type Operations Slice[Operation]
 
-func (o Operations) FilterCustomerOrder() Slice[CustomerOrder] {
-	return filterType[CustomerOrder](o)
+// Push Привязка платежей к документам.
+// Необходимо передать *Operation, которые были созданы через NewOperation.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
+func (operations *Operations) Push(elements ...*Operation) *Operations {
+	*operations = append(*operations, elements...)
+	return operations
 }
 
-func (o Operations) FilterPurchaseReturn() Slice[PurchaseReturn] {
-	return filterType[PurchaseReturn](o)
+func (operations Operations) FilterCustomerOrder() Slice[CustomerOrder] {
+	return filterType[CustomerOrder](operations)
 }
 
-func (o Operations) FilterDemand() Slice[Demand] {
-	return filterType[Demand](o)
+func (operations Operations) FilterPurchaseReturn() Slice[PurchaseReturn] {
+	return filterType[PurchaseReturn](operations)
 }
 
-func (o Operations) FilterInvoiceOut() Slice[InvoiceOut] {
-	return filterType[InvoiceOut](o)
+func (operations Operations) FilterDemand() Slice[Demand] {
+	return filterType[Demand](operations)
 }
 
-func (o Operations) FilterCommissionReportIn() Slice[CommissionReportIn] {
-	return filterType[CommissionReportIn](o)
+func (operations Operations) FilterInvoiceOut() Slice[InvoiceOut] {
+	return filterType[InvoiceOut](operations)
 }
 
-func (o Operations) FilterSalesReturn() Slice[SalesReturn] {
-	return filterType[SalesReturn](o)
+func (operations Operations) FilterCommissionReportIn() Slice[CommissionReportIn] {
+	return filterType[CommissionReportIn](operations)
 }
 
-func (o Operations) FilterSupply() Slice[Supply] {
-	return filterType[Supply](o)
+func (operations Operations) FilterSalesReturn() Slice[SalesReturn] {
+	return filterType[SalesReturn](operations)
 }
 
-func (o Operations) FilterInvoiceIn() Slice[InvoiceIn] {
-	return filterType[InvoiceIn](o)
+func (operations Operations) FilterSupply() Slice[Supply] {
+	return filterType[Supply](operations)
 }
 
-func (o Operations) FilterPurchaseOrder() Slice[PurchaseOrder] {
-	return filterType[PurchaseOrder](o)
+func (operations Operations) FilterInvoiceIn() Slice[InvoiceIn] {
+	return filterType[InvoiceIn](operations)
 }
 
-func (o Operations) FilterCommissionReportOut() Slice[CommissionReportOut] {
-	return filterType[CommissionReportOut](o)
+func (operations Operations) FilterPurchaseOrder() Slice[PurchaseOrder] {
+	return filterType[PurchaseOrder](operations)
 }
 
-func (o Operations) FilterRetailShift() Slice[RetailShift] {
-	return filterType[RetailShift](o)
+func (operations Operations) FilterCommissionReportOut() Slice[CommissionReportOut] {
+	return filterType[CommissionReportOut](operations)
+}
+
+func (operations Operations) FilterRetailShift() Slice[RetailShift] {
+	return filterType[RetailShift](operations)
 }
 
 //

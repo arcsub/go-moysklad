@@ -52,6 +52,14 @@ type Bundle struct {
 	Attributes          Attributes                  `json:"attributes,omitempty"`
 }
 
+func NewBundleFromAssortment(assortmentPosition AssortmentPosition) *Bundle {
+	return unmarshalAsType[Bundle](assortmentPosition)
+}
+
+func (bundle Bundle) FromAssortment(assortmentPosition AssortmentPosition) *Bundle {
+	return unmarshalAsType[Bundle](assortmentPosition)
+}
+
 func (bundle Bundle) GetVolume() float64 {
 	return Deref(bundle.Volume)
 }

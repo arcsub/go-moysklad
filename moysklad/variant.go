@@ -32,6 +32,14 @@ type Variant struct {
 	Packs              VariantPacks    `json:"packs,omitempty"`
 }
 
+func NewVariantFromAssortment(assortmentPosition AssortmentPosition) *Variant {
+	return unmarshalAsType[Variant](assortmentPosition)
+}
+
+func (variant Variant) FromAssortment(assortmentPosition AssortmentPosition) *Variant {
+	return unmarshalAsType[Variant](assortmentPosition)
+}
+
 func (variant Variant) GetArchived() bool {
 	return Deref(variant.Archived)
 }

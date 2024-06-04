@@ -42,16 +42,24 @@ type Service struct {
 	Attributes          Attributes     `json:"attributes,omitempty"`
 }
 
-func (s Service) String() string {
-	return Stringify(s)
+func NewServiceFromAssortment(assortmentPosition AssortmentPosition) *Service {
+	return unmarshalAsType[Service](assortmentPosition)
+}
+
+func (service Service) FromAssortment(assortmentPosition AssortmentPosition) *Service {
+	return unmarshalAsType[Service](assortmentPosition)
+}
+
+func (service Service) String() string {
+	return Stringify(service)
 }
 
 // GetMeta удовлетворяет интерфейсу HasMeta
-func (s Service) GetMeta() Meta {
-	return Deref(s.Meta)
+func (service Service) GetMeta() Meta {
+	return Deref(service.Meta)
 }
 
-func (s Service) MetaType() MetaType {
+func (service Service) MetaType() MetaType {
 	return MetaTypeService
 }
 

@@ -24,7 +24,7 @@ type CashIn struct {
 	Group          *Group        `json:"group,omitempty"`
 	ID             *uuid.UUID    `json:"id,omitempty"`
 	Meta           *Meta         `json:"meta,omitempty"`
-	Operations     *Operations   `json:"operations,omitempty"`
+	Operations     Operations    `json:"operations,omitempty"`
 	Agent          *Counterparty `json:"agent,omitempty"`
 	Created        *Timestamp    `json:"created,omitempty"`
 	Owner          *Employee     `json:"owner,omitempty"`
@@ -50,21 +50,6 @@ func (c CashIn) String() string {
 
 func (c CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
-}
-
-// BindDocuments Привязка платежей к документам.
-// Необходимо передать *Meta документов, к которым необходимо привязать платёж.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
-func (c *CashIn) BindDocuments(documentsMeta ...*Meta) *CashIn {
-	if c.Operations == nil {
-		c.Operations = &Operations{}
-	}
-
-	for _, meta := range documentsMeta {
-		*c.Operations = append(*c.Operations, Operation{Meta: Deref(meta)})
-	}
-
-	return c
 }
 
 // CashInTemplateArg

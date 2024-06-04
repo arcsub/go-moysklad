@@ -59,6 +59,14 @@ type Product struct {
 	Attributes          Attributes     `json:"attributes,omitempty"`
 }
 
+func NewProductFromAssortment(assortmentPosition AssortmentPosition) *Product {
+	return unmarshalAsType[Product](assortmentPosition)
+}
+
+func (product Product) FromAssortment(assortmentPosition AssortmentPosition) *Product {
+	return unmarshalAsType[Product](assortmentPosition)
+}
+
 func (product Product) GetSupplier() Counterparty {
 	return Deref(product.Supplier)
 }
