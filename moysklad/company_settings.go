@@ -17,17 +17,112 @@ type CompanySettings struct {
 	CompanyAddress           *string          `json:"companyAddress,omitempty"`
 	Currency                 *Currency        `json:"currency,omitempty"`
 	GlobalOperationNumbering *bool            `json:"globalOperationNumbering,omitempty"`
-	PriceTypes               *PriceTypes      `json:"priceTypes,omitempty"`
+	PriceTypes               PriceTypes       `json:"priceTypes,omitempty"`
 	UseCompanyAddress        *bool            `json:"useCompanyAddress,omitempty"`
 	UseRecycleBin            *bool            `json:"useRecycleBin,omitempty"`
 	DiscountStrategy         DiscountStrategy `json:"discountStrategy,omitempty"`
+	AccountCountry           AccountCountry   `json:"accountCountry,omitempty"`
 }
 
-func (c CompanySettings) String() string {
-	return Stringify(c)
+func (companySettings CompanySettings) GetMeta() Meta {
+	return Deref(companySettings.Meta)
 }
 
-func (c CompanySettings) MetaType() MetaType {
+func (companySettings CompanySettings) GetCheckMinPrice() bool {
+	return Deref(companySettings.CheckShippingStock)
+}
+
+func (companySettings CompanySettings) GetCheckShippingStock() bool {
+	return Deref(companySettings.CheckShippingStock)
+}
+
+func (companySettings CompanySettings) GetCompanyAddress() string {
+	return Deref(companySettings.CompanyAddress)
+}
+
+func (companySettings CompanySettings) GetCurrency() Currency {
+	return Deref(companySettings.Currency)
+}
+
+func (companySettings CompanySettings) GetGlobalOperationNumbering() bool {
+	return Deref(companySettings.GlobalOperationNumbering)
+}
+
+func (companySettings CompanySettings) GetPriceTypes() PriceTypes {
+	return companySettings.PriceTypes
+}
+
+func (companySettings CompanySettings) GetUseCompanyAddress() bool {
+	return Deref(companySettings.UseCompanyAddress)
+}
+
+func (companySettings CompanySettings) GetUseRecycleBin() bool {
+	return Deref(companySettings.UseRecycleBin)
+}
+
+func (companySettings CompanySettings) GetDiscountStrategy() DiscountStrategy {
+	return companySettings.DiscountStrategy
+}
+
+func (companySettings CompanySettings) GetAccountCountry() AccountCountry {
+	return companySettings.AccountCountry
+}
+
+func (companySettings *CompanySettings) SetMeta(meta *Meta) *CompanySettings {
+	companySettings.Meta = meta
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCheckMinPrice(checkMinPrice bool) *CompanySettings {
+	companySettings.CheckMinPrice = &checkMinPrice
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCheckShippingStock(checkShippingStock bool) *CompanySettings {
+	companySettings.CheckShippingStock = &checkShippingStock
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCompanyAddress(companyAddress string) *CompanySettings {
+	companySettings.CompanyAddress = &companyAddress
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCurrency(currency *Currency) *CompanySettings {
+	companySettings.Currency = currency
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetGlobalOperationNumbering(globalOperationNumbering bool) *CompanySettings {
+	companySettings.GlobalOperationNumbering = &globalOperationNumbering
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetPriceTypes(priceTypes PriceTypes) *CompanySettings {
+	companySettings.PriceTypes = priceTypes
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetUseCompanyAddress(useCompanyAddress bool) *CompanySettings {
+	companySettings.UseCompanyAddress = &useCompanyAddress
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetUseRecycleBin(useRecycleBin bool) *CompanySettings {
+	companySettings.UseRecycleBin = &useRecycleBin
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetDiscountStrategy(discountStrategy DiscountStrategy) *CompanySettings {
+	companySettings.DiscountStrategy = discountStrategy
+	return companySettings
+}
+
+func (companySettings CompanySettings) String() string {
+	return Stringify(companySettings)
+}
+
+func (companySettings CompanySettings) MetaType() MetaType {
 	return MetaTypeCompanySettings
 }
 
@@ -38,6 +133,14 @@ type DiscountStrategy string
 const (
 	DiscountStrategyBySum      DiscountStrategy = "bySum"      // Сумма скидок (должна действовать сумма скидок)
 	DiscountStrategyByPriority DiscountStrategy = "byPriority" // Приоритетная (должна действовать одна, наиболее выгодная для покупателя скидка)
+)
+
+type AccountCountry string
+
+const (
+	AccountCountryRU AccountCountry = "RU"
+	AccountCountryBY AccountCountry = "BY"
+	AccountCountryKZ AccountCountry = "KZ"
 )
 
 // ContextCompanySettingsService
