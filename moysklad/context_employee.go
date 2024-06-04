@@ -522,11 +522,11 @@ type ContextEmployee struct {
 	Archived     bool     `json:"archived"`
 }
 
-func (c ContextEmployee) String() string {
-	return Stringify(c)
+func (contextEmployee ContextEmployee) String() string {
+	return Stringify(contextEmployee)
 }
 
-func (c ContextEmployee) MetaType() MetaType {
+func (contextEmployee ContextEmployee) MetaType() MetaType {
 	return MetaTypeEmployeeContext
 }
 

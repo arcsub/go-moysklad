@@ -39,11 +39,229 @@ type Contract struct {
 	Attributes          Attributes    `json:"attributes,omitempty"`
 }
 
-func (c Contract) String() string {
-	return Stringify(c)
+func (contract Contract) GetAgentAccount() AgentAccount {
+	return Deref(contract.AgentAccount)
 }
 
-func (c Contract) MetaType() MetaType {
+func (contract Contract) GetPublished() bool {
+	return Deref(contract.Published)
+}
+
+func (contract Contract) GetRewardPercent() float64 {
+	return Deref(contract.RewardPercent)
+}
+
+func (contract Contract) GetArchived() bool {
+	return Deref(contract.Archived)
+}
+
+func (contract Contract) GetAgent() Counterparty {
+	return Deref(contract.Agent)
+}
+
+func (contract Contract) GetCode() string {
+	return Deref(contract.Code)
+}
+
+func (contract Contract) GetName() string {
+	return Deref(contract.Name)
+}
+
+func (contract Contract) GetDescription() string {
+	return Deref(contract.Description)
+}
+
+func (contract Contract) GetExternalCode() string {
+	return Deref(contract.ExternalCode)
+}
+
+func (contract Contract) GetGroup() Group {
+	return Deref(contract.Group)
+}
+
+func (contract Contract) GetID() uuid.UUID {
+	return Deref(contract.ID)
+}
+
+func (contract Contract) GetMeta() Meta {
+	return Deref(contract.Meta)
+}
+
+func (contract Contract) GetMoment() Timestamp {
+	return Deref(contract.Moment)
+}
+
+func (contract Contract) GetPrinted() bool {
+	return Deref(contract.Printed)
+}
+
+func (contract Contract) GetOrganizationAccount() AgentAccount {
+	return Deref(contract.OrganizationAccount)
+}
+
+func (contract Contract) GetOwnAgent() Organization {
+	return Deref(contract.OwnAgent)
+}
+
+func (contract Contract) GetOwner() Employee {
+	return Deref(contract.Owner)
+}
+
+func (contract Contract) GetRate() Rate {
+	return Deref(contract.Rate)
+}
+
+func (contract Contract) GetAccountID() uuid.UUID {
+	return Deref(contract.AccountID)
+}
+
+func (contract Contract) GetUpdated() Timestamp {
+	return Deref(contract.Updated)
+}
+
+func (contract Contract) GetShared() bool {
+	return Deref(contract.Shared)
+}
+
+func (contract Contract) GetState() State {
+	return Deref(contract.State)
+}
+
+func (contract Contract) GetSum() Decimal {
+	return Deref(contract.Sum)
+}
+
+func (contract Contract) GetSyncID() uuid.UUID {
+	return Deref(contract.SyncID)
+}
+
+func (contract Contract) GetContractType() ContractType {
+	return contract.ContractType
+}
+
+func (contract Contract) GetRewardType() RewardType {
+	return contract.RewardType
+}
+
+func (contract Contract) GetAttributes() Attributes {
+	return contract.Attributes
+}
+
+func (contract *Contract) SetAgentAccount(agentAccount *AgentAccount) *Contract {
+	contract.AgentAccount = agentAccount
+	return contract
+}
+
+func (contract *Contract) SetRewardPercent(rewardPercent float64) *Contract {
+	contract.RewardPercent = &rewardPercent
+	return contract
+}
+
+func (contract *Contract) SetArchived(archived bool) *Contract {
+	contract.Archived = &archived
+	return contract
+}
+
+func (contract *Contract) SetAgent(agent *Counterparty) *Contract {
+	contract.Agent = agent
+	return contract
+}
+
+func (contract *Contract) SetCode(code string) *Contract {
+	contract.Code = &code
+	return contract
+}
+
+func (contract *Contract) SetName(name string) *Contract {
+	contract.Name = &name
+	return contract
+}
+
+func (contract *Contract) SetDescription(description string) *Contract {
+	contract.Description = &description
+	return contract
+}
+
+func (contract *Contract) SetExternalCode(externalCode string) *Contract {
+	contract.ExternalCode = &externalCode
+	return contract
+}
+
+func (contract *Contract) SetGroup(group *Group) *Contract {
+	contract.Group = group
+	return contract
+}
+
+func (contract *Contract) SetMeta(meta *Meta) *Contract {
+	contract.Meta = meta
+	return contract
+}
+
+func (contract *Contract) SetMoment(moment *Timestamp) *Contract {
+	contract.Moment = moment
+	return contract
+}
+
+func (contract *Contract) SetOrganizationAccount(organizationAccount *AgentAccount) *Contract {
+	contract.OrganizationAccount = organizationAccount
+	return contract
+}
+
+func (contract *Contract) SetOwnAgent(ownAgent *Organization) *Contract {
+	contract.OwnAgent = ownAgent
+	return contract
+}
+
+func (contract *Contract) SetOwner(owner *Employee) *Contract {
+	contract.Owner = owner
+	return contract
+}
+
+func (contract *Contract) SetRate(rate *Rate) *Contract {
+	contract.Rate = rate
+	return contract
+}
+
+func (contract *Contract) SetShared(shared bool) *Contract {
+	contract.Shared = &shared
+	return contract
+}
+
+func (contract *Contract) SetState(state *State) *Contract {
+	contract.State = state
+	return contract
+}
+
+func (contract *Contract) SetSum(sum *Decimal) *Contract {
+	contract.Sum = sum
+	return contract
+}
+
+func (contract *Contract) SetSyncID(syncID *uuid.UUID) *Contract {
+	contract.SyncID = syncID
+	return contract
+}
+
+func (contract *Contract) SetContractType(contractType ContractType) *Contract {
+	contract.ContractType = contractType
+	return contract
+}
+
+func (contract *Contract) SetRewardType(rewardType RewardType) *Contract {
+	contract.RewardType = rewardType
+	return contract
+}
+
+func (contract *Contract) SetAttributes(attributes Attributes) *Contract {
+	contract.Attributes = attributes
+	return contract
+}
+
+func (contract Contract) String() string {
+	return Stringify(contract)
+}
+
+func (contract Contract) MetaType() MetaType {
 	return MetaTypeContract
 }
 

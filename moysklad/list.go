@@ -6,6 +6,6 @@ type List[T any] struct {
 	Meta    MetaCollection `json:"meta"`
 }
 
-func (l List[T]) String() string {
-	return Stringify(l)
+func (list List[T]) String() string {
+	return Stringify(list)
 }
