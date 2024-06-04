@@ -30,6 +30,15 @@ type AssortmentPosition struct {
 	ID           uuid.UUID       `json:"id,omitempty"`
 }
 
+type AssortmentType interface {
+	Product | Variant | Bundle | Service | Consignment
+	MetaOwner
+}
+
+func NewAssortmentPosition[T AssortmentType](entity T) *AssortmentPosition {
+	return &AssortmentPosition{Meta: entity.GetMeta()}
+}
+
 func (assortmentPosition *AssortmentPosition) String() string {
 	return Stringify(assortmentPosition.Meta)
 }
