@@ -19,6 +19,8 @@ type AgentAccount struct {
 	Updated              *Timestamp `json:"updated,omitempty"`              // Момент последнего обновления
 }
 
+type Accounts MetaArray[AgentAccount]
+
 func (agentAccount AgentAccount) GetAccountID() uuid.UUID {
 	return Deref(agentAccount.AccountID)
 }
