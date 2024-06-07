@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// FactureIn Счет-фактура полученный
+// FactureIn Счет-фактура полученный.
 // Ключевое слово: facturein
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-faktura-poluchennyj
 type FactureIn struct {
@@ -36,17 +36,247 @@ type FactureIn struct {
 	Sum            *float64      `json:"sum,omitempty"`
 	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
 	Updated        *Timestamp    `json:"updated,omitempty"`
-	Supplies       *Supplies     `json:"supplies,omitempty"`
-	Payments       *Payments     `json:"payments,omitempty"`
+	Supplies       Supplies      `json:"supplies,omitempty"`
+	Payments       Payments      `json:"payments,omitempty"`
 	IncomingNumber *string       `json:"incomingNumber,omitempty"`
 	Attributes     Attributes    `json:"attributes,omitempty"`
 }
 
-func (f FactureIn) String() string {
-	return Stringify(f)
+func (factureIn FactureIn) GetMoment() Timestamp {
+	return Deref(factureIn.Moment)
 }
 
-func (f FactureIn) MetaType() MetaType {
+func (factureIn FactureIn) GetApplicable() bool {
+	return Deref(factureIn.Applicable)
+}
+
+func (factureIn FactureIn) GetName() string {
+	return Deref(factureIn.Name)
+}
+
+func (factureIn FactureIn) GetAccountID() uuid.UUID {
+	return Deref(factureIn.AccountID)
+}
+
+func (factureIn FactureIn) GetCode() string {
+	return Deref(factureIn.Code)
+}
+
+func (factureIn FactureIn) GetContract() Contract {
+	return Deref(factureIn.Contract)
+}
+
+func (factureIn FactureIn) GetCreated() Timestamp {
+	return Deref(factureIn.Created)
+}
+
+func (factureIn FactureIn) GetDeleted() Timestamp {
+	return Deref(factureIn.Deleted)
+}
+
+func (factureIn FactureIn) GetDescription() string {
+	return Deref(factureIn.Description)
+}
+
+func (factureIn FactureIn) GetExternalCode() string {
+	return Deref(factureIn.ExternalCode)
+}
+
+func (factureIn FactureIn) GetFiles() Files {
+	return Deref(factureIn.Files)
+}
+
+func (factureIn FactureIn) GetGroup() Group {
+	return Deref(factureIn.Group)
+}
+
+func (factureIn FactureIn) GetID() uuid.UUID {
+	return Deref(factureIn.ID)
+}
+
+func (factureIn FactureIn) GetMeta() Meta {
+	return Deref(factureIn.Meta)
+}
+
+func (factureIn FactureIn) GetIncomingDate() Timestamp {
+	return Deref(factureIn.IncomingDate)
+}
+
+func (factureIn FactureIn) GetAgent() Counterparty {
+	return Deref(factureIn.Agent)
+}
+
+func (factureIn FactureIn) GetOrganization() Organization {
+	return Deref(factureIn.Organization)
+}
+
+func (factureIn FactureIn) GetOwner() Employee {
+	return Deref(factureIn.Owner)
+}
+
+func (factureIn FactureIn) GetPrinted() bool {
+	return Deref(factureIn.Printed)
+}
+
+func (factureIn FactureIn) GetPublished() bool {
+	return Deref(factureIn.Published)
+}
+
+func (factureIn FactureIn) GetRate() Rate {
+	return Deref(factureIn.Rate)
+}
+
+func (factureIn FactureIn) GetShared() bool {
+	return Deref(factureIn.Shared)
+}
+
+func (factureIn FactureIn) GetState() State {
+	return Deref(factureIn.State)
+}
+
+func (factureIn FactureIn) GetSum() float64 {
+	return Deref(factureIn.Sum)
+}
+
+func (factureIn FactureIn) GetSyncID() uuid.UUID {
+	return Deref(factureIn.SyncID)
+}
+
+func (factureIn FactureIn) GetUpdated() Timestamp {
+	return Deref(factureIn.Updated)
+}
+
+func (factureIn FactureIn) GetSupplies() Supplies {
+	return factureIn.Supplies
+}
+
+func (factureIn FactureIn) GetPayments() Payments {
+	return factureIn.Payments
+}
+
+func (factureIn FactureIn) GetIncomingNumber() string {
+	return Deref(factureIn.IncomingNumber)
+}
+
+func (factureIn FactureIn) GetAttributes() Attributes {
+	return factureIn.Attributes
+}
+
+func (factureIn *FactureIn) SetMoment(moment *Timestamp) *FactureIn {
+	factureIn.Moment = moment
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetApplicable(applicable bool) *FactureIn {
+	factureIn.Applicable = &applicable
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetName(name string) *FactureIn {
+	factureIn.Name = &name
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetCode(code string) *FactureIn {
+	factureIn.Code = &code
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetContract(contract *Contract) *FactureIn {
+	factureIn.Contract = contract
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetDescription(description string) *FactureIn {
+	factureIn.Description = &description
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetExternalCode(externalCode string) *FactureIn {
+	factureIn.ExternalCode = &externalCode
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetFiles(files *Files) *FactureIn {
+	factureIn.Files = files
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetGroup(group *Group) *FactureIn {
+	factureIn.Group = group
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetMeta(meta *Meta) *FactureIn {
+	factureIn.Meta = meta
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetIncomingDate(incomingDate *Timestamp) *FactureIn {
+	factureIn.IncomingDate = incomingDate
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetAgent(agent *Counterparty) *FactureIn {
+	factureIn.Agent = agent
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetOrganization(organization *Organization) *FactureIn {
+	factureIn.Organization = organization
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetOwner(owner *Employee) *FactureIn {
+	factureIn.Owner = owner
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetRate(rate *Rate) *FactureIn {
+	factureIn.Rate = rate
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetShared(shared bool) *FactureIn {
+	factureIn.Shared = &shared
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetState(state *State) *FactureIn {
+	factureIn.State = state
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetSyncID(syncID *uuid.UUID) *FactureIn {
+	factureIn.SyncID = syncID
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetSupplies(supplies Supplies) *FactureIn {
+	factureIn.Supplies = supplies
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetPayments(payments Payments) *FactureIn {
+	factureIn.Payments = payments
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetIncomingNumber(incomingNumber string) *FactureIn {
+	factureIn.IncomingNumber = &incomingNumber
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetAttributes(attributes Attributes) *FactureIn {
+	factureIn.Attributes = attributes
+	return factureIn
+}
+
+func (factureIn FactureIn) String() string {
+	return Stringify(factureIn)
+}
+
+func (factureIn FactureIn) MetaType() MetaType {
 	return MetaTypeFactureIn
 }
 
