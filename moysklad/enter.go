@@ -40,11 +40,223 @@ type Enter struct {
 	Attributes   Attributes                `json:"attributes,omitempty"`
 }
 
-func (e Enter) String() string {
-	return Stringify(e)
+func (enter Enter) GetOrganization() Organization {
+	return Deref(enter.Organization)
 }
 
-func (e Enter) MetaType() MetaType {
+func (enter Enter) GetSum() float64 {
+	return Deref(enter.Sum)
+}
+
+func (enter Enter) GetMoment() Timestamp {
+	return Deref(enter.Moment)
+}
+
+func (enter Enter) GetCode() string {
+	return Deref(enter.Code)
+}
+
+func (enter Enter) GetCreated() Timestamp {
+	return Deref(enter.Created)
+}
+
+func (enter Enter) GetDeleted() Timestamp {
+	return Deref(enter.Deleted)
+}
+
+func (enter Enter) GetDescription() string {
+	return Deref(enter.Description)
+}
+
+func (enter Enter) GetExternalCode() string {
+	return Deref(enter.ExternalCode)
+}
+
+func (enter Enter) GetFiles() Files {
+	return Deref(enter.Files)
+}
+
+func (enter Enter) GetGroup() Group {
+	return Deref(enter.Group)
+}
+
+func (enter Enter) GetID() uuid.UUID {
+	return Deref(enter.ID)
+}
+
+func (enter Enter) GetMeta() Meta {
+	return Deref(enter.Meta)
+}
+
+func (enter Enter) GetUpdated() Timestamp {
+	return Deref(enter.Updated)
+}
+
+func (enter Enter) GetApplicable() bool {
+	return Deref(enter.Applicable)
+}
+
+func (enter Enter) GetPrinted() bool {
+	return Deref(enter.Printed)
+}
+
+func (enter Enter) GetOverhead() Overhead {
+	return Deref(enter.Overhead)
+}
+
+func (enter Enter) GetOwner() Employee {
+	return Deref(enter.Owner)
+}
+
+func (enter Enter) GetPositions() Positions[EnterPosition] {
+	return Deref(enter.Positions)
+}
+
+func (enter Enter) GetAccountID() uuid.UUID {
+	return Deref(enter.AccountID)
+}
+
+func (enter Enter) GetProject() Project {
+	return Deref(enter.Project)
+}
+
+func (enter Enter) GetPublished() bool {
+	return Deref(enter.Published)
+}
+
+func (enter Enter) GetRate() Rate {
+	return Deref(enter.Rate)
+}
+
+func (enter Enter) GetShared() bool {
+	return Deref(enter.Shared)
+}
+
+func (enter Enter) GetState() State {
+	return Deref(enter.State)
+}
+
+func (enter Enter) GetStore() Store {
+	return Deref(enter.Store)
+}
+
+func (enter Enter) GetName() string {
+	return Deref(enter.Name)
+}
+
+func (enter Enter) GetSyncID() uuid.UUID {
+	return Deref(enter.SyncID)
+}
+
+func (enter Enter) GetAttributes() Attributes {
+	return enter.Attributes
+}
+
+func (enter *Enter) SetOrganization(organization *Organization) *Enter {
+	enter.Organization = organization
+	return enter
+}
+
+func (enter *Enter) SetMoment(moment *Timestamp) *Enter {
+	enter.Moment = moment
+	return enter
+}
+
+func (enter *Enter) SetCode(code string) *Enter {
+	enter.Code = &code
+	return enter
+}
+
+func (enter *Enter) SetDescription(description string) *Enter {
+	enter.Description = &description
+	return enter
+}
+
+func (enter *Enter) SetExternalCode(externalCode string) *Enter {
+	enter.ExternalCode = &externalCode
+	return enter
+}
+
+func (enter *Enter) SetFiles(files *Files) *Enter {
+	enter.Files = files
+	return enter
+}
+
+func (enter *Enter) SetGroup(group *Group) *Enter {
+	enter.Group = group
+	return enter
+}
+
+func (enter *Enter) SetMeta(meta *Meta) *Enter {
+	enter.Meta = meta
+	return enter
+}
+
+func (enter *Enter) SetApplicable(applicable bool) *Enter {
+	enter.Applicable = &applicable
+	return enter
+}
+
+func (enter *Enter) SetOverhead(overhead *Overhead) *Enter {
+	enter.Overhead = overhead
+	return enter
+}
+
+func (enter *Enter) SetOwner(owner *Employee) *Enter {
+	enter.Owner = owner
+	return enter
+}
+
+func (enter *Enter) SetPositions(positions *Positions[EnterPosition]) *Enter {
+	enter.Positions = positions
+	return enter
+}
+
+func (enter *Enter) SetProject(project *Project) *Enter {
+	enter.Project = project
+	return enter
+}
+
+func (enter *Enter) SetRate(rate *Rate) *Enter {
+	enter.Rate = rate
+	return enter
+}
+
+func (enter *Enter) SetShared(shared bool) *Enter {
+	enter.Shared = &shared
+	return enter
+}
+
+func (enter *Enter) SetState(state *State) *Enter {
+	enter.State = state
+	return enter
+}
+
+func (enter *Enter) SetStore(store *Store) *Enter {
+	enter.Store = store
+	return enter
+}
+
+func (enter *Enter) SetName(name string) *Enter {
+	enter.Name = &name
+	return enter
+}
+
+func (enter *Enter) SetSyncID(syncID *uuid.UUID) *Enter {
+	enter.SyncID = syncID
+	return enter
+}
+
+func (enter *Enter) SetAttributes(attributes Attributes) *Enter {
+	enter.Attributes = attributes
+	return enter
+}
+
+func (enter Enter) String() string {
+	return Stringify(enter)
+}
+
+func (enter Enter) MetaType() MetaType {
 	return MetaTypeEnter
 }
 
@@ -63,14 +275,107 @@ type EnterPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина оприходования данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
-	Things     *Things             `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
+	Things     Things              `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
 }
 
-func (e EnterPosition) String() string {
-	return Stringify(e)
+func (enterPosition EnterPosition) GetAccountID() uuid.UUID {
+	return Deref(enterPosition.AccountID)
 }
 
-func (e EnterPosition) MetaType() MetaType {
+func (enterPosition EnterPosition) GetAssortment() AssortmentPosition {
+	return Deref(enterPosition.Assortment)
+}
+
+func (enterPosition EnterPosition) GetCountry() Country {
+	return Deref(enterPosition.Country)
+}
+
+func (enterPosition EnterPosition) GetGTD() GTD {
+	return Deref(enterPosition.GTD)
+}
+
+func (enterPosition EnterPosition) GetID() uuid.UUID {
+	return Deref(enterPosition.ID)
+}
+
+func (enterPosition EnterPosition) GetOverhead() float64 {
+	return Deref(enterPosition.Overhead)
+}
+
+func (enterPosition EnterPosition) GetPack() Pack {
+	return Deref(enterPosition.Pack)
+}
+
+func (enterPosition EnterPosition) GetPrice() float64 {
+	return Deref(enterPosition.Price)
+}
+
+func (enterPosition EnterPosition) GetQuantity() float64 {
+	return Deref(enterPosition.Quantity)
+}
+
+func (enterPosition EnterPosition) GetReason() string {
+	return Deref(enterPosition.Reason)
+}
+
+func (enterPosition EnterPosition) GetSlot() Slot {
+	return Deref(enterPosition.Slot)
+}
+
+func (enterPosition EnterPosition) GetThings() Things {
+	return enterPosition.Things
+}
+
+func (enterPosition *EnterPosition) SetAssortment(assortment *AssortmentPosition) *EnterPosition {
+	enterPosition.Assortment = assortment
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetCountry(country *Country) *EnterPosition {
+	enterPosition.Country = country
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetGTD(gtd *GTD) *EnterPosition {
+	enterPosition.GTD = gtd
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetPack(pack *Pack) *EnterPosition {
+	enterPosition.Pack = pack
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetPrice(price float64) *EnterPosition {
+	enterPosition.Price = &price
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetQuantity(quantity float64) *EnterPosition {
+	enterPosition.Quantity = &quantity
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetReason(reason string) *EnterPosition {
+	enterPosition.Reason = &reason
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetSlot(slot *Slot) *EnterPosition {
+	enterPosition.Slot = slot
+	return enterPosition
+}
+
+func (enterPosition *EnterPosition) SetThings(things Things) *EnterPosition {
+	enterPosition.Things = things
+	return enterPosition
+}
+
+func (enterPosition EnterPosition) String() string {
+	return Stringify(enterPosition)
+}
+
+func (enterPosition EnterPosition) MetaType() MetaType {
 	return MetaTypeEnterPosition
 }
 
