@@ -16,11 +16,33 @@ type CustomEntity struct {
 	Name *string    `json:"name,omitempty"` // Наименование Пользовательского справочника
 }
 
-func (c CustomEntity) String() string {
-	return Stringify(c)
+func (customEntity CustomEntity) GetID() uuid.UUID {
+	return Deref(customEntity.ID)
 }
 
-func (c CustomEntity) MetaType() MetaType {
+func (customEntity CustomEntity) GetMeta() Meta {
+	return Deref(customEntity.Meta)
+}
+
+func (customEntity CustomEntity) GetName() string {
+	return Deref(customEntity.Name)
+}
+
+func (customEntity *CustomEntity) SetMeta(meta *Meta) *CustomEntity {
+	customEntity.Meta = meta
+	return customEntity
+}
+
+func (customEntity *CustomEntity) SetName(name string) *CustomEntity {
+	customEntity.Name = &name
+	return customEntity
+}
+
+func (customEntity CustomEntity) String() string {
+	return Stringify(customEntity)
+}
+
+func (customEntity CustomEntity) MetaType() MetaType {
 	return MetaTypeCustomEntity
 }
 
@@ -40,8 +62,92 @@ type CustomEntityElement struct {
 	Shared       *bool      `json:"shared,omitempty"`       // Общий доступ
 }
 
-func (c CustomEntityElement) String() string {
-	return Stringify(c)
+func (customEntityElement CustomEntityElement) GetAccountID() uuid.UUID {
+	return Deref(customEntityElement.AccountID)
+}
+
+func (customEntityElement CustomEntityElement) GetCode() string {
+	return Deref(customEntityElement.Code)
+}
+
+func (customEntityElement CustomEntityElement) GetDescription() string {
+	return Deref(customEntityElement.Description)
+}
+
+func (customEntityElement CustomEntityElement) GetExternalCode() string {
+	return Deref(customEntityElement.ExternalCode)
+}
+
+func (customEntityElement CustomEntityElement) GetID() uuid.UUID {
+	return Deref(customEntityElement.ID)
+}
+
+func (customEntityElement CustomEntityElement) GetMeta() Meta {
+	return Deref(customEntityElement.Meta)
+}
+
+func (customEntityElement CustomEntityElement) GetName() string {
+	return Deref(customEntityElement.Name)
+}
+
+func (customEntityElement CustomEntityElement) GetUpdated() Timestamp {
+	return Deref(customEntityElement.Updated)
+}
+
+func (customEntityElement CustomEntityElement) GetGroup() Group {
+	return Deref(customEntityElement.Group)
+}
+
+func (customEntityElement CustomEntityElement) GetOwner() Employee {
+	return Deref(customEntityElement.Owner)
+}
+
+func (customEntityElement CustomEntityElement) GetShared() bool {
+	return Deref(customEntityElement.Shared)
+}
+
+func (customEntityElement *CustomEntityElement) SetCode(code string) *CustomEntityElement {
+	customEntityElement.Code = &code
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetDescription(description string) *CustomEntityElement {
+	customEntityElement.Description = &description
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetExternalCode(externalCode string) *CustomEntityElement {
+	customEntityElement.ExternalCode = &externalCode
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetMeta(meta *Meta) *CustomEntityElement {
+	customEntityElement.Meta = meta
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetName(name string) *CustomEntityElement {
+	customEntityElement.Name = &name
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetGroup(group *Group) *CustomEntityElement {
+	customEntityElement.Group = group
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetOwner(owner *Employee) *CustomEntityElement {
+	customEntityElement.Owner = owner
+	return customEntityElement
+}
+
+func (customEntityElement *CustomEntityElement) SetShared(shared bool) *CustomEntityElement {
+	customEntityElement.Shared = &shared
+	return customEntityElement
+}
+
+func (customEntityElement CustomEntityElement) String() string {
+	return Stringify(customEntityElement)
 }
 
 // CustomEntityService
@@ -53,7 +159,7 @@ type CustomEntityService interface {
 	GetElements(ctx context.Context, id *uuid.UUID) (*List[CustomEntityElement], *resty.Response, error)
 	CreateElement(ctx context.Context, id *uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
 	DeleteElement(ctx context.Context, id, elementID *uuid.UUID) (bool, *resty.Response, error)
-	GetElementById(ctx context.Context, id, elementID *uuid.UUID) (*CustomEntityElement, *resty.Response, error)
+	GetElementByID(ctx context.Context, id, elementID *uuid.UUID) (*CustomEntityElement, *resty.Response, error)
 	UpdateElement(ctx context.Context, id, elementID *uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
 }
 
@@ -95,9 +201,9 @@ func (s *customEntityService) DeleteElement(ctx context.Context, id, elementId *
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
-// GetElementById Получить отдельный элементы справочника.
+// GetElementByID Получить отдельный элементы справочника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skij-sprawochnik-poluchit-alement
-func (s *customEntityService) GetElementById(ctx context.Context, id, elementId *uuid.UUID) (*CustomEntityElement, *resty.Response, error) {
+func (s *customEntityService) GetElementByID(ctx context.Context, id, elementId *uuid.UUID) (*CustomEntityElement, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/%s", s.uri, id, elementId)
 	return NewRequestBuilder[CustomEntityElement](s.client, path).Get(ctx)
 }
