@@ -48,3 +48,12 @@ func (slice Slice[E]) Filter(f func(e *E) bool) Slice[E] {
 	}
 	return b
 }
+
+// IntoChunks разбивает слайс на разные слайсы с заданной размерностью.
+func (slice Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
+	var items = slice
+	for chunkSize < len(items) {
+		items, chunks = items[chunkSize:], append(chunks, items[:chunkSize:chunkSize])
+	}
+	return append(chunks, items)
+}
