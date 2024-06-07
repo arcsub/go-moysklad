@@ -40,11 +40,200 @@ type Employee struct {
 	Attributes   Attributes `json:"attributes,omitempty"`
 }
 
-func (e Employee) String() string {
-	return Stringify(e)
+func (employee Employee) GetID() uuid.UUID {
+	return Deref(employee.ID)
 }
 
-func (e Employee) MetaType() MetaType {
+func (employee Employee) GetOwner() Employee {
+	return Deref(employee.Owner)
+}
+
+func (employee Employee) GetImage() Image {
+	return Deref(employee.Image)
+}
+
+func (employee Employee) GetINN() string {
+	return Deref(employee.INN)
+}
+
+func (employee Employee) GetCode() string {
+	return Deref(employee.Code)
+}
+
+func (employee Employee) GetCreated() Timestamp {
+	return Deref(employee.Created)
+}
+
+func (employee Employee) GetDescription() string {
+	return Deref(employee.Description)
+}
+
+func (employee Employee) GetEmail() string {
+	return Deref(employee.Email)
+}
+
+func (employee Employee) GetExternalCode() string {
+	return Deref(employee.ExternalCode)
+}
+
+func (employee Employee) GetFirstName() string {
+	return Deref(employee.FirstName)
+}
+
+func (employee Employee) GetFullName() string {
+	return Deref(employee.FullName)
+}
+
+func (employee Employee) GetGroup() Group {
+	return Deref(employee.Group)
+}
+
+func (employee Employee) GetUpdated() Timestamp {
+	return Deref(employee.Updated)
+}
+
+func (employee Employee) GetAccountID() uuid.UUID {
+	return Deref(employee.AccountID)
+}
+
+func (employee Employee) GetCashiers() Cashiers {
+	return Deref(employee.Cashiers)
+}
+
+func (employee Employee) GetLastName() string {
+	return Deref(employee.LastName)
+}
+
+func (employee Employee) GetMeta() Meta {
+	return Deref(employee.Meta)
+}
+
+func (employee Employee) GetMiddleName() string {
+	return Deref(employee.MiddleName)
+}
+
+func (employee Employee) GetName() string {
+	return Deref(employee.Name)
+}
+
+func (employee Employee) GetArchived() bool {
+	return Deref(employee.Archived)
+}
+
+func (employee Employee) GetPhone() string {
+	return Deref(employee.Phone)
+}
+
+func (employee Employee) GetPosition() string {
+	return Deref(employee.Position)
+}
+
+func (employee Employee) GetShared() bool {
+	return Deref(employee.Shared)
+}
+
+func (employee Employee) GetShortFio() string {
+	return Deref(employee.ShortFio)
+}
+
+func (employee Employee) GetUID() string {
+	return Deref(employee.UID)
+}
+
+func (employee Employee) GetAttributes() Attributes {
+	return employee.Attributes
+}
+
+func (employee *Employee) SetOwner(owner *Employee) *Employee {
+	employee.Owner = owner
+	return employee
+}
+
+func (employee *Employee) SetImage(image *Image) *Employee {
+	employee.Image = image
+	return employee
+}
+
+func (employee *Employee) SetINN(inn string) *Employee {
+	employee.INN = &inn
+	return employee
+}
+
+func (employee *Employee) SetCode(code string) *Employee {
+	employee.Code = &code
+	return employee
+}
+
+func (employee *Employee) SetDescription(description string) *Employee {
+	employee.Description = &description
+	return employee
+}
+
+func (employee *Employee) SetEmail(email string) *Employee {
+	employee.Email = &email
+	return employee
+}
+
+func (employee *Employee) SetExternalCode(externalCode string) *Employee {
+	employee.ExternalCode = &externalCode
+	return employee
+}
+
+func (employee *Employee) SetFirstName(firstName string) *Employee {
+	employee.FirstName = &firstName
+	return employee
+}
+
+func (employee *Employee) SetGroup(group *Group) *Employee {
+	employee.Group = group
+	return employee
+}
+
+func (employee *Employee) SetLastName(lastName string) *Employee {
+	employee.LastName = &lastName
+	return employee
+}
+
+func (employee *Employee) SetMeta(meta *Meta) *Employee {
+	employee.Meta = meta
+	return employee
+}
+
+func (employee *Employee) SetMiddleName(middleName string) *Employee {
+	employee.MiddleName = &middleName
+	return employee
+}
+
+func (employee *Employee) SetArchived(archived bool) *Employee {
+	employee.Archived = &archived
+	return employee
+}
+
+func (employee *Employee) SetPhone(phone string) *Employee {
+	employee.Phone = &phone
+	return employee
+}
+
+func (employee *Employee) SetPosition(position string) *Employee {
+	employee.Position = &position
+	return employee
+}
+
+func (employee *Employee) SetShared(shared bool) *Employee {
+	employee.Shared = &shared
+	return employee
+}
+
+func (employee *Employee) SetAttributes(attributes Attributes) *Employee {
+	employee.Attributes = attributes
+	return employee
+}
+
+func (employee Employee) String() string {
+	return Stringify(employee)
+}
+
+func (employee Employee) MetaType() MetaType {
 	return MetaTypeEmployee
 }
 
@@ -68,8 +257,80 @@ type EmployeePermission struct {
 	AuthorizedHosts     []string `json:"authorizedHosts,omitempty"`
 }
 
-func (e EmployeePermission) String() string {
-	return Stringify(e)
+func (employeePermission EmployeePermission) GetAuthorizedIpNetmask() string {
+	return Deref(employeePermission.AuthorizedIpNetmask)
+}
+
+func (employeePermission EmployeePermission) GetAuthorizedIpNetwork() string {
+	return Deref(employeePermission.AuthorizedIpNetwork)
+}
+
+func (employeePermission EmployeePermission) GetEmail() string {
+	return Deref(employeePermission.Email)
+}
+
+func (employeePermission EmployeePermission) GetGroup() Group {
+	return Deref(employeePermission.Group)
+}
+
+func (employeePermission EmployeePermission) GetIsActive() bool {
+	return Deref(employeePermission.IsActive)
+}
+
+func (employeePermission EmployeePermission) GetLogin() string {
+	return Deref(employeePermission.Login)
+}
+
+func (employeePermission EmployeePermission) GetRole() Role {
+	return Deref(employeePermission.Role)
+}
+
+func (employeePermission EmployeePermission) GetAuthorizedHosts() []string {
+	return employeePermission.AuthorizedHosts
+}
+
+func (employeePermission *EmployeePermission) SetAuthorizedIpNetmask(authorizedIpNetmask string) *EmployeePermission {
+	employeePermission.AuthorizedIpNetmask = &authorizedIpNetmask
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetAuthorizedIpNetwork(authorizedIpNetwork string) *EmployeePermission {
+	employeePermission.AuthorizedIpNetwork = &authorizedIpNetwork
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetEmail(email string) *EmployeePermission {
+	employeePermission.Email = &email
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetGroup(group *Group) *EmployeePermission {
+	employeePermission.Group = group
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetIsActive(isActive bool) *EmployeePermission {
+	employeePermission.IsActive = &isActive
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetLogin(login string) *EmployeePermission {
+	employeePermission.Login = &login
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetRole(role *Role) *EmployeePermission {
+	employeePermission.Role = role
+	return employeePermission
+}
+
+func (employeePermission *EmployeePermission) SetAuthorizedHosts(authorizedHosts []string) *EmployeePermission {
+	employeePermission.AuthorizedHosts = authorizedHosts
+	return employeePermission
+}
+
+func (employeePermission EmployeePermission) String() string {
+	return Stringify(employeePermission)
 }
 
 // EmployeeService
