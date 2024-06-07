@@ -14,7 +14,7 @@ type Prepayment struct {
 	Owner         *Employee                      `json:"owner,omitempty"`
 	Applicable    *bool                          `json:"applicable,omitempty"`
 	Agent         *Counterparty                  `json:"agent,omitempty"`
-	CashSum       *Decimal                       `json:"cashSum,omitempty"`
+	CashSum       *float64                       `json:"cashSum,omitempty"`
 	Code          *string                        `json:"code,omitempty"`
 	Created       *Timestamp                     `json:"created,omitempty"`
 	CustomerOrder *CustomerOrder                 `json:"customerOrder,omitempty"`
@@ -27,13 +27,13 @@ type Prepayment struct {
 	Meta          *Meta                          `json:"meta,omitempty"`
 	Moment        *Timestamp                     `json:"moment,omitempty"`
 	Name          *string                        `json:"name,omitempty"`
-	NoCashSum     *Decimal                       `json:"noCashSum,omitempty"`
+	NoCashSum     *float64                       `json:"noCashSum,omitempty"`
 	AccountID     *uuid.UUID                     `json:"accountId,omitempty"`
 	VatIncluded   *bool                          `json:"vatIncluded,omitempty"`
 	Positions     *Positions[PrepaymentPosition] `json:"positions,omitempty"`
 	Printed       *bool                          `json:"printed,omitempty"`
 	Published     *bool                          `json:"published,omitempty"`
-	QRSum         *Decimal                       `json:"qrSum,omitempty"`
+	QRSum         *float64                       `json:"qrSum,omitempty"`
 	Rate          *Rate                          `json:"rate,omitempty"`
 	RetailShift   *RetailShift                   `json:"retailShift,omitempty"`
 	RetailStore   *RetailStore                   `json:"retailStore,omitempty"`

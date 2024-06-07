@@ -37,12 +37,12 @@ type PurchaseReturn struct {
 	Shared              *bool                              `json:"shared,omitempty"`
 	State               *State                             `json:"state,omitempty"`
 	Store               *Store                             `json:"store,omitempty"`
-	Sum                 *Decimal                           `json:"sum,omitempty"`
+	Sum                 *float64                           `json:"sum,omitempty"`
 	SyncID              *uuid.UUID                         `json:"syncId,omitempty"`
 	Updated             *Timestamp                         `json:"updated,omitempty"`
 	VatEnabled          *bool                              `json:"vatEnabled,omitempty"`
 	VatIncluded         *bool                              `json:"vatIncluded,omitempty"`
-	VatSum              *Decimal                           `json:"vatSum,omitempty"`
+	VatSum              *float64                           `json:"vatSum,omitempty"`
 	Positions           *Positions[PurchaseReturnPosition] `json:"positions,omitempty"`
 	Owner               *Employee                          `json:"owner,omitempty"`
 	FactureIn           *FactureIn                         `json:"factureIn,omitempty"`

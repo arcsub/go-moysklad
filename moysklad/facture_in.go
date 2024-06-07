@@ -33,7 +33,7 @@ type FactureIn struct {
 	Rate           *Rate         `json:"rate,omitempty"`
 	Shared         *bool         `json:"shared,omitempty"`
 	State          *State        `json:"state,omitempty"`
-	Sum            *Decimal      `json:"sum,omitempty"`
+	Sum            *float64      `json:"sum,omitempty"`
 	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
 	Updated        *Timestamp    `json:"updated,omitempty"`
 	Supplies       *Supplies     `json:"supplies,omitempty"`

@@ -10,7 +10,7 @@ import (
 // Ключевое слово: purchaseorder
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-postawschiku
 type PurchaseOrder struct {
-	PayedSum              *Decimal                          `json:"payedSum,omitempty"`
+	PayedSum              *float64                          `json:"payedSum,omitempty"`
 	Applicable            *bool                             `json:"applicable,omitempty"`
 	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`
 	Owner                 *Employee                         `json:"owner,omitempty"`
@@ -25,7 +25,7 @@ type PurchaseOrder struct {
 	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
 	Group                 *Group                            `json:"group,omitempty"`
 	ID                    *uuid.UUID                        `json:"id,omitempty"`
-	InvoicedSum           *Decimal                          `json:"invoicedSum,omitempty"`
+	InvoicedSum           *float64                          `json:"invoicedSum,omitempty"`
 	Meta                  *Meta                             `json:"meta,omitempty"`
 	Moment                *Timestamp                        `json:"moment,omitempty"`
 	Name                  *string                           `json:"name,omitempty"`
@@ -39,16 +39,16 @@ type PurchaseOrder struct {
 	Published             *bool                             `json:"published,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
-	ShippedSum            *Decimal                          `json:"shippedSum,omitempty"`
+	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
 	State                 *State                            `json:"state,omitempty"`
 	Store                 *Store                            `json:"store,omitempty"`
-	Sum                   *Decimal                          `json:"sum,omitempty"`
+	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
 	Updated               *Timestamp                        `json:"updated,omitempty"`
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
-	VatSum                *Decimal                          `json:"vatSum,omitempty"`
-	WaitSum               *Decimal                          `json:"waitSum,omitempty"`
+	VatSum                *float64                          `json:"vatSum,omitempty"`
+	WaitSum               *float64                          `json:"waitSum,omitempty"`
 	CustomerOrders        *CustomerOrders                   `json:"customerOrders,omitempty"`
 	InvoicesIn            *InvoicesIn                       `json:"invoicesIn,omitempty"`
 	Payments              *Payments                         `json:"payments,omitempty"`
@@ -77,13 +77,13 @@ type PurchaseOrders = Slice[PurchaseOrder]
 type PurchaseOrderPosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Discount   *Decimal            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
+	Discount   *float64            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
-	Shipped    *Decimal            `json:"shipped,omitempty"`    // Принято
-	InTransit  *Decimal            `json:"inTransit,omitempty"`  // Ожидание
+	Shipped    *float64            `json:"shipped,omitempty"`    // Принято
+	InTransit  *float64            `json:"inTransit,omitempty"`  // Ожидание
 	Vat        *float64            `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Wait       *bool               `json:"wait,omitempty"`       // Ожидается данной позиции

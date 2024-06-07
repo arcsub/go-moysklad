@@ -49,7 +49,7 @@ func (p PriceList) MetaType() MetaType {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-yachejki
 type PriceListCell struct {
 	Column *string  `json:"column,omitempty"` // Название столбца, к которому относится данная ячейка
-	Sum    *Decimal `json:"sum,omitempty"`    // Числовое значение ячейки
+	Sum    *float64 `json:"sum,omitempty"`    // Числовое значение ячейки
 }
 
 func (p PriceListCell) String() string {

@@ -37,10 +37,10 @@ type CashOut struct {
 	SalesChannel   *SalesChannel `json:"salesChannel,omitempty"`
 	Shared         *bool         `json:"shared,omitempty"`
 	State          *State        `json:"state,omitempty"`
-	Sum            *Decimal      `json:"sum,omitempty"`
+	Sum            *float64      `json:"sum,omitempty"`
 	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
 	Updated        *Timestamp    `json:"updated,omitempty"`
-	VatSum         *Decimal      `json:"vatSum,omitempty"`
+	VatSum         *float64      `json:"vatSum,omitempty"`
 	FactureOut     *FactureOut   `json:"factureOut,omitempty"`
 	Attributes     Attributes    `json:"attributes,omitempty"`
 }
@@ -153,7 +153,7 @@ func (cashOut CashOut) GetState() State {
 	return Deref(cashOut.State)
 }
 
-func (cashOut CashOut) GetSum() Decimal {
+func (cashOut CashOut) GetSum() float64 {
 	return Deref(cashOut.Sum)
 }
 
@@ -165,7 +165,7 @@ func (cashOut CashOut) GetUpdated() Timestamp {
 	return Deref(cashOut.Updated)
 }
 
-func (cashOut CashOut) GetVatSum() Decimal {
+func (cashOut CashOut) GetVatSum() float64 {
 	return Deref(cashOut.VatSum)
 }
 

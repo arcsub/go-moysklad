@@ -116,8 +116,8 @@ func (a AccumulationDiscount) MetaType() MetaType {
 // AccumulationLevel Проценты скидок при определенной сумме продаж.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-levels
 type AccumulationLevel struct {
-	Amount   *Decimal `json:"amount,omitempty"`   // Сумма накоплений в копейках
-	Discount *Decimal `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
+	Amount   *float64 `json:"amount,omitempty"`   // Сумма накоплений в копейках
+	Discount *float64 `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
 }
 
 type Levels = Slice[AccumulationLevel]
@@ -160,7 +160,7 @@ type SpecialPriceDiscount struct {
 	UsePriceType   *bool           `json:"usePriceType,omitempty"`   // Использовать специальную цену
 	Assortment     *Assortment     `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
 	ProductFolders *ProductFolders `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
-	Discount       *Decimal        `json:"discount,omitempty"`       // Процент скидки если выбран фиксированный процент
+	Discount       *float64        `json:"discount,omitempty"`       // Процент скидки если выбран фиксированный процент
 	SpecialPrice   *SpecialPrice   `json:"specialPrice,omitempty"`   // Спец. цена (если выбран тип цен)
 }
 

@@ -32,7 +32,7 @@ type Contract struct {
 	Updated             *Timestamp    `json:"updated,omitempty"`
 	Shared              *bool         `json:"shared,omitempty"`
 	State               *State        `json:"state,omitempty"`
-	Sum                 *Decimal      `json:"sum,omitempty"`
+	Sum                 *float64      `json:"sum,omitempty"`
 	SyncID              *uuid.UUID    `json:"syncId,omitempty"`
 	ContractType        ContractType  `json:"contractType,omitempty"`
 	RewardType          RewardType    `json:"rewardType,omitempty"`
@@ -127,7 +127,7 @@ func (contract Contract) GetState() State {
 	return Deref(contract.State)
 }
 
-func (contract Contract) GetSum() Decimal {
+func (contract Contract) GetSum() float64 {
 	return Deref(contract.Sum)
 }
 
@@ -232,7 +232,7 @@ func (contract *Contract) SetState(state *State) *Contract {
 	return contract
 }
 
-func (contract *Contract) SetSum(sum *Decimal) *Contract {
+func (contract *Contract) SetSum(sum *float64) *Contract {
 	contract.Sum = sum
 	return contract
 }

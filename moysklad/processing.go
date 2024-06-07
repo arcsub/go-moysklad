@@ -32,7 +32,7 @@ type Processing struct {
 	Owner               *Employee                         `json:"owner,omitempty"`
 	Printed             *bool                             `json:"printed,omitempty"`
 	ProcessingPlan      *ProcessingPlan                   `json:"processingPlan,omitempty"`
-	ProcessingSum       *Decimal                          `json:"processingSum,omitempty"`
+	ProcessingSum       *float64                          `json:"processingSum,omitempty"`
 	Updated             *Timestamp                        `json:"updated,omitempty"`
 	ProductsStore       *Store                            `json:"productsStore,omitempty"`
 	Project             *Project                          `json:"project,omitempty"`

@@ -18,7 +18,7 @@ type Turnover struct {
 // TurnoverIncomeOutcome Структура объекта показатели (onPeriodStart, onPeriodEnd, income, outcome).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaram-struktura-ob-ekta-pokazateli-onperiodstart-onperiodend-income-outcome
 type TurnoverIncomeOutcome struct {
-	Sum      Decimal `json:"sum"`      // Сумма себестоимости
+	Sum      float64 `json:"sum"`      // Сумма себестоимости
 	Quantity float64 `json:"quantity"` // Количество единиц товара
 }
 
@@ -47,8 +47,8 @@ type TurnoverByOperation struct {
 	Assortment TurnoverAssortment `json:"assortment"`
 	Operation  TurnoverOperation  `json:"operation"`
 	Store      MetaName           `json:"store"`
-	Cost       Decimal            `json:"cost"`
-	Sum        Decimal            `json:"sum"`
+	Cost       float64            `json:"cost"`
+	Sum        float64            `json:"sum"`
 	Quantity   float64            `json:"quantity"`
 }
 

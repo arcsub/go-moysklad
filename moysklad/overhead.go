@@ -3,7 +3,7 @@ package moysklad
 // Overhead Накладные расходы.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-priemka-priemki-nakladnye-rashody
 type Overhead struct {
-	Sum          *Decimal     `json:"sum,omitempty"`          // Сумма в копейках
+	Sum          *float64     `json:"sum,omitempty"`          // Сумма в копейках
 	Distribution Distribution `json:"distribution,omitempty"` // Распределение накладных расходов
 }
 

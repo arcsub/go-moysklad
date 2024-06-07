@@ -25,34 +25,34 @@ type CustomerOrder struct {
 	Files                 *Files                            `json:"files,omitempty"`
 	Group                 *Group                            `json:"group,omitempty"`
 	ID                    *uuid.UUID                        `json:"id,omitempty"`
-	InvoicedSum           *Decimal                          `json:"invoicedSum,omitempty"`
+	InvoicedSum           *float64                          `json:"invoicedSum,omitempty"`
 	Meta                  *Meta                             `json:"meta,omitempty"`
 	Name                  *string                           `json:"name,omitempty"`
 	Moment                *Timestamp                        `json:"moment,omitempty"`
 	Organization          *Organization                     `json:"organization,omitempty"`
 	Printed               *bool                             `json:"printed,omitempty"`
 	Owner                 *Employee                         `json:"owner,omitempty"`
-	PayedSum              *Decimal                          `json:"payedSum,omitempty"`
+	PayedSum              *float64                          `json:"payedSum,omitempty"`
 	Positions             *Positions[CustomerOrderPosition] `json:"positions,omitempty"`
 	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
 	Contract              *Contract                         `json:"contract,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
-	ReservedSum           *Decimal                          `json:"reservedSum,omitempty"`
+	ReservedSum           *float64                          `json:"reservedSum,omitempty"`
 	SalesChannel          *SalesChannel                     `json:"salesChannel,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	ShipmentAddress       *string                           `json:"shipmentAddress,omitempty"`
 	ShipmentAddressFull   *Address                          `json:"shipmentAddressFull,omitempty"`
-	ShippedSum            *Decimal                          `json:"shippedSum,omitempty"`
+	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
 	State                 *State                            `json:"state,omitempty"`
 	Store                 *Store                            `json:"store,omitempty"`
-	Sum                   *Decimal                          `json:"sum,omitempty"`
+	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
 	Prepayments           *Prepayments                      `json:"prepayments,omitempty"`
 	Updated               *Timestamp                        `json:"updated,omitempty"`
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
-	VatSum                *Decimal                          `json:"vatSum,omitempty"`
+	VatSum                *float64                          `json:"vatSum,omitempty"`
 	PurchaseOrders        *PurchaseOrders                   `json:"purchaseOrders,omitempty"`
 	Demands               *Demands                          `json:"demands,omitempty"`
 	Payments              *Payments                         `json:"payments,omitempty"`
@@ -82,13 +82,13 @@ type CustomerOrders = Slice[CustomerOrder]
 type CustomerOrderPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`
 	Assortment *AssortmentPosition `json:"assortment,omitempty"`
-	Discount   *Decimal            `json:"discount,omitempty"`
+	Discount   *float64            `json:"discount,omitempty"`
 	ID         *uuid.UUID          `json:"id,omitempty"`
 	Pack       *Pack               `json:"pack,omitempty"`
-	Price      *Decimal            `json:"price,omitempty"`
+	Price      *float64            `json:"price,omitempty"`
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`
-	Reserve    *Decimal            `json:"reserve,omitempty"`
-	Shipped    *Decimal            `json:"shipped,omitempty"`
+	Reserve    *float64            `json:"reserve,omitempty"`
+	Shipped    *float64            `json:"shipped,omitempty"`
 	Vat        *int                `json:"vat,omitempty"`
 	VatEnabled *bool               `json:"vatEnabled,omitempty"`
 	Stock      *Stock              `json:"stock,omitempty"`

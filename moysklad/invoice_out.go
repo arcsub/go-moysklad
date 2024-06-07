@@ -10,7 +10,7 @@ import (
 // Ключевое слово: invoiceout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-pokupatelu
 type InvoiceOut struct {
-	PayedSum             *Decimal                    `json:"payedSum,omitempty"`
+	PayedSum             *float64                    `json:"payedSum,omitempty"`
 	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`
 	AgentAccount         *AgentAccount               `json:"agentAccount,omitempty"`
 	Applicable           *bool                       `json:"applicable,omitempty"`
@@ -38,15 +38,15 @@ type InvoiceOut struct {
 	Published            *bool                       `json:"published,omitempty"`
 	Rate                 *Rate                       `json:"rate,omitempty"`
 	Shared               *bool                       `json:"shared,omitempty"`
-	ShippedSum           *Decimal                    `json:"shippedSum,omitempty"`
+	ShippedSum           *float64                    `json:"shippedSum,omitempty"`
 	State                *State                      `json:"state,omitempty"`
 	Store                *Store                      `json:"store,omitempty"`
-	Sum                  *Decimal                    `json:"sum,omitempty"`
+	Sum                  *float64                    `json:"sum,omitempty"`
 	SyncID               *uuid.UUID                  `json:"syncId,omitempty"`
 	Updated              *Timestamp                  `json:"updated,omitempty"`
 	Owner                *Employee                   `json:"owner,omitempty"`
 	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`
-	VatSum               *Decimal                    `json:"vatSum,omitempty"`
+	VatSum               *float64                    `json:"vatSum,omitempty"`
 	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`
 	Payments             *Payments                   `json:"payments,omitempty"`
 	Attributes           Attributes                  `json:"attributes,omitempty"`

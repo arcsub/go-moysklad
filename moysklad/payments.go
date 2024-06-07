@@ -33,11 +33,11 @@ type Payment struct {
 	SalesChannel   *SalesChannel `json:"salesChannel,omitempty"`   // Метаданные канала продаж
 	Shared         *bool         `json:"shared,omitempty"`         // Общий доступ
 	State          *State        `json:"state,omitempty"`          // Метаданные статуса
-	Sum            *Decimal      `json:"sum,omitempty"`            // Сумма
+	Sum            *float64      `json:"sum,omitempty"`            // Сумма
 	SyncID         *uuid.UUID    `json:"syncId,omitempty"`         // ID синхронизации. После заполнения недоступен для изменения
 	Updated        *Timestamp    `json:"updated,omitempty"`        // Момент последнего обновления
-	VatSum         *Decimal      `json:"vatSum,omitempty"`         // Сумма включая НДС
-	LinkedSum      *Decimal      `json:"linkedSum,omitempty"`      // Сумма, оплаченная по документу из этого платежа
+	VatSum         *float64      `json:"vatSum,omitempty"`         // Сумма включая НДС
+	LinkedSum      *float64      `json:"linkedSum,omitempty"`      // Сумма, оплаченная по документу из этого платежа
 	Operations     *Operations   `json:"operations,omitempty"`     // Массив ссылок на связанные операции в формате Метаданных
 
 	// сырые данные

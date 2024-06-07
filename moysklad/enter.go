@@ -11,7 +11,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-oprihodowanie
 type Enter struct {
 	Organization *Organization             `json:"organization,omitempty"`
-	Sum          *Decimal                  `json:"sum,omitempty"`
+	Sum          *float64                  `json:"sum,omitempty"`
 	Moment       *Timestamp                `json:"moment,omitempty"`
 	Code         *string                   `json:"code,omitempty"`
 	Created      *Timestamp                `json:"created,omitempty"`
@@ -57,9 +57,9 @@ type EnterPosition struct {
 	Country    *Country            `json:"country,omitempty"`    // Метаданные страны
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
-	Overhead   *Decimal            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
+	Overhead   *float64            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина оприходования данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе

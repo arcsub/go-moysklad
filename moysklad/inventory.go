@@ -13,7 +13,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-inwentarizaciq
 type Inventory struct {
 	Name         *string                       `json:"name,omitempty"`
-	Sum          *Decimal                      `json:"sum,omitempty"`
+	Sum          *float64                      `json:"sum,omitempty"`
 	Code         *string                       `json:"code,omitempty"`
 	Created      *Timestamp                    `json:"created,omitempty"`
 	Deleted      *Timestamp                    `json:"deleted,omitempty"`
@@ -54,10 +54,10 @@ type InventoryPosition struct {
 	Assortment         *AssortmentPosition `json:"assortment,omitempty"`         // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	CalculatedQuantity *float64            `json:"calculatedQuantity,omitempty"` // расчетный остаток
 	CorrectionAmount   *float64            `json:"correctionAmount,omitempty"`   // разница между расчетным остатком и фактическимх
-	CorrectionSum      *Decimal            `json:"correctionSum,omitempty"`      // избыток/недостача
+	CorrectionSum      *float64            `json:"correctionSum,omitempty"`      // избыток/недостача
 	ID                 *uuid.UUID          `json:"id,omitempty"`                 // ID сущности
 	Pack               *Pack               `json:"pack,omitempty"`               // Упаковка Товара
-	Price              *Decimal            `json:"price,omitempty"`              // Цена товара/услуги в копейках
+	Price              *float64            `json:"price,omitempty"`              // Цена товара/услуги в копейках
 	Quantity           *float64            `json:"quantity,omitempty"`           // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 }
 

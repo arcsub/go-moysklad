@@ -396,11 +396,11 @@ func (bundle Bundle) MetaType() MetaType {
 // BundleOverhead Дополнительные расходы
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-atributy-wlozhennyh-suschnostej-dopolnitel-nye-rashody
 type BundleOverhead struct {
-	Value    *Decimal  `json:"value,omitempty"`    // Значение цены
+	Value    *float64  `json:"value,omitempty"`    // Значение цены
 	Currency *Currency `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
 }
 
-func (bundleOverhead BundleOverhead) GetValue() Decimal {
+func (bundleOverhead BundleOverhead) GetValue() float64 {
 	return Deref(bundleOverhead.Value)
 }
 
@@ -408,7 +408,7 @@ func (bundleOverhead BundleOverhead) GetCurrency() Currency {
 	return Deref(bundleOverhead.Currency)
 }
 
-func (bundleOverhead *BundleOverhead) SetValue(value *Decimal) *BundleOverhead {
+func (bundleOverhead *BundleOverhead) SetValue(value *float64) *BundleOverhead {
 	bundleOverhead.Value = value
 	return bundleOverhead
 }

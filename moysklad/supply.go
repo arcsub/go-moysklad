@@ -33,7 +33,7 @@ type Supply struct {
 	Payments            *Payments                  `json:"payments,omitempty"`
 	Agent               *Counterparty              `json:"agent,omitempty"`
 	IncomingNumber      *string                    `json:"incomingNumber,omitempty"`
-	PayedSum            *Decimal                   `json:"payedSum,omitempty"`
+	PayedSum            *float64                   `json:"payedSum,omitempty"`
 	Positions           *Positions[SupplyPosition] `json:"positions,omitempty"`
 	Printed             *bool                      `json:"printed,omitempty"`
 	Project             *Project                   `json:"project,omitempty"`
@@ -42,12 +42,12 @@ type Supply struct {
 	Shared              *bool                      `json:"shared,omitempty"`
 	State               *State                     `json:"state,omitempty"`
 	Store               *Store                     `json:"store,omitempty"`
-	Sum                 *Decimal                   `json:"sum,omitempty"`
+	Sum                 *float64                   `json:"sum,omitempty"`
 	SyncID              *uuid.UUID                 `json:"syncId,omitempty"`
 	Updated             *Timestamp                 `json:"updated,omitempty"`
 	VatEnabled          *bool                      `json:"vatEnabled,omitempty"`
 	VatIncluded         *bool                      `json:"vatIncluded,omitempty"`
-	VatSum              *Decimal                   `json:"vatSum,omitempty"`
+	VatSum              *float64                   `json:"vatSum,omitempty"`
 	PurchaseOrder       *PurchaseOrder             `json:"purchaseOrder,omitempty"`
 	FactureIn           *FactureIn                 `json:"factureIn,omitempty"`
 	InvoicesIn          *InvoicesIn                `json:"invoicesIn,omitempty"`
@@ -77,16 +77,16 @@ type SupplyPosition struct {
 	AccountID     *uuid.UUID          `json:"accountId,omitempty"`     // ID учетной записи
 	Assortment    *AssortmentPosition `json:"assortment,omitempty"`    // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Country       *Country            `json:"country,omitempty"`       // Метаданные страны
-	Discount      *Decimal            `json:"discount,omitempty"`      // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
+	Discount      *float64            `json:"discount,omitempty"`      // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	GTD           *GTD                `json:"gtd,omitempty"`           // ГТД
 	ID            *uuid.UUID          `json:"id,omitempty"`            // ID позиции
 	Pack          *Pack               `json:"pack,omitempty"`          // Упаковка Товара
-	Price         *Decimal            `json:"price,omitempty"`         // Цена товара/услуги в копейках
+	Price         *float64            `json:"price,omitempty"`         // Цена товара/услуги в копейках
 	Quantity      *float64            `json:"quantity,omitempty"`      // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Slot          *Slot               `json:"slot,omitempty"`          // Ячейка на складе
 	Things        *Things             `json:"things,omitempty"`        // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
 	TrackingCodes *TrackingCodes      `json:"trackingCodes,omitempty"` // Коды маркировки товаров и транспортных упаковок
-	Overhead      *Decimal            `json:"overhead,omitempty"`      // Накладные расходы. Если Позиции Приемки не заданы, то накладные расходы нельзя задать.
+	Overhead      *float64            `json:"overhead,omitempty"`      // Накладные расходы. Если Позиции Приемки не заданы, то накладные расходы нельзя задать.
 	Vat           *int                `json:"vat,omitempty"`           // НДС, которым облагается текущая позиция
 	VatEnabled    *bool               `json:"vatEnabled,omitempty"`    // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Stock         *Stock              `json:"stock,omitempty"`         // Остатки и себестоимость `?fields=stock&expand=positions`

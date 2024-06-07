@@ -11,7 +11,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prihodnyj-order
 type CashIn struct {
 	Organization   *Organization `json:"organization,omitempty"`
-	VatSum         *Decimal      `json:"vatSum,omitempty"`
+	VatSum         *float64      `json:"vatSum,omitempty"`
 	Applicable     *bool         `json:"applicable,omitempty"`
 	Moment         *Timestamp    `json:"moment,omitempty"`
 	Code           *string       `json:"code,omitempty"`
@@ -36,7 +36,7 @@ type CashIn struct {
 	SalesChannel   *SalesChannel `json:"salesChannel,omitempty"`
 	Shared         *bool         `json:"shared,omitempty"`
 	State          *State        `json:"state,omitempty"`
-	Sum            *Decimal      `json:"sum,omitempty"`
+	Sum            *float64      `json:"sum,omitempty"`
 	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
 	Updated        *Timestamp    `json:"updated,omitempty"`
 	Name           *string       `json:"name,omitempty"`
@@ -48,7 +48,7 @@ func (cashIn CashIn) GetOrganization() Organization {
 	return Deref(cashIn.Organization)
 }
 
-func (cashIn CashIn) GetVatSum() Decimal {
+func (cashIn CashIn) GetVatSum() float64 {
 	return Deref(cashIn.VatSum)
 }
 
@@ -148,7 +148,7 @@ func (cashIn CashIn) GetState() State {
 	return Deref(cashIn.State)
 }
 
-func (cashIn CashIn) GetSum() Decimal {
+func (cashIn CashIn) GetSum() float64 {
 	return Deref(cashIn.Sum)
 }
 
@@ -177,7 +177,7 @@ func (cashIn *CashIn) SetOrganization(organization *Organization) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetVatSum(vatSum *Decimal) *CashIn {
+func (cashIn *CashIn) SetVatSum(vatSum *float64) *CashIn {
 	cashIn.VatSum = vatSum
 	return cashIn
 }
@@ -272,7 +272,7 @@ func (cashIn *CashIn) SetState(state *State) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetSum(sum *Decimal) *CashIn {
+func (cashIn *CashIn) SetSum(sum *float64) *CashIn {
 	cashIn.Sum = sum
 	return cashIn
 }

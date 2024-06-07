@@ -59,7 +59,7 @@ type ProcessingOrderPosition struct {
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
-	Reserve    *Decimal            `json:"reserve,omitempty"`    // Резерв данной позиции
+	Reserve    *float64            `json:"reserve,omitempty"`    // Резерв данной позиции
 }
 
 func (p ProcessingOrderPosition) String() string {

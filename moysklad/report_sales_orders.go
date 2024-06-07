@@ -9,7 +9,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-series
 type SeriesElement struct {
 	Date     Timestamp `json:"date"`
-	Sum      Decimal   `json:"sum"`
+	Sum      float64   `json:"sum"`
 	Quantity float64   `json:"quantity"`
 }
 

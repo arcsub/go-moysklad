@@ -29,7 +29,7 @@ type CounterPartyAdjustment struct {
 	ID           *uuid.UUID    `json:"id,omitempty"`
 	Published    *bool         `json:"published,omitempty"`
 	Shared       *bool         `json:"shared,omitempty"`
-	Sum          *Decimal      `json:"sum,omitempty"`
+	Sum          *float64      `json:"sum,omitempty"`
 	Attributes   Attributes    `json:"attributes,omitempty"`
 }
 

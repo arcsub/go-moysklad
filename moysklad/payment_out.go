@@ -39,10 +39,10 @@ type PaymentOut struct {
 	SalesChannel        *SalesChannel `json:"salesChannel,omitempty"`
 	Shared              *bool         `json:"shared,omitempty"`
 	State               *State        `json:"state,omitempty"`
-	Sum                 *Decimal      `json:"sum,omitempty"`
+	Sum                 *float64      `json:"sum,omitempty"`
 	SyncID              *uuid.UUID    `json:"syncId,omitempty"`
 	Updated             *Timestamp    `json:"updated,omitempty"`
-	VatSum              *Decimal      `json:"vatSum,omitempty"`
+	VatSum              *float64      `json:"vatSum,omitempty"`
 	AccountID           *uuid.UUID    `json:"accountId,omitempty"`
 	Attributes          Attributes    `json:"attributes,omitempty"`
 }

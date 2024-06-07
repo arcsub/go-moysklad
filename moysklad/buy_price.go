@@ -3,11 +3,11 @@ package moysklad
 // BuyPrice Закупочная цена.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-zakupochnaq-cena
 type BuyPrice struct {
-	Value    *Decimal  `json:"value,omitempty"`    // Значение цены
+	Value    *float64  `json:"value,omitempty"`    // Значение цены
 	Currency *Currency `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
 }
 
-func (buyPrice BuyPrice) GetValue() Decimal {
+func (buyPrice BuyPrice) GetValue() float64 {
 	return Deref(buyPrice.Value)
 }
 
@@ -15,7 +15,7 @@ func (buyPrice BuyPrice) GetCurrency() Currency {
 	return Deref(buyPrice.Currency)
 }
 
-func (buyPrice *BuyPrice) SetValue(value *Decimal) *BuyPrice {
+func (buyPrice *BuyPrice) SetValue(value *float64) *BuyPrice {
 	buyPrice.Value = value
 	return buyPrice
 }

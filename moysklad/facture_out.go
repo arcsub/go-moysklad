@@ -34,7 +34,7 @@ type FactureOut struct {
 	Shared          *bool            `json:"shared,omitempty"`
 	State           *State           `json:"state,omitempty"`
 	StateContractId *string          `json:"stateContractId,omitempty"`
-	Sum             *Decimal         `json:"sum,omitempty"`
+	Sum             *float64         `json:"sum,omitempty"`
 	SyncID          *uuid.UUID       `json:"syncId,omitempty"`
 	Updated         *Timestamp       `json:"updated,omitempty"`
 	Demands         *Demands         `json:"demands,omitempty"`

@@ -10,7 +10,7 @@ import (
 // Ключевое слово: currency
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-valuta
 type Currency struct {
-	Margin         *Decimal       `json:"margin,omitempty"`
+	Margin         *float64       `json:"margin,omitempty"`
 	ISOCode        *string        `json:"isoCode,omitempty"`
 	Default        *bool          `json:"default,omitempty"`
 	FullName       *string        `json:"fullName,omitempty"`

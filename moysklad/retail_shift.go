@@ -14,8 +14,8 @@ type RetailShift struct {
 	Shared              *bool             `json:"shared,omitempty"`
 	AgentAccount        *AgentAccount     `json:"agentAccount,omitempty"`
 	VatIncluded         *bool             `json:"vatIncluded,omitempty"`
-	BankCommission      *Decimal          `json:"bankComission,omitempty"`
-	BankPercent         *Decimal          `json:"bankPercent,omitempty"`
+	BankCommission      *float64          `json:"bankComission,omitempty"`
+	BankPercent         *float64          `json:"bankPercent,omitempty"`
 	Name                *string           `json:"name,omitempty"`
 	CloseDate           *Timestamp        `json:"closeDate,omitempty"`
 	Contract            *Contract         `json:"contract,omitempty"`
@@ -35,14 +35,14 @@ type RetailShift struct {
 	Owner               *Employee         `json:"owner,omitempty"`
 	Payments            *Payments         `json:"paymentOperations,omitempty"`
 	Printed             *bool             `json:"printed,omitempty"`
-	ProceedsCash        *Decimal          `json:"proceedsCash,omitempty"`
-	ProceedsNoCash      *Decimal          `json:"proceedsNoCash,omitempty"`
+	ProceedsCash        *float64          `json:"proceedsCash,omitempty"`
+	ProceedsNoCash      *float64          `json:"proceedsNoCash,omitempty"`
 	Published           *bool             `json:"published,omitempty"`
 	QRAcquire           *Counterparty     `json:"qrAcquire,omitempty"`
-	QRBankCommission    *Decimal          `json:"qrBankComission,omitempty"`
-	QRBankPercent       *Decimal          `json:"qrBankPercent,omitempty"`
-	ReceivedCash        *Decimal          `json:"receivedCash,omitempty"`
-	ReceivedNoCash      *Decimal          `json:"receivedNoCash,omitempty"`
+	QRBankCommission    *float64          `json:"qrBankComission,omitempty"`
+	QRBankPercent       *float64          `json:"qrBankPercent,omitempty"`
+	ReceivedCash        *float64          `json:"receivedCash,omitempty"`
+	ReceivedNoCash      *float64          `json:"receivedNoCash,omitempty"`
 	RetailStore         *RetailStore      `json:"retailStore,omitempty"`
 	Operations          *RetailOperations `json:"operations,omitempty"`
 	Store               *Store            `json:"store,omitempty"`

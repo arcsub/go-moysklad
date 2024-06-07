@@ -11,20 +11,20 @@ import (
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-pokazateli-kontragentow
 type ReportCounterparty struct {
-	FirstDemandDate Timestamp        `json:"firstDemandDate"`
 	Updated         Timestamp        `json:"updated"`
 	LastEventDate   Timestamp        `json:"lastEventDate"`
 	LastDemandDate  Timestamp        `json:"lastDemandDate"`
+	FirstDemandDate Timestamp        `json:"firstDemandDate"`
 	Counterparty    CounterpartyData `json:"counterparty"`
 	Meta            Meta             `json:"meta"`
-	DiscountsSum    Decimal          `json:"discountsSum"`
 	LastEventText   string           `json:"lastEventText"`
-	DemandsSum      Decimal          `json:"demandsSum"`
-	AverageReceipt  Decimal          `json:"averageReceipt"`
-	BonusBalance    Decimal          `json:"bonusBalance"`
-	Profit          Decimal          `json:"profit"`
-	ReturnsSum      Decimal          `json:"returnsSum"`
-	Balance         Decimal          `json:"balance"`
+	DemandsSum      float64          `json:"demandsSum"`
+	DiscountsSum    float64          `json:"discountsSum"`
+	AverageReceipt  float64          `json:"averageReceipt"`
+	BonusBalance    float64          `json:"bonusBalance"`
+	Profit          float64          `json:"profit"`
+	ReturnsSum      float64          `json:"returnsSum"`
+	Balance         float64          `json:"balance"`
 	DemandsCount    int              `json:"demandsCount"`
 	ReturnsCount    int              `json:"returnsCount"`
 }

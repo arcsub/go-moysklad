@@ -7,14 +7,14 @@ import (
 
 // Profit общие поля для структур отчёта "Прибыльность"
 type Profit struct {
-	Margin         Decimal `json:"margin"`
-	Profit         Decimal `json:"profit"`
-	ReturnAvgCheck Decimal `json:"returnAvgCheck"`
-	ReturnCostSum  Decimal `json:"returnCostSum"`
-	ReturnSum      Decimal `json:"returnSum"`
-	SalesAvgCheck  Decimal `json:"salesAvgCheck"`
-	SellCostSum    Decimal `json:"sellCostSum"`
-	SellSum        Decimal `json:"sellSum"`
+	Margin         float64 `json:"margin"`
+	Profit         float64 `json:"profit"`
+	ReturnAvgCheck float64 `json:"returnAvgCheck"`
+	ReturnCostSum  float64 `json:"returnCostSum"`
+	ReturnSum      float64 `json:"returnSum"`
+	SalesAvgCheck  float64 `json:"salesAvgCheck"`
+	SellCostSum    float64 `json:"sellCostSum"`
+	SellSum        float64 `json:"sellSum"`
 	ReturnCount    float64 `json:"returnCount"`
 	SalesCount     float64 `json:"salesCount"`
 }
@@ -23,16 +23,16 @@ type Profit struct {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
 type ProfitByAssortment struct {
 	Assortment     ProfitReportAssortment `json:"assortment"`
-	SellCostSum    Decimal                `json:"sellCostSum"`
-	Profit         Decimal                `json:"profit"`
-	ReturnCost     Decimal                `json:"returnCost"`
-	ReturnCostSum  Decimal                `json:"returnCostSum"`
-	ReturnPrice    Decimal                `json:"returnPrice"`
-	ReturnSum      Decimal                `json:"returnSum"`
-	SellCost       Decimal                `json:"sellCost"`
-	Margin         Decimal                `json:"margin"`
-	SellPrice      Decimal                `json:"SellPrice"`
-	SellSum        Decimal                `json:"sellSum"`
+	SellCostSum    float64                `json:"sellCostSum"`
+	Profit         float64                `json:"profit"`
+	ReturnCost     float64                `json:"returnCost"`
+	ReturnCostSum  float64                `json:"returnCostSum"`
+	ReturnPrice    float64                `json:"returnPrice"`
+	ReturnSum      float64                `json:"returnSum"`
+	SellCost       float64                `json:"sellCost"`
+	Margin         float64                `json:"margin"`
+	SellPrice      float64                `json:"SellPrice"`
+	SellSum        float64                `json:"sellSum"`
 	ReturnQuantity float64                `json:"returnQuantity"`
 	SellQuantity   float64                `json:"sellQuantity"`
 }

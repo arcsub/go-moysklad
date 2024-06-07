@@ -17,7 +17,6 @@ type Operation struct {
 	Deleted      Timestamp    `json:"deleted,omitempty"`
 	Meta         Meta         `json:"meta,omitempty"`
 	Name         string       `json:"name,omitempty"`
-	LinkedSum    Decimal      `json:"linkedSum,omitempty"`
 	ExternalCode string       `json:"externalCode,omitempty"`
 	Description  string       `json:"description,omitempty"`
 	Organization Organization `json:"organization,omitempty"`
@@ -26,8 +25,9 @@ type Operation struct {
 	Payments     Payments   `json:"payments,omitempty"`
 	Attributes   Attributes `json:"attributes,omitempty"`
 	Files        Files      `json:"files,omitempty"`
-	ID           uuid.UUID  `json:"id,omitempty"`
+	LinkedSum    float64    `json:"linkedSum,omitempty"`
 	AccountID    uuid.UUID  `json:"accountId,omitempty"`
+	ID           uuid.UUID  `json:"id,omitempty"`
 	SyncID       uuid.UUID  `json:"syncId,omitempty"`
 	Published    bool       `json:"published,omitempty"`
 	VatIncluded  bool       `json:"vatIncluded,omitempty"`

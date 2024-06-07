@@ -40,7 +40,7 @@ type PaymentIn struct {
 	Shared              *bool         `json:"shared,omitempty"`
 	SalesChannel        *SalesChannel `json:"salesChannel,omitempty"`
 	State               *State        `json:"state,omitempty"`
-	Sum                 *Decimal      `json:"sum,omitempty"`
+	Sum                 *float64      `json:"sum,omitempty"`
 	SyncID              *uuid.UUID    `json:"syncId,omitempty"`
 	Updated             *Timestamp    `json:"updated,omitempty"`
 	AccountID           *uuid.UUID    `json:"accountId,omitempty"`

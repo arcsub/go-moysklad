@@ -14,11 +14,11 @@ type CommissionReportOut struct {
 	OrganizationAccount   *AgentAccount                           `json:"organizationAccount,omitempty"`
 	AgentAccount          *AgentAccount                           `json:"agentAccount,omitempty"`
 	Organization          *Organization                           `json:"organization,omitempty"`
-	VatSum                *Decimal                                `json:"vatSum,omitempty"`
+	VatSum                *float64                                `json:"vatSum,omitempty"`
 	Code                  *string                                 `json:"code,omitempty"`
 	CommissionPeriodEnd   *Timestamp                              `json:"commissionPeriodEnd,omitempty"`
 	Agent                 *Counterparty                           `json:"agent,omitempty"`
-	CommitentSum          *Decimal                                `json:"commitentSum,omitempty"`
+	CommitentSum          *float64                                `json:"commitentSum,omitempty"`
 	Contract              *Contract                               `json:"contract,omitempty"`
 	Created               *Timestamp                              `json:"created,omitempty"`
 	Deleted               *Timestamp                              `json:"deleted,omitempty"`
@@ -33,7 +33,7 @@ type CommissionReportOut struct {
 	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`
 	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"`
 	Owner                 *Employee                               `json:"owner,omitempty"`
-	PayedSum              *Decimal                                `json:"payedSum,omitempty"`
+	PayedSum              *float64                                `json:"payedSum,omitempty"`
 	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`
 	Printed               *bool                                   `json:"printed,omitempty"`
 	Project               *Project                                `json:"project,omitempty"`
@@ -44,7 +44,7 @@ type CommissionReportOut struct {
 	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`
 	Shared                *bool                                   `json:"shared,omitempty"`
 	State                 *State                                  `json:"state,omitempty"`
-	Sum                   *Decimal                                `json:"sum,omitempty"`
+	Sum                   *float64                                `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                              `json:"syncId,omitempty"`
 	Updated               *Timestamp                              `json:"updated,omitempty"`
 	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`
@@ -69,7 +69,7 @@ func (commissionReportOut CommissionReportOut) GetOrganization() Organization {
 	return Deref(commissionReportOut.Organization)
 }
 
-func (commissionReportOut CommissionReportOut) GetVatSum() Decimal {
+func (commissionReportOut CommissionReportOut) GetVatSum() float64 {
 	return Deref(commissionReportOut.VatSum)
 }
 
@@ -85,7 +85,7 @@ func (commissionReportOut CommissionReportOut) GetAgent() Counterparty {
 	return Deref(commissionReportOut.Agent)
 }
 
-func (commissionReportOut CommissionReportOut) GetCommitentSum() Decimal {
+func (commissionReportOut CommissionReportOut) GetCommitentSum() float64 {
 	return Deref(commissionReportOut.CommitentSum)
 }
 
@@ -145,7 +145,7 @@ func (commissionReportOut CommissionReportOut) GetOwner() Employee {
 	return Deref(commissionReportOut.Owner)
 }
 
-func (commissionReportOut CommissionReportOut) GetPayedSum() Decimal {
+func (commissionReportOut CommissionReportOut) GetPayedSum() float64 {
 	return Deref(commissionReportOut.PayedSum)
 }
 
@@ -189,7 +189,7 @@ func (commissionReportOut CommissionReportOut) GetState() State {
 	return Deref(commissionReportOut.State)
 }
 
-func (commissionReportOut CommissionReportOut) GetSum() Decimal {
+func (commissionReportOut CommissionReportOut) GetSum() float64 {
 	return Deref(commissionReportOut.Sum)
 }
 
@@ -384,9 +384,9 @@ type CommissionReportOutPosition struct {
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID сущности
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Meta       *Meta               `json:"meta,omitempty"`       // Метаданные
-	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
-	Reward     *Decimal            `json:"reward,omitempty"`     // Вознаграждение
+	Reward     *float64            `json:"reward,omitempty"`     // Вознаграждение
 	Vat        *int                `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }
@@ -411,7 +411,7 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetMeta() Meta {
 	return Deref(commissionReportOutPosition.Meta)
 }
 
-func (commissionReportOutPosition CommissionReportOutPosition) GetPrice() Decimal {
+func (commissionReportOutPosition CommissionReportOutPosition) GetPrice() float64 {
 	return Deref(commissionReportOutPosition.Price)
 }
 
@@ -419,7 +419,7 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetQuantity() flo
 	return Deref(commissionReportOutPosition.Quantity)
 }
 
-func (commissionReportOutPosition CommissionReportOutPosition) GetReward() Decimal {
+func (commissionReportOutPosition CommissionReportOutPosition) GetReward() float64 {
 	return Deref(commissionReportOutPosition.Reward)
 }
 
@@ -446,7 +446,7 @@ func (commissionReportOutPosition *CommissionReportOutPosition) SetMeta(meta *Me
 	return commissionReportOutPosition
 }
 
-func (commissionReportOutPosition *CommissionReportOutPosition) SetPrice(price *Decimal) *CommissionReportOutPosition {
+func (commissionReportOutPosition *CommissionReportOutPosition) SetPrice(price *float64) *CommissionReportOutPosition {
 	commissionReportOutPosition.Price = price
 	return commissionReportOutPosition
 }
@@ -456,7 +456,7 @@ func (commissionReportOutPosition *CommissionReportOutPosition) SetQuantity(quan
 	return commissionReportOutPosition
 }
 
-func (commissionReportOutPosition *CommissionReportOutPosition) SetReward(reward *Decimal) *CommissionReportOutPosition {
+func (commissionReportOutPosition *CommissionReportOutPosition) SetReward(reward *float64) *CommissionReportOutPosition {
 	commissionReportOutPosition.Reward = reward
 	return commissionReportOutPosition
 }

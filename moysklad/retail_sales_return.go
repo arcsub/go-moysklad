@@ -15,7 +15,7 @@ type RetailSalesReturn struct {
 	AgentAccount        *AgentAccount              `json:"agentAccount,omitempty"`
 	Applicable          *bool                      `json:"applicable,omitempty"`
 	VatIncluded         *bool                      `json:"vatIncluded,omitempty"`
-	CashSum             *Decimal                   `json:"cashSum,omitempty"`
+	CashSum             *float64                   `json:"cashSum,omitempty"`
 	Code                *string                    `json:"code,omitempty"`
 	Contract            *Contract                  `json:"contract,omitempty"`
 	Created             *Timestamp                 `json:"created,omitempty"`
@@ -28,7 +28,7 @@ type RetailSalesReturn struct {
 	Meta                *Meta                      `json:"meta,omitempty"`
 	Moment              *Timestamp                 `json:"moment,omitempty"`
 	OrganizationAccount *AgentAccount              `json:"organizationAccount,omitempty"`
-	NoCashSum           *Decimal                   `json:"noCashSum,omitempty"`
+	NoCashSum           *float64                   `json:"noCashSum,omitempty"`
 	SyncID              *uuid.UUID                 `json:"syncId,omitempty"`
 	AccountID           *uuid.UUID                 `json:"accountId,omitempty"`
 	Owner               *Employee                  `json:"owner,omitempty"`
@@ -36,16 +36,16 @@ type RetailSalesReturn struct {
 	Printed             *bool                      `json:"printed,omitempty"`
 	Project             *Project                   `json:"project,omitempty"`
 	Published           *bool                      `json:"published,omitempty"`
-	QrSum               *Decimal                   `json:"qrSum,omitempty"`
+	QrSum               *float64                   `json:"qrSum,omitempty"`
 	Rate                *Rate                      `json:"rate,omitempty"`
 	RetailShift         *RetailShift               `json:"retailShift,omitempty"`
 	RetailStore         *RetailStore               `json:"retailStore,omitempty"`
 	Shared              *bool                      `json:"shared,omitempty"`
 	State               *State                     `json:"state,omitempty"`
 	Store               *Store                     `json:"store,omitempty"`
-	Sum                 *Decimal                   `json:"sum,omitempty"`
+	Sum                 *float64                   `json:"sum,omitempty"`
 	Agent               *Counterparty              `json:"agent,omitempty"`
-	VatSum              *Decimal                   `json:"vatSum,omitempty"`
+	VatSum              *float64                   `json:"vatSum,omitempty"`
 	Updated             *Timestamp                 `json:"updated,omitempty"`
 	VatEnabled          *bool                      `json:"vatEnabled,omitempty"`
 	TaxSystem           TaxSystem                  `json:"taxSystem,omitempty"`

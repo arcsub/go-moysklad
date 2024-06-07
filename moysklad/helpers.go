@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/shopspring/decimal"
 	"reflect"
 
 	"image/color"
@@ -38,24 +37,6 @@ func Float(v float64) *float64 { return &v }
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
-
-// DecimalPtr is a helper routine that allocates a new decimal value
-// to store v and returns a pointer to it.
-func DecimalPtr(v decimal.Decimal) *Decimal { return &Decimal{v} }
-
-// DecimalFloatPtr is a helper routine that allocates a new decimal value
-// to store v and returns a pointer to it.
-func DecimalFloatPtr(v float64) *Decimal {
-	d := decimal.NewFromFloat(v)
-	return &Decimal{d}
-}
-
-// DecimalIntPtr is a helper routine that allocates a new decimal value
-// to store v and returns a pointer to it.
-func DecimalIntPtr(v int64) *Decimal {
-	d := decimal.NewFromInt(v)
-	return &Decimal{d}
-}
 
 // Stringify attempts to create a reasonable string representation of types in
 // the Moysklad library. It does things like resolve pointers to their values
@@ -326,15 +307,6 @@ func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
 	lMeta := Deref(l).GetMeta()
 	rMeta := Deref(r).GetMeta()
 	return l != nil && r != nil && lMeta.IsEqual(&rMeta)
-}
-
-type Decimal struct {
-	decimal.Decimal
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-func (d Decimal) MarshalJSON() ([]byte, error) {
-	return []byte(d.StringFixed(2)), nil
 }
 
 type DeleteManyRequest []MetaWrapper

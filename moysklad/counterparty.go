@@ -38,7 +38,7 @@ type Counterparty struct {
 	Fax                *string         `json:"fax,omitempty"`
 	Phone              *string         `json:"phone,omitempty"`
 	PriceType          *PriceType      `json:"priceType,omitempty"`
-	SalesAmount        *Decimal        `json:"salesAmount,omitempty"`
+	SalesAmount        *float64        `json:"salesAmount,omitempty"`
 	Shared             *bool           `json:"shared,omitempty"`
 	State              *State          `json:"state,omitempty"`
 	SyncID             *uuid.UUID      `json:"syncId,omitempty"`
@@ -166,7 +166,7 @@ func (counterparty Counterparty) GetPriceType() PriceType {
 	return Deref(counterparty.PriceType)
 }
 
-func (counterparty Counterparty) GetSalesAmount() Decimal {
+func (counterparty Counterparty) GetSalesAmount() float64 {
 	return Deref(counterparty.SalesAmount)
 }
 

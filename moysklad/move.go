@@ -37,7 +37,7 @@ type Move struct {
 	Shared        *bool                    `json:"shared,omitempty"`
 	SourceStore   *Store                   `json:"sourceStore,omitempty"`
 	State         *State                   `json:"state,omitempty"`
-	Sum           *Decimal                 `json:"sum,omitempty"`
+	Sum           *float64                 `json:"sum,omitempty"`
 	SyncID        *uuid.UUID               `json:"syncId,omitempty"`
 	TargetStore   *Store                   `json:"targetStore,omitempty"`
 	Attributes    Attributes               `json:"attributes,omitempty"`
@@ -60,9 +60,9 @@ type MovePosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
-	Overhead   *Decimal            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Перемещения не заданы, то накладные расходы нельзя задать
+	Overhead   *float64            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Перемещения не заданы, то накладные расходы нельзя задать
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе
 	SourceSlot *Slot               `json:"sourceSlot,omitempty"` // Ячейка на складе, с которого совершается перемещение
 	TargetSlot *Slot               `json:"targetSlot,omitempty"` // Ячейка на складе, на который совершается перемещение

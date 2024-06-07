@@ -11,7 +11,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-pokupatelq
 type SalesReturn struct {
 	Positions           *Positions[SalesReturnPosition] `json:"positions,omitempty"`
-	VatSum              *Decimal                        `json:"vatSum,omitempty"`
+	VatSum              *float64                        `json:"vatSum,omitempty"`
 	AgentAccount        *AgentAccount                   `json:"agentAccount,omitempty"`
 	Applicable          *bool                           `json:"applicable,omitempty"`
 	FactureOut          *FactureOut                     `json:"factureOut,omitempty"`
@@ -39,7 +39,7 @@ type SalesReturn struct {
 	Shared              *bool                           `json:"shared,omitempty"`
 	State               *State                          `json:"state,omitempty"`
 	Store               *Store                          `json:"store,omitempty"`
-	Sum                 *Decimal                        `json:"sum,omitempty"`
+	Sum                 *float64                        `json:"sum,omitempty"`
 	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`
 	Updated             *Timestamp                      `json:"updated,omitempty"`
 	VatEnabled          *bool                           `json:"vatEnabled,omitempty"`
@@ -48,7 +48,7 @@ type SalesReturn struct {
 	Demand              *Demand                         `json:"demand,omitempty"`
 	Losses              *Losses                         `json:"losses,omitempty"`
 	Payments            *Payments                       `json:"payments,omitempty"`
-	PayedSum            *Decimal                        `json:"payedSum,omitempty"`
+	PayedSum            *float64                        `json:"payedSum,omitempty"`
 	Attributes          Attributes                      `json:"attributes,omitempty"`
 }
 
@@ -73,13 +73,13 @@ type SalesReturns = Slice[SalesReturn]
 type SalesReturnPosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Cost       *Decimal            `json:"cost,omitempty"`       // Себестоимость (выводится, если документ был создан без основания)
+	Cost       *float64            `json:"cost,omitempty"`       // Себестоимость (выводится, если документ был создан без основания)
 	Country    *Country            `json:"country,omitempty"`    // Метаданные Страны
-	Discount   *Decimal            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
+	Discount   *float64            `json:"discount,omitempty"`   // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	Price      *Decimal            `json:"price,omitempty"`      // Цена товара/услуги в копейках
+	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Slot       *Slot               `json:"slot,omitempty"`       // Метаданные
 	Things     *Things             `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
