@@ -77,7 +77,7 @@ type productionStageCompletionService struct {
 	endpointCreateUpdateMany[ProductionStageCompletion]
 	endpointDeleteMany[ProductionStageCompletion]
 	endpointDelete
-	endpointGetById[ProductionStageCompletion]
+	endpointGetByID[ProductionStageCompletion]
 	endpointUpdate[ProductionStageCompletion]
 }
 
@@ -90,7 +90,7 @@ func NewProductionStageCompletionService(client *Client) ProductionStageCompleti
 		endpointCreateUpdateMany: endpointCreateUpdateMany[ProductionStageCompletion]{e},
 		endpointDeleteMany:       endpointDeleteMany[ProductionStageCompletion]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[ProductionStageCompletion]{e},
+		endpointGetByID:          endpointGetByID[ProductionStageCompletion]{e},
 		endpointUpdate:           endpointUpdate[ProductionStageCompletion]{e},
 	}
 }

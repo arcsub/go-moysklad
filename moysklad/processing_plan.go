@@ -81,7 +81,7 @@ type processingPlanService struct {
 	endpointCreateUpdateMany[ProcessingPlan]
 	endpointDeleteMany[ProcessingPlan]
 	endpointDelete
-	endpointGetById[ProcessingPlan]
+	endpointGetByID[ProcessingPlan]
 	endpointUpdate[ProcessingPlan]
 	endpointPositions[ProcessingPlanProduct]
 	endpointRemove
@@ -96,7 +96,7 @@ func NewProcessingPlanService(client *Client) ProcessingPlanService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[ProcessingPlan]{e},
 		endpointDeleteMany:       endpointDeleteMany[ProcessingPlan]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[ProcessingPlan]{e},
+		endpointGetByID:          endpointGetByID[ProcessingPlan]{e},
 		endpointUpdate:           endpointUpdate[ProcessingPlan]{e},
 		endpointPositions:        endpointPositions[ProcessingPlanProduct]{e},
 		endpointRemove:           endpointRemove{e},

@@ -139,7 +139,7 @@ type processingService struct {
 	endpointCreateUpdateMany[Processing]
 	endpointDeleteMany[Processing]
 	endpointDelete
-	endpointGetById[Processing]
+	endpointGetByID[Processing]
 	endpointUpdate[Processing]
 	//endpointTemplate[Processing]
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
@@ -158,7 +158,7 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Processing]{e},
 		endpointDeleteMany:       endpointDeleteMany[Processing]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[Processing]{e},
+		endpointGetByID:          endpointGetByID[Processing]{e},
 		endpointUpdate:           endpointUpdate[Processing]{e},
 		endpointMetadata:         endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointAttributes:       endpointAttributes{e},

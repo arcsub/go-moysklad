@@ -106,7 +106,7 @@ type employeeService struct {
 	endpointDelete
 	endpointMetadata[MetadataAttributeShared]
 	endpointAttributes
-	endpointGetById[Employee]
+	endpointGetByID[Employee]
 	endpointUpdate[Employee]
 }
 
@@ -121,7 +121,7 @@ func NewEmployeeService(client *Client) EmployeeService {
 		endpointDelete:           endpointDelete{e},
 		endpointMetadata:         endpointMetadata[MetadataAttributeShared]{e},
 		endpointAttributes:       endpointAttributes{e},
-		endpointGetById:          endpointGetById[Employee]{e},
+		endpointGetByID:          endpointGetByID[Employee]{e},
 		endpointUpdate:           endpointUpdate[Employee]{e},
 	}
 }

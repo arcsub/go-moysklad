@@ -136,7 +136,7 @@ type SupplyService interface {
 	GetFiles(ctx context.Context, id *uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id *uuid.UUID, file *File) (*[]File, *resty.Response, error)
 	UpdateFiles(ctx context.Context, id *uuid.UUID, files []*File) (*[]File, *resty.Response, error)
-	DeleteFile(ctx context.Context, id *uuid.UUID, fileId *uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id *uuid.UUID, fileID *uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id *uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)

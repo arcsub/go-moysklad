@@ -312,7 +312,7 @@ type retailStoreService struct {
 	endpointCreateUpdateMany[RetailStore]
 	endpointDeleteMany[RetailStore]
 	endpointDelete
-	endpointGetById[RetailStore]
+	endpointGetByID[RetailStore]
 	endpointUpdate[RetailStore]
 	endpointNamedFilter
 }
@@ -326,7 +326,7 @@ func NewRetailStoreService(client *Client) RetailStoreService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[RetailStore]{e},
 		endpointDeleteMany:       endpointDeleteMany[RetailStore]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[RetailStore]{e},
+		endpointGetByID:          endpointGetByID[RetailStore]{e},
 		endpointUpdate:           endpointUpdate[RetailStore]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
 	}

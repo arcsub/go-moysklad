@@ -239,7 +239,7 @@ type roleService struct {
 	endpointGetList[Role]
 	endpointCreate[Role]
 	endpointDelete
-	endpointGetById[Role]
+	endpointGetByID[Role]
 	endpointUpdate[Role]
 }
 
@@ -250,7 +250,7 @@ func NewRoleService(client *Client) RoleService {
 		endpointGetList: endpointGetList[Role]{e},
 		endpointCreate:  endpointCreate[Role]{e},
 		endpointDelete:  endpointDelete{e},
-		endpointGetById: endpointGetById[Role]{e},
+		endpointGetByID: endpointGetByID[Role]{e},
 		endpointUpdate:  endpointUpdate[Role]{e},
 	}
 }

@@ -109,7 +109,7 @@ type productionTaskService struct {
 	endpointDeleteMany[ProductionTask]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointAttributes
-	endpointGetById[ProductionTask]
+	endpointGetByID[ProductionTask]
 	endpointUpdate[ProductionTask]
 	endpointDelete
 	endpointPositions[ProductionRow]
@@ -124,7 +124,7 @@ func NewProductionTaskService(client *Client) ProductionTaskService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[ProductionTask]{e},
 		endpointDeleteMany:       endpointDeleteMany[ProductionTask]{e},
 		endpointMetadata:         endpointMetadata[MetadataAttributeSharedStates]{e},
-		endpointGetById:          endpointGetById[ProductionTask]{e},
+		endpointGetByID:          endpointGetByID[ProductionTask]{e},
 		endpointUpdate:           endpointUpdate[ProductionTask]{e},
 		endpointPositions:        endpointPositions[ProductionRow]{e},
 		endpointDelete:           endpointDelete{e},

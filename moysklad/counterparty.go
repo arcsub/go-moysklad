@@ -619,7 +619,7 @@ type counterpartyService struct {
 	endpointCreateUpdateMany[Counterparty]
 	endpointDeleteMany[Counterparty]
 	endpointDelete
-	endpointGetById[Counterparty]
+	endpointGetByID[Counterparty]
 	endpointUpdate[Counterparty]
 	endpointMetadata[MetadataCounterparty]
 	endpointAttributes
@@ -638,7 +638,7 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Counterparty]{e},
 		endpointDeleteMany:       endpointDeleteMany[Counterparty]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[Counterparty]{e},
+		endpointGetByID:          endpointGetByID[Counterparty]{e},
 		endpointUpdate:           endpointUpdate[Counterparty]{e},
 		endpointMetadata:         endpointMetadata[MetadataCounterparty]{e},
 		endpointAttributes:       endpointAttributes{e},

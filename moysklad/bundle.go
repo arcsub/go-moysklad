@@ -478,7 +478,7 @@ type BundleService interface {
 	DeleteMany(ctx context.Context, bundleList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetComponents(ctx context.Context, id *uuid.UUID) (*List[BundleComponent], *resty.Response, error)
 	CreateComponent(ctx context.Context, id *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
-	GetComponentById(ctx context.Context, id, componentID *uuid.UUID) (*BundleComponent, *resty.Response, error)
+	GetComponentByID(ctx context.Context, id, componentID *uuid.UUID) (*BundleComponent, *resty.Response, error)
 	UpdateComponent(ctx context.Context, id, componentID *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 	DeleteComponent(ctx context.Context, id, componentID *uuid.UUID) (bool, *resty.Response, error)
 }
@@ -488,7 +488,7 @@ type bundleService struct {
 	endpointGetList[Bundle]
 	endpointCreate[Bundle]
 	endpointCreateUpdateMany[Bundle]
-	endpointGetById[Bundle]
+	endpointGetByID[Bundle]
 	endpointUpdate[Bundle]
 	endpointDelete
 	endpointDeleteMany[Bundle]
@@ -501,7 +501,7 @@ func NewBundleService(client *Client) BundleService {
 		endpointGetList:          endpointGetList[Bundle]{e},
 		endpointCreate:           endpointCreate[Bundle]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Bundle]{e},
-		endpointGetById:          endpointGetById[Bundle]{e},
+		endpointGetByID:          endpointGetByID[Bundle]{e},
 		endpointUpdate:           endpointUpdate[Bundle]{e},
 		endpointDelete:           endpointDelete{e},
 		endpointDeleteMany:       endpointDeleteMany[Bundle]{e},
@@ -522,9 +522,9 @@ func (s *bundleService) CreateComponent(ctx context.Context, id *uuid.UUID, bund
 	return NewRequestBuilder[BundleComponent](s.client, path).Post(ctx, bundleComponent)
 }
 
-// GetComponentById Получить компонент.
+// GetComponentByID Получить компонент.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-poluchit-komponent
-func (s *bundleService) GetComponentById(ctx context.Context, id, componentId *uuid.UUID) (*BundleComponent, *resty.Response, error) {
+func (s *bundleService) GetComponentByID(ctx context.Context, id, componentId *uuid.UUID) (*BundleComponent, *resty.Response, error) {
 	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentId)
 	return NewRequestBuilder[BundleComponent](s.client, path).Get(ctx)
 }

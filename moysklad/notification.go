@@ -41,7 +41,7 @@ type NotificationService interface {
 type notificationService struct {
 	Endpoint
 	endpointGetList[Notification]
-	endpointGetById[Notification]
+	endpointGetByID[Notification]
 	endpointDelete
 }
 
@@ -50,7 +50,7 @@ func NewNotificationService(client *Client) NotificationService {
 	return &notificationService{
 		Endpoint:        e,
 		endpointGetList: endpointGetList[Notification]{e},
-		endpointGetById: endpointGetById[Notification]{e},
+		endpointGetByID: endpointGetByID[Notification]{e},
 		endpointDelete:  endpointDelete{e},
 	}
 }

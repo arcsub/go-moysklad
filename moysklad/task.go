@@ -70,12 +70,12 @@ type TaskService interface {
 	Update(ctx context.Context, id *uuid.UUID, task *Task, params *Params) (*Task, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	GetNotes(ctx context.Context, taskId *uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error)
-	CreateNote(ctx context.Context, taskId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
-	CreateNotes(ctx context.Context, taskId *uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error)
-	GetNoteById(ctx context.Context, taskId, taskNoteId *uuid.UUID) (*TaskNote, *resty.Response, error)
-	UpdateNote(ctx context.Context, taskId, taskNoteId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
-	DeleteNote(ctx context.Context, taskId, taskNoteId *uuid.UUID) (bool, *resty.Response, error)
+	GetNotes(ctx context.Context, taskID *uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error)
+	CreateNote(ctx context.Context, taskID *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
+	CreateNotes(ctx context.Context, taskID *uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error)
+	GetNoteByID(ctx context.Context, taskID, taskNoteID *uuid.UUID) (*TaskNote, *resty.Response, error)
+	UpdateNote(ctx context.Context, taskID, taskNoteID *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
+	DeleteNote(ctx context.Context, taskID, taskNoteID *uuid.UUID) (bool, *resty.Response, error)
 }
 
 type taskService struct {
@@ -85,7 +85,7 @@ type taskService struct {
 	endpointCreateUpdateMany[Task]
 	endpointDeleteMany[Task]
 	endpointDelete
-	endpointGetById[Task]
+	endpointGetByID[Task]
 	endpointUpdate[Task]
 	endpointNamedFilter
 }
@@ -99,7 +99,7 @@ func NewTaskService(client *Client) TaskService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Task]{e},
 		endpointDeleteMany:       endpointDeleteMany[Task]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[Task]{e},
+		endpointGetByID:          endpointGetByID[Task]{e},
 		endpointUpdate:           endpointUpdate[Task]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
 	}
@@ -107,41 +107,41 @@ func NewTaskService(client *Client) TaskService {
 
 // GetNotes Запрос на получение списка всех комментариев данной Задачи.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarii-zadachi
-func (s *taskService) GetNotes(ctx context.Context, taskId *uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskId)
+func (s *taskService) GetNotes(ctx context.Context, taskID *uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", s.uri, taskID)
 	return NewRequestBuilder[List[TaskNote]](s.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateNote Запрос на создание нового комментария к Задаче.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-sozdat-kommentarij-zadachi
-func (s *taskService) CreateNote(ctx context.Context, taskId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskId)
+func (s *taskService) CreateNote(ctx context.Context, taskID *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", s.uri, taskID)
 	return NewRequestBuilder[TaskNote](s.client, path).Post(ctx, taskNote)
 }
 
 // CreateNotes Запрос на создание нескольких комментариев к Задаче.
-func (s *taskService) CreateNotes(ctx context.Context, taskId *uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskId)
+func (s *taskService) CreateNotes(ctx context.Context, taskID *uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", s.uri, taskID)
 	return NewRequestBuilder[[]TaskNote](s.client, path).Post(ctx, taskNotes)
 }
 
-// GetNoteById Отдельный комментарий к Задаче с указанным id комментария.
+// GetNoteByID Отдельный комментарий к Задаче с указанным id комментария.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarij-k-zadache
-func (s *taskService) GetNoteById(ctx context.Context, taskId, taskNoteId *uuid.UUID) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskId, taskNoteId)
+func (s *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID *uuid.UUID) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskID, taskNoteID)
 	return NewRequestBuilder[TaskNote](s.client, path).Get(ctx)
 }
 
 // UpdateNote Запрос на обновление отдельного комментария к Задаче.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-izmenit-kommentarij-k-zadache
-func (s *taskService) UpdateNote(ctx context.Context, taskId, taskNoteId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskId, taskNoteId)
+func (s *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskID, taskNoteID)
 	return NewRequestBuilder[TaskNote](s.client, path).Put(ctx, taskNote)
 }
 
 // DeleteNote Запрос на удаление отдельного комментария к Задаче с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-udalit-kommentarij
-func (s *taskService) DeleteNote(ctx context.Context, taskId, taskNoteId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/notes/%s", taskId, taskNoteId)
+func (s *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID *uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/notes/%s", taskID, taskNoteID)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

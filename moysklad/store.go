@@ -85,7 +85,7 @@ type storeService struct {
 	endpointDelete
 	endpointMetadata[MetadataAttributeShared]
 	endpointAttributes
-	endpointGetById[Store]
+	endpointGetByID[Store]
 	endpointUpdate[Store]
 	endpointNamedFilter
 }
@@ -101,7 +101,7 @@ func NewStoreService(client *Client) StoreService {
 		endpointDelete:           endpointDelete{e},
 		endpointMetadata:         endpointMetadata[MetadataAttributeShared]{e},
 		endpointAttributes:       endpointAttributes{e},
-		endpointGetById:          endpointGetById[Store]{e},
+		endpointGetByID:          endpointGetByID[Store]{e},
 		endpointUpdate:           endpointUpdate[Store]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
 	}

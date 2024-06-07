@@ -664,7 +664,7 @@ type commissionReportInService struct {
 	endpointCreateUpdateMany[CommissionReportIn]
 	endpointDeleteMany[CommissionReportIn]
 	endpointDelete
-	endpointGetById[CommissionReportIn]
+	endpointGetByID[CommissionReportIn]
 	endpointUpdate[CommissionReportIn]
 	endpointMetadata[MetadataAttributeSharedStates]
 	endpointPositions[CommissionReportInPosition]
@@ -684,7 +684,7 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[CommissionReportIn]{e},
 		endpointDeleteMany:       endpointDeleteMany[CommissionReportIn]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[CommissionReportIn]{e},
+		endpointGetByID:          endpointGetByID[CommissionReportIn]{e},
 		endpointUpdate:           endpointUpdate[CommissionReportIn]{e},
 		endpointMetadata:         endpointMetadata[MetadataAttributeSharedStates]{e},
 		endpointPositions:        endpointPositions[CommissionReportInPosition]{e},

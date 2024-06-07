@@ -330,7 +330,7 @@ type VariantService interface {
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
 	CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
 	CreateCharacteristics(ctx context.Context, characteristics []*Characteristic) (*[]Characteristic, *resty.Response, error)
-	GetCharacteristicById(ctx context.Context, id *uuid.UUID) (*Characteristic, *resty.Response, error)
+	GetCharacteristicByID(ctx context.Context, id *uuid.UUID) (*Characteristic, *resty.Response, error)
 	UpdateCharacteristic(ctx context.Context, id *uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
 	DeleteCharacteristic(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 }
@@ -342,7 +342,7 @@ type variantService struct {
 	endpointCreateUpdateMany[Variant]
 	endpointDeleteMany[Variant]
 	endpointDelete
-	endpointGetById[Variant]
+	endpointGetByID[Variant]
 	endpointUpdate[Variant]
 	endpointMetadata[MetadataVariant]
 	endpointImages
@@ -358,7 +358,7 @@ func NewVariantService(client *Client) VariantService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Variant]{e},
 		endpointDeleteMany:       endpointDeleteMany[Variant]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[Variant]{e},
+		endpointGetByID:          endpointGetByID[Variant]{e},
 		endpointUpdate:           endpointUpdate[Variant]{e},
 		endpointMetadata:         endpointMetadata[MetadataVariant]{e},
 		endpointImages:           endpointImages{e},
@@ -380,9 +380,9 @@ func (s *variantService) CreateCharacteristics(ctx context.Context, characterist
 	return NewRequestBuilder[[]Characteristic](s.client, path).Post(ctx, characteristics)
 }
 
-// GetCharacteristicById Получить Характеристику.
+// GetCharacteristicByID Получить Характеристику.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-harakteristiki-modifikacij-poluchit-harakteristiku
-func (s *variantService) GetCharacteristicById(ctx context.Context, id *uuid.UUID) (*Characteristic, *resty.Response, error) {
+func (s *variantService) GetCharacteristicByID(ctx context.Context, id *uuid.UUID) (*Characteristic, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
 	return NewRequestBuilder[Characteristic](s.client, path).Get(ctx)
 }

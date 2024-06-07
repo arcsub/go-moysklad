@@ -15,7 +15,7 @@ type mainService[E any, P any, M any, S any] struct {
 	endpointCreateUpdateMany[E]
 	endpointDeleteMany[E]
 	endpointDelete
-	endpointGetById[E]
+	endpointGetByID[E]
 	endpointUpdate[E]
 	endpointMetadata[M]
 	endpointAttributes
@@ -45,7 +45,7 @@ func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M
 		endpointCreateUpdateMany: endpointCreateUpdateMany[E]{e},
 		endpointDeleteMany:       endpointDeleteMany[E]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[E]{e},
+		endpointGetByID:          endpointGetByID[E]{e},
 		endpointUpdate:           endpointUpdate[E]{e},
 		endpointMetadata:         endpointMetadata[M]{e},
 		endpointAttributes:       endpointAttributes{e},
@@ -82,10 +82,10 @@ func (s *endpointDelete) Delete(ctx context.Context, id *uuid.UUID) (bool, *rest
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
 
-type endpointGetById[T any] struct{ Endpoint }
+type endpointGetByID[T any] struct{ Endpoint }
 
 // GetByID Запрос на получение объекта по id.
-func (s *endpointGetById[T]) GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*T, *resty.Response, error) {
+func (s *endpointGetByID[T]) GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[T](s.client, path).SetParams(params).Get(ctx)
 }
