@@ -8,84 +8,142 @@ import (
 	"github.com/google/uuid"
 )
 
+// DiscountType описывает типы, которые могут быть скидкой.
+type DiscountType interface {
+	AccumulationDiscount | PersonalDiscount | SpecialPriceDiscount | BonusProgram
+}
+
+// NewDiscount принимает в качестве аргумента объект, удовлетворяющий интерфейсу DiscountType.
+//
+// Возвращает скидку с общими полями.
+func NewDiscount[T DiscountType](entity T) *Discount {
+	var discount Discount
+	b, _ := json.Marshal(entity)
+	_ = json.Unmarshal(b, &discount)
+	return &discount
+}
+
 // Discount Скидка.
-// Представляет из себя структуру из полей:
-// `Meta` для определения типа сущности
-// `data` для хранения сырых данных
-// AccumulationDiscount | PersonalDiscount | SpecialPriceDiscount
 //
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki
 type Discount struct {
-	Meta *Meta `json:"meta,omitempty"`
-	data json.RawMessage
-}
-
-func (d Discount) String() string {
-	return Stringify(d.Meta)
+	Meta      *Meta           `json:"meta,omitempty"`
+	ID        *uuid.UUID      `json:"id,omitempty"`
+	AccountID *uuid.UUID      `json:"accountId,omitempty"`
+	Name      *string         `json:"name,omitempty"`
+	Active    *bool           `json:"active,omitempty"`
+	AllAgents *bool           `json:"allAgents,omitempty"`
+	AgentTags Tags            `json:"agentTags,omitempty"`
+	data      json.RawMessage // сырые данные для последующей десериализации в нужный тип
 }
 
 type Discounts = Slice[Discount]
 
-// RoundOffDiscount Округление копеек.
-type RoundOffDiscount struct {
-	Meta      *Meta      `json:"meta,omitempty"`
-	ID        *uuid.UUID `json:"id,omitempty"`
-	AccountID *uuid.UUID `json:"accountId,omitempty"`
-	Name      *string    `json:"name,omitempty"`
-	Active    *bool      `json:"active,omitempty"`
-	AllAgents *bool      `json:"allAgents,omitempty"`
-	AgentTags *Tags      `json:"agentTags,omitempty"`
+func (discount Discount) GetMeta() Meta {
+	return Deref(discount.Meta)
 }
 
-func (r RoundOffDiscount) String() string {
-	return Stringify(r)
+func (discount Discount) GetID() uuid.UUID {
+	return Deref(discount.ID)
 }
 
-func (r RoundOffDiscount) MetaType() MetaType {
-	return MetaTypeRoundOffDiscount
+func (discount Discount) GetAccountID() uuid.UUID {
+	return Deref(discount.AccountID)
+}
+
+func (discount Discount) GetName() string {
+	return Deref(discount.Name)
+}
+
+func (discount Discount) GetActive() bool {
+	return Deref(discount.Active)
+}
+
+func (discount Discount) GetAllAgents() bool {
+	return Deref(discount.AllAgents)
+}
+
+func (discount Discount) GetAgentTags() Tags {
+	return discount.AgentTags
+}
+
+func (discount *Discount) SetMeta(meta *Meta) *Discount {
+	discount.Meta = meta
+	return discount
+}
+
+func (discount *Discount) SetName(name string) *Discount {
+	discount.Name = &name
+	return discount
+}
+
+func (discount *Discount) SetActive(active bool) *Discount {
+	discount.Active = &active
+	return discount
+}
+
+func (discount *Discount) SetAllAgents(allAgents bool) *Discount {
+	discount.AllAgents = &allAgents
+	return discount
+}
+
+func (discount *Discount) SetAgentTags(agentTags Tags) *Discount {
+	discount.AgentTags = agentTags
+	return discount
+}
+
+func (discount Discount) String() string {
+	return Stringify(discount.Meta)
+}
+
+// MetaType удовлетворяет интерфейсу MetaTyper
+func (discount *Discount) MetaType() MetaType {
+	return discount.Meta.Type
+}
+
+// Raw удовлетворяет интерфейсу RawMetaTyper
+func (discount *Discount) Raw() json.RawMessage {
+	return discount.data
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
-func (d *Discount) UnmarshalJSON(data []byte) error {
+func (discount *Discount) UnmarshalJSON(data []byte) error {
 	type alias Discount
 	var t alias
 	if err := json.Unmarshal(data, &t); err != nil {
 		return err
 	}
 	t.data = data
-	*d = Discount(t)
+	*discount = Discount(t)
 	return nil
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
-func (d *Discount) MetaType() MetaType {
-	return d.Meta.Type
-}
-
-// Raw удовлетворяет интерфейсу RawMetaTyper
-func (d *Discount) Raw() json.RawMessage {
-	return d.data
-}
-
-// AccumulationDiscount десериализует сырые данные в тип *AccumulationDiscount
+// AsBonusProgram десериализует сырые данные в тип *BonusProgram
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
-func (d *Discount) AccumulationDiscount() *AccumulationDiscount {
-	return unmarshalAsType[AccumulationDiscount](d)
+func (discount *Discount) AsBonusProgram() *BonusProgram {
+	return unmarshalAsType[BonusProgram](discount)
 }
 
-// PersonalDiscount десериализует сырые данные в тип *PersonalDiscount
+// AsAccumulationDiscount десериализует сырые данные в тип *AccumulationDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
-func (d *Discount) PersonalDiscount() *PersonalDiscount {
-	return unmarshalAsType[PersonalDiscount](d)
+func (discount *Discount) AsAccumulationDiscount() *AccumulationDiscount {
+	return unmarshalAsType[AccumulationDiscount](discount)
 }
 
-// SpecialPriceDiscount десериализует сырые данные в тип *SpecialPriceDiscount
+// AsPersonalDiscount десериализует сырые данные в тип *PersonalDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
-func (d *Discount) SpecialPriceDiscount() *SpecialPriceDiscount {
-	return unmarshalAsType[SpecialPriceDiscount](d)
+func (discount *Discount) AsPersonalDiscount() *PersonalDiscount {
+	return unmarshalAsType[PersonalDiscount](discount)
+}
+
+// AsSpecialPriceDiscount десериализует сырые данные в тип *SpecialPriceDiscount
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
+func (discount *Discount) AsSpecialPriceDiscount() *SpecialPriceDiscount {
+	return unmarshalAsType[SpecialPriceDiscount](discount)
 }
 
 // AccumulationDiscount Накопительная скидка.
@@ -97,19 +155,108 @@ type AccumulationDiscount struct {
 	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
 	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
 	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
-	AgentTags      *Tags           `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
+	AgentTags      Tags            `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
 	AllProducts    *bool           `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
 	AllAgents      *bool           `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
-	Assortment     *Assortment     `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
+	Assortment     Assortment      `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
 	ProductFolders *ProductFolders `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
-	Levels         *Levels         `json:"levels,omitempty"`         // Проценты скидок при определенной сумме продаж
+	Levels         Levels          `json:"levels,omitempty"`         // Проценты скидок при определенной сумме продаж
 }
 
-func (a AccumulationDiscount) String() string {
-	return Stringify(a)
+func (accumulationDiscount AccumulationDiscount) GetAccountID() uuid.UUID {
+	return Deref(accumulationDiscount.AccountID)
 }
 
-func (a AccumulationDiscount) MetaType() MetaType {
+func (accumulationDiscount AccumulationDiscount) GetID() uuid.UUID {
+	return Deref(accumulationDiscount.ID)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetName() string {
+	return Deref(accumulationDiscount.Name)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetMeta() Meta {
+	return Deref(accumulationDiscount.Meta)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetActive() bool {
+	return Deref(accumulationDiscount.Active)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetAgentTags() Tags {
+	return accumulationDiscount.AgentTags
+}
+
+func (accumulationDiscount AccumulationDiscount) GetAllProducts() bool {
+	return Deref(accumulationDiscount.AllProducts)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetAllAgents() bool {
+	return Deref(accumulationDiscount.AllAgents)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetAssortment() Assortment {
+	return accumulationDiscount.Assortment
+}
+
+func (accumulationDiscount AccumulationDiscount) GetProductFolders() ProductFolders {
+	return Deref(accumulationDiscount.ProductFolders)
+}
+
+func (accumulationDiscount AccumulationDiscount) GetLevels() Levels {
+	return accumulationDiscount.Levels
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetName(name string) *AccumulationDiscount {
+	accumulationDiscount.Name = &name
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetMeta(meta *Meta) *AccumulationDiscount {
+	accumulationDiscount.Meta = meta
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetActive(active bool) *AccumulationDiscount {
+	accumulationDiscount.Active = &active
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags Tags) *AccumulationDiscount {
+	accumulationDiscount.AgentTags = agentTags
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetAllProducts(allProducts bool) *AccumulationDiscount {
+	accumulationDiscount.AllProducts = &allProducts
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetAllAgents(allAgents bool) *AccumulationDiscount {
+	accumulationDiscount.AllAgents = &allAgents
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetAssortment(assortment Assortment) *AccumulationDiscount {
+	accumulationDiscount.Assortment = assortment
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders *ProductFolders) *AccumulationDiscount {
+	accumulationDiscount.ProductFolders = productFolders
+	return accumulationDiscount
+}
+
+func (accumulationDiscount *AccumulationDiscount) SetLevels(levels Levels) *AccumulationDiscount {
+	accumulationDiscount.Levels = levels
+	return accumulationDiscount
+}
+
+func (accumulationDiscount AccumulationDiscount) String() string {
+	return Stringify(accumulationDiscount)
+}
+
+func (accumulationDiscount AccumulationDiscount) MetaType() MetaType {
 	return MetaTypeAccumulationDiscount
 }
 
@@ -120,28 +267,126 @@ type AccumulationLevel struct {
 	Discount *float64 `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
 }
 
+func (accumulationLevel AccumulationLevel) GetAmount() float64 {
+	return Deref(accumulationLevel.Amount)
+}
+
+func (accumulationLevel AccumulationLevel) GetDiscount() float64 {
+	return Deref(accumulationLevel.Discount)
+}
+
+func (accumulationLevel *AccumulationLevel) SetAmount(amount float64) *AccumulationLevel {
+	accumulationLevel.Amount = &amount
+	return accumulationLevel
+}
+
+func (accumulationLevel *AccumulationLevel) SetDiscount(discount float64) *AccumulationLevel {
+	accumulationLevel.Discount = &discount
+	return accumulationLevel
+}
+
 type Levels = Slice[AccumulationLevel]
 
 // PersonalDiscount Персональная скидка.
 // Ключевое слово: personaldiscount
 type PersonalDiscount struct {
-	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
-	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
-	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
-	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
-	AgentTags      *Tags           `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
-	AllProducts    *bool           `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
-	AllAgents      *bool           `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
-	Assortment     *Assortment     `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
-	ProductFolders *ProductFolders `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
+	AccountID      *uuid.UUID      `json:"accountId,omitempty"`
+	ID             *uuid.UUID      `json:"id,omitempty"`
+	Name           *string         `json:"name,omitempty"`
+	Meta           *Meta           `json:"meta,omitempty"`
+	Active         *bool           `json:"active,omitempty"`
+	AllProducts    *bool           `json:"allProducts,omitempty"`
+	AllAgents      *bool           `json:"allAgents,omitempty"`
+	ProductFolders *ProductFolders `json:"productFolders,omitempty"`
+	AgentTags      Tags            `json:"agentTags,omitempty"`
+	Assortment     Assortment      `json:"assortment,omitempty"`
 }
 
-func (p PersonalDiscount) String() string {
-	return Stringify(p)
+func (personalDiscount PersonalDiscount) GetAccountID() uuid.UUID {
+	return Deref(personalDiscount.AccountID)
 }
 
-func (p PersonalDiscount) MetaType() MetaType {
+func (personalDiscount PersonalDiscount) GetID() uuid.UUID {
+	return Deref(personalDiscount.ID)
+}
+
+func (personalDiscount PersonalDiscount) GetName() string {
+	return Deref(personalDiscount.Name)
+}
+
+func (personalDiscount PersonalDiscount) GetMeta() Meta {
+	return Deref(personalDiscount.Meta)
+}
+
+func (personalDiscount PersonalDiscount) GetActive() bool {
+	return Deref(personalDiscount.Active)
+}
+
+func (personalDiscount PersonalDiscount) GetAgentTags() Tags {
+	return personalDiscount.AgentTags
+}
+
+func (personalDiscount PersonalDiscount) GetAllProducts() bool {
+	return Deref(personalDiscount.AllProducts)
+}
+
+func (personalDiscount PersonalDiscount) GetAllAgents() bool {
+	return Deref(personalDiscount.AllAgents)
+}
+
+func (personalDiscount PersonalDiscount) GetAssortment() Assortment {
+	return personalDiscount.Assortment
+}
+
+func (personalDiscount PersonalDiscount) GetProductFolders() ProductFolders {
+	return Deref(personalDiscount.ProductFolders)
+}
+
+func (personalDiscount *PersonalDiscount) SetName(name string) *PersonalDiscount {
+	personalDiscount.Name = &name
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetMeta(meta *Meta) *PersonalDiscount {
+	personalDiscount.Meta = meta
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetActive(active bool) *PersonalDiscount {
+	personalDiscount.Active = &active
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags Tags) *PersonalDiscount {
+	personalDiscount.AgentTags = agentTags
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetAllProducts(allProducts bool) *PersonalDiscount {
+	personalDiscount.AllProducts = &allProducts
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetAllAgents(allAgents bool) *PersonalDiscount {
+	personalDiscount.AllAgents = &allAgents
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetAssortment(assortment Assortment) *PersonalDiscount {
+	personalDiscount.Assortment = assortment
+	return personalDiscount
+}
+
+func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders *ProductFolders) *PersonalDiscount {
+	personalDiscount.ProductFolders = productFolders
+	return personalDiscount
+}
+
+func (personalDiscount PersonalDiscount) String() string {
+	return Stringify(personalDiscount)
+}
+
+func (personalDiscount PersonalDiscount) MetaType() MetaType {
 	return MetaTypePersonalDiscount
 }
 
@@ -149,26 +394,133 @@ func (p PersonalDiscount) MetaType() MetaType {
 // Ключевое слово: specialpricediscount
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
 type SpecialPriceDiscount struct {
-	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
-	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
-	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
-	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
-	AgentTags      *Tags           `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
-	AllProducts    *bool           `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
-	AllAgents      *bool           `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
-	UsePriceType   *bool           `json:"usePriceType,omitempty"`   // Использовать специальную цену
-	Assortment     *Assortment     `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
-	ProductFolders *ProductFolders `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
-	Discount       *float64        `json:"discount,omitempty"`       // Процент скидки если выбран фиксированный процент
-	SpecialPrice   *SpecialPrice   `json:"specialPrice,omitempty"`   // Спец. цена (если выбран тип цен)
+	AllProducts    *bool           `json:"allProducts,omitempty"`
+	ID             *uuid.UUID      `json:"id,omitempty"`
+	Name           *string         `json:"name,omitempty"`
+	Meta           *Meta           `json:"meta,omitempty"`
+	Active         *bool           `json:"active,omitempty"`
+	AccountID      *uuid.UUID      `json:"accountId,omitempty"`
+	AllAgents      *bool           `json:"allAgents,omitempty"`
+	UsePriceType   *bool           `json:"usePriceType,omitempty"`
+	Assortment     Assortment      `json:"assortment,omitempty"`
+	ProductFolders *ProductFolders `json:"productFolders,omitempty"`
+	Discount       *float64        `json:"discount,omitempty"`
+	SpecialPrice   *SpecialPrice   `json:"specialPrice,omitempty"`
+	AgentTags      Tags            `json:"agentTags,omitempty"`
 }
 
-func (s SpecialPriceDiscount) String() string {
-	return Stringify(s)
+func (specialPriceDiscount SpecialPriceDiscount) GetAccountID() uuid.UUID {
+	return Deref(specialPriceDiscount.AccountID)
 }
 
-func (s SpecialPriceDiscount) MetaType() MetaType {
+func (specialPriceDiscount SpecialPriceDiscount) GetID() uuid.UUID {
+	return Deref(specialPriceDiscount.ID)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetName() string {
+	return Deref(specialPriceDiscount.Name)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetMeta() Meta {
+	return Deref(specialPriceDiscount.Meta)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetActive() bool {
+	return Deref(specialPriceDiscount.Active)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetAgentTags() Tags {
+	return specialPriceDiscount.AgentTags
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetAllProducts() bool {
+	return Deref(specialPriceDiscount.AllProducts)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetAllAgents() bool {
+	return Deref(specialPriceDiscount.AllAgents)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetUsePriceType() bool {
+	return Deref(specialPriceDiscount.UsePriceType)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetAssortment() Assortment {
+	return specialPriceDiscount.Assortment
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetProductFolders() ProductFolders {
+	return Deref(specialPriceDiscount.ProductFolders)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetDiscount() float64 {
+	return Deref(specialPriceDiscount.Discount)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) GetSpecialPrice() SpecialPrice {
+	return Deref(specialPriceDiscount.SpecialPrice)
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetName(name string) *SpecialPriceDiscount {
+	specialPriceDiscount.Name = &name
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetMeta(meta *Meta) *SpecialPriceDiscount {
+	specialPriceDiscount.Meta = meta
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetActive(active bool) *SpecialPriceDiscount {
+	specialPriceDiscount.Active = &active
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags Tags) *SpecialPriceDiscount {
+	specialPriceDiscount.AgentTags = agentTags
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetAllProducts(allProducts bool) *SpecialPriceDiscount {
+	specialPriceDiscount.AllProducts = &allProducts
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetAllAgents(allAgents bool) *SpecialPriceDiscount {
+	specialPriceDiscount.AllAgents = &allAgents
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetUsePriceType(usePriceType bool) *SpecialPriceDiscount {
+	specialPriceDiscount.UsePriceType = &usePriceType
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetAssortment(assortment Assortment) *SpecialPriceDiscount {
+	specialPriceDiscount.Assortment = assortment
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders *ProductFolders) *SpecialPriceDiscount {
+	specialPriceDiscount.ProductFolders = productFolders
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetDiscount(discount float64) *SpecialPriceDiscount {
+	specialPriceDiscount.Discount = &discount
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount *SpecialPriceDiscount) SetSpecialPrice(specialPrice *SpecialPrice) *SpecialPriceDiscount {
+	specialPriceDiscount.SpecialPrice = specialPrice
+	return specialPriceDiscount
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) String() string {
+	return Stringify(specialPriceDiscount)
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) MetaType() MetaType {
 	return MetaTypeSpecialPriceDiscount
 }
 
@@ -179,15 +531,33 @@ type SpecialPrice struct {
 	Value     *int       `json:"value,omitempty"`     // Значение цены, если выбрано фиксированное значение
 }
 
-func (s SpecialPrice) String() string {
-	return Stringify(s)
+func (specialPrice SpecialPrice) GetPriceType() PriceType {
+	return Deref(specialPrice.PriceType)
+}
+
+func (specialPrice SpecialPrice) GetValue() int {
+	return Deref(specialPrice.Value)
+}
+
+func (specialPrice *SpecialPrice) SetPriceType(priceType *PriceType) *SpecialPrice {
+	specialPrice.PriceType = priceType
+	return specialPrice
+}
+
+func (specialPrice *SpecialPrice) SetValue(value int) *SpecialPrice {
+	specialPrice.Value = &value
+	return specialPrice
+}
+
+func (specialPrice SpecialPrice) String() string {
+	return Stringify(specialPrice)
 }
 
 // DiscountService
 // Сервис для работы со скидками.
 type DiscountService interface {
 	GetList(ctx context.Context, params *Params) (*List[Discount], *resty.Response, error)
-	UpdateRoundOffDiscount(ctx context.Context, id *uuid.UUID, entity *RoundOffDiscount) (*RoundOffDiscount, *resty.Response, error)
+	UpdateRoundOffDiscount(ctx context.Context, id *uuid.UUID, entity *Discount) (*Discount, *resty.Response, error)
 	GetAccumulationDiscounts(ctx context.Context, params *Params) (*List[AccumulationDiscount], *resty.Response, error)
 	CreateAccumulationDiscount(ctx context.Context, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
 	GetByIdAccumulationDiscount(ctx context.Context, id *uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error)
@@ -220,9 +590,9 @@ func NewDiscountService(client *Client) DiscountService {
 
 // UpdateRoundOffDiscount Изменить округление копеек.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-okruglenie-kopeek
-func (s *discountService) UpdateRoundOffDiscount(ctx context.Context, id *uuid.UUID, entity *RoundOffDiscount) (*RoundOffDiscount, *resty.Response, error) {
+func (s *discountService) UpdateRoundOffDiscount(ctx context.Context, id *uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
-	return NewRequestBuilder[RoundOffDiscount](s.client, path).Put(ctx, entity)
+	return NewRequestBuilder[Discount](s.client, path).Put(ctx, entity)
 }
 
 // GetAccumulationDiscounts Получить все накопительные скидки.

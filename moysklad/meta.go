@@ -227,7 +227,6 @@ const (
 	MetaTypeRetailSalesReturnPosition         MetaType = "salesreturnposition"
 	MetaTypeRetailShift                       MetaType = "retailshift"
 	MetaTypeRetailStore                       MetaType = "retailstore"
-	MetaTypeRoundOffDiscount                  MetaType = "discount"
 	MetaTypeSalesReturn                       MetaType = "salesreturn"
 	MetaTypeSalesReturnPosition               MetaType = "salesreturnposition"
 	MetaTypeService                           MetaType = "service"
