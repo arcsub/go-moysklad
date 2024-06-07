@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 )
 
-// CounterPartyAdjustment Корректировка баланса контрагента.
+// CounterPartyAdjustment Корректировка взаиморасчетов.
 // Ключевое слово: counterpartyadjustment
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-korrektirowka-balansa-kontragenta
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-korrektirowka-wzaimoraschetow
 type CounterPartyAdjustment struct {
 	ExternalCode *string       `json:"externalCode,omitempty"`
 	Printed      *bool         `json:"printed,omitempty"`
@@ -33,11 +33,160 @@ type CounterPartyAdjustment struct {
 	Attributes   Attributes    `json:"attributes,omitempty"`
 }
 
-func (c CounterPartyAdjustment) String() string {
-	return Stringify(c)
+func (counterPartyAdjustment CounterPartyAdjustment) GetExternalCode() string {
+	return Deref(counterPartyAdjustment.ExternalCode)
 }
 
-func (c CounterPartyAdjustment) MetaType() MetaType {
+func (counterPartyAdjustment CounterPartyAdjustment) GetPrinted() bool {
+	return Deref(counterPartyAdjustment.Printed)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetAccountID() uuid.UUID {
+	return Deref(counterPartyAdjustment.AccountID)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetGroup() Group {
+	return Deref(counterPartyAdjustment.Group)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetFiles() Files {
+	return Deref(counterPartyAdjustment.Files)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetApplicable() bool {
+	return Deref(counterPartyAdjustment.Applicable)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetUpdated() Timestamp {
+	return Deref(counterPartyAdjustment.Updated)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetCreated() Timestamp {
+	return Deref(counterPartyAdjustment.Created)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetDeleted() Timestamp {
+	return Deref(counterPartyAdjustment.Deleted)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetDescription() string {
+	return Deref(counterPartyAdjustment.Description)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetName() string {
+	return Deref(counterPartyAdjustment.Name)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetAgent() Counterparty {
+	return Deref(counterPartyAdjustment.Agent)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetMeta() Meta {
+	return Deref(counterPartyAdjustment.Meta)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetMoment() Timestamp {
+	return Deref(counterPartyAdjustment.Moment)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetOrganization() Organization {
+	return Deref(counterPartyAdjustment.Organization)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetOwner() Employee {
+	return Deref(counterPartyAdjustment.Owner)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetID() uuid.UUID {
+	return Deref(counterPartyAdjustment.ID)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetPublished() bool {
+	return Deref(counterPartyAdjustment.Published)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetShared() bool {
+	return Deref(counterPartyAdjustment.Shared)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetSum() float64 {
+	return Deref(counterPartyAdjustment.Sum)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) GetAttributes() Attributes {
+	return counterPartyAdjustment.Attributes
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetExternalCode(externalCode string) *CounterPartyAdjustment {
+	counterPartyAdjustment.ExternalCode = &externalCode
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetGroup(group *Group) *CounterPartyAdjustment {
+	counterPartyAdjustment.Group = group
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetFiles(files *Files) *CounterPartyAdjustment {
+	counterPartyAdjustment.Files = files
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetApplicable(applicable bool) *CounterPartyAdjustment {
+	counterPartyAdjustment.Applicable = &applicable
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetDescription(description string) *CounterPartyAdjustment {
+	counterPartyAdjustment.Description = &description
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetName(name string) *CounterPartyAdjustment {
+	counterPartyAdjustment.Name = &name
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetAgent(agent *Counterparty) *CounterPartyAdjustment {
+	counterPartyAdjustment.Agent = agent
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetMeta(meta *Meta) *CounterPartyAdjustment {
+	counterPartyAdjustment.Meta = meta
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetMoment(moment *Timestamp) *CounterPartyAdjustment {
+	counterPartyAdjustment.Moment = moment
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetOrganization(organization *Organization) *CounterPartyAdjustment {
+	counterPartyAdjustment.Organization = organization
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetOwner(owner *Employee) *CounterPartyAdjustment {
+	counterPartyAdjustment.Owner = owner
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetShared(shared bool) *CounterPartyAdjustment {
+	counterPartyAdjustment.Shared = &shared
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment *CounterPartyAdjustment) SetAttributes(attributes Attributes) *CounterPartyAdjustment {
+	counterPartyAdjustment.Attributes = attributes
+	return counterPartyAdjustment
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) String() string {
+	return Stringify(counterPartyAdjustment)
+}
+
+func (counterPartyAdjustment CounterPartyAdjustment) MetaType() MetaType {
 	return MetaTypeCounterPartyAdjustment
 }
 
