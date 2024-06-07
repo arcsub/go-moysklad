@@ -7,6 +7,11 @@ func (slice Slice[E]) S() []*E {
 	return slice
 }
 
+// Len возвращает количество элементов
+func (slice Slice[E]) Len() int {
+	return len(slice)
+}
+
 // Iter возвращает итератор.
 func (slice Slice[E]) Iter() *Iterator[E] {
 	return &Iterator[E]{el: slice}
@@ -52,7 +57,7 @@ func (slice Slice[E]) Filter(f func(e *E) bool) Slice[E] {
 // IntoChunks разбивает слайс на разные слайсы с заданной размерностью.
 func (slice Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
 	var items = slice
-	for chunkSize < len(items) {
+	for chunkSize < items.Len() {
 		items, chunks = items[chunkSize:], append(chunks, items[:chunkSize:chunkSize])
 	}
 	return append(chunks, items)

@@ -14,11 +14,58 @@ type Image struct {
 	Updated   *Timestamp `json:"updated,omitempty"`   // Время загрузки файла на сервер
 }
 
-func (i Image) String() string {
-	return Stringify(i)
+func (image Image) GetContent() string {
+	return Deref(image.Content)
 }
 
-func (i Image) MetaType() MetaType {
+func (image Image) GetFilename() string {
+	return Deref(image.Filename)
+}
+
+func (image Image) GetMeta() Meta {
+	return Deref(image.Meta)
+}
+
+func (image Image) GetMiniature() Meta {
+	return Deref(image.Miniature)
+}
+
+func (image Image) GetSize() int {
+	return Deref(image.Size)
+}
+
+func (image Image) GetTiny() Meta {
+	return Deref(image.Tiny)
+}
+
+func (image Image) GetTitle() string {
+	return Deref(image.Title)
+}
+
+func (image Image) GetUpdated() Timestamp {
+	return Deref(image.Updated)
+}
+
+func (image *Image) SetContent(content string) *Image {
+	image.Content = &content
+	return image
+}
+
+func (image *Image) SetFilename(filename string) *Image {
+	image.Filename = &filename
+	return image
+}
+
+func (image *Image) SetMeta(meta *Meta) *Image {
+	image.Meta = meta
+	return image
+}
+
+func (image Image) String() string {
+	return Stringify(image)
+}
+
+func (image Image) MetaType() MetaType {
 	return MetaTypeImage
 }
 
@@ -27,8 +74,8 @@ type Images MetaArray[Image]
 // Push добавляет элементы в срез.
 // Элементы, превышающее максимальное значение MaxImages, игнорируются
 func (i *Images) Push(elements ...*Image) *Images {
-	i.Rows = append(i.Rows, elements...)
-	if len(i.Rows) > MaxImages {
+	i.Rows.Push(elements...)
+	if i.Rows.Len() > MaxImages {
 		i.Rows = i.Rows[:MaxImages]
 	}
 	return i

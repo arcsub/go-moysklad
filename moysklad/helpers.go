@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"net/http"
 	"reflect"
 
 	"image/color"
@@ -128,51 +129,84 @@ func Clamp(val, min, max int) int {
 	}
 }
 
-type FileTypes interface {
-	File | Image
+func getFilenameContent(filePath string) (string, string, error) {
+	b, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", "", err
+	}
+	return filepath.Base(filePath), base64.StdEncoding.EncodeToString(b), nil
+}
+
+func getContentFromURL(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(bodyBytes), nil
+}
+
+// NewFileFromURL возвращает *File, на основе переданного URL пути.
+func NewFileFromURL(url string) (*File, error) {
+	content, err := getContentFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	return &File{Content: String(content)}, nil
+}
+
+// NewImageFromURL возвращает *Image, на основе переданного URL пути.
+func NewImageFromURL(url string) (*Image, error) {
+	content, err := getContentFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	return &Image{Content: String(content)}, nil
 }
 
 // NewFileFromFilepath возвращает *File, на основе переданного пути до файла
 // и ошибку, если файл не удалось найти
 func NewFileFromFilepath(filePath string) (*File, error) {
-	b, err := os.ReadFile(filePath)
+	fileName, content, err := getFilenameContent(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	fileName := filepath.Base(filePath)
-	content := base64.StdEncoding.EncodeToString(b)
-	f := &File{
+	file := &File{
 		Title:    String(fileName),
 		Filename: String(fileName),
 		Content:  String(content),
 	}
-	return f, nil
+	return file, nil
 }
 
 // NewImageFromFilepath возвращает *Image, на основе переданного пути до файла
 // и ошибку, если файл не удалось найти
 func NewImageFromFilepath(filePath string) (*Image, error) {
-	b, err := os.ReadFile(filePath)
+	fileName, content, err := getFilenameContent(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	fileName := filepath.Base(filePath)
-	content := base64.StdEncoding.EncodeToString(b)
-	f := &Image{
+	image := &Image{
 		Title:    String(fileName),
 		Filename: String(fileName),
 		Content:  String(content),
 	}
-	return f, nil
+	return image, nil
 }
 
+// RawMetaTyper описывает методы, необходимые для преобразования одного типа в другой.
 type RawMetaTyper interface {
 	MetaTyper
 	Raw() json.RawMessage
 }
 
+// filterType преобразует слайс элементов типа D в слайс элементов типа M
 func filterType[M MetaTyper, D RawMetaTyper](elements []D) Slice[M] {
 	var slice = Slice[M]{}
 	for _, el := range elements {
