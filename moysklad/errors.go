@@ -1,51 +1,39 @@
 package moysklad
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
 // ApiError Структура ошибки API МойСклад.
+//
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-obrabotka-oshibok
 type ApiError struct {
-	Meta         Meta   `json:"meta"`
-	Message      string `json:"error"`
-	Parameter    string `json:"parameter"`
-	ErrorMessage string `json:"error_message"`
-	MoreInfo     string `json:"moreInfo"`
-	Dependencies []Meta `json:"dependencies"`
-	Code         int    `json:"code"`
-	Line         int    `json:"line"`
-	Column       int    `json:"column"`
+	Meta         *Meta  `json:"meta,omitempty"`
+	Message      string `json:"error,omitempty"`
+	Parameter    string `json:"parameter,omitempty"`
+	ErrorMessage string `json:"error_message,omitempty"`
+	MoreInfo     string `json:"moreInfo,omitempty"`
+	Dependencies []Meta `json:"dependencies,omitempty"`
+	Code         int    `json:"code,omitempty"`
+	Line         int    `json:"line,omitempty"`
+	Column       int    `json:"column,omitempty"`
 }
 
-func (e ApiError) Error() string {
-	return fmt.Sprintf("%v %v %v %v", e.Code, e.Message, e.ErrorMessage, e.MoreInfo)
+// Error выводит ошибку в формате JSON
+func (apiError ApiError) Error() string {
+	b, _ := json.Marshal(apiError)
+	return string(b)
 }
 
 type ApiErrors struct {
 	ApiErrors []ApiError `json:"errors"`
 }
 
-func (e ApiErrors) Error() string {
+func (apiErrors ApiErrors) Error() string {
 	var message string
-	for _, er := range e.ApiErrors {
-		message += fmt.Sprintf("%v %v %v %v\n", er.Code, er.Message, er.ErrorMessage, er.MoreInfo)
+	for _, er := range apiErrors.ApiErrors {
+		message += fmt.Sprintf("%v\n", er.Error())
 	}
 	return message
-}
-
-type ErrUnknownEntity struct {
-	t any
-}
-
-func (e ErrUnknownEntity) Error() string {
-	return fmt.Sprintf("unrecognized entity: %v", e.t)
-}
-
-type ErrWrongMetaType struct {
-	have, need MetaType
-}
-
-func (e ErrWrongMetaType) Error() string {
-	return fmt.Sprintf("meta type mismatch! have %s, need %s", e.have, e.need)
 }

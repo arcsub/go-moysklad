@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/google/uuid"
 	"reflect"
 	"strings"
@@ -540,7 +541,7 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeProductionStageCompletionResult
 
 	default:
-		err = ErrUnknownEntity{v}
+		err = fmt.Errorf("unrecognized entity: %v", metaType)
 	}
 	return metaType, err
 }
