@@ -40,15 +40,225 @@ type Loss struct {
 	Attributes   Attributes               `json:"attributes,omitempty"`
 }
 
-func (l Loss) String() string {
-	return Stringify(l)
+func (loss Loss) GetOrganization() Organization {
+	return Deref(loss.Organization)
 }
 
-func (l Loss) MetaType() MetaType {
+func (loss Loss) GetSyncID() uuid.UUID {
+	return Deref(loss.SyncID)
+}
+
+func (loss Loss) GetMoment() Timestamp {
+	return Deref(loss.Moment)
+}
+
+func (loss Loss) GetCode() string {
+	return Deref(loss.Code)
+}
+
+func (loss Loss) GetCreated() Timestamp {
+	return Deref(loss.Created)
+}
+
+func (loss Loss) GetDeleted() Timestamp {
+	return Deref(loss.Deleted)
+}
+
+func (loss Loss) GetDescription() string {
+	return Deref(loss.Description)
+}
+
+func (loss Loss) GetExternalCode() string {
+	return Deref(loss.ExternalCode)
+}
+
+func (loss Loss) GetFiles() Files {
+	return Deref(loss.Files)
+}
+
+func (loss Loss) GetGroup() Group {
+	return Deref(loss.Group)
+}
+
+func (loss Loss) GetID() uuid.UUID {
+	return Deref(loss.ID)
+}
+
+func (loss Loss) GetMeta() Meta {
+	return Deref(loss.Meta)
+}
+
+func (loss Loss) GetSalesReturn() SalesReturn {
+	return Deref(loss.SalesReturn)
+}
+
+func (loss Loss) GetApplicable() bool {
+	return Deref(loss.Applicable)
+}
+
+func (loss Loss) GetProject() Project {
+	return Deref(loss.Project)
+}
+
+func (loss Loss) GetOwner() Employee {
+	return Deref(loss.Owner)
+}
+
+func (loss Loss) GetPositions() Positions[LossPosition] {
+	return Deref(loss.Positions)
+}
+
+func (loss Loss) GetPrinted() bool {
+	return Deref(loss.Printed)
+}
+
+func (loss Loss) GetAccountID() uuid.UUID {
+	return Deref(loss.AccountID)
+}
+
+func (loss Loss) GetPublished() bool {
+	return Deref(loss.Published)
+}
+
+func (loss Loss) GetRate() Rate {
+	return Deref(loss.Rate)
+}
+
+func (loss Loss) GetShared() bool {
+	return Deref(loss.Shared)
+}
+
+func (loss Loss) GetState() State {
+	return Deref(loss.State)
+}
+
+func (loss Loss) GetStore() Store {
+	return Deref(loss.Store)
+}
+
+func (loss Loss) GetSum() float64 {
+	return Deref(loss.Sum)
+}
+
+func (loss Loss) GetName() string {
+	return Deref(loss.Name)
+}
+
+func (loss Loss) GetUpdated() Timestamp {
+	return Deref(loss.Updated)
+}
+
+func (loss Loss) GetAttributes() Attributes {
+	return loss.Attributes
+}
+
+func (loss *Loss) SetOrganization(organization *Organization) *Loss {
+	loss.Organization = organization
+	return loss
+}
+
+func (loss *Loss) SetSyncID(syncID *uuid.UUID) *Loss {
+	loss.SyncID = syncID
+	return loss
+}
+
+func (loss *Loss) SetMoment(moment *Timestamp) *Loss {
+	loss.Moment = moment
+	return loss
+}
+
+func (loss *Loss) SetCode(code string) *Loss {
+	loss.Code = &code
+	return loss
+}
+
+func (loss *Loss) SetDescription(description string) *Loss {
+	loss.Description = &description
+	return loss
+}
+
+func (loss *Loss) SetExternalCode(externalCode string) *Loss {
+	loss.ExternalCode = &externalCode
+	return loss
+}
+
+func (loss *Loss) SetFiles(files *Files) *Loss {
+	loss.Files = files
+	return loss
+}
+
+func (loss *Loss) SetGroup(group *Group) *Loss {
+	loss.Group = group
+	return loss
+}
+
+func (loss *Loss) SetMeta(meta *Meta) *Loss {
+	loss.Meta = meta
+	return loss
+}
+
+func (loss *Loss) SetSalesReturn(salesReturn *SalesReturn) *Loss {
+	loss.SalesReturn = salesReturn
+	return loss
+}
+
+func (loss *Loss) SetApplicable(applicable bool) *Loss {
+	loss.Applicable = &applicable
+	return loss
+}
+
+func (loss *Loss) SetProject(project *Project) *Loss {
+	loss.Project = project
+	return loss
+}
+
+func (loss *Loss) SetOwner(owner *Employee) *Loss {
+	loss.Owner = owner
+	return loss
+}
+
+func (loss *Loss) SetPositions(positions *Positions[LossPosition]) *Loss {
+	loss.Positions = positions
+	return loss
+}
+
+func (loss *Loss) SetRate(rate *Rate) *Loss {
+	loss.Rate = rate
+	return loss
+}
+
+func (loss *Loss) SetShared(shared bool) *Loss {
+	loss.Shared = &shared
+	return loss
+}
+
+func (loss *Loss) SetState(state *State) *Loss {
+	loss.State = state
+	return loss
+}
+
+func (loss *Loss) SetStore(store *Store) *Loss {
+	loss.Store = store
+	return loss
+}
+
+func (loss *Loss) SetName(name string) *Loss {
+	loss.Name = &name
+	return loss
+}
+
+func (loss *Loss) SetAttributes(attributes Attributes) *Loss {
+	loss.Attributes = attributes
+	return loss
+}
+
+func (loss Loss) String() string {
+	return Stringify(loss)
+}
+
+func (loss Loss) MetaType() MetaType {
 	return MetaTypeLoss
 }
-
-type Losses = Slice[Loss]
 
 // LossPosition Позиция Списания.
 // Ключевое слово: lossposition
@@ -62,14 +272,85 @@ type LossPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина списания данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
-	Things     *Things             `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
+	Things     Things              `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
 }
 
-func (l LossPosition) String() string {
-	return Stringify(l)
+func (lossPosition LossPosition) GetAccountID() uuid.UUID {
+	return Deref(lossPosition.AccountID)
 }
 
-func (l LossPosition) MetaType() MetaType {
+func (lossPosition LossPosition) GetAssortment() AssortmentPosition {
+	return Deref(lossPosition.Assortment)
+}
+
+func (lossPosition LossPosition) GetID() uuid.UUID {
+	return Deref(lossPosition.ID)
+}
+
+func (lossPosition LossPosition) GetPack() Pack {
+	return Deref(lossPosition.Pack)
+}
+
+func (lossPosition LossPosition) GetPrice() float64 {
+	return Deref(lossPosition.Price)
+}
+
+func (lossPosition LossPosition) GetQuantity() float64 {
+	return Deref(lossPosition.Quantity)
+}
+
+func (lossPosition LossPosition) GetReason() string {
+	return Deref(lossPosition.Reason)
+}
+
+func (lossPosition LossPosition) GetSlot() Slot {
+	return Deref(lossPosition.Slot)
+}
+
+func (lossPosition LossPosition) GetThings() Things {
+	return lossPosition.Things
+}
+
+func (lossPosition *LossPosition) SetAssortment(assortment *AssortmentPosition) *LossPosition {
+	lossPosition.Assortment = assortment
+	return lossPosition
+}
+
+func (lossPosition *LossPosition) SetPack(pack *Pack) *LossPosition {
+	lossPosition.Pack = pack
+	return lossPosition
+}
+
+func (lossPosition *LossPosition) SetPrice(price float64) *LossPosition {
+	lossPosition.Price = &price
+	return lossPosition
+}
+
+func (lossPosition *LossPosition) SetQuantity(quantity float64) *LossPosition {
+	lossPosition.Quantity = &quantity
+	return lossPosition
+}
+
+func (lossPosition *LossPosition) SetReason(reason string) *LossPosition {
+	lossPosition.Reason = &reason
+	return lossPosition
+}
+
+func (lossPosition *LossPosition) SetSlot(slot *Slot) *LossPosition {
+	lossPosition.Slot = slot
+	return lossPosition
+}
+
+func (lossPosition *LossPosition) SetThings(things Things) *LossPosition {
+	lossPosition.Things = things
+	return lossPosition
+}
+
+func (lossPosition LossPosition) String() string {
+	return Stringify(lossPosition)
+}
+
+func (lossPosition LossPosition) MetaType() MetaType {
 	return MetaTypeLossPosition
 }
 
@@ -95,7 +376,7 @@ type LossService interface {
 	Update(ctx context.Context, id *uuid.UUID, loss *Loss, params *Params) (*Loss, *resty.Response, error)
 	//endpointTemplate[Loss]
 	//endpointTemplateBasedOn[Loss, LossTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[LossPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*LossPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *LossPosition, params *Params) (*LossPosition, *resty.Response, error)
@@ -123,5 +404,5 @@ type LossService interface {
 
 func NewLossService(client *Client) LossService {
 	e := NewEndpoint(client, "entity/loss")
-	return newMainService[Loss, LossPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[Loss, LossPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

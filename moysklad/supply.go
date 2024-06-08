@@ -50,7 +50,7 @@ type Supply struct {
 	VatSum              *float64                   `json:"vatSum,omitempty"`
 	PurchaseOrder       *PurchaseOrder             `json:"purchaseOrder,omitempty"`
 	FactureIn           *FactureIn                 `json:"factureIn,omitempty"`
-	InvoicesIn          *InvoicesIn                `json:"invoicesIn,omitempty"`
+	InvoicesIn          Slice[InvoiceIn]           `json:"invoicesIn,omitempty"`
 	AccountID           *uuid.UUID                 `json:"accountId,omitempty"`
 	Attributes          Attributes                 `json:"attributes,omitempty"`
 }
@@ -67,8 +67,6 @@ func (s Supply) GetMeta() Meta {
 func (s Supply) MetaType() MetaType {
 	return MetaTypeSupply
 }
-
-type Supplies Slice[Supply]
 
 // SupplyPosition Позиция Приемки.
 // Ключевое слово: supplyposition
@@ -110,7 +108,7 @@ type SupplyService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Supply, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, supply *Supply, params *Params) (*Supply, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	//endpointTemplate[Supply]
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[SupplyPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*SupplyPosition, *resty.Response, error)
@@ -152,5 +150,5 @@ type SupplyService interface {
 
 func NewSupplyService(client *Client) SupplyService {
 	e := NewEndpoint(client, "entity/supply")
-	return newMainService[Supply, SupplyPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[Supply, SupplyPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

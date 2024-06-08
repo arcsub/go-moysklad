@@ -51,7 +51,7 @@ func (m Move) MetaType() MetaType {
 	return MetaTypeMove
 }
 
-type Moves Slice[Move]
+//type Moves = Slice[Move]
 
 // MovePosition Позиция перемещения.
 // Ключевое слово: moveposition
@@ -97,7 +97,7 @@ type MoveService interface {
 	Update(ctx context.Context, id *uuid.UUID, move *Move, params *Params) (*Move, *resty.Response, error)
 	//endpointTemplate[Move]
 	//endpointTemplateBasedOn[Move, MoveTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[MovePosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*MovePosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *MovePosition, params *Params) (*MovePosition, *resty.Response, error)
@@ -125,5 +125,5 @@ type MoveService interface {
 
 func NewMoveService(client *Client) MoveService {
 	e := NewEndpoint(client, "entity/move")
-	return newMainService[Move, MovePosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[Move, MovePosition, MetaAttributesSharedStatesWrapper, any](e)
 }

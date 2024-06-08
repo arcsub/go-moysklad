@@ -52,7 +52,7 @@ func (operation Operation) String() string {
 
 // MetaType удовлетворяет интерфейсу MetaTyper
 func (operation Operation) MetaType() MetaType {
-	return operation.Meta.Type
+	return operation.Meta.GetType()
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper

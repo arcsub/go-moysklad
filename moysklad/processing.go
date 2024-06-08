@@ -107,7 +107,7 @@ type ProcessingService interface {
 	Update(ctx context.Context, id *uuid.UUID, processing *Processing, params *Params) (*Processing, *resty.Response, error)
 	//endpointTemplate[Processing]
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -143,7 +143,7 @@ type processingService struct {
 	endpointUpdate[Processing]
 	//endpointTemplate[Processing]
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
-	endpointMetadata[MetadataAttributeSharedStates]
+	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointAttributes
 	endpointSyncID[Processing]
 	endpointRemove
@@ -160,7 +160,7 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[Processing]{e},
 		endpointUpdate:           endpointUpdate[Processing]{e},
-		endpointMetadata:         endpointMetadata[MetadataAttributeSharedStates]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[Processing]{e},
 		endpointRemove:           endpointRemove{e},

@@ -200,7 +200,7 @@ type CounterPartyAdjustmentService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, counterPartyAdjustment *CounterPartyAdjustment, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
@@ -208,5 +208,5 @@ type CounterPartyAdjustmentService interface {
 
 func NewCounterPartyAdjustmentService(client *Client) CounterPartyAdjustmentService {
 	e := NewEndpoint(client, "entity/counterpartyadjustment")
-	return newMainService[CounterPartyAdjustment, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[CounterPartyAdjustment, any, MetaAttributesSharedStatesWrapper, any](e)
 }

@@ -113,7 +113,7 @@ type PurchaseReturnService interface {
 	Update(ctx context.Context, id *uuid.UUID, purchaseReturn *PurchaseReturn, params *Params) (*PurchaseReturn, *resty.Response, error)
 	//endpointTemplate[PurchaseReturn]
 	//endpointTemplateBasedOn[PurchaseReturn, PurchaseReturnTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[PurchaseReturnPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*PurchaseReturnPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *PurchaseReturnPosition, params *Params) (*PurchaseReturnPosition, *resty.Response, error)
@@ -143,5 +143,5 @@ type PurchaseReturnService interface {
 
 func NewPurchaseReturnService(client *Client) PurchaseReturnService {
 	e := NewEndpoint(client, "entity/purchasereturn")
-	return newMainService[PurchaseReturn, PurchaseReturnPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[PurchaseReturn, PurchaseReturnPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

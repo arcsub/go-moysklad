@@ -38,11 +38,187 @@ type Inventory struct {
 	Attributes   Attributes                    `json:"attributes,omitempty"`
 }
 
-func (i Inventory) String() string {
-	return Stringify(i)
+func (inventory Inventory) GetName() string {
+	return Deref(inventory.Name)
 }
 
-func (i Inventory) MetaType() MetaType {
+func (inventory Inventory) GetSum() float64 {
+	return Deref(inventory.Sum)
+}
+
+func (inventory Inventory) GetCode() string {
+	return Deref(inventory.Code)
+}
+
+func (inventory Inventory) GetCreated() Timestamp {
+	return Deref(inventory.Created)
+}
+
+func (inventory Inventory) GetDeleted() Timestamp {
+	return Deref(inventory.Deleted)
+}
+
+func (inventory Inventory) GetDescription() string {
+	return Deref(inventory.Description)
+}
+
+func (inventory Inventory) GetExternalCode() string {
+	return Deref(inventory.ExternalCode)
+}
+
+func (inventory Inventory) GetFiles() Files {
+	return Deref(inventory.Files)
+}
+
+func (inventory Inventory) GetGroup() Group {
+	return Deref(inventory.Group)
+}
+
+func (inventory Inventory) GetID() uuid.UUID {
+	return Deref(inventory.ID)
+}
+
+func (inventory Inventory) GetUpdated() Timestamp {
+	return Deref(inventory.Updated)
+}
+
+func (inventory Inventory) GetMeta() Meta {
+	return Deref(inventory.Meta)
+}
+
+func (inventory Inventory) GetOwner() Employee {
+	return Deref(inventory.Owner)
+}
+
+func (inventory Inventory) GetOrganization() Organization {
+	return Deref(inventory.Organization)
+}
+
+func (inventory Inventory) GetAccountID() uuid.UUID {
+	return Deref(inventory.AccountID)
+}
+
+func (inventory Inventory) GetPositions() Positions[InventoryPosition] {
+	return Deref(inventory.Positions)
+}
+
+func (inventory Inventory) GetPrinted() bool {
+	return Deref(inventory.Printed)
+}
+
+func (inventory Inventory) GetPublished() bool {
+	return Deref(inventory.Published)
+}
+
+func (inventory Inventory) GetShared() bool {
+	return Deref(inventory.Shared)
+}
+
+func (inventory Inventory) GetState() State {
+	return Deref(inventory.State)
+}
+
+func (inventory Inventory) GetStore() Store {
+	return Deref(inventory.Store)
+}
+
+func (inventory Inventory) GetMoment() Timestamp {
+	return Deref(inventory.Moment)
+}
+
+func (inventory Inventory) GetSyncID() uuid.UUID {
+	return Deref(inventory.SyncID)
+}
+
+func (inventory Inventory) GetAttributes() Attributes {
+	return inventory.Attributes
+}
+
+func (inventory *Inventory) SetName(name string) *Inventory {
+	inventory.Name = &name
+	return inventory
+}
+
+func (inventory *Inventory) SetCode(code string) *Inventory {
+	inventory.Code = &code
+	return inventory
+}
+
+func (inventory *Inventory) SetDescription(description string) *Inventory {
+	inventory.Description = &description
+	return inventory
+}
+
+func (inventory *Inventory) SetExternalCode(externalCode string) *Inventory {
+	inventory.ExternalCode = &externalCode
+	return inventory
+}
+
+func (inventory *Inventory) SetFiles(files *Files) *Inventory {
+	inventory.Files = files
+	return inventory
+}
+
+func (inventory *Inventory) SetGroup(group *Group) *Inventory {
+	inventory.Group = group
+	return inventory
+}
+
+func (inventory *Inventory) SetMeta(meta *Meta) *Inventory {
+	inventory.Meta = meta
+	return inventory
+}
+
+func (inventory *Inventory) SetOwner(owner *Employee) *Inventory {
+	inventory.Owner = owner
+	return inventory
+}
+
+func (inventory *Inventory) SetOrganization(organization *Organization) *Inventory {
+	inventory.Organization = organization
+	return inventory
+}
+
+func (inventory *Inventory) SetPositions(positions *Positions[InventoryPosition]) *Inventory {
+	inventory.Positions = positions
+	return inventory
+}
+
+func (inventory *Inventory) SetShared(shared bool) *Inventory {
+	inventory.Shared = &shared
+	return inventory
+}
+
+func (inventory *Inventory) SetState(state *State) *Inventory {
+	inventory.State = state
+	return inventory
+}
+
+func (inventory *Inventory) SetStore(store *Store) *Inventory {
+	inventory.Store = store
+	return inventory
+}
+
+func (inventory *Inventory) SetMoment(moment *Timestamp) *Inventory {
+	inventory.Moment = moment
+	return inventory
+}
+
+func (inventory *Inventory) SetSyncID(syncID *uuid.UUID) *Inventory {
+	inventory.SyncID = syncID
+	return inventory
+}
+
+func (inventory *Inventory) SetAttributes(attributes Attributes) *Inventory {
+	inventory.Attributes = attributes
+	return inventory
+}
+
+func (inventory Inventory) String() string {
+	return Stringify(inventory)
+}
+
+func (inventory Inventory) MetaType() MetaType {
 	return MetaTypeInventory
 }
 
@@ -61,11 +237,72 @@ type InventoryPosition struct {
 	Quantity           *float64            `json:"quantity,omitempty"`           // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 }
 
-func (i InventoryPosition) String() string {
-	return Stringify(i)
+func (inventoryPosition InventoryPosition) GetAccountID() uuid.UUID {
+	return Deref(inventoryPosition.AccountID)
 }
 
-func (i InventoryPosition) MetaType() MetaType {
+func (inventoryPosition InventoryPosition) GetAssortment() AssortmentPosition {
+	return Deref(inventoryPosition.Assortment)
+}
+
+func (inventoryPosition InventoryPosition) GetCalculatedQuantity() float64 {
+	return Deref(inventoryPosition.CalculatedQuantity)
+}
+
+func (inventoryPosition InventoryPosition) GetCorrectionAmount() float64 {
+	return Deref(inventoryPosition.CorrectionAmount)
+}
+
+func (inventoryPosition InventoryPosition) GetCorrectionSum() float64 {
+	return Deref(inventoryPosition.CorrectionSum)
+}
+
+func (inventoryPosition InventoryPosition) GetID() uuid.UUID {
+	return Deref(inventoryPosition.ID)
+}
+
+func (inventoryPosition InventoryPosition) GetPack() Pack {
+	return Deref(inventoryPosition.Pack)
+}
+
+func (inventoryPosition InventoryPosition) GetPrice() float64 {
+	return Deref(inventoryPosition.Price)
+}
+
+func (inventoryPosition InventoryPosition) GetQuantity() float64 {
+	return Deref(inventoryPosition.Quantity)
+}
+
+func (inventoryPosition *InventoryPosition) SetAssortment(assortment *AssortmentPosition) *InventoryPosition {
+	inventoryPosition.Assortment = assortment
+	return inventoryPosition
+}
+
+func (inventoryPosition *InventoryPosition) SetCalculatedQuantity(calculatedQuantity float64) *InventoryPosition {
+	inventoryPosition.CalculatedQuantity = &calculatedQuantity
+	return inventoryPosition
+}
+
+func (inventoryPosition *InventoryPosition) SetPack(pack *Pack) *InventoryPosition {
+	inventoryPosition.Pack = pack
+	return inventoryPosition
+}
+
+func (inventoryPosition *InventoryPosition) SetPrice(price float64) *InventoryPosition {
+	inventoryPosition.Price = &price
+	return inventoryPosition
+}
+
+func (inventoryPosition *InventoryPosition) SetQuantity(quantity float64) *InventoryPosition {
+	inventoryPosition.Quantity = &quantity
+	return inventoryPosition
+}
+
+func (inventoryPosition InventoryPosition) String() string {
+	return Stringify(inventoryPosition)
+}
+
+func (inventoryPosition InventoryPosition) MetaType() MetaType {
 	return MetaTypeInventoryPosition
 }
 
@@ -80,7 +317,7 @@ type InventoryService interface {
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Inventory, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, inventory *Inventory, params *Params) (*Inventory, *resty.Response, error)
 	//endpointTemplate[Inventory]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[InventoryPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*InventoryPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *InventoryPosition, params *Params) (*InventoryPosition, *resty.Response, error)
@@ -113,7 +350,7 @@ type inventoryService struct {
 	endpointGetByID[Inventory]
 	endpointUpdate[Inventory]
 	//endpointTemplate[Inventory]
-	endpointMetadata[MetadataAttributeSharedStates]
+	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointPositions[InventoryPosition]
 	endpointAttributes
 	endpointSyncID[Inventory]
@@ -132,7 +369,7 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointGetByID:          endpointGetByID[Inventory]{e},
 		endpointUpdate:           endpointUpdate[Inventory]{e},
 		//endpointTemplate:         endpointTemplate[Inventory]{e},
-		endpointMetadata:   endpointMetadata[MetadataAttributeSharedStates]{e},
+		endpointMetadata:   endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
 		endpointPositions:  endpointPositions[InventoryPosition]{e},
 		endpointAttributes: endpointAttributes{e},
 		endpointSyncID:     endpointSyncID[Inventory]{e},

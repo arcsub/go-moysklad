@@ -281,7 +281,7 @@ type ContractService interface {
 	CreateUpdateMany(ctx context.Context, contractList []*Contract, params *Params) (*[]Contract, *resty.Response, error)
 	DeleteMany(ctx context.Context, contractList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -302,5 +302,5 @@ type ContractService interface {
 
 func NewContractService(client *Client) ContractService {
 	e := NewEndpoint(client, "entity/contract")
-	return newMainService[Contract, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[Contract, any, MetaAttributesSharedStatesWrapper, any](e)
 }

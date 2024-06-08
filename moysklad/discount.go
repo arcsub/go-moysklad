@@ -98,7 +98,7 @@ func (discount Discount) String() string {
 
 // MetaType удовлетворяет интерфейсу MetaTyper
 func (discount *Discount) MetaType() MetaType {
-	return discount.Meta.Type
+	return discount.Meta.GetType()
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper

@@ -209,7 +209,7 @@ type CashOutService interface {
 	CreateUpdateMany(ctx context.Context, cashOutList []*CashOut, params *Params) (*[]CashOut, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, cashOutList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -231,5 +231,5 @@ type CashOutService interface {
 
 func NewCashOutService(client *Client) CashOutService {
 	e := NewEndpoint(client, "entity/cashout")
-	return newMainService[CashOut, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[CashOut, any, MetaAttributesSharedStatesWrapper, any](e)
 }

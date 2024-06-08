@@ -5,7 +5,7 @@ import "encoding/json"
 type PositionType interface {
 	BundleComponent | CommissionReportInPosition | CommissionReportInReturnPosition |
 		CommissionReportOutPosition | CustomerOrderPosition | DemandPosition | EnterPosition |
-		InternalOrderPosition | InventoryPosition | InvoicePosition | LossPosition | MovePosition |
+		InternalOrderPosition | InventoryPosition | InvoiceInPosition | InvoiceOutPosition | LossPosition | MovePosition |
 		PrepaymentPosition | PrepaymentReturnPosition | PriceListPosition | ProcessingOrderPosition |
 		ProcessingPlanMaterial | ProcessingPlanProduct | ProcessingProcessPosition | PurchaseOrderPosition |
 		PurchaseReturnPosition | RetailPosition | SalesReturnPosition | SupplyPosition | ProductionTaskMaterial |
@@ -63,8 +63,12 @@ func NewInventoryPositions() *Positions[InventoryPosition] {
 	return newPositions[InventoryPosition]()
 }
 
-func NewInvoicePositions() *Positions[InvoicePosition] {
-	return newPositions[InvoicePosition]()
+func NewInvoiceInPositions() *Positions[InvoiceInPosition] {
+	return newPositions[InvoiceInPosition]()
+}
+
+func NewInvoiceOutPositions() *Positions[InvoiceOutPosition] {
+	return newPositions[InvoiceOutPosition]()
 }
 
 func NewLossPositions() *Positions[LossPosition] {

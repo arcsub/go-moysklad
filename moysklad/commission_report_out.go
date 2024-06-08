@@ -489,7 +489,7 @@ type CommissionReportOutService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CommissionReportOut, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, commissionReportOut *CommissionReportOut, params *Params) (*CommissionReportOut, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CommissionReportOutPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*CommissionReportOutPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *CommissionReportOutPosition, params *Params) (*CommissionReportOutPosition, *resty.Response, error)
@@ -520,5 +520,5 @@ type CommissionReportOutService interface {
 
 func NewCommissionReportOutService(client *Client) CommissionReportOutService {
 	e := NewEndpoint(client, "entity/commissionreportout")
-	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

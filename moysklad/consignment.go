@@ -152,7 +152,7 @@ type ConsignmentService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Consignment, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
-	GetMetadata(context.Context) (*MetadataAttribute, *resty.Response, error)
+	GetMetadata(context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 	GetAttributes(context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -166,6 +166,6 @@ type ConsignmentService interface {
 
 func NewConsignmentService(client *Client) ConsignmentService {
 	e := NewEndpoint(client, "entity/consignment")
-	return newMainService[Consignment, any, MetadataAttribute, any](e)
+	return newMainService[Consignment, any, MetaAttributesWrapper, any](e)
 
 }

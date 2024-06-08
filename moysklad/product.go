@@ -524,7 +524,7 @@ type ProductService interface {
 	CreateUpdateMany(ctx context.Context, productList []*Product, params *Params) (*[]Product, *resty.Response, error)
 	DeleteMany(ctx context.Context, productList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeShared, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -549,5 +549,5 @@ type ProductService interface {
 
 func NewProductService(client *Client) ProductService {
 	e := NewEndpoint(client, "entity/product")
-	return newMainService[Product, any, MetadataAttributeShared, any](e)
+	return newMainService[Product, any, MetaAttributesSharedWrapper, any](e)
 }

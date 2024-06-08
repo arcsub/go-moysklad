@@ -36,7 +36,7 @@ type FactureIn struct {
 	Sum            *float64      `json:"sum,omitempty"`
 	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
 	Updated        *Timestamp    `json:"updated,omitempty"`
-	Supplies       Supplies      `json:"supplies,omitempty"`
+	Supplies       Slice[Supply] `json:"supplies,omitempty"`
 	Payments       Payments      `json:"payments,omitempty"`
 	IncomingNumber *string       `json:"incomingNumber,omitempty"`
 	Attributes     Attributes    `json:"attributes,omitempty"`
@@ -146,7 +146,7 @@ func (factureIn FactureIn) GetUpdated() Timestamp {
 	return Deref(factureIn.Updated)
 }
 
-func (factureIn FactureIn) GetSupplies() Supplies {
+func (factureIn FactureIn) GetSupplies() Slice[Supply] {
 	return factureIn.Supplies
 }
 
@@ -252,7 +252,7 @@ func (factureIn *FactureIn) SetSyncID(syncID *uuid.UUID) *FactureIn {
 	return factureIn
 }
 
-func (factureIn *FactureIn) SetSupplies(supplies Supplies) *FactureIn {
+func (factureIn *FactureIn) SetSupplies(supplies Slice[Supply]) *FactureIn {
 	factureIn.Supplies = supplies
 	return factureIn
 }
@@ -290,7 +290,7 @@ type FactureInService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*FactureIn, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, factureIn *FactureIn, params *Params) (*FactureIn, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -310,5 +310,5 @@ type FactureInService interface {
 
 func NewFactureInService(client *Client) FactureInService {
 	e := NewEndpoint(client, "entity/facturein")
-	return newMainService[FactureIn, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[FactureIn, any, MetaAttributesSharedStatesWrapper, any](e)
 }

@@ -623,7 +623,7 @@ type CommissionReportInService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CommissionReportIn, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, commissionReportIn *CommissionReportIn, params *Params) (*CommissionReportIn, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CommissionReportInPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*CommissionReportInPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *CommissionReportInPosition, params *Params) (*CommissionReportInPosition, *resty.Response, error)
@@ -666,7 +666,7 @@ type commissionReportInService struct {
 	endpointDelete
 	endpointGetByID[CommissionReportIn]
 	endpointUpdate[CommissionReportIn]
-	endpointMetadata[MetadataAttributeSharedStates]
+	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointPositions[CommissionReportInPosition]
 	endpointAttributes
 	endpointSyncID[CommissionReportIn]
@@ -686,7 +686,7 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[CommissionReportIn]{e},
 		endpointUpdate:           endpointUpdate[CommissionReportIn]{e},
-		endpointMetadata:         endpointMetadata[MetadataAttributeSharedStates]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
 		endpointPositions:        endpointPositions[CommissionReportInPosition]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[CommissionReportIn]{e},

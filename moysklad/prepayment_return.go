@@ -90,7 +90,7 @@ type PrepaymentReturnService interface {
 	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[PrepaymentReturnPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*PrepaymentReturnPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *PrepaymentReturnPosition, params *Params) (*PrepaymentReturnPosition, *resty.Response, error)
@@ -107,5 +107,5 @@ type PrepaymentReturnService interface {
 
 func NewPrepaymentReturnService(client *Client) PrepaymentReturnService {
 	e := NewEndpoint(client, "entity/prepaymentreturn")
-	return newMainService[PrepaymentReturn, PrepaymentReturnPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[PrepaymentReturn, PrepaymentReturnPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

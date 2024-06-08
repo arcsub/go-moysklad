@@ -8,16 +8,16 @@ import (
 // Metadata Глобальные метаданные.
 // Ключевое слово: metadata
 type Metadata struct {
-	Inventory                 AttributesCreateSharedWrapper       `json:"inventory"`
-	Prepayment                AttributesCreateSharedWrapper       `json:"prepayment"`
-	ProductionsTageCompletion AttributesCreateSharedWrapper       `json:"productionstagecompletion"`
-	Enter                     AttributesCreateSharedWrapper       `json:"enter"`
-	RetailSalesReturn         AttributesCreateSharedWrapper       `json:"retailsalesreturn"`
-	Store                     AttributesCreateSharedWrapper       `json:"store"`
-	BonusTransaction          AttributesCreateSharedWrapper       `json:"bonustransaction"`
-	PriceList                 AttributesCreateSharedWrapper       `json:"pricelist"`
-	PaymentIn                 AttributesCreateSharedWrapper       `json:"paymentin"`
-	RetailDrawerCashIn        AttributesCreateSharedWrapper       `json:"retaildrawercashin"`
+	CompanySettings           MetadataCompanySettings             `json:"companysettings"`
+	BonusProgram              MetaAttributesWrapper               `json:"bonusprogram"`
+	Consignment               MetaAttributesWrapper               `json:"consignment"`
+	ProcessingPlan            MetaAttributesWrapper               `json:"processingplan"`
+	Assortment                Meta                                `json:"assortment"`
+	ProductFolder             MetaWrapper                         `json:"productfolder"`
+	ProcessingPlanFolder      MetaWrapper                         `json:"processingplanfolder"`
+	Application               MetaWrapper                         `json:"application"`
+	InvoiceIn                 AttributesCreateSharedWrapper       `json:"invoicein"`
+	Processing                AttributesCreateSharedWrapper       `json:"processing"`
 	Supply                    AttributesCreateSharedWrapper       `json:"supply"`
 	CommissionReportIn        AttributesCreateSharedWrapper       `json:"commissionreportin"`
 	CommissionReportOut       AttributesCreateSharedWrapper       `json:"commissionreportout"`
@@ -34,12 +34,12 @@ type Metadata struct {
 	SalesReturn               AttributesCreateSharedWrapper       `json:"salesreturn"`
 	InternalOrder             AttributesCreateSharedWrapper       `json:"internalorder"`
 	Organization              AttributesCreateSharedWrapper       `json:"organization"`
-	InvoiceIn                 AttributesCreateSharedWrapper       `json:"invoicein"`
+	Inventory                 AttributesCreateSharedWrapper       `json:"inventory"`
 	Demand                    AttributesCreateSharedWrapper       `json:"demand"`
 	PaymentOut                AttributesCreateSharedWrapper       `json:"paymentout"`
 	CounterpartyAdjustment    AttributesCreateSharedWrapper       `json:"counterpartyadjustment"`
 	ProductionTask            AttributesCreateSharedWrapper       `json:"productiontask"`
-	Processing                AttributesCreateSharedWrapper       `json:"processing"`
+	RetailDrawerCashIn        AttributesCreateSharedWrapper       `json:"retaildrawercashin"`
 	CashOut                   AttributesCreateSharedWrapper       `json:"cashout"`
 	PurchaseReturn            AttributesCreateSharedWrapper       `json:"purchasereturn"`
 	RetailDrawerCashOut       AttributesCreateSharedWrapper       `json:"retaildrawercashout"`
@@ -48,41 +48,40 @@ type Metadata struct {
 	FactureOn                 AttributesCreateSharedWrapper       `json:"facturein"`
 	CashIn                    AttributesCreateSharedWrapper       `json:"cashin"`
 	Contract                  AttributesCreateSharedWrapper       `json:"contract"`
-	BonusProgram              AttributesWrapper                   `json:"bonusprogram"`
-	ProcessingPlan            AttributesWrapper                   `json:"processingplan"`
-	Consignment               AttributesWrapper                   `json:"consignment"`
-	Application               MetaWrapper                         `json:"application"`
-	ProcessingPlanFolder      MetaWrapper                         `json:"processingplanfolder"`
-	ProductFolder             MetaWrapper                         `json:"productfolder"`
-	Assortment                Meta                                `json:"assortment"`
-	Counterparty              CounterPartyOption                  `json:"counterparty"`
-	CompanySettings           MetadataCompanySettings             `json:"companysettings"`
+	PaymentIn                 AttributesCreateSharedWrapper       `json:"paymentin"`
+	PriceList                 AttributesCreateSharedWrapper       `json:"pricelist"`
+	BonusTransaction          AttributesCreateSharedWrapper       `json:"bonustransaction"`
+	Store                     AttributesCreateSharedWrapper       `json:"store"`
+	RetailSalesReturn         AttributesCreateSharedWrapper       `json:"retailsalesreturn"`
+	Enter                     AttributesCreateSharedWrapper       `json:"enter"`
+	ProductionsTageCompletion AttributesCreateSharedWrapper       `json:"productionstagecompletion"`
+	Service                   MetaAttributesSharedWrapper         `json:"service"`
+	Prepayment                AttributesCreateSharedWrapper       `json:"prepayment"`
+	Product                   MetaAttributesSharedWrapper         `json:"product"`
+	Bundle                    MetaAttributesSharedWrapper         `json:"bundle"`
+	Counterparty              CounterpartyOption                  `json:"counterparty"`
 	CustomerOrder             AttributesStatesCreateSharedWrapper `json:"customerorder"`
-	Variant                   MetadataVariant                     `json:"variant"`
-	Bundle                    MetadataAttributeShared             `json:"bundle"`
-	Product                   MetadataAttributeShared             `json:"product"`
-	Service                   MetadataAttributeShared             `json:"service"`
+	Variant                   MetaCharacteristicsWrapper          `json:"variant"`
 }
 
-type AttributesWrapper struct {
+type MetaAttributesWrapper struct {
 	Meta       Meta        `json:"meta"`
 	Attributes MetaWrapper `json:"attributes"`
 }
 
 type AttributesCreateSharedWrapper struct {
-	AttributesWrapper
-	Meta         Meta `json:"meta"`
+	MetaAttributesWrapper
 	CreateShared bool `json:"createShared"`
 }
 
 type AttributesStatesCreateSharedWrapper struct {
 	AttributesCreateSharedWrapper
-	States []StatesElement `json:"states"`
+	States Slice[StatesElement] `json:"states"`
 }
 
-type CounterPartyOption struct {
+type CounterpartyOption struct {
 	AttributesStatesCreateSharedWrapper
-	Tags []string `json:"tags"`
+	Tags Tags `json:"tags"`
 }
 
 type StatesElement struct {
@@ -92,44 +91,39 @@ type StatesElement struct {
 	Color      int    `json:"color"`
 }
 
-func (m Metadata) MetaType() MetaType {
+func (metadata Metadata) MetaType() MetaType {
 	return MetaTypeMetadata
 }
 
 // Метаданные сущности
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-suschnosti
 
-type MetadataAttribute struct {
-	Meta       Meta                 `json:"meta"`
-	Attributes MetaArray[Attribute] `json:"attributes"`
-}
-
-type MetadataAttributeShared struct {
-	MetadataAttribute
+type MetaAttributesSharedWrapper struct {
+	MetaAttributesWrapper
 	CreateShared bool `json:"createShared"`
 }
 
-type MetadataAttributeSharedStates struct {
-	States []State `json:"states"`
-	MetadataAttributeShared
+type MetaAttributesSharedStatesWrapper struct {
+	MetaAttributesSharedWrapper
+	States Slice[State] `json:"states"`
 }
 
-type MetadataVariant struct {
-	Meta            Meta             `json:"meta"`            // Метаданные
-	Characteristics []Characteristic `json:"characteristics"` // Коллекция всех созданных характеристик Модификаций
+type MetaCharacteristicsWrapper struct {
+	Meta            Meta                  `json:"meta"`            // Метаданные
+	Characteristics Slice[Characteristic] `json:"characteristics"` // Коллекция всех созданных характеристик Модификаций
 }
 
-type MetadataCounterparty struct {
-	Tags []string `json:"tags"`
-	MetadataAttributeShared
+type MetaTagsWrapper struct {
+	MetaAttributesSharedWrapper
+	Tags Tags `json:"tags"`
 }
 
-type MetadataAttributeSharedPriceTypes struct {
-	PriceTypes []struct {
-		Name string `json:"name,omitempty"`
-	} `json:"priceTypes"`
-	MetadataAttributeShared // Наименование
-}
+//type MetadataAttributeSharedPriceTypes struct {
+//	PriceTypes []struct {
+//		Name string `json:"name,omitempty"`
+//	} `json:"priceTypes"`
+//	MetaAttributesSharedWrapper // Наименование
+//}
 
 type MetaNameShared struct {
 	Meta         Meta   `json:"meta,omitempty"`
@@ -138,8 +132,8 @@ type MetaNameShared struct {
 }
 
 type MetadataCompanySettings struct {
-	CustomEntities []MetaNameShared `json:"customEntities"`
-	MetadataAttribute
+	MetaAttributesWrapper
+	CustomEntities Slice[MetaNameShared] `json:"customEntities"`
 }
 
 // MetadataService

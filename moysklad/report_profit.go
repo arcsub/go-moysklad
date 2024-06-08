@@ -41,17 +41,17 @@ type ProfitByAssortment struct {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-struktura-ob-ekta-assortment
 type ProfitReportAssortment struct {
 	Image Meta `json:"image"`
-	MetaName
-	Uom     MetaName `json:"uom,omitempty"`
-	Code    string   `json:"code"`
-	Article string   `json:"article"`
+	MetaNameWrapper
+	Uom     MetaNameWrapper `json:"uom,omitempty"`
+	Code    string          `json:"code"`
+	Article string          `json:"article"`
 }
 
 // ProfitByCounterparty Прибыльность по покупателям
 // Ключевое слово: salesbyCounterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-pokupatelqm
 type ProfitByCounterparty struct {
-	Counterparty MetaName `json:"counterparty"`
+	Counterparty MetaNameWrapper `json:"counterparty"`
 	Profit
 }
 
@@ -63,7 +63,7 @@ func (r ProfitByCounterparty) MetaType() MetaType {
 // Ключевое слово: salesbyemployee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-sotrudnikam
 type ProfitByEmployee struct {
-	Employee MetaName `json:"employee"`
+	Employee MetaNameWrapper `json:"employee"`
 	Profit
 }
 

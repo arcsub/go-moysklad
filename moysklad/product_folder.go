@@ -50,7 +50,7 @@ type ProductFolderService interface {
 	CreateUpdateMany(ctx context.Context, productFolderList []*ProductFolder, params *Params) (*[]ProductFolder, *resty.Response, error)
 	DeleteMany(ctx context.Context, productFolderList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttribute, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -64,5 +64,5 @@ type ProductFolderService interface {
 
 func NewProductFolderService(client *Client) ProductFolderService {
 	e := NewEndpoint(client, "entity/productfolder")
-	return newMainService[ProductFolder, any, MetadataAttribute, any](e)
+	return newMainService[ProductFolder, any, MetaAttributesWrapper, any](e)
 }

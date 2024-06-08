@@ -20,11 +20,11 @@ type Notification struct {
 	Read        bool      `json:"read"`
 }
 
-func (n Notification) String() string {
-	return Stringify(n)
+func (notification Notification) String() string {
+	return Stringify(notification)
 }
 
-func (n Notification) MetaType() MetaType {
+func (notification Notification) MetaType() MetaType {
 	return MetaTypeNotification
 }
 

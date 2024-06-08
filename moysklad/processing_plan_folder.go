@@ -41,7 +41,7 @@ type ProcessingPlanFolderService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ProcessingPlanFolder, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, processingPlanFolder *ProcessingPlanFolder, params *Params) (*ProcessingPlanFolder, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
@@ -49,5 +49,5 @@ type ProcessingPlanFolderService interface {
 
 func NewProcessingPlanFolderService(client *Client) ProcessingPlanFolderService {
 	e := NewEndpoint(client, "entity/processingplanfolder")
-	return newMainService[ProcessingPlanFolder, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[ProcessingPlanFolder, any, MetaAttributesSharedStatesWrapper, any](e)
 }

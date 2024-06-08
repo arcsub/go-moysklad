@@ -666,7 +666,7 @@ type DemandService interface {
 	Update(ctx context.Context, id *uuid.UUID, demand *Demand, params *Params) (*Demand, *resty.Response, error)
 	//endpointTemplate[Demand]
 	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[DemandPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*DemandPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *DemandPosition, params *Params) (*DemandPosition, *resty.Response, error)
@@ -701,5 +701,5 @@ type DemandService interface {
 
 func NewDemandService(client *Client) DemandService {
 	e := NewEndpoint(client, "entity/demand")
-	return newMainService[Demand, DemandPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[Demand, DemandPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

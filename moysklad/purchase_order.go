@@ -50,9 +50,9 @@ type PurchaseOrder struct {
 	VatSum                *float64                          `json:"vatSum,omitempty"`
 	WaitSum               *float64                          `json:"waitSum,omitempty"`
 	CustomerOrders        *CustomerOrders                   `json:"customerOrders,omitempty"`
-	InvoicesIn            *InvoicesIn                       `json:"invoicesIn,omitempty"`
+	InvoicesIn            Slice[InvoiceIn]                  `json:"invoicesIn,omitempty"`
 	Payments              *Payments                         `json:"payments,omitempty"`
-	Supplies              *Supplies                         `json:"supplies,omitempty"`
+	Supplies              Slice[Supply]                     `json:"supplies,omitempty"`
 	Attributes            Attributes                        `json:"attributes,omitempty"`
 }
 
@@ -118,7 +118,7 @@ type PurchaseOrderService interface {
 	Update(ctx context.Context, id *uuid.UUID, purchaseOrder *PurchaseOrder, params *Params) (*PurchaseOrder, *resty.Response, error)
 	//endpointTemplate[PurchaseOrder]
 	//endpointTemplateBasedOn[PurchaseOrder, PurchaseOrderTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[PurchaseOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*PurchaseOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *PurchaseOrderPosition, params *Params) (*PurchaseOrderPosition, *resty.Response, error)
@@ -148,5 +148,5 @@ type PurchaseOrderService interface {
 
 func NewPurchaseOrderService(client *Client) PurchaseOrderService {
 	e := NewEndpoint(client, "entity/purchaseorder")
-	return newMainService[PurchaseOrder, PurchaseOrderPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[PurchaseOrder, PurchaseOrderPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

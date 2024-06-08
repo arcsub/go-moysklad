@@ -24,57 +24,97 @@ type MetaOwner interface {
 // Meta Метаданные объекта.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-ob-ekta
 type Meta struct {
-	Href         *string  `json:"href,omitempty"`
-	MetadataHref *string  `json:"metadataHref,omitempty"`
-	MediaType    *string  `json:"mediaType,omitempty"`
-	UUIDHref     *string  `json:"uuidHref,omitempty"`
-	DownloadHref *string  `json:"downloadHref,omitempty"`
-	Type         MetaType `json:"type,omitempty"`
+	Href         *string   `json:"href,omitempty"`
+	MetadataHref *string   `json:"metadataHref,omitempty"`
+	MediaType    *string   `json:"mediaType,omitempty"`
+	UUIDHref     *string   `json:"uuidHref,omitempty"`
+	DownloadHref *string   `json:"downloadHref,omitempty"`
+	Type         *MetaType `json:"type,omitempty"`
 }
 
-func (m Meta) String() string {
-	return Stringify(m)
+func (meta Meta) GetHref() string {
+	return Deref(meta.Href)
 }
 
-func (m *Meta) IsEqual(meta *Meta) bool {
-	return IsEqualPtr(m.Href, meta.Href)
+func (meta Meta) GetMetadataHref() string {
+	return Deref(meta.MetadataHref)
 }
 
-// ID возвращает UUID из поля Href
+func (meta Meta) GetMediaType() string {
+	return Deref(meta.MediaType)
+}
+
+func (meta Meta) GetUUIDHref() string {
+	return Deref(meta.UUIDHref)
+}
+
+func (meta Meta) GetDownloadHref() string {
+	return Deref(meta.DownloadHref)
+}
+
+func (meta Meta) GetType() MetaType {
+	return Deref(meta.Type)
+}
+
+func (meta *Meta) SetHref(href string) *Meta {
+	meta.Href = &href
+	return meta
+}
+
+func (meta *Meta) SetType(metaType MetaType) *Meta {
+	meta.Type = &metaType
+	return meta
+}
+
+// Wrap оборачивает текущий объект Meta в MetaWrapper
+func (meta Meta) Wrap() MetaWrapper {
+	return MetaWrapper{meta}
+}
+
+func (meta Meta) String() string {
+	return Stringify(meta)
+}
+
+func (meta *Meta) IsEqual(other *Meta) bool {
+	return IsEqualPtr(meta.Href, other.Href)
+}
+
+// GetIDFromHref возвращает UUID из поля Href
 // Возвращает nil, если поле Href пусто или не содержит id
-func (m Meta) ID() *uuid.UUID {
-	href := Deref(m.Href)
+func (meta Meta) GetIDFromHref() *uuid.UUID {
+	href := Deref(meta.Href)
 	if href == "" {
 		return nil
 	}
 
 	sep := strings.Split(href, "/")
-
-	var uuids []uuid.UUID
-	for _, part := range sep {
-		if id, err := uuid.Parse(part); err == nil {
-			uuids = append(uuids, id)
-		}
-	}
-
-	if len(uuids) == 0 {
+	if len(sep) == 0 {
 		return nil
 	}
 
-	return &uuids[len(uuids)-1]
+	if id, err := uuid.Parse(sep[len(sep)-1]); err == nil {
+		return &id
+	}
+	return nil
 }
 
+// MetaWrapper объект-обёртка для Meta
 type MetaWrapper struct {
 	Meta Meta `json:"meta"`
 }
 
-type MetaName struct {
+func (metaWrapper MetaWrapper) String() string {
+	return Stringify(metaWrapper)
+}
+
+// MetaNameWrapper объект-обёртка для Meta и поля Name
+type MetaNameWrapper struct {
 	Meta Meta   `json:"meta"`
 	Name string `json:"name"`
 }
 
-func (m MetaWrapper) String() string {
-	return Stringify(m)
+func (metaNameWrapper MetaNameWrapper) String() string {
+	return Stringify(metaNameWrapper)
 }
 
 // MetaCollection Метаданные коллекции.
@@ -90,18 +130,8 @@ type MetaCollection struct {
 	Offset       int    `json:"offset,omitempty"`
 }
 
-func (m MetaCollection) String() string {
-	return Stringify(m)
-}
-
-type AssortmentResult struct {
-	Context Context        `json:"context,omitempty"`
-	Rows    Assortment     `json:"rows,omitempty"`
-	Meta    MetaCollection `json:"meta,omitempty"`
-}
-
-func (m AssortmentResult) String() string {
-	return Stringify(m)
+func (metaCollection MetaCollection) String() string {
+	return Stringify(metaCollection)
 }
 
 // MetaArray Объект с полями meta и rows, где rows - массив объектов
@@ -110,19 +140,19 @@ type MetaArray[T any] struct {
 	Meta MetaCollection `json:"meta,omitempty"`
 }
 
-func (m MetaArray[T]) String() string {
-	return Stringify(m)
+func (metaArray MetaArray[T]) String() string {
+	return Stringify(metaArray)
 }
 
 // MarshalJSON implements the json.Marshaler interface.
-func (m MetaArray[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(m.Rows)
+func (metaArray MetaArray[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(metaArray.Rows)
 }
 
 type MetaType string
 
-func (m MetaType) String() string {
-	return string(m)
+func (metaType MetaType) String() string {
+	return string(metaType)
 }
 
 const (

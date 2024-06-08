@@ -46,7 +46,7 @@ type SalesReturn struct {
 	VatIncluded         *bool                           `json:"vatIncluded,omitempty"`
 	Owner               *Employee                       `json:"owner,omitempty"`
 	Demand              *Demand                         `json:"demand,omitempty"`
-	Losses              *Losses                         `json:"losses,omitempty"`
+	Losses              Slice[Loss]                     `json:"losses,omitempty"`
 	Payments            *Payments                       `json:"payments,omitempty"`
 	PayedSum            *float64                        `json:"payedSum,omitempty"`
 	Attributes          Attributes                      `json:"attributes,omitempty"`
@@ -118,7 +118,7 @@ type SalesReturnService interface {
 	Update(ctx context.Context, id *uuid.UUID, salesReturn *SalesReturn, params *Params) (*SalesReturn, *resty.Response, error)
 	//endpointTemplate[SalesReturn]
 	//endpointTemplateBasedOn[SalesReturn, SalesReturnTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[SalesReturnPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*SalesReturnPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *SalesReturnPosition, params *Params) (*SalesReturnPosition, *resty.Response, error)
@@ -148,5 +148,5 @@ type SalesReturnService interface {
 
 func NewSalesReturnService(client *Client) SalesReturnService {
 	e := NewEndpoint(client, "entity/salesreturn")
-	return newMainService[SalesReturn, SalesReturnPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[SalesReturn, SalesReturnPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

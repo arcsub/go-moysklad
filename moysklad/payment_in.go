@@ -83,7 +83,7 @@ type PaymentInService interface {
 	Update(ctx context.Context, id *uuid.UUID, paymentIn *PaymentIn, params *Params) (*PaymentIn, *resty.Response, error)
 	//endpointTemplate[PaymentIn]
 	//endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -102,5 +102,5 @@ type PaymentInService interface {
 
 func NewPaymentInService(client *Client) PaymentInService {
 	e := NewEndpoint(client, "entity/paymentin")
-	return newMainService[PaymentIn, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[PaymentIn, any, MetaAttributesSharedStatesWrapper, any](e)
 }

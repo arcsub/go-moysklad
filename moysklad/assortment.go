@@ -51,7 +51,7 @@ func (assortmentPosition *AssortmentPosition) String() string {
 
 // MetaType удовлетворяет интерфейсу MetaTyper
 func (assortmentPosition AssortmentPosition) MetaType() MetaType {
-	return assortmentPosition.Meta.Type
+	return assortmentPosition.Meta.GetType()
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
@@ -219,11 +219,21 @@ func (barcodeRules BarcodeRules) String() string {
 	return Stringify(barcodeRules)
 }
 
+type AssortmentResponse struct {
+	Context Context        `json:"context,omitempty"`
+	Rows    Assortment     `json:"rows,omitempty"`
+	Meta    MetaCollection `json:"meta,omitempty"`
+}
+
+func (m AssortmentResponse) String() string {
+	return Stringify(m)
+}
+
 // AssortmentService
 // Сервис для работы с ассортиментом.
 type AssortmentService interface {
-	Get(ctx context.Context, params *Params) (*AssortmentResult, *resty.Response, error)
-	GetAsync(ctx context.Context) (AsyncResultService[AssortmentResult], *resty.Response, error)
+	Get(ctx context.Context, params *Params) (*AssortmentResponse, *resty.Response, error)
+	GetAsync(ctx context.Context) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
@@ -235,5 +245,5 @@ type AssortmentService interface {
 
 func NewAssortmentService(client *Client) AssortmentService {
 	e := NewEndpoint(client, "entity/assortment")
-	return newMainService[AssortmentResult, any, any, AssortmentSettings](e)
+	return newMainService[AssortmentResponse, any, any, AssortmentSettings](e)
 }

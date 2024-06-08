@@ -399,7 +399,7 @@ type EnterService interface {
 	Update(ctx context.Context, id *uuid.UUID, enter *Enter, params *Params) (*Enter, *resty.Response, error)
 	//endpointTemplate[Enter]
 	//endpointTemplateBasedOn[Enter, EnterTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[EnterPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*EnterPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *EnterPosition, params *Params) (*EnterPosition, *resty.Response, error)
@@ -429,5 +429,5 @@ type EnterService interface {
 
 func NewEnterService(client *Client) EnterService {
 	e := NewEndpoint(client, "entity/enter")
-	return newMainService[Enter, EnterPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[Enter, EnterPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

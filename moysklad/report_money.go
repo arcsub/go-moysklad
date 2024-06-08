@@ -9,9 +9,9 @@ import (
 // Ключевое слово: moneyreport
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-ostatki-denezhnyh-sredstw
 type Money struct {
-	Account      MetaName `json:"account"`      // Счет организации (не выводится для остатка кассы, так как касса одна на организацию)
-	Organization MetaName `json:"organization"` // Организация
-	Balance      float64  `json:"balance"`      // Текущий остаток денежных средств
+	Account      MetaNameWrapper `json:"account"`      // Счет организации (не выводится для остатка кассы, так как касса одна на организацию)
+	Organization MetaNameWrapper `json:"organization"` // Организация
+	Balance      float64         `json:"balance"`      // Текущий остаток денежных средств
 }
 
 func (m Money) MetaType() MetaType {

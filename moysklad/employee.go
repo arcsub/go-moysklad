@@ -341,7 +341,7 @@ type EmployeeService interface {
 	CreateUpdateMany(ctx context.Context, employeeList []*Employee, params *Params) (*[]Employee, *resty.Response, error)
 	DeleteMany(ctx context.Context, employeeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeShared, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -365,7 +365,7 @@ type employeeService struct {
 	endpointCreateUpdateMany[Employee]
 	endpointDeleteMany[Employee]
 	endpointDelete
-	endpointMetadata[MetadataAttributeShared]
+	endpointMetadata[MetaAttributesSharedWrapper]
 	endpointAttributes
 	endpointGetByID[Employee]
 	endpointUpdate[Employee]
@@ -380,7 +380,7 @@ func NewEmployeeService(client *Client) EmployeeService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Employee]{e},
 		endpointDeleteMany:       endpointDeleteMany[Employee]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointMetadata:         endpointMetadata[MetadataAttributeShared]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointGetByID:          endpointGetByID[Employee]{e},
 		endpointUpdate:           endpointUpdate[Employee]{e},

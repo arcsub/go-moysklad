@@ -84,7 +84,7 @@ type OrganizationService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Organization, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, organization *Organization, params *Params) (*Organization, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeShared, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -101,5 +101,5 @@ type OrganizationService interface {
 
 func NewOrganizationService(client *Client) OrganizationService {
 	e := NewEndpoint(client, "entity/organization")
-	return newMainService[Organization, any, MetadataAttributeShared, any](e)
+	return newMainService[Organization, any, MetaAttributesSharedWrapper, any](e)
 }

@@ -100,7 +100,7 @@ type PriceListService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*PriceList, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, priceList *PriceList, params *Params) (*PriceList, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[PriceListPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*PriceListPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *PriceListPosition, params *Params) (*PriceListPosition, *resty.Response, error)
@@ -124,5 +124,5 @@ type PriceListService interface {
 
 func NewPriceListService(client *Client) PriceListService {
 	e := NewEndpoint(client, "entity/pricelist")
-	return newMainService[PriceList, PriceListPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[PriceList, PriceListPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

@@ -66,8 +66,7 @@ func (client *Client) init() *Client {
 		}).
 		AddRetryCondition(
 			func(r *resty.Response, err error) bool {
-				return r.StatusCode() == http.StatusTooManyRequests ||
-					r.StatusCode() >= http.StatusBadGateway
+				return r.StatusCode() == http.StatusTooManyRequests || r.StatusCode() >= http.StatusBadGateway
 			},
 		)
 

@@ -43,7 +43,7 @@ type ProjectService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Project, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, project *Project, params *Params) (*Project, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeShared, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -57,5 +57,5 @@ type ProjectService interface {
 
 func NewProjectService(client *Client) ProjectService {
 	e := NewEndpoint(client, "entity/project")
-	return newMainService[Project, any, MetadataAttributeShared, any](e)
+	return newMainService[Project, any, MetaAttributesSharedWrapper, any](e)
 }

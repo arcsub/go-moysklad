@@ -25,20 +25,20 @@ type TurnoverIncomeOutcome struct {
 // TurnoverAll Обороты по товарам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-poluchit-oboroty-po-towaram
 type TurnoverAll struct {
-	Assortment MetaName `json:"assortment"` // Краткое представление Товара или Модификации в отчете
+	Assortment MetaNameWrapper `json:"assortment"` // Краткое представление Товара или Модификации в отчете
 	Turnover
 }
 
 // TurnoverAssortment Структура объекта assortment.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaru-s-detalizaciej-po-skladam-struktura-ob-ekta-assortment
 type TurnoverAssortment struct {
-	Article       string        `json:"article"`       // Артикул Товара
-	Code          string        `json:"code"`          // Код Товара
-	Image         Image         `json:"image"`         // Первое изображение Товара или Модификации
-	Meta          Meta          `json:"meta"`          // Метаданные Товара или Модификации
-	Name          string        `json:"name"`          // Наименование Товара или Модификации
-	ProductFolder ProductFolder `json:"productFolder"` // Группа Товара или Модификации
-	Uom           MetaName      `json:"uom"`           // Единица измерения
+	Article       string          `json:"article"`       // Артикул Товара
+	Code          string          `json:"code"`          // Код Товара
+	Image         Image           `json:"image"`         // Первое изображение Товара или Модификации
+	Meta          Meta            `json:"meta"`          // Метаданные Товара или Модификации
+	Name          string          `json:"name"`          // Наименование Товара или Модификации
+	ProductFolder ProductFolder   `json:"productFolder"` // Группа Товара или Модификации
+	Uom           MetaNameWrapper `json:"uom"`           // Единица измерения
 }
 
 // TurnoverByOperation Обороты по товару с детализацией по документам.
@@ -46,7 +46,7 @@ type TurnoverAssortment struct {
 type TurnoverByOperation struct {
 	Assortment TurnoverAssortment `json:"assortment"`
 	Operation  TurnoverOperation  `json:"operation"`
-	Store      MetaName           `json:"store"`
+	Store      MetaNameWrapper    `json:"store"`
 	Cost       float64            `json:"cost"`
 	Sum        float64            `json:"sum"`
 	Quantity   float64            `json:"quantity"`
@@ -55,11 +55,11 @@ type TurnoverByOperation struct {
 // TurnoverOperation Структура объекта operation.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaru-s-detalizaciej-po-dokumentam-struktura-ob-ekta-operation
 type TurnoverOperation struct {
-	Meta        Meta      `json:"meta"`        // Метаданные документа
-	Name        string    `json:"name"`        // Номер документа
-	Description string    `json:"description"` // Комментарий к документу
-	Moment      Timestamp `json:"moment"`      // Дата проведения документа
-	Agent       MetaName  `json:"agent"`       // Контрагент документа
+	Meta        Meta            `json:"meta"`        // Метаданные документа
+	Name        string          `json:"name"`        // Номер документа
+	Description string          `json:"description"` // Комментарий к документу
+	Moment      Timestamp       `json:"moment"`      // Дата проведения документа
+	Agent       MetaNameWrapper `json:"agent"`       // Контрагент документа
 }
 
 // TurnoverByStore Обороты по товару с детализацией по складам.
@@ -72,7 +72,7 @@ type TurnoverByStore struct {
 // TurnoverByStoreElement Структура объекта детализация оборотов по складам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaru-s-detalizaciej-po-skladam-struktura-ob-ekta-detalizaciq-oborotow-po-skladam
 type TurnoverByStoreElement struct {
-	Store MetaName `json:"store"` // Склад
+	Store MetaNameWrapper `json:"store"` // Склад
 	Turnover
 }
 

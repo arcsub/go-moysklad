@@ -5,6 +5,8 @@ import (
 )
 
 // InvoicePosition общие поля для счетов.
+// Ключевое слово: invoicein
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-postawschika-scheta-postawschikow-pozicii-scheta-postawschika
 type InvoicePosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
@@ -19,6 +21,94 @@ type InvoicePosition struct {
 	Stock      *Stock              `json:"stock,omitempty"`      // Остатки и себестоимость `?fields=stock&expand=positions`
 }
 
-func (i InvoicePosition) String() string {
-	return Stringify(i)
+func (invoicePosition InvoicePosition) GetAccountID() uuid.UUID {
+	return Deref(invoicePosition.AccountID)
+}
+
+func (invoicePosition InvoicePosition) GetAssortment() AssortmentPosition {
+	return Deref(invoicePosition.Assortment)
+}
+
+func (invoicePosition InvoicePosition) GetDiscount() float64 {
+	return Deref(invoicePosition.Discount)
+}
+
+func (invoicePosition InvoicePosition) GetID() uuid.UUID {
+	return Deref(invoicePosition.ID)
+}
+
+func (invoicePosition InvoicePosition) GetPack() Pack {
+	return Deref(invoicePosition.Pack)
+}
+
+func (invoicePosition InvoicePosition) GetMeta() Meta {
+	return Deref(invoicePosition.Meta)
+}
+
+func (invoicePosition InvoicePosition) GetPrice() float64 {
+	return Deref(invoicePosition.Price)
+}
+
+func (invoicePosition InvoicePosition) GetQuantity() float64 {
+	return Deref(invoicePosition.Quantity)
+}
+
+func (invoicePosition InvoicePosition) GetVat() int {
+	return Deref(invoicePosition.Vat)
+}
+
+func (invoicePosition InvoicePosition) GetVatEnabled() bool {
+	return Deref(invoicePosition.VatEnabled)
+}
+
+func (invoicePosition InvoicePosition) GetStock() Stock {
+	return Deref(invoicePosition.Stock)
+}
+
+func (invoicePosition *InvoicePosition) SetAssortment(assortment *AssortmentPosition) *InvoicePosition {
+	invoicePosition.Assortment = assortment
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetDiscount(discount float64) *InvoicePosition {
+	invoicePosition.Discount = &discount
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetPack(pack *Pack) *InvoicePosition {
+	invoicePosition.Pack = pack
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetMeta(meta *Meta) *InvoicePosition {
+	invoicePosition.Meta = meta
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetPrice(price float64) *InvoicePosition {
+	invoicePosition.Price = &price
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetQuantity(quantity float64) *InvoicePosition {
+	invoicePosition.Quantity = &quantity
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetVat(vat int) *InvoicePosition {
+	invoicePosition.Vat = &vat
+	return invoicePosition
+}
+
+func (invoicePosition *InvoicePosition) SetVatEnabled(vatEnabled bool) *InvoicePosition {
+	invoicePosition.VatEnabled = &vatEnabled
+	return invoicePosition
+}
+
+func (invoicePosition InvoicePosition) String() string {
+	return Stringify(invoicePosition)
+}
+
+func (invoicePosition InvoicePosition) MetaType() MetaType {
+	return MetaTypeInvoicePosition
 }

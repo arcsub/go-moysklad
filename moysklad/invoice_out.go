@@ -10,46 +10,46 @@ import (
 // Ключевое слово: invoiceout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-pokupatelu
 type InvoiceOut struct {
-	PayedSum             *float64                    `json:"payedSum,omitempty"`
-	VatEnabled           *bool                       `json:"vatEnabled,omitempty"`
-	AgentAccount         *AgentAccount               `json:"agentAccount,omitempty"`
-	Applicable           *bool                       `json:"applicable,omitempty"`
-	Demands              *Demands                    `json:"demands,omitempty"`
-	Code                 *string                     `json:"code,omitempty"`
-	OrganizationAccount  *AgentAccount               `json:"organizationAccount,omitempty"`
-	Created              *Timestamp                  `json:"created,omitempty"`
-	Deleted              *Timestamp                  `json:"deleted,omitempty"`
-	Description          *string                     `json:"description,omitempty"`
-	ExternalCode         *string                     `json:"externalCode,omitempty"`
-	Files                *Files                      `json:"files,omitempty"`
-	Group                *Group                      `json:"group,omitempty"`
-	ID                   *uuid.UUID                  `json:"id,omitempty"`
-	Meta                 *Meta                       `json:"meta,omitempty"`
-	Moment               *Timestamp                  `json:"moment,omitempty"`
-	Name                 *string                     `json:"name,omitempty"`
-	AccountID            *uuid.UUID                  `json:"accountId,omitempty"`
-	Contract             *Contract                   `json:"contract,omitempty"`
-	Agent                *Counterparty               `json:"agent,omitempty"`
-	Organization         *Organization               `json:"organization,omitempty"`
-	PaymentPlannedMoment *Timestamp                  `json:"paymentPlannedMoment,omitempty"`
-	Positions            *Positions[InvoicePosition] `json:"positions,omitempty"`
-	Printed              *bool                       `json:"printed,omitempty"`
-	Project              *Project                    `json:"project,omitempty"`
-	Published            *bool                       `json:"published,omitempty"`
-	Rate                 *Rate                       `json:"rate,omitempty"`
-	Shared               *bool                       `json:"shared,omitempty"`
-	ShippedSum           *float64                    `json:"shippedSum,omitempty"`
-	State                *State                      `json:"state,omitempty"`
-	Store                *Store                      `json:"store,omitempty"`
-	Sum                  *float64                    `json:"sum,omitempty"`
-	SyncID               *uuid.UUID                  `json:"syncId,omitempty"`
-	Updated              *Timestamp                  `json:"updated,omitempty"`
-	Owner                *Employee                   `json:"owner,omitempty"`
-	VatIncluded          *bool                       `json:"vatIncluded,omitempty"`
-	VatSum               *float64                    `json:"vatSum,omitempty"`
-	CustomerOrder        *CustomerOrder              `json:"customerOrder,omitempty"`
-	Payments             *Payments                   `json:"payments,omitempty"`
-	Attributes           Attributes                  `json:"attributes,omitempty"`
+	PayedSum             *float64                       `json:"payedSum,omitempty"`
+	VatEnabled           *bool                          `json:"vatEnabled,omitempty"`
+	AgentAccount         *AgentAccount                  `json:"agentAccount,omitempty"`
+	Applicable           *bool                          `json:"applicable,omitempty"`
+	Demands              *Demands                       `json:"demands,omitempty"`
+	Code                 *string                        `json:"code,omitempty"`
+	OrganizationAccount  *AgentAccount                  `json:"organizationAccount,omitempty"`
+	Created              *Timestamp                     `json:"created,omitempty"`
+	Deleted              *Timestamp                     `json:"deleted,omitempty"`
+	Description          *string                        `json:"description,omitempty"`
+	ExternalCode         *string                        `json:"externalCode,omitempty"`
+	Files                *Files                         `json:"files,omitempty"`
+	Group                *Group                         `json:"group,omitempty"`
+	ID                   *uuid.UUID                     `json:"id,omitempty"`
+	Meta                 *Meta                          `json:"meta,omitempty"`
+	Moment               *Timestamp                     `json:"moment,omitempty"`
+	Name                 *string                        `json:"name,omitempty"`
+	AccountID            *uuid.UUID                     `json:"accountId,omitempty"`
+	Contract             *Contract                      `json:"contract,omitempty"`
+	Agent                *Counterparty                  `json:"agent,omitempty"`
+	Organization         *Organization                  `json:"organization,omitempty"`
+	PaymentPlannedMoment *Timestamp                     `json:"paymentPlannedMoment,omitempty"`
+	Positions            *Positions[InvoiceOutPosition] `json:"positions,omitempty"`
+	Printed              *bool                          `json:"printed,omitempty"`
+	Project              *Project                       `json:"project,omitempty"`
+	Published            *bool                          `json:"published,omitempty"`
+	Rate                 *Rate                          `json:"rate,omitempty"`
+	Shared               *bool                          `json:"shared,omitempty"`
+	ShippedSum           *float64                       `json:"shippedSum,omitempty"`
+	State                *State                         `json:"state,omitempty"`
+	Store                *Store                         `json:"store,omitempty"`
+	Sum                  *float64                       `json:"sum,omitempty"`
+	SyncID               *uuid.UUID                     `json:"syncId,omitempty"`
+	Updated              *Timestamp                     `json:"updated,omitempty"`
+	Owner                *Employee                      `json:"owner,omitempty"`
+	VatIncluded          *bool                          `json:"vatIncluded,omitempty"`
+	VatSum               *float64                       `json:"vatSum,omitempty"`
+	CustomerOrder        *CustomerOrder                 `json:"customerOrder,omitempty"`
+	Payments             *Payments                      `json:"payments,omitempty"`
+	Attributes           Attributes                     `json:"attributes,omitempty"`
 }
 
 func (i InvoiceOut) String() string {
@@ -102,7 +102,7 @@ type InvoiceOutService interface {
 	Update(ctx context.Context, id *uuid.UUID, invoiceOut *InvoiceOut, params *Params) (*InvoiceOut, *resty.Response, error)
 	//endpointTemplate[InvoiceOut]
 	//endpointTemplateBasedOn[InvoiceOut, InvoiceOutTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[InvoiceOutPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*InvoiceOutPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *InvoiceOutPosition, params *Params) (*InvoiceOutPosition, *resty.Response, error)
@@ -130,5 +130,5 @@ type InvoiceOutService interface {
 
 func NewInvoiceOutService(client *Client) InvoiceOutService {
 	e := NewEndpoint(client, "entity/invoiceout")
-	return newMainService[InvoiceOut, InvoiceOutPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[InvoiceOut, InvoiceOutPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

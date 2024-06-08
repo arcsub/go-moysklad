@@ -83,7 +83,7 @@ type PaymentOutService interface {
 	Update(ctx context.Context, id *uuid.UUID, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
 	//endpointTemplate[PaymentOut]
 	//endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -102,5 +102,5 @@ type PaymentOutService interface {
 
 func NewPaymentOutService(client *Client) PaymentOutService {
 	e := NewEndpoint(client, "entity/paymentout")
-	return newMainService[PaymentOut, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[PaymentOut, any, MetaAttributesSharedStatesWrapper, any](e)
 }

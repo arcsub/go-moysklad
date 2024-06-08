@@ -320,7 +320,7 @@ type VariantService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Variant, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, variant *Variant, params *Params) (*Variant, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataVariant, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaCharacteristicsWrapper, *resty.Response, error)
 	GetImages(ctx context.Context, id *uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id *uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
 	UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
@@ -344,7 +344,7 @@ type variantService struct {
 	endpointDelete
 	endpointGetByID[Variant]
 	endpointUpdate[Variant]
-	endpointMetadata[MetadataVariant]
+	endpointMetadata[MetaCharacteristicsWrapper]
 	endpointImages
 	endpointNamedFilter
 }
@@ -360,7 +360,7 @@ func NewVariantService(client *Client) VariantService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[Variant]{e},
 		endpointUpdate:           endpointUpdate[Variant]{e},
-		endpointMetadata:         endpointMetadata[MetadataVariant]{e},
+		endpointMetadata:         endpointMetadata[MetaCharacteristicsWrapper]{e},
 		endpointImages:           endpointImages{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
 	}

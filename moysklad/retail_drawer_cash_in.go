@@ -60,7 +60,7 @@ type RetailDrawerCashInService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, retailDrawerCashIn *RetailDrawerCashIn, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	//endpointTemplate[RetailDrawerCashIn]
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
@@ -82,5 +82,5 @@ type RetailDrawerCashInService interface {
 
 func NewRetailDrawerCashInService(client *Client) RetailDrawerCashInService {
 	e := NewEndpoint(client, "entity/retaildrawercashin")
-	return newMainService[RetailDrawerCashIn, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[RetailDrawerCashIn, any, MetaAttributesSharedStatesWrapper, any](e)
 }

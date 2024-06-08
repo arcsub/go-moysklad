@@ -156,7 +156,7 @@ type AttributeValueType interface {
 		int | // Число целое AttributeTypeLong (long)
 		string | // Ссылка AttributeTypeLink (link), Строка AttributeTypeString (string), Текст AttributeTypeText (text), Файл AttributeTypeFile (file)
 		Timestamp | // Дата AttributeTypeTime (time)
-		MetaName // Справочник AttributeTypeDictionary*
+		MetaNameWrapper // Справочник AttributeTypeDictionary*
 }
 
 // AttributeType Тип доп. поля

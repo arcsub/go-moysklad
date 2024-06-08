@@ -48,7 +48,7 @@ type StoreService interface {
 	CreateUpdateMany(ctx context.Context, storeList []*Store, params *Params) (*[]Store, *resty.Response, error)
 	DeleteMany(ctx context.Context, storeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeShared, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -83,7 +83,7 @@ type storeService struct {
 	endpointCreateUpdateMany[Store]
 	endpointDeleteMany[Store]
 	endpointDelete
-	endpointMetadata[MetadataAttributeShared]
+	endpointMetadata[MetaAttributesSharedWrapper]
 	endpointAttributes
 	endpointGetByID[Store]
 	endpointUpdate[Store]
@@ -99,7 +99,7 @@ func NewStoreService(client *Client) StoreService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Store]{e},
 		endpointDeleteMany:       endpointDeleteMany[Store]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointMetadata:         endpointMetadata[MetadataAttributeShared]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointGetByID:          endpointGetByID[Store]{e},
 		endpointUpdate:           endpointUpdate[Store]{e},

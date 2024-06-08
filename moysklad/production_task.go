@@ -73,7 +73,7 @@ type ProductionTaskService interface {
 	Create(ctx context.Context, productionTask *ProductionTask, params *Params) (*ProductionTask, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productionTaskList []*ProductionTask, params *Params) (*[]ProductionTask, *resty.Response, error)
 	DeleteMany(ctx context.Context, productionTaskList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -107,7 +107,7 @@ type productionTaskService struct {
 	endpointCreate[ProductionTask]
 	endpointCreateUpdateMany[ProductionTask]
 	endpointDeleteMany[ProductionTask]
-	endpointMetadata[MetadataAttributeSharedStates]
+	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointAttributes
 	endpointGetByID[ProductionTask]
 	endpointUpdate[ProductionTask]
@@ -123,7 +123,7 @@ func NewProductionTaskService(client *Client) ProductionTaskService {
 		endpointCreate:           endpointCreate[ProductionTask]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[ProductionTask]{e},
 		endpointDeleteMany:       endpointDeleteMany[ProductionTask]{e},
-		endpointMetadata:         endpointMetadata[MetadataAttributeSharedStates]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
 		endpointGetByID:          endpointGetByID[ProductionTask]{e},
 		endpointUpdate:           endpointUpdate[ProductionTask]{e},
 		endpointPositions:        endpointPositions[ProductionRow]{e},

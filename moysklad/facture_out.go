@@ -320,7 +320,7 @@ type FactureOutService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*FactureOut, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, factureOut *FactureOut, params *Params) (*FactureOut, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -339,5 +339,5 @@ type FactureOutService interface {
 
 func NewFactureOutService(client *Client) FactureOutService {
 	e := NewEndpoint(client, "entity/factureout")
-	return newMainService[FactureOut, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[FactureOut, any, MetaAttributesSharedStatesWrapper, any](e)
 }

@@ -109,7 +109,7 @@ type RetailDemandService interface {
 	Update(ctx context.Context, id *uuid.UUID, retailDemand *RetailDemand, params *Params) (*RetailDemand, *resty.Response, error)
 	//endpointTemplate[RetailDemand]
 	//endpointTemplateBasedOn[RetailDemand, RetailDemandTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[RetailPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*RetailPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *RetailPosition, params *Params) (*RetailPosition, *resty.Response, error)
@@ -139,5 +139,5 @@ type RetailDemandService interface {
 
 func NewRetailDemandService(client *Client) RetailDemandService {
 	e := NewEndpoint(client, "entity/retaildemand")
-	return newMainService[RetailDemand, RetailPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[RetailDemand, RetailPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

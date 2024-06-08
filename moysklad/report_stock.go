@@ -11,21 +11,21 @@ import (
 // Ключевое слово: stock
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-rasshirennyj-otchet-ob-ostatkah
 type StockAll struct {
-	Image        Meta        `json:"image"`
-	Meta         Meta        `json:"meta"`
-	Folder       StockFolder `json:"folder"`
-	Uom          MetaName    `json:"uom"`
-	Article      string      `json:"article"`
-	ExternalCode string      `json:"externalCode"`
-	Code         string      `json:"code"`
-	Name         string      `json:"name"`
-	InTransit    float64     `json:"inTransit"`
-	Price        float64     `json:"price"`
-	Quantity     float64     `json:"quantity"`
-	Reserve      float64     `json:"reserve"`
-	SalePrice    float64     `json:"salePrice"`
-	Stock        float64     `json:"stock"`
-	StockDays    float64     `json:"stockDays"`
+	Image        Meta            `json:"image"`
+	Meta         Meta            `json:"meta"`
+	Folder       StockFolder     `json:"folder"`
+	Uom          MetaNameWrapper `json:"uom"`
+	Article      string          `json:"article"`
+	ExternalCode string          `json:"externalCode"`
+	Code         string          `json:"code"`
+	Name         string          `json:"name"`
+	InTransit    float64         `json:"inTransit"`
+	Price        float64         `json:"price"`
+	Quantity     float64         `json:"quantity"`
+	Reserve      float64         `json:"reserve"`
+	SalePrice    float64         `json:"salePrice"`
+	Stock        float64         `json:"stock"`
+	StockDays    float64         `json:"stockDays"`
 }
 
 func (s StockAll) MetaType() MetaType {

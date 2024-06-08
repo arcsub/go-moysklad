@@ -583,7 +583,7 @@ type CounterpartyService interface {
 	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Counterparty, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetadataCounterparty, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaTagsWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -621,7 +621,7 @@ type counterpartyService struct {
 	endpointDelete
 	endpointGetByID[Counterparty]
 	endpointUpdate[Counterparty]
-	endpointMetadata[MetadataCounterparty]
+	endpointMetadata[MetaTagsWrapper]
 	endpointAttributes
 	endpointSettings[CounterpartySettings]
 	endpointAccounts
@@ -640,7 +640,7 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[Counterparty]{e},
 		endpointUpdate:           endpointUpdate[Counterparty]{e},
-		endpointMetadata:         endpointMetadata[MetadataCounterparty]{e},
+		endpointMetadata:         endpointMetadata[MetaTagsWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointSettings:         endpointSettings[CounterpartySettings]{e},
 		endpointAccounts:         endpointAccounts{e},

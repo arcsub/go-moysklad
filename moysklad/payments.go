@@ -6,7 +6,6 @@ import (
 )
 
 type Payment struct {
-	// Общие поля
 	AccountID      *uuid.UUID    `json:"accountId,omitempty"`      // ID учетной записи
 	Agent          *Counterparty `json:"agent,omitempty"`          // Метаданные контрагента
 	Applicable     *bool         `json:"applicable,omitempty"`     // Отметка о проведении
@@ -46,7 +45,7 @@ type Payment struct {
 
 // MetaType удовлетворяет интерфейсу MetaTyper
 func (p Payment) MetaType() MetaType {
-	return p.Meta.Type
+	return p.Meta.GetType()
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
@@ -73,24 +72,32 @@ func (p *Payment) UnmarshalJSON(data []byte) (err error) {
 }
 
 // AsCashIn десериализует сырые данные в тип *CashIn
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
 func (p *Payment) AsCashIn() *CashIn {
 	return unmarshalAsType[CashIn](p)
 }
 
 // AsCashOut десериализует сырые данные в тип *CashOut
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
 func (p *Payment) AsCashOut() *CashOut {
 	return unmarshalAsType[CashOut](p)
 }
 
 // AsPaymentIn десериализует сырые данные в тип *PaymentIn
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
 func (p *Payment) AsPaymentIn() *PaymentIn {
 	return unmarshalAsType[PaymentIn](p)
 }
 
 // AsPaymentOut десериализует сырые данные в тип *PaymentOut
+// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
+// Возвращает nil в случае неудачи.
 func (p *Payment) AsPaymentOut() *PaymentOut {
 	return unmarshalAsType[PaymentOut](p)
 }
 
 // Payments Входящий платеж, Приходный ордер, Исходящий платеж, Расходный ордер
-type Payments []Payment
+type Payments = Slice[Payment]

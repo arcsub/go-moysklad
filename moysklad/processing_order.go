@@ -90,7 +90,7 @@ type ProcessingOrderService interface {
 	Update(ctx context.Context, id *uuid.UUID, processingOrder *ProcessingOrder, params *Params) (*ProcessingOrder, *resty.Response, error)
 	//endpointTemplate[ProcessingOrder]
 	//endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *ProcessingOrderPosition, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
@@ -114,5 +114,5 @@ type ProcessingOrderService interface {
 
 func NewProcessingOrderService(client *Client) ProcessingOrderService {
 	e := NewEndpoint(client, "entity/processingorder")
-	return newMainService[ProcessingOrder, ProcessingOrderPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[ProcessingOrder, ProcessingOrderPosition, MetaAttributesSharedStatesWrapper, any](e)
 }

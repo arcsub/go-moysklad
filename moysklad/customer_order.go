@@ -14,7 +14,7 @@ type CustomerOrder struct {
 	Project               *Project                          `json:"project,omitempty"`
 	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`
 	Applicable            *bool                             `json:"applicable,omitempty"`
-	Moves                 Moves                             `json:"moves,omitempty"`
+	Moves                 Slice[Move]                       `json:"moves,omitempty"`
 	Code                  *string                           `json:"code,omitempty"`
 	Agent                 *Counterparty                     `json:"agent,omitempty"`
 	Created               *Timestamp                        `json:"created,omitempty"`
@@ -77,7 +77,7 @@ func (customerOrder CustomerOrder) GetApplicable() bool {
 	return Deref(customerOrder.Applicable)
 }
 
-func (customerOrder CustomerOrder) GetMoves() Moves {
+func (customerOrder CustomerOrder) GetMoves() Slice[Move] {
 	return customerOrder.Moves
 }
 
@@ -277,7 +277,7 @@ func (customerOrder *CustomerOrder) SetApplicable(applicable bool) *CustomerOrde
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetMoves(moves Moves) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetMoves(moves Slice[Move]) *CustomerOrder {
 	customerOrder.Moves = moves
 	return customerOrder
 }
@@ -582,7 +582,7 @@ type CustomerOrderService interface {
 	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CustomerOrder, *resty.Response, error)
 	Update(ctx context.Context, id *uuid.UUID, customerOrder *CustomerOrder, params *Params) (*CustomerOrder, *resty.Response, error)
 	//endpointTemplate[CustomerOrder]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CustomerOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*CustomerOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *CustomerOrderPosition, params *Params) (*CustomerOrderPosition, *resty.Response, error)
@@ -616,5 +616,5 @@ type CustomerOrderService interface {
 
 func NewCustomerOrderService(client *Client) CustomerOrderService {
 	e := NewEndpoint(client, "entity/customerorder")
-	return newMainService[CustomerOrder, CustomerOrderPosition, MetadataAttributeSharedStates, any](e)
+	return newMainService[CustomerOrder, CustomerOrderPosition, MetaAttributesSharedStatesWrapper, any](e)
 }
