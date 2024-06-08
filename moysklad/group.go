@@ -17,11 +17,46 @@ type Group struct {
 	Name      *string    `json:"name,omitempty"`      // Наименование Отдела
 }
 
-func (g Group) String() string {
-	return Stringify(g)
+func (group Group) GetAccountID() uuid.UUID {
+	return Deref(group.AccountID)
 }
 
-func (g Group) MetaType() MetaType {
+func (group Group) GetID() uuid.UUID {
+	return Deref(group.ID)
+}
+
+func (group Group) GetIndex() int {
+	return Deref(group.Index)
+}
+
+func (group Group) GetMeta() Meta {
+	return Deref(group.Meta)
+}
+
+func (group Group) GetName() string {
+	return Deref(group.Name)
+}
+
+func (group *Group) SetIndex(index int) *Group {
+	group.Index = &index
+	return group
+}
+
+func (group *Group) SetMeta(meta *Meta) *Group {
+	group.Meta = meta
+	return group
+}
+
+func (group *Group) SetName(name string) *Group {
+	group.Name = &name
+	return group
+}
+
+func (group Group) String() string {
+	return Stringify(group)
+}
+
+func (group Group) MetaType() MetaType {
 	return MetaTypeGroup
 }
 
