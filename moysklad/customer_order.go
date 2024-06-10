@@ -54,11 +54,15 @@ type CustomerOrder struct {
 	VatSum                *float64                          `json:"vatSum,omitempty"`
 	Prepayments           Slice[Prepayment]                 `json:"prepayments,omitempty"`
 	PurchaseOrders        Slice[PurchaseOrder]              `json:"purchaseOrders,omitempty"`
-	Demands               Demands                           `json:"demands,omitempty"`
+	Demands               Slice[Demand]                     `json:"demands,omitempty"`
 	Payments              Slice[Payment]                    `json:"payments,omitempty"`
 	InvoicesOut           Slice[InvoiceOut]                 `json:"invoicesOut,omitempty"`
 	TaxSystem             TaxSystem                         `json:"taxSystem,omitempty"`
 	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
+}
+
+func (customerOrder CustomerOrder) Clean() *CustomerOrder {
+	return &CustomerOrder{Meta: customerOrder.Meta}
 }
 
 func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
@@ -237,7 +241,7 @@ func (customerOrder CustomerOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 	return customerOrder.PurchaseOrders
 }
 
-func (customerOrder CustomerOrder) GetDemands() Demands {
+func (customerOrder CustomerOrder) GetDemands() Slice[Demand] {
 	return customerOrder.Demands
 }
 
@@ -412,7 +416,7 @@ func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders Slice[Purch
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetDemands(demands Demands) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetDemands(demands Slice[Demand]) *CustomerOrder {
 	customerOrder.Demands = demands
 	return customerOrder
 }

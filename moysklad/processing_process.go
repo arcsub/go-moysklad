@@ -24,6 +24,10 @@ type ProcessingProcess struct {
 	Updated      *Timestamp                            `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+func (processingProcess ProcessingProcess) Clean() *ProcessingProcess {
+	return &ProcessingProcess{Meta: processingProcess.Meta}
+}
+
 func (processingProcess ProcessingProcess) GetAccountID() uuid.UUID {
 	return Deref(processingProcess.AccountID)
 }
@@ -133,6 +137,10 @@ type ProcessingProcessPosition struct {
 	ID              *uuid.UUID       `json:"id,omitempty"`              // ID позиции
 	Meta            *Meta            `json:"meta,omitempty"`            // Метаданные позиции Тех. процесса
 	ProcessingStage *ProcessingStage `json:"processingstage,omitempty"` // Метаданные этапа, который представляет собой позиция
+}
+
+func (processingProcessPosition ProcessingProcessPosition) Clean() *ProcessingProcessPosition {
+	return &ProcessingProcessPosition{Meta: processingProcessPosition.Meta}
 }
 
 func (processingProcessPosition ProcessingProcessPosition) GetAccountID() uuid.UUID {

@@ -86,6 +86,10 @@ type RetailStore struct {
 	CreateAgentsTags                    Slice[string]             `json:"createAgentsTags,omitempty"`
 }
 
+func (retailStore RetailStore) Clean() *RetailStore {
+	return &RetailStore{Meta: retailStore.Meta}
+}
+
 func (retailStore RetailStore) GetAcquire() Counterparty {
 	return Deref(retailStore.Acquire)
 }

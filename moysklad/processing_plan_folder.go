@@ -25,6 +25,10 @@ type ProcessingPlanFolder struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+func (processingPlanFolder ProcessingPlanFolder) Clean() *ProcessingPlanFolder {
+	return &ProcessingPlanFolder{Meta: processingPlanFolder.Meta}
+}
+
 func (processingPlanFolder ProcessingPlanFolder) GetAccountID() uuid.UUID {
 	return Deref(processingPlanFolder.AccountID)
 }

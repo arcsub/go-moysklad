@@ -37,6 +37,10 @@ type Discount struct {
 	data      json.RawMessage // сырые данные для последующей десериализации в нужный тип
 }
 
+func (discount Discount) Clean() *Discount {
+	return &Discount{Meta: discount.Meta}
+}
+
 func (discount Discount) GetMeta() Meta {
 	return Deref(discount.Meta)
 }
@@ -159,6 +163,10 @@ type AccumulationDiscount struct {
 	Assortment     Assortment                `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
 	ProductFolders *MetaArray[ProductFolder] `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
 	Levels         Slice[AccumulationLevel]  `json:"levels,omitempty"`         // Проценты скидок при определенной сумме продаж
+}
+
+func (accumulationDiscount AccumulationDiscount) Clean() *AccumulationDiscount {
+	return &AccumulationDiscount{Meta: accumulationDiscount.Meta}
 }
 
 func (accumulationDiscount AccumulationDiscount) GetAccountID() uuid.UUID {
@@ -298,6 +306,10 @@ type PersonalDiscount struct {
 	Assortment     Assortment                `json:"assortment,omitempty"`
 }
 
+func (personalDiscount PersonalDiscount) Clean() *PersonalDiscount {
+	return &PersonalDiscount{Meta: personalDiscount.Meta}
+}
+
 func (personalDiscount PersonalDiscount) GetAccountID() uuid.UUID {
 	return Deref(personalDiscount.AccountID)
 }
@@ -403,6 +415,10 @@ type SpecialPriceDiscount struct {
 	Discount       *float64                  `json:"discount,omitempty"`
 	SpecialPrice   *SpecialPrice             `json:"specialPrice,omitempty"`
 	AgentTags      Slice[string]             `json:"agentTags,omitempty"`
+}
+
+func (specialPriceDiscount SpecialPriceDiscount) Clean() *SpecialPriceDiscount {
+	return &SpecialPriceDiscount{Meta: specialPriceDiscount.Meta}
 }
 
 func (specialPriceDiscount SpecialPriceDiscount) GetAccountID() uuid.UUID {
@@ -586,109 +602,109 @@ func NewDiscountService(client *Client) DiscountService {
 
 // UpdateRoundOffDiscount Изменить округление копеек.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-okruglenie-kopeek
-func (s *discountService) UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s", s.uri, id)
-	return NewRequestBuilder[Discount](s.client, path).Put(ctx, entity)
+func (service *discountService) UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s", service.uri, id)
+	return NewRequestBuilder[Discount](service.client, path).Put(ctx, entity)
 }
 
 // GetAccumulationDiscounts Получить все накопительные скидки.
-func (s *discountService) GetAccumulationDiscounts(ctx context.Context, params *Params) (*List[AccumulationDiscount], *resty.Response, error) {
+func (service *discountService) GetAccumulationDiscounts(ctx context.Context, params *Params) (*List[AccumulationDiscount], *resty.Response, error) {
 	path := "entity/accumulationdiscount"
-	return NewRequestBuilder[List[AccumulationDiscount]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[AccumulationDiscount]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateAccumulationDiscount Создать накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-nakopitel-nuu-skidku
-func (s *discountService) CreateAccumulationDiscount(ctx context.Context, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) CreateAccumulationDiscount(ctx context.Context, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	path := "entity/accumulationdiscount"
-	return NewRequestBuilder[AccumulationDiscount](s.client, path).Post(ctx, entity)
+	return NewRequestBuilder[AccumulationDiscount](service.client, path).Post(ctx, entity)
 }
 
 // GetAccumulationDiscountByID Получить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-nakopitel-nuu-skidku
-func (s *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
-	return NewRequestBuilder[AccumulationDiscount](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdateAccumulationDiscount Изменить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-nakopitel-nuu-skidku
-func (s *discountService) UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
-	return NewRequestBuilder[AccumulationDiscount](s.client, path).Put(ctx, entity)
+	return NewRequestBuilder[AccumulationDiscount](service.client, path).Put(ctx, entity)
 }
 
 // DeleteAccumulationDiscount Удалить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-nakopitel-nuu-skidku
-func (s *discountService) DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *discountService) DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // GetPersonalDiscounts Получить все персональные скидки.
-func (s *discountService) GetPersonalDiscounts(ctx context.Context, params *Params) (*List[PersonalDiscount], *resty.Response, error) {
+func (service *discountService) GetPersonalDiscounts(ctx context.Context, params *Params) (*List[PersonalDiscount], *resty.Response, error) {
 	path := "entity/personaldiscount"
-	return NewRequestBuilder[List[PersonalDiscount]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[PersonalDiscount]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreatePersonalDiscount Создать персональную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-personal-nuu-skidku
-func (s *discountService) CreatePersonalDiscount(ctx context.Context, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) CreatePersonalDiscount(ctx context.Context, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	path := "entity/personaldiscount"
-	return NewRequestBuilder[PersonalDiscount](s.client, path).Post(ctx, entity)
+	return NewRequestBuilder[PersonalDiscount](service.client, path).Post(ctx, entity)
 }
 
 // GetPersonalDiscountByID Получить персональную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-personal-nuu-skidku
-func (s *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
-	return NewRequestBuilder[PersonalDiscount](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdatePersonalDiscount Изменить персональную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-personal-nuu-skidku
-func (s *discountService) UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
-	return NewRequestBuilder[PersonalDiscount](s.client, path).Put(ctx, entity)
+	return NewRequestBuilder[PersonalDiscount](service.client, path).Put(ctx, entity)
 }
 
 // DeletePersonalDiscount Удалить персональную скидку.
-func (s *discountService) DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *discountService) DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // GetSpecialPriceDiscounts Получить все специальные цены.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-personal-nuu-skidku
-func (s *discountService) GetSpecialPriceDiscounts(ctx context.Context, params *Params) (*List[SpecialPriceDiscount], *resty.Response, error) {
+func (service *discountService) GetSpecialPriceDiscounts(ctx context.Context, params *Params) (*List[SpecialPriceDiscount], *resty.Response, error) {
 	path := "entity/specialpricediscount"
-	return NewRequestBuilder[List[SpecialPriceDiscount]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[SpecialPriceDiscount]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateSpecialPriceDiscount Создать специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-special-nuu-cenu
-func (s *discountService) CreateSpecialPriceDiscount(ctx context.Context, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) CreateSpecialPriceDiscount(ctx context.Context, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := "entity/specialpricediscount"
-	return NewRequestBuilder[SpecialPriceDiscount](s.client, path).Post(ctx, entity)
+	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).Post(ctx, entity)
 }
 
 // GetSpecialPriceDiscountByID Получить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-special-nuu-cenu
-func (s *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
-	return NewRequestBuilder[SpecialPriceDiscount](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdateSpecialPriceDiscount Изменить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-special-nuu-cenu
-func (s *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
-	return NewRequestBuilder[SpecialPriceDiscount](s.client, path).Put(ctx, entity)
+	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).Put(ctx, entity)
 }
 
 // DeleteSpecialPriceDiscount Удалить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-special-nuu-cenu
-func (s *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

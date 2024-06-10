@@ -39,6 +39,10 @@ type Contract struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (contract Contract) Clean() *Contract {
+	return &Contract{Meta: contract.Meta}
+}
+
 func (contract Contract) GetAgentAccount() AgentAccount {
 	return Deref(contract.AgentAccount)
 }

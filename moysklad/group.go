@@ -17,6 +17,10 @@ type Group struct {
 	Name      *string    `json:"name,omitempty"`      // Наименование Отдела
 }
 
+func (group Group) Clean() *Group {
+	return &Group{Meta: group.Meta}
+}
+
 func (group Group) GetAccountID() uuid.UUID {
 	return Deref(group.AccountID)
 }

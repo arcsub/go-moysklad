@@ -42,6 +42,10 @@ type ProcessingOrder struct {
 	Attributes            Slice[AttributeValue]               `json:"attributes,omitempty"`
 }
 
+func (processingOrder ProcessingOrder) Clean() *ProcessingOrder {
+	return &ProcessingOrder{Meta: processingOrder.Meta}
+}
+
 func (processingOrder ProcessingOrder) GetName() string {
 	return Deref(processingOrder.Name)
 }

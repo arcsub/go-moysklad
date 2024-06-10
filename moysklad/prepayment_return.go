@@ -48,6 +48,10 @@ type PrepaymentReturn struct {
 	Attributes   Slice[AttributeValue]                `json:"attributes,omitempty"`
 }
 
+func (prepaymentReturn PrepaymentReturn) Clean() *PrepaymentReturn {
+	return &PrepaymentReturn{Meta: prepaymentReturn.Meta}
+}
+
 func (prepaymentReturn PrepaymentReturn) GetAgent() Counterparty {
 	return Deref(prepaymentReturn.Agent)
 }
@@ -344,7 +348,86 @@ func (prepaymentReturn PrepaymentReturn) MetaType() MetaType {
 // Ключевое слово: prepaymentreturnposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-predoplaty-atributy-suschnosti-pozicii-vozwrata-predoplaty
 type PrepaymentReturnPosition struct {
-	PrepaymentPosition
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`
+	Assortment *AssortmentPosition `json:"assortment,omitempty"`
+	Discount   *float64            `json:"discount,omitempty"`
+	ID         *uuid.UUID          `json:"id,omitempty"`
+	Pack       *Pack               `json:"pack,omitempty"`
+	Price      *float64            `json:"price,omitempty"`
+	Quantity   *float64            `json:"quantity,omitempty"`
+	Vat        *int                `json:"vat,omitempty"`
+	VatEnabled *bool               `json:"vatEnabled,omitempty"`
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetAccountID() uuid.UUID {
+	return Deref(prepaymentReturnPosition.AccountID)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetAssortment() AssortmentPosition {
+	return Deref(prepaymentReturnPosition.Assortment)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetDiscount() float64 {
+	return Deref(prepaymentReturnPosition.Discount)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetID() uuid.UUID {
+	return Deref(prepaymentReturnPosition.ID)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetPack() Pack {
+	return Deref(prepaymentReturnPosition.Pack)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetPrice() float64 {
+	return Deref(prepaymentReturnPosition.Price)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetQuantity() float64 {
+	return Deref(prepaymentReturnPosition.Quantity)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetVat() int {
+	return Deref(prepaymentReturnPosition.Vat)
+}
+
+func (prepaymentReturnPosition PrepaymentReturnPosition) GetVatEnabled() bool {
+	return Deref(prepaymentReturnPosition.VatEnabled)
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetAssortment(assortment AsAssortment) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.Assortment = assortment.AsAssortment()
+	return prepaymentReturnPosition
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetDiscount(discount float64) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.Discount = &discount
+	return prepaymentReturnPosition
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetPack(pack *Pack) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.Pack = pack
+	return prepaymentReturnPosition
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetPrice(price float64) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.Price = &price
+	return prepaymentReturnPosition
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetQuantity(quantity float64) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.Quantity = &quantity
+	return prepaymentReturnPosition
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetVat(vat int) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.Vat = &vat
+	return prepaymentReturnPosition
+}
+
+func (prepaymentReturnPosition *PrepaymentReturnPosition) SetVatEnabled(vatEnabled bool) *PrepaymentReturnPosition {
+	prepaymentReturnPosition.VatEnabled = &vatEnabled
+	return prepaymentReturnPosition
 }
 
 func (prepaymentReturnPosition PrepaymentReturnPosition) String() string {

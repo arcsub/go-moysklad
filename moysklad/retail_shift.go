@@ -52,6 +52,10 @@ type RetailShift struct {
 	Attributes          Slice[AttributeValue]  `json:"attributes,omitempty"`
 }
 
+func (retailShift RetailShift) Clean() *RetailShift {
+	return &RetailShift{Meta: retailShift.Meta}
+}
+
 func (retailShift RetailShift) GetOrganization() Organization {
 	return Deref(retailShift.Organization)
 }

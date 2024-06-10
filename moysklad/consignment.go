@@ -25,6 +25,10 @@ type Consignment struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (consignment Consignment) Clean() *Consignment {
+	return &Consignment{Meta: consignment.Meta}
+}
+
 func NewConsignmentFromAssortment(assortmentPosition AssortmentPosition) *Consignment {
 	return unmarshalAsType[Consignment](assortmentPosition)
 }

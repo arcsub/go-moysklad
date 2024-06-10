@@ -418,7 +418,9 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeInvoiceIn
 	case InvoiceOut:
 		metaType = MetaTypeInvoiceOut
-	case InvoicePosition:
+	case InvoiceInPosition:
+		metaType = MetaTypeInvoicePosition
+	case InvoiceOutPosition:
 		metaType = MetaTypeInvoicePosition
 	case Loss:
 		metaType = MetaTypeLoss

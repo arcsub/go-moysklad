@@ -56,6 +56,10 @@ type PurchaseOrder struct {
 	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
+func (purchaseOrder PurchaseOrder) Clean() *PurchaseOrder {
+	return &PurchaseOrder{Meta: purchaseOrder.Meta}
+}
+
 func (purchaseOrder PurchaseOrder) GetPayedSum() float64 {
 	return Deref(purchaseOrder.PayedSum)
 }

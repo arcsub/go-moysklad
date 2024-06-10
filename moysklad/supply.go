@@ -55,6 +55,10 @@ type Supply struct {
 	Attributes          Slice[AttributeValue]      `json:"attributes,omitempty"`
 }
 
+func (supply Supply) Clean() *Supply {
+	return &Supply{Meta: supply.Meta}
+}
+
 func (supply Supply) GetOrganizationAccount() AgentAccount {
 	return Deref(supply.OrganizationAccount)
 }

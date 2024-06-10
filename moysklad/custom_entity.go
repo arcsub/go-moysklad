@@ -16,6 +16,10 @@ type CustomEntity struct {
 	Name *string    `json:"name,omitempty"` // Наименование Пользовательского справочника
 }
 
+func (customEntity CustomEntity) Clean() *CustomEntity {
+	return &CustomEntity{Meta: customEntity.Meta}
+}
+
 func (customEntity CustomEntity) GetID() uuid.UUID {
 	return Deref(customEntity.ID)
 }

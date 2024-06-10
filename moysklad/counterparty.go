@@ -58,6 +58,10 @@ type Counterparty struct {
 	Attributes         Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
+func (counterparty Counterparty) Clean() *Counterparty {
+	return &Counterparty{Meta: counterparty.Meta}
+}
+
 func (counterparty Counterparty) GetName() string {
 	return Deref(counterparty.Name)
 }

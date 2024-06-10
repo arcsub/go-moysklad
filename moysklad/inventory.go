@@ -38,6 +38,10 @@ type Inventory struct {
 	Attributes   Slice[AttributeValue]         `json:"attributes,omitempty"`
 }
 
+func (inventory Inventory) Clean() *Inventory {
+	return &Inventory{Meta: inventory.Meta}
+}
+
 func (inventory Inventory) GetName() string {
 	return Deref(inventory.Name)
 }

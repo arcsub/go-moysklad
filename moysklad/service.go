@@ -42,6 +42,10 @@ type Service struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (service Service) Clean() *Service {
+	return &Service{Meta: service.Meta}
+}
+
 func NewServiceFromAssortment(assortmentPosition AssortmentPosition) *Service {
 	return unmarshalAsType[Service](assortmentPosition)
 }

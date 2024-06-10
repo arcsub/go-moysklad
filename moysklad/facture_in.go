@@ -42,6 +42,10 @@ type FactureIn struct {
 	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (factureIn FactureIn) Clean() *FactureIn {
+	return &FactureIn{Meta: factureIn.Meta}
+}
+
 func (factureIn FactureIn) GetMoment() Timestamp {
 	return Deref(factureIn.Moment)
 }

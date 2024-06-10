@@ -32,6 +32,10 @@ type ProcessingPlan struct {
 	CostDistributionType CostDistributionType               `json:"costDistributionType,omitempty"` // Тип распределения себестоимости. Возможные значения: BY_PRICE, BY_PRODUCTION
 }
 
+func (processingPlan ProcessingPlan) Clean() *ProcessingPlan {
+	return &ProcessingPlan{Meta: processingPlan.Meta}
+}
+
 func (processingPlan ProcessingPlan) GetAccountID() uuid.UUID {
 	return Deref(processingPlan.AccountID)
 }

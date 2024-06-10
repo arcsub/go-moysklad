@@ -25,6 +25,10 @@ type Project struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (project Project) Clean() *Project {
+	return &Project{Meta: project.Meta}
+}
+
 func (project Project) GetGroup() Group {
 	return Deref(project.Group)
 }

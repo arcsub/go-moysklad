@@ -32,6 +32,10 @@ type Variant struct {
 	Packs              Slice[VariantPack]    `json:"packs,omitempty"`
 }
 
+func (variant Variant) Clean() *Variant {
+	return &Variant{Meta: variant.Meta}
+}
+
 func NewVariantFromAssortment(assortmentPosition AssortmentPosition) *Variant {
 	return unmarshalAsType[Variant](assortmentPosition)
 }

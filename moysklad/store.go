@@ -32,6 +32,10 @@ type Store struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (store Store) Clean() *Store {
+	return &Store{Meta: store.Meta}
+}
+
 func (store Store) GetOwner() Employee {
 	return Deref(store.Owner)
 }

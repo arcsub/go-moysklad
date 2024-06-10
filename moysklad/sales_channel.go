@@ -25,6 +25,10 @@ type SalesChannel struct {
 	SalesChannelType SalesChannelType `json:"type,omitempty"`
 }
 
+func (salesChannel SalesChannel) Clean() *SalesChannel {
+	return &SalesChannel{Meta: salesChannel.Meta}
+}
+
 func (salesChannel SalesChannel) GetID() uuid.UUID {
 	return Deref(salesChannel.ID)
 }

@@ -276,7 +276,7 @@ func (bundle *Bundle) SetComponents(components *Positions[BundleComponent]) *Bun
 }
 
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
-	bundle.Country = country
+	bundle.Country = country.Clean()
 	return bundle
 }
 
@@ -291,7 +291,7 @@ func (bundle *Bundle) SetFiles(files Slice[File]) *Bundle {
 }
 
 func (bundle *Bundle) SetGroup(group *Group) *Bundle {
-	bundle.Group = group
+	bundle.Group = group.Clean()
 	return bundle
 }
 
@@ -311,7 +311,7 @@ func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
 }
 
 func (bundle *Bundle) SetOwner(owner *Employee) *Bundle {
-	bundle.Owner = owner
+	bundle.Owner = owner.Clean()
 	return bundle
 }
 
@@ -331,7 +331,7 @@ func (bundle *Bundle) SetSalePrices(salePrices Slice[SalePrice]) *Bundle {
 }
 
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
-	bundle.ProductFolder = productFolder
+	bundle.ProductFolder = productFolder.Clean()
 	return bundle
 }
 
@@ -351,7 +351,7 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 }
 
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
-	bundle.Uom = uom
+	bundle.Uom = uom.Clean()
 	return bundle
 }
 

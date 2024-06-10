@@ -23,6 +23,10 @@ type ProcessingStage struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+func (processingStage ProcessingStage) Clean() *ProcessingStage {
+	return &ProcessingStage{Meta: processingStage.Meta}
+}
+
 func (processingStage ProcessingStage) GetAccountID() uuid.UUID {
 	return Deref(processingStage.AccountID)
 }

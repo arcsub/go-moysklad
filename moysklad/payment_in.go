@@ -47,6 +47,10 @@ type PaymentIn struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (paymentIn PaymentIn) Clean() *PaymentIn {
+	return &PaymentIn{Meta: paymentIn.Meta}
+}
+
 func (paymentIn PaymentIn) GetMeta() Meta {
 	return Deref(paymentIn.Meta)
 }

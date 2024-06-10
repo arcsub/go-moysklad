@@ -37,12 +37,16 @@ type FactureOut struct {
 	Sum             *float64              `json:"sum,omitempty"`
 	SyncID          *uuid.UUID            `json:"syncId,omitempty"`
 	Updated         *Timestamp            `json:"updated,omitempty"`
-	Demands         Demands               `json:"demands,omitempty"`
+	Demands         Slice[Demand]         `json:"demands,omitempty"`
 	Payments        Slice[Payment]        `json:"payments,omitempty"`
 	Returns         Slice[PurchaseReturn] `json:"returns,omitempty"`
 	Consignee       *Counterparty         `json:"consignee,omitempty"`
 	PaymentNumber   *string               `json:"paymentNumber,omitempty"`
 	Attributes      Slice[AttributeValue] `json:"attributes,omitempty"`
+}
+
+func (factureOut FactureOut) Clean() *FactureOut {
+	return &FactureOut{Meta: factureOut.Meta}
 }
 
 func (factureOut FactureOut) GetOrganization() Organization {
@@ -153,7 +157,7 @@ func (factureOut FactureOut) GetUpdated() Timestamp {
 	return Deref(factureOut.Updated)
 }
 
-func (factureOut FactureOut) GetDemands() Demands {
+func (factureOut FactureOut) GetDemands() Slice[Demand] {
 	return factureOut.Demands
 }
 
@@ -272,7 +276,7 @@ func (factureOut *FactureOut) SetSyncID(syncID uuid.UUID) *FactureOut {
 	return factureOut
 }
 
-func (factureOut *FactureOut) SetDemands(demands Demands) *FactureOut {
+func (factureOut *FactureOut) SetDemands(demands Slice[Demand]) *FactureOut {
 	factureOut.Demands = demands
 	return factureOut
 }

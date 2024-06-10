@@ -61,6 +61,10 @@ type Organization struct {
 	Attributes             Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+func (organization Organization) Clean() *Organization {
+	return &Organization{Meta: organization.Meta}
+}
+
 func (organization Organization) GetUpdated() Timestamp {
 	return Deref(organization.Updated)
 }

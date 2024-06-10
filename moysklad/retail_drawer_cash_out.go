@@ -38,6 +38,10 @@ type RetailDrawerCashOut struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (retailDrawerCashOut RetailDrawerCashOut) Clean() *RetailDrawerCashOut {
+	return &RetailDrawerCashOut{Meta: retailDrawerCashOut.Meta}
+}
+
 func (retailDrawerCashOut RetailDrawerCashOut) GetMeta() Meta {
 	return Deref(retailDrawerCashOut.Meta)
 }

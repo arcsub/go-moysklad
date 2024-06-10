@@ -45,6 +45,10 @@ type CashOut struct {
 	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (cashOut CashOut) Clean() *CashOut {
+	return &CashOut{Meta: cashOut.Meta}
+}
+
 func (cashOut CashOut) GetName() string {
 	return Deref(cashOut.Name)
 }

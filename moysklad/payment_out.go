@@ -47,6 +47,10 @@ type PaymentOut struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (paymentOut PaymentOut) Clean() *PaymentOut {
+	return &PaymentOut{Meta: paymentOut.Meta}
+}
+
 func (paymentOut PaymentOut) GetMoment() Timestamp {
 	return Deref(paymentOut.Moment)
 }

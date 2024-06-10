@@ -23,6 +23,10 @@ type Uom struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Единицы измерения
 }
 
+func (uom Uom) Clean() *Uom {
+	return &Uom{Meta: uom.Meta}
+}
+
 func (uom Uom) GetAccountID() uuid.UUID {
 	return Deref(uom.AccountID)
 }

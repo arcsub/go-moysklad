@@ -16,6 +16,10 @@ type State struct {
 	StateType  StateType  `json:"stateType,omitempty"`  // Тип Статуса
 }
 
+func (state State) Clean() *State {
+	return &State{Meta: state.Meta}
+}
+
 func (state State) GetAccountID() uuid.UUID {
 	return Deref(state.AccountID)
 }

@@ -42,6 +42,10 @@ type ProductionTask struct {
 	Attributes            Slice[AttributeValue]            `json:"attributes,omitempty"`
 }
 
+func (productionTask ProductionTask) Clean() *ProductionTask {
+	return &ProductionTask{Meta: productionTask.Meta}
+}
+
 func (productionTask ProductionTask) GetMoment() Timestamp {
 	return Deref(productionTask.Moment)
 }

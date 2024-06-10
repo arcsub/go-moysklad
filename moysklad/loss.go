@@ -40,6 +40,10 @@ type Loss struct {
 	Attributes   Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+func (loss Loss) Clean() *Loss {
+	return &Loss{Meta: loss.Meta}
+}
+
 func (loss Loss) GetOrganization() Organization {
 	return Deref(loss.Organization)
 }

@@ -49,6 +49,10 @@ type Prepayment struct {
 	Attributes    Slice[AttributeValue]          `json:"attributes,omitempty"`
 }
 
+func (prepayment Prepayment) Clean() *Prepayment {
+	return &Prepayment{Meta: prepayment.Meta}
+}
+
 func (prepayment Prepayment) GetReturns() Slice[PrepaymentReturn] {
 	return prepayment.Returns
 }

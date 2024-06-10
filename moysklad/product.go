@@ -59,6 +59,10 @@ type Product struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (product Product) Clean() *Product {
+	return &Product{Meta: product.Meta}
+}
+
 func NewProductFromAssortment(assortmentPosition AssortmentPosition) *Product {
 	return unmarshalAsType[Product](assortmentPosition)
 }

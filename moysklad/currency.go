@@ -28,6 +28,10 @@ type Currency struct {
 	RateUpdateType RateUpdateType `json:"rateUpdateType,omitempty"`
 }
 
+func (currency Currency) Clean() *Currency {
+	return &Currency{Meta: currency.Meta}
+}
+
 func (currency Currency) GetMargin() float64 {
 	return Deref(currency.Margin)
 }

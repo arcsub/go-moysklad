@@ -52,6 +52,10 @@ type PurchaseReturn struct {
 	Attributes          Slice[AttributeValue]              `json:"attributes,omitempty"`
 }
 
+func (purchaseReturn PurchaseReturn) Clean() *PurchaseReturn {
+	return &PurchaseReturn{Meta: purchaseReturn.Meta}
+}
+
 func (purchaseReturn PurchaseReturn) GetPrinted() bool {
 	return Deref(purchaseReturn.Printed)
 }

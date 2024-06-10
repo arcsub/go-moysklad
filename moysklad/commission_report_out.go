@@ -53,6 +53,10 @@ type CommissionReportOut struct {
 	Attributes            Slice[AttributeValue]                   `json:"attributes,omitempty"`
 }
 
+func (commissionReportOut CommissionReportOut) Clean() *CommissionReportOut {
+	return &CommissionReportOut{Meta: commissionReportOut.Meta}
+}
+
 func (commissionReportOut CommissionReportOut) GetApplicable() bool {
 	return Deref(commissionReportOut.Applicable)
 }

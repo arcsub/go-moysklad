@@ -56,6 +56,10 @@ type CommissionReportIn struct {
 	Attributes                    Slice[AttributeValue]                        `json:"attributes,omitempty"`
 }
 
+func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
+	return &CommissionReportIn{Meta: commissionReportIn.Meta}
+}
+
 func (commissionReportIn CommissionReportIn) GetVatSum() float64 {
 	return Deref(commissionReportIn.VatSum)
 }

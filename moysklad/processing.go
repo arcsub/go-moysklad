@@ -45,6 +45,10 @@ type Processing struct {
 	Attributes          Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
+func (processing Processing) Clean() *Processing {
+	return &Processing{Meta: processing.Meta}
+}
+
 func (processing Processing) GetOrganization() Organization {
 	return Deref(processing.Organization)
 }

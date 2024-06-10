@@ -33,6 +33,10 @@ type CounterPartyAdjustment struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (counterPartyAdjustment CounterPartyAdjustment) Clean() *CounterPartyAdjustment {
+	return &CounterPartyAdjustment{Meta: counterPartyAdjustment.Meta}
+}
+
 func (counterPartyAdjustment CounterPartyAdjustment) GetExternalCode() string {
 	return Deref(counterPartyAdjustment.ExternalCode)
 }

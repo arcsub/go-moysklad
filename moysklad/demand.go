@@ -64,6 +64,10 @@ type Demand struct {
 	Attributes              Slice[AttributeValue]      `json:"attributes,omitempty"`
 }
 
+func (demand Demand) Clean() *Demand {
+	return &Demand{Meta: demand.Meta}
+}
+
 func (demand Demand) GetAccountID() uuid.UUID {
 	return Deref(demand.AccountID)
 }
@@ -489,8 +493,6 @@ func (demand Demand) String() string {
 func (demand Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
-
-type Demands Slice[Demand]
 
 // DemandPosition Позиция Отгрузки
 // Ключевое слово: demandposition

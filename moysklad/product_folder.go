@@ -32,6 +32,10 @@ type ProductFolder struct {
 	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
 }
 
+func (productFolder ProductFolder) Clean() *ProductFolder {
+	return &ProductFolder{Meta: productFolder.Meta}
+}
+
 func (productFolder ProductFolder) GetName() string {
 	return Deref(productFolder.Name)
 }

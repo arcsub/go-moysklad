@@ -15,6 +15,10 @@ type NamedFilter struct {
 	Owner     *Employee  `json:"owner,omitempty"`     // Владелец (Сотрудник)
 }
 
+func (namedFilter NamedFilter) Clean() *NamedFilter {
+	return &NamedFilter{Meta: namedFilter.Meta}
+}
+
 func (namedFilter NamedFilter) GetAccountID() uuid.UUID {
 	return Deref(namedFilter.AccountID)
 }

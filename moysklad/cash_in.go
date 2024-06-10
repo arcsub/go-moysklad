@@ -44,6 +44,10 @@ type CashIn struct {
 	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (cashIn CashIn) Clean() *CashIn {
+	return &CashIn{Meta: cashIn.Meta}
+}
+
 func (cashIn CashIn) GetOrganization() Organization {
 	return Deref(cashIn.Organization)
 }

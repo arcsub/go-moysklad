@@ -45,6 +45,10 @@ type InternalOrder struct {
 	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
+func (internalOrder InternalOrder) Clean() *InternalOrder {
+	return &InternalOrder{Meta: internalOrder.Meta}
+}
+
 func (internalOrder InternalOrder) GetOrganization() Organization {
 	return Deref(internalOrder.Organization)
 }

@@ -40,6 +40,10 @@ type Enter struct {
 	Attributes   Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
+func (enter Enter) Clean() *Enter {
+	return &Enter{Meta: enter.Meta}
+}
+
 func (enter Enter) GetOrganization() Organization {
 	return Deref(enter.Organization)
 }

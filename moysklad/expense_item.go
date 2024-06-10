@@ -20,6 +20,10 @@ type ExpenseItem struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+func (expenseItem ExpenseItem) Clean() *ExpenseItem {
+	return &ExpenseItem{Meta: expenseItem.Meta}
+}
+
 func (expenseItem ExpenseItem) GetAccountID() uuid.UUID {
 	return Deref(expenseItem.AccountID)
 }

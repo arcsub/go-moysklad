@@ -52,6 +52,10 @@ type SalesReturn struct {
 	Attributes          Slice[AttributeValue]           `json:"attributes,omitempty"`
 }
 
+func (salesReturn SalesReturn) Clean() *SalesReturn {
+	return &SalesReturn{Meta: salesReturn.Meta}
+}
+
 func (salesReturn SalesReturn) GetPositions() Positions[SalesReturnPosition] {
 	return Deref(salesReturn.Positions)
 }

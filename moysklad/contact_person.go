@@ -21,6 +21,10 @@ type ContactPerson struct {
 	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
 }
 
+func (contactPerson ContactPerson) Clean() *ContactPerson {
+	return &ContactPerson{Meta: contactPerson.Meta}
+}
+
 func (contactPerson ContactPerson) GetAccountID() uuid.UUID {
 	return Deref(contactPerson.AccountID)
 }

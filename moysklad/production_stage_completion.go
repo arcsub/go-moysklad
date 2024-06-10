@@ -31,6 +31,10 @@ type ProductionStageCompletion struct {
 	Updated            *Timestamp                                    `json:"updated,omitempty"`            // Момент последнего обновления Выполнения этапа производства
 }
 
+func (productionStageCompletion ProductionStageCompletion) Clean() *ProductionStageCompletion {
+	return &ProductionStageCompletion{Meta: productionStageCompletion.Meta}
+}
+
 func (productionStageCompletion ProductionStageCompletion) GetAccountId() uuid.UUID {
 	return Deref(productionStageCompletion.AccountId)
 }

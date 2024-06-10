@@ -28,6 +28,10 @@ type BonusProgram struct {
 	AgentTags                 Slice[string]      `json:"agentTags,omitempty"`
 }
 
+func (bonusProgram BonusProgram) Clean() *BonusProgram {
+	return &BonusProgram{Meta: bonusProgram.Meta}
+}
+
 func (bonusProgram BonusProgram) GetAllProducts() bool {
 	return Deref(bonusProgram.AllProducts)
 }

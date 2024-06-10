@@ -23,6 +23,10 @@ type Country struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+func (country Country) Clean() *Country {
+	return &Country{Meta: country.Meta}
+}
+
 func (country Country) GetAccountID() uuid.UUID {
 	return Deref(country.AccountID)
 }

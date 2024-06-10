@@ -16,6 +16,10 @@ type Role struct {
 	Permissions *EmployeePermissions `json:"permissions,omitempty"` // Список пермиссий
 }
 
+func (role Role) Clean() *Role {
+	return &Role{Meta: role.Meta}
+}
+
 func (role Role) GetID() uuid.UUID {
 	return Deref(role.ID)
 }

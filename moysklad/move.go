@@ -45,6 +45,10 @@ type Move struct {
 	Attributes    Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+func (move Move) Clean() *Move {
+	return &Move{Meta: move.Meta}
+}
+
 func (move Move) GetMoment() Timestamp {
 	return Deref(move.Moment)
 }

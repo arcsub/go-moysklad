@@ -37,6 +37,10 @@ type RetailDrawerCashIn struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (retailDrawerCashIn RetailDrawerCashIn) Clean() *RetailDrawerCashIn {
+	return &RetailDrawerCashIn{Meta: retailDrawerCashIn.Meta}
+}
+
 func (retailDrawerCashIn RetailDrawerCashIn) GetMoment() Timestamp {
 	return Deref(retailDrawerCashIn.Moment)
 }

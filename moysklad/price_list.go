@@ -37,6 +37,10 @@ type PriceList struct {
 	Attributes   Slice[AttributeValue]         `json:"attributes,omitempty"`
 }
 
+func (priceList PriceList) Clean() *PriceList {
+	return &PriceList{Meta: priceList.Meta}
+}
+
 func (priceList PriceList) GetMeta() Meta {
 	return Deref(priceList.Meta)
 }

@@ -40,6 +40,10 @@ type Employee struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+func (employee Employee) Clean() *Employee {
+	return &Employee{Meta: employee.Meta}
+}
+
 func (employee Employee) GetID() uuid.UUID {
 	return Deref(employee.ID)
 }

@@ -35,6 +35,10 @@ type BonusTransaction struct {
 	CategoryType      BonusTransactionCategory `json:"categoryType,omitempty"`
 }
 
+func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
+	return &BonusTransaction{Meta: bonusTransaction.Meta}
+}
+
 func (bonusTransaction BonusTransaction) GetOrganization() Organization {
 	return Deref(bonusTransaction.Organization)
 }
@@ -128,17 +132,17 @@ func (bonusTransaction BonusTransaction) GetCategoryType() BonusTransactionCateg
 }
 
 func (bonusTransaction *BonusTransaction) SetOrganization(organization *Organization) *BonusTransaction {
-	bonusTransaction.Organization = organization
+	bonusTransaction.Organization = organization.Clean()
 	return bonusTransaction
 }
 
 func (bonusTransaction *BonusTransaction) SetGroup(group *Group) *BonusTransaction {
-	bonusTransaction.Group = group
+	bonusTransaction.Group = group.Clean()
 	return bonusTransaction
 }
 
 func (bonusTransaction *BonusTransaction) SetBonusProgram(bonusProgram *BonusProgram) *BonusTransaction {
-	bonusTransaction.BonusProgram = bonusProgram
+	bonusTransaction.BonusProgram = bonusProgram.Clean()
 	return bonusTransaction
 }
 
@@ -168,7 +172,7 @@ func (bonusTransaction *BonusTransaction) SetApplicable(applicable bool) *BonusT
 }
 
 func (bonusTransaction *BonusTransaction) SetAgent(agent *Counterparty) *BonusTransaction {
-	bonusTransaction.Agent = agent
+	bonusTransaction.Agent = agent.Clean()
 	return bonusTransaction
 }
 
@@ -188,12 +192,12 @@ func (bonusTransaction *BonusTransaction) SetName(name string) *BonusTransaction
 }
 
 func (bonusTransaction *BonusTransaction) SetOwner(owner *Employee) *BonusTransaction {
-	bonusTransaction.Owner = owner
+	bonusTransaction.Owner = owner.Clean()
 	return bonusTransaction
 }
 
 func (bonusTransaction *BonusTransaction) SetParentDocument(parentDocument *BonusTransaction) *BonusTransaction {
-	bonusTransaction.ParentDocument = parentDocument
+	bonusTransaction.ParentDocument = parentDocument.Clean()
 	return bonusTransaction
 }
 

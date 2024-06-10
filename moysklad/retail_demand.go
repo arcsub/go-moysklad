@@ -64,6 +64,10 @@ type RetailDemand struct {
 	Attributes          Slice[AttributeValue]            `json:"attributes,omitempty"`
 }
 
+func (retailDemand RetailDemand) Clean() *RetailDemand {
+	return &RetailDemand{Meta: retailDemand.Meta}
+}
+
 func (retailDemand RetailDemand) GetAccountID() uuid.UUID {
 	return Deref(retailDemand.AccountID)
 }

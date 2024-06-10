@@ -27,6 +27,10 @@ type ProductionStage struct {
 	ProcessingUnitCost *float64                           `json:"processingUnitCost,omitempty"` // Затраты на единицу объема производства
 }
 
+func (productionStage ProductionStage) Clean() *ProductionStage {
+	return &ProductionStage{Meta: productionStage.Meta}
+}
+
 func (productionStage ProductionStage) GetAccountId() uuid.UUID {
 	return Deref(productionStage.AccountId)
 }

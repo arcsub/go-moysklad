@@ -15,6 +15,10 @@ type Cashier struct {
 	RetailStore *RetailStore `json:"retailStore,omitempty"` // Метаданные точки продаж, к которой прикреплен кассир
 }
 
+func (cashier Cashier) Clean() *Cashier {
+	return &Cashier{Meta: cashier.Meta}
+}
+
 func (cashier Cashier) GetAccountID() uuid.UUID {
 	return Deref(cashier.AccountID)
 }

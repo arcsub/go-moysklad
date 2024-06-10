@@ -20,6 +20,10 @@ type Region struct {
 	Version      *int       `json:"version,omitempty"`      // Версия сущности
 }
 
+func (region Region) Clean() *Region {
+	return &Region{Meta: region.Meta}
+}
+
 func (region Region) GetAccountID() uuid.UUID {
 	return Deref(region.AccountID)
 }
