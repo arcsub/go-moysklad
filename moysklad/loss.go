@@ -157,7 +157,7 @@ func (loss Loss) GetAttributes() Slice[AttributeValue] {
 }
 
 func (loss *Loss) SetOrganization(organization *Organization) *Loss {
-	loss.Organization = organization
+	loss.Organization = organization.Clean()
 	return loss
 }
 
@@ -192,7 +192,7 @@ func (loss *Loss) SetFiles(files Slice[File]) *Loss {
 }
 
 func (loss *Loss) SetGroup(group *Group) *Loss {
-	loss.Group = group
+	loss.Group = group.Clean()
 	return loss
 }
 
@@ -202,7 +202,7 @@ func (loss *Loss) SetMeta(meta *Meta) *Loss {
 }
 
 func (loss *Loss) SetSalesReturn(salesReturn *SalesReturn) *Loss {
-	loss.SalesReturn = salesReturn
+	loss.SalesReturn = salesReturn.Clean()
 	return loss
 }
 
@@ -212,12 +212,12 @@ func (loss *Loss) SetApplicable(applicable bool) *Loss {
 }
 
 func (loss *Loss) SetProject(project *Project) *Loss {
-	loss.Project = project
+	loss.Project = project.Clean()
 	return loss
 }
 
 func (loss *Loss) SetOwner(owner *Employee) *Loss {
-	loss.Owner = owner
+	loss.Owner = owner.Clean()
 	return loss
 }
 
@@ -237,12 +237,12 @@ func (loss *Loss) SetShared(shared bool) *Loss {
 }
 
 func (loss *Loss) SetState(state *State) *Loss {
-	loss.State = state
+	loss.State = state.Clean()
 	return loss
 }
 
 func (loss *Loss) SetStore(store *Store) *Loss {
-	loss.Store = store
+	loss.Store = store.Clean()
 	return loss
 }
 
@@ -341,7 +341,7 @@ func (lossPosition *LossPosition) SetReason(reason string) *LossPosition {
 }
 
 func (lossPosition *LossPosition) SetSlot(slot *Slot) *LossPosition {
-	lossPosition.Slot = slot
+	lossPosition.Slot = slot.Clean()
 	return lossPosition
 }
 

@@ -207,17 +207,17 @@ func (move *Move) SetFiles(files Slice[File]) *Move {
 }
 
 func (move *Move) SetGroup(group *Group) *Move {
-	move.Group = group
+	move.Group = group.Clean()
 	return move
 }
 
 func (move *Move) SetInternalOrder(internalOrder *InternalOrder) *Move {
-	move.InternalOrder = internalOrder
+	move.InternalOrder = internalOrder.Clean()
 	return move
 }
 
 func (move *Move) SetCustomerOrder(customerOrder *CustomerOrder) *Move {
-	move.CustomerOrder = customerOrder
+	move.CustomerOrder = customerOrder.Clean()
 	return move
 }
 
@@ -232,7 +232,7 @@ func (move *Move) SetName(name string) *Move {
 }
 
 func (move *Move) SetOrganization(organization *Organization) *Move {
-	move.Organization = organization
+	move.Organization = organization.Clean()
 	return move
 }
 
@@ -247,7 +247,7 @@ func (move *Move) SetOverhead(overhead *Overhead) *Move {
 }
 
 func (move *Move) SetOwner(owner *Employee) *Move {
-	move.Owner = owner
+	move.Owner = owner.Clean()
 	return move
 }
 
@@ -257,7 +257,7 @@ func (move *Move) SetPositions(positions *Positions[MovePosition]) *Move {
 }
 
 func (move *Move) SetProject(project *Project) *Move {
-	move.Project = project
+	move.Project = project.Clean()
 	return move
 }
 
@@ -277,7 +277,7 @@ func (move *Move) SetSourceStore(sourceStore *Store) *Move {
 }
 
 func (move *Move) SetState(state *State) *Move {
-	move.State = state
+	move.State = state.Clean()
 	return move
 }
 
@@ -287,7 +287,7 @@ func (move *Move) SetSyncID(syncID uuid.UUID) *Move {
 }
 
 func (move *Move) SetTargetStore(targetStore *Store) *Move {
-	move.TargetStore = targetStore
+	move.TargetStore = targetStore.Clean()
 	return move
 }
 
@@ -381,12 +381,12 @@ func (movePosition *MovePosition) SetQuantity(quantity float64) *MovePosition {
 }
 
 func (movePosition *MovePosition) SetSourceSlot(sourceSlot *Slot) *MovePosition {
-	movePosition.SourceSlot = sourceSlot
+	movePosition.SourceSlot = sourceSlot.Clean()
 	return movePosition
 }
 
 func (movePosition *MovePosition) SetTargetSlot(targetSlot *Slot) *MovePosition {
-	movePosition.TargetSlot = targetSlot
+	movePosition.TargetSlot = targetSlot.Clean()
 	return movePosition
 }
 

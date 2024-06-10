@@ -197,12 +197,12 @@ func (prepaymentReturn PrepaymentReturn) GetAttributes() Slice[AttributeValue] {
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetAgent(agent *Counterparty) *PrepaymentReturn {
-	prepaymentReturn.Agent = agent
+	prepaymentReturn.Agent = agent.Clean()
 	return prepaymentReturn
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetOrganization(organization *Organization) *PrepaymentReturn {
-	prepaymentReturn.Organization = organization
+	prepaymentReturn.Organization = organization.Clean()
 	return prepaymentReturn
 }
 
@@ -237,7 +237,7 @@ func (prepaymentReturn *PrepaymentReturn) SetFiles(files Slice[File]) *Prepaymen
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetGroup(group *Group) *PrepaymentReturn {
-	prepaymentReturn.Group = group
+	prepaymentReturn.Group = group.Clean()
 	return prepaymentReturn
 }
 
@@ -262,7 +262,7 @@ func (prepaymentReturn *PrepaymentReturn) SetNoCashSum(noCashSum float64) *Prepa
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetOwner(owner *Employee) *PrepaymentReturn {
-	prepaymentReturn.Owner = owner
+	prepaymentReturn.Owner = owner.Clean()
 	return prepaymentReturn
 }
 
@@ -277,7 +277,7 @@ func (prepaymentReturn *PrepaymentReturn) SetPositions(positions *Positions[Prep
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetPrepayment(prepayment *Prepayment) *PrepaymentReturn {
-	prepaymentReturn.Prepayment = prepayment
+	prepaymentReturn.Prepayment = prepayment.Clean()
 	return prepaymentReturn
 }
 
@@ -292,12 +292,12 @@ func (prepaymentReturn *PrepaymentReturn) SetRate(rate *Rate) *PrepaymentReturn 
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetRetailShift(retailShift *RetailShift) *PrepaymentReturn {
-	prepaymentReturn.RetailShift = retailShift
+	prepaymentReturn.RetailShift = retailShift.Clean()
 	return prepaymentReturn
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetRetailStore(retailStore *RetailStore) *PrepaymentReturn {
-	prepaymentReturn.RetailStore = retailStore
+	prepaymentReturn.RetailStore = retailStore.Clean()
 	return prepaymentReturn
 }
 
@@ -307,7 +307,7 @@ func (prepaymentReturn *PrepaymentReturn) SetShared(shared bool) *PrepaymentRetu
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetState(state *State) *PrepaymentReturn {
-	prepaymentReturn.State = state
+	prepaymentReturn.State = state.Clean()
 	return prepaymentReturn
 }
 

@@ -113,7 +113,7 @@ func (productionStageCompletion *ProductionStageCompletion) SetExternalCode(exte
 }
 
 func (productionStageCompletion *ProductionStageCompletion) SetGroup(group *Group) *ProductionStageCompletion {
-	productionStageCompletion.Group = group
+	productionStageCompletion.Group = group.Clean()
 	return productionStageCompletion
 }
 
@@ -143,12 +143,12 @@ func (productionStageCompletion *ProductionStageCompletion) SetName(name string)
 }
 
 func (productionStageCompletion *ProductionStageCompletion) SetOwner(owner *Employee) *ProductionStageCompletion {
-	productionStageCompletion.Owner = owner
+	productionStageCompletion.Owner = owner.Clean()
 	return productionStageCompletion
 }
 
 func (productionStageCompletion *ProductionStageCompletion) SetPerformer(performer *Employee) *ProductionStageCompletion {
-	productionStageCompletion.Performer = performer
+	productionStageCompletion.Performer = performer.Clean()
 	return productionStageCompletion
 }
 
@@ -158,7 +158,7 @@ func (productionStageCompletion *ProductionStageCompletion) SetProcessingUnitCos
 }
 
 func (productionStageCompletion *ProductionStageCompletion) SetProductionStage(productionStage *ProductionStage) *ProductionStageCompletion {
-	productionStageCompletion.ProductionStage = productionStage
+	productionStageCompletion.ProductionStage = productionStage.Clean()
 	return productionStageCompletion
 }
 

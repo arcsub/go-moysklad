@@ -202,7 +202,7 @@ func (paymentOut *PaymentOut) SetApplicable(applicable bool) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetAgentAccount(agentAccount *AgentAccount) *PaymentOut {
-	paymentOut.AgentAccount = agentAccount
+	paymentOut.AgentAccount = agentAccount.Clean()
 	return paymentOut
 }
 
@@ -217,12 +217,12 @@ func (paymentOut *PaymentOut) SetOperations(operations Operations) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetOrganization(organization *Organization) *PaymentOut {
-	paymentOut.Organization = organization
+	paymentOut.Organization = organization.Clean()
 	return paymentOut
 }
 
 func (paymentOut *PaymentOut) SetContract(contract *Contract) *PaymentOut {
-	paymentOut.Contract = contract
+	paymentOut.Contract = contract.Clean()
 	return paymentOut
 }
 
@@ -232,7 +232,7 @@ func (paymentOut *PaymentOut) SetDescription(description string) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetExpenseItem(expenseItem *ExpenseItem) *PaymentOut {
-	paymentOut.ExpenseItem = expenseItem
+	paymentOut.ExpenseItem = expenseItem.Clean()
 	return paymentOut
 }
 
@@ -247,7 +247,7 @@ func (paymentOut *PaymentOut) SetFiles(files Slice[File]) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetGroup(group *Group) *PaymentOut {
-	paymentOut.Group = group
+	paymentOut.Group = group.Clean()
 	return paymentOut
 }
 
@@ -257,12 +257,12 @@ func (paymentOut *PaymentOut) SetMeta(meta *Meta) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetFactureIn(factureIn *FactureIn) *PaymentOut {
-	paymentOut.FactureIn = factureIn
+	paymentOut.FactureIn = factureIn.Clean()
 	return paymentOut
 }
 
 func (paymentOut *PaymentOut) SetAgent(agent *Counterparty) *PaymentOut {
-	paymentOut.Agent = agent
+	paymentOut.Agent = agent.Clean()
 	return paymentOut
 }
 
@@ -272,12 +272,12 @@ func (paymentOut *PaymentOut) SetCode(code string) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetOrganizationAccount(organizationAccount *AgentAccount) *PaymentOut {
-	paymentOut.OrganizationAccount = organizationAccount
+	paymentOut.OrganizationAccount = organizationAccount.Clean()
 	return paymentOut
 }
 
 func (paymentOut *PaymentOut) SetOwner(owner *Employee) *PaymentOut {
-	paymentOut.Owner = owner
+	paymentOut.Owner = owner.Clean()
 	return paymentOut
 }
 
@@ -287,7 +287,7 @@ func (paymentOut *PaymentOut) SetPaymentPurpose(paymentPurpose string) *PaymentO
 }
 
 func (paymentOut *PaymentOut) SetProject(project *Project) *PaymentOut {
-	paymentOut.Project = project
+	paymentOut.Project = project.Clean()
 	return paymentOut
 }
 
@@ -297,7 +297,7 @@ func (paymentOut *PaymentOut) SetRate(rate *Rate) *PaymentOut {
 }
 
 func (paymentOut *PaymentOut) SetSalesChannel(salesChannel *SalesChannel) *PaymentOut {
-	paymentOut.SalesChannel = salesChannel
+	paymentOut.SalesChannel = salesChannel.Clean()
 	return paymentOut
 }
 

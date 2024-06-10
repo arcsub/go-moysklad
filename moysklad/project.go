@@ -82,7 +82,7 @@ func (project Project) GetAttributes() Slice[AttributeValue] {
 }
 
 func (project *Project) SetGroup(group *Group) *Project {
-	project.Group = group
+	project.Group = group.Clean()
 	return project
 }
 
@@ -117,7 +117,7 @@ func (project *Project) SetName(name string) *Project {
 }
 
 func (project *Project) SetOwner(owner *Employee) *Project {
-	project.Owner = owner
+	project.Owner = owner.Clean()
 	return project
 }
 

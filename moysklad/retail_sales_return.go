@@ -222,12 +222,12 @@ func (retailSalesReturn *RetailSalesReturn) SetName(name string) *RetailSalesRet
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetOrganization(organization *Organization) *RetailSalesReturn {
-	retailSalesReturn.Organization = organization
+	retailSalesReturn.Organization = organization.Clean()
 	return retailSalesReturn
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetAgentAccount(agentAccount *AgentAccount) *RetailSalesReturn {
-	retailSalesReturn.AgentAccount = agentAccount
+	retailSalesReturn.AgentAccount = agentAccount.Clean()
 	return retailSalesReturn
 }
 
@@ -252,12 +252,12 @@ func (retailSalesReturn *RetailSalesReturn) SetCode(code string) *RetailSalesRet
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetContract(contract *Contract) *RetailSalesReturn {
-	retailSalesReturn.Contract = contract
+	retailSalesReturn.Contract = contract.Clean()
 	return retailSalesReturn
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetDemand(demand *RetailDemand) *RetailSalesReturn {
-	retailSalesReturn.Demand = demand
+	retailSalesReturn.Demand = demand.Clean()
 	return retailSalesReturn
 }
 
@@ -272,7 +272,7 @@ func (retailSalesReturn *RetailSalesReturn) SetExternalCode(externalCode string)
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetGroup(group *Group) *RetailSalesReturn {
-	retailSalesReturn.Group = group
+	retailSalesReturn.Group = group.Clean()
 	return retailSalesReturn
 }
 
@@ -287,7 +287,7 @@ func (retailSalesReturn *RetailSalesReturn) SetMoment(moment *Timestamp) *Retail
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetOrganizationAccount(organizationAccount *AgentAccount) *RetailSalesReturn {
-	retailSalesReturn.OrganizationAccount = organizationAccount
+	retailSalesReturn.OrganizationAccount = organizationAccount.Clean()
 	return retailSalesReturn
 }
 
@@ -302,7 +302,7 @@ func (retailSalesReturn *RetailSalesReturn) SetSyncID(syncID uuid.UUID) *RetailS
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetOwner(owner *Employee) *RetailSalesReturn {
-	retailSalesReturn.Owner = owner
+	retailSalesReturn.Owner = owner.Clean()
 	return retailSalesReturn
 }
 
@@ -312,7 +312,7 @@ func (retailSalesReturn *RetailSalesReturn) SetPositions(positions *Positions[Re
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetProject(project *Project) *RetailSalesReturn {
-	retailSalesReturn.Project = project
+	retailSalesReturn.Project = project.Clean()
 	return retailSalesReturn
 }
 
@@ -327,12 +327,12 @@ func (retailSalesReturn *RetailSalesReturn) SetRate(rate *Rate) *RetailSalesRetu
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetRetailShift(retailShift *RetailShift) *RetailSalesReturn {
-	retailSalesReturn.RetailShift = retailShift
+	retailSalesReturn.RetailShift = retailShift.Clean()
 	return retailSalesReturn
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetRetailStore(retailStore *RetailStore) *RetailSalesReturn {
-	retailSalesReturn.RetailStore = retailStore
+	retailSalesReturn.RetailStore = retailStore.Clean()
 	return retailSalesReturn
 }
 
@@ -342,17 +342,17 @@ func (retailSalesReturn *RetailSalesReturn) SetShared(shared bool) *RetailSalesR
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetState(state *State) *RetailSalesReturn {
-	retailSalesReturn.State = state
+	retailSalesReturn.State = state.Clean()
 	return retailSalesReturn
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetStore(store *Store) *RetailSalesReturn {
-	retailSalesReturn.Store = store
+	retailSalesReturn.Store = store.Clean()
 	return retailSalesReturn
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetAgent(agent *Counterparty) *RetailSalesReturn {
-	retailSalesReturn.Agent = agent
+	retailSalesReturn.Agent = agent.Clean()
 	return retailSalesReturn
 }
 

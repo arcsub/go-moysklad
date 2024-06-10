@@ -187,7 +187,7 @@ func (factureIn *FactureIn) SetCode(code string) *FactureIn {
 }
 
 func (factureIn *FactureIn) SetContract(contract *Contract) *FactureIn {
-	factureIn.Contract = contract
+	factureIn.Contract = contract.Clean()
 	return factureIn
 }
 
@@ -207,7 +207,7 @@ func (factureIn *FactureIn) SetFiles(files Slice[File]) *FactureIn {
 }
 
 func (factureIn *FactureIn) SetGroup(group *Group) *FactureIn {
-	factureIn.Group = group
+	factureIn.Group = group.Clean()
 	return factureIn
 }
 
@@ -222,17 +222,17 @@ func (factureIn *FactureIn) SetIncomingDate(incomingDate *Timestamp) *FactureIn 
 }
 
 func (factureIn *FactureIn) SetAgent(agent *Counterparty) *FactureIn {
-	factureIn.Agent = agent
+	factureIn.Agent = agent.Clean()
 	return factureIn
 }
 
 func (factureIn *FactureIn) SetOrganization(organization *Organization) *FactureIn {
-	factureIn.Organization = organization
+	factureIn.Organization = organization.Clean()
 	return factureIn
 }
 
 func (factureIn *FactureIn) SetOwner(owner *Employee) *FactureIn {
-	factureIn.Owner = owner
+	factureIn.Owner = owner.Clean()
 	return factureIn
 }
 
@@ -247,7 +247,7 @@ func (factureIn *FactureIn) SetShared(shared bool) *FactureIn {
 }
 
 func (factureIn *FactureIn) SetState(state *State) *FactureIn {
-	factureIn.State = state
+	factureIn.State = state.Clean()
 	return factureIn
 }
 

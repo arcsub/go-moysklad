@@ -222,7 +222,7 @@ func (salesReturn *SalesReturn) SetPositions(positions *Positions[SalesReturnPos
 }
 
 func (salesReturn *SalesReturn) SetAgentAccount(agentAccount *AgentAccount) *SalesReturn {
-	salesReturn.AgentAccount = agentAccount
+	salesReturn.AgentAccount = agentAccount.Clean()
 	return salesReturn
 }
 
@@ -232,7 +232,7 @@ func (salesReturn *SalesReturn) SetApplicable(applicable bool) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetFactureOut(factureOut *FactureOut) *SalesReturn {
-	salesReturn.FactureOut = factureOut
+	salesReturn.FactureOut = factureOut.Clean()
 	return salesReturn
 }
 
@@ -242,7 +242,7 @@ func (salesReturn *SalesReturn) SetCode(code string) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetOrganizationAccount(organizationAccount *AgentAccount) *SalesReturn {
-	salesReturn.OrganizationAccount = organizationAccount
+	salesReturn.OrganizationAccount = organizationAccount.Clean()
 	return salesReturn
 }
 
@@ -262,7 +262,7 @@ func (salesReturn *SalesReturn) SetFiles(files Slice[File]) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetGroup(group *Group) *SalesReturn {
-	salesReturn.Group = group
+	salesReturn.Group = group.Clean()
 	return salesReturn
 }
 
@@ -287,17 +287,17 @@ func (salesReturn *SalesReturn) SetContract(contract *Contract) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetAgent(agent *Counterparty) *SalesReturn {
-	salesReturn.Agent = agent
+	salesReturn.Agent = agent.Clean()
 	return salesReturn
 }
 
 func (salesReturn *SalesReturn) SetOrganization(organization *Organization) *SalesReturn {
-	salesReturn.Organization = organization
+	salesReturn.Organization = organization.Clean()
 	return salesReturn
 }
 
 func (salesReturn *SalesReturn) SetProject(project *Project) *SalesReturn {
-	salesReturn.Project = project
+	salesReturn.Project = project.Clean()
 	return salesReturn
 }
 
@@ -307,7 +307,7 @@ func (salesReturn *SalesReturn) SetRate(rate *Rate) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetSalesChannel(salesChannel *SalesChannel) *SalesReturn {
-	salesReturn.SalesChannel = salesChannel
+	salesReturn.SalesChannel = salesChannel.Clean()
 	return salesReturn
 }
 
@@ -317,12 +317,12 @@ func (salesReturn *SalesReturn) SetShared(shared bool) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetState(state *State) *SalesReturn {
-	salesReturn.State = state
+	salesReturn.State = state.Clean()
 	return salesReturn
 }
 
 func (salesReturn *SalesReturn) SetStore(store *Store) *SalesReturn {
-	salesReturn.Store = store
+	salesReturn.Store = store.Clean()
 	return salesReturn
 }
 
@@ -342,12 +342,12 @@ func (salesReturn *SalesReturn) SetVatIncluded(vatIncluded bool) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetOwner(owner *Employee) *SalesReturn {
-	salesReturn.Owner = owner
+	salesReturn.Owner = owner.Clean()
 	return salesReturn
 }
 
 func (salesReturn *SalesReturn) SetDemand(demand *Demand) *SalesReturn {
-	salesReturn.Demand = demand
+	salesReturn.Demand = demand.Clean()
 	return salesReturn
 }
 
@@ -466,7 +466,7 @@ func (salesReturnPosition *SalesReturnPosition) SetCost(cost float64) *SalesRetu
 }
 
 func (salesReturnPosition *SalesReturnPosition) SetCountry(country *Country) *SalesReturnPosition {
-	salesReturnPosition.Country = country
+	salesReturnPosition.Country = country.Clean()
 	return salesReturnPosition
 }
 
@@ -496,7 +496,7 @@ func (salesReturnPosition *SalesReturnPosition) SetQuantity(quantity float64) *S
 }
 
 func (salesReturnPosition *SalesReturnPosition) SetSlot(slot *Slot) *SalesReturnPosition {
-	salesReturnPosition.Slot = slot
+	salesReturnPosition.Slot = slot.Clean()
 	return salesReturnPosition
 }
 

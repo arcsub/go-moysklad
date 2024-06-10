@@ -178,7 +178,7 @@ func (processing Processing) GetAttributes() Slice[AttributeValue] {
 }
 
 func (processing *Processing) SetOrganization(organization *Organization) *Processing {
-	processing.Organization = organization
+	processing.Organization = organization.Clean()
 	return processing
 }
 
@@ -203,7 +203,7 @@ func (processing *Processing) SetFiles(files Slice[File]) *Processing {
 }
 
 func (processing *Processing) SetGroup(group *Group) *Processing {
-	processing.Group = group
+	processing.Group = group.Clean()
 	return processing
 }
 
@@ -213,7 +213,7 @@ func (processing *Processing) SetMoment(moment *Timestamp) *Processing {
 }
 
 func (processing *Processing) SetMaterialsStore(materialsStore *Store) *Processing {
-	processing.MaterialsStore = materialsStore
+	processing.MaterialsStore = materialsStore.Clean()
 	return processing
 }
 
@@ -223,7 +223,7 @@ func (processing *Processing) SetMeta(meta *Meta) *Processing {
 }
 
 func (processing *Processing) SetProcessingOrder(processingOrder *ProcessingOrder) *Processing {
-	processing.ProcessingOrder = processingOrder
+	processing.ProcessingOrder = processingOrder.Clean()
 	return processing
 }
 
@@ -238,17 +238,17 @@ func (processing *Processing) SetDescription(description string) *Processing {
 }
 
 func (processing *Processing) SetOrganizationAccount(organizationAccount *AgentAccount) *Processing {
-	processing.OrganizationAccount = organizationAccount
+	processing.OrganizationAccount = organizationAccount.Clean()
 	return processing
 }
 
 func (processing *Processing) SetOwner(owner *Employee) *Processing {
-	processing.Owner = owner
+	processing.Owner = owner.Clean()
 	return processing
 }
 
 func (processing *Processing) SetProcessingPlan(processingPlan *ProcessingPlan) *Processing {
-	processing.ProcessingPlan = processingPlan
+	processing.ProcessingPlan = processingPlan.Clean()
 	return processing
 }
 
@@ -258,12 +258,12 @@ func (processing *Processing) SetProcessingSum(processingSum float64) *Processin
 }
 
 func (processing *Processing) SetProductsStore(productsStore *Store) *Processing {
-	processing.ProductsStore = productsStore
+	processing.ProductsStore = productsStore.Clean()
 	return processing
 }
 
 func (processing *Processing) SetProject(project *Project) *Processing {
-	processing.Project = project
+	processing.Project = project.Clean()
 	return processing
 }
 
@@ -278,7 +278,7 @@ func (processing *Processing) SetShared(shared bool) *Processing {
 }
 
 func (processing *Processing) SetState(state *State) *Processing {
-	processing.State = state
+	processing.State = state.Clean()
 	return processing
 }
 

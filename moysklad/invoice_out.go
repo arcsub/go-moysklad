@@ -222,7 +222,7 @@ func (invoiceOut *InvoiceOut) SetVatEnabled(vatEnabled bool) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetAgentAccount(agentAccount *AgentAccount) *InvoiceOut {
-	invoiceOut.AgentAccount = agentAccount
+	invoiceOut.AgentAccount = agentAccount.Clean()
 	return invoiceOut
 }
 
@@ -242,7 +242,7 @@ func (invoiceOut *InvoiceOut) SetCode(code string) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetOrganizationAccount(organizationAccount *AgentAccount) *InvoiceOut {
-	invoiceOut.OrganizationAccount = organizationAccount
+	invoiceOut.OrganizationAccount = organizationAccount.Clean()
 	return invoiceOut
 }
 
@@ -262,7 +262,7 @@ func (invoiceOut *InvoiceOut) SetFiles(files Slice[File]) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetGroup(group *Group) *InvoiceOut {
-	invoiceOut.Group = group
+	invoiceOut.Group = group.Clean()
 	return invoiceOut
 }
 
@@ -282,17 +282,17 @@ func (invoiceOut *InvoiceOut) SetName(name string) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetContract(contract *Contract) *InvoiceOut {
-	invoiceOut.Contract = contract
+	invoiceOut.Contract = contract.Clean()
 	return invoiceOut
 }
 
 func (invoiceOut *InvoiceOut) SetAgent(agent *Counterparty) *InvoiceOut {
-	invoiceOut.Agent = agent
+	invoiceOut.Agent = agent.Clean()
 	return invoiceOut
 }
 
 func (invoiceOut *InvoiceOut) SetOrganization(organization *Organization) *InvoiceOut {
-	invoiceOut.Organization = organization
+	invoiceOut.Organization = organization.Clean()
 	return invoiceOut
 }
 
@@ -307,7 +307,7 @@ func (invoiceOut *InvoiceOut) SetPositions(positions *Positions[InvoiceOutPositi
 }
 
 func (invoiceOut *InvoiceOut) SetProject(project *Project) *InvoiceOut {
-	invoiceOut.Project = project
+	invoiceOut.Project = project.Clean()
 	return invoiceOut
 }
 
@@ -322,12 +322,12 @@ func (invoiceOut *InvoiceOut) SetShared(shared bool) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetState(state *State) *InvoiceOut {
-	invoiceOut.State = state
+	invoiceOut.State = state.Clean()
 	return invoiceOut
 }
 
 func (invoiceOut *InvoiceOut) SetStore(store *Store) *InvoiceOut {
-	invoiceOut.Store = store
+	invoiceOut.Store = store.Clean()
 	return invoiceOut
 }
 
@@ -337,7 +337,7 @@ func (invoiceOut *InvoiceOut) SetSyncID(syncID uuid.UUID) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetOwner(owner *Employee) *InvoiceOut {
-	invoiceOut.Owner = owner
+	invoiceOut.Owner = owner.Clean()
 	return invoiceOut
 }
 
@@ -347,7 +347,7 @@ func (invoiceOut *InvoiceOut) SetVatIncluded(vatIncluded bool) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetCustomerOrder(customerOrder *CustomerOrder) *InvoiceOut {
-	invoiceOut.CustomerOrder = customerOrder
+	invoiceOut.CustomerOrder = customerOrder.Clean()
 	return invoiceOut
 }
 

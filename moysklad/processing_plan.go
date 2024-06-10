@@ -133,7 +133,7 @@ func (processingPlan *ProcessingPlan) SetExternalCode(externalCode string) *Proc
 }
 
 func (processingPlan *ProcessingPlan) SetGroup(group *Group) *ProcessingPlan {
-	processingPlan.Group = group
+	processingPlan.Group = group.Clean()
 	return processingPlan
 }
 
@@ -158,17 +158,17 @@ func (processingPlan *ProcessingPlan) SetName(name string) *ProcessingPlan {
 }
 
 func (processingPlan *ProcessingPlan) SetOwner(owner *Employee) *ProcessingPlan {
-	processingPlan.Owner = owner
+	processingPlan.Owner = owner.Clean()
 	return processingPlan
 }
 
 func (processingPlan *ProcessingPlan) SetParent(parent *Group) *ProcessingPlan {
-	processingPlan.Parent = parent
+	processingPlan.Parent = parent.Clean()
 	return processingPlan
 }
 
 func (processingPlan *ProcessingPlan) SetProcessingProcess(processingProcess *ProcessingProcess) *ProcessingPlan {
-	processingPlan.ProcessingProcess = processingProcess
+	processingPlan.ProcessingProcess = processingProcess.Clean()
 	return processingPlan
 }
 
@@ -227,7 +227,7 @@ func (processingPlanProduct *ProcessingPlanProduct) SetAssortment(assortment AsA
 }
 
 func (processingPlanProduct *ProcessingPlanProduct) SetProduct(product *Product) *ProcessingPlanProduct {
-	processingPlanProduct.Product = product
+	processingPlanProduct.Product = product.Clean()
 	return processingPlanProduct
 }
 
@@ -291,7 +291,7 @@ func (processingPlanMaterial *ProcessingPlanMaterial) SetAssortment(assortment A
 }
 
 func (processingPlanMaterial *ProcessingPlanMaterial) SetProduct(product *Product) *ProcessingPlanMaterial {
-	processingPlanMaterial.Product = product
+	processingPlanMaterial.Product = product.Clean()
 	return processingPlanMaterial
 }
 

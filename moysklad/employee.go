@@ -149,7 +149,7 @@ func (employee Employee) GetAttributes() Slice[AttributeValue] {
 }
 
 func (employee *Employee) SetOwner(owner *Employee) *Employee {
-	employee.Owner = owner
+	employee.Owner = owner.Clean()
 	return employee
 }
 
@@ -189,7 +189,7 @@ func (employee *Employee) SetFirstName(firstName string) *Employee {
 }
 
 func (employee *Employee) SetGroup(group *Group) *Employee {
-	employee.Group = group
+	employee.Group = group.Clean()
 	return employee
 }
 
@@ -309,7 +309,7 @@ func (employeePermission *EmployeePermission) SetEmail(email string) *EmployeePe
 }
 
 func (employeePermission *EmployeePermission) SetGroup(group *Group) *EmployeePermission {
-	employeePermission.Group = group
+	employeePermission.Group = group.Clean()
 	return employeePermission
 }
 
@@ -324,7 +324,7 @@ func (employeePermission *EmployeePermission) SetLogin(login string) *EmployeePe
 }
 
 func (employeePermission *EmployeePermission) SetRole(role *Role) *EmployeePermission {
-	employeePermission.Role = role
+	employeePermission.Role = role.Clean()
 	return employeePermission
 }
 
@@ -393,30 +393,30 @@ func NewEmployeeService(client *Client) EmployeeService {
 
 // GetPermissions Запрос на получение информации о правах Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-poluchit-informaciu-o-prawah-sotrudnika
-func (s *employeeService) GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/security", s.uri, id)
-	return NewRequestBuilder[EmployeePermission](s.client, path).Get(ctx)
+func (service *employeeService) GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/security", service.uri, id)
+	return NewRequestBuilder[EmployeePermission](service.client, path).Get(ctx)
 }
 
 // UpdatePermissions Запрос на изменение информации о правах Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-izmenit-informaciu-o-prawah-sotrudnika
-func (s *employeeService) UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/security", s.uri, id)
-	return NewRequestBuilder[EmployeePermission](s.client, path).Put(ctx, permissions)
+func (service *employeeService) UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/security", service.uri, id)
+	return NewRequestBuilder[EmployeePermission](service.client, path).Put(ctx, permissions)
 }
 
 // Activate Активация Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-aktiwaciq-sotrudnika
-func (s *employeeService) Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*MailActivationRequired, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/access/activate", s.uri, id)
-	return NewRequestBuilder[MailActivationRequired](s.client, path).Put(ctx, permissions)
+func (service *employeeService) Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*MailActivationRequired, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/access/activate", service.uri, id)
+	return NewRequestBuilder[MailActivationRequired](service.client, path).Put(ctx, permissions)
 }
 
 // Deactivate Деактивация Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-deaktiwaciq-sotrudnika
-func (s *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/access/deactivate", s.uri, id)
-	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
+func (service *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/access/deactivate", service.uri, id)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}
@@ -425,9 +425,9 @@ func (s *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (bool, *
 
 // ResetPassword Сброс пароля Сотрудника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-sbros-parolq-sotrudnika
-func (s *employeeService) ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *employeeService) ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/access/resetpassword", id)
-	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}

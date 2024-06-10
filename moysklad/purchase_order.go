@@ -242,17 +242,17 @@ func (purchaseOrder *PurchaseOrder) SetApplicable(applicable bool) *PurchaseOrde
 }
 
 func (purchaseOrder *PurchaseOrder) SetAgentAccount(agentAccount *AgentAccount) *PurchaseOrder {
-	purchaseOrder.AgentAccount = agentAccount
+	purchaseOrder.AgentAccount = agentAccount.Clean()
 	return purchaseOrder
 }
 
 func (purchaseOrder *PurchaseOrder) SetOwner(owner *Employee) *PurchaseOrder {
-	purchaseOrder.Owner = owner
+	purchaseOrder.Owner = owner.Clean()
 	return purchaseOrder
 }
 
 func (purchaseOrder *PurchaseOrder) SetInternalOrder(internalOrder *InternalOrder) *PurchaseOrder {
-	purchaseOrder.InternalOrder = internalOrder
+	purchaseOrder.InternalOrder = internalOrder.Clean()
 	return purchaseOrder
 }
 
@@ -262,7 +262,7 @@ func (purchaseOrder *PurchaseOrder) SetCode(code string) *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetContract(contract *Contract) *PurchaseOrder {
-	purchaseOrder.Contract = contract
+	purchaseOrder.Contract = contract.Clean()
 	return purchaseOrder
 }
 
@@ -272,7 +272,7 @@ func (purchaseOrder *PurchaseOrder) SetDeliveryPlannedMoment(deliveryPlannedMome
 }
 
 func (purchaseOrder *PurchaseOrder) SetOrganizationAccount(organizationAccount *AgentAccount) *PurchaseOrder {
-	purchaseOrder.OrganizationAccount = organizationAccount
+	purchaseOrder.OrganizationAccount = organizationAccount.Clean()
 	return purchaseOrder
 }
 
@@ -282,7 +282,7 @@ func (purchaseOrder *PurchaseOrder) SetExternalCode(externalCode string) *Purcha
 }
 
 func (purchaseOrder *PurchaseOrder) SetGroup(group *Group) *PurchaseOrder {
-	purchaseOrder.Group = group
+	purchaseOrder.Group = group.Clean()
 	return purchaseOrder
 }
 
@@ -312,7 +312,7 @@ func (purchaseOrder *PurchaseOrder) SetDescription(description string) *Purchase
 }
 
 func (purchaseOrder *PurchaseOrder) SetAgent(agent *Counterparty) *PurchaseOrder {
-	purchaseOrder.Agent = agent
+	purchaseOrder.Agent = agent.Clean()
 	return purchaseOrder
 }
 
@@ -327,7 +327,7 @@ func (purchaseOrder *PurchaseOrder) SetPositions(positions *Positions[PurchaseOr
 }
 
 func (purchaseOrder *PurchaseOrder) SetProject(project *Project) *PurchaseOrder {
-	purchaseOrder.Project = project
+	purchaseOrder.Project = project.Clean()
 	return purchaseOrder
 }
 
@@ -342,12 +342,12 @@ func (purchaseOrder *PurchaseOrder) SetShared(shared bool) *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetState(state *State) *PurchaseOrder {
-	purchaseOrder.State = state
+	purchaseOrder.State = state.Clean()
 	return purchaseOrder
 }
 
 func (purchaseOrder *PurchaseOrder) SetStore(store *Store) *PurchaseOrder {
-	purchaseOrder.Store = store
+	purchaseOrder.Store = store.Clean()
 	return purchaseOrder
 }
 

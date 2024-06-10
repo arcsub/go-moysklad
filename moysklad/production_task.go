@@ -198,17 +198,17 @@ func (productionTask *ProductionTask) SetFiles(files Slice[File]) *ProductionTas
 }
 
 func (productionTask *ProductionTask) SetGroup(group *Group) *ProductionTask {
-	productionTask.Group = group
+	productionTask.Group = group.Clean()
 	return productionTask
 }
 
 func (productionTask *ProductionTask) SetOrganization(organization *Organization) *ProductionTask {
-	productionTask.Organization = organization
+	productionTask.Organization = organization.Clean()
 	return productionTask
 }
 
 func (productionTask *ProductionTask) SetMaterialsStore(materialsStore *Store) *ProductionTask {
-	productionTask.MaterialsStore = materialsStore
+	productionTask.MaterialsStore = materialsStore.Clean()
 	return productionTask
 }
 
@@ -223,7 +223,7 @@ func (productionTask *ProductionTask) SetApplicable(applicable bool) *Production
 }
 
 func (productionTask *ProductionTask) SetOwner(owner *Employee) *ProductionTask {
-	productionTask.Owner = owner
+	productionTask.Owner = owner.Clean()
 	return productionTask
 }
 
@@ -243,7 +243,7 @@ func (productionTask *ProductionTask) SetProducts(products *Positions[Production
 }
 
 func (productionTask *ProductionTask) SetProductsStore(productsStore *Store) *ProductionTask {
-	productionTask.ProductsStore = productsStore
+	productionTask.ProductsStore = productsStore.Clean()
 	return productionTask
 }
 
@@ -258,7 +258,7 @@ func (productionTask *ProductionTask) SetShared(shared bool) *ProductionTask {
 }
 
 func (productionTask *ProductionTask) SetState(state *State) *ProductionTask {
-	productionTask.State = state
+	productionTask.State = state.Clean()
 	return productionTask
 }
 
@@ -327,7 +327,7 @@ func (productionRow *ProductionRow) SetName(name string) *ProductionRow {
 }
 
 func (productionRow *ProductionRow) SetProcessingPlan(processingPlan *ProcessingPlan) *ProductionRow {
-	productionRow.ProcessingPlan = processingPlan
+	productionRow.ProcessingPlan = processingPlan.Clean()
 	return productionRow
 }
 

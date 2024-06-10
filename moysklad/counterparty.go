@@ -268,7 +268,7 @@ func (counterparty *Counterparty) SetNotes(notes Slice[Note]) *Counterparty {
 }
 
 func (counterparty *Counterparty) SetBonusProgram(bonusProgram *BonusProgram) *Counterparty {
-	counterparty.BonusProgram = bonusProgram
+	counterparty.BonusProgram = bonusProgram.Clean()
 	return counterparty
 }
 
@@ -318,7 +318,7 @@ func (counterparty *Counterparty) SetExternalCode(externalCode string) *Counterp
 }
 
 func (counterparty *Counterparty) SetOwner(owner *Employee) *Counterparty {
-	counterparty.Owner = owner
+	counterparty.Owner = owner.Clean()
 	return counterparty
 }
 
@@ -328,7 +328,7 @@ func (counterparty *Counterparty) SetFiles(files Slice[File]) *Counterparty {
 }
 
 func (counterparty *Counterparty) SetGroup(group *Group) *Counterparty {
-	counterparty.Group = group
+	counterparty.Group = group.Clean()
 	return counterparty
 }
 
@@ -342,8 +342,8 @@ func (counterparty *Counterparty) SetActualAddressFull(actualAddressFull *Addres
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetAccounts(accounts *MetaArray[AgentAccount]) *Counterparty {
-	counterparty.Accounts = accounts
+func (counterparty *Counterparty) SetAccounts(accounts Slice[AgentAccount]) *Counterparty {
+	counterparty.Accounts = NewMetaArrayRows(accounts)
 	return counterparty
 }
 

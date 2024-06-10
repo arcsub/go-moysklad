@@ -92,7 +92,7 @@ func (processingProcess *ProcessingProcess) SetExternalCode(externalCode string)
 }
 
 func (processingProcess *ProcessingProcess) SetGroup(group *Group) *ProcessingProcess {
-	processingProcess.Group = group
+	processingProcess.Group = group.Clean()
 	return processingProcess
 }
 
@@ -107,7 +107,7 @@ func (processingProcess *ProcessingProcess) SetName(name string) *ProcessingProc
 }
 
 func (processingProcess *ProcessingProcess) SetOwner(owner *Employee) *ProcessingProcess {
-	processingProcess.Owner = owner
+	processingProcess.Owner = owner.Clean()
 	return processingProcess
 }
 
@@ -165,7 +165,7 @@ func (processingProcessPosition *ProcessingProcessPosition) SetMeta(meta *Meta) 
 }
 
 func (processingProcessPosition *ProcessingProcessPosition) SetProcessingStage(processingStage *ProcessingStage) *ProcessingProcessPosition {
-	processingProcessPosition.ProcessingStage = processingStage
+	processingProcessPosition.ProcessingStage = processingStage.Clean()
 	return processingProcessPosition
 }
 

@@ -26,12 +26,12 @@ func (salePrice *SalePrice) SetValue(value float64) *SalePrice {
 }
 
 func (salePrice *SalePrice) SetCurrency(currency *Currency) *SalePrice {
-	salePrice.Currency = currency
+	salePrice.Currency = currency.Clean()
 	return salePrice
 }
 
 func (salePrice *SalePrice) SetPriceType(priceType *PriceType) *SalePrice {
-	salePrice.PriceType = priceType
+	salePrice.PriceType = priceType.Clean()
 	return salePrice
 }
 

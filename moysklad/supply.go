@@ -232,7 +232,7 @@ func (supply Supply) GetAttributes() Slice[AttributeValue] {
 }
 
 func (supply *Supply) SetOrganizationAccount(organizationAccount *AgentAccount) *Supply {
-	supply.OrganizationAccount = organizationAccount
+	supply.OrganizationAccount = organizationAccount.Clean()
 	return supply
 }
 
@@ -242,7 +242,7 @@ func (supply *Supply) SetApplicable(applicable bool) *Supply {
 }
 
 func (supply *Supply) SetAgentAccount(agentAccount *AgentAccount) *Supply {
-	supply.AgentAccount = agentAccount
+	supply.AgentAccount = agentAccount.Clean()
 	return supply
 }
 
@@ -262,7 +262,7 @@ func (supply *Supply) SetCode(code string) *Supply {
 }
 
 func (supply *Supply) SetContract(contract *Contract) *Supply {
-	supply.Contract = contract
+	supply.Contract = contract.Clean()
 	return supply
 }
 
@@ -282,7 +282,7 @@ func (supply *Supply) SetFiles(files Slice[File]) *Supply {
 }
 
 func (supply *Supply) SetGroup(group *Group) *Supply {
-	supply.Group = group
+	supply.Group = group.Clean()
 	return supply
 }
 
@@ -292,7 +292,7 @@ func (supply *Supply) SetIncomingDate(incomingDate *Timestamp) *Supply {
 }
 
 func (supply *Supply) SetOwner(owner *Employee) *Supply {
-	supply.Owner = owner
+	supply.Owner = owner.Clean()
 	return supply
 }
 
@@ -312,7 +312,7 @@ func (supply *Supply) SetName(name string) *Supply {
 }
 
 func (supply *Supply) SetOrganization(organization *Organization) *Supply {
-	supply.Organization = organization
+	supply.Organization = organization.Clean()
 	return supply
 }
 
@@ -322,7 +322,7 @@ func (supply *Supply) SetPayments(payments Slice[Payment]) *Supply {
 }
 
 func (supply *Supply) SetAgent(agent *Counterparty) *Supply {
-	supply.Agent = agent
+	supply.Agent = agent.Clean()
 	return supply
 }
 
@@ -337,7 +337,7 @@ func (supply *Supply) SetPositions(positions *Positions[SupplyPosition]) *Supply
 }
 
 func (supply *Supply) SetProject(project *Project) *Supply {
-	supply.Project = project
+	supply.Project = project.Clean()
 	return supply
 }
 
@@ -352,12 +352,12 @@ func (supply *Supply) SetShared(shared bool) *Supply {
 }
 
 func (supply *Supply) SetState(state *State) *Supply {
-	supply.State = state
+	supply.State = state.Clean()
 	return supply
 }
 
 func (supply *Supply) SetStore(store *Store) *Supply {
-	supply.Store = store
+	supply.Store = store.Clean()
 	return supply
 }
 
@@ -377,12 +377,12 @@ func (supply *Supply) SetVatIncluded(vatIncluded bool) *Supply {
 }
 
 func (supply *Supply) SetPurchaseOrder(purchaseOrder *PurchaseOrder) *Supply {
-	supply.PurchaseOrder = purchaseOrder
+	supply.PurchaseOrder = purchaseOrder.Clean()
 	return supply
 }
 
 func (supply *Supply) SetFactureIn(factureIn *FactureIn) *Supply {
-	supply.FactureIn = factureIn
+	supply.FactureIn = factureIn.Clean()
 	return supply
 }
 
@@ -496,7 +496,7 @@ func (supplyPosition *SupplyPosition) SetAssortment(assortment AsAssortment) *Su
 }
 
 func (supplyPosition *SupplyPosition) SetCountry(country *Country) *SupplyPosition {
-	supplyPosition.Country = country
+	supplyPosition.Country = country.Clean()
 	return supplyPosition
 }
 
@@ -526,7 +526,7 @@ func (supplyPosition *SupplyPosition) SetQuantity(quantity float64) *SupplyPosit
 }
 
 func (supplyPosition *SupplyPosition) SetSlot(slot *Slot) *SupplyPosition {
-	supplyPosition.Slot = slot
+	supplyPosition.Slot = slot.Clean()
 	return supplyPosition
 }
 

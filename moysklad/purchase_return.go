@@ -217,12 +217,12 @@ func (purchaseReturn PurchaseReturn) GetAttributes() Slice[AttributeValue] {
 }
 
 func (purchaseReturn *PurchaseReturn) SetSupply(supply *Supply) *PurchaseReturn {
-	purchaseReturn.Supply = supply
+	purchaseReturn.Supply = supply.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetAgentAccount(agentAccount *AgentAccount) *PurchaseReturn {
-	purchaseReturn.AgentAccount = agentAccount
+	purchaseReturn.AgentAccount = agentAccount.Clean()
 	return purchaseReturn
 }
 
@@ -242,7 +242,7 @@ func (purchaseReturn *PurchaseReturn) SetCode(code string) *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetOrganizationAccount(organizationAccount *AgentAccount) *PurchaseReturn {
-	purchaseReturn.OrganizationAccount = organizationAccount
+	purchaseReturn.OrganizationAccount = organizationAccount.Clean()
 	return purchaseReturn
 }
 
@@ -262,7 +262,7 @@ func (purchaseReturn *PurchaseReturn) SetFiles(files Slice[File]) *PurchaseRetur
 }
 
 func (purchaseReturn *PurchaseReturn) SetGroup(group *Group) *PurchaseReturn {
-	purchaseReturn.Group = group
+	purchaseReturn.Group = group.Clean()
 	return purchaseReturn
 }
 
@@ -282,22 +282,22 @@ func (purchaseReturn *PurchaseReturn) SetName(name string) *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetContract(contract *Contract) *PurchaseReturn {
-	purchaseReturn.Contract = contract
+	purchaseReturn.Contract = contract.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetAgent(agent *Counterparty) *PurchaseReturn {
-	purchaseReturn.Agent = agent
+	purchaseReturn.Agent = agent.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetOrganization(organization *Organization) *PurchaseReturn {
-	purchaseReturn.Organization = organization
+	purchaseReturn.Organization = organization.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetProject(project *Project) *PurchaseReturn {
-	purchaseReturn.Project = project
+	purchaseReturn.Project = project.Clean()
 	return purchaseReturn
 }
 
@@ -312,12 +312,12 @@ func (purchaseReturn *PurchaseReturn) SetShared(shared bool) *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetState(state *State) *PurchaseReturn {
-	purchaseReturn.State = state
+	purchaseReturn.State = state.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetStore(store *Store) *PurchaseReturn {
-	purchaseReturn.Store = store
+	purchaseReturn.Store = store.Clean()
 	return purchaseReturn
 }
 
@@ -347,17 +347,17 @@ func (purchaseReturn *PurchaseReturn) SetPositions(positions *Positions[Purchase
 }
 
 func (purchaseReturn *PurchaseReturn) SetOwner(owner *Employee) *PurchaseReturn {
-	purchaseReturn.Owner = owner
+	purchaseReturn.Owner = owner.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetFactureIn(factureIn *FactureIn) *PurchaseReturn {
-	purchaseReturn.FactureIn = factureIn
+	purchaseReturn.FactureIn = factureIn.Clean()
 	return purchaseReturn
 }
 
 func (purchaseReturn *PurchaseReturn) SetFactureOut(factureOut *FactureOut) *PurchaseReturn {
-	purchaseReturn.FactureOut = factureOut
+	purchaseReturn.FactureOut = factureOut.Clean()
 	return purchaseReturn
 }
 
@@ -476,7 +476,7 @@ func (purchaseReturnPosition *PurchaseReturnPosition) SetQuantity(quantity float
 }
 
 func (purchaseReturnPosition *PurchaseReturnPosition) SetSlot(slot *Slot) *PurchaseReturnPosition {
-	purchaseReturnPosition.Slot = slot
+	purchaseReturnPosition.Slot = slot.Clean()
 	return purchaseReturnPosition
 }
 

@@ -227,17 +227,17 @@ func (commissionReportOut *CommissionReportOut) SetApplicable(applicable bool) *
 }
 
 func (commissionReportOut *CommissionReportOut) SetOrganizationAccount(organizationAccount *AgentAccount) *CommissionReportOut {
-	commissionReportOut.OrganizationAccount = organizationAccount
+	commissionReportOut.OrganizationAccount = organizationAccount.Clean()
 	return commissionReportOut
 }
 
 func (commissionReportOut *CommissionReportOut) SetAgentAccount(agentAccount *AgentAccount) *CommissionReportOut {
-	commissionReportOut.AgentAccount = agentAccount
+	commissionReportOut.AgentAccount = agentAccount.Clean()
 	return commissionReportOut
 }
 
 func (commissionReportOut *CommissionReportOut) SetOrganization(organization *Organization) *CommissionReportOut {
-	commissionReportOut.Organization = organization
+	commissionReportOut.Organization = organization.Clean()
 	return commissionReportOut
 }
 
@@ -252,12 +252,12 @@ func (commissionReportOut *CommissionReportOut) SetCommissionPeriodEnd(commissio
 }
 
 func (commissionReportOut *CommissionReportOut) SetAgent(agent *Counterparty) *CommissionReportOut {
-	commissionReportOut.Agent = agent
+	commissionReportOut.Agent = agent.Clean()
 	return commissionReportOut
 }
 
 func (commissionReportOut *CommissionReportOut) SetContract(contract *Contract) *CommissionReportOut {
-	commissionReportOut.Contract = contract
+	commissionReportOut.Contract = contract.Clean()
 	return commissionReportOut
 }
 
@@ -277,7 +277,7 @@ func (commissionReportOut *CommissionReportOut) SetFiles(files Slice[File]) *Com
 }
 
 func (commissionReportOut *CommissionReportOut) SetGroup(group *Group) *CommissionReportOut {
-	commissionReportOut.Group = group
+	commissionReportOut.Group = group.Clean()
 	return commissionReportOut
 }
 
@@ -302,7 +302,7 @@ func (commissionReportOut *CommissionReportOut) SetCommissionPeriodStart(commiss
 }
 
 func (commissionReportOut *CommissionReportOut) SetOwner(owner *Employee) *CommissionReportOut {
-	commissionReportOut.Owner = owner
+	commissionReportOut.Owner = owner.Clean()
 	return commissionReportOut
 }
 
@@ -312,7 +312,7 @@ func (commissionReportOut *CommissionReportOut) SetPositions(positions *Position
 }
 
 func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *CommissionReportOut {
-	commissionReportOut.Project = project
+	commissionReportOut.Project = project.Clean()
 	return commissionReportOut
 }
 
@@ -332,7 +332,7 @@ func (commissionReportOut *CommissionReportOut) SetPayments(payments Slice[Payme
 }
 
 func (commissionReportOut *CommissionReportOut) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportOut {
-	commissionReportOut.SalesChannel = salesChannel
+	commissionReportOut.SalesChannel = salesChannel.Clean()
 	return commissionReportOut
 }
 
@@ -342,7 +342,7 @@ func (commissionReportOut *CommissionReportOut) SetShared(shared bool) *Commissi
 }
 
 func (commissionReportOut *CommissionReportOut) SetState(state *State) *CommissionReportOut {
-	commissionReportOut.State = state
+	commissionReportOut.State = state.Clean()
 	return commissionReportOut
 }
 

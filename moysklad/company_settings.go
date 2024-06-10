@@ -89,7 +89,7 @@ func (companySettings *CompanySettings) SetCompanyAddress(companyAddress string)
 }
 
 func (companySettings *CompanySettings) SetCurrency(currency *Currency) *CompanySettings {
-	companySettings.Currency = currency
+	companySettings.Currency = currency.Clean()
 	return companySettings
 }
 

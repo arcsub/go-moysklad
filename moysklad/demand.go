@@ -277,12 +277,12 @@ func (demand Demand) GetAttributes() Slice[AttributeValue] {
 }
 
 func (demand *Demand) SetAgent(agent *Counterparty) *Demand {
-	demand.Agent = agent
+	demand.Agent = agent.Clean()
 	return demand
 }
 
 func (demand *Demand) SetAgentAccount(agentAccount *AgentAccount) *Demand {
-	demand.AgentAccount = agentAccount
+	demand.AgentAccount = agentAccount.Clean()
 	return demand
 }
 
@@ -297,7 +297,7 @@ func (demand *Demand) SetCode(code string) *Demand {
 }
 
 func (demand *Demand) SetContract(contract *Contract) *Demand {
-	demand.Contract = contract
+	demand.Contract = contract.Clean()
 	return demand
 }
 
@@ -317,7 +317,7 @@ func (demand *Demand) SetFiles(files Slice[File]) *Demand {
 }
 
 func (demand *Demand) SetGroup(group *Group) *Demand {
-	demand.Group = group
+	demand.Group = group.Clean()
 	return demand
 }
 
@@ -352,7 +352,7 @@ func (demand *Demand) SetOverhead(overhead *Overhead) *Demand {
 }
 
 func (demand *Demand) SetOwner(owner *Employee) *Demand {
-	demand.Owner = owner
+	demand.Owner = owner.Clean()
 	return demand
 }
 
@@ -362,7 +362,7 @@ func (demand *Demand) SetPositions(positions *Positions[DemandPosition]) *Demand
 }
 
 func (demand *Demand) SetProject(project *Project) *Demand {
-	demand.Project = project
+	demand.Project = project.Clean()
 	return demand
 }
 
@@ -372,7 +372,7 @@ func (demand *Demand) SetRate(rate *Rate) *Demand {
 }
 
 func (demand *Demand) SetSalesChannel(salesChannel *SalesChannel) *Demand {
-	demand.SalesChannel = salesChannel
+	demand.SalesChannel = salesChannel.Clean()
 	return demand
 }
 
@@ -392,12 +392,12 @@ func (demand *Demand) SetShipmentAddressFull(shipmentAddressFull *Address) *Dema
 }
 
 func (demand *Demand) SetState(state *State) *Demand {
-	demand.State = state
+	demand.State = state.Clean()
 	return demand
 }
 
 func (demand *Demand) SetStore(store *Store) *Demand {
-	demand.Store = store
+	demand.Store = store.Clean()
 	return demand
 }
 
@@ -417,12 +417,12 @@ func (demand *Demand) SetVatIncluded(vatIncluded bool) *Demand {
 }
 
 func (demand *Demand) SetCustomerOrder(customerOrder *CustomerOrder) *Demand {
-	demand.CustomerOrder = customerOrder
+	demand.CustomerOrder = customerOrder.Clean()
 	return demand
 }
 
 func (demand *Demand) SetFactureOut(factureOut *FactureOut) *Demand {
-	demand.FactureOut = factureOut
+	demand.FactureOut = factureOut.Clean()
 	return demand
 }
 
@@ -447,12 +447,12 @@ func (demand *Demand) SetCargoName(cargoName string) *Demand {
 }
 
 func (demand *Demand) SetCarrier(carrier *Counterparty) *Demand {
-	demand.Carrier = carrier
+	demand.Carrier = carrier.Clean()
 	return demand
 }
 
 func (demand *Demand) SetConsignee(consignee *Counterparty) *Demand {
-	demand.Consignee = consignee
+	demand.Consignee = consignee.Clean()
 	return demand
 }
 
@@ -611,7 +611,7 @@ func (demandPosition *DemandPosition) SetQuantity(quantity float64) *DemandPosit
 }
 
 func (demandPosition *DemandPosition) SetSlot(slot *Slot) *DemandPosition {
-	demandPosition.Slot = slot
+	demandPosition.Slot = slot.Clean()
 	return demandPosition
 }
 

@@ -202,7 +202,7 @@ func (paymentIn *PaymentIn) SetApplicable(applicable bool) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetAgentAccount(agentAccount *AgentAccount) *PaymentIn {
-	paymentIn.AgentAccount = agentAccount
+	paymentIn.AgentAccount = agentAccount.Clean()
 	return paymentIn
 }
 
@@ -222,7 +222,7 @@ func (paymentIn *PaymentIn) SetName(name string) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetContract(contract *Contract) *PaymentIn {
-	paymentIn.Contract = contract
+	paymentIn.Contract = contract.Clean()
 	return paymentIn
 }
 
@@ -242,7 +242,7 @@ func (paymentIn *PaymentIn) SetFiles(files Slice[File]) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetGroup(group *Group) *PaymentIn {
-	paymentIn.Group = group
+	paymentIn.Group = group.Clean()
 	return paymentIn
 }
 
@@ -257,12 +257,12 @@ func (paymentIn *PaymentIn) SetIncomingNumber(incomingNumber string) *PaymentIn 
 }
 
 func (paymentIn *PaymentIn) SetFactureOut(factureOut *FactureOut) *PaymentIn {
-	paymentIn.FactureOut = factureOut
+	paymentIn.FactureOut = factureOut.Clean()
 	return paymentIn
 }
 
 func (paymentIn *PaymentIn) SetAgent(agent *Counterparty) *PaymentIn {
-	paymentIn.Agent = agent
+	paymentIn.Agent = agent.Clean()
 	return paymentIn
 }
 
@@ -272,17 +272,17 @@ func (paymentIn *PaymentIn) SetCode(code string) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetOrganization(organization *Organization) *PaymentIn {
-	paymentIn.Organization = organization
+	paymentIn.Organization = organization.Clean()
 	return paymentIn
 }
 
 func (paymentIn *PaymentIn) SetOrganizationAccount(organizationAccount *AgentAccount) *PaymentIn {
-	paymentIn.OrganizationAccount = organizationAccount
+	paymentIn.OrganizationAccount = organizationAccount.Clean()
 	return paymentIn
 }
 
 func (paymentIn *PaymentIn) SetOwner(owner *Employee) *PaymentIn {
-	paymentIn.Owner = owner
+	paymentIn.Owner = owner.Clean()
 	return paymentIn
 }
 
@@ -292,7 +292,7 @@ func (paymentIn *PaymentIn) SetPaymentPurpose(paymentPurpose string) *PaymentIn 
 }
 
 func (paymentIn *PaymentIn) SetProject(project *Project) *PaymentIn {
-	paymentIn.Project = project
+	paymentIn.Project = project.Clean()
 	return paymentIn
 }
 
@@ -307,12 +307,12 @@ func (paymentIn *PaymentIn) SetShared(shared bool) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetSalesChannel(salesChannel *SalesChannel) *PaymentIn {
-	paymentIn.SalesChannel = salesChannel
+	paymentIn.SalesChannel = salesChannel.Clean()
 	return paymentIn
 }
 
 func (paymentIn *PaymentIn) SetState(state *State) *PaymentIn {
-	paymentIn.State = state
+	paymentIn.State = state.Clean()
 	return paymentIn
 }
 

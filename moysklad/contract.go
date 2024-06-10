@@ -152,7 +152,7 @@ func (contract Contract) GetAttributes() Slice[AttributeValue] {
 }
 
 func (contract *Contract) SetAgentAccount(agentAccount *AgentAccount) *Contract {
-	contract.AgentAccount = agentAccount
+	contract.AgentAccount = agentAccount.Clean()
 	return contract
 }
 
@@ -167,7 +167,7 @@ func (contract *Contract) SetArchived(archived bool) *Contract {
 }
 
 func (contract *Contract) SetAgent(agent *Counterparty) *Contract {
-	contract.Agent = agent
+	contract.Agent = agent.Clean()
 	return contract
 }
 
@@ -192,7 +192,7 @@ func (contract *Contract) SetExternalCode(externalCode string) *Contract {
 }
 
 func (contract *Contract) SetGroup(group *Group) *Contract {
-	contract.Group = group
+	contract.Group = group.Clean()
 	return contract
 }
 
@@ -207,17 +207,17 @@ func (contract *Contract) SetMoment(moment *Timestamp) *Contract {
 }
 
 func (contract *Contract) SetOrganizationAccount(organizationAccount *AgentAccount) *Contract {
-	contract.OrganizationAccount = organizationAccount
+	contract.OrganizationAccount = organizationAccount.Clean()
 	return contract
 }
 
 func (contract *Contract) SetOwnAgent(ownAgent *Organization) *Contract {
-	contract.OwnAgent = ownAgent
+	contract.OwnAgent = ownAgent.Clean()
 	return contract
 }
 
 func (contract *Contract) SetOwner(owner *Employee) *Contract {
-	contract.Owner = owner
+	contract.Owner = owner.Clean()
 	return contract
 }
 
@@ -232,7 +232,7 @@ func (contract *Contract) SetShared(shared bool) *Contract {
 }
 
 func (contract *Contract) SetState(state *State) *Contract {
-	contract.State = state
+	contract.State = state.Clean()
 	return contract
 }
 

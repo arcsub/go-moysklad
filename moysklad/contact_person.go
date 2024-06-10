@@ -70,7 +70,7 @@ func (contactPerson ContactPerson) GetUpdated() Timestamp {
 }
 
 func (contactPerson *ContactPerson) SetAgent(agent *Counterparty) *ContactPerson {
-	contactPerson.Agent = agent
+	contactPerson.Agent = agent.Clean()
 	return contactPerson
 }
 

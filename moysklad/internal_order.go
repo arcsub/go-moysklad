@@ -182,7 +182,7 @@ func (internalOrder InternalOrder) GetAttributes() Slice[AttributeValue] {
 }
 
 func (internalOrder *InternalOrder) SetOrganization(organization *Organization) *InternalOrder {
-	internalOrder.Organization = organization
+	internalOrder.Organization = organization.Clean()
 	return internalOrder
 }
 
@@ -197,7 +197,7 @@ func (internalOrder *InternalOrder) SetDeliveryPlannedMoment(deliveryPlannedMome
 }
 
 func (internalOrder *InternalOrder) SetOwner(owner *Employee) *InternalOrder {
-	internalOrder.Owner = owner
+	internalOrder.Owner = owner.Clean()
 	return internalOrder
 }
 
@@ -212,7 +212,7 @@ func (internalOrder *InternalOrder) SetFiles(files Slice[File]) *InternalOrder {
 }
 
 func (internalOrder *InternalOrder) SetGroup(group *Group) *InternalOrder {
-	internalOrder.Group = group
+	internalOrder.Group = group.Clean()
 	return internalOrder
 }
 
@@ -252,7 +252,7 @@ func (internalOrder *InternalOrder) SetMoment(moment *Timestamp) *InternalOrder 
 }
 
 func (internalOrder *InternalOrder) SetProject(project *Project) *InternalOrder {
-	internalOrder.Project = project
+	internalOrder.Project = project.Clean()
 	return internalOrder
 }
 
@@ -272,12 +272,12 @@ func (internalOrder *InternalOrder) SetShared(shared bool) *InternalOrder {
 }
 
 func (internalOrder *InternalOrder) SetState(state *State) *InternalOrder {
-	internalOrder.State = state
+	internalOrder.State = state.Clean()
 	return internalOrder
 }
 
 func (internalOrder *InternalOrder) SetStore(store *Store) *InternalOrder {
-	internalOrder.Store = store
+	internalOrder.Store = store.Clean()
 	return internalOrder
 }
 

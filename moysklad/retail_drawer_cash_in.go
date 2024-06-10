@@ -147,7 +147,7 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetMoment(moment *Timestamp) *Reta
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetRetailShift(retailShift *RetailShift) *RetailDrawerCashIn {
-	retailDrawerCashIn.RetailShift = retailShift
+	retailDrawerCashIn.RetailShift = retailShift.Clean()
 	return retailDrawerCashIn
 }
 
@@ -162,7 +162,7 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetDescription(description string)
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetOrganization(organization *Organization) *RetailDrawerCashIn {
-	retailDrawerCashIn.Organization = organization
+	retailDrawerCashIn.Organization = organization.Clean()
 	return retailDrawerCashIn
 }
 
@@ -172,7 +172,7 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetFiles(files Slice[File]) *Retai
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetGroup(group *Group) *RetailDrawerCashIn {
-	retailDrawerCashIn.Group = group
+	retailDrawerCashIn.Group = group.Clean()
 	return retailDrawerCashIn
 }
 
@@ -187,7 +187,7 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetApplicable(applicable bool) *Re
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetAgent(agent *Counterparty) *RetailDrawerCashIn {
-	retailDrawerCashIn.Agent = agent
+	retailDrawerCashIn.Agent = agent.Clean()
 	return retailDrawerCashIn
 }
 
@@ -197,7 +197,7 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetExternalCode(externalCode strin
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetOwner(owner *Employee) *RetailDrawerCashIn {
-	retailDrawerCashIn.Owner = owner
+	retailDrawerCashIn.Owner = owner.Clean()
 	return retailDrawerCashIn
 }
 
@@ -212,7 +212,7 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetShared(shared bool) *RetailDraw
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetState(state *State) *RetailDrawerCashIn {
-	retailDrawerCashIn.State = state
+	retailDrawerCashIn.State = state.Clean()
 	return retailDrawerCashIn
 }
 

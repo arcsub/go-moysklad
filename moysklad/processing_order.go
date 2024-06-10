@@ -172,7 +172,7 @@ func (processingOrder *ProcessingOrder) SetName(name string) *ProcessingOrder {
 }
 
 func (processingOrder *ProcessingOrder) SetOrganization(organization *Organization) *ProcessingOrder {
-	processingOrder.Organization = organization
+	processingOrder.Organization = organization.Clean()
 	return processingOrder
 }
 
@@ -202,7 +202,7 @@ func (processingOrder *ProcessingOrder) SetFiles(files Slice[File]) *ProcessingO
 }
 
 func (processingOrder *ProcessingOrder) SetGroup(group *Group) *ProcessingOrder {
-	processingOrder.Group = group
+	processingOrder.Group = group.Clean()
 	return processingOrder
 }
 
@@ -217,12 +217,12 @@ func (processingOrder *ProcessingOrder) SetMoment(moment *Timestamp) *Processing
 }
 
 func (processingOrder *ProcessingOrder) SetOrganizationAccount(organizationAccount *AgentAccount) *ProcessingOrder {
-	processingOrder.OrganizationAccount = organizationAccount
+	processingOrder.OrganizationAccount = organizationAccount.Clean()
 	return processingOrder
 }
 
 func (processingOrder *ProcessingOrder) SetOwner(owner *Employee) *ProcessingOrder {
-	processingOrder.Owner = owner
+	processingOrder.Owner = owner.Clean()
 	return processingOrder
 }
 
@@ -232,12 +232,12 @@ func (processingOrder *ProcessingOrder) SetPositions(positions *Positions[Proces
 }
 
 func (processingOrder *ProcessingOrder) SetProcessingPlan(processingPlan *ProcessingPlan) *ProcessingOrder {
-	processingOrder.ProcessingPlan = processingPlan
+	processingOrder.ProcessingPlan = processingPlan.Clean()
 	return processingOrder
 }
 
 func (processingOrder *ProcessingOrder) SetProject(project *Project) *ProcessingOrder {
-	processingOrder.Project = project
+	processingOrder.Project = project.Clean()
 	return processingOrder
 }
 
@@ -257,12 +257,12 @@ func (processingOrder *ProcessingOrder) SetShared(shared bool) *ProcessingOrder 
 }
 
 func (processingOrder *ProcessingOrder) SetState(state *State) *ProcessingOrder {
-	processingOrder.State = state
+	processingOrder.State = state.Clean()
 	return processingOrder
 }
 
 func (processingOrder *ProcessingOrder) SetStore(store *Store) *ProcessingOrder {
-	processingOrder.Store = store
+	processingOrder.Store = store.Clean()
 	return processingOrder
 }
 

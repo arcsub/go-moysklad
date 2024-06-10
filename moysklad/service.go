@@ -180,7 +180,7 @@ func (service *Service) SetVatEnabled(vatEnabled bool) *Service {
 }
 
 func (service *Service) SetGroup(group *Group) *Service {
-	service.Group = group
+	service.Group = group.Clean()
 	return service
 }
 
@@ -245,12 +245,12 @@ func (service *Service) SetMinPrice(minPrice *MinPrice) *Service {
 }
 
 func (service *Service) SetOwner(owner *Employee) *Service {
-	service.Owner = owner
+	service.Owner = owner.Clean()
 	return service
 }
 
 func (service *Service) SetProductFolder(productFolder *ProductFolder) *Service {
-	service.ProductFolder = productFolder
+	service.ProductFolder = productFolder.Clean()
 	return service
 }
 
@@ -275,7 +275,7 @@ func (service *Service) SetVat(vat int) *Service {
 }
 
 func (service *Service) SetUom(uom *Uom) *Service {
-	service.Uom = uom
+	service.Uom = uom.Clean()
 	return service
 }
 

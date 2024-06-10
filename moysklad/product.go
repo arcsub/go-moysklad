@@ -264,7 +264,7 @@ func (product Product) GetAttributes() Slice[AttributeValue] {
 }
 
 func (product *Product) SetSupplier(supplier *Counterparty) *Product {
-	product.Supplier = supplier
+	product.Supplier = supplier.Clean()
 	return product
 }
 
@@ -324,7 +324,7 @@ func (product *Product) SetBuyPrice(buyPrice *BuyPrice) *Product {
 }
 
 func (product *Product) SetCountry(country *Country) *Product {
-	product.Country = country
+	product.Country = country.Clean()
 	return product
 }
 
@@ -339,7 +339,7 @@ func (product *Product) SetFiles(files Slice[File]) *Product {
 }
 
 func (product *Product) SetGroup(group *Group) *Product {
-	product.Group = group
+	product.Group = group.Clean()
 	return product
 }
 
@@ -369,7 +369,7 @@ func (product *Product) SetUseParentVat(useParentVat bool) *Product {
 }
 
 func (product *Product) SetOwner(owner *Employee) *Product {
-	product.Owner = owner
+	product.Owner = owner.Clean()
 	return product
 }
 
@@ -394,7 +394,7 @@ func (product *Product) SetPpeType(ppeType string) *Product {
 }
 
 func (product *Product) SetProductFolder(productFolder *ProductFolder) *Product {
-	product.ProductFolder = productFolder
+	product.ProductFolder = productFolder.Clean()
 	return product
 }
 
@@ -434,7 +434,7 @@ func (product *Product) SetVatEnabled(vatEnabled bool) *Product {
 }
 
 func (product *Product) SetUom(uom *Uom) *Product {
-	product.Uom = uom
+	product.Uom = uom.Clean()
 	return product
 }
 

@@ -152,17 +152,17 @@ func (productFolder *ProductFolder) SetArchived(archived bool) *ProductFolder {
 }
 
 func (productFolder *ProductFolder) SetGroup(group *Group) *ProductFolder {
-	productFolder.Group = group
+	productFolder.Group = group.Clean()
 	return productFolder
 }
 
 func (productFolder *ProductFolder) SetOwner(owner *Employee) *ProductFolder {
-	productFolder.Owner = owner
+	productFolder.Owner = owner.Clean()
 	return productFolder
 }
 
 func (productFolder *ProductFolder) SetProductFolder(parent *ProductFolder) *ProductFolder {
-	productFolder.ProductFolder = parent
+	productFolder.ProductFolder = parent.Clean()
 	return productFolder
 }
 

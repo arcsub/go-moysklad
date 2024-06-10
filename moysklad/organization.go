@@ -277,7 +277,7 @@ func (organization *Organization) SetArchived(archived bool) *Organization {
 }
 
 func (organization *Organization) SetBonusProgram(bonusProgram *BonusProgram) *Organization {
-	organization.BonusProgram = bonusProgram
+	organization.BonusProgram = bonusProgram.Clean()
 	return organization
 }
 
@@ -302,7 +302,7 @@ func (organization *Organization) SetExternalCode(externalCode string) *Organiza
 }
 
 func (organization *Organization) SetGroup(group *Group) *Organization {
-	organization.Group = group
+	organization.Group = group.Clean()
 	return organization
 }
 
@@ -317,7 +317,7 @@ func (organization *Organization) SetName(name string) *Organization {
 }
 
 func (organization *Organization) SetOwner(owner *Employee) *Organization {
-	organization.Owner = owner
+	organization.Owner = owner.Clean()
 	return organization
 }
 

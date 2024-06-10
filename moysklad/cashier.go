@@ -40,7 +40,7 @@ func (cashier Cashier) GetRetailStore() RetailStore {
 }
 
 func (cashier *Cashier) SetEmployee(employee *Employee) *Cashier {
-	cashier.Employee = employee
+	cashier.Employee = employee.Clean()
 	return cashier
 }
 
@@ -50,7 +50,7 @@ func (cashier *Cashier) SetMeta(meta *Meta) *Cashier {
 }
 
 func (cashier *Cashier) SetRetailStore(retailStore *RetailStore) *Cashier {
-	cashier.RetailStore = retailStore
+	cashier.RetailStore = retailStore.Clean()
 	return cashier
 }
 

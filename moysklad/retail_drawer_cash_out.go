@@ -187,27 +187,27 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetFiles(files Slice[File]) *Ret
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetGroup(group *Group) *RetailDrawerCashOut {
-	retailDrawerCashOut.Group = group
+	retailDrawerCashOut.Group = group.Clean()
 	return retailDrawerCashOut
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetRetailShift(retailShift *RetailShift) *RetailDrawerCashOut {
-	retailDrawerCashOut.RetailShift = retailShift
+	retailDrawerCashOut.RetailShift = retailShift.Clean()
 	return retailDrawerCashOut
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetAgent(agent *Counterparty) *RetailDrawerCashOut {
-	retailDrawerCashOut.Agent = agent
+	retailDrawerCashOut.Agent = agent.Clean()
 	return retailDrawerCashOut
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetOrganization(organization *Organization) *RetailDrawerCashOut {
-	retailDrawerCashOut.Organization = organization
+	retailDrawerCashOut.Organization = organization.Clean()
 	return retailDrawerCashOut
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetOwner(owner *Employee) *RetailDrawerCashOut {
-	retailDrawerCashOut.Owner = owner
+	retailDrawerCashOut.Owner = owner.Clean()
 	return retailDrawerCashOut
 }
 
@@ -222,7 +222,7 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetShared(shared bool) *RetailDr
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetState(state *State) *RetailDrawerCashOut {
-	retailDrawerCashOut.State = state
+	retailDrawerCashOut.State = state.Clean()
 	return retailDrawerCashOut
 }
 

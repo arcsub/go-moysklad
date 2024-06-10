@@ -73,7 +73,7 @@ func (taxRate *TaxRate) SetComment(comment string) *TaxRate {
 }
 
 func (taxRate *TaxRate) SetGroup(group *Group) *TaxRate {
-	taxRate.Group = group
+	taxRate.Group = group.Clean()
 	return taxRate
 }
 
@@ -88,7 +88,7 @@ func (taxRate *TaxRate) SetRate(rate int) *TaxRate {
 }
 
 func (taxRate *TaxRate) SetOwner(owner *Employee) *TaxRate {
-	taxRate.Owner = owner
+	taxRate.Owner = owner.Clean()
 	return taxRate
 }
 

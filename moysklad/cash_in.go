@@ -177,7 +177,7 @@ func (cashIn CashIn) GetAttributes() Slice[AttributeValue] {
 }
 
 func (cashIn *CashIn) SetOrganization(organization *Organization) *CashIn {
-	cashIn.Organization = organization
+	cashIn.Organization = organization.Clean()
 	return cashIn
 }
 
@@ -202,7 +202,7 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 }
 
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
-	cashIn.Contract = contract
+	cashIn.Contract = contract.Clean()
 	return cashIn
 }
 
@@ -222,7 +222,7 @@ func (cashIn *CashIn) SetFiles(files Slice[File]) *CashIn {
 }
 
 func (cashIn *CashIn) SetGroup(group *Group) *CashIn {
-	cashIn.Group = group
+	cashIn.Group = group.Clean()
 	return cashIn
 }
 
@@ -237,12 +237,12 @@ func (cashIn *CashIn) SetOperations(operations Operations) *CashIn {
 }
 
 func (cashIn *CashIn) SetAgent(agent *Counterparty) *CashIn {
-	cashIn.Agent = agent
+	cashIn.Agent = agent.Clean()
 	return cashIn
 }
 
 func (cashIn *CashIn) SetOwner(owner *Employee) *CashIn {
-	cashIn.Owner = owner
+	cashIn.Owner = owner.Clean()
 	return cashIn
 }
 
@@ -252,7 +252,7 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 }
 
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
-	cashIn.Project = project
+	cashIn.Project = project.Clean()
 	return cashIn
 }
 
@@ -262,7 +262,7 @@ func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 }
 
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
-	cashIn.SalesChannel = salesChannel
+	cashIn.SalesChannel = salesChannel.Clean()
 	return cashIn
 }
 
@@ -272,7 +272,7 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 }
 
 func (cashIn *CashIn) SetState(state *State) *CashIn {
-	cashIn.State = state
+	cashIn.State = state.Clean()
 	return cashIn
 }
 
@@ -292,7 +292,7 @@ func (cashIn *CashIn) SetName(name string) *CashIn {
 }
 
 func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
-	cashIn.FactureIn = factureIn
+	cashIn.FactureIn = factureIn.Clean()
 	return cashIn
 }
 

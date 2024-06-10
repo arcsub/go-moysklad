@@ -87,7 +87,7 @@ func (processingStage *ProcessingStage) SetExternalCode(externalCode string) *Pr
 }
 
 func (processingStage *ProcessingStage) SetGroup(group *Group) *ProcessingStage {
-	processingStage.Group = group
+	processingStage.Group = group.Clean()
 	return processingStage
 }
 
@@ -102,7 +102,7 @@ func (processingStage *ProcessingStage) SetName(name string) *ProcessingStage {
 }
 
 func (processingStage *ProcessingStage) SetOwner(owner *Employee) *ProcessingStage {
-	processingStage.Owner = owner
+	processingStage.Owner = owner.Clean()
 	return processingStage
 }
 

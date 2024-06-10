@@ -177,7 +177,7 @@ func (priceList *PriceList) SetFiles(files Slice[File]) *PriceList {
 }
 
 func (priceList *PriceList) SetGroup(group *Group) *PriceList {
-	priceList.Group = group
+	priceList.Group = group.Clean()
 	return priceList
 }
 
@@ -197,7 +197,7 @@ func (priceList *PriceList) SetOrganization(organization *Organization) *PriceLi
 }
 
 func (priceList *PriceList) SetOwner(owner *Employee) *PriceList {
-	priceList.Owner = owner
+	priceList.Owner = owner.Clean()
 	return priceList
 }
 
@@ -212,7 +212,7 @@ func (priceList *PriceList) SetShared(shared bool) *PriceList {
 }
 
 func (priceList *PriceList) SetState(state *State) *PriceList {
-	priceList.State = state
+	priceList.State = state.Clean()
 	return priceList
 }
 

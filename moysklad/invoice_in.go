@@ -227,7 +227,7 @@ func (invoiceIn InvoiceIn) GetAttributes() Slice[AttributeValue] {
 }
 
 func (invoiceIn *InvoiceIn) SetOrganizationAccount(organizationAccount *AgentAccount) *InvoiceIn {
-	invoiceIn.OrganizationAccount = organizationAccount
+	invoiceIn.OrganizationAccount = organizationAccount.Clean()
 	return invoiceIn
 }
 
@@ -247,12 +247,12 @@ func (invoiceIn *InvoiceIn) SetCode(code string) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetContract(contract *Contract) *InvoiceIn {
-	invoiceIn.Contract = contract
+	invoiceIn.Contract = contract.Clean()
 	return invoiceIn
 }
 
 func (invoiceIn *InvoiceIn) SetOwner(owner *Employee) *InvoiceIn {
-	invoiceIn.Owner = owner
+	invoiceIn.Owner = owner.Clean()
 	return invoiceIn
 }
 
@@ -297,22 +297,22 @@ func (invoiceIn *InvoiceIn) SetName(name string) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetOrganization(organization *Organization) *InvoiceIn {
-	invoiceIn.Organization = organization
+	invoiceIn.Organization = organization.Clean()
 	return invoiceIn
 }
 
 func (invoiceIn *InvoiceIn) SetGroup(group *Group) *InvoiceIn {
-	invoiceIn.Group = group
+	invoiceIn.Group = group.Clean()
 	return invoiceIn
 }
 
 func (invoiceIn *InvoiceIn) SetAgent(agent *Counterparty) *InvoiceIn {
-	invoiceIn.Agent = agent
+	invoiceIn.Agent = agent.Clean()
 	return invoiceIn
 }
 
 func (invoiceIn *InvoiceIn) SetAgentAccount(agentAccount *AgentAccount) *InvoiceIn {
-	invoiceIn.AgentAccount = agentAccount
+	invoiceIn.AgentAccount = agentAccount.Clean()
 	return invoiceIn
 }
 
@@ -327,7 +327,7 @@ func (invoiceIn *InvoiceIn) SetPositions(positions *Positions[InvoiceInPosition]
 }
 
 func (invoiceIn *InvoiceIn) SetProject(project *Project) *InvoiceIn {
-	invoiceIn.Project = project
+	invoiceIn.Project = project.Clean()
 	return invoiceIn
 }
 
@@ -342,12 +342,12 @@ func (invoiceIn *InvoiceIn) SetShared(shared bool) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetState(state *State) *InvoiceIn {
-	invoiceIn.State = state
+	invoiceIn.State = state.Clean()
 	return invoiceIn
 }
 
 func (invoiceIn *InvoiceIn) SetStore(store *Store) *InvoiceIn {
-	invoiceIn.Store = store
+	invoiceIn.Store = store.Clean()
 	return invoiceIn
 }
 
@@ -372,7 +372,7 @@ func (invoiceIn *InvoiceIn) SetPayments(payments Slice[Payment]) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetPurchaseOrder(purchaseOrder *PurchaseOrder) *InvoiceIn {
-	invoiceIn.PurchaseOrder = purchaseOrder
+	invoiceIn.PurchaseOrder = purchaseOrder.Clean()
 	return invoiceIn
 }
 

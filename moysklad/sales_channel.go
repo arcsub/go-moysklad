@@ -102,7 +102,7 @@ func (salesChannel *SalesChannel) SetExternalCode(externalCode string) *SalesCha
 }
 
 func (salesChannel *SalesChannel) SetGroup(group *Group) *SalesChannel {
-	salesChannel.Group = group
+	salesChannel.Group = group.Clean()
 	return salesChannel
 }
 
@@ -117,7 +117,7 @@ func (salesChannel *SalesChannel) SetName(name string) *SalesChannel {
 }
 
 func (salesChannel *SalesChannel) SetOwner(owner *Employee) *SalesChannel {
-	salesChannel.Owner = owner
+	salesChannel.Owner = owner.Clean()
 	return salesChannel
 }
 

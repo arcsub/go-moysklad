@@ -157,7 +157,7 @@ func (enter Enter) GetAttributes() Slice[AttributeValue] {
 }
 
 func (enter *Enter) SetOrganization(organization *Organization) *Enter {
-	enter.Organization = organization
+	enter.Organization = organization.Clean()
 	return enter
 }
 
@@ -187,7 +187,7 @@ func (enter *Enter) SetFiles(files Slice[File]) *Enter {
 }
 
 func (enter *Enter) SetGroup(group *Group) *Enter {
-	enter.Group = group
+	enter.Group = group.Clean()
 	return enter
 }
 
@@ -207,7 +207,7 @@ func (enter *Enter) SetOverhead(overhead *Overhead) *Enter {
 }
 
 func (enter *Enter) SetOwner(owner *Employee) *Enter {
-	enter.Owner = owner
+	enter.Owner = owner.Clean()
 	return enter
 }
 
@@ -217,7 +217,7 @@ func (enter *Enter) SetPositions(positions *Positions[EnterPosition]) *Enter {
 }
 
 func (enter *Enter) SetProject(project *Project) *Enter {
-	enter.Project = project
+	enter.Project = project.Clean()
 	return enter
 }
 
@@ -232,12 +232,12 @@ func (enter *Enter) SetShared(shared bool) *Enter {
 }
 
 func (enter *Enter) SetState(state *State) *Enter {
-	enter.State = state
+	enter.State = state.Clean()
 	return enter
 }
 
 func (enter *Enter) SetStore(store *Store) *Enter {
-	enter.Store = store
+	enter.Store = store.Clean()
 	return enter
 }
 
@@ -336,7 +336,7 @@ func (enterPosition *EnterPosition) SetAssortment(assortment AsAssortment) *Ente
 }
 
 func (enterPosition *EnterPosition) SetCountry(country *Country) *EnterPosition {
-	enterPosition.Country = country
+	enterPosition.Country = country.Clean()
 	return enterPosition
 }
 
@@ -366,7 +366,7 @@ func (enterPosition *EnterPosition) SetReason(reason string) *EnterPosition {
 }
 
 func (enterPosition *EnterPosition) SetSlot(slot *Slot) *EnterPosition {
-	enterPosition.Slot = slot
+	enterPosition.Slot = slot.Clean()
 	return enterPosition
 }
 

@@ -207,7 +207,7 @@ func (prepayment *Prepayment) SetReturns(returns Slice[PrepaymentReturn]) *Prepa
 }
 
 func (prepayment *Prepayment) SetOwner(owner *Employee) *Prepayment {
-	prepayment.Owner = owner
+	prepayment.Owner = owner.Clean()
 	return prepayment
 }
 
@@ -217,7 +217,7 @@ func (prepayment *Prepayment) SetApplicable(applicable bool) *Prepayment {
 }
 
 func (prepayment *Prepayment) SetAgent(agent *Counterparty) *Prepayment {
-	prepayment.Agent = agent
+	prepayment.Agent = agent.Clean()
 	return prepayment
 }
 
@@ -232,7 +232,7 @@ func (prepayment *Prepayment) SetCode(code string) *Prepayment {
 }
 
 func (prepayment *Prepayment) SetCustomerOrder(customerOrder *CustomerOrder) *Prepayment {
-	prepayment.CustomerOrder = customerOrder
+	prepayment.CustomerOrder = customerOrder.Clean()
 	return prepayment
 }
 
@@ -252,7 +252,7 @@ func (prepayment *Prepayment) SetFiles(files Slice[File]) *Prepayment {
 }
 
 func (prepayment *Prepayment) SetGroup(group *Group) *Prepayment {
-	prepayment.Group = group
+	prepayment.Group = group.Clean()
 	return prepayment
 }
 
@@ -297,17 +297,17 @@ func (prepayment *Prepayment) SetRate(rate *Rate) *Prepayment {
 }
 
 func (prepayment *Prepayment) SetRetailShift(retailShift *RetailShift) *Prepayment {
-	prepayment.RetailShift = retailShift
+	prepayment.RetailShift = retailShift.Clean()
 	return prepayment
 }
 
 func (prepayment *Prepayment) SetRetailStore(retailStore *RetailStore) *Prepayment {
-	prepayment.RetailStore = retailStore
+	prepayment.RetailStore = retailStore.Clean()
 	return prepayment
 }
 
 func (prepayment *Prepayment) SetOrganization(organization *Organization) *Prepayment {
-	prepayment.Organization = organization
+	prepayment.Organization = organization.Clean()
 	return prepayment
 }
 
@@ -317,7 +317,7 @@ func (prepayment *Prepayment) SetShared(shared bool) *Prepayment {
 }
 
 func (prepayment *Prepayment) SetState(state *State) *Prepayment {
-	prepayment.State = state
+	prepayment.State = state.Clean()
 	return prepayment
 }
 

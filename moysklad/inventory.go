@@ -164,7 +164,7 @@ func (inventory *Inventory) SetFiles(files Slice[File]) *Inventory {
 }
 
 func (inventory *Inventory) SetGroup(group *Group) *Inventory {
-	inventory.Group = group
+	inventory.Group = group.Clean()
 	return inventory
 }
 
@@ -174,12 +174,12 @@ func (inventory *Inventory) SetMeta(meta *Meta) *Inventory {
 }
 
 func (inventory *Inventory) SetOwner(owner *Employee) *Inventory {
-	inventory.Owner = owner
+	inventory.Owner = owner.Clean()
 	return inventory
 }
 
 func (inventory *Inventory) SetOrganization(organization *Organization) *Inventory {
-	inventory.Organization = organization
+	inventory.Organization = organization.Clean()
 	return inventory
 }
 
@@ -194,12 +194,12 @@ func (inventory *Inventory) SetShared(shared bool) *Inventory {
 }
 
 func (inventory *Inventory) SetState(state *State) *Inventory {
-	inventory.State = state
+	inventory.State = state.Clean()
 	return inventory
 }
 
 func (inventory *Inventory) SetStore(store *Store) *Inventory {
-	inventory.Store = store
+	inventory.Store = store.Clean()
 	return inventory
 }
 
@@ -385,9 +385,9 @@ func NewInventoryService(client *Client) InventoryService {
 
 // Recalculate Запрос на пересчёт расчётных остатков у позиций инвентаризации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-pereschet-raschetnogo-ostatka-w-inwentarizacii
-func (s *inventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *inventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("rpc/inventory/%s/recalcCalculatedQuantity", id)
-	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}

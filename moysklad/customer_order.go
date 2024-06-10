@@ -262,17 +262,17 @@ func (customerOrder CustomerOrder) GetAttributes() Slice[AttributeValue] {
 }
 
 func (customerOrder *CustomerOrder) SetOrganizationAccount(organizationAccount *AgentAccount) *CustomerOrder {
-	customerOrder.OrganizationAccount = organizationAccount
+	customerOrder.OrganizationAccount = organizationAccount.Clean()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetProject(project *Project) *CustomerOrder {
-	customerOrder.Project = project
+	customerOrder.Project = project.Clean()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetAgentAccount(agentAccount *AgentAccount) *CustomerOrder {
-	customerOrder.AgentAccount = agentAccount
+	customerOrder.AgentAccount = agentAccount.Clean()
 	return customerOrder
 }
 
@@ -292,7 +292,7 @@ func (customerOrder *CustomerOrder) SetCode(code string) *CustomerOrder {
 }
 
 func (customerOrder *CustomerOrder) SetAgent(agent *Counterparty) *CustomerOrder {
-	customerOrder.Agent = agent
+	customerOrder.Agent = agent.Clean()
 	return customerOrder
 }
 
@@ -317,7 +317,7 @@ func (customerOrder *CustomerOrder) SetFiles(files Slice[File]) *CustomerOrder {
 }
 
 func (customerOrder *CustomerOrder) SetGroup(group *Group) *CustomerOrder {
-	customerOrder.Group = group
+	customerOrder.Group = group.Clean()
 	return customerOrder
 }
 
@@ -337,12 +337,12 @@ func (customerOrder *CustomerOrder) SetMoment(moment *Timestamp) *CustomerOrder 
 }
 
 func (customerOrder *CustomerOrder) SetOrganization(organization *Organization) *CustomerOrder {
-	customerOrder.Organization = organization
+	customerOrder.Organization = organization.Clean()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetOwner(owner *Employee) *CustomerOrder {
-	customerOrder.Owner = owner
+	customerOrder.Owner = owner.Clean()
 	return customerOrder
 }
 
@@ -352,7 +352,7 @@ func (customerOrder *CustomerOrder) SetPositions(positions *Positions[CustomerOr
 }
 
 func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrder {
-	customerOrder.Contract = contract
+	customerOrder.Contract = contract.Clean()
 	return customerOrder
 }
 
@@ -362,7 +362,7 @@ func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
 }
 
 func (customerOrder *CustomerOrder) SetSalesChannel(salesChannel *SalesChannel) *CustomerOrder {
-	customerOrder.SalesChannel = salesChannel
+	customerOrder.SalesChannel = salesChannel.Clean()
 	return customerOrder
 }
 
@@ -382,12 +382,12 @@ func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull A
 }
 
 func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
-	customerOrder.State = state
+	customerOrder.State = state.Clean()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetStore(store *Store) *CustomerOrder {
-	customerOrder.Store = store
+	customerOrder.Store = store.Clean()
 	return customerOrder
 }
 

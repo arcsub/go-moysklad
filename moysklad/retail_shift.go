@@ -217,7 +217,7 @@ func (retailShift RetailShift) GetAttributes() Slice[AttributeValue] {
 }
 
 func (retailShift *RetailShift) SetOrganization(organization *Organization) *RetailShift {
-	retailShift.Organization = organization
+	retailShift.Organization = organization.Clean()
 	return retailShift
 }
 
@@ -261,8 +261,8 @@ func (retailShift *RetailShift) SetExternalCode(externalCode string) *RetailShif
 	return retailShift
 }
 
-func (retailShift *RetailShift) SetFiles(files *MetaArray[File]) *RetailShift {
-	retailShift.Files = files
+func (retailShift *RetailShift) SetFiles(files Slice[File]) *RetailShift {
+	retailShift.Files = NewMetaArrayRows(files)
 	return retailShift
 }
 
@@ -272,7 +272,7 @@ func (retailShift *RetailShift) SetMeta(meta *Meta) *RetailShift {
 }
 
 func (retailShift *RetailShift) SetAcquire(acquire *Counterparty) *RetailShift {
-	retailShift.Acquire = acquire
+	retailShift.Acquire = acquire.Clean()
 	return retailShift
 }
 
@@ -282,17 +282,17 @@ func (retailShift *RetailShift) SetMoment(moment *Timestamp) *RetailShift {
 }
 
 func (retailShift *RetailShift) SetOrganizationAccount(organizationAccount *AgentAccount) *RetailShift {
-	retailShift.OrganizationAccount = organizationAccount
+	retailShift.OrganizationAccount = organizationAccount.Clean()
 	return retailShift
 }
 
 func (retailShift *RetailShift) SetOwner(owner *Employee) *RetailShift {
-	retailShift.Owner = owner
+	retailShift.Owner = owner.Clean()
 	return retailShift
 }
 
 func (retailShift *RetailShift) SetQRAcquire(qrAcquire *Counterparty) *RetailShift {
-	retailShift.QRAcquire = qrAcquire
+	retailShift.QRAcquire = qrAcquire.Clean()
 	return retailShift
 }
 
@@ -307,12 +307,12 @@ func (retailShift *RetailShift) SetQRBankPercent(qrBankPercent float64) *RetailS
 }
 
 func (retailShift *RetailShift) SetRetailStore(retailStore *RetailStore) *RetailShift {
-	retailShift.RetailStore = retailStore
+	retailShift.RetailStore = retailStore.Clean()
 	return retailShift
 }
 
 func (retailShift *RetailShift) SetStore(store *Store) *RetailShift {
-	retailShift.Store = store
+	retailShift.Store = store.Clean()
 	return retailShift
 }
 

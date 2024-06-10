@@ -277,12 +277,12 @@ func (retailDemand RetailDemand) GetAttributes() Slice[AttributeValue] {
 }
 
 func (retailDemand *RetailDemand) SetAgent(agent *Counterparty) *RetailDemand {
-	retailDemand.Agent = agent
+	retailDemand.Agent = agent.Clean()
 	return retailDemand
 }
 
 func (retailDemand *RetailDemand) SetAgentAccount(agentAccount *AgentAccount) *RetailDemand {
-	retailDemand.AgentAccount = agentAccount
+	retailDemand.AgentAccount = agentAccount.Clean()
 	return retailDemand
 }
 
@@ -312,12 +312,12 @@ func (retailDemand *RetailDemand) SetCode(code string) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetContract(contract *Contract) *RetailDemand {
-	retailDemand.Contract = contract
+	retailDemand.Contract = contract.Clean()
 	return retailDemand
 }
 
 func (retailDemand *RetailDemand) SetCustomerOrder(customerOrder *CustomerOrder) *RetailDemand {
-	retailDemand.CustomerOrder = customerOrder
+	retailDemand.CustomerOrder = customerOrder.Clean()
 	return retailDemand
 }
 
@@ -342,7 +342,7 @@ func (retailDemand *RetailDemand) SetFiles(files Slice[File]) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetGroup(group *Group) *RetailDemand {
-	retailDemand.Group = group
+	retailDemand.Group = group.Clean()
 	return retailDemand
 }
 
@@ -367,12 +367,12 @@ func (retailDemand *RetailDemand) SetNoCashSum(noCashSum float64) *RetailDemand 
 }
 
 func (retailDemand *RetailDemand) SetOrganization(organization *Organization) *RetailDemand {
-	retailDemand.Organization = organization
+	retailDemand.Organization = organization.Clean()
 	return retailDemand
 }
 
 func (retailDemand *RetailDemand) SetOrganizationAccount(organizationAccount *AgentAccount) *RetailDemand {
-	retailDemand.OrganizationAccount = organizationAccount
+	retailDemand.OrganizationAccount = organizationAccount.Clean()
 	return retailDemand
 }
 
@@ -402,7 +402,7 @@ func (retailDemand *RetailDemand) SetPrepaymentQRSum(prepaymentQRSum float64) *R
 }
 
 func (retailDemand *RetailDemand) SetProject(project *Project) *RetailDemand {
-	retailDemand.Project = project
+	retailDemand.Project = project.Clean()
 	return retailDemand
 }
 
@@ -417,12 +417,12 @@ func (retailDemand *RetailDemand) SetRate(rate *Rate) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetRetailShift(retailShift *RetailShift) *RetailDemand {
-	retailDemand.RetailShift = retailShift
+	retailDemand.RetailShift = retailShift.Clean()
 	return retailDemand
 }
 
 func (retailDemand *RetailDemand) SetRetailStore(retailStore *RetailStore) *RetailDemand {
-	retailDemand.RetailStore = retailStore
+	retailDemand.RetailStore = retailStore.Clean()
 	return retailDemand
 }
 
@@ -437,12 +437,12 @@ func (retailDemand *RetailDemand) SetShared(shared bool) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetState(state *State) *RetailDemand {
-	retailDemand.State = state
+	retailDemand.State = state.Clean()
 	return retailDemand
 }
 
 func (retailDemand *RetailDemand) SetStore(store *Store) *RetailDemand {
-	retailDemand.Store = store
+	retailDemand.Store = store.Clean()
 	return retailDemand
 }
 

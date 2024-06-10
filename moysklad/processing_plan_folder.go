@@ -102,7 +102,7 @@ func (processingPlanFolder *ProcessingPlanFolder) SetDescription(description str
 }
 
 func (processingPlanFolder *ProcessingPlanFolder) SetGroup(group *Group) *ProcessingPlanFolder {
-	processingPlanFolder.Group = group
+	processingPlanFolder.Group = group.Clean()
 	return processingPlanFolder
 }
 
@@ -117,7 +117,7 @@ func (processingPlanFolder *ProcessingPlanFolder) SetName(name string) *Processi
 }
 
 func (processingPlanFolder *ProcessingPlanFolder) SetOwner(owner *Employee) *ProcessingPlanFolder {
-	processingPlanFolder.Owner = owner
+	processingPlanFolder.Owner = owner.Clean()
 	return processingPlanFolder
 }
 

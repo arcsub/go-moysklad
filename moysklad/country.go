@@ -87,7 +87,7 @@ func (country *Country) SetExternalCode(externalCode string) *Country {
 }
 
 func (country *Country) SetGroup(group *Group) *Country {
-	country.Group = group
+	country.Group = group.Clean()
 	return country
 }
 
@@ -102,7 +102,7 @@ func (country *Country) SetName(name string) *Country {
 }
 
 func (country *Country) SetOwner(owner *Employee) *Country {
-	country.Owner = owner
+	country.Owner = owner.Clean()
 	return country
 }
 

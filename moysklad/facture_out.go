@@ -182,7 +182,7 @@ func (factureOut FactureOut) GetAttributes() Slice[AttributeValue] {
 }
 
 func (factureOut *FactureOut) SetOrganization(organization *Organization) *FactureOut {
-	factureOut.Organization = organization
+	factureOut.Organization = organization.Clean()
 	return factureOut
 }
 
@@ -197,12 +197,12 @@ func (factureOut *FactureOut) SetCode(code string) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetContract(contract *Contract) *FactureOut {
-	factureOut.Contract = contract
+	factureOut.Contract = contract.Clean()
 	return factureOut
 }
 
 func (factureOut *FactureOut) SetOwner(owner *Employee) *FactureOut {
-	factureOut.Owner = owner
+	factureOut.Owner = owner.Clean()
 	return factureOut
 }
 
@@ -222,7 +222,7 @@ func (factureOut *FactureOut) SetFiles(files Slice[File]) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetGroup(group *Group) *FactureOut {
-	factureOut.Group = group
+	factureOut.Group = group.Clean()
 	return factureOut
 }
 
@@ -242,7 +242,7 @@ func (factureOut *FactureOut) SetPaymentDate(paymentDate *Timestamp) *FactureOut
 }
 
 func (factureOut *FactureOut) SetAgent(agent *Counterparty) *FactureOut {
-	factureOut.Agent = agent
+	factureOut.Agent = agent.Clean()
 	return factureOut
 }
 
@@ -262,7 +262,7 @@ func (factureOut *FactureOut) SetShared(shared bool) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetState(state *State) *FactureOut {
-	factureOut.State = state
+	factureOut.State = state.Clean()
 	return factureOut
 }
 
@@ -292,7 +292,7 @@ func (factureOut *FactureOut) SetReturns(returns Slice[PurchaseReturn]) *Facture
 }
 
 func (factureOut *FactureOut) SetConsignee(consignee *Counterparty) *FactureOut {
-	factureOut.Consignee = consignee
+	factureOut.Consignee = consignee.Clean()
 	return factureOut
 }
 

@@ -14,6 +14,10 @@ type PriceType struct {
 	Name         *string    `json:"name,omitempty"`         // Наименование Типа цены
 }
 
+func (priceType PriceType) Clean() *PriceType {
+	return &PriceType{Meta: priceType.Meta}
+}
+
 func (priceType PriceType) GetExternalCode() string {
 	return Deref(priceType.ExternalCode)
 }

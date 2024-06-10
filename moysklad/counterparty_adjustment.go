@@ -127,7 +127,7 @@ func (counterPartyAdjustment *CounterPartyAdjustment) SetExternalCode(externalCo
 }
 
 func (counterPartyAdjustment *CounterPartyAdjustment) SetGroup(group *Group) *CounterPartyAdjustment {
-	counterPartyAdjustment.Group = group
+	counterPartyAdjustment.Group = group.Clean()
 	return counterPartyAdjustment
 }
 
@@ -152,7 +152,7 @@ func (counterPartyAdjustment *CounterPartyAdjustment) SetName(name string) *Coun
 }
 
 func (counterPartyAdjustment *CounterPartyAdjustment) SetAgent(agent *Counterparty) *CounterPartyAdjustment {
-	counterPartyAdjustment.Agent = agent
+	counterPartyAdjustment.Agent = agent.Clean()
 	return counterPartyAdjustment
 }
 
@@ -167,12 +167,12 @@ func (counterPartyAdjustment *CounterPartyAdjustment) SetMoment(moment *Timestam
 }
 
 func (counterPartyAdjustment *CounterPartyAdjustment) SetOrganization(organization *Organization) *CounterPartyAdjustment {
-	counterPartyAdjustment.Organization = organization
+	counterPartyAdjustment.Organization = organization.Clean()
 	return counterPartyAdjustment
 }
 
 func (counterPartyAdjustment *CounterPartyAdjustment) SetOwner(owner *Employee) *CounterPartyAdjustment {
-	counterPartyAdjustment.Owner = owner
+	counterPartyAdjustment.Owner = owner.Clean()
 	return counterPartyAdjustment
 }
 

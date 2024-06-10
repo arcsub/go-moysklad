@@ -181,6 +181,136 @@ func (cashOut CashOut) GetAttributes() Slice[AttributeValue] {
 	return cashOut.Attributes
 }
 
+func (cashOut *CashOut) SetName(name string) *CashOut {
+	cashOut.Name = &name
+	return cashOut
+}
+
+func (cashOut *CashOut) SetApplicable(applicable bool) *CashOut {
+	cashOut.Applicable = &applicable
+	return cashOut
+}
+
+func (cashOut *CashOut) SetCode(code string) *CashOut {
+	cashOut.Code = &code
+	return cashOut
+}
+
+func (cashOut *CashOut) SetContract(contract *Contract) *CashOut {
+	cashOut.Contract = contract.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetOrganization(organization *Organization) *CashOut {
+	cashOut.Organization = organization.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetDescription(description string) *CashOut {
+	cashOut.Description = &description
+	return cashOut
+}
+
+func (cashOut *CashOut) SetExpenseItem(expenseItem *ExpenseItem) *CashOut {
+	cashOut.ExpenseItem = expenseItem.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetExternalCode(externalCode string) *CashOut {
+	cashOut.ExternalCode = &externalCode
+	return cashOut
+}
+
+func (cashOut *CashOut) SetFiles(files Slice[File]) *CashOut {
+	cashOut.Files = NewMetaArrayRows(files)
+	return cashOut
+}
+
+func (cashOut *CashOut) SetGroup(group *Group) *CashOut {
+	cashOut.Group = group.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetOwner(owner *Employee) *CashOut {
+	cashOut.Owner = owner.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetMeta(meta *Meta) *CashOut {
+	cashOut.Meta = meta
+	return cashOut
+}
+
+func (cashOut *CashOut) SetMoment(moment *Timestamp) *CashOut {
+	cashOut.Moment = moment
+	return cashOut
+}
+
+func (cashOut *CashOut) SetOperations(operations Operations) *CashOut {
+	cashOut.Operations = operations
+	return cashOut
+}
+
+func (cashOut *CashOut) SetAgent(agent *Counterparty) *CashOut {
+	cashOut.Agent = agent.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetPaymentPurpose(paymentPurpose string) *CashOut {
+	cashOut.PaymentPurpose = &paymentPurpose
+	return cashOut
+}
+
+func (cashOut *CashOut) SetProject(project *Project) *CashOut {
+	cashOut.Project = project.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetRate(rate *Rate) *CashOut {
+	cashOut.Rate = rate
+	return cashOut
+}
+
+func (cashOut *CashOut) SetSalesChannel(salesChannel *SalesChannel) *CashOut {
+	cashOut.SalesChannel = salesChannel.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetShared(shared bool) *CashOut {
+	cashOut.Shared = &shared
+	return cashOut
+}
+
+func (cashOut *CashOut) SetState(state *State) *CashOut {
+	cashOut.State = state.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetSum(sum float64) *CashOut {
+	cashOut.Sum = &sum
+	return cashOut
+}
+
+func (cashOut *CashOut) SetSyncID(syncID uuid.UUID) *CashOut {
+	cashOut.SyncID = &syncID
+	return cashOut
+}
+
+func (cashOut *CashOut) SetVatSum(vatSum float64) *CashOut {
+	cashOut.VatSum = &vatSum
+	return cashOut
+}
+
+func (cashOut *CashOut) SetFactureOut(factureOut *FactureOut) *CashOut {
+	cashOut.FactureOut = factureOut.Clean()
+	return cashOut
+}
+
+func (cashOut *CashOut) SetAttributes(attributes Slice[AttributeValue]) *CashOut {
+	cashOut.Attributes = attributes
+	return cashOut
+}
+
 func (cashOut CashOut) String() string {
 	return Stringify(cashOut)
 }

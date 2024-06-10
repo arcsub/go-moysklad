@@ -87,7 +87,7 @@ func (uom *Uom) SetExternalCode(externalCode string) *Uom {
 }
 
 func (uom *Uom) SetGroup(group *Group) *Uom {
-	uom.Group = group
+	uom.Group = group.Clean()
 	return uom
 }
 
@@ -102,7 +102,7 @@ func (uom *Uom) SetName(name string) *Uom {
 }
 
 func (uom *Uom) SetOwner(owner *Employee) *Uom {
-	uom.Owner = owner
+	uom.Owner = owner.Clean()
 	return uom
 }
 

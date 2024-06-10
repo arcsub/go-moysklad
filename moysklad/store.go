@@ -204,6 +204,10 @@ type Slot struct {
 	Zone         *Zone      `json:"zone,omitempty"`         // Зона ячейки
 }
 
+func (slot Slot) Clean() *Slot {
+	return &Slot{Meta: slot.Meta}
+}
+
 func (slot Slot) GetAccountID() uuid.UUID {
 	return Deref(slot.AccountID)
 }

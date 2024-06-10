@@ -383,7 +383,7 @@ func (retailStore RetailStore) GetCreateAgentsTags() Slice[string] {
 }
 
 func (retailStore *RetailStore) SetAcquire(acquire *Counterparty) *RetailStore {
-	retailStore.Acquire = acquire
+	retailStore.Acquire = acquire.Clean()
 	return retailStore
 }
 
@@ -427,8 +427,8 @@ func (retailStore *RetailStore) SetBankPercent(bankPercent float64) *RetailStore
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCashiers(cashiers *MetaArray[Cashier]) *RetailStore {
-	retailStore.Cashiers = cashiers
+func (retailStore *RetailStore) SetCashiers(cashiers Slice[Cashier]) *RetailStore {
+	retailStore.Cashiers = NewMetaArrayRows(cashiers)
 	return retailStore
 }
 
@@ -448,7 +448,7 @@ func (retailStore *RetailStore) SetCreateCashInOnRetailShiftClosing(createCashIn
 }
 
 func (retailStore *RetailStore) SetCreateOrderWithState(createOrderWithState *State) *RetailStore {
-	retailStore.CreateOrderWithState = createOrderWithState
+	retailStore.CreateOrderWithState = createOrderWithState.Clean()
 	return retailStore
 }
 
@@ -483,12 +483,12 @@ func (retailStore *RetailStore) SetEnableReturnsWithNoReason(enableReturnsWithNo
 }
 
 func (retailStore *RetailStore) SetGroup(group *Group) *RetailStore {
-	retailStore.Group = group
+	retailStore.Group = group.Clean()
 	return retailStore
 }
 
 func (retailStore *RetailStore) SetStore(store *Store) *RetailStore {
-	retailStore.Store = store
+	retailStore.Store = store.Clean()
 	return retailStore
 }
 
@@ -553,22 +553,22 @@ func (retailStore *RetailStore) SetShared(shared bool) *RetailStore {
 }
 
 func (retailStore *RetailStore) SetOrderToState(orderToState *State) *RetailStore {
-	retailStore.OrderToState = orderToState
+	retailStore.OrderToState = orderToState.Clean()
 	return retailStore
 }
 
 func (retailStore *RetailStore) SetOrganization(organization *Organization) *RetailStore {
-	retailStore.Organization = organization
+	retailStore.Organization = organization.Clean()
 	return retailStore
 }
 
 func (retailStore *RetailStore) SetOwner(owner *Employee) *RetailStore {
-	retailStore.Owner = owner
+	retailStore.Owner = owner.Clean()
 	return retailStore
 }
 
 func (retailStore *RetailStore) SetPriceType(priceType *PriceType) *RetailStore {
-	retailStore.PriceType = priceType
+	retailStore.PriceType = priceType.Clean()
 	return retailStore
 }
 
@@ -588,7 +588,7 @@ func (retailStore *RetailStore) SetProductFolders(productFolders Slice[ProductFo
 }
 
 func (retailStore *RetailStore) SetQRAcquire(qrAcquire *Counterparty) *RetailStore {
-	retailStore.QRAcquire = qrAcquire
+	retailStore.QRAcquire = qrAcquire.Clean()
 	return retailStore
 }
 
@@ -941,14 +941,14 @@ func NewRetailStoreService(client *Client) RetailStoreService {
 
 // GetCashiers Получить Кассиров.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassirow
-func (s *retailStoreService) GetCashiers(ctx context.Context, id uuid.UUID) (*MetaArray[Cashier], *resty.Response, error) {
+func (service *retailStoreService) GetCashiers(ctx context.Context, id uuid.UUID) (*MetaArray[Cashier], *resty.Response, error) {
 	path := fmt.Sprintf("entity/retailstore/%s/cashiers", id)
-	return NewRequestBuilder[MetaArray[Cashier]](s.client, path).Get(ctx)
+	return NewRequestBuilder[MetaArray[Cashier]](service.client, path).Get(ctx)
 }
 
 // GetCashierByID Получить Кассира.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir-poluchit-kassira
-func (s *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID uuid.UUID) (*Cashier, *resty.Response, error) {
+func (service *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID uuid.UUID) (*Cashier, *resty.Response, error) {
 	path := fmt.Sprintf("entity/retailstore/%s/cashiers/%s", id, cashierID)
-	return NewRequestBuilder[Cashier](s.client, path).Get(ctx)
+	return NewRequestBuilder[Cashier](service.client, path).Get(ctx)
 }
