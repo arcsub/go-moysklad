@@ -5,40 +5,35 @@ import (
 	"time"
 )
 
+// TimestampFormat Формат даты и времени
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-format-daty-i-wremeni
 const TimestampFormat = "2006-01-02 15:04:05.000"
 
 // Timestamp represents a time that can be unmarshalled from a JSON string
 // formatted as either an TimestampFormat.
-type Timestamp struct{ time.Time }
+type Timestamp time.Time
 
 func NewTimestamp(time time.Time) *Timestamp {
-	return &Timestamp{Time: time}
+	t := (Timestamp)(time)
+	return &t
 }
 
 func (timestamp Timestamp) String() string {
-	return timestamp.Time.String()
+	return timestamp.Time().String()
 }
 
-// GetTime returns std time.Time.
-func (timestamp *Timestamp) GetTime() *time.Time {
-	if timestamp == nil {
-		return nil
-	}
-	return &timestamp.Time
+func (timestamp Timestamp) Time() time.Time {
+	return (time.Time)(timestamp)
 }
 
 // MarshalJSON implements the json.Marshaler interface.
 func (timestamp Timestamp) MarshalJSON() ([]byte, error) {
-	return json.Marshal(timestamp.Time.Format("2006-01-02 15:04:05"))
+	return json.Marshal((time.Time)(timestamp).Format("2006-01-02 15:04:05"))
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
 func (timestamp *Timestamp) UnmarshalJSON(data []byte) (err error) {
-	timestamp.Time, err = time.Parse(`"`+TimestampFormat+`"`, string(data))
+	t, err := time.Parse(`"`+TimestampFormat+`"`, string(data))
+	*timestamp = Timestamp(t)
 	return
-}
-
-// Equal reports whether t and u are equal based on time.Equal
-func (timestamp Timestamp) Equal(u Timestamp) bool {
-	return timestamp.Time.Equal(u.Time)
 }
