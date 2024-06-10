@@ -351,8 +351,8 @@ func (internalOrderPosition InternalOrderPosition) GetVatEnabled() bool {
 	return Deref(internalOrderPosition.VatEnabled)
 }
 
-func (internalOrderPosition *InternalOrderPosition) SetAssortment(assortment *AssortmentPosition) *InternalOrderPosition {
-	internalOrderPosition.Assortment = assortment
+func (internalOrderPosition *InternalOrderPosition) SetAssortment(assortment AsAssortment) *InternalOrderPosition {
+	internalOrderPosition.Assortment = assortment.AsAssortment()
 	return internalOrderPosition
 }
 

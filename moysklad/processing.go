@@ -332,8 +332,8 @@ func (processingPositionMaterial ProcessingPositionMaterial) GetQuantity() float
 	return Deref(processingPositionMaterial.Quantity)
 }
 
-func (processingPositionMaterial *ProcessingPositionMaterial) SetAssortment(assortment *AssortmentPosition) *ProcessingPositionMaterial {
-	processingPositionMaterial.Assortment = assortment
+func (processingPositionMaterial *ProcessingPositionMaterial) SetAssortment(assortment AsAssortment) *ProcessingPositionMaterial {
+	processingPositionMaterial.Assortment = assortment.AsAssortment()
 	return processingPositionMaterial
 }
 
@@ -376,8 +376,8 @@ func (processingPositionProduct ProcessingPositionProduct) GetQuantity() float64
 	return Deref(processingPositionProduct.Quantity)
 }
 
-func (processingPositionProduct *ProcessingPositionProduct) SetAssortment(assortment *AssortmentPosition) *ProcessingPositionProduct {
-	processingPositionProduct.Assortment = assortment
+func (processingPositionProduct *ProcessingPositionProduct) SetAssortment(assortment AsAssortment) *ProcessingPositionProduct {
+	processingPositionProduct.Assortment = assortment.AsAssortment()
 	return processingPositionProduct
 }
 

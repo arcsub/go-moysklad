@@ -466,8 +466,8 @@ func (purchaseOrderPosition PurchaseOrderPosition) GetStock() Stock {
 	return Deref(purchaseOrderPosition.Stock)
 }
 
-func (purchaseOrderPosition *PurchaseOrderPosition) SetAssortment(assortment *AssortmentPosition) *PurchaseOrderPosition {
-	purchaseOrderPosition.Assortment = assortment
+func (purchaseOrderPosition *PurchaseOrderPosition) SetAssortment(assortment AsAssortment) *PurchaseOrderPosition {
+	purchaseOrderPosition.Assortment = assortment.AsAssortment()
 	return purchaseOrderPosition
 }
 

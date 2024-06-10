@@ -326,8 +326,8 @@ func (enterPosition EnterPosition) GetThings() Slice[string] {
 	return enterPosition.Things
 }
 
-func (enterPosition *EnterPosition) SetAssortment(assortment *AssortmentPosition) *EnterPosition {
-	enterPosition.Assortment = assortment
+func (enterPosition *EnterPosition) SetAssortment(assortment AsAssortment) *EnterPosition {
+	enterPosition.Assortment = assortment.AsAssortment()
 	return enterPosition
 }
 

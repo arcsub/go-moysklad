@@ -212,8 +212,8 @@ func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetTh
 	return productionStageCompletionMaterial.Things
 }
 
-func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetAssortment(assortment *AssortmentPosition) *ProductionStageCompletionMaterial {
-	productionStageCompletionMaterial.Assortment = assortment
+func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetAssortment(assortment AsAssortment) *ProductionStageCompletionMaterial {
+	productionStageCompletionMaterial.Assortment = assortment.AsAssortment()
 	return productionStageCompletionMaterial
 }
 
@@ -266,8 +266,8 @@ func (productionStageCompletionResult ProductionStageCompletionResult) GetThings
 	return productionStageCompletionResult.Things
 }
 
-func (productionStageCompletionResult *ProductionStageCompletionResult) SetAssortment(assortment *AssortmentPosition) *ProductionStageCompletionResult {
-	productionStageCompletionResult.Assortment = assortment
+func (productionStageCompletionResult *ProductionStageCompletionResult) SetAssortment(assortment AsAssortment) *ProductionStageCompletionResult {
+	productionStageCompletionResult.Assortment = assortment.AsAssortment()
 	return productionStageCompletionResult
 }
 

@@ -117,8 +117,8 @@ func (productionTaskMaterial ProductionTaskMaterial) GetPlanQuantity() float64 {
 	return Deref(productionTaskMaterial.PlanQuantity)
 }
 
-func (productionTaskMaterial *ProductionTaskMaterial) SetAssortment(assortment *AssortmentPosition) *ProductionTaskMaterial {
-	productionTaskMaterial.Assortment = assortment
+func (productionTaskMaterial *ProductionTaskMaterial) SetAssortment(assortment AsAssortment) *ProductionTaskMaterial {
+	productionTaskMaterial.Assortment = assortment.AsAssortment()
 	return productionTaskMaterial
 }
 

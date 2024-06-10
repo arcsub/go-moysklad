@@ -546,8 +546,8 @@ func (retailDemandPosition RetailDemandPosition) GetStock() Stock {
 	return Deref(retailDemandPosition.Stock)
 }
 
-func (retailDemandPosition *RetailDemandPosition) SetAssortment(assortment *AssortmentPosition) *RetailDemandPosition {
-	retailDemandPosition.Assortment = assortment
+func (retailDemandPosition *RetailDemandPosition) SetAssortment(assortment AsAssortment) *RetailDemandPosition {
+	retailDemandPosition.Assortment = assortment.AsAssortment()
 	return retailDemandPosition
 }
 

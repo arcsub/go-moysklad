@@ -521,8 +521,8 @@ func (customerOrderPosition *CustomerOrderPosition) SetQuantity(quantity float64
 	return customerOrderPosition
 }
 
-func (customerOrderPosition *CustomerOrderPosition) SetAssortment(assortment *AssortmentPosition) *CustomerOrderPosition {
-	customerOrderPosition.Assortment = assortment
+func (customerOrderPosition *CustomerOrderPosition) SetAssortment(assortment AsAssortment) *CustomerOrderPosition {
+	customerOrderPosition.Assortment = assortment.AsAssortment()
 	return customerOrderPosition
 }
 

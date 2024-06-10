@@ -65,8 +65,8 @@ func (invoicePosition InvoicePosition) GetStock() Stock {
 	return Deref(invoicePosition.Stock)
 }
 
-func (invoicePosition *InvoicePosition) SetAssortment(assortment *AssortmentPosition) *InvoicePosition {
-	invoicePosition.Assortment = assortment
+func (invoicePosition *InvoicePosition) SetAssortment(assortment AsAssortment) *InvoicePosition {
+	invoicePosition.Assortment = assortment.AsAssortment()
 	return invoicePosition
 }
 

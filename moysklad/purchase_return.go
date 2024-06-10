@@ -446,8 +446,8 @@ func (purchaseReturnPosition PurchaseReturnPosition) GetThings() Slice[string] {
 	return purchaseReturnPosition.Things
 }
 
-func (purchaseReturnPosition *PurchaseReturnPosition) SetAssortment(assortment *AssortmentPosition) *PurchaseReturnPosition {
-	purchaseReturnPosition.Assortment = assortment
+func (purchaseReturnPosition *PurchaseReturnPosition) SetAssortment(assortment AsAssortment) *PurchaseReturnPosition {
+	purchaseReturnPosition.Assortment = assortment.AsAssortment()
 	return purchaseReturnPosition
 }
 

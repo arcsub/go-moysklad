@@ -273,8 +273,8 @@ func (inventoryPosition InventoryPosition) GetQuantity() float64 {
 	return Deref(inventoryPosition.Quantity)
 }
 
-func (inventoryPosition *InventoryPosition) SetAssortment(assortment *AssortmentPosition) *InventoryPosition {
-	inventoryPosition.Assortment = assortment
+func (inventoryPosition *InventoryPosition) SetAssortment(assortment AsAssortment) *InventoryPosition {
+	inventoryPosition.Assortment = assortment.AsAssortment()
 	return inventoryPosition
 }
 

@@ -431,8 +431,8 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() b
 	return Deref(commissionReportOutPosition.VatEnabled)
 }
 
-func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment *AssortmentPosition) *CommissionReportOutPosition {
-	commissionReportOutPosition.Assortment = assortment
+func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AsAssortment) *CommissionReportOutPosition {
+	commissionReportOutPosition.Assortment = assortment.AsAssortment()
 	return commissionReportOutPosition
 }
 

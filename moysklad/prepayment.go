@@ -401,8 +401,8 @@ func (prepaymentPosition PrepaymentPosition) GetVatEnabled() bool {
 	return Deref(prepaymentPosition.VatEnabled)
 }
 
-func (prepaymentPosition *PrepaymentPosition) SetAssortment(assortment *AssortmentPosition) *PrepaymentPosition {
-	prepaymentPosition.Assortment = assortment
+func (prepaymentPosition *PrepaymentPosition) SetAssortment(assortment AsAssortment) *PrepaymentPosition {
+	prepaymentPosition.Assortment = assortment.AsAssortment()
 	return prepaymentPosition
 }
 

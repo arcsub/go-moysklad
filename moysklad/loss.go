@@ -311,8 +311,8 @@ func (lossPosition LossPosition) GetThings() Slice[string] {
 	return lossPosition.Things
 }
 
-func (lossPosition *LossPosition) SetAssortment(assortment *AssortmentPosition) *LossPosition {
-	lossPosition.Assortment = assortment
+func (lossPosition *LossPosition) SetAssortment(assortment AsAssortment) *LossPosition {
+	lossPosition.Assortment = assortment.AsAssortment()
 	return lossPosition
 }
 

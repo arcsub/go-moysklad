@@ -356,8 +356,8 @@ func (movePosition MovePosition) GetThings() Slice[string] {
 	return movePosition.Things
 }
 
-func (movePosition *MovePosition) SetAssortment(assortment *AssortmentPosition) *MovePosition {
-	movePosition.Assortment = assortment
+func (movePosition *MovePosition) SetAssortment(assortment AsAssortment) *MovePosition {
+	movePosition.Assortment = assortment.AsAssortment()
 	return movePosition
 }
 

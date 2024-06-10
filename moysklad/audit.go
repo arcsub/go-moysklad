@@ -146,16 +146,16 @@ func NewAuditService(client *Client) AuditService {
 	return &auditService{NewEndpoint(client, "audit")}
 }
 
-func (s *auditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error) {
-	return NewRequestBuilder[List[Audit]](s.client, s.uri).SetParams(params).Get(ctx)
+func (service *auditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error) {
+	return NewRequestBuilder[List[Audit]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
-func (s *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
+func (service *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf("audit/%s/events", id)
-	return NewRequestBuilder[List[AuditEvent]](s.client, path).Get(ctx)
+	return NewRequestBuilder[List[AuditEvent]](service.client, path).Get(ctx)
 }
 
-func (s *auditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
+func (service *auditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
 	path := "audit/metadata/filters"
-	return NewRequestBuilder[AuditFilters](s.client, path).Get(ctx)
+	return NewRequestBuilder[AuditFilters](service.client, path).Get(ctx)
 }

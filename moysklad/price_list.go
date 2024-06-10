@@ -319,8 +319,8 @@ func (priceListPosition PriceListPosition) GetPack() Pack {
 	return Deref(priceListPosition.Pack)
 }
 
-func (priceListPosition *PriceListPosition) SetAssortment(assortment *AssortmentPosition) *PriceListPosition {
-	priceListPosition.Assortment = assortment
+func (priceListPosition *PriceListPosition) SetAssortment(assortment AsAssortment) *PriceListPosition {
+	priceListPosition.Assortment = assortment.AsAssortment()
 	return priceListPosition
 }
 

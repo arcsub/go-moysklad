@@ -321,8 +321,8 @@ func (processingOrderPosition ProcessingOrderPosition) GetReserve() float64 {
 	return Deref(processingOrderPosition.Reserve)
 }
 
-func (processingOrderPosition *ProcessingOrderPosition) SetAssortment(assortment *AssortmentPosition) *ProcessingOrderPosition {
-	processingOrderPosition.Assortment = assortment
+func (processingOrderPosition *ProcessingOrderPosition) SetAssortment(assortment AsAssortment) *ProcessingOrderPosition {
+	processingOrderPosition.Assortment = assortment.AsAssortment()
 	return processingOrderPosition
 }
 

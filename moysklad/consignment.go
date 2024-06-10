@@ -114,8 +114,8 @@ func (consignment *Consignment) SetExternalCode(externalCode string) *Consignmen
 	return consignment
 }
 
-func (consignment *Consignment) SetAssortment(assortment *AssortmentPosition) *Consignment {
-	consignment.Assortment = assortment
+func (consignment *Consignment) SetAssortment(assortment AsAssortment) *Consignment {
+	consignment.Assortment = assortment.AsAssortment()
 	return consignment
 }
 

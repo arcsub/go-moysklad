@@ -217,8 +217,8 @@ func (processingPlanProduct ProcessingPlanProduct) GetQuantity() float64 {
 	return Deref(processingPlanProduct.Quantity)
 }
 
-func (processingPlanProduct *ProcessingPlanProduct) SetAssortment(assortment *AssortmentPosition) *ProcessingPlanProduct {
-	processingPlanProduct.Assortment = assortment
+func (processingPlanProduct *ProcessingPlanProduct) SetAssortment(assortment AsAssortment) *ProcessingPlanProduct {
+	processingPlanProduct.Assortment = assortment.AsAssortment()
 	return processingPlanProduct
 }
 
@@ -281,8 +281,8 @@ func (processingPlanMaterial ProcessingPlanMaterial) GetMaterialProcessingPlan()
 	return Deref(processingPlanMaterial.MaterialProcessingPlan)
 }
 
-func (processingPlanMaterial *ProcessingPlanMaterial) SetAssortment(assortment *AssortmentPosition) *ProcessingPlanMaterial {
-	processingPlanMaterial.Assortment = assortment
+func (processingPlanMaterial *ProcessingPlanMaterial) SetAssortment(assortment AsAssortment) *ProcessingPlanMaterial {
+	processingPlanMaterial.Assortment = assortment.AsAssortment()
 	return processingPlanMaterial
 }
 

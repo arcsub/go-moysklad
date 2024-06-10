@@ -486,8 +486,8 @@ func (supplyPosition SupplyPosition) GetStock() Stock {
 	return Deref(supplyPosition.Stock)
 }
 
-func (supplyPosition *SupplyPosition) SetAssortment(assortment *AssortmentPosition) *SupplyPosition {
-	supplyPosition.Assortment = assortment
+func (supplyPosition *SupplyPosition) SetAssortment(assortment AsAssortment) *SupplyPosition {
+	supplyPosition.Assortment = assortment.AsAssortment()
 	return supplyPosition
 }
 

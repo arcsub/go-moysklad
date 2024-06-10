@@ -38,11 +38,15 @@ type AssortmentType interface {
 	MetaOwner
 }
 
+type AsAssortment interface {
+	AsAssortment() *AssortmentPosition
+}
+
 // NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу AssortmentType.
 //
 // Возвращает позицию ассортимента с заполненным полем Meta.
-func NewAssortmentPosition[T AssortmentType](entity T) *AssortmentPosition {
-	return &AssortmentPosition{Meta: entity.GetMeta()}
+func NewAssortmentPosition[T AsAssortment](entity T) *AssortmentPosition {
+	return entity.AsAssortment()
 }
 
 func (assortmentPosition *AssortmentPosition) String() string {

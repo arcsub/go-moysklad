@@ -371,8 +371,8 @@ func (productionTaskResult ProductionTaskResult) GetProductionRow() ProductionRo
 	return Deref(productionTaskResult.ProductionRow)
 }
 
-func (productionTaskResult *ProductionTaskResult) SetAssortment(assortment *AssortmentPosition) *ProductionTaskResult {
-	productionTaskResult.Assortment = assortment
+func (productionTaskResult *ProductionTaskResult) SetAssortment(assortment AsAssortment) *ProductionTaskResult {
+	productionTaskResult.Assortment = assortment.AsAssortment()
 	return productionTaskResult
 }
 

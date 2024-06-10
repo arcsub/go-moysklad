@@ -578,8 +578,8 @@ func (demandPosition DemandPosition) GetStock() Stock {
 	return Deref(demandPosition.Stock)
 }
 
-func (demandPosition *DemandPosition) SetAssortment(assortment *AssortmentPosition) *DemandPosition {
-	demandPosition.Assortment = assortment
+func (demandPosition *DemandPosition) SetAssortment(assortment AsAssortment) *DemandPosition {
+	demandPosition.Assortment = assortment.AsAssortment()
 	return demandPosition
 }
 
