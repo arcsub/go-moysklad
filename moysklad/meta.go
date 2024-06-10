@@ -126,8 +126,8 @@ type MetaCollection struct {
 	NextHref     string `json:"nextHref,omitempty"`
 	PreviousHref string `json:"previousHref,omitempty"`
 	Size         int    `json:"size,omitempty"`
-	Limit        int    `json:"limit,omitempty"`
-	Offset       int    `json:"offset,omitempty"`
+	Limit        int    `json:"Limit,omitempty"`
+	Offset       int    `json:"Offset,omitempty"`
 }
 
 func (metaCollection MetaCollection) String() string {
@@ -138,6 +138,16 @@ func (metaCollection MetaCollection) String() string {
 type MetaArray[T any] struct {
 	Rows Slice[T]       `json:"rows,omitempty"`
 	Meta MetaCollection `json:"meta,omitempty"`
+}
+
+func NewMetaArrayRows[T any](rows Slice[T]) *MetaArray[T] {
+	return &MetaArray[T]{Rows: rows}
+}
+
+// Push добавляет элементы в срез.
+func (metaArray *MetaArray[T]) Push(elements ...*T) *MetaArray[T] {
+	metaArray.Rows.Push(elements...)
+	return metaArray
 }
 
 func (metaArray MetaArray[T]) String() string {
@@ -303,6 +313,7 @@ const (
 	MetaTypeWebhookStock                      MetaType = "webhookstock"
 	MetaTypeProcessingPlanFolder              MetaType = "processingplanfolder"
 	MetaTypeProductionTask                    MetaType = "productiontask"
+	MetaTypeProductionTaskMaterial            MetaType = "productiontaskmaterial"
 	MetaTypeProductionRow                     MetaType = "productionrow"
 	MetaTypeProductionTaskResult              MetaType = "productiontaskresult"
 	MetaTypeProductionStage                   MetaType = "productionstage"

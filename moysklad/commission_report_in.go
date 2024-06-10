@@ -26,7 +26,7 @@ type CommissionReportIn struct {
 	Deleted                       *Timestamp                                   `json:"deleted,omitempty"`
 	Description                   *string                                      `json:"description,omitempty"`
 	ExternalCode                  *string                                      `json:"externalCode,omitempty"`
-	Files                         *Files                                       `json:"files,omitempty"`
+	Files                         *MetaArray[File]                             `json:"files,omitempty"`
 	Group                         *Group                                       `json:"group,omitempty"`
 	ID                            *uuid.UUID                                   `json:"id,omitempty"`
 	Meta                          *Meta                                        `json:"meta,omitempty"`
@@ -43,7 +43,7 @@ type CommissionReportIn struct {
 	Rate                          *Rate                                        `json:"rate,omitempty"`
 	ReturnToCommissionerPositions *Positions[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"`
 	RewardPercent                 *float64                                     `json:"rewardPercent,omitempty"`
-	Payments                      *Payments                                    `json:"payments,omitempty"`
+	Payments                      Slice[Payment]                               `json:"payments,omitempty"`
 	SalesChannel                  *SalesChannel                                `json:"salesChannel,omitempty"`
 	Shared                        *bool                                        `json:"shared,omitempty"`
 	State                         *State                                       `json:"state,omitempty"`
@@ -53,7 +53,7 @@ type CommissionReportIn struct {
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`
 	RewardType                    RewardType                                   `json:"rewardType,omitempty"`
-	Attributes                    Attributes                                   `json:"attributes,omitempty"`
+	Attributes                    Slice[AttributeValue]                        `json:"attributes,omitempty"`
 }
 
 func (commissionReportIn CommissionReportIn) GetVatSum() float64 {
@@ -116,7 +116,7 @@ func (commissionReportIn CommissionReportIn) GetExternalCode() string {
 	return Deref(commissionReportIn.ExternalCode)
 }
 
-func (commissionReportIn CommissionReportIn) GetFiles() Files {
+func (commissionReportIn CommissionReportIn) GetFiles() MetaArray[File] {
 	return Deref(commissionReportIn.Files)
 }
 
@@ -184,8 +184,8 @@ func (commissionReportIn CommissionReportIn) GetRewardPercent() float64 {
 	return Deref(commissionReportIn.RewardPercent)
 }
 
-func (commissionReportIn CommissionReportIn) GetPayments() Payments {
-	return Deref(commissionReportIn.Payments)
+func (commissionReportIn CommissionReportIn) GetPayments() Slice[Payment] {
+	return commissionReportIn.Payments
 }
 
 func (commissionReportIn CommissionReportIn) GetSalesChannel() SalesChannel {
@@ -224,7 +224,7 @@ func (commissionReportIn CommissionReportIn) GetRewardType() RewardType {
 	return commissionReportIn.RewardType
 }
 
-func (commissionReportIn CommissionReportIn) GetAttributes() Attributes {
+func (commissionReportIn CommissionReportIn) GetAttributes() Slice[AttributeValue] {
 	return commissionReportIn.Attributes
 }
 
@@ -283,8 +283,8 @@ func (commissionReportIn *CommissionReportIn) SetExternalCode(externalCode strin
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetFiles(files *Files) *CommissionReportIn {
-	commissionReportIn.Files = files
+func (commissionReportIn *CommissionReportIn) SetFiles(files Slice[File]) *CommissionReportIn {
+	commissionReportIn.Files = NewMetaArrayRows(files)
 	return commissionReportIn
 }
 
@@ -343,7 +343,7 @@ func (commissionReportIn *CommissionReportIn) SetRewardPercent(rewardPercent flo
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetPayments(payments *Payments) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetPayments(payments Slice[Payment]) *CommissionReportIn {
 	commissionReportIn.Payments = payments
 	return commissionReportIn
 }
@@ -363,8 +363,8 @@ func (commissionReportIn *CommissionReportIn) SetState(state *State) *Commission
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetSyncID(syncID *uuid.UUID) *CommissionReportIn {
-	commissionReportIn.SyncID = syncID
+func (commissionReportIn *CommissionReportIn) SetSyncID(syncID uuid.UUID) *CommissionReportIn {
+	commissionReportIn.SyncID = &syncID
 	return commissionReportIn
 }
 
@@ -383,7 +383,7 @@ func (commissionReportIn *CommissionReportIn) SetRewardType(rewardType RewardTyp
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetAttributes(attributes Attributes) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetAttributes(attributes Slice[AttributeValue]) *CommissionReportIn {
 	commissionReportIn.Attributes = attributes
 	return commissionReportIn
 }
@@ -620,41 +620,41 @@ type CommissionReportInService interface {
 	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params *Params) (*CommissionReportIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, commissionReportInList []*CommissionReportIn, params *Params) (*[]CommissionReportIn, *resty.Response, error)
 	DeleteMany(ctx context.Context, commissionReportInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CommissionReportIn, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, commissionReportIn *CommissionReportIn, params *Params) (*CommissionReportIn, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CommissionReportIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params *Params) (*CommissionReportIn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CommissionReportInPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*CommissionReportInPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *CommissionReportInPosition, params *Params) (*CommissionReportInPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *CommissionReportInPosition) (*CommissionReportInPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*CommissionReportInPosition) (*[]CommissionReportInPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CommissionReportInPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*CommissionReportInPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportInPosition, params *Params) (*CommissionReportInPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *CommissionReportInPosition) (*CommissionReportInPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*CommissionReportInPosition) (*[]CommissionReportInPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*CommissionReportIn, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportIn, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	// Template(ctx context.Context) (*CommissionReportIn, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetReturnPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error)
-	GetReturnPositionByID(ctx context.Context, id, positionID *uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
-	CreateReturnPosition(ctx context.Context, id *uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error)
-	UpdateReturnPosition(ctx context.Context, id, positionID *uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
-	DeleteReturnPosition(ctx context.Context, id, positionID *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetReturnPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error)
+	GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
+	CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error)
+	UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
+	DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error)
 }
 
 type commissionReportInService struct {
@@ -673,6 +673,7 @@ type commissionReportInService struct {
 	endpointNamedFilter
 	endpointPublication
 	endpointRemove
+	endpointStates
 }
 
 func NewCommissionReportInService(client *Client) CommissionReportInService {
@@ -694,40 +695,41 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		//endpointTemplate:         endpointTemplate[CommissionReportIn]{e},
 		endpointPublication: endpointPublication{e},
 		endpointRemove:      endpointRemove{e},
+		endpointStates:      endpointStates{e},
 	}
 }
 
 // GetReturnPositions Получить позиции возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-pozicii-wozwrata-na-sklad-komissionera
-func (s *commissionReportInService) GetReturnPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error) {
+func (s *commissionReportInService) GetReturnPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
 	return NewRequestBuilder[MetaArray[CommissionReportInReturnPosition]](s.client, path).SetParams(params).Get(ctx)
 }
 
 // GetReturnPositionByID Получить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-poziciu-wozwrata-na-sklad-komissionera
-func (s *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID *uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (s *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionID)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateReturnPosition Создать позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-sozdat-poziciu-wozwrata-na-sklad-komissionera
-func (s *commissionReportInService) CreateReturnPosition(ctx context.Context, id *uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (s *commissionReportInService) CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).Post(ctx, position)
 }
 
 // UpdateReturnPosition Изменить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-izmenit-poziciu-wozwrata-na-sklad-komissionera
-func (s *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID *uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (s *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionID)
 	return NewRequestBuilder[CommissionReportInReturnPosition](s.client, path).SetParams(params).Put(ctx, position)
 }
 
 // DeleteReturnPosition Удалить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-udalit-poziciu-wozwrata-na-sklad-komissionera
-func (s *commissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionID *uuid.UUID) (bool, *resty.Response, error) {
+func (s *commissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/positions/%s", id, positionID)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

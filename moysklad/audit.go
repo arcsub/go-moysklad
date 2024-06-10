@@ -130,7 +130,7 @@ type AuditService interface {
 	// GetEvents выполняет запрос на получение Событий по Контексту AuditEvent.
 	//
 	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-kontextu
-	GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error)
+	GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error)
 
 	// GetFilters выполняет запрос на получение Фильтров AuditFilters.
 	//
@@ -150,7 +150,7 @@ func (s *auditService) GetContexts(ctx context.Context, params *Params) (*List[A
 	return NewRequestBuilder[List[Audit]](s.client, s.uri).SetParams(params).Get(ctx)
 }
 
-func (s *auditService) GetEvents(ctx context.Context, id *uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
+func (s *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf("audit/%s/events", id)
 	return NewRequestBuilder[List[AuditEvent]](s.client, path).Get(ctx)
 }

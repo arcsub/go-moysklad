@@ -22,7 +22,7 @@ type CustomerOrder struct {
 	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
 	Description           *string                           `json:"description,omitempty"`
 	ExternalCode          *string                           `json:"externalCode,omitempty"`
-	Files                 *Files                            `json:"files,omitempty"`
+	Files                 *MetaArray[File]                  `json:"files,omitempty"`
 	Group                 *Group                            `json:"group,omitempty"`
 	ID                    *uuid.UUID                        `json:"id,omitempty"`
 	InvoicedSum           *float64                          `json:"invoicedSum,omitempty"`
@@ -52,13 +52,13 @@ type CustomerOrder struct {
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
 	VatSum                *float64                          `json:"vatSum,omitempty"`
-	Prepayments           Prepayments                       `json:"prepayments,omitempty"`
-	PurchaseOrders        PurchaseOrders                    `json:"purchaseOrders,omitempty"`
+	Prepayments           Slice[Prepayment]                 `json:"prepayments,omitempty"`
+	PurchaseOrders        Slice[PurchaseOrder]              `json:"purchaseOrders,omitempty"`
 	Demands               Demands                           `json:"demands,omitempty"`
-	Payments              Payments                          `json:"payments,omitempty"`
-	InvoicesOut           InvoicesOut                       `json:"invoicesOut,omitempty"`
+	Payments              Slice[Payment]                    `json:"payments,omitempty"`
+	InvoicesOut           Slice[InvoiceOut]                 `json:"invoicesOut,omitempty"`
 	TaxSystem             TaxSystem                         `json:"taxSystem,omitempty"`
-	Attributes            Attributes                        `json:"attributes,omitempty"`
+	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
 func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
@@ -109,7 +109,7 @@ func (customerOrder CustomerOrder) GetExternalCode() string {
 	return Deref(customerOrder.ExternalCode)
 }
 
-func (customerOrder CustomerOrder) GetFiles() Files {
+func (customerOrder CustomerOrder) GetFiles() MetaArray[File] {
 	return Deref(customerOrder.Files)
 }
 
@@ -213,7 +213,7 @@ func (customerOrder CustomerOrder) GetSyncID() uuid.UUID {
 	return Deref(customerOrder.SyncID)
 }
 
-func (customerOrder CustomerOrder) GetPrepayments() Prepayments {
+func (customerOrder CustomerOrder) GetPrepayments() Slice[Prepayment] {
 	return customerOrder.Prepayments
 }
 
@@ -233,7 +233,7 @@ func (customerOrder CustomerOrder) GetVatSum() float64 {
 	return Deref(customerOrder.VatSum)
 }
 
-func (customerOrder CustomerOrder) GetPurchaseOrders() PurchaseOrders {
+func (customerOrder CustomerOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 	return customerOrder.PurchaseOrders
 }
 
@@ -241,11 +241,11 @@ func (customerOrder CustomerOrder) GetDemands() Demands {
 	return customerOrder.Demands
 }
 
-func (customerOrder CustomerOrder) GetPayments() Payments {
+func (customerOrder CustomerOrder) GetPayments() Slice[Payment] {
 	return customerOrder.Payments
 }
 
-func (customerOrder CustomerOrder) GetInvoicesOut() InvoicesOut {
+func (customerOrder CustomerOrder) GetInvoicesOut() Slice[InvoiceOut] {
 	return customerOrder.InvoicesOut
 }
 
@@ -253,7 +253,7 @@ func (customerOrder CustomerOrder) GetTaxSystem() TaxSystem {
 	return customerOrder.TaxSystem
 }
 
-func (customerOrder CustomerOrder) GetAttributes() Attributes {
+func (customerOrder CustomerOrder) GetAttributes() Slice[AttributeValue] {
 	return customerOrder.Attributes
 }
 
@@ -307,8 +307,8 @@ func (customerOrder *CustomerOrder) SetExternalCode(externalCode string) *Custom
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetFiles(files *Files) *CustomerOrder {
-	customerOrder.Files = files
+func (customerOrder *CustomerOrder) SetFiles(files Slice[File]) *CustomerOrder {
+	customerOrder.Files = NewMetaArrayRows(files)
 	return customerOrder
 }
 
@@ -387,12 +387,12 @@ func (customerOrder *CustomerOrder) SetStore(store *Store) *CustomerOrder {
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetSyncID(syncID *uuid.UUID) *CustomerOrder {
-	customerOrder.SyncID = syncID
+func (customerOrder *CustomerOrder) SetSyncID(syncID uuid.UUID) *CustomerOrder {
+	customerOrder.SyncID = &syncID
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPrepayments(prepayments Prepayments) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPrepayments(prepayments Slice[Prepayment]) *CustomerOrder {
 	customerOrder.Prepayments = prepayments
 	return customerOrder
 }
@@ -407,7 +407,7 @@ func (customerOrder *CustomerOrder) SetVatIncluded(vatIncluded bool) *CustomerOr
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders PurchaseOrders) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders Slice[PurchaseOrder]) *CustomerOrder {
 	customerOrder.PurchaseOrders = purchaseOrders
 	return customerOrder
 }
@@ -417,12 +417,12 @@ func (customerOrder *CustomerOrder) SetDemands(demands Demands) *CustomerOrder {
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPayments(payments Payments) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPayments(payments Slice[Payment]) *CustomerOrder {
 	customerOrder.Payments = payments
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetInvoicesOut(invoicesOut InvoicesOut) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetInvoicesOut(invoicesOut Slice[InvoiceOut]) *CustomerOrder {
 	customerOrder.InvoicesOut = invoicesOut
 	return customerOrder
 }
@@ -432,7 +432,7 @@ func (customerOrder *CustomerOrder) SetTaxSystem(taxSystem TaxSystem) *CustomerO
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetAttributes(attributes Attributes) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetAttributes(attributes Slice[AttributeValue]) *CustomerOrder {
 	customerOrder.Attributes = attributes
 	return customerOrder
 }
@@ -444,8 +444,6 @@ func (customerOrder CustomerOrder) String() string {
 func (customerOrder CustomerOrder) MetaType() MetaType {
 	return MetaTypeCustomerOrder
 }
-
-type CustomerOrders = Slice[CustomerOrder]
 
 // CustomerOrderPosition Позиция Заказа покупателя.
 // Ключевое слово: customerorderposition
@@ -578,40 +576,45 @@ type CustomerOrderService interface {
 	Create(ctx context.Context, customerOrder *CustomerOrder, params *Params) (*CustomerOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, customerOrderList []*CustomerOrder, params *Params) (*[]CustomerOrder, *resty.Response, error)
 	DeleteMany(ctx context.Context, customerOrderList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CustomerOrder, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, customerOrder *CustomerOrder, params *Params) (*CustomerOrder, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CustomerOrder, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, customerOrder *CustomerOrder, params *Params) (*CustomerOrder, *resty.Response, error)
 	//endpointTemplate[CustomerOrder]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[CustomerOrderPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*CustomerOrderPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *CustomerOrderPosition, params *Params) (*CustomerOrderPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *CustomerOrderPosition) (*CustomerOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*CustomerOrderPosition) (*[]CustomerOrderPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CustomerOrderPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*CustomerOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CustomerOrderPosition, params *Params) (*CustomerOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *CustomerOrderPosition) (*CustomerOrderPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*CustomerOrderPosition) (*[]CustomerOrderPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*CustomerOrder, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CustomerOrder, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)
-	GetEmbeddedTemplateByID(ctx context.Context, id *uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
+	GetEmbeddedTemplateByID(ctx context.Context, id uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
 	GetCustomTemplates(ctx context.Context) (*List[CustomTemplate], *resty.Response, error)
-	GetCustomTemplateByID(ctx context.Context, id *uuid.UUID) (*CustomTemplate, *resty.Response, error)
+	GetCustomTemplateByID(ctx context.Context, id uuid.UUID) (*CustomTemplate, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewCustomerOrderService(client *Client) CustomerOrderService {

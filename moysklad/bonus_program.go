@@ -25,7 +25,7 @@ type BonusProgram struct {
 	SpendRatePointsToRouble   *int               `json:"spendRatePointsToRouble,omitempty"`
 	WelcomeBonusesEnabled     *bool              `json:"welcomeBonusesEnabled,omitempty"`
 	WelcomeBonusesMode        WelcomeBonusesMode `json:"welcomeBonusesMode,omitempty"`
-	AgentTags                 Tags               `json:"agentTags,omitempty"`
+	AgentTags                 Slice[string]      `json:"agentTags,omitempty"`
 }
 
 func (bonusProgram BonusProgram) GetAllProducts() bool {
@@ -88,7 +88,7 @@ func (bonusProgram BonusProgram) GetWelcomeBonusesMode() WelcomeBonusesMode {
 	return bonusProgram.WelcomeBonusesMode
 }
 
-func (bonusProgram BonusProgram) GetAgentTags() Tags {
+func (bonusProgram BonusProgram) GetAgentTags() Slice[string] {
 	return bonusProgram.AgentTags
 }
 
@@ -157,7 +157,7 @@ func (bonusProgram *BonusProgram) SetWelcomeBonusesMode(welcomeBonusesMode Welco
 	return bonusProgram
 }
 
-func (bonusProgram *BonusProgram) SetAgentTags(agentTags Tags) *BonusProgram {
+func (bonusProgram *BonusProgram) SetAgentTags(agentTags Slice[string]) *BonusProgram {
 	bonusProgram.AgentTags = agentTags
 	return bonusProgram
 }
@@ -184,9 +184,9 @@ const (
 type BonusProgramService interface {
 	GetList(ctx context.Context, params *Params) (*List[BonusProgram], *resty.Response, error)
 	Create(ctx context.Context, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*BonusProgram, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*BonusProgram, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, bonusProgramList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 

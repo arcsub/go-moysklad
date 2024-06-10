@@ -10,36 +10,36 @@ import (
 // Ключевое слово: facturein
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-faktura-poluchennyj
 type FactureIn struct {
-	Moment         *Timestamp    `json:"moment,omitempty"`
-	Applicable     *bool         `json:"applicable,omitempty"`
-	Name           *string       `json:"name,omitempty"`
-	AccountID      *uuid.UUID    `json:"accountId,omitempty"`
-	Code           *string       `json:"code,omitempty"`
-	Contract       *Contract     `json:"contract,omitempty"`
-	Created        *Timestamp    `json:"created,omitempty"`
-	Deleted        *Timestamp    `json:"deleted,omitempty"`
-	Description    *string       `json:"description,omitempty"`
-	ExternalCode   *string       `json:"externalCode,omitempty"`
-	Files          *Files        `json:"files,omitempty"`
-	Group          *Group        `json:"group,omitempty"`
-	ID             *uuid.UUID    `json:"id,omitempty"`
-	Meta           *Meta         `json:"meta,omitempty"`
-	IncomingDate   *Timestamp    `json:"incomingDate,omitempty"`
-	Agent          *Counterparty `json:"agent,omitempty"`
-	Organization   *Organization `json:"organization,omitempty"`
-	Owner          *Employee     `json:"owner,omitempty"`
-	Printed        *bool         `json:"printed,omitempty"`
-	Published      *bool         `json:"published,omitempty"`
-	Rate           *Rate         `json:"rate,omitempty"`
-	Shared         *bool         `json:"shared,omitempty"`
-	State          *State        `json:"state,omitempty"`
-	Sum            *float64      `json:"sum,omitempty"`
-	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
-	Updated        *Timestamp    `json:"updated,omitempty"`
-	Supplies       Slice[Supply] `json:"supplies,omitempty"`
-	Payments       Payments      `json:"payments,omitempty"`
-	IncomingNumber *string       `json:"incomingNumber,omitempty"`
-	Attributes     Attributes    `json:"attributes,omitempty"`
+	Moment         *Timestamp            `json:"moment,omitempty"`
+	Applicable     *bool                 `json:"applicable,omitempty"`
+	Name           *string               `json:"name,omitempty"`
+	AccountID      *uuid.UUID            `json:"accountId,omitempty"`
+	Code           *string               `json:"code,omitempty"`
+	Contract       *Contract             `json:"contract,omitempty"`
+	Created        *Timestamp            `json:"created,omitempty"`
+	Deleted        *Timestamp            `json:"deleted,omitempty"`
+	Description    *string               `json:"description,omitempty"`
+	ExternalCode   *string               `json:"externalCode,omitempty"`
+	Files          *MetaArray[File]      `json:"files,omitempty"`
+	Group          *Group                `json:"group,omitempty"`
+	ID             *uuid.UUID            `json:"id,omitempty"`
+	Meta           *Meta                 `json:"meta,omitempty"`
+	IncomingDate   *Timestamp            `json:"incomingDate,omitempty"`
+	Agent          *Counterparty         `json:"agent,omitempty"`
+	Organization   *Organization         `json:"organization,omitempty"`
+	Owner          *Employee             `json:"owner,omitempty"`
+	Printed        *bool                 `json:"printed,omitempty"`
+	Published      *bool                 `json:"published,omitempty"`
+	Rate           *Rate                 `json:"rate,omitempty"`
+	Shared         *bool                 `json:"shared,omitempty"`
+	State          *State                `json:"state,omitempty"`
+	Sum            *float64              `json:"sum,omitempty"`
+	SyncID         *uuid.UUID            `json:"syncId,omitempty"`
+	Updated        *Timestamp            `json:"updated,omitempty"`
+	Supplies       Slice[Supply]         `json:"supplies,omitempty"`
+	Payments       Slice[Payment]        `json:"payments,omitempty"`
+	IncomingNumber *string               `json:"incomingNumber,omitempty"`
+	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
 func (factureIn FactureIn) GetMoment() Timestamp {
@@ -82,7 +82,7 @@ func (factureIn FactureIn) GetExternalCode() string {
 	return Deref(factureIn.ExternalCode)
 }
 
-func (factureIn FactureIn) GetFiles() Files {
+func (factureIn FactureIn) GetFiles() MetaArray[File] {
 	return Deref(factureIn.Files)
 }
 
@@ -150,7 +150,7 @@ func (factureIn FactureIn) GetSupplies() Slice[Supply] {
 	return factureIn.Supplies
 }
 
-func (factureIn FactureIn) GetPayments() Payments {
+func (factureIn FactureIn) GetPayments() Slice[Payment] {
 	return factureIn.Payments
 }
 
@@ -158,7 +158,7 @@ func (factureIn FactureIn) GetIncomingNumber() string {
 	return Deref(factureIn.IncomingNumber)
 }
 
-func (factureIn FactureIn) GetAttributes() Attributes {
+func (factureIn FactureIn) GetAttributes() Slice[AttributeValue] {
 	return factureIn.Attributes
 }
 
@@ -197,8 +197,8 @@ func (factureIn *FactureIn) SetExternalCode(externalCode string) *FactureIn {
 	return factureIn
 }
 
-func (factureIn *FactureIn) SetFiles(files *Files) *FactureIn {
-	factureIn.Files = files
+func (factureIn *FactureIn) SetFiles(files Slice[File]) *FactureIn {
+	factureIn.Files = NewMetaArrayRows(files)
 	return factureIn
 }
 
@@ -247,8 +247,8 @@ func (factureIn *FactureIn) SetState(state *State) *FactureIn {
 	return factureIn
 }
 
-func (factureIn *FactureIn) SetSyncID(syncID *uuid.UUID) *FactureIn {
-	factureIn.SyncID = syncID
+func (factureIn *FactureIn) SetSyncID(syncID uuid.UUID) *FactureIn {
+	factureIn.SyncID = &syncID
 	return factureIn
 }
 
@@ -257,7 +257,7 @@ func (factureIn *FactureIn) SetSupplies(supplies Slice[Supply]) *FactureIn {
 	return factureIn
 }
 
-func (factureIn *FactureIn) SetPayments(payments Payments) *FactureIn {
+func (factureIn *FactureIn) SetPayments(payments Slice[Payment]) *FactureIn {
 	factureIn.Payments = payments
 	return factureIn
 }
@@ -267,7 +267,7 @@ func (factureIn *FactureIn) SetIncomingNumber(incomingNumber string) *FactureIn 
 	return factureIn
 }
 
-func (factureIn *FactureIn) SetAttributes(attributes Attributes) *FactureIn {
+func (factureIn *FactureIn) SetAttributes(attributes Slice[AttributeValue]) *FactureIn {
 	factureIn.Attributes = attributes
 	return factureIn
 }
@@ -287,25 +287,30 @@ type FactureInService interface {
 	Create(ctx context.Context, factureIn *FactureIn, params *Params) (*FactureIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, factureInList []*FactureIn, params *Params) (*[]FactureIn, *resty.Response, error)
 	DeleteMany(ctx context.Context, factureInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*FactureIn, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, factureIn *FactureIn, params *Params) (*FactureIn, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*FactureIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, factureIn *FactureIn, params *Params) (*FactureIn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	//endpointTemplate[FactureIn]
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*FactureIn, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*FactureIn, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewFactureInService(client *Client) FactureInService {

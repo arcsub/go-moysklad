@@ -23,11 +23,95 @@ type Uom struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Единицы измерения
 }
 
-func (u Uom) String() string {
-	return Stringify(u)
+func (uom Uom) GetAccountID() uuid.UUID {
+	return Deref(uom.AccountID)
 }
 
-func (u Uom) MetaType() MetaType {
+func (uom Uom) GetCode() string {
+	return Deref(uom.Code)
+}
+
+func (uom Uom) GetDescription() string {
+	return Deref(uom.Description)
+}
+
+func (uom Uom) GetExternalCode() string {
+	return Deref(uom.ExternalCode)
+}
+
+func (uom Uom) GetGroup() Group {
+	return Deref(uom.Group)
+}
+
+func (uom Uom) GetID() uuid.UUID {
+	return Deref(uom.ID)
+}
+
+func (uom Uom) GetMeta() Meta {
+	return Deref(uom.Meta)
+}
+
+func (uom Uom) GetName() string {
+	return Deref(uom.Name)
+}
+
+func (uom Uom) GetOwner() Employee {
+	return Deref(uom.Owner)
+}
+
+func (uom Uom) GetShared() bool {
+	return Deref(uom.Shared)
+}
+
+func (uom Uom) GetUpdated() Timestamp {
+	return Deref(uom.Updated)
+}
+
+func (uom *Uom) SetCode(code string) *Uom {
+	uom.Code = &code
+	return uom
+}
+
+func (uom *Uom) SetDescription(detDescription string) *Uom {
+	uom.Description = &detDescription
+	return uom
+}
+
+func (uom *Uom) SetExternalCode(externalCode string) *Uom {
+	uom.ExternalCode = &externalCode
+	return uom
+}
+
+func (uom *Uom) SetGroup(group *Group) *Uom {
+	uom.Group = group
+	return uom
+}
+
+func (uom *Uom) SetMeta(meta *Meta) *Uom {
+	uom.Meta = meta
+	return uom
+}
+
+func (uom *Uom) SetName(name string) *Uom {
+	uom.Name = &name
+	return uom
+}
+
+func (uom *Uom) SetOwner(owner *Employee) *Uom {
+	uom.Owner = owner
+	return uom
+}
+
+func (uom *Uom) SetShared(shared bool) *Uom {
+	uom.Shared = &shared
+	return uom
+}
+
+func (uom Uom) String() string {
+	return Stringify(uom)
+}
+
+func (uom Uom) MetaType() MetaType {
 	return MetaTypeUom
 }
 
@@ -38,9 +122,9 @@ type UomService interface {
 	Create(ctx context.Context, uom *Uom, params *Params) (*Uom, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, uomList []*Uom, params *Params) (*[]Uom, *resty.Response, error)
 	DeleteMany(ctx context.Context, uomList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Uom, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, uom *Uom, params *Params) (*Uom, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Uom, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, uom *Uom, params *Params) (*Uom, *resty.Response, error)
 }
 
 func NewUomService(client *Client) UomService {

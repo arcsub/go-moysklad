@@ -10,39 +10,39 @@ import (
 // Ключевое слово: cashout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-rashodnyj-order
 type CashOut struct {
-	Name           *string       `json:"name,omitempty"`
-	Deleted        *Timestamp    `json:"deleted,omitempty"`
-	Applicable     *bool         `json:"applicable,omitempty"`
-	AccountID      *uuid.UUID    `json:"accountId,omitempty"`
-	Code           *string       `json:"code,omitempty"`
-	Contract       *Contract     `json:"contract,omitempty"`
-	Created        *Timestamp    `json:"created,omitempty"`
-	Organization   *Organization `json:"organization,omitempty"`
-	Description    *string       `json:"description,omitempty"`
-	ExpenseItem    *ExpenseItem  `json:"expenseItem,omitempty"`
-	ExternalCode   *string       `json:"externalCode,omitempty"`
-	Files          *Files        `json:"files,omitempty"`
-	Group          *Group        `json:"group,omitempty"`
-	Owner          *Employee     `json:"owner,omitempty"`
-	Meta           *Meta         `json:"meta,omitempty"`
-	Moment         *Timestamp    `json:"moment,omitempty"`
-	Operations     Operations    `json:"operations,omitempty"`
-	Agent          *Counterparty `json:"agent,omitempty"`
-	ID             *uuid.UUID    `json:"id,omitempty"`
-	PaymentPurpose *string       `json:"paymentPurpose,omitempty"`
-	Printed        *bool         `json:"printed,omitempty"`
-	Project        *Project      `json:"project,omitempty"`
-	Published      *bool         `json:"published,omitempty"`
-	Rate           *Rate         `json:"rate,omitempty"`
-	SalesChannel   *SalesChannel `json:"salesChannel,omitempty"`
-	Shared         *bool         `json:"shared,omitempty"`
-	State          *State        `json:"state,omitempty"`
-	Sum            *float64      `json:"sum,omitempty"`
-	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
-	Updated        *Timestamp    `json:"updated,omitempty"`
-	VatSum         *float64      `json:"vatSum,omitempty"`
-	FactureOut     *FactureOut   `json:"factureOut,omitempty"`
-	Attributes     Attributes    `json:"attributes,omitempty"`
+	Name           *string               `json:"name,omitempty"`
+	Deleted        *Timestamp            `json:"deleted,omitempty"`
+	Applicable     *bool                 `json:"applicable,omitempty"`
+	AccountID      *uuid.UUID            `json:"accountId,omitempty"`
+	Code           *string               `json:"code,omitempty"`
+	Contract       *Contract             `json:"contract,omitempty"`
+	Created        *Timestamp            `json:"created,omitempty"`
+	Organization   *Organization         `json:"organization,omitempty"`
+	Description    *string               `json:"description,omitempty"`
+	ExpenseItem    *ExpenseItem          `json:"expenseItem,omitempty"`
+	ExternalCode   *string               `json:"externalCode,omitempty"`
+	Files          *MetaArray[File]      `json:"files,omitempty"`
+	Group          *Group                `json:"group,omitempty"`
+	Owner          *Employee             `json:"owner,omitempty"`
+	Meta           *Meta                 `json:"meta,omitempty"`
+	Moment         *Timestamp            `json:"moment,omitempty"`
+	Operations     Operations            `json:"operations,omitempty"`
+	Agent          *Counterparty         `json:"agent,omitempty"`
+	ID             *uuid.UUID            `json:"id,omitempty"`
+	PaymentPurpose *string               `json:"paymentPurpose,omitempty"`
+	Printed        *bool                 `json:"printed,omitempty"`
+	Project        *Project              `json:"project,omitempty"`
+	Published      *bool                 `json:"published,omitempty"`
+	Rate           *Rate                 `json:"rate,omitempty"`
+	SalesChannel   *SalesChannel         `json:"salesChannel,omitempty"`
+	Shared         *bool                 `json:"shared,omitempty"`
+	State          *State                `json:"state,omitempty"`
+	Sum            *float64              `json:"sum,omitempty"`
+	SyncID         *uuid.UUID            `json:"syncId,omitempty"`
+	Updated        *Timestamp            `json:"updated,omitempty"`
+	VatSum         *float64              `json:"vatSum,omitempty"`
+	FactureOut     *FactureOut           `json:"factureOut,omitempty"`
+	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
 func (cashOut CashOut) GetName() string {
@@ -89,7 +89,7 @@ func (cashOut CashOut) GetExternalCode() string {
 	return Deref(cashOut.ExternalCode)
 }
 
-func (cashOut CashOut) GetFiles() Files {
+func (cashOut CashOut) GetFiles() MetaArray[File] {
 	return Deref(cashOut.Files)
 }
 
@@ -173,7 +173,7 @@ func (cashOut CashOut) GetFactureOut() FactureOut {
 	return Deref(cashOut.FactureOut)
 }
 
-func (cashOut CashOut) GetAttributes() Attributes {
+func (cashOut CashOut) GetAttributes() Slice[AttributeValue] {
 	return cashOut.Attributes
 }
 
@@ -185,6 +185,10 @@ func (cashOut CashOut) MetaType() MetaType {
 	return MetaTypeCashOut
 }
 
+func (cashOut CashOut) AsPayment() *Payment {
+	return &Payment{Meta: cashOut.GetMeta()}
+}
+
 // CashOutTemplateArg
 // Документ: Расходный ордер (cashout)
 // Основание, на котором он может быть создан:
@@ -193,13 +197,13 @@ func (cashOut CashOut) MetaType() MetaType {
 // - Счет поставщика (invoicein)
 // - Заказ поставщику (purchaseorder)
 // - Выданный отчет комиссионера (commissionreportout)
-type CashOutTemplateArg struct {
-	SalesReturn         *MetaWrapper `json:"salesReturn,omitempty"`
-	Supply              *MetaWrapper `json:"supply,omitempty"`
-	InvoiceIn           *MetaWrapper `json:"invoiceIn,omitempty"`
-	PurchaseOrder       *MetaWrapper `json:"purchaseOrder,omitempty"`
-	CommissionReportOut *MetaWrapper `json:"commissionReportOut,omitempty"`
-}
+//type CashOutTemplateArg struct {
+//	SalesReturn         *MetaWrapper `json:"salesReturn,omitempty"`
+//	Supply              *MetaWrapper `json:"supply,omitempty"`
+//	InvoiceIn           *MetaWrapper `json:"invoiceIn,omitempty"`
+//	PurchaseOrder       *MetaWrapper `json:"purchaseOrder,omitempty"`
+//	CommissionReportOut *MetaWrapper `json:"commissionReportOut,omitempty"`
+//}
 
 // CashOutService cashout
 // Сервис для работы с расходными ордерами.
@@ -207,26 +211,31 @@ type CashOutService interface {
 	GetList(ctx context.Context, params *Params) (*List[CashOut], *resty.Response, error)
 	Create(ctx context.Context, cashOut *CashOut, params *Params) (*CashOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, cashOutList []*CashOut, params *Params) (*[]CashOut, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, cashOutList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	//Template(ctx context.Context) (*CashOut, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CashOut, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, cashOut *CashOut, params *Params) (*CashOut, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*CashOut, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CashOut, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, cashOut *CashOut, params *Params) (*CashOut, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CashOut, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewCashOutService(client *Client) CashOutService {

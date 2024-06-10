@@ -51,7 +51,7 @@ type AsyncService interface {
 	// GetStatusByID выполняет запрос на получение статуса Асинхронной задачи.
 	//
 	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-poluchenie-statusa-asinhronnoj-zadachi
-	GetStatusByID(ctx context.Context, id *uuid.UUID, params *Params) (*Async, *resty.Response, error)
+	GetStatusByID(ctx context.Context, id uuid.UUID, params *Params) (*Async, *resty.Response, error)
 }
 
 type asyncService struct {
@@ -67,7 +67,7 @@ func (service *asyncService) GetStatuses(ctx context.Context, params *Params) (*
 	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
-func (service *asyncService) GetStatusByID(ctx context.Context, id *uuid.UUID, params *Params) (*Async, *resty.Response, error) {
+func (service *asyncService) GetStatusByID(ctx context.Context, id uuid.UUID, params *Params) (*Async, *resty.Response, error) {
 	path := fmt.Sprintf("async/%s", id)
 	return NewRequestBuilder[Async](service.client, path).SetParams(params).Get(ctx)
 }

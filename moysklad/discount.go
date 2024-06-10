@@ -33,11 +33,9 @@ type Discount struct {
 	Name      *string         `json:"name,omitempty"`
 	Active    *bool           `json:"active,omitempty"`
 	AllAgents *bool           `json:"allAgents,omitempty"`
-	AgentTags Tags            `json:"agentTags,omitempty"`
+	AgentTags Slice[string]   `json:"agentTags,omitempty"`
 	data      json.RawMessage // сырые данные для последующей десериализации в нужный тип
 }
-
-type Discounts = Slice[Discount]
 
 func (discount Discount) GetMeta() Meta {
 	return Deref(discount.Meta)
@@ -63,7 +61,7 @@ func (discount Discount) GetAllAgents() bool {
 	return Deref(discount.AllAgents)
 }
 
-func (discount Discount) GetAgentTags() Tags {
+func (discount Discount) GetAgentTags() Slice[string] {
 	return discount.AgentTags
 }
 
@@ -87,7 +85,7 @@ func (discount *Discount) SetAllAgents(allAgents bool) *Discount {
 	return discount
 }
 
-func (discount *Discount) SetAgentTags(agentTags Tags) *Discount {
+func (discount *Discount) SetAgentTags(agentTags Slice[string]) *Discount {
 	discount.AgentTags = agentTags
 	return discount
 }
@@ -150,17 +148,17 @@ func (discount *Discount) AsSpecialPriceDiscount() *SpecialPriceDiscount {
 // Ключевое слово: accumulationdiscount
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-nakopitel-nyh-skidok
 type AccumulationDiscount struct {
-	AccountID      *uuid.UUID      `json:"accountId,omitempty"`      // ID учетной записи
-	ID             *uuid.UUID      `json:"id,omitempty"`             // ID сущности
-	Name           *string         `json:"name,omitempty"`           // Наименование Скидки
-	Meta           *Meta           `json:"meta,omitempty"`           // Метаданные
-	Active         *bool           `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
-	AgentTags      Tags            `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
-	AllProducts    *bool           `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
-	AllAgents      *bool           `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
-	Assortment     Assortment      `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
-	ProductFolders *ProductFolders `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
-	Levels         Levels          `json:"levels,omitempty"`         // Проценты скидок при определенной сумме продаж
+	AccountID      *uuid.UUID                `json:"accountId,omitempty"`      // ID учетной записи
+	ID             *uuid.UUID                `json:"id,omitempty"`             // ID сущности
+	Name           *string                   `json:"name,omitempty"`           // Наименование Скидки
+	Meta           *Meta                     `json:"meta,omitempty"`           // Метаданные
+	Active         *bool                     `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
+	AgentTags      Slice[string]             `json:"agentTags,omitempty"`      // Тэги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
+	AllProducts    *bool                     `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
+	AllAgents      *bool                     `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
+	Assortment     Assortment                `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
+	ProductFolders *MetaArray[ProductFolder] `json:"productFolders,omitempty"` // Группы товаров которые были выбраны для применения скидки (если применяется не ко всем товарам)
+	Levels         Slice[AccumulationLevel]  `json:"levels,omitempty"`         // Проценты скидок при определенной сумме продаж
 }
 
 func (accumulationDiscount AccumulationDiscount) GetAccountID() uuid.UUID {
@@ -183,7 +181,7 @@ func (accumulationDiscount AccumulationDiscount) GetActive() bool {
 	return Deref(accumulationDiscount.Active)
 }
 
-func (accumulationDiscount AccumulationDiscount) GetAgentTags() Tags {
+func (accumulationDiscount AccumulationDiscount) GetAgentTags() Slice[string] {
 	return accumulationDiscount.AgentTags
 }
 
@@ -199,11 +197,11 @@ func (accumulationDiscount AccumulationDiscount) GetAssortment() Assortment {
 	return accumulationDiscount.Assortment
 }
 
-func (accumulationDiscount AccumulationDiscount) GetProductFolders() ProductFolders {
+func (accumulationDiscount AccumulationDiscount) GetProductFolders() MetaArray[ProductFolder] {
 	return Deref(accumulationDiscount.ProductFolders)
 }
 
-func (accumulationDiscount AccumulationDiscount) GetLevels() Levels {
+func (accumulationDiscount AccumulationDiscount) GetLevels() Slice[AccumulationLevel] {
 	return accumulationDiscount.Levels
 }
 
@@ -222,7 +220,7 @@ func (accumulationDiscount *AccumulationDiscount) SetActive(active bool) *Accumu
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags Tags) *AccumulationDiscount {
+func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags Slice[string]) *AccumulationDiscount {
 	accumulationDiscount.AgentTags = agentTags
 	return accumulationDiscount
 }
@@ -242,12 +240,12 @@ func (accumulationDiscount *AccumulationDiscount) SetAssortment(assortment Assor
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders *ProductFolders) *AccumulationDiscount {
-	accumulationDiscount.ProductFolders = productFolders
+func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *AccumulationDiscount {
+	accumulationDiscount.ProductFolders = NewMetaArrayRows(productFolders)
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetLevels(levels Levels) *AccumulationDiscount {
+func (accumulationDiscount *AccumulationDiscount) SetLevels(levels Slice[AccumulationLevel]) *AccumulationDiscount {
 	accumulationDiscount.Levels = levels
 	return accumulationDiscount
 }
@@ -285,21 +283,19 @@ func (accumulationLevel *AccumulationLevel) SetDiscount(discount float64) *Accum
 	return accumulationLevel
 }
 
-type Levels = Slice[AccumulationLevel]
-
 // PersonalDiscount Персональная скидка.
 // Ключевое слово: personaldiscount
 type PersonalDiscount struct {
-	AccountID      *uuid.UUID      `json:"accountId,omitempty"`
-	ID             *uuid.UUID      `json:"id,omitempty"`
-	Name           *string         `json:"name,omitempty"`
-	Meta           *Meta           `json:"meta,omitempty"`
-	Active         *bool           `json:"active,omitempty"`
-	AllProducts    *bool           `json:"allProducts,omitempty"`
-	AllAgents      *bool           `json:"allAgents,omitempty"`
-	ProductFolders *ProductFolders `json:"productFolders,omitempty"`
-	AgentTags      Tags            `json:"agentTags,omitempty"`
-	Assortment     Assortment      `json:"assortment,omitempty"`
+	AccountID      *uuid.UUID                `json:"accountId,omitempty"`
+	ID             *uuid.UUID                `json:"id,omitempty"`
+	Name           *string                   `json:"name,omitempty"`
+	Meta           *Meta                     `json:"meta,omitempty"`
+	Active         *bool                     `json:"active,omitempty"`
+	AllProducts    *bool                     `json:"allProducts,omitempty"`
+	AllAgents      *bool                     `json:"allAgents,omitempty"`
+	ProductFolders *MetaArray[ProductFolder] `json:"productFolders,omitempty"`
+	AgentTags      Slice[string]             `json:"agentTags,omitempty"`
+	Assortment     Assortment                `json:"assortment,omitempty"`
 }
 
 func (personalDiscount PersonalDiscount) GetAccountID() uuid.UUID {
@@ -322,7 +318,7 @@ func (personalDiscount PersonalDiscount) GetActive() bool {
 	return Deref(personalDiscount.Active)
 }
 
-func (personalDiscount PersonalDiscount) GetAgentTags() Tags {
+func (personalDiscount PersonalDiscount) GetAgentTags() Slice[string] {
 	return personalDiscount.AgentTags
 }
 
@@ -338,7 +334,7 @@ func (personalDiscount PersonalDiscount) GetAssortment() Assortment {
 	return personalDiscount.Assortment
 }
 
-func (personalDiscount PersonalDiscount) GetProductFolders() ProductFolders {
+func (personalDiscount PersonalDiscount) GetProductFolders() MetaArray[ProductFolder] {
 	return Deref(personalDiscount.ProductFolders)
 }
 
@@ -357,7 +353,7 @@ func (personalDiscount *PersonalDiscount) SetActive(active bool) *PersonalDiscou
 	return personalDiscount
 }
 
-func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags Tags) *PersonalDiscount {
+func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags Slice[string]) *PersonalDiscount {
 	personalDiscount.AgentTags = agentTags
 	return personalDiscount
 }
@@ -377,8 +373,8 @@ func (personalDiscount *PersonalDiscount) SetAssortment(assortment Assortment) *
 	return personalDiscount
 }
 
-func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders *ProductFolders) *PersonalDiscount {
-	personalDiscount.ProductFolders = productFolders
+func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *PersonalDiscount {
+	personalDiscount.ProductFolders = NewMetaArrayRows(productFolders)
 	return personalDiscount
 }
 
@@ -394,19 +390,19 @@ func (personalDiscount PersonalDiscount) MetaType() MetaType {
 // Ключевое слово: specialpricediscount
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
 type SpecialPriceDiscount struct {
-	AllProducts    *bool           `json:"allProducts,omitempty"`
-	ID             *uuid.UUID      `json:"id,omitempty"`
-	Name           *string         `json:"name,omitempty"`
-	Meta           *Meta           `json:"meta,omitempty"`
-	Active         *bool           `json:"active,omitempty"`
-	AccountID      *uuid.UUID      `json:"accountId,omitempty"`
-	AllAgents      *bool           `json:"allAgents,omitempty"`
-	UsePriceType   *bool           `json:"usePriceType,omitempty"`
-	Assortment     Assortment      `json:"assortment,omitempty"`
-	ProductFolders *ProductFolders `json:"productFolders,omitempty"`
-	Discount       *float64        `json:"discount,omitempty"`
-	SpecialPrice   *SpecialPrice   `json:"specialPrice,omitempty"`
-	AgentTags      Tags            `json:"agentTags,omitempty"`
+	AllProducts    *bool                     `json:"allProducts,omitempty"`
+	ID             *uuid.UUID                `json:"id,omitempty"`
+	Name           *string                   `json:"name,omitempty"`
+	Meta           *Meta                     `json:"meta,omitempty"`
+	Active         *bool                     `json:"active,omitempty"`
+	AccountID      *uuid.UUID                `json:"accountId,omitempty"`
+	AllAgents      *bool                     `json:"allAgents,omitempty"`
+	UsePriceType   *bool                     `json:"usePriceType,omitempty"`
+	Assortment     Assortment                `json:"assortment,omitempty"`
+	ProductFolders *MetaArray[ProductFolder] `json:"productFolders,omitempty"`
+	Discount       *float64                  `json:"discount,omitempty"`
+	SpecialPrice   *SpecialPrice             `json:"specialPrice,omitempty"`
+	AgentTags      Slice[string]             `json:"agentTags,omitempty"`
 }
 
 func (specialPriceDiscount SpecialPriceDiscount) GetAccountID() uuid.UUID {
@@ -429,7 +425,7 @@ func (specialPriceDiscount SpecialPriceDiscount) GetActive() bool {
 	return Deref(specialPriceDiscount.Active)
 }
 
-func (specialPriceDiscount SpecialPriceDiscount) GetAgentTags() Tags {
+func (specialPriceDiscount SpecialPriceDiscount) GetAgentTags() Slice[string] {
 	return specialPriceDiscount.AgentTags
 }
 
@@ -449,7 +445,7 @@ func (specialPriceDiscount SpecialPriceDiscount) GetAssortment() Assortment {
 	return specialPriceDiscount.Assortment
 }
 
-func (specialPriceDiscount SpecialPriceDiscount) GetProductFolders() ProductFolders {
+func (specialPriceDiscount SpecialPriceDiscount) GetProductFolders() MetaArray[ProductFolder] {
 	return Deref(specialPriceDiscount.ProductFolders)
 }
 
@@ -476,7 +472,7 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetActive(active bool) *Specia
 	return specialPriceDiscount
 }
 
-func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags Tags) *SpecialPriceDiscount {
+func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags Slice[string]) *SpecialPriceDiscount {
 	specialPriceDiscount.AgentTags = agentTags
 	return specialPriceDiscount
 }
@@ -501,8 +497,8 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetAssortment(assortment Assor
 	return specialPriceDiscount
 }
 
-func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders *ProductFolders) *SpecialPriceDiscount {
-	specialPriceDiscount.ProductFolders = productFolders
+func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *SpecialPriceDiscount {
+	specialPriceDiscount.ProductFolders = NewMetaArrayRows(productFolders)
 	return specialPriceDiscount
 }
 
@@ -557,22 +553,22 @@ func (specialPrice SpecialPrice) String() string {
 // Сервис для работы со скидками.
 type DiscountService interface {
 	GetList(ctx context.Context, params *Params) (*List[Discount], *resty.Response, error)
-	UpdateRoundOffDiscount(ctx context.Context, id *uuid.UUID, entity *Discount) (*Discount, *resty.Response, error)
+	UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error)
 	GetAccumulationDiscounts(ctx context.Context, params *Params) (*List[AccumulationDiscount], *resty.Response, error)
 	CreateAccumulationDiscount(ctx context.Context, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
-	GetAccumulationDiscountByID(ctx context.Context, id *uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error)
-	UpdateAccumulationDiscount(ctx context.Context, id *uuid.UUID, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
-	DeleteAccumulationDiscount(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error)
+	UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
+	DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetPersonalDiscounts(ctx context.Context, params *Params) (*List[PersonalDiscount], *resty.Response, error)
 	CreatePersonalDiscount(ctx context.Context, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
-	GetPersonalDiscountByID(ctx context.Context, id *uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error)
-	UpdatePersonalDiscount(ctx context.Context, id *uuid.UUID, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
-	DeletePersonalDiscount(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error)
+	UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
+	DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetSpecialPriceDiscounts(ctx context.Context, params *Params) (*List[SpecialPriceDiscount], *resty.Response, error)
 	CreateSpecialPriceDiscount(ctx context.Context, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
-	GetSpecialPriceDiscountByID(ctx context.Context, id *uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error)
-	UpdateSpecialPriceDiscount(ctx context.Context, id *uuid.UUID, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
-	DeleteSpecialPriceDiscount(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error)
+	UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
+	DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 type discountService struct {
@@ -590,7 +586,7 @@ func NewDiscountService(client *Client) DiscountService {
 
 // UpdateRoundOffDiscount Изменить округление копеек.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-okruglenie-kopeek
-func (s *discountService) UpdateRoundOffDiscount(ctx context.Context, id *uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
+func (s *discountService) UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", s.uri, id)
 	return NewRequestBuilder[Discount](s.client, path).Put(ctx, entity)
 }
@@ -610,21 +606,21 @@ func (s *discountService) CreateAccumulationDiscount(ctx context.Context, entity
 
 // GetAccumulationDiscountByID Получить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-nakopitel-nuu-skidku
-func (s *discountService) GetAccumulationDiscountByID(ctx context.Context, id *uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error) {
+func (s *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
 	return NewRequestBuilder[AccumulationDiscount](s.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdateAccumulationDiscount Изменить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-nakopitel-nuu-skidku
-func (s *discountService) UpdateAccumulationDiscount(ctx context.Context, id *uuid.UUID, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
+func (s *discountService) UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
 	return NewRequestBuilder[AccumulationDiscount](s.client, path).Put(ctx, entity)
 }
 
 // DeleteAccumulationDiscount Удалить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-nakopitel-nuu-skidku
-func (s *discountService) DeleteAccumulationDiscount(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *discountService) DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
@@ -644,20 +640,20 @@ func (s *discountService) CreatePersonalDiscount(ctx context.Context, entity *Pe
 
 // GetPersonalDiscountByID Получить персональную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-personal-nuu-skidku
-func (s *discountService) GetPersonalDiscountByID(ctx context.Context, id *uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error) {
+func (s *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
 	return NewRequestBuilder[PersonalDiscount](s.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdatePersonalDiscount Изменить персональную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-personal-nuu-skidku
-func (s *discountService) UpdatePersonalDiscount(ctx context.Context, id *uuid.UUID, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
+func (s *discountService) UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
 	return NewRequestBuilder[PersonalDiscount](s.client, path).Put(ctx, entity)
 }
 
 // DeletePersonalDiscount Удалить персональную скидку.
-func (s *discountService) DeletePersonalDiscount(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *discountService) DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }
@@ -678,21 +674,21 @@ func (s *discountService) CreateSpecialPriceDiscount(ctx context.Context, entity
 
 // GetSpecialPriceDiscountByID Получить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-special-nuu-cenu
-func (s *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id *uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error) {
+func (s *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
 	return NewRequestBuilder[SpecialPriceDiscount](s.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdateSpecialPriceDiscount Изменить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-special-nuu-cenu
-func (s *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id *uuid.UUID, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
+func (s *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
 	return NewRequestBuilder[SpecialPriceDiscount](s.client, path).Put(ctx, entity)
 }
 
 // DeleteSpecialPriceDiscount Удалить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-special-nuu-cenu
-func (s *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

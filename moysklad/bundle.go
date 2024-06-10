@@ -21,13 +21,13 @@ type Bundle struct {
 	Name                *string                     `json:"name,omitempty"`
 	Archived            *bool                       `json:"archived,omitempty"`
 	Article             *string                     `json:"article,omitempty"`
-	Images              *Images                     `json:"images,omitempty"`
+	Images              *MetaArray[Image]           `json:"images,omitempty"`
 	Components          *Positions[BundleComponent] `json:"components,omitempty"`
 	Country             *Country                    `json:"country,omitempty"`
 	DiscountProhibited  *bool                       `json:"discountProhibited"`
 	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`
 	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"`
-	Files               *Files                      `json:"files,omitempty"`
+	Files               *MetaArray[File]            `json:"files,omitempty"`
 	Group               *Group                      `json:"group,omitempty"`
 	Vat                 *int                        `json:"vat,omitempty"`
 	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`
@@ -36,7 +36,6 @@ type Bundle struct {
 	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`
 	PathName            *string                     `json:"pathName,omitempty"`
 	Weight              *float64                    `json:"weight,omitempty"`
-	SalePrices          SalePrices                  `json:"salePrices,omitempty"`
 	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`
 	Shared              *bool                       `json:"shared,omitempty"`
 	Updated             *Timestamp                  `json:"updated,omitempty"`
@@ -44,12 +43,13 @@ type Bundle struct {
 	Tnved               *string                     `json:"tnved,omitempty"`
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
 	Uom                 *Uom                        `json:"uom,omitempty"`
-	Barcodes            Barcodes                    `json:"barcodes,omitempty"`
 	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
 	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`
-	Attributes          Attributes                  `json:"attributes,omitempty"`
+	Barcodes            Slice[Barcode]              `json:"barcodes,omitempty"`
+	SalePrices          Slice[SalePrice]            `json:"salePrices,omitempty"`
+	Attributes          Slice[AttributeValue]       `json:"attributes,omitempty"`
 }
 
 func NewBundleFromAssortment(assortmentPosition AssortmentPosition) *Bundle {
@@ -104,7 +104,7 @@ func (bundle Bundle) GetArticle() string {
 	return Deref(bundle.Article)
 }
 
-func (bundle Bundle) GetImages() Images {
+func (bundle Bundle) GetImages() MetaArray[Image] {
 	return Deref(bundle.Images)
 }
 
@@ -128,7 +128,7 @@ func (bundle Bundle) GetEffectiveVatEnabled() bool {
 	return Deref(bundle.EffectiveVatEnabled)
 }
 
-func (bundle Bundle) GetFiles() Files {
+func (bundle Bundle) GetFiles() MetaArray[File] {
 	return Deref(bundle.Files)
 }
 
@@ -164,7 +164,7 @@ func (bundle Bundle) GetWeight() float64 {
 	return Deref(bundle.Weight)
 }
 
-func (bundle Bundle) GetSalePrices() SalePrices {
+func (bundle Bundle) GetSalePrices() Slice[SalePrice] {
 	return bundle.SalePrices
 }
 
@@ -196,7 +196,7 @@ func (bundle Bundle) GetUom() Uom {
 	return Deref(bundle.Uom)
 }
 
-func (bundle Bundle) GetBarcodes() Barcodes {
+func (bundle Bundle) GetBarcodes() Slice[Barcode] {
 	return bundle.Barcodes
 }
 
@@ -216,7 +216,7 @@ func (bundle Bundle) GetPaymentItemType() PaymentItem {
 	return bundle.PaymentItemType
 }
 
-func (bundle Bundle) GetAttributes() Attributes {
+func (bundle Bundle) GetAttributes() Slice[AttributeValue] {
 	return bundle.Attributes
 }
 
@@ -225,8 +225,8 @@ func (bundle *Bundle) SetVolume(volume float64) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetSyncID(syncID *uuid.UUID) *Bundle {
-	bundle.SyncID = syncID
+func (bundle *Bundle) SetSyncID(syncID uuid.UUID) *Bundle {
+	bundle.SyncID = &syncID
 	return bundle
 }
 
@@ -265,8 +265,8 @@ func (bundle *Bundle) SetArticle(article string) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetImages(images *Images) *Bundle {
-	bundle.Images = images
+func (bundle *Bundle) SetImages(images Slice[Image]) *Bundle {
+	bundle.Images = NewMetaArrayRows(images)
 	return bundle
 }
 
@@ -285,8 +285,8 @@ func (bundle *Bundle) SetDiscountProhibited(discountProhibited bool) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetFiles(files *Files) *Bundle {
-	bundle.Files = files
+func (bundle *Bundle) SetFiles(files Slice[File]) *Bundle {
+	bundle.Files = NewMetaArrayRows(files)
 	return bundle
 }
 
@@ -325,7 +325,7 @@ func (bundle *Bundle) SetWeight(weight float64) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetSalePrices(salePrices SalePrices) *Bundle {
+func (bundle *Bundle) SetSalePrices(salePrices Slice[SalePrice]) *Bundle {
 	bundle.SalePrices = salePrices
 	return bundle
 }
@@ -355,7 +355,7 @@ func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetBarcodes(barcodes Barcodes) *Bundle {
+func (bundle *Bundle) SetBarcodes(barcodes Slice[Barcode]) *Bundle {
 	bundle.Barcodes = barcodes
 	return bundle
 }
@@ -380,7 +380,7 @@ func (bundle *Bundle) SetPaymentItemType(paymentItemType PaymentItem) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetAttributes(attributes Attributes) *Bundle {
+func (bundle *Bundle) SetAttributes(attributes Slice[AttributeValue]) *Bundle {
 	bundle.Attributes = attributes
 	return bundle
 }
@@ -472,15 +472,15 @@ type BundleService interface {
 	GetList(ctx context.Context, params *Params) (*List[Bundle], *resty.Response, error)
 	Create(ctx context.Context, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, bundleList []*Bundle, params *Params) (*[]Bundle, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Bundle, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Bundle, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, bundleList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetComponents(ctx context.Context, id *uuid.UUID) (*List[BundleComponent], *resty.Response, error)
-	CreateComponent(ctx context.Context, id *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
-	GetComponentByID(ctx context.Context, id, componentID *uuid.UUID) (*BundleComponent, *resty.Response, error)
-	UpdateComponent(ctx context.Context, id, componentID *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
-	DeleteComponent(ctx context.Context, id, componentID *uuid.UUID) (bool, *resty.Response, error)
+	GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)
+	CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
+	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
+	UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
+	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
 }
 
 type bundleService struct {
@@ -510,35 +510,35 @@ func NewBundleService(client *Client) BundleService {
 
 // GetComponents Получить компоненты Комплекта.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-poluchit-komponenty-komplekta
-func (s *bundleService) GetComponents(ctx context.Context, id *uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
+func (s *bundleService) GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
 	path := fmt.Sprintf("entity/bundle/%s/components", id)
 	return NewRequestBuilder[List[BundleComponent]](s.client, path).Get(ctx)
 }
 
 // CreateComponent Добавить компонент Комплекта.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-dobawit-komponent-komplekta
-func (s *bundleService) CreateComponent(ctx context.Context, id *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+func (s *bundleService) CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
 	path := fmt.Sprintf("entity/bundle/%s/components", id)
 	return NewRequestBuilder[BundleComponent](s.client, path).Post(ctx, bundleComponent)
 }
 
 // GetComponentByID Получить компонент.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-poluchit-komponent
-func (s *bundleService) GetComponentByID(ctx context.Context, id, componentId *uuid.UUID) (*BundleComponent, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentId)
+func (s *bundleService) GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error) {
+	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentID)
 	return NewRequestBuilder[BundleComponent](s.client, path).Get(ctx)
 }
 
 // UpdateComponent Изменить компонент.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-izmenit-komponent
-func (s *bundleService) UpdateComponent(ctx context.Context, id, componentId *uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentId)
+func (s *bundleService) UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentID)
 	return NewRequestBuilder[BundleComponent](s.client, path).Put(ctx, bundleComponent)
 }
 
 // DeleteComponent Удалить компонент.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-udalit-komponent
-func (s *bundleService) DeleteComponent(ctx context.Context, id, componentId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentId)
+func (s *bundleService) DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentID)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

@@ -11,25 +11,25 @@ import (
 // Ключевое слово: variant
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq
 type Variant struct {
-	Archived           *bool           `json:"archived,omitempty"`
-	Updated            *Timestamp      `json:"updated,omitempty"`
-	AccountID          *uuid.UUID      `json:"accountId,omitempty"`
-	Description        *string         `json:"description,omitempty"`
-	ExternalCode       *string         `json:"externalCode,omitempty"`
-	ID                 *uuid.UUID      `json:"id,omitempty"`
-	Meta               *Meta           `json:"meta,omitempty"`
-	Name               *string         `json:"name,omitempty"`
-	Code               *string         `json:"code,omitempty"`
-	Barcodes           Barcodes        `json:"barcodes,omitempty"`
-	DiscountProhibited *bool           `json:"discountProhibited,omitempty"`
-	Characteristics    Characteristics `json:"characteristics,omitempty"`
-	Images             *Images         `json:"images,omitempty"`
-	MinPrice           *MinPrice       `json:"minPrice,omitempty"`
-	BuyPrice           *BuyPrice       `json:"buyPrice,omitempty"`
-	Product            *Product        `json:"product,omitempty"`
-	SalePrices         SalePrices      `json:"salePrices,omitempty"`
-	Things             Things          `json:"things,omitempty"`
-	Packs              VariantPacks    `json:"packs,omitempty"`
+	Archived           *bool                 `json:"archived,omitempty"`
+	Updated            *Timestamp            `json:"updated,omitempty"`
+	AccountID          *uuid.UUID            `json:"accountId,omitempty"`
+	Description        *string               `json:"description,omitempty"`
+	ExternalCode       *string               `json:"externalCode,omitempty"`
+	ID                 *uuid.UUID            `json:"id,omitempty"`
+	Meta               *Meta                 `json:"meta,omitempty"`
+	Name               *string               `json:"name,omitempty"`
+	Code               *string               `json:"code,omitempty"`
+	Barcodes           Slice[Barcode]        `json:"barcodes,omitempty"`
+	DiscountProhibited *bool                 `json:"discountProhibited,omitempty"`
+	Characteristics    Slice[Characteristic] `json:"characteristics,omitempty"`
+	Images             *MetaArray[Image]     `json:"images,omitempty"`
+	MinPrice           *MinPrice             `json:"minPrice,omitempty"`
+	BuyPrice           *BuyPrice             `json:"buyPrice,omitempty"`
+	Product            *Product              `json:"product,omitempty"`
+	SalePrices         Slice[SalePrice]      `json:"salePrices,omitempty"`
+	Things             Slice[string]         `json:"things,omitempty"`
+	Packs              Slice[VariantPack]    `json:"packs,omitempty"`
 }
 
 func NewVariantFromAssortment(assortmentPosition AssortmentPosition) *Variant {
@@ -80,7 +80,7 @@ func (variant Variant) GetCode() string {
 	return Deref(variant.Code)
 }
 
-func (variant Variant) GetBarcodes() Barcodes {
+func (variant Variant) GetBarcodes() Slice[Barcode] {
 	return variant.Barcodes
 }
 
@@ -88,11 +88,11 @@ func (variant Variant) GetDiscountProhibited() bool {
 	return Deref(variant.DiscountProhibited)
 }
 
-func (variant Variant) GetCharacteristics() Characteristics {
+func (variant Variant) GetCharacteristics() Slice[Characteristic] {
 	return variant.Characteristics
 }
 
-func (variant Variant) GetImages() Images {
+func (variant Variant) GetImages() MetaArray[Image] {
 	return Deref(variant.Images)
 }
 
@@ -108,15 +108,15 @@ func (variant Variant) GetProduct() Product {
 	return Deref(variant.Product)
 }
 
-func (variant Variant) GetSalePrices() SalePrices {
+func (variant Variant) GetSalePrices() Slice[SalePrice] {
 	return variant.SalePrices
 }
 
-func (variant Variant) GetThings() Things {
+func (variant Variant) GetThings() Slice[string] {
 	return variant.Things
 }
 
-func (variant Variant) GetPacks() VariantPacks {
+func (variant Variant) GetPacks() Slice[VariantPack] {
 	return variant.Packs
 }
 
@@ -150,7 +150,7 @@ func (variant *Variant) SetCode(code string) *Variant {
 	return variant
 }
 
-func (variant *Variant) SetBarcodes(barcodes Barcodes) *Variant {
+func (variant *Variant) SetBarcodes(barcodes Slice[Barcode]) *Variant {
 	variant.Barcodes = barcodes
 	return variant
 }
@@ -160,13 +160,13 @@ func (variant *Variant) SetDiscountProhibited(discountProhibited bool) *Variant 
 	return variant
 }
 
-func (variant *Variant) SetCharacteristics(characteristics Characteristics) *Variant {
+func (variant *Variant) SetCharacteristics(characteristics Slice[Characteristic]) *Variant {
 	variant.Characteristics = characteristics
 	return variant
 }
 
-func (variant *Variant) SetImages(images *Images) *Variant {
-	variant.Images = images
+func (variant *Variant) SetImages(images Slice[Image]) *Variant {
+	variant.Images = NewMetaArrayRows(images)
 	return variant
 }
 
@@ -185,12 +185,12 @@ func (variant *Variant) SetProduct(product *Product) *Variant {
 	return variant
 }
 
-func (variant *Variant) SetSalePrices(salePrices SalePrices) *Variant {
+func (variant *Variant) SetSalePrices(salePrices Slice[SalePrice]) *Variant {
 	variant.SalePrices = salePrices
 	return variant
 }
 
-func (variant *Variant) SetPacks(packs VariantPacks) *Variant {
+func (variant *Variant) SetPacks(packs Slice[VariantPack]) *Variant {
 	variant.Packs = packs
 	return variant
 }
@@ -206,12 +206,10 @@ func (variant Variant) MetaType() MetaType {
 // VariantPack Упаковка модификации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-upakowki-modifikacii
 type VariantPack struct {
-	ID         *uuid.UUID `json:"id,omitempty"`
-	ParentPack *Pack      `json:"parentpack,omitempty"`
-	Barcodes   Barcodes   `json:"barcodes,omitempty"`
+	ID         *uuid.UUID     `json:"id,omitempty"`
+	ParentPack *Pack          `json:"parentpack,omitempty"`
+	Barcodes   Slice[Barcode] `json:"barcodes,omitempty"`
 }
-
-type VariantPacks = Slice[VariantPack]
 
 func (variantPack VariantPack) GetID() uuid.UUID {
 	return Deref(variantPack.ID)
@@ -221,7 +219,7 @@ func (variantPack VariantPack) GetParentPack() Pack {
 	return Deref(variantPack.ParentPack)
 }
 
-func (variantPack VariantPack) GetBarcodes() Barcodes {
+func (variantPack VariantPack) GetBarcodes() Slice[Barcode] {
 	return variantPack.Barcodes
 }
 
@@ -230,7 +228,7 @@ func (variantPack *VariantPack) SetParentPack(pack *Pack) *VariantPack {
 	return variantPack
 }
 
-func (variantPack *VariantPack) SetBarcodes(barcodes Barcodes) *VariantPack {
+func (variantPack *VariantPack) SetBarcodes(barcodes Slice[Barcode]) *VariantPack {
 	variantPack.Barcodes = barcodes
 	return variantPack
 }
@@ -250,8 +248,6 @@ type Characteristic struct {
 	Type     *string    `json:"type,omitempty"`     // Тип значения характеристики (значение всегда "string")
 	Value    *string    `json:"value,omitempty"`    // Значение характеристики
 }
-
-type Characteristics = Slice[Characteristic]
 
 func (characteristic Characteristic) GetID() uuid.UUID {
 	return Deref(characteristic.ID)
@@ -317,22 +313,22 @@ type VariantService interface {
 	Create(ctx context.Context, variant *Variant, params *Params) (*Variant, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, variantList []*Variant, params *Params) (*[]Variant, *resty.Response, error)
 	DeleteMany(ctx context.Context, variantList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Variant, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, variant *Variant, params *Params) (*Variant, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Variant, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, variant *Variant, params *Params) (*Variant, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaCharacteristicsWrapper, *resty.Response, error)
-	GetImages(ctx context.Context, id *uuid.UUID) (*MetaArray[Image], *resty.Response, error)
-	CreateImage(ctx context.Context, id *uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
-	UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
-	DeleteImage(ctx context.Context, id *uuid.UUID, imageId *uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id *uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
+	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
+	UpdateImages(ctx context.Context, id uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
+	DeleteImage(ctx context.Context, id uuid.UUID, imageId uuid.UUID) (bool, *resty.Response, error)
+	DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
 	CreateCharacteristics(ctx context.Context, characteristics []*Characteristic) (*[]Characteristic, *resty.Response, error)
-	GetCharacteristicByID(ctx context.Context, id *uuid.UUID) (*Characteristic, *resty.Response, error)
-	UpdateCharacteristic(ctx context.Context, id *uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
-	DeleteCharacteristic(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error)
+	UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
+	DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 type variantService struct {
@@ -382,19 +378,19 @@ func (s *variantService) CreateCharacteristics(ctx context.Context, characterist
 
 // GetCharacteristicByID Получить Характеристику.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-harakteristiki-modifikacij-poluchit-harakteristiku
-func (s *variantService) GetCharacteristicByID(ctx context.Context, id *uuid.UUID) (*Characteristic, *resty.Response, error) {
+func (s *variantService) GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
 	return NewRequestBuilder[Characteristic](s.client, path).Get(ctx)
 }
 
 // UpdateCharacteristic Изменить характеристику.
-func (s *variantService) UpdateCharacteristic(ctx context.Context, id *uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
+func (s *variantService) UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
 	return NewRequestBuilder[Characteristic](s.client, path).Put(ctx, characteristic)
 }
 
 // DeleteCharacteristic Удалить характеристику.
-func (s *variantService) DeleteCharacteristic(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *variantService) DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
 	return NewRequestBuilder[any](s.client, path).Delete(ctx)
 }

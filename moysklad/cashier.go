@@ -57,5 +57,3 @@ func (cashier Cashier) String() string {
 func (cashier Cashier) MetaType() MetaType {
 	return MetaTypeCashier
 }
-
-type Cashiers MetaArray[Cashier]

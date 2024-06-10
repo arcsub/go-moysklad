@@ -247,9 +247,9 @@ type BonusTransactionService interface {
 	Create(ctx context.Context, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, bonusTransactionList []*BonusTransaction, params *Params) (*[]BonusTransaction, *resty.Response, error)
 	DeleteMany(ctx context.Context, bonusTransactionList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*BonusTransaction, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*BonusTransaction, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
 }
 
 func NewBonusTransactionService(client *Client) BonusTransactionService {

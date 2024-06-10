@@ -7,8 +7,26 @@ type Overhead struct {
 	Distribution Distribution `json:"distribution,omitempty"` // Распределение накладных расходов
 }
 
-func (o Overhead) String() string {
-	return Stringify(o)
+func (overhead Overhead) GetSum() float64 {
+	return Deref(overhead.Sum)
+}
+
+func (overhead Overhead) GetDistribution() Distribution {
+	return overhead.Distribution
+}
+
+func (overhead *Overhead) SetSum(sum float64) *Overhead {
+	overhead.Sum = &sum
+	return overhead
+}
+
+func (overhead *Overhead) SetDistribution(distribution Distribution) *Overhead {
+	overhead.Distribution = distribution
+	return overhead
+}
+
+func (overhead Overhead) String() string {
+	return Stringify(overhead)
 }
 
 // Distribution Тип Распределения накладных расходов.

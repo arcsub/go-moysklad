@@ -9,17 +9,17 @@ import (
 // Ключевое слово: subscription
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-podpiska-kompanii
 type Subscription struct {
-	Role                          *string `json:"role,omitempty"`
-	IsSubscriptionChangeAvailable *bool   `json:"isSubscriptionChangeAvailable,omitempty"`
-	SubscriptionEndDate           *int64  `json:"subscriptionEndDate,omitempty"`
-	Tariff                        Tariff  `json:"tariff,omitempty"`
+	Role                          string `json:"role,omitempty"`
+	Tariff                        Tariff `json:"tariff,omitempty"`
+	SubscriptionEndDate           int64  `json:"subscriptionEndDate,omitempty"`
+	IsSubscriptionChangeAvailable bool   `json:"isSubscriptionChangeAvailable,omitempty"`
 }
 
-func (s Subscription) String() string {
-	return Stringify(s)
+func (subscription Subscription) String() string {
+	return Stringify(subscription)
 }
 
-func (s Subscription) MetaType() MetaType {
+func (subscription Subscription) MetaType() MetaType {
 	return MetaTypeSubscription
 }
 

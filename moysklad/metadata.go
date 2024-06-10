@@ -81,7 +81,7 @@ type AttributesStatesCreateSharedWrapper struct {
 
 type CounterpartyOption struct {
 	AttributesStatesCreateSharedWrapper
-	Tags Tags `json:"tags"`
+	Tags Slice[string] `json:"tags"`
 }
 
 type StatesElement struct {
@@ -115,7 +115,7 @@ type MetaCharacteristicsWrapper struct {
 
 type MetaTagsWrapper struct {
 	MetaAttributesSharedWrapper
-	Tags Tags `json:"tags"`
+	Tags Slice[string] `json:"tags"`
 }
 
 //type MetadataAttributeSharedPriceTypes struct {

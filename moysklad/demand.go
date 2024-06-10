@@ -20,7 +20,7 @@ type Demand struct {
 	Deleted                 *Timestamp                 `json:"deleted,omitempty"`
 	Description             *string                    `json:"description,omitempty"`
 	ExternalCode            *string                    `json:"externalCode,omitempty"`
-	Files                   *Files                     `json:"files,omitempty"`
+	Files                   *MetaArray[File]           `json:"files,omitempty"`
 	Group                   *Group                     `json:"group,omitempty"`
 	ID                      *uuid.UUID                 `json:"id,omitempty"`
 	Meta                    *Meta                      `json:"meta,omitempty"`
@@ -50,9 +50,9 @@ type Demand struct {
 	VatSum                  *float64                   `json:"vatSum,omitempty"`
 	CustomerOrder           *CustomerOrder             `json:"customerOrder,omitempty"`
 	FactureOut              *FactureOut                `json:"factureOut,omitempty"`
-	Returns                 SalesReturns               `json:"returns,omitempty"`
-	Payments                Payments                   `json:"payments,omitempty"`
-	InvoicesOut             InvoicesOut                `json:"invoicesOut,omitempty"`
+	Returns                 Slice[SalesReturn]         `json:"returns,omitempty"`
+	Payments                Slice[Payment]             `json:"payments,omitempty"`
+	InvoicesOut             Slice[InvoiceOut]          `json:"invoicesOut,omitempty"`
 	CargoName               *string                    `json:"cargoName,omitempty"`
 	Carrier                 *Counterparty              `json:"carrier,omitempty"`
 	Consignee               *Counterparty              `json:"consignee,omitempty"`
@@ -61,7 +61,7 @@ type Demand struct {
 	StateContractID         *string                    `json:"stateContractId,omitempty"`
 	TransportFacility       *string                    `json:"transportFacility,omitempty"`
 	TransportFacilityNumber *string                    `json:"transportFacilityNumber,omitempty"`
-	Attributes              Attributes                 `json:"attributes,omitempty"`
+	Attributes              Slice[AttributeValue]      `json:"attributes,omitempty"`
 }
 
 func (demand Demand) GetAccountID() uuid.UUID {
@@ -104,7 +104,7 @@ func (demand Demand) GetExternalCode() string {
 	return Deref(demand.ExternalCode)
 }
 
-func (demand Demand) GetFiles() Files {
+func (demand Demand) GetFiles() MetaArray[File] {
 	return Deref(demand.Files)
 }
 
@@ -224,15 +224,15 @@ func (demand Demand) GetFactureOut() FactureOut {
 	return Deref(demand.FactureOut)
 }
 
-func (demand Demand) GetReturns() SalesReturns {
+func (demand Demand) GetReturns() Slice[SalesReturn] {
 	return demand.Returns
 }
 
-func (demand Demand) GetPayments() Payments {
+func (demand Demand) GetPayments() Slice[Payment] {
 	return demand.Payments
 }
 
-func (demand Demand) GetInvoicesOut() InvoicesOut {
+func (demand Demand) GetInvoicesOut() Slice[InvoiceOut] {
 	return demand.InvoicesOut
 }
 
@@ -268,7 +268,7 @@ func (demand Demand) GetTransportFacilityNumber() string {
 	return Deref(demand.TransportFacilityNumber)
 }
 
-func (demand Demand) GetAttributes() Attributes {
+func (demand Demand) GetAttributes() Slice[AttributeValue] {
 	return demand.Attributes
 }
 
@@ -307,8 +307,8 @@ func (demand *Demand) SetExternalCode(externalCode string) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetFiles(files *Files) *Demand {
-	demand.Files = files
+func (demand *Demand) SetFiles(files Slice[File]) *Demand {
+	demand.Files = NewMetaArrayRows(files)
 	return demand
 }
 
@@ -397,8 +397,8 @@ func (demand *Demand) SetStore(store *Store) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetSyncID(syncID *uuid.UUID) *Demand {
-	demand.SyncID = syncID
+func (demand *Demand) SetSyncID(syncID uuid.UUID) *Demand {
+	demand.SyncID = &syncID
 	return demand
 }
 
@@ -422,17 +422,17 @@ func (demand *Demand) SetFactureOut(factureOut *FactureOut) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetReturns(returns SalesReturns) *Demand {
+func (demand *Demand) SetReturns(returns Slice[SalesReturn]) *Demand {
 	demand.Returns = returns
 	return demand
 }
 
-func (demand *Demand) SetPayments(payments Payments) *Demand {
+func (demand *Demand) SetPayments(payments Slice[Payment]) *Demand {
 	demand.Payments = payments
 	return demand
 }
 
-func (demand *Demand) SetInvoicesOut(invoicesOut InvoicesOut) *Demand {
+func (demand *Demand) SetInvoicesOut(invoicesOut Slice[InvoiceOut]) *Demand {
 	demand.InvoicesOut = invoicesOut
 	return demand
 }
@@ -477,7 +477,7 @@ func (demand *Demand) SetTransportFacilityNumber(transportFacilityNumber string)
 	return demand
 }
 
-func (demand *Demand) SetAttributes(attributes Attributes) *Demand {
+func (demand *Demand) SetAttributes(attributes Slice[AttributeValue]) *Demand {
 	demand.Attributes = attributes
 	return demand
 }
@@ -509,9 +509,9 @@ type DemandPosition struct {
 	VatEnabled        *bool               `json:"vatEnabled,omitempty"`
 	Vat               *int                `json:"vat,omitempty"`
 	Overhead          *float64            `json:"overhead,omitempty"`
-	TrackingCodes1162 TrackingCodes       `json:"trackingCodes_1162,omitempty"`
-	TrackingCodes     TrackingCodes       `json:"trackingCodes,omitempty"`
-	Things            Things              `json:"things,omitempty"`
+	TrackingCodes1162 Slice[TrackingCode] `json:"trackingCodes_1162,omitempty"`
+	TrackingCodes     Slice[TrackingCode] `json:"trackingCodes,omitempty"`
+	Things            Slice[string]       `json:"things,omitempty"`
 }
 
 func (demandPosition DemandPosition) GetAccountID() uuid.UUID {
@@ -550,15 +550,15 @@ func (demandPosition DemandPosition) GetSlot() Slot {
 	return Deref(demandPosition.Slot)
 }
 
-func (demandPosition DemandPosition) GetThings() Things {
+func (demandPosition DemandPosition) GetThings() Slice[string] {
 	return demandPosition.Things
 }
 
-func (demandPosition DemandPosition) GetTrackingCodes() TrackingCodes {
+func (demandPosition DemandPosition) GetTrackingCodes() Slice[TrackingCode] {
 	return demandPosition.TrackingCodes
 }
 
-func (demandPosition DemandPosition) GetTrackingCodes1162() TrackingCodes {
+func (demandPosition DemandPosition) GetTrackingCodes1162() Slice[TrackingCode] {
 	return demandPosition.TrackingCodes1162
 }
 
@@ -613,17 +613,17 @@ func (demandPosition *DemandPosition) SetSlot(slot *Slot) *DemandPosition {
 	return demandPosition
 }
 
-func (demandPosition *DemandPosition) SetThings(things Things) *DemandPosition {
+func (demandPosition *DemandPosition) SetThings(things Slice[string]) *DemandPosition {
 	demandPosition.Things = things
 	return demandPosition
 }
 
-func (demandPosition *DemandPosition) SetTrackingCodes(trackingCodes TrackingCodes) *DemandPosition {
+func (demandPosition *DemandPosition) SetTrackingCodes(trackingCodes Slice[TrackingCode]) *DemandPosition {
 	demandPosition.TrackingCodes = trackingCodes
 	return demandPosition
 }
 
-func (demandPosition *DemandPosition) SetTrackingCodes1162(trackingCodes1162 TrackingCodes) *DemandPosition {
+func (demandPosition *DemandPosition) SetTrackingCodes1162(trackingCodes1162 Slice[TrackingCode]) *DemandPosition {
 	demandPosition.TrackingCodes1162 = trackingCodes1162
 	return demandPosition
 }
@@ -650,9 +650,9 @@ func (demandPosition DemandPosition) MetaType() MetaType {
 // Документ: Отгрузка (demand)
 // Основание, на котором он может быть создан:
 // - Заказ покупателя (customerorder)
-type DemandTemplateArg struct {
-	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
-}
+//type DemandTemplateArg struct {
+//	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
+//}
 
 // DemandService
 // Сервис для работы с отгрузками.
@@ -661,42 +661,47 @@ type DemandService interface {
 	Create(ctx context.Context, demand *Demand, params *Params) (*Demand, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, demandList []*Demand, params *Params) (*[]Demand, *resty.Response, error)
 	DeleteMany(ctx context.Context, demandList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Demand, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, demand *Demand, params *Params) (*Demand, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Demand, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, demand *Demand, params *Params) (*Demand, *resty.Response, error)
 	//endpointTemplate[Demand]
 	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[DemandPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*DemandPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *DemandPosition, params *Params) (*DemandPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *DemandPosition) (*DemandPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*DemandPosition) (*[]DemandPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[DemandPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*DemandPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *DemandPosition, params *Params) (*DemandPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *DemandPosition) (*DemandPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*DemandPosition) (*[]DemandPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Demand, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Demand, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)
-	GetEmbeddedTemplateByID(ctx context.Context, id *uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
+	GetEmbeddedTemplateByID(ctx context.Context, id uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
 	GetCustomTemplates(ctx context.Context) (*List[CustomTemplate], *resty.Response, error)
-	GetCustomTemplateByID(ctx context.Context, id *uuid.UUID) (*CustomTemplate, *resty.Response, error)
-	PrintDocument(ctx context.Context, id *uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error)
+	GetCustomTemplateByID(ctx context.Context, id uuid.UUID) (*CustomTemplate, *resty.Response, error)
+	PrintDocument(ctx context.Context, id uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewDemandService(client *Client) DemandService {

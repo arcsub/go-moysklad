@@ -10,19 +10,19 @@ import (
 // Ключевое слово: consignment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-seriq
 type Consignment struct {
-	Meta         *Meta               `json:"meta,omitempty"`
-	Barcodes     Barcodes            `json:"barcodes,omitempty"`
-	Code         *string             `json:"code,omitempty"`
-	Description  *string             `json:"description,omitempty"`
-	ExternalCode *string             `json:"externalCode,omitempty"`
-	ID           *uuid.UUID          `json:"id,omitempty"`
-	AccountID    *uuid.UUID          `json:"accountId,omitempty"`
-	Name         *string             `json:"name,omitempty"`
-	Assortment   *AssortmentPosition `json:"assortment,omitempty"`
-	Image        *Image              `json:"image,omitempty"`
-	Label        *string             `json:"label,omitempty"`
-	Updated      *Timestamp          `json:"updated,omitempty"`
-	Attributes   Attributes          `json:"attributes,omitempty"`
+	Meta         *Meta                 `json:"meta,omitempty"`
+	Barcodes     Slice[Barcode]        `json:"barcodes,omitempty"`
+	Code         *string               `json:"code,omitempty"`
+	Description  *string               `json:"description,omitempty"`
+	ExternalCode *string               `json:"externalCode,omitempty"`
+	ID           *uuid.UUID            `json:"id,omitempty"`
+	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
+	Name         *string               `json:"name,omitempty"`
+	Assortment   *AssortmentPosition   `json:"assortment,omitempty"`
+	Image        *Image                `json:"image,omitempty"`
+	Label        *string               `json:"label,omitempty"`
+	Updated      *Timestamp            `json:"updated,omitempty"`
+	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
 func NewConsignmentFromAssortment(assortmentPosition AssortmentPosition) *Consignment {
@@ -41,7 +41,7 @@ func (consignment Consignment) GetMeta() Meta {
 	return Deref(consignment.Meta)
 }
 
-func (consignment Consignment) GetBarcodes() Barcodes {
+func (consignment Consignment) GetBarcodes() Slice[Barcode] {
 	return consignment.Barcodes
 }
 
@@ -85,7 +85,7 @@ func (consignment Consignment) GetUpdated() Timestamp {
 	return Deref(consignment.Updated)
 }
 
-func (consignment Consignment) GetAttributes() Attributes {
+func (consignment Consignment) GetAttributes() Slice[AttributeValue] {
 	return consignment.Attributes
 }
 
@@ -94,7 +94,7 @@ func (consignment *Consignment) SetMeta(meta *Meta) *Consignment {
 	return consignment
 }
 
-func (consignment *Consignment) SetBarcodes(barcodes Barcodes) *Consignment {
+func (consignment *Consignment) SetBarcodes(barcodes Slice[Barcode]) *Consignment {
 	consignment.Barcodes = barcodes
 	return consignment
 }
@@ -129,7 +129,7 @@ func (consignment *Consignment) SetLabel(label string) *Consignment {
 	return consignment
 }
 
-func (consignment *Consignment) SetAttributes(attributes Attributes) *Consignment {
+func (consignment *Consignment) SetAttributes(attributes Slice[AttributeValue]) *Consignment {
 	consignment.Attributes = attributes
 	return consignment
 }
@@ -149,19 +149,19 @@ type ConsignmentService interface {
 	Create(ctx context.Context, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, consignmentList []*Consignment, params *Params) (*[]Consignment, *resty.Response, error)
 	DeleteMany(ctx context.Context, consignmentList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Consignment, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Consignment, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
 	GetMetadata(context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 	GetAttributes(context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attr *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attr *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
 func NewConsignmentService(client *Client) ConsignmentService {

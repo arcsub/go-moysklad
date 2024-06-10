@@ -73,8 +73,6 @@ func (barcode *Barcode) UnmarshalJSON(bytes []byte) (err error) {
 	return
 }
 
-type Barcodes = Slice[Barcode]
-
-func NewBarcodes() Barcodes {
-	return make(Barcodes, 0)
+func NewBarcodes() Slice[Barcode] {
+	return NewSlice[Barcode]()
 }

@@ -73,15 +73,3 @@ func (file File) String() string {
 func (file File) MetaType() MetaType {
 	return MetaTypeFiles
 }
-
-type Files MetaArray[File]
-
-// Push добавляет элементы в срез.
-// Элементы, превышающее максимальное значение MaxFiles, игнорируются
-func (f *Files) Push(elements ...*File) *Files {
-	f.Rows.Push(elements...)
-	if f.Rows.Len() > MaxFiles {
-		f.Rows = f.Rows[:MaxFiles]
-	}
-	return f
-}

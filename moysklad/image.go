@@ -68,15 +68,3 @@ func (image Image) String() string {
 func (image Image) MetaType() MetaType {
 	return MetaTypeImage
 }
-
-type Images MetaArray[Image]
-
-// Push добавляет элементы в срез.
-// Элементы, превышающее максимальное значение MaxImages, игнорируются
-func (i *Images) Push(elements ...*Image) *Images {
-	i.Rows.Push(elements...)
-	if i.Rows.Len() > MaxImages {
-		i.Rows = i.Rows[:MaxImages]
-	}
-	return i
-}

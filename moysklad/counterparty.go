@@ -11,51 +11,51 @@ import (
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent
 type Counterparty struct {
-	Name               *string         `json:"name,omitempty"`
-	OKPO               *string         `json:"okpo,omitempty"`
-	ActualAddress      *string         `json:"actualAddress,omitempty"`
-	AccountID          *uuid.UUID      `json:"accountId,omitempty"`
-	Archived           *bool           `json:"archived,omitempty"`
-	Notes              *Notes          `json:"notes,omitempty"`
-	BonusPoints        *int            `json:"bonusPoints,omitempty"`
-	BonusProgram       *BonusProgram   `json:"bonusProgram,omitempty"`
-	Code               *string         `json:"code,omitempty"`
-	OGRNIP             *string         `json:"ogrnip,omitempty"`
-	ContactPersons     *ContactPersons `json:"contactpersons,omitempty"`
-	Created            *Timestamp      `json:"created,omitempty"`
-	Description        *string         `json:"description,omitempty"`
-	DiscountCardNumber *string         `json:"discountCardNumber,omitempty"`
-	Discounts          *DiscountsData  `json:"discounts,omitempty"`
-	Email              *string         `json:"email,omitempty"`
-	ExternalCode       *string         `json:"externalCode,omitempty"`
-	Owner              *Employee       `json:"owner,omitempty"`
-	Files              *Files          `json:"files,omitempty"`
-	Group              *Group          `json:"group,omitempty"`
-	ID                 *uuid.UUID      `json:"id,omitempty"`
-	Meta               *Meta           `json:"meta,omitempty"`
-	ActualAddressFull  *Address        `json:"actualAddressFull,omitempty"`
-	Accounts           *Accounts       `json:"accounts,omitempty"`
-	Fax                *string         `json:"fax,omitempty"`
-	Phone              *string         `json:"phone,omitempty"`
-	PriceType          *PriceType      `json:"priceType,omitempty"`
-	SalesAmount        *float64        `json:"salesAmount,omitempty"`
-	Shared             *bool           `json:"shared,omitempty"`
-	State              *State          `json:"state,omitempty"`
-	SyncID             *uuid.UUID      `json:"syncId,omitempty"`
-	Tags               Tags            `json:"tags,omitempty"`
-	Updated            *Timestamp      `json:"updated,omitempty"`
-	BirthDate          *Timestamp      `json:"birthDate,omitempty"`
-	CertificateDate    *Timestamp      `json:"certificateDate,omitempty"`
-	CertificateNumber  *string         `json:"certificateNumber,omitempty"`
-	INN                *string         `json:"inn,omitempty"`
-	KPP                *string         `json:"kpp,omitempty"`
-	LegalAddress       *string         `json:"legalAddress,omitempty"`
-	LegalAddressFull   *Address        `json:"legalAddressFull,omitempty"`
-	LegalTitle         *string         `json:"legalTitle,omitempty"`
-	OGRN               *string         `json:"ogrn,omitempty"`
-	CompanyType        CompanyType     `json:"companyType,omitempty"`
-	Sex                Sex             `json:"sex,omitempty"`
-	Attributes         Attributes      `json:"attributes,omitempty"`
+	Name               *string                   `json:"name,omitempty"`
+	OKPO               *string                   `json:"okpo,omitempty"`
+	ActualAddress      *string                   `json:"actualAddress,omitempty"`
+	AccountID          *uuid.UUID                `json:"accountId,omitempty"`
+	Archived           *bool                     `json:"archived,omitempty"`
+	Notes              *MetaArray[Note]          `json:"notes,omitempty"`
+	BonusPoints        *int                      `json:"bonusPoints,omitempty"`
+	BonusProgram       *BonusProgram             `json:"bonusProgram,omitempty"`
+	Code               *string                   `json:"code,omitempty"`
+	OGRNIP             *string                   `json:"ogrnip,omitempty"`
+	ContactPersons     *MetaArray[ContactPerson] `json:"contactpersons,omitempty"`
+	Created            *Timestamp                `json:"created,omitempty"`
+	Description        *string                   `json:"description,omitempty"`
+	DiscountCardNumber *string                   `json:"discountCardNumber,omitempty"`
+	Discounts          *DiscountsData            `json:"discounts,omitempty"`
+	Email              *string                   `json:"email,omitempty"`
+	ExternalCode       *string                   `json:"externalCode,omitempty"`
+	Owner              *Employee                 `json:"owner,omitempty"`
+	Files              *MetaArray[File]          `json:"files,omitempty"`
+	Group              *Group                    `json:"group,omitempty"`
+	ID                 *uuid.UUID                `json:"id,omitempty"`
+	Meta               *Meta                     `json:"meta,omitempty"`
+	ActualAddressFull  *Address                  `json:"actualAddressFull,omitempty"`
+	Accounts           *MetaArray[AgentAccount]  `json:"accounts,omitempty"`
+	Fax                *string                   `json:"fax,omitempty"`
+	Phone              *string                   `json:"phone,omitempty"`
+	PriceType          *PriceType                `json:"priceType,omitempty"`
+	SalesAmount        *float64                  `json:"salesAmount,omitempty"`
+	Shared             *bool                     `json:"shared,omitempty"`
+	State              *State                    `json:"state,omitempty"`
+	SyncID             *uuid.UUID                `json:"syncId,omitempty"`
+	Tags               Slice[string]             `json:"tags,omitempty"`
+	Updated            *Timestamp                `json:"updated,omitempty"`
+	BirthDate          *Timestamp                `json:"birthDate,omitempty"`
+	CertificateDate    *Timestamp                `json:"certificateDate,omitempty"`
+	CertificateNumber  *string                   `json:"certificateNumber,omitempty"`
+	INN                *string                   `json:"inn,omitempty"`
+	KPP                *string                   `json:"kpp,omitempty"`
+	LegalAddress       *string                   `json:"legalAddress,omitempty"`
+	LegalAddressFull   *Address                  `json:"legalAddressFull,omitempty"`
+	LegalTitle         *string                   `json:"legalTitle,omitempty"`
+	OGRN               *string                   `json:"ogrn,omitempty"`
+	CompanyType        CompanyType               `json:"companyType,omitempty"`
+	Sex                Sex                       `json:"sex,omitempty"`
+	Attributes         Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
 func (counterparty Counterparty) GetName() string {
@@ -78,7 +78,7 @@ func (counterparty Counterparty) GetArchived() bool {
 	return Deref(counterparty.Archived)
 }
 
-func (counterparty Counterparty) GetNotes() Notes {
+func (counterparty Counterparty) GetNotes() MetaArray[Note] {
 	return Deref(counterparty.Notes)
 }
 
@@ -98,7 +98,7 @@ func (counterparty Counterparty) GetOGRNIP() string {
 	return Deref(counterparty.OGRNIP)
 }
 
-func (counterparty Counterparty) GetContactPersons() ContactPersons {
+func (counterparty Counterparty) GetContactPersons() MetaArray[ContactPerson] {
 	return Deref(counterparty.ContactPersons)
 }
 
@@ -130,7 +130,7 @@ func (counterparty Counterparty) GetOwner() Employee {
 	return Deref(counterparty.Owner)
 }
 
-func (counterparty Counterparty) GetFiles() Files {
+func (counterparty Counterparty) GetFiles() MetaArray[File] {
 	return Deref(counterparty.Files)
 }
 
@@ -150,7 +150,7 @@ func (counterparty Counterparty) GetActualAddressFull() Address {
 	return Deref(counterparty.ActualAddressFull)
 }
 
-func (counterparty Counterparty) GetAccounts() Accounts {
+func (counterparty Counterparty) GetAccounts() MetaArray[AgentAccount] {
 	return Deref(counterparty.Accounts)
 }
 
@@ -182,7 +182,7 @@ func (counterparty Counterparty) GetSyncID() uuid.UUID {
 	return Deref(counterparty.SyncID)
 }
 
-func (counterparty Counterparty) GetTags() Tags {
+func (counterparty Counterparty) GetTags() Slice[string] {
 	return counterparty.Tags
 }
 
@@ -234,7 +234,7 @@ func (counterparty Counterparty) GetSex() Sex {
 	return counterparty.Sex
 }
 
-func (counterparty Counterparty) GetAttributes() Attributes {
+func (counterparty Counterparty) GetAttributes() Slice[AttributeValue] {
 	return counterparty.Attributes
 }
 
@@ -258,8 +258,8 @@ func (counterparty *Counterparty) SetArchived(archived bool) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetNotes(notes *Notes) *Counterparty {
-	counterparty.Notes = notes
+func (counterparty *Counterparty) SetNotes(notes Slice[Note]) *Counterparty {
+	counterparty.Notes = NewMetaArrayRows(notes)
 	return counterparty
 }
 
@@ -278,8 +278,8 @@ func (counterparty *Counterparty) SetOGRNIP(ogrnip string) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetContactPersons(contactPersons *ContactPersons) *Counterparty {
-	counterparty.ContactPersons = contactPersons
+func (counterparty *Counterparty) SetContactPersons(contactPersons Slice[ContactPerson]) *Counterparty {
+	counterparty.ContactPersons = NewMetaArrayRows(contactPersons)
 	return counterparty
 }
 
@@ -318,8 +318,8 @@ func (counterparty *Counterparty) SetOwner(owner *Employee) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetFiles(files *Files) *Counterparty {
-	counterparty.Files = files
+func (counterparty *Counterparty) SetFiles(files Slice[File]) *Counterparty {
+	counterparty.Files = NewMetaArrayRows(files)
 	return counterparty
 }
 
@@ -338,7 +338,7 @@ func (counterparty *Counterparty) SetActualAddressFull(actualAddressFull *Addres
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetAccounts(accounts *Accounts) *Counterparty {
+func (counterparty *Counterparty) SetAccounts(accounts *MetaArray[AgentAccount]) *Counterparty {
 	counterparty.Accounts = accounts
 	return counterparty
 }
@@ -368,12 +368,12 @@ func (counterparty *Counterparty) SetState(state *State) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetSyncID(syncID *uuid.UUID) *Counterparty {
-	counterparty.SyncID = syncID
+func (counterparty *Counterparty) SetSyncID(syncID uuid.UUID) *Counterparty {
+	counterparty.SyncID = &syncID
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetTags(tags Tags) *Counterparty {
+func (counterparty *Counterparty) SetTags(tags Slice[string]) *Counterparty {
 	counterparty.Tags = tags
 	return counterparty
 }
@@ -433,7 +433,7 @@ func (counterparty *Counterparty) SetSex(sex Sex) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetAttributes(attributes Attributes) *Counterparty {
+func (counterparty *Counterparty) SetAttributes(attributes Slice[AttributeValue]) *Counterparty {
 	counterparty.Attributes = attributes
 	return counterparty
 }
@@ -510,8 +510,6 @@ type Note struct {
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные
 }
 
-type Notes MetaArray[Note]
-
 func (note Note) GetAccountID() uuid.UUID {
 	return Deref(note.AccountID)
 }
@@ -571,8 +569,6 @@ const (
 	SexFemale Sex = "FEMALE" // Женский
 )
 
-type Tags = []string
-
 // CounterpartyService
 // Сервис для работы с контрагентами.
 type CounterpartyService interface {
@@ -580,36 +576,36 @@ type CounterpartyService interface {
 	Create(ctx context.Context, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, counterpartyList []*Counterparty, params *Params) (*[]Counterparty, *resty.Response, error)
 	DeleteMany(ctx context.Context, counterpartyList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Counterparty, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Counterparty, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaTagsWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*CounterpartySettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *CounterpartySettings) (*CounterpartySettings, *resty.Response, error)
-	GetAccounts(ctx context.Context, id *uuid.UUID) (*List[AgentAccount], *resty.Response, error)
-	GetAccountByID(ctx context.Context, id *uuid.UUID, accountId *uuid.UUID) (*AgentAccount, *resty.Response, error)
-	UpdateAccounts(ctx context.Context, id *uuid.UUID, accounts []*AgentAccount) (*[]AgentAccount, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Counterparty, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
+	GetAccountByID(ctx context.Context, id uuid.UUID, accountId uuid.UUID) (*AgentAccount, *resty.Response, error)
+	UpdateAccounts(ctx context.Context, id uuid.UUID, accounts Slice[AgentAccount]) (*MetaArray[AgentAccount], *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Counterparty, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetAsync(ctx context.Context, params *Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
-	GetContactPersons(ctx context.Context, id *uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error)
-	GetContactPersonById(ctx context.Context, id, contactPersonID *uuid.UUID) (*ContactPerson, *resty.Response, error)
-	CreateContactPerson(ctx context.Context, id *uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error)
-	UpdateContactPerson(ctx context.Context, id, contactPersonID *uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
-	GetNotes(ctx context.Context, id *uuid.UUID) (*List[Note], *resty.Response, error)
-	GetNoteById(ctx context.Context, id, noteID *uuid.UUID) (*Note, *resty.Response, error)
-	CreateNote(ctx context.Context, id *uuid.UUID, note *Note) (*Notes, *resty.Response, error)
-	UpdateNote(ctx context.Context, id, noteID *uuid.UUID, note *Note) (*Note, *resty.Response, error)
-	DeleteNote(ctx context.Context, id, noteID *uuid.UUID) (bool, *resty.Response, error)
+	GetContactPersons(ctx context.Context, id uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error)
+	GetContactPersonById(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error)
+	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error)
+	UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
+	GetNotes(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error)
+	GetNoteById(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error)
+	CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error)
+	UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error)
+	DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error)
 }
 
 type counterpartyService struct {
@@ -627,6 +623,7 @@ type counterpartyService struct {
 	endpointAccounts
 	endpointSyncID[Counterparty]
 	endpointNamedFilter
+	endpointStates
 }
 
 func NewCounterpartyService(client *Client) CounterpartyService {
@@ -646,6 +643,7 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 		endpointAccounts:         endpointAccounts{e},
 		endpointSyncID:           endpointSyncID[Counterparty]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
+		endpointStates:           endpointStates{e},
 	}
 }
 
@@ -657,63 +655,63 @@ func (service *counterpartyService) GetAsync(ctx context.Context, params *Params
 
 // GetContactPersons Список контактных лиц.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-kontaktnyh-lic
-func (service *counterpartyService) GetContactPersons(ctx context.Context, id *uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error) {
+func (service *counterpartyService) GetContactPersons(ctx context.Context, id uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons", service.uri, id)
 	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetContactPersonById Получить контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-kontaktnoe-lico
-func (service *counterpartyService) GetContactPersonById(ctx context.Context, id, contactPersonId *uuid.UUID) (*ContactPerson, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonId)
+func (service *counterpartyService) GetContactPersonById(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonID)
 	return NewRequestBuilder[ContactPerson](service.client, path).Get(ctx)
 }
 
 // CreateContactPerson Создать контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-sozdat-kontaktnoe-lico
-func (service *counterpartyService) CreateContactPerson(ctx context.Context, id *uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error) {
+func (service *counterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons", service.uri, id)
 	return NewRequestBuilder[[]ContactPerson](service.client, path).Post(ctx, contactPerson)
 }
 
 // UpdateContactPerson Изменить контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-izmenit-kontaktnoe-lico
-func (service *counterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonId *uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonId)
+func (service *counterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonID)
 	return NewRequestBuilder[ContactPerson](service.client, path).Put(ctx, contactPerson)
 }
 
 // GetNotes Список событий.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-sobytij
-func (service *counterpartyService) GetNotes(ctx context.Context, id *uuid.UUID) (*List[Note], *resty.Response, error) {
+func (service *counterpartyService) GetNotes(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", service.uri, id)
 	return NewRequestBuilder[List[Note]](service.client, path).Get(ctx)
 }
 
 // GetNoteById Получить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-sobytie
-func (service *counterpartyService) GetNoteById(ctx context.Context, id, noteId *uuid.UUID) (*Note, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteId)
+func (service *counterpartyService) GetNoteById(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
 	return NewRequestBuilder[Note](service.client, path).Get(ctx)
 }
 
 // CreateNote Добавить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-dobawit-sobytie
-func (service *counterpartyService) CreateNote(ctx context.Context, id *uuid.UUID, note *Note) (*Notes, *resty.Response, error) {
+func (service *counterpartyService) CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", service.uri, id)
-	return NewRequestBuilder[Notes](service.client, path).Post(ctx, note)
+	return NewRequestBuilder[MetaArray[Note]](service.client, path).Post(ctx, note)
 }
 
 // UpdateNote Изменить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-izmenit-sobytie
-func (service *counterpartyService) UpdateNote(ctx context.Context, id, noteId *uuid.UUID, note *Note) (*Note, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteId)
+func (service *counterpartyService) UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
 	return NewRequestBuilder[Note](service.client, path).Put(ctx, note)
 }
 
 // DeleteNote Удалить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-udalit-sobytie
-func (service *counterpartyService) DeleteNote(ctx context.Context, id, noteId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteId)
+func (service *counterpartyService) DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

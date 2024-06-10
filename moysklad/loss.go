@@ -18,7 +18,7 @@ type Loss struct {
 	Deleted      *Timestamp               `json:"deleted,omitempty"`
 	Description  *string                  `json:"description,omitempty"`
 	ExternalCode *string                  `json:"externalCode,omitempty"`
-	Files        *Files                   `json:"files,omitempty"`
+	Files        *MetaArray[File]         `json:"files,omitempty"`
 	Group        *Group                   `json:"group,omitempty"`
 	ID           *uuid.UUID               `json:"id,omitempty"`
 	Meta         *Meta                    `json:"meta,omitempty"`
@@ -37,7 +37,7 @@ type Loss struct {
 	Sum          *float64                 `json:"sum,omitempty"`
 	Name         *string                  `json:"name,omitempty"`
 	Updated      *Timestamp               `json:"updated,omitempty"`
-	Attributes   Attributes               `json:"attributes,omitempty"`
+	Attributes   Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
 func (loss Loss) GetOrganization() Organization {
@@ -72,7 +72,7 @@ func (loss Loss) GetExternalCode() string {
 	return Deref(loss.ExternalCode)
 }
 
-func (loss Loss) GetFiles() Files {
+func (loss Loss) GetFiles() MetaArray[File] {
 	return Deref(loss.Files)
 }
 
@@ -148,7 +148,7 @@ func (loss Loss) GetUpdated() Timestamp {
 	return Deref(loss.Updated)
 }
 
-func (loss Loss) GetAttributes() Attributes {
+func (loss Loss) GetAttributes() Slice[AttributeValue] {
 	return loss.Attributes
 }
 
@@ -157,8 +157,8 @@ func (loss *Loss) SetOrganization(organization *Organization) *Loss {
 	return loss
 }
 
-func (loss *Loss) SetSyncID(syncID *uuid.UUID) *Loss {
-	loss.SyncID = syncID
+func (loss *Loss) SetSyncID(syncID uuid.UUID) *Loss {
+	loss.SyncID = &syncID
 	return loss
 }
 
@@ -182,8 +182,8 @@ func (loss *Loss) SetExternalCode(externalCode string) *Loss {
 	return loss
 }
 
-func (loss *Loss) SetFiles(files *Files) *Loss {
-	loss.Files = files
+func (loss *Loss) SetFiles(files Slice[File]) *Loss {
+	loss.Files = NewMetaArrayRows(files)
 	return loss
 }
 
@@ -247,7 +247,7 @@ func (loss *Loss) SetName(name string) *Loss {
 	return loss
 }
 
-func (loss *Loss) SetAttributes(attributes Attributes) *Loss {
+func (loss *Loss) SetAttributes(attributes Slice[AttributeValue]) *Loss {
 	loss.Attributes = attributes
 	return loss
 }
@@ -272,7 +272,7 @@ type LossPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина списания данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
-	Things     Things              `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
+	Things     Slice[string]       `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
 }
 
 func (lossPosition LossPosition) GetAccountID() uuid.UUID {
@@ -307,7 +307,7 @@ func (lossPosition LossPosition) GetSlot() Slot {
 	return Deref(lossPosition.Slot)
 }
 
-func (lossPosition LossPosition) GetThings() Things {
+func (lossPosition LossPosition) GetThings() Slice[string] {
 	return lossPosition.Things
 }
 
@@ -341,7 +341,7 @@ func (lossPosition *LossPosition) SetSlot(slot *Slot) *LossPosition {
 	return lossPosition
 }
 
-func (lossPosition *LossPosition) SetThings(things Things) *LossPosition {
+func (lossPosition *LossPosition) SetThings(things Slice[string]) *LossPosition {
 	lossPosition.Things = things
 	return lossPosition
 }
@@ -359,10 +359,10 @@ func (lossPosition LossPosition) MetaType() MetaType {
 // Основание, на котором он может быть создан:
 // - Возврат покупателя (salesreturn)
 // - инвентаризация(inventory)
-type LossTemplateArg struct {
-	SalesReturn *MetaWrapper `json:"salesReturn,omitempty"`
-	Inventory   *MetaWrapper `json:"inventory,omitempty"`
-}
+//type LossTemplateArg struct {
+//	SalesReturn *MetaWrapper `json:"salesReturn,omitempty"`
+//	Inventory   *MetaWrapper `json:"inventory,omitempty"`
+//}
 
 // LossService
 // Сервис для работы со списаниями.
@@ -371,35 +371,40 @@ type LossService interface {
 	Create(ctx context.Context, loss *Loss, params *Params) (*Loss, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, lossList []*Loss, params *Params) (*[]Loss, *resty.Response, error)
 	DeleteMany(ctx context.Context, lossList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Loss, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, loss *Loss, params *Params) (*Loss, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Loss, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, loss *Loss, params *Params) (*Loss, *resty.Response, error)
 	//endpointTemplate[Loss]
 	//endpointTemplateBasedOn[Loss, LossTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[LossPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*LossPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *LossPosition, params *Params) (*LossPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *LossPosition) (*LossPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*LossPosition) (*[]LossPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[LossPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*LossPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *LossPosition, params *Params) (*LossPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *LossPosition) (*LossPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*LossPosition) (*[]LossPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Loss, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Loss, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewLossService(client *Client) LossService {

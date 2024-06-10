@@ -19,7 +19,7 @@ type InternalOrder struct {
 	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
 	Owner                 *Employee                         `json:"owner,omitempty"`
 	ExternalCode          *string                           `json:"externalCode,omitempty"`
-	Files                 *Files                            `json:"files,omitempty"`
+	Files                 *MetaArray[File]                  `json:"files,omitempty"`
 	Group                 *Group                            `json:"group,omitempty"`
 	ID                    *uuid.UUID                        `json:"id,omitempty"`
 	Meta                  *Meta                             `json:"meta,omitempty"`
@@ -32,7 +32,7 @@ type InternalOrder struct {
 	Printed               *bool                             `json:"printed,omitempty"`
 	Project               *Project                          `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
-	PurchaseOrders        PurchaseOrders                    `json:"purchaseOrders,omitempty"`
+	PurchaseOrders        Slice[PurchaseOrder]              `json:"purchaseOrders,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	State                 *State                            `json:"state,omitempty"`
@@ -42,7 +42,7 @@ type InternalOrder struct {
 	Updated               *Timestamp                        `json:"updated,omitempty"`
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
-	Attributes            Attributes                        `json:"attributes,omitempty"`
+	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
 func (internalOrder InternalOrder) GetOrganization() Organization {
@@ -81,7 +81,7 @@ func (internalOrder InternalOrder) GetExternalCode() string {
 	return Deref(internalOrder.ExternalCode)
 }
 
-func (internalOrder InternalOrder) GetFiles() Files {
+func (internalOrder InternalOrder) GetFiles() MetaArray[File] {
 	return Deref(internalOrder.Files)
 }
 
@@ -133,7 +133,7 @@ func (internalOrder InternalOrder) GetPublished() bool {
 	return Deref(internalOrder.Published)
 }
 
-func (internalOrder InternalOrder) GetPurchaseOrders() PurchaseOrders {
+func (internalOrder InternalOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 	return internalOrder.PurchaseOrders
 }
 
@@ -173,7 +173,7 @@ func (internalOrder InternalOrder) GetVatIncluded() bool {
 	return Deref(internalOrder.VatIncluded)
 }
 
-func (internalOrder InternalOrder) GetAttributes() Attributes {
+func (internalOrder InternalOrder) GetAttributes() Slice[AttributeValue] {
 	return internalOrder.Attributes
 }
 
@@ -202,8 +202,8 @@ func (internalOrder *InternalOrder) SetExternalCode(externalCode string) *Intern
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetFiles(files *Files) *InternalOrder {
-	internalOrder.Files = files
+func (internalOrder *InternalOrder) SetFiles(files Slice[File]) *InternalOrder {
+	internalOrder.Files = NewMetaArrayRows(files)
 	return internalOrder
 }
 
@@ -252,7 +252,7 @@ func (internalOrder *InternalOrder) SetProject(project *Project) *InternalOrder 
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetPurchaseOrders(purchaseOrders PurchaseOrders) *InternalOrder {
+func (internalOrder *InternalOrder) SetPurchaseOrders(purchaseOrders Slice[PurchaseOrder]) *InternalOrder {
 	internalOrder.PurchaseOrders = purchaseOrders
 	return internalOrder
 }
@@ -277,8 +277,8 @@ func (internalOrder *InternalOrder) SetStore(store *Store) *InternalOrder {
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetSyncID(syncID *uuid.UUID) *InternalOrder {
-	internalOrder.SyncID = syncID
+func (internalOrder *InternalOrder) SetSyncID(syncID uuid.UUID) *InternalOrder {
+	internalOrder.SyncID = &syncID
 	return internalOrder
 }
 
@@ -292,7 +292,7 @@ func (internalOrder *InternalOrder) SetVatIncluded(vatIncluded bool) *InternalOr
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetAttributes(attributes Attributes) *InternalOrder {
+func (internalOrder *InternalOrder) SetAttributes(attributes Slice[AttributeValue]) *InternalOrder {
 	internalOrder.Attributes = attributes
 	return internalOrder
 }
@@ -396,34 +396,39 @@ type InternalOrderService interface {
 	Create(ctx context.Context, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, internalOrderList []*InternalOrder, params *Params) (*[]InternalOrder, *resty.Response, error)
 	DeleteMany(ctx context.Context, internalOrderList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*InternalOrder, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*InternalOrder, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
 	//endpointTemplate[InternalOrder]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*InternalOrderPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *InternalOrderPosition, params *Params) (*InternalOrderPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *InternalOrderPosition) (*InternalOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*InternalOrderPosition) (*[]InternalOrderPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*InternalOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InternalOrderPosition, params *Params) (*InternalOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *InternalOrderPosition) (*InternalOrderPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*InternalOrderPosition) (*[]InternalOrderPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*InternalOrder, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*InternalOrder, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewInternalOrderService(client *Client) InternalOrderService {

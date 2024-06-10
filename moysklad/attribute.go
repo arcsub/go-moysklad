@@ -143,10 +143,8 @@ func (attributeValue *AttributeValue) SetValue(value any) *AttributeValue {
 	return attributeValue
 }
 
-type Attributes = Slice[AttributeValue]
-
-func NewAttributes() Attributes {
-	return make(Attributes, 0)
+func NewAttributes() Slice[AttributeValue] {
+	return NewSlice[AttributeValue]()
 }
 
 // AttributeValueType Тип значения атрибута

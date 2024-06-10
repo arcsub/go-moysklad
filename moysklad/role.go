@@ -16,12 +16,95 @@ type Role struct {
 	Permissions *EmployeePermissions `json:"permissions,omitempty"` // Список пермиссий
 }
 
-func (r Role) String() string {
-	return Stringify(r)
+func (role Role) GetID() uuid.UUID {
+	return Deref(role.ID)
 }
 
-func (r Role) MetaType() MetaType {
+func (role Role) GetMeta() Meta {
+	return Deref(role.Meta)
+}
+
+func (role Role) GetName() string {
+	return Deref(role.Name)
+}
+
+func (role Role) GetPermissions() EmployeePermissions {
+	return Deref(role.Permissions)
+}
+
+func (role *Role) SetMeta(meta *Meta) *Role {
+	role.Meta = meta
+	return role
+}
+
+func (role *Role) SetName(name string) *Role {
+	role.Name = &name
+	return role
+}
+
+func (role *Role) SetPermissions(permissions *EmployeePermissions) *Role {
+	role.Permissions = permissions
+	return role
+}
+
+func (role Role) String() string {
+	return Stringify(role)
+}
+
+func (role Role) MetaType() MetaType {
 	return MetaTypeRole
+}
+
+// AdminRole Роль администратора
+type AdminRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (adminRole AdminRole) String() string {
+	return Stringify(adminRole)
+}
+
+func (adminRole AdminRole) MetaType() MetaType {
+	return MetaTypeSystemRole
+}
+
+// IndividualRole Индивидуальная роль
+type IndividualRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (individualRole IndividualRole) String() string {
+	return Stringify(individualRole)
+}
+
+func (individualRole IndividualRole) MetaType() MetaType {
+	return MetaTypeIndividualRole
+}
+
+// CashierRole Роль кассира
+type CashierRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (cashierRole CashierRole) String() string {
+	return Stringify(cashierRole)
+}
+
+func (cashierRole CashierRole) MetaType() MetaType {
+	return MetaTypeSystemRole
+}
+
+// WorkerRole Роль сотрудника производства
+type WorkerRole struct {
+	Meta Meta `json:"meta,omitempty"`
+}
+
+func (workerRole WorkerRole) String() string {
+	return Stringify(workerRole)
+}
+
+func (workerRole WorkerRole) MetaType() MetaType {
+	return MetaTypeSystemRole
 }
 
 type PermissionValue string
@@ -181,57 +264,18 @@ type EmployeePermissions struct {
 	DeleteFromRecycleBin            bool                       `json:"deleteFromRecycleBin"`
 }
 
-// AdminRole Роль администратора
-type AdminRole struct {
-	Meta Meta `json:"meta,omitempty"`
-}
-
-func (r AdminRole) String() string {
-	return Stringify(r)
-}
-
-func (r AdminRole) MetaType() MetaType {
-	return MetaTypeSystemRole
-}
-
-// IndividualRole Индивидуальная роль
-type IndividualRole struct {
-	Meta Meta `json:"meta,omitempty"`
-}
-
-func (r IndividualRole) String() string {
-	return Stringify(r)
-}
-
-func (r IndividualRole) MetaType() MetaType {
-	return MetaTypeIndividualRole
-}
-
-// CashierRole Роль кассира
-type CashierRole struct {
-	Meta Meta `json:"meta,omitempty"`
-}
-
-func (r CashierRole) String() string {
-	return Stringify(r)
-}
-
-func (r CashierRole) MetaType() MetaType {
-	return MetaTypeSystemRole
-}
-
 // RoleService
 // Сервис для работы с ролями и правами сотрудников.
 type RoleService interface {
 	GetList(ctx context.Context, params *Params) (*List[Role], *resty.Response, error)
 	Create(ctx context.Context, role *Role, params *Params) (*Role, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Role, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, role *Role, params *Params) (*Role, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Role, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, role *Role, params *Params) (*Role, *resty.Response, error)
 	GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error)
 	GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error)
 	GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error)
-	GetWorkerRole(ctx context.Context) (*CashierRole, *resty.Response, error)
+	GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error)
 }
 
 type roleService struct {
@@ -278,7 +322,7 @@ func (s *roleService) GetCashierRole(ctx context.Context) (*CashierRole, *resty.
 
 // GetWorkerRole Запрос на получение роли кассира.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-roli-sotrudnika-proizwodstwa
-func (s *roleService) GetWorkerRole(ctx context.Context) (*CashierRole, *resty.Response, error) {
+func (s *roleService) GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error) {
 	path := "entity/role/worker"
-	return NewRequestBuilder[CashierRole](s.client, path).Get(ctx)
+	return NewRequestBuilder[WorkerRole](s.client, path).Get(ctx)
 }

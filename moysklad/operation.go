@@ -22,18 +22,18 @@ type Operation struct {
 	Organization Organization `json:"organization,omitempty"`
 	Owner        Employee     `json:"owner,omitempty"`
 	raw          json.RawMessage
-	Payments     Payments   `json:"payments,omitempty"`
-	Attributes   Attributes `json:"attributes,omitempty"`
-	Files        Files      `json:"files,omitempty"`
-	LinkedSum    float64    `json:"linkedSum,omitempty"`
-	AccountID    uuid.UUID  `json:"accountId,omitempty"`
-	ID           uuid.UUID  `json:"id,omitempty"`
-	SyncID       uuid.UUID  `json:"syncId,omitempty"`
-	Published    bool       `json:"published,omitempty"`
-	VatIncluded  bool       `json:"vatIncluded,omitempty"`
-	VatEnabled   bool       `json:"vatEnabled,omitempty"`
-	Shared       bool       `json:"shared,omitempty"`
-	Printed      bool       `json:"printed,omitempty"`
+	Payments     Slice[Payment]        `json:"payments,omitempty"`
+	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	Files        MetaArray[File]       `json:"files,omitempty"`
+	LinkedSum    float64               `json:"linkedSum,omitempty"`
+	AccountID    uuid.UUID             `json:"accountId,omitempty"`
+	ID           uuid.UUID             `json:"id,omitempty"`
+	SyncID       uuid.UUID             `json:"syncId,omitempty"`
+	Published    bool                  `json:"published,omitempty"`
+	VatIncluded  bool                  `json:"vatIncluded,omitempty"`
+	VatEnabled   bool                  `json:"vatEnabled,omitempty"`
+	Shared       bool                  `json:"shared,omitempty"`
+	Printed      bool                  `json:"printed,omitempty"`
 }
 
 type OperationType interface {

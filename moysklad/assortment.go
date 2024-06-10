@@ -26,7 +26,7 @@ type AssortmentPosition struct {
 	Description  string          `json:"description,omitempty"`
 	ExternalCode string          `json:"externalCode,omitempty"`
 	Name         string          `json:"name,omitempty"`
-	Barcodes     Barcodes        `json:"barcodes,omitempty"`
+	Barcodes     Slice[Barcode]  `json:"barcodes,omitempty"`
 	raw          json.RawMessage // сырые данные для последующей десериализации в нужный тип
 	AccountID    uuid.UUID       `json:"accountId,omitempty"`
 	ID           uuid.UUID       `json:"id,omitempty"`
@@ -225,9 +225,68 @@ type AssortmentResponse struct {
 	Meta    MetaCollection `json:"meta,omitempty"`
 }
 
-func (m AssortmentResponse) String() string {
-	return Stringify(m)
+func (assortmentResponse AssortmentResponse) String() string {
+	return Stringify(assortmentResponse)
 }
+
+// PaymentItem Признак предмета расчета.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-priznak-predmeta-rascheta
+type PaymentItem string
+
+const (
+	PaymentItemGood                PaymentItem = "GOOD"                  // Товар
+	PaymentItemExcisableGood       PaymentItem = "EXCISABLE_GOOD"        // Подакцизный товар
+	PaymentItemCompoundPaymentItem PaymentItem = "COMPOUND_PAYMENT_ITEM" // Составной предмет расчета
+	PaymentItemAnotherPaymentItem  PaymentItem = "ANOTHER_PAYMENT_ITEM"  // Иной предмет расчета
+)
+
+// TrackingType Тип маркируемой продукции.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-tip-markiruemoj-produkcii
+type TrackingType string
+
+const (
+	TrackingTypeFoodSupplement TrackingType = "FOOD_SUPPLEMENT" // [22-12-2023]
+	TrackingTypeBeerAlcohol    TrackingType = "BEER_ALCOHOL"    // [26-10-2023]
+	TrackingTypeElectronics    TrackingType = "ELECTRONICS"
+	TrackingTypeClothes        TrackingType = "LP_CLOTHES"
+	TrackingTypeLinens         TrackingType = "LP_LINENS"
+	TrackingTypeMilk           TrackingType = "MILK"
+	TrackingTypeNcp            TrackingType = "NCP"
+	TrackingTypeNotTracked     TrackingType = "NOT_TRACKED"
+	TrackingTypeOtp            TrackingType = "OTP"
+	TrackingTypePerfumery      TrackingType = "PERFUMERY"
+	TrackingTypeShoes          TrackingType = "SHOES"
+	TrackingTypeTires          TrackingType = "TIRES"
+	TrackingTypeTobacco        TrackingType = "TOBACCO"
+	TrackingTypeWater          TrackingType = "WATER"
+)
+
+// GoodTaxSystem Код системы налогообложения.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-kod-sistemy-nalogooblozheniq
+type GoodTaxSystem string
+
+const (
+	GoodTaxSystemGeneralTaxSystem                 GoodTaxSystem = "GENERAL_TAX_SYSTEM"                   // ОСН
+	GoodTaxSystemSimplifiedTaxSystemIncome        GoodTaxSystem = "SIMPLIFIED_TAX_SYSTEM_INCOME"         // УСН. Доход
+	GoodTaxSystemSimplifiedTaxSystemIncomeOutcome GoodTaxSystem = "SIMPLIFIED_TAX_SYSTEM_INCOME_OUTCOME" // УСН. Доход-Расход
+	GoodTaxSystemUnifiedAgriculturalTax           GoodTaxSystem = "UNIFIED_AGRICULTURAL_TAX"             // ЕСХН
+	GoodTaxSystemPresumptiveTaxSystem             GoodTaxSystem = "PRESUMPTIVE_TAX_SYSTEM"               // ЕНВД
+	GoodTaxSystemPatentBased                      GoodTaxSystem = "PATENT_BASED"                         // Патент
+	GoodTaxSystemSameAsGroup                      GoodTaxSystem = "TAX_SYSTEM_SAME_AS_GROUP"             // Совпадает с группой
+)
+
+// TaxSystem Код системы налогообложения по умолчанию.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tochka-prodazh-tochki-prodazh-atributy-suschnosti-kod-sistemy-nalogooblozheniq-po-umolchaniu
+type TaxSystem string
+
+const (
+	GeneralTaxSystem                 TaxSystem = "GENERAL_TAX_SYSTEM"                   // ОСН
+	SimplifiedTaxSystemIncome        TaxSystem = "SIMPLIFIED_TAX_SYSTEM_INCOME"         // УСН. Доход
+	SimplifiedTaxSystemIncomeOutcome TaxSystem = "SIMPLIFIED_TAX_SYSTEM_INCOME_OUTCOME" // УСН. Доход-Расход
+	UnifiedAgriculturalTax           TaxSystem = "UNIFIED_AGRICULTURAL_TAX"             // ЕСХН
+	PresumptiveTaxSystem             TaxSystem = "PRESUMPTIVE_TAX_SYSTEM"               // ЕНВД
+	PatentBased                      TaxSystem = "PATENT_BASED"                         // Патент
+)
 
 // AssortmentService
 // Сервис для работы с ассортиментом.
@@ -238,9 +297,9 @@ type AssortmentService interface {
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
 	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)
-	GetEmbeddedTemplateByID(ctx context.Context, id *uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
+	GetEmbeddedTemplateByID(ctx context.Context, id uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
 	GetCustomTemplates(ctx context.Context) (*List[CustomTemplate], *resty.Response, error)
-	GetCustomTemplateByID(ctx context.Context, id *uuid.UUID) (*CustomTemplate, *resty.Response, error)
+	GetCustomTemplateByID(ctx context.Context, id uuid.UUID) (*CustomTemplate, *resty.Response, error)
 }
 
 func NewAssortmentService(client *Client) AssortmentService {

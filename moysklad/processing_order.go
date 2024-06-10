@@ -19,12 +19,11 @@ type ProcessingOrder struct {
 	DeliveryPlannedMoment *Timestamp                          `json:"deliveryPlannedMoment,omitempty"`
 	Description           *string                             `json:"description,omitempty"`
 	ExternalCode          *string                             `json:"externalCode,omitempty"`
-	Files                 *Files                              `json:"files,omitempty"`
+	Files                 *MetaArray[File]                    `json:"files,omitempty"`
 	Group                 *Group                              `json:"group,omitempty"`
 	ID                    *uuid.UUID                          `json:"id,omitempty"`
 	Meta                  *Meta                               `json:"meta,omitempty"`
 	Moment                *Timestamp                          `json:"moment,omitempty"`
-	Processings           *Processings                        `json:"processings,omitempty"`
 	AccountID             *uuid.UUID                          `json:"accountId,omitempty"`
 	OrganizationAccount   *AgentAccount                       `json:"organizationAccount,omitempty"`
 	Owner                 *Employee                           `json:"owner,omitempty"`
@@ -39,14 +38,250 @@ type ProcessingOrder struct {
 	Store                 *Store                              `json:"store,omitempty"`
 	SyncID                *uuid.UUID                          `json:"syncId,omitempty"`
 	Updated               *Timestamp                          `json:"updated,omitempty"`
-	Attributes            Attributes                          `json:"attributes,omitempty"`
+	Processings           Slice[Processing]                   `json:"processings,omitempty"`
+	Attributes            Slice[AttributeValue]               `json:"attributes,omitempty"`
 }
 
-func (p ProcessingOrder) String() string {
-	return Stringify(p)
+func (processingOrder ProcessingOrder) GetName() string {
+	return Deref(processingOrder.Name)
 }
 
-func (p ProcessingOrder) MetaType() MetaType {
+func (processingOrder ProcessingOrder) GetPublished() bool {
+	return Deref(processingOrder.Published)
+}
+
+func (processingOrder ProcessingOrder) GetOrganization() Organization {
+	return Deref(processingOrder.Organization)
+}
+
+func (processingOrder ProcessingOrder) GetCode() string {
+	return Deref(processingOrder.Code)
+}
+
+func (processingOrder ProcessingOrder) GetCreated() Timestamp {
+	return Deref(processingOrder.Created)
+}
+
+func (processingOrder ProcessingOrder) GetDeleted() Timestamp {
+	return Deref(processingOrder.Deleted)
+}
+
+func (processingOrder ProcessingOrder) GetDeliveryPlannedMoment() Timestamp {
+	return Deref(processingOrder.DeliveryPlannedMoment)
+}
+
+func (processingOrder ProcessingOrder) GetDescription() string {
+	return Deref(processingOrder.Description)
+}
+
+func (processingOrder ProcessingOrder) GetExternalCode() string {
+	return Deref(processingOrder.ExternalCode)
+}
+
+func (processingOrder ProcessingOrder) GetFiles() MetaArray[File] {
+	return Deref(processingOrder.Files)
+}
+
+func (processingOrder ProcessingOrder) GetGroup() Group {
+	return Deref(processingOrder.Group)
+}
+
+func (processingOrder ProcessingOrder) GetID() uuid.UUID {
+	return Deref(processingOrder.ID)
+}
+
+func (processingOrder ProcessingOrder) GetMeta() Meta {
+	return Deref(processingOrder.Meta)
+}
+
+func (processingOrder ProcessingOrder) GetMoment() Timestamp {
+	return Deref(processingOrder.Moment)
+}
+
+func (processingOrder ProcessingOrder) GetAccountID() uuid.UUID {
+	return Deref(processingOrder.AccountID)
+}
+
+func (processingOrder ProcessingOrder) GetOrganizationAccount() AgentAccount {
+	return Deref(processingOrder.OrganizationAccount)
+}
+
+func (processingOrder ProcessingOrder) GetOwner() Employee {
+	return Deref(processingOrder.Owner)
+}
+
+func (processingOrder ProcessingOrder) GetPositions() Positions[ProcessingOrderPosition] {
+	return Deref(processingOrder.Positions)
+}
+
+func (processingOrder ProcessingOrder) GetPrinted() bool {
+	return Deref(processingOrder.Printed)
+}
+
+func (processingOrder ProcessingOrder) GetProcessingPlan() ProcessingPlan {
+	return Deref(processingOrder.ProcessingPlan)
+}
+
+func (processingOrder ProcessingOrder) GetProject() Project {
+	return Deref(processingOrder.Project)
+}
+
+func (processingOrder ProcessingOrder) GetApplicable() bool {
+	return Deref(processingOrder.Applicable)
+}
+
+func (processingOrder ProcessingOrder) GetQuantity() float64 {
+	return Deref(processingOrder.Quantity)
+}
+
+func (processingOrder ProcessingOrder) GetShared() bool {
+	return Deref(processingOrder.Shared)
+}
+
+func (processingOrder ProcessingOrder) GetState() State {
+	return Deref(processingOrder.State)
+}
+
+func (processingOrder ProcessingOrder) GetStore() Store {
+	return Deref(processingOrder.Store)
+}
+
+func (processingOrder ProcessingOrder) GetSyncID() uuid.UUID {
+	return Deref(processingOrder.SyncID)
+}
+
+func (processingOrder ProcessingOrder) GetUpdated() Timestamp {
+	return Deref(processingOrder.Updated)
+}
+
+func (processingOrder ProcessingOrder) GetProcessings() Slice[Processing] {
+	return processingOrder.Processings
+}
+
+func (processingOrder ProcessingOrder) GetAttributes() Slice[AttributeValue] {
+	return processingOrder.Attributes
+}
+
+func (processingOrder *ProcessingOrder) SetName(name string) *ProcessingOrder {
+	processingOrder.Name = &name
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetOrganization(organization *Organization) *ProcessingOrder {
+	processingOrder.Organization = organization
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetCode(code string) *ProcessingOrder {
+	processingOrder.Code = &code
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment *Timestamp) *ProcessingOrder {
+	processingOrder.DeliveryPlannedMoment = deliveryPlannedMoment
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetDescription(description string) *ProcessingOrder {
+	processingOrder.Description = &description
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetExternalCode(externalCode string) *ProcessingOrder {
+	processingOrder.ExternalCode = &externalCode
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetFiles(files Slice[File]) *ProcessingOrder {
+	processingOrder.Files = NewMetaArrayRows(files)
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetGroup(group *Group) *ProcessingOrder {
+	processingOrder.Group = group
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetMeta(meta *Meta) *ProcessingOrder {
+	processingOrder.Meta = meta
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetMoment(moment *Timestamp) *ProcessingOrder {
+	processingOrder.Moment = moment
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetOrganizationAccount(organizationAccount *AgentAccount) *ProcessingOrder {
+	processingOrder.OrganizationAccount = organizationAccount
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetOwner(owner *Employee) *ProcessingOrder {
+	processingOrder.Owner = owner
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetPositions(positions *Positions[ProcessingOrderPosition]) *ProcessingOrder {
+	processingOrder.Positions = positions
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetProcessingPlan(processingPlan *ProcessingPlan) *ProcessingOrder {
+	processingOrder.ProcessingPlan = processingPlan
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetProject(project *Project) *ProcessingOrder {
+	processingOrder.Project = project
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetApplicable(applicable bool) *ProcessingOrder {
+	processingOrder.Applicable = &applicable
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetQuantity(quantity float64) *ProcessingOrder {
+	processingOrder.Quantity = &quantity
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetShared(shared bool) *ProcessingOrder {
+	processingOrder.Shared = &shared
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetState(state *State) *ProcessingOrder {
+	processingOrder.State = state
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetStore(store *Store) *ProcessingOrder {
+	processingOrder.Store = store
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetSyncID(syncID uuid.UUID) *ProcessingOrder {
+	processingOrder.SyncID = &syncID
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetProcessings(processings Slice[Processing]) *ProcessingOrder {
+	processingOrder.Processings = processings
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetAttributes(attributes Slice[AttributeValue]) *ProcessingOrder {
+	processingOrder.Attributes = attributes
+	return processingOrder
+}
+
+func (processingOrder ProcessingOrder) String() string {
+	return Stringify(processingOrder)
+}
+
+func (processingOrder ProcessingOrder) MetaType() MetaType {
 	return MetaTypeProcessingOrder
 }
 
@@ -62,11 +297,55 @@ type ProcessingOrderPosition struct {
 	Reserve    *float64            `json:"reserve,omitempty"`    // Резерв данной позиции
 }
 
-func (p ProcessingOrderPosition) String() string {
-	return Stringify(p)
+func (processingOrderPosition ProcessingOrderPosition) GetAccountID() uuid.UUID {
+	return Deref(processingOrderPosition.AccountID)
 }
 
-func (p ProcessingOrderPosition) MetaType() MetaType {
+func (processingOrderPosition ProcessingOrderPosition) GetAssortment() AssortmentPosition {
+	return Deref(processingOrderPosition.Assortment)
+}
+
+func (processingOrderPosition ProcessingOrderPosition) GetID() uuid.UUID {
+	return Deref(processingOrderPosition.ID)
+}
+
+func (processingOrderPosition ProcessingOrderPosition) GetPack() Pack {
+	return Deref(processingOrderPosition.Pack)
+}
+
+func (processingOrderPosition ProcessingOrderPosition) GetQuantity() float64 {
+	return Deref(processingOrderPosition.Quantity)
+}
+
+func (processingOrderPosition ProcessingOrderPosition) GetReserve() float64 {
+	return Deref(processingOrderPosition.Reserve)
+}
+
+func (processingOrderPosition *ProcessingOrderPosition) SetAssortment(assortment *AssortmentPosition) *ProcessingOrderPosition {
+	processingOrderPosition.Assortment = assortment
+	return processingOrderPosition
+}
+
+func (processingOrderPosition *ProcessingOrderPosition) SetPack(pack *Pack) *ProcessingOrderPosition {
+	processingOrderPosition.Pack = pack
+	return processingOrderPosition
+}
+
+func (processingOrderPosition *ProcessingOrderPosition) SetQuantity(quantity float64) *ProcessingOrderPosition {
+	processingOrderPosition.Quantity = &quantity
+	return processingOrderPosition
+}
+
+func (processingOrderPosition *ProcessingOrderPosition) SetReserve(reserve float64) *ProcessingOrderPosition {
+	processingOrderPosition.Reserve = &reserve
+	return processingOrderPosition
+}
+
+func (processingOrderPosition ProcessingOrderPosition) String() string {
+	return Stringify(processingOrderPosition)
+}
+
+func (processingOrderPosition ProcessingOrderPosition) MetaType() MetaType {
 	return MetaTypeProcessingOrderPosition
 }
 
@@ -74,9 +353,9 @@ func (p ProcessingOrderPosition) MetaType() MetaType {
 // Документ: Заказ на производство (processingorder)
 // Основание, на котором он может быть создан:
 // - Техкарта (processingplan)
-type ProcessingOrderTemplateArg struct {
-	ProcessingPlan *MetaWrapper `json:"processingPlan,omitempty"`
-}
+//type ProcessingOrderTemplateArg struct {
+//	ProcessingPlan *MetaWrapper `json:"processingPlan,omitempty"`
+//}
 
 // ProcessingOrderService
 // Сервис для работы с заказами на производство.
@@ -85,31 +364,36 @@ type ProcessingOrderService interface {
 	Create(ctx context.Context, processingOrder *ProcessingOrder, params *Params) (*ProcessingOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingOrderList []*ProcessingOrder, params *Params) (*[]ProcessingOrder, *resty.Response, error)
 	DeleteMany(ctx context.Context, processingOrderList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ProcessingOrder, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, processingOrder *ProcessingOrder, params *Params) (*ProcessingOrder, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProcessingOrder, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params *Params) (*ProcessingOrder, *resty.Response, error)
 	//endpointTemplate[ProcessingOrder]
 	//endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *ProcessingOrderPosition, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *ProcessingOrderPosition) (*ProcessingOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*ProcessingOrderPosition) (*[]ProcessingOrderPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingOrderPosition, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingOrderPosition) (*ProcessingOrderPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*ProcessingOrderPosition) (*[]ProcessingOrderPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*ProcessingOrder, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*ProcessingOrder, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewProcessingOrderService(client *Client) ProcessingOrderService {

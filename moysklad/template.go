@@ -19,16 +19,48 @@ type Template struct {
 	Type    TemplateType `json:"type,omitempty"`    // Тип шаблона (entity - документ, mxtemplate - новый тип шаблона для ценников и этикеток)
 }
 
-func (t Template) String() string {
-	return Stringify(t)
+func (template Template) GetContent() string {
+	return Deref(template.Content)
 }
 
-func (t Template) GetType() TemplateType {
-	return t.Type
+func (template Template) GetID() uuid.UUID {
+	return Deref(template.ID)
 }
 
-func (t Template) GetMeta() Meta {
-	return Deref(t.Meta)
+func (template Template) GetMeta() Meta {
+	return Deref(template.Meta)
+}
+
+func (template Template) GetName() string {
+	return Deref(template.Name)
+}
+
+func (template Template) GetType() TemplateType {
+	return template.Type
+}
+
+func (template *Template) SetContent(content string) *Template {
+	template.Content = &content
+	return template
+}
+
+func (template *Template) SetMeta(meta *Meta) *Template {
+	template.Meta = meta
+	return template
+}
+
+func (template *Template) SetName(name string) *Template {
+	template.Name = &name
+	return template
+}
+
+func (template *Template) SetType(templateType TemplateType) *Template {
+	template.Type = templateType
+	return template
+}
+
+func (template Template) String() string {
+	return Stringify(template)
 }
 
 // CustomTemplate Пользовательский Шаблон.
@@ -38,11 +70,11 @@ type CustomTemplate struct {
 	Template
 }
 
-func (c CustomTemplate) String() string {
-	return Stringify(c)
+func (customTemplate CustomTemplate) String() string {
+	return Stringify(customTemplate)
 }
 
-func (c CustomTemplate) MetaType() MetaType {
+func (customTemplate CustomTemplate) MetaType() MetaType {
 	return MetaTypeCustomTemplate
 }
 
@@ -53,11 +85,11 @@ type EmbeddedTemplate struct {
 	Template
 }
 
-func (e EmbeddedTemplate) String() string {
-	return Stringify(e)
+func (embeddedTemplate EmbeddedTemplate) String() string {
+	return Stringify(embeddedTemplate)
 }
 
-func (e EmbeddedTemplate) MetaType() MetaType {
+func (embeddedTemplate EmbeddedTemplate) MetaType() MetaType {
 	return MetaTypeEmbeddedTemplate
 }
 

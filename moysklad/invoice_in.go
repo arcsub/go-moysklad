@@ -21,7 +21,7 @@ type InvoiceIn struct {
 	Deleted              *Timestamp                    `json:"deleted,omitempty"`
 	Description          *string                       `json:"description,omitempty"`
 	ExternalCode         *string                       `json:"externalCode,omitempty"`
-	Files                *Files                        `json:"files,omitempty"`
+	Files                *MetaArray[File]              `json:"files,omitempty"`
 	AccountID            *uuid.UUID                    `json:"accountId,omitempty"`
 	ID                   *uuid.UUID                    `json:"id,omitempty"`
 	IncomingDate         *Timestamp                    `json:"incomingDate,omitempty"`
@@ -49,9 +49,9 @@ type InvoiceIn struct {
 	VatEnabled           *bool                         `json:"vatEnabled,omitempty"`
 	VatIncluded          *bool                         `json:"vatIncluded,omitempty"`
 	VatSum               *float64                      `json:"vatSum,omitempty"`
-	Payments             Payments                      `json:"payments,omitempty"`
+	Payments             Slice[Payment]                `json:"payments,omitempty"`
 	PurchaseOrder        *PurchaseOrder                `json:"purchaseOrder,omitempty"`
-	Attributes           Attributes                    `json:"attributes,omitempty"`
+	Attributes           Slice[AttributeValue]         `json:"attributes,omitempty"`
 }
 
 func (invoiceIn InvoiceIn) GetOrganizationAccount() AgentAccount {
@@ -98,7 +98,7 @@ func (invoiceIn InvoiceIn) GetExternalCode() string {
 	return Deref(invoiceIn.ExternalCode)
 }
 
-func (invoiceIn InvoiceIn) GetFiles() Files {
+func (invoiceIn InvoiceIn) GetFiles() MetaArray[File] {
 	return Deref(invoiceIn.Files)
 }
 
@@ -210,7 +210,7 @@ func (invoiceIn InvoiceIn) GetVatSum() float64 {
 	return Deref(invoiceIn.VatSum)
 }
 
-func (invoiceIn InvoiceIn) GetPayments() Payments {
+func (invoiceIn InvoiceIn) GetPayments() Slice[Payment] {
 	return invoiceIn.Payments
 }
 
@@ -218,7 +218,7 @@ func (invoiceIn InvoiceIn) GetPurchaseOrder() PurchaseOrder {
 	return Deref(invoiceIn.PurchaseOrder)
 }
 
-func (invoiceIn InvoiceIn) GetAttributes() Attributes {
+func (invoiceIn InvoiceIn) GetAttributes() Slice[AttributeValue] {
 	return invoiceIn.Attributes
 }
 
@@ -262,8 +262,8 @@ func (invoiceIn *InvoiceIn) SetExternalCode(externalCode string) *InvoiceIn {
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetFiles(files *Files) *InvoiceIn {
-	invoiceIn.Files = files
+func (invoiceIn *InvoiceIn) SetFiles(files Slice[File]) *InvoiceIn {
+	invoiceIn.Files = NewMetaArrayRows(files)
 	return invoiceIn
 }
 
@@ -347,8 +347,8 @@ func (invoiceIn *InvoiceIn) SetStore(store *Store) *InvoiceIn {
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetSyncID(syncID *uuid.UUID) *InvoiceIn {
-	invoiceIn.SyncID = syncID
+func (invoiceIn *InvoiceIn) SetSyncID(syncID uuid.UUID) *InvoiceIn {
+	invoiceIn.SyncID = &syncID
 	return invoiceIn
 }
 
@@ -362,7 +362,7 @@ func (invoiceIn *InvoiceIn) SetVatIncluded(vatIncluded bool) *InvoiceIn {
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetPayments(payments Payments) *InvoiceIn {
+func (invoiceIn *InvoiceIn) SetPayments(payments Slice[Payment]) *InvoiceIn {
 	invoiceIn.Payments = payments
 	return invoiceIn
 }
@@ -372,7 +372,7 @@ func (invoiceIn *InvoiceIn) SetPurchaseOrder(purchaseOrder *PurchaseOrder) *Invo
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetAttributes(attributes Attributes) *InvoiceIn {
+func (invoiceIn *InvoiceIn) SetAttributes(attributes Slice[AttributeValue]) *InvoiceIn {
 	invoiceIn.Attributes = attributes
 	return invoiceIn
 }
@@ -396,9 +396,9 @@ type InvoiceInPosition struct {
 // Документ: Счет поставщика (invoicein)
 // Основание, на котором он может быть создан:
 // - Заказ поставщику (purchaseorder)
-type InvoiceInTemplateArg struct {
-	PurchaseOrder *MetaWrapper `json:"purchaseOrder,omitempty"`
-}
+//type InvoiceInTemplateArg struct {
+//	PurchaseOrder *MetaWrapper `json:"purchaseOrder,omitempty"`
+//}
 
 // InvoiceInService
 // Сервис для работы со счетами поставщиков.
@@ -407,35 +407,40 @@ type InvoiceInService interface {
 	Create(ctx context.Context, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, invoiceInList []*InvoiceIn, params *Params) (*[]InvoiceIn, *resty.Response, error)
 	DeleteMany(ctx context.Context, invoiceInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*InvoiceIn, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*InvoiceIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
 	//endpointTemplate[InvoiceIn]
 	//endpointTemplateBasedOn[InvoiceIn, InvoiceInTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[InvoiceInPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*InvoiceInPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *InvoiceInPosition, params *Params) (*InvoiceInPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *InvoiceInPosition) (*InvoiceInPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*InvoiceInPosition) (*[]InvoiceInPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[InvoiceInPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*InvoiceInPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InvoiceInPosition, params *Params) (*InvoiceInPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *InvoiceInPosition) (*InvoiceInPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*InvoiceInPosition) (*[]InvoiceInPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*InvoiceIn, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*InvoiceIn, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewInvoiceInService(client *Client) InvoiceInService {

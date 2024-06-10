@@ -21,8 +21,6 @@ type ContactPerson struct {
 	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
 }
 
-type ContactPersons MetaArray[ContactPerson]
-
 func (contactPerson ContactPerson) GetAccountID() uuid.UUID {
 	return Deref(contactPerson.AccountID)
 }

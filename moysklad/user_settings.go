@@ -24,11 +24,114 @@ type UserSettings struct {
 	PrintFormat                 PrintFormat   `json:"printFormat,omitempty"`                 // Правила печати документов
 }
 
-func (u UserSettings) String() string {
-	return Stringify(u)
+func (userSettings UserSettings) GetAutoShowReports() bool {
+	return Deref(userSettings.AutoShowReports)
 }
 
-func (u UserSettings) MetaType() MetaType {
+func (userSettings UserSettings) GetDefaultCompany() Meta {
+	return Deref(userSettings.DefaultCompany)
+}
+
+func (userSettings UserSettings) GetDefaultCustomerCounterparty() Meta {
+	return Deref(userSettings.DefaultCustomerCounterparty)
+}
+
+func (userSettings UserSettings) GetDefaultPlace() Meta {
+	return Deref(userSettings.DefaultPlace)
+}
+
+func (userSettings UserSettings) GetDefaultProject() Meta {
+	return Deref(userSettings.DefaultProject)
+}
+
+func (userSettings UserSettings) GetDefaultPurchaseCounterparty() Meta {
+	return Deref(userSettings.DefaultPurchaseCounterparty)
+}
+
+func (userSettings UserSettings) GetDefaultScreen() DefaultScreen {
+	return userSettings.DefaultScreen
+}
+
+func (userSettings UserSettings) GetFieldsPerRow() int {
+	return Deref(userSettings.FieldsPerRow)
+}
+
+func (userSettings UserSettings) GetLocale() Locale {
+	return userSettings.Locale
+}
+
+func (userSettings UserSettings) GetMailFooter() string {
+	return Deref(userSettings.MailFooter)
+}
+
+func (userSettings UserSettings) GetMeta() Meta {
+	return Deref(userSettings.Meta)
+}
+
+func (userSettings UserSettings) GetPrintFormat() PrintFormat {
+	return userSettings.PrintFormat
+}
+
+func (userSettings *UserSettings) SetAutoShowReports(autoShowReports bool) *UserSettings {
+	userSettings.AutoShowReports = &autoShowReports
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetDefaultCompany(defaultCompany *Organization) *UserSettings {
+	userSettings.DefaultCompany = defaultCompany.Meta
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetDefaultCustomerCounterparty(defaultCustomerCounterparty *Counterparty) *UserSettings {
+	userSettings.DefaultCustomerCounterparty = defaultCustomerCounterparty.Meta
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetDefaultPlace(defaultPlace *Store) *UserSettings {
+	userSettings.DefaultPlace = defaultPlace.Meta
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetDefaultProject(defaultProject *Project) *UserSettings {
+	userSettings.DefaultProject = defaultProject.Meta
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetDefaultPurchaseCounterparty(defaultPurchaseCounterparty *Counterparty) *UserSettings {
+	userSettings.DefaultPurchaseCounterparty = defaultPurchaseCounterparty.Meta
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetDefaultScreen(defaultScreen DefaultScreen) *UserSettings {
+	userSettings.DefaultScreen = defaultScreen
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetFieldsPerRow(fieldsPerRow int) *UserSettings {
+	userSettings.FieldsPerRow = &fieldsPerRow
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetLocale(locale Locale) *UserSettings {
+	userSettings.Locale = locale
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetMailFooter(mailFooter string) *UserSettings {
+	userSettings.MailFooter = &mailFooter
+	return userSettings
+}
+
+func (userSettings *UserSettings) SetPrintFormat(printFormat PrintFormat) *UserSettings {
+	userSettings.PrintFormat = printFormat
+	return userSettings
+}
+
+func (userSettings UserSettings) String() string {
+	return Stringify(userSettings)
+}
+
+func (userSettings UserSettings) MetaType() MetaType {
 	return MetaTypeUserSettings
 }
 
@@ -158,7 +261,7 @@ const (
 // Сервис для работы с настройками пользователей.
 type UserSettingsService interface {
 	Get(ctx context.Context, params *Params) (*UserSettings, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, userSettings *UserSettings, params *Params) (*UserSettings, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings, params *Params) (*UserSettings, *resty.Response, error)
 }
 
 func NewContextUserSettingsService(client *Client) UserSettingsService {

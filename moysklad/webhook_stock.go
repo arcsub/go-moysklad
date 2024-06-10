@@ -10,22 +10,88 @@ import (
 // Ключевое слово: webhookstock
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuk-na-izmenenie-ostatkow
 type WebhookStock struct {
-	AccountID         *uuid.UUID    `json:"accountId,omitempty"`
-	AuthorApplication *Meta         `json:"authorApplication,omitempty"`
-	Enabled           *bool         `json:"enabled,omitempty"`
-	StockType         *string       `json:"stockType,omitempty"`
-	ReportUrl         *string       `json:"reportUrl,omitempty"`
-	ID                *uuid.UUID    `json:"id,omitempty"`
-	Meta              *Meta         `json:"meta,omitempty"`
-	URL               *string       `json:"url,omitempty"`
-	ReportType        WebhookReport `json:"reportType,omitempty"`
+	AccountID         *uuid.UUID       `json:"accountId,omitempty"`
+	AuthorApplication *Meta            `json:"authorApplication,omitempty"`
+	Enabled           *bool            `json:"enabled,omitempty"`
+	StockType         WebhookStockType `json:"stockType,omitempty"`
+	ReportUrl         *string          `json:"reportUrl,omitempty"`
+	ID                *uuid.UUID       `json:"id,omitempty"`
+	Meta              *Meta            `json:"meta,omitempty"`
+	URL               *string          `json:"url,omitempty"`
+	ReportType        WebhookReport    `json:"reportType,omitempty"`
 }
 
-func (w WebhookStock) String() string {
-	return Stringify(w)
+func (webhookStock WebhookStock) GetAccountID() uuid.UUID {
+	return Deref(webhookStock.AccountID)
 }
 
-func (w WebhookStock) MetaType() MetaType {
+func (webhookStock WebhookStock) GetAuthorApplication() Meta {
+	return Deref(webhookStock.AuthorApplication)
+}
+
+func (webhookStock WebhookStock) GetEnabled() bool {
+	return Deref(webhookStock.Enabled)
+}
+
+func (webhookStock WebhookStock) GetStockType() WebhookStockType {
+	return webhookStock.StockType
+}
+
+func (webhookStock WebhookStock) GetReportUrl() string {
+	return Deref(webhookStock.ReportUrl)
+}
+
+func (webhookStock WebhookStock) GetID() uuid.UUID {
+	return Deref(webhookStock.ID)
+}
+
+func (webhookStock WebhookStock) GetMeta() Meta {
+	return Deref(webhookStock.Meta)
+}
+
+func (webhookStock WebhookStock) GetURL() string {
+	return Deref(webhookStock.URL)
+}
+
+func (webhookStock WebhookStock) GetReportType() WebhookReport {
+	return webhookStock.ReportType
+}
+
+func (webhookStock *WebhookStock) SetEnabled(enabled bool) *WebhookStock {
+	webhookStock.Enabled = &enabled
+	return webhookStock
+}
+
+func (webhookStock *WebhookStock) SetStockType() *WebhookStock {
+	webhookStock.StockType = WebhookTypeStock
+	return webhookStock
+}
+
+func (webhookStock *WebhookStock) SetReportUrl(reportUrl string) *WebhookStock {
+	webhookStock.ReportUrl = &reportUrl
+	return webhookStock
+}
+
+func (webhookStock *WebhookStock) SetMeta(meta *Meta) *WebhookStock {
+	webhookStock.Meta = meta
+	return webhookStock
+}
+
+func (webhookStock *WebhookStock) SetURL(url string) *WebhookStock {
+	webhookStock.URL = &url
+	return webhookStock
+}
+
+func (webhookStock *WebhookStock) SetReportType(reportType WebhookReport) *WebhookStock {
+	webhookStock.ReportType = reportType
+	return webhookStock
+}
+
+func (webhookStock WebhookStock) String() string {
+	return Stringify(webhookStock)
+}
+
+func (webhookStock WebhookStock) MetaType() MetaType {
 	return MetaTypeWebhookStock
 }
 
@@ -37,6 +103,12 @@ const (
 	WebhookReportByStore WebhookReport = "bystore"
 )
 
+type WebhookStockType string
+
+const (
+	WebhookTypeStock WebhookStockType = "stock"
+)
+
 // WebhookStockService
 // Сервис для работы с вебхуками на изменение остатков.
 type WebhookStockService interface {
@@ -44,9 +116,9 @@ type WebhookStockService interface {
 	Create(ctx context.Context, webhookStock *WebhookStock, params *Params) (*WebhookStock, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, webhookStockList []*WebhookStock, params *Params) (*[]WebhookStock, *resty.Response, error)
 	DeleteMany(ctx context.Context, webhookStockList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*WebhookStock, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, webhookStock *WebhookStock, params *Params) (*WebhookStock, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*WebhookStock, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, webhookStock *WebhookStock, params *Params) (*WebhookStock, *resty.Response, error)
 }
 
 func NewWebhookStockService(client *Client) WebhookStockService {

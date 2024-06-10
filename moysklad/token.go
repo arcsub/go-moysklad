@@ -11,8 +11,8 @@ type Token struct {
 	AccessToken string `json:"access_token"`
 }
 
-func (t Token) String() string {
-	return Stringify(t)
+func (token Token) String() string {
+	return Stringify(token)
 }
 
 // SecurityTokenService

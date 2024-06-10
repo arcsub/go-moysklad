@@ -8,8 +8,9 @@ type PositionType interface {
 		InternalOrderPosition | InventoryPosition | InvoiceInPosition | InvoiceOutPosition | LossPosition | MovePosition |
 		PrepaymentPosition | PrepaymentReturnPosition | PriceListPosition | ProcessingOrderPosition |
 		ProcessingPlanMaterial | ProcessingPlanProduct | ProcessingProcessPosition | PurchaseOrderPosition |
-		PurchaseReturnPosition | RetailPosition | SalesReturnPosition | SupplyPosition | ProductionTaskMaterial |
-		ProductionStageCompletionMaterial | ProductionStageCompletionResult | ProductionRow | ProductionTaskResult
+		PurchaseReturnPosition | SalesReturnPosition | SupplyPosition | ProductionTaskMaterial |
+		ProductionStageCompletionMaterial | ProductionStageCompletionResult | ProductionRow | ProductionTaskResult |
+		RetailSalesReturnPosition | RetailDemandPosition
 }
 
 type Positions[T PositionType] MetaArray[T]
@@ -115,8 +116,12 @@ func NewPurchaseReturnPositions() *Positions[PurchaseReturnPosition] {
 	return newPositions[PurchaseReturnPosition]()
 }
 
-func NewRetailPositions() *Positions[RetailPosition] {
-	return newPositions[RetailPosition]()
+func NewRetailDemandPositions() *Positions[RetailDemandPosition] {
+	return newPositions[RetailDemandPosition]()
+}
+
+func NewRetailSalesReturnPositions() *Positions[RetailSalesReturnPosition] {
+	return newPositions[RetailSalesReturnPosition]()
 }
 
 func NewSalesReturnPositions() *Positions[SalesReturnPosition] {

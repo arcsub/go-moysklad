@@ -76,5 +76,3 @@ func (retailOperation *RetailOperation) AsPrepayment() *Prepayment {
 func (retailOperation *RetailOperation) AsPrepaymentReturn() *PrepaymentReturn {
 	return unmarshalAsType[PrepaymentReturn](retailOperation)
 }
-
-type RetailOperations = Slice[RetailOperation]

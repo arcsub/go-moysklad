@@ -32,9 +32,9 @@ func (notification Notification) MetaType() MetaType {
 // Сервис для работы с уведомлениями.
 type NotificationService interface {
 	GetList(ctx context.Context, params *Params) (*List[Notification], *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Notification, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Notification, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error)
 }
 
@@ -57,7 +57,7 @@ func NewNotificationService(client *Client) NotificationService {
 
 // MarkAsRead Отметить Уведомление как прочитанное.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-uwedomlenie-kak-prochitannoe
-func (s *notificationService) MarkAsRead(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error) {
+func (s *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/markasread", s.uri, id)
 	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err

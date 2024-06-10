@@ -18,7 +18,7 @@ type Enter struct {
 	Deleted      *Timestamp                `json:"deleted,omitempty"`
 	Description  *string                   `json:"description,omitempty"`
 	ExternalCode *string                   `json:"externalCode,omitempty"`
-	Files        *Files                    `json:"files,omitempty"`
+	Files        *MetaArray[File]          `json:"files,omitempty"`
 	Group        *Group                    `json:"group,omitempty"`
 	ID           *uuid.UUID                `json:"id,omitempty"`
 	Meta         *Meta                     `json:"meta,omitempty"`
@@ -37,7 +37,7 @@ type Enter struct {
 	Store        *Store                    `json:"store,omitempty"`
 	Name         *string                   `json:"name,omitempty"`
 	SyncID       *uuid.UUID                `json:"syncId,omitempty"`
-	Attributes   Attributes                `json:"attributes,omitempty"`
+	Attributes   Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
 func (enter Enter) GetOrganization() Organization {
@@ -72,7 +72,7 @@ func (enter Enter) GetExternalCode() string {
 	return Deref(enter.ExternalCode)
 }
 
-func (enter Enter) GetFiles() Files {
+func (enter Enter) GetFiles() MetaArray[File] {
 	return Deref(enter.Files)
 }
 
@@ -148,7 +148,7 @@ func (enter Enter) GetSyncID() uuid.UUID {
 	return Deref(enter.SyncID)
 }
 
-func (enter Enter) GetAttributes() Attributes {
+func (enter Enter) GetAttributes() Slice[AttributeValue] {
 	return enter.Attributes
 }
 
@@ -177,8 +177,8 @@ func (enter *Enter) SetExternalCode(externalCode string) *Enter {
 	return enter
 }
 
-func (enter *Enter) SetFiles(files *Files) *Enter {
-	enter.Files = files
+func (enter *Enter) SetFiles(files Slice[File]) *Enter {
+	enter.Files = NewMetaArrayRows(files)
 	return enter
 }
 
@@ -242,12 +242,12 @@ func (enter *Enter) SetName(name string) *Enter {
 	return enter
 }
 
-func (enter *Enter) SetSyncID(syncID *uuid.UUID) *Enter {
-	enter.SyncID = syncID
+func (enter *Enter) SetSyncID(syncID uuid.UUID) *Enter {
+	enter.SyncID = &syncID
 	return enter
 }
 
-func (enter *Enter) SetAttributes(attributes Attributes) *Enter {
+func (enter *Enter) SetAttributes(attributes Slice[AttributeValue]) *Enter {
 	enter.Attributes = attributes
 	return enter
 }
@@ -275,7 +275,7 @@ type EnterPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reason     *string             `json:"reason,omitempty"`     // Причина оприходования данной позиции
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
-	Things     Things              `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
+	Things     Slice[string]       `json:"things,omitempty"`     // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута.
 }
 
 func (enterPosition EnterPosition) GetAccountID() uuid.UUID {
@@ -322,7 +322,7 @@ func (enterPosition EnterPosition) GetSlot() Slot {
 	return Deref(enterPosition.Slot)
 }
 
-func (enterPosition EnterPosition) GetThings() Things {
+func (enterPosition EnterPosition) GetThings() Slice[string] {
 	return enterPosition.Things
 }
 
@@ -366,7 +366,7 @@ func (enterPosition *EnterPosition) SetSlot(slot *Slot) *EnterPosition {
 	return enterPosition
 }
 
-func (enterPosition *EnterPosition) SetThings(things Things) *EnterPosition {
+func (enterPosition *EnterPosition) SetThings(things Slice[string]) *EnterPosition {
 	enterPosition.Things = things
 	return enterPosition
 }
@@ -383,9 +383,9 @@ func (enterPosition EnterPosition) MetaType() MetaType {
 // Документ: Оприходование (enter)
 // Основание, на котором он может быть создан:
 // - Инвентаризация(inventory)
-type EnterTemplateArg struct {
-	Inventory *MetaWrapper `json:"inventory,omitempty"`
-}
+//type EnterTemplateArg struct {
+//	Inventory *MetaWrapper `json:"inventory,omitempty"`
+//}
 
 // EnterService
 // Сервис для работы с оприходованиями.
@@ -394,37 +394,42 @@ type EnterService interface {
 	Create(ctx context.Context, enter *Enter, params *Params) (*Enter, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, enterList []*Enter, params *Params) (*[]Enter, *resty.Response, error)
 	DeleteMany(ctx context.Context, enterList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Enter, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, enter *Enter, params *Params) (*Enter, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Enter, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, enter *Enter, params *Params) (*Enter, *resty.Response, error)
 	//endpointTemplate[Enter]
 	//endpointTemplateBasedOn[Enter, EnterTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[EnterPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*EnterPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *EnterPosition, params *Params) (*EnterPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *EnterPosition) (*EnterPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*EnterPosition) (*[]EnterPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[EnterPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*EnterPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *EnterPosition, params *Params) (*EnterPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *EnterPosition) (*EnterPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*EnterPosition) (*[]EnterPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Enter, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Enter, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewEnterService(client *Client) EnterService {

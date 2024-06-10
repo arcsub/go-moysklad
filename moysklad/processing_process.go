@@ -24,17 +24,110 @@ type ProcessingProcess struct {
 	Updated      *Timestamp                            `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
-func (p ProcessingProcess) String() string {
-	return Stringify(p)
+func (processingProcess ProcessingProcess) GetAccountID() uuid.UUID {
+	return Deref(processingProcess.AccountID)
 }
 
-func (p ProcessingProcess) MetaType() MetaType {
+func (processingProcess ProcessingProcess) GetArchived() bool {
+	return Deref(processingProcess.Archived)
+}
+
+func (processingProcess ProcessingProcess) GetDescription() string {
+	return Deref(processingProcess.Description)
+}
+
+func (processingProcess ProcessingProcess) GetExternalCode() string {
+	return Deref(processingProcess.ExternalCode)
+}
+
+func (processingProcess ProcessingProcess) GetGroup() Group {
+	return Deref(processingProcess.Group)
+}
+
+func (processingProcess ProcessingProcess) GetID() uuid.UUID {
+	return Deref(processingProcess.ID)
+}
+
+func (processingProcess ProcessingProcess) GetMeta() Meta {
+	return Deref(processingProcess.Meta)
+}
+
+func (processingProcess ProcessingProcess) GetName() string {
+	return Deref(processingProcess.Name)
+}
+
+func (processingProcess ProcessingProcess) GetOwner() Employee {
+	return Deref(processingProcess.Owner)
+}
+
+func (processingProcess ProcessingProcess) GetPositions() Positions[ProcessingProcessPosition] {
+	return Deref(processingProcess.Positions)
+}
+
+func (processingProcess ProcessingProcess) GetShared() bool {
+	return Deref(processingProcess.Shared)
+}
+
+func (processingProcess ProcessingProcess) GetUpdated() Timestamp {
+	return Deref(processingProcess.Updated)
+}
+
+func (processingProcess *ProcessingProcess) SetArchived(archived bool) *ProcessingProcess {
+	processingProcess.Archived = &archived
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetDescription(description string) *ProcessingProcess {
+	processingProcess.Description = &description
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetExternalCode(externalCode string) *ProcessingProcess {
+	processingProcess.ExternalCode = &externalCode
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetGroup(group *Group) *ProcessingProcess {
+	processingProcess.Group = group
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetMeta(meta *Meta) *ProcessingProcess {
+	processingProcess.Meta = meta
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetName(name string) *ProcessingProcess {
+	processingProcess.Name = &name
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetOwner(owner *Employee) *ProcessingProcess {
+	processingProcess.Owner = owner
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetPositions(positions *Positions[ProcessingProcessPosition]) *ProcessingProcess {
+	processingProcess.Positions = positions
+	return processingProcess
+}
+
+func (processingProcess *ProcessingProcess) SetShared(shared bool) *ProcessingProcess {
+	processingProcess.Shared = &shared
+	return processingProcess
+}
+
+func (processingProcess ProcessingProcess) String() string {
+	return Stringify(processingProcess)
+}
+
+func (processingProcess ProcessingProcess) MetaType() MetaType {
 	return MetaTypeProcessingProcess
 }
 
 // ProcessingProcessPosition Позиция Тех. процесса.
 // Ключевое слово: processingprocessposition
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-process-teh-processy-atributy-wlozhennyh-suschnostej-pozicii-teh-processa
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehprocess-pozicii-tehprocessa
 type ProcessingProcessPosition struct {
 	AccountID       *uuid.UUID       `json:"accountId,omitempty"`       // ID учетной записи
 	ID              *uuid.UUID       `json:"id,omitempty"`              // ID позиции
@@ -42,11 +135,37 @@ type ProcessingProcessPosition struct {
 	ProcessingStage *ProcessingStage `json:"processingstage,omitempty"` // Метаданные этапа, который представляет собой позиция
 }
 
-func (p ProcessingProcessPosition) String() string {
-	return Stringify(p)
+func (processingProcessPosition ProcessingProcessPosition) GetAccountID() uuid.UUID {
+	return Deref(processingProcessPosition.AccountID)
 }
 
-func (p ProcessingProcessPosition) MetaType() MetaType {
+func (processingProcessPosition ProcessingProcessPosition) GetID() uuid.UUID {
+	return Deref(processingProcessPosition.ID)
+}
+
+func (processingProcessPosition ProcessingProcessPosition) GetMeta() Meta {
+	return Deref(processingProcessPosition.Meta)
+}
+
+func (processingProcessPosition ProcessingProcessPosition) GetProcessingStage() ProcessingStage {
+	return Deref(processingProcessPosition.ProcessingStage)
+}
+
+func (processingProcessPosition *ProcessingProcessPosition) SetMeta(meta *Meta) *ProcessingProcessPosition {
+	processingProcessPosition.Meta = meta
+	return processingProcessPosition
+}
+
+func (processingProcessPosition *ProcessingProcessPosition) SetProcessingStage(processingStage *ProcessingStage) *ProcessingProcessPosition {
+	processingProcessPosition.ProcessingStage = processingStage
+	return processingProcessPosition
+}
+
+func (processingProcessPosition ProcessingProcessPosition) String() string {
+	return Stringify(processingProcessPosition)
+}
+
+func (processingProcessPosition ProcessingProcessPosition) MetaType() MetaType {
 	return MetaTypeProcessingProcessPosition
 }
 
@@ -57,21 +176,21 @@ type ProcessingProcessService interface {
 	Create(ctx context.Context, processingProcess *ProcessingProcess, params *Params) (*ProcessingProcess, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingProcessList []*ProcessingProcess, params *Params) (*[]ProcessingProcess, *resty.Response, error)
 	DeleteMany(ctx context.Context, processingProcessList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*ProcessingProcess, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, processingProcess *ProcessingProcess, params *Params) (*ProcessingProcess, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[ProcessingProcessPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*ProcessingProcessPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *ProcessingProcessPosition, params *Params) (*ProcessingProcessPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *ProcessingProcessPosition) (*ProcessingProcessPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*ProcessingProcessPosition) (*[]ProcessingProcessPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProcessingProcess, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, processingProcess *ProcessingProcess, params *Params) (*ProcessingProcess, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[ProcessingProcessPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*ProcessingProcessPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingProcessPosition, params *Params) (*ProcessingProcessPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingProcessPosition) (*ProcessingProcessPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*ProcessingProcessPosition) (*[]ProcessingProcessPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewProcessingProcessService(client *Client) ProcessingProcessService {

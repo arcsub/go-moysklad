@@ -13,13 +13,12 @@ import (
 type Processing struct {
 	Organization        *Organization                     `json:"organization,omitempty"`
 	SyncID              *uuid.UUID                        `json:"syncId,omitempty"`
-	Attributes          Attributes                        `json:"attributes,omitempty"`
 	Code                *string                           `json:"code,omitempty"`
 	Created             *Timestamp                        `json:"created,omitempty"`
 	Deleted             *Timestamp                        `json:"deleted,omitempty"`
 	AccountID           *uuid.UUID                        `json:"accountId,omitempty"`
 	ExternalCode        *string                           `json:"externalCode,omitempty"`
-	Files               *Files                            `json:"files,omitempty"`
+	Files               *MetaArray[File]                  `json:"files,omitempty"`
 	Group               *Group                            `json:"group,omitempty"`
 	ID                  *uuid.UUID                        `json:"id,omitempty"`
 	Moment              *Timestamp                        `json:"moment,omitempty"`
@@ -43,30 +42,311 @@ type Processing struct {
 	Name                *string                           `json:"name,omitempty"`
 	Products            Slice[ProcessingPositionProduct]  `json:"products,omitempty"`
 	Materials           Slice[ProcessingPositionMaterial] `json:"materials,omitempty"`
+	Attributes          Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
-func (p Processing) String() string {
-	return Stringify(p)
+func (processing Processing) GetOrganization() Organization {
+	return Deref(processing.Organization)
 }
 
-func (p Processing) MetaType() MetaType {
+func (processing Processing) GetSyncID() uuid.UUID {
+	return Deref(processing.SyncID)
+}
+
+func (processing Processing) GetCode() string {
+	return Deref(processing.Code)
+}
+
+func (processing Processing) GetCreated() Timestamp {
+	return Deref(processing.Created)
+}
+
+func (processing Processing) GetDeleted() Timestamp {
+	return Deref(processing.Deleted)
+}
+
+func (processing Processing) GetAccountID() uuid.UUID {
+	return Deref(processing.AccountID)
+}
+
+func (processing Processing) GetExternalCode() string {
+	return Deref(processing.ExternalCode)
+}
+
+func (processing Processing) GetFiles() MetaArray[File] {
+	return Deref(processing.Files)
+}
+
+func (processing Processing) GetGroup() Group {
+	return Deref(processing.Group)
+}
+
+func (processing Processing) GetID() uuid.UUID {
+	return Deref(processing.ID)
+}
+
+func (processing Processing) GetMoment() Timestamp {
+	return Deref(processing.Moment)
+}
+
+func (processing Processing) GetMaterialsStore() Store {
+	return Deref(processing.MaterialsStore)
+}
+
+func (processing Processing) GetMeta() Meta {
+	return Deref(processing.Meta)
+}
+
+func (processing Processing) GetProcessingOrder() ProcessingOrder {
+	return Deref(processing.ProcessingOrder)
+}
+
+func (processing Processing) GetApplicable() bool {
+	return Deref(processing.Applicable)
+}
+
+func (processing Processing) GetDescription() string {
+	return Deref(processing.Description)
+}
+
+func (processing Processing) GetOrganizationAccount() AgentAccount {
+	return Deref(processing.OrganizationAccount)
+}
+
+func (processing Processing) GetOwner() Employee {
+	return Deref(processing.Owner)
+}
+
+func (processing Processing) GetPrinted() bool {
+	return Deref(processing.Printed)
+}
+
+func (processing Processing) GetProcessingPlan() ProcessingPlan {
+	return Deref(processing.ProcessingPlan)
+}
+
+func (processing Processing) GetProcessingSum() float64 {
+	return Deref(processing.ProcessingSum)
+}
+
+func (processing Processing) GetUpdated() Timestamp {
+	return Deref(processing.Updated)
+}
+
+func (processing Processing) GetProductsStore() Store {
+	return Deref(processing.ProductsStore)
+}
+
+func (processing Processing) GetProject() Project {
+	return Deref(processing.Project)
+}
+
+func (processing Processing) GetPublished() bool {
+	return Deref(processing.Published)
+}
+
+func (processing Processing) GetQuantity() float64 {
+	return Deref(processing.Quantity)
+}
+
+func (processing Processing) GetShared() bool {
+	return Deref(processing.Shared)
+}
+
+func (processing Processing) GetState() State {
+	return Deref(processing.State)
+}
+
+func (processing Processing) GetName() string {
+	return Deref(processing.Name)
+}
+
+func (processing Processing) GetProducts() Slice[ProcessingPositionProduct] {
+	return processing.Products
+}
+
+func (processing Processing) GetMaterials() Slice[ProcessingPositionMaterial] {
+	return processing.Materials
+}
+
+func (processing Processing) GetAttributes() Slice[AttributeValue] {
+	return processing.Attributes
+}
+
+func (processing *Processing) SetOrganization(organization *Organization) *Processing {
+	processing.Organization = organization
+	return processing
+}
+
+func (processing *Processing) SetSyncID(syncID uuid.UUID) *Processing {
+	processing.SyncID = &syncID
+	return processing
+}
+
+func (processing *Processing) SetCode(code string) *Processing {
+	processing.Code = &code
+	return processing
+}
+
+func (processing *Processing) SetExternalCode(externalCode string) *Processing {
+	processing.ExternalCode = &externalCode
+	return processing
+}
+
+func (processing *Processing) SetFiles(files Slice[File]) *Processing {
+	processing.Files = NewMetaArrayRows(files)
+	return processing
+}
+
+func (processing *Processing) SetGroup(group *Group) *Processing {
+	processing.Group = group
+	return processing
+}
+
+func (processing *Processing) SetMoment(moment *Timestamp) *Processing {
+	processing.Moment = moment
+	return processing
+}
+
+func (processing *Processing) SetMaterialsStore(materialsStore *Store) *Processing {
+	processing.MaterialsStore = materialsStore
+	return processing
+}
+
+func (processing *Processing) SetMeta(meta *Meta) *Processing {
+	processing.Meta = meta
+	return processing
+}
+
+func (processing *Processing) SetProcessingOrder(processingOrder *ProcessingOrder) *Processing {
+	processing.ProcessingOrder = processingOrder
+	return processing
+}
+
+func (processing *Processing) SetApplicable(applicable bool) *Processing {
+	processing.Applicable = &applicable
+	return processing
+}
+
+func (processing *Processing) SetDescription(description string) *Processing {
+	processing.Description = &description
+	return processing
+}
+
+func (processing *Processing) SetOrganizationAccount(organizationAccount *AgentAccount) *Processing {
+	processing.OrganizationAccount = organizationAccount
+	return processing
+}
+
+func (processing *Processing) SetOwner(owner *Employee) *Processing {
+	processing.Owner = owner
+	return processing
+}
+
+func (processing *Processing) SetProcessingPlan(processingPlan *ProcessingPlan) *Processing {
+	processing.ProcessingPlan = processingPlan
+	return processing
+}
+
+func (processing *Processing) SetProcessingSum(processingSum float64) *Processing {
+	processing.ProcessingSum = &processingSum
+	return processing
+}
+
+func (processing *Processing) SetProductsStore(productsStore *Store) *Processing {
+	processing.ProductsStore = productsStore
+	return processing
+}
+
+func (processing *Processing) SetProject(project *Project) *Processing {
+	processing.Project = project
+	return processing
+}
+
+func (processing *Processing) SetQuantity(quantity float64) *Processing {
+	processing.Quantity = &quantity
+	return processing
+}
+
+func (processing *Processing) SetShared(shared bool) *Processing {
+	processing.Shared = &shared
+	return processing
+}
+
+func (processing *Processing) SetState(state *State) *Processing {
+	processing.State = state
+	return processing
+}
+
+func (processing *Processing) SetName(name string) *Processing {
+	processing.Name = &name
+	return processing
+}
+
+func (processing *Processing) SetProducts(products Slice[ProcessingPositionProduct]) *Processing {
+	processing.Products = products
+	return processing
+}
+
+func (processing *Processing) SetMaterials(materials Slice[ProcessingPositionMaterial]) *Processing {
+	processing.Materials = materials
+	return processing
+}
+
+func (processing *Processing) SetAttributes(attributes Slice[AttributeValue]) *Processing {
+	processing.Attributes = attributes
+	return processing
+}
+
+func (processing Processing) String() string {
+	return Stringify(processing)
+}
+
+func (processing Processing) MetaType() MetaType {
 	return MetaTypeProcessing
 }
-
-type Processings = Slice[Processing]
 
 // ProcessingPositionMaterial Материал Техоперации.
 // Ключевое слово: processingpositionmaterial
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-tehoperaciq-tehoperacii-materialy-tehoperacii
 type ProcessingPositionMaterial struct {
-	ProcessingPosition
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/серии/модификации, которую представляет собой позиция
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров данного вида в позиции
 }
 
-func (p ProcessingPositionMaterial) String() string {
-	return Stringify(p)
+func (processingPositionMaterial ProcessingPositionMaterial) GetAccountID() uuid.UUID {
+	return Deref(processingPositionMaterial.AccountID)
 }
 
-func (p ProcessingPositionMaterial) MetaType() MetaType {
+func (processingPositionMaterial ProcessingPositionMaterial) GetAssortment() AssortmentPosition {
+	return Deref(processingPositionMaterial.Assortment)
+}
+
+func (processingPositionMaterial ProcessingPositionMaterial) GetID() uuid.UUID {
+	return Deref(processingPositionMaterial.ID)
+}
+
+func (processingPositionMaterial ProcessingPositionMaterial) GetQuantity() float64 {
+	return Deref(processingPositionMaterial.Quantity)
+}
+
+func (processingPositionMaterial *ProcessingPositionMaterial) SetAssortment(assortment *AssortmentPosition) *ProcessingPositionMaterial {
+	processingPositionMaterial.Assortment = assortment
+	return processingPositionMaterial
+}
+
+func (processingPositionMaterial *ProcessingPositionMaterial) SetQuantity(quantity float64) *ProcessingPositionMaterial {
+	processingPositionMaterial.Quantity = &quantity
+	return processingPositionMaterial
+}
+
+func (processingPositionMaterial ProcessingPositionMaterial) String() string {
+	return Stringify(processingPositionMaterial)
+}
+
+func (processingPositionMaterial ProcessingPositionMaterial) MetaType() MetaType {
 	return MetaTypeProcessingPositionMaterial
 }
 
@@ -74,14 +354,43 @@ func (p ProcessingPositionMaterial) MetaType() MetaType {
 // Ключевое слово: processingpositionresult
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-tehoperaciq-tehoperacii-produkty-tehoperacii
 type ProcessingPositionProduct struct {
-	ProcessingPosition
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/серии/модификации, которую представляет собой позиция
+	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров данного вида в позиции
 }
 
-func (p ProcessingPositionProduct) String() string {
-	return Stringify(p)
+func (processingPositionProduct ProcessingPositionProduct) GetAccountID() uuid.UUID {
+	return Deref(processingPositionProduct.AccountID)
 }
 
-func (p ProcessingPositionProduct) MetaType() MetaType {
+func (processingPositionProduct ProcessingPositionProduct) GetAssortment() AssortmentPosition {
+	return Deref(processingPositionProduct.Assortment)
+}
+
+func (processingPositionProduct ProcessingPositionProduct) GetID() uuid.UUID {
+	return Deref(processingPositionProduct.ID)
+}
+
+func (processingPositionProduct ProcessingPositionProduct) GetQuantity() float64 {
+	return Deref(processingPositionProduct.Quantity)
+}
+
+func (processingPositionProduct *ProcessingPositionProduct) SetAssortment(assortment *AssortmentPosition) *ProcessingPositionProduct {
+	processingPositionProduct.Assortment = assortment
+	return processingPositionProduct
+}
+
+func (processingPositionProduct *ProcessingPositionProduct) SetQuantity(quantity float64) *ProcessingPositionProduct {
+	processingPositionProduct.Quantity = &quantity
+	return processingPositionProduct
+}
+
+func (processingPositionProduct ProcessingPositionProduct) String() string {
+	return Stringify(processingPositionProduct)
+}
+
+func (processingPositionProduct ProcessingPositionProduct) MetaType() MetaType {
 	return MetaTypeProcessingPositionProduct
 }
 
@@ -90,10 +399,10 @@ func (p ProcessingPositionProduct) MetaType() MetaType {
 // Основание, на котором он может быть создан:
 // - Заказ на производство (processingorder)
 // - Техкарта (processingplan)
-type ProcessingTemplateArg struct {
-	ProcessingOrder *MetaWrapper `json:"processingOrder,omitempty"`
-	ProcessingPlan  *MetaWrapper `json:"processingPlan,omitempty"`
-}
+//type ProcessingTemplateArg struct {
+//	ProcessingOrder *MetaWrapper `json:"processingOrder,omitempty"`
+//	ProcessingPlan  *MetaWrapper `json:"processingPlan,omitempty"`
+//}
 
 // ProcessingService
 // Сервис для работы с Техоперациями.
@@ -102,34 +411,34 @@ type ProcessingService interface {
 	Create(ctx context.Context, processing *Processing, params *Params) (*Processing, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingList []*Processing, params *Params) (*[]Processing, *resty.Response, error)
 	DeleteMany(ctx context.Context, processingList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Processing, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, processing *Processing, params *Params) (*Processing, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Processing, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, processing *Processing, params *Params) (*Processing, *resty.Response, error)
 	//endpointTemplate[Processing]
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Processing, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetMaterials(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
-	CreateMaterial(ctx context.Context, id *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
-	CreateMaterials(ctx context.Context, id *uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error)
-	GetMaterialById(ctx context.Context, id, materialID *uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error)
-	UpdateMaterial(ctx context.Context, id, materialID *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
-	DeleteMaterial(ctx context.Context, id, materialID *uuid.UUID) (bool, *resty.Response, error)
-	GetProducts(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error)
-	CreateProduct(ctx context.Context, id *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	CreateProducts(ctx context.Context, id *uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error)
-	GetProductById(ctx context.Context, id, productID *uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error)
-	UpdateProduct(ctx context.Context, id, productID *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	DeleteProduct(ctx context.Context, id, productID *uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Processing, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
+	CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
+	CreateMaterials(ctx context.Context, id uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error)
+	GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error)
+	UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
+	DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error)
+	GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error)
+	CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
+	CreateProducts(ctx context.Context, id uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error)
+	GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error)
+	UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
+	DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error)
 }
 
 type processingService struct {
@@ -147,6 +456,7 @@ type processingService struct {
 	endpointAttributes
 	endpointSyncID[Processing]
 	endpointRemove
+	endpointStates
 }
 
 func NewProcessingService(client *Client) ProcessingService {
@@ -164,87 +474,88 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[Processing]{e},
 		endpointRemove:           endpointRemove{e},
+		endpointStates:           endpointStates{e},
 	}
 }
 
 // GetMaterials Получить материалы Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-poluchit-materialy-teh-karty
-func (s *processingService) GetMaterials(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
-	return NewRequestBuilder[List[ProcessingPlanMaterial]](s.client, path).Get(ctx)
+func (service *processingService) GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
+	return NewRequestBuilder[List[ProcessingPlanMaterial]](service.client, path).Get(ctx)
 }
 
 // CreateMaterial Создать материал Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-sozdat-material-teh-karty
-func (s *processingService) CreateMaterial(ctx context.Context, id *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
-	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Post(ctx, material)
+func (service *processingService) CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
+	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Post(ctx, material)
 }
 
 // CreateMaterials Создать несколько материалов Тех. карты.
-func (s *processingService) CreateMaterials(ctx context.Context, id *uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials", s.uri, id)
-	return NewRequestBuilder[[]ProcessingPlanMaterial](s.client, path).Post(ctx, materials)
+func (service *processingService) CreateMaterials(ctx context.Context, id uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
+	return NewRequestBuilder[[]ProcessingPlanMaterial](service.client, path).Post(ctx, materials)
 }
 
-// GetMaterialById Получить материал.
+// GetMaterialByID Получить материал.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-poluchit-material
-func (s *processingService) GetMaterialById(ctx context.Context, id, materialId *uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials/%s", s.uri, id, materialId)
-	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Get(ctx)
+func (service *processingService) GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials/%s", service.uri, id, materialID)
+	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Get(ctx)
 }
 
 // UpdateMaterial Изменить материал.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-izmenit-material
-func (s *processingService) UpdateMaterial(ctx context.Context, id, materialId *uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials/%s", s.uri, id, materialId)
-	return NewRequestBuilder[ProcessingPlanMaterial](s.client, path).Put(ctx, material)
+func (service *processingService) UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials/%s", service.uri, id, materialID)
+	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Put(ctx, material)
 }
 
 // DeleteMaterial Удалить материал.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-udalit-material
-func (s *processingService) DeleteMaterial(ctx context.Context, id, materialId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials/%s", s.uri, id, materialId)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+func (service *processingService) DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/materials/%s", service.uri, id, materialID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // GetProducts Получить продукты Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-poluchit-produkty-teh-karty
-func (s *processingService) GetProducts(ctx context.Context, id *uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products", s.uri, id)
-	return NewRequestBuilder[List[ProcessingPlanProduct]](s.client, path).Get(ctx)
+func (service *processingService) GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products", service.uri, id)
+	return NewRequestBuilder[List[ProcessingPlanProduct]](service.client, path).Get(ctx)
 }
 
 // CreateProduct Создать продукт Тех. карты.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-sozdat-produkt-teh-karty
-func (s *processingService) CreateProduct(ctx context.Context, id *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products", s.uri, id)
-	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Post(ctx, product)
+func (service *processingService) CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products", service.uri, id)
+	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Post(ctx, product)
 }
 
 // CreateProducts Создать несколько продуктов Тех. карты.
-func (s *processingService) CreateProducts(ctx context.Context, id *uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products", s.uri, id)
-	return NewRequestBuilder[[]ProcessingPlanProduct](s.client, path).Post(ctx, products)
+func (service *processingService) CreateProducts(ctx context.Context, id uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products", service.uri, id)
+	return NewRequestBuilder[[]ProcessingPlanProduct](service.client, path).Post(ctx, products)
 }
 
-// GetProductById Получить продукт.
+// GetProductByID Получить продукт.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-poluchit-produkt
-func (s *processingService) GetProductById(ctx context.Context, id, productId *uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products/%s", s.uri, id, productId)
-	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Get(ctx)
+func (service *processingService) GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products/%s", service.uri, id, productID)
+	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Get(ctx)
 }
 
 // UpdateProduct Изменить продукт.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-izmenit-produkt
-func (s *processingService) UpdateProduct(ctx context.Context, id, productId *uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products/%s", s.uri, id, productId)
-	return NewRequestBuilder[ProcessingPlanProduct](s.client, path).Put(ctx, product)
+func (service *processingService) UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products/%s", service.uri, id, productID)
+	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Put(ctx, product)
 }
 
 // DeleteProduct Удалить продукт.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-teh-karta-udalit-produkt
-func (s *processingService) DeleteProduct(ctx context.Context, id, productId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products/%s", s.uri, id, productId)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+func (service *processingService) DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/products/%s", service.uri, id, productID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

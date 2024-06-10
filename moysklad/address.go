@@ -35,7 +35,7 @@ func (address *Address) SetComment(comment string) *Address {
 }
 
 func (address *Address) SetCountry(country *Country) *Address {
-	address.Country = country
+	address.Country = &Country{Meta: country.Meta}
 	return address
 }
 
@@ -50,7 +50,7 @@ func (address *Address) SetPostalCode(postalCode string) *Address {
 }
 
 func (address *Address) SetRegion(region *Region) *Address {
-	address.Region = region
+	address.Region = &Region{Meta: region.Meta}
 	return address
 }
 

@@ -10,33 +10,33 @@ import (
 // Ключевое слово: contract
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-dogowor
 type Contract struct {
-	AgentAccount        *AgentAccount `json:"agentAccount,omitempty"`
-	Published           *bool         `json:"published,omitempty"`
-	RewardPercent       *float64      `json:"rewardPercent,omitempty"`
-	Archived            *bool         `json:"archived,omitempty"`
-	Agent               *Counterparty `json:"agent,omitempty"`
-	Code                *string       `json:"code,omitempty"`
-	Name                *string       `json:"name,omitempty"`
-	Description         *string       `json:"description,omitempty"`
-	ExternalCode        *string       `json:"externalCode,omitempty"`
-	Group               *Group        `json:"group,omitempty"`
-	ID                  *uuid.UUID    `json:"id,omitempty"`
-	Meta                *Meta         `json:"meta,omitempty"`
-	Moment              *Timestamp    `json:"moment,omitempty"`
-	Printed             *bool         `json:"printed,omitempty"`
-	OrganizationAccount *AgentAccount `json:"organizationAccount,omitempty"`
-	OwnAgent            *Organization `json:"ownAgent,omitempty"`
-	Owner               *Employee     `json:"owner,omitempty"`
-	Rate                *Rate         `json:"rate,omitempty"`
-	AccountID           *uuid.UUID    `json:"accountId,omitempty"`
-	Updated             *Timestamp    `json:"updated,omitempty"`
-	Shared              *bool         `json:"shared,omitempty"`
-	State               *State        `json:"state,omitempty"`
-	Sum                 *float64      `json:"sum,omitempty"`
-	SyncID              *uuid.UUID    `json:"syncId,omitempty"`
-	ContractType        ContractType  `json:"contractType,omitempty"`
-	RewardType          RewardType    `json:"rewardType,omitempty"`
-	Attributes          Attributes    `json:"attributes,omitempty"`
+	AgentAccount        *AgentAccount         `json:"agentAccount,omitempty"`
+	Published           *bool                 `json:"published,omitempty"`
+	RewardPercent       *float64              `json:"rewardPercent,omitempty"`
+	Archived            *bool                 `json:"archived,omitempty"`
+	Agent               *Counterparty         `json:"agent,omitempty"`
+	Code                *string               `json:"code,omitempty"`
+	Name                *string               `json:"name,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	ExternalCode        *string               `json:"externalCode,omitempty"`
+	Group               *Group                `json:"group,omitempty"`
+	ID                  *uuid.UUID            `json:"id,omitempty"`
+	Meta                *Meta                 `json:"meta,omitempty"`
+	Moment              *Timestamp            `json:"moment,omitempty"`
+	Printed             *bool                 `json:"printed,omitempty"`
+	OrganizationAccount *AgentAccount         `json:"organizationAccount,omitempty"`
+	OwnAgent            *Organization         `json:"ownAgent,omitempty"`
+	Owner               *Employee             `json:"owner,omitempty"`
+	Rate                *Rate                 `json:"rate,omitempty"`
+	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
+	Updated             *Timestamp            `json:"updated,omitempty"`
+	Shared              *bool                 `json:"shared,omitempty"`
+	State               *State                `json:"state,omitempty"`
+	Sum                 *float64              `json:"sum,omitempty"`
+	SyncID              *uuid.UUID            `json:"syncId,omitempty"`
+	ContractType        ContractType          `json:"contractType,omitempty"`
+	RewardType          RewardType            `json:"rewardType,omitempty"`
+	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
 func (contract Contract) GetAgentAccount() AgentAccount {
@@ -143,7 +143,7 @@ func (contract Contract) GetRewardType() RewardType {
 	return contract.RewardType
 }
 
-func (contract Contract) GetAttributes() Attributes {
+func (contract Contract) GetAttributes() Slice[AttributeValue] {
 	return contract.Attributes
 }
 
@@ -237,8 +237,8 @@ func (contract *Contract) SetSum(sum *float64) *Contract {
 	return contract
 }
 
-func (contract *Contract) SetSyncID(syncID *uuid.UUID) *Contract {
-	contract.SyncID = syncID
+func (contract *Contract) SetSyncID(syncID uuid.UUID) *Contract {
+	contract.SyncID = &syncID
 	return contract
 }
 
@@ -252,7 +252,7 @@ func (contract *Contract) SetRewardType(rewardType RewardType) *Contract {
 	return contract
 }
 
-func (contract *Contract) SetAttributes(attributes Attributes) *Contract {
+func (contract *Contract) SetAttributes(attributes Slice[AttributeValue]) *Contract {
 	contract.Attributes = attributes
 	return contract
 }
@@ -273,6 +273,14 @@ const (
 	ContractTypeSales      ContractType = "Sales"      // Договор купли-продажи
 )
 
+// RewardType Тип Вознаграждения.
+type RewardType string
+
+const (
+	RewardTypePercentOfSales RewardType = "PercentOfSales" // Процент от суммы продажи
+	RewardTypeNone           RewardType = "None"           // Не рассчитывать
+)
+
 // ContractService
 // Сервис для работы с договорами.
 type ContractService interface {
@@ -280,24 +288,29 @@ type ContractService interface {
 	Create(ctx context.Context, contract *Contract, params *Params) (*Contract, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, contractList []*Contract, params *Params) (*[]Contract, *resty.Response, error)
 	DeleteMany(ctx context.Context, contractList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Contract, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, contract *Contract, params *Params) (*Contract, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Contract, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, contract *Contract, params *Params) (*Contract, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewContractService(client *Client) ContractService {

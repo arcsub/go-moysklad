@@ -21,7 +21,7 @@ type InvoiceOut struct {
 	Deleted              *Timestamp                     `json:"deleted,omitempty"`
 	Description          *string                        `json:"description,omitempty"`
 	ExternalCode         *string                        `json:"externalCode,omitempty"`
-	Files                *Files                         `json:"files,omitempty"`
+	Files                *MetaArray[File]               `json:"files,omitempty"`
 	Group                *Group                         `json:"group,omitempty"`
 	ID                   *uuid.UUID                     `json:"id,omitempty"`
 	Meta                 *Meta                          `json:"meta,omitempty"`
@@ -48,8 +48,8 @@ type InvoiceOut struct {
 	VatIncluded          *bool                          `json:"vatIncluded,omitempty"`
 	VatSum               *float64                       `json:"vatSum,omitempty"`
 	CustomerOrder        *CustomerOrder                 `json:"customerOrder,omitempty"`
-	Payments             *Payments                      `json:"payments,omitempty"`
-	Attributes           Attributes                     `json:"attributes,omitempty"`
+	Payments             Slice[Payment]                 `json:"payments,omitempty"`
+	Attributes           Slice[AttributeValue]          `json:"attributes,omitempty"`
 }
 
 func (i InvoiceOut) String() string {
@@ -64,8 +64,6 @@ func (i InvoiceOut) GetMeta() Meta {
 func (i InvoiceOut) MetaType() MetaType {
 	return MetaTypeInvoiceOut
 }
-
-type InvoicesOut = Slice[InvoiceOut]
 
 // InvoiceOutPosition Позиция Счета покупателю.
 // Ключевое слово: invoiceposition
@@ -86,9 +84,9 @@ func (i InvoiceOutPosition) MetaType() MetaType {
 // Документ: Cчет покупателю (invoiceout)
 // Основание, на котором он может быть создан:
 // - Заказ покупателя (customerorder)
-type InvoiceOutTemplateArg struct {
-	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
-}
+//type InvoiceOutTemplateArg struct {
+//	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
+//}
 
 // InvoiceOutService
 // Сервис для работы со счетами покупателей.
@@ -97,35 +95,40 @@ type InvoiceOutService interface {
 	Create(ctx context.Context, invoiceOut *InvoiceOut, params *Params) (*InvoiceOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, invoiceOutList []*InvoiceOut, params *Params) (*[]InvoiceOut, *resty.Response, error)
 	DeleteMany(ctx context.Context, invoiceOutList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*InvoiceOut, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, invoiceOut *InvoiceOut, params *Params) (*InvoiceOut, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*InvoiceOut, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, invoiceOut *InvoiceOut, params *Params) (*InvoiceOut, *resty.Response, error)
 	//endpointTemplate[InvoiceOut]
 	//endpointTemplateBasedOn[InvoiceOut, InvoiceOutTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id *uuid.UUID, params *Params) (*MetaArray[InvoiceOutPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, params *Params) (*InvoiceOutPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, position *InvoiceOutPosition, params *Params) (*InvoiceOutPosition, *resty.Response, error)
-	CreatePosition(ctx context.Context, id *uuid.UUID, position *InvoiceOutPosition) (*InvoiceOutPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id *uuid.UUID, positions []*InvoiceOutPosition) (*[]InvoiceOutPosition, *resty.Response, error)
-	DeletePosition(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (bool, *resty.Response, error)
-	GetPositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*[]TrackingCode, *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id *uuid.UUID, positionID *uuid.UUID, trackingCodes TrackingCodes) (*DeleteManyResponse, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[InvoiceOutPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*InvoiceOutPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InvoiceOutPosition, params *Params) (*InvoiceOutPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id uuid.UUID, position *InvoiceOutPosition) (*InvoiceOutPosition, *resty.Response, error)
+	CreatePositions(ctx context.Context, id uuid.UUID, positions []*InvoiceOutPosition) (*[]InvoiceOutPosition, *resty.Response, error)
+	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
+	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error)
+	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*InvoiceOut, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*InvoiceOut, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewInvoiceOutService(client *Client) InvoiceOutService {

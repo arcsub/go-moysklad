@@ -7,6 +7,24 @@ type Rate struct {
 	Value    *float64  `json:"value,omitempty"`    // Курс валюты в этом документе (содержится в ответе, если значение курса отлично от 1)
 }
 
-func (r Rate) String() string {
-	return Stringify(r)
+func (rate Rate) GetCurrency() Currency {
+	return Deref(rate.Currency)
+}
+
+func (rate Rate) GetValue() float64 {
+	return Deref(rate.Value)
+}
+
+func (rate *Rate) SetCurrency(currency *Currency) *Rate {
+	rate.Currency = currency
+	return rate
+}
+
+func (rate *Rate) SetValue(value float64) *Rate {
+	rate.Value = &value
+	return rate
+}
+
+func (rate Rate) String() string {
+	return Stringify(rate)
 }

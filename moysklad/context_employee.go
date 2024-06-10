@@ -503,23 +503,23 @@ type ContextEmployee struct {
 			View string `json:"view"`
 		} `json:"viewCashFlow"`
 	} `json:"permissions,omitempty"`
-	Created      string   `json:"created"`
-	MiddleName   string   `json:"middleName"`
-	ExternalCode string   `json:"externalCode"`
-	ID           string   `json:"id"`
-	Position     string   `json:"position"`
-	Uid          string   `json:"uid"`
-	Email        string   `json:"email"`
-	Phone        string   `json:"phone"`
-	FirstName    string   `json:"firstName"`
-	Name         string   `json:"name"`
-	LastName     string   `json:"lastName"`
-	FullName     string   `json:"fullName"`
-	ShortFio     string   `json:"shortFio"`
-	AccountID    string   `json:"accountId"`
-	Cashiers     Cashiers `json:"cashiers"`
-	Shared       bool     `json:"shared"`
-	Archived     bool     `json:"archived"`
+	Created      string             `json:"created"`
+	MiddleName   string             `json:"middleName"`
+	ExternalCode string             `json:"externalCode"`
+	ID           string             `json:"id"`
+	Position     string             `json:"position"`
+	Uid          string             `json:"uid"`
+	Email        string             `json:"email"`
+	Phone        string             `json:"phone"`
+	FirstName    string             `json:"firstName"`
+	Name         string             `json:"name"`
+	LastName     string             `json:"lastName"`
+	FullName     string             `json:"fullName"`
+	ShortFio     string             `json:"shortFio"`
+	AccountID    string             `json:"accountId"`
+	Cashiers     MetaArray[Cashier] `json:"cashiers"`
+	Shared       bool               `json:"shared"`
+	Archived     bool               `json:"archived"`
 }
 
 func (contextEmployee ContextEmployee) String() string {

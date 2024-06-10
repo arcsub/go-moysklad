@@ -10,38 +10,38 @@ import (
 // Ключевое слово: cashin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prihodnyj-order
 type CashIn struct {
-	Organization   *Organization `json:"organization,omitempty"`
-	VatSum         *float64      `json:"vatSum,omitempty"`
-	Applicable     *bool         `json:"applicable,omitempty"`
-	Moment         *Timestamp    `json:"moment,omitempty"`
-	Code           *string       `json:"code,omitempty"`
-	Contract       *Contract     `json:"contract,omitempty"`
-	AccountID      *uuid.UUID    `json:"accountId,omitempty"`
-	Deleted        *Timestamp    `json:"deleted,omitempty"`
-	Description    *string       `json:"description,omitempty"`
-	ExternalCode   *string       `json:"externalCode,omitempty"`
-	Files          *Files        `json:"files,omitempty"`
-	Group          *Group        `json:"group,omitempty"`
-	ID             *uuid.UUID    `json:"id,omitempty"`
-	Meta           *Meta         `json:"meta,omitempty"`
-	Operations     Operations    `json:"operations,omitempty"`
-	Agent          *Counterparty `json:"agent,omitempty"`
-	Created        *Timestamp    `json:"created,omitempty"`
-	Owner          *Employee     `json:"owner,omitempty"`
-	PaymentPurpose *string       `json:"paymentPurpose,omitempty"`
-	Printed        *bool         `json:"printed,omitempty"`
-	Project        *Project      `json:"project,omitempty"`
-	Published      *bool         `json:"published,omitempty"`
-	Rate           *Rate         `json:"rate,omitempty"`
-	SalesChannel   *SalesChannel `json:"salesChannel,omitempty"`
-	Shared         *bool         `json:"shared,omitempty"`
-	State          *State        `json:"state,omitempty"`
-	Sum            *float64      `json:"sum,omitempty"`
-	SyncID         *uuid.UUID    `json:"syncId,omitempty"`
-	Updated        *Timestamp    `json:"updated,omitempty"`
-	Name           *string       `json:"name,omitempty"`
-	FactureIn      *FactureIn    `json:"factureIn,omitempty"`
-	Attributes     Attributes    `json:"attributes,omitempty"`
+	Organization   *Organization         `json:"organization,omitempty"`
+	VatSum         *float64              `json:"vatSum,omitempty"`
+	Applicable     *bool                 `json:"applicable,omitempty"`
+	Moment         *Timestamp            `json:"moment,omitempty"`
+	Code           *string               `json:"code,omitempty"`
+	Contract       *Contract             `json:"contract,omitempty"`
+	AccountID      *uuid.UUID            `json:"accountId,omitempty"`
+	Deleted        *Timestamp            `json:"deleted,omitempty"`
+	Description    *string               `json:"description,omitempty"`
+	ExternalCode   *string               `json:"externalCode,omitempty"`
+	Files          *MetaArray[File]      `json:"files,omitempty"`
+	Group          *Group                `json:"group,omitempty"`
+	ID             *uuid.UUID            `json:"id,omitempty"`
+	Meta           *Meta                 `json:"meta,omitempty"`
+	Operations     Operations            `json:"operations,omitempty"`
+	Agent          *Counterparty         `json:"agent,omitempty"`
+	Created        *Timestamp            `json:"created,omitempty"`
+	Owner          *Employee             `json:"owner,omitempty"`
+	PaymentPurpose *string               `json:"paymentPurpose,omitempty"`
+	Printed        *bool                 `json:"printed,omitempty"`
+	Project        *Project              `json:"project,omitempty"`
+	Published      *bool                 `json:"published,omitempty"`
+	Rate           *Rate                 `json:"rate,omitempty"`
+	SalesChannel   *SalesChannel         `json:"salesChannel,omitempty"`
+	Shared         *bool                 `json:"shared,omitempty"`
+	State          *State                `json:"state,omitempty"`
+	Sum            *float64              `json:"sum,omitempty"`
+	SyncID         *uuid.UUID            `json:"syncId,omitempty"`
+	Updated        *Timestamp            `json:"updated,omitempty"`
+	Name           *string               `json:"name,omitempty"`
+	FactureIn      *FactureIn            `json:"factureIn,omitempty"`
+	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
 func (cashIn CashIn) GetOrganization() Organization {
@@ -84,7 +84,7 @@ func (cashIn CashIn) GetExternalCode() string {
 	return Deref(cashIn.ExternalCode)
 }
 
-func (cashIn CashIn) GetFiles() Files {
+func (cashIn CashIn) GetFiles() MetaArray[File] {
 	return Deref(cashIn.Files)
 }
 
@@ -168,7 +168,7 @@ func (cashIn CashIn) GetFactureIn() FactureIn {
 	return Deref(cashIn.FactureIn)
 }
 
-func (cashIn CashIn) GetAttributes() Attributes {
+func (cashIn CashIn) GetAttributes() Slice[AttributeValue] {
 	return cashIn.Attributes
 }
 
@@ -212,8 +212,8 @@ func (cashIn *CashIn) SetExternalCode(externalCode string) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetFiles(files *Files) *CashIn {
-	cashIn.Files = files
+func (cashIn *CashIn) SetFiles(files Slice[File]) *CashIn {
+	cashIn.Files = NewMetaArrayRows(files)
 	return cashIn
 }
 
@@ -277,8 +277,8 @@ func (cashIn *CashIn) SetSum(sum *float64) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetSyncID(syncID *uuid.UUID) *CashIn {
-	cashIn.SyncID = syncID
+func (cashIn *CashIn) SetSyncID(syncID uuid.UUID) *CashIn {
+	cashIn.SyncID = &syncID
 	return cashIn
 }
 
@@ -292,7 +292,7 @@ func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetAttributes(attributes Attributes) *CashIn {
+func (cashIn *CashIn) SetAttributes(attributes Slice[AttributeValue]) *CashIn {
 	cashIn.Attributes = attributes
 	return cashIn
 }
@@ -305,6 +305,10 @@ func (cashIn CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
 }
 
+func (cashIn CashIn) AsPayment() *Payment {
+	return &Payment{Meta: cashIn.GetMeta()}
+}
+
 // CashInTemplateArg
 // Документ: Приходный ордер (cashin)
 // Основание, на котором он может быть создан:
@@ -313,13 +317,13 @@ func (cashIn CashIn) MetaType() MetaType {
 // - Отгрузка (demand)
 // - Счет покупателю (invoiceout)
 // - Полученный отчет комиссионера (commissionreportin)
-type CashInTemplateArg struct {
-	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
-	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
-	Demand             *MetaWrapper `json:"demand,omitempty"`
-	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
-	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
-}
+//type CashInTemplateArg struct {
+//	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
+//	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
+//	Demand             *MetaWrapper `json:"demand,omitempty"`
+//	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
+//	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
+//}
 
 // CashInService
 // Сервис для работы с приходными ордерами.
@@ -328,25 +332,30 @@ type CashInService interface {
 	Create(ctx context.Context, cashIn *CashIn, params *Params) (*CashIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, cashInList []*CashIn, params *Params) (*[]CashIn, *resty.Response, error)
 	DeleteMany(ctx context.Context, cashInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	//Template(ctx context.Context) (*CashIn, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*CashIn, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, cashIn *CashIn, params *Params) (*CashIn, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*CashIn, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	MoveToTrash(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CashIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params *Params) (*CashIn, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CashIn, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
 func NewCashInService(client *Client) CashInService {

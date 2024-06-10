@@ -62,3 +62,7 @@ func (slice Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
 	}
 	return append(chunks, items)
 }
+
+func NewSlice[T any]() Slice[T] {
+	return make(Slice[T], 0)
+}

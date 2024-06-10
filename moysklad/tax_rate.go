@@ -22,11 +22,86 @@ type TaxRate struct {
 	Updated   *Timestamp `json:"updated,omitempty"`   // Момент последнего обновления сущности
 }
 
-func (t TaxRate) String() string {
-	return Stringify(t)
+func (taxRate TaxRate) GetAccountID() uuid.UUID {
+	return Deref(taxRate.AccountID)
 }
 
-func (t TaxRate) MetaType() MetaType {
+func (taxRate TaxRate) GetArchived() bool {
+	return Deref(taxRate.Archived)
+}
+
+func (taxRate TaxRate) GetComment() string {
+	return Deref(taxRate.Comment)
+}
+
+func (taxRate TaxRate) GetGroup() Group {
+	return Deref(taxRate.Group)
+}
+
+func (taxRate TaxRate) GetID() uuid.UUID {
+	return Deref(taxRate.ID)
+}
+
+func (taxRate TaxRate) GetMeta() Meta {
+	return Deref(taxRate.Meta)
+}
+
+func (taxRate TaxRate) GetRate() int {
+	return Deref(taxRate.Rate)
+}
+
+func (taxRate TaxRate) GetOwner() Employee {
+	return Deref(taxRate.Owner)
+}
+
+func (taxRate TaxRate) GetShared() bool {
+	return Deref(taxRate.Shared)
+}
+
+func (taxRate TaxRate) GetUpdated() Timestamp {
+	return Deref(taxRate.Updated)
+}
+
+func (taxRate *TaxRate) SetArchived(archived bool) *TaxRate {
+	taxRate.Archived = &archived
+	return taxRate
+}
+
+func (taxRate *TaxRate) SetComment(comment string) *TaxRate {
+	taxRate.Comment = &comment
+	return taxRate
+}
+
+func (taxRate *TaxRate) SetGroup(group *Group) *TaxRate {
+	taxRate.Group = group
+	return taxRate
+}
+
+func (taxRate *TaxRate) SetMeta(meta *Meta) *TaxRate {
+	taxRate.Meta = meta
+	return taxRate
+}
+
+func (taxRate *TaxRate) SetRate(rate int) *TaxRate {
+	taxRate.Rate = &rate
+	return taxRate
+}
+
+func (taxRate *TaxRate) SetOwner(owner *Employee) *TaxRate {
+	taxRate.Owner = owner
+	return taxRate
+}
+
+func (taxRate *TaxRate) SetShared(shared bool) *TaxRate {
+	taxRate.Shared = &shared
+	return taxRate
+}
+
+func (taxRate TaxRate) String() string {
+	return Stringify(taxRate)
+}
+
+func (taxRate TaxRate) MetaType() MetaType {
 	return MetaTypeTaxRate
 }
 
@@ -37,9 +112,9 @@ type TaxRateService interface {
 	Create(ctx context.Context, taxRate *TaxRate, params *Params) (*TaxRate, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, taxRateList []*TaxRate, params *Params) (*[]TaxRate, *resty.Response, error)
 	DeleteMany(ctx context.Context, taxRateList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*TaxRate, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, taxRate *TaxRate, params *Params) (*TaxRate, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*TaxRate, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, taxRate *TaxRate, params *Params) (*TaxRate, *resty.Response, error)
 }
 
 func NewTaxRateService(client *Client) TaxRateService {

@@ -10,53 +10,53 @@ import (
 // Ключевое слово: product
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar
 type Product struct {
-	Supplier            *Counterparty  `json:"supplier,omitempty"`
-	OnTap               *bool          `json:"onTap,omitempty"`
-	Code                *string        `json:"code,omitempty"`
-	Description         *string        `json:"description,omitempty"`
-	ExternalCode        *string        `json:"externalCode,omitempty"`
-	ID                  *uuid.UUID     `json:"id,omitempty"`
-	Meta                *Meta          `json:"meta,omitempty"`
-	Name                *string        `json:"name,omitempty"`
-	Alcoholic           *Alcoholic     `json:"alcoholic,omitempty"`
-	Archived            *bool          `json:"archived,omitempty"`
-	Article             *string        `json:"article,omitempty"`
-	PaymentItemType     PaymentItem    `json:"paymentItemType,omitempty"`
-	BuyPrice            *BuyPrice      `json:"buyPrice,omitempty"`
-	Country             *Country       `json:"country,omitempty"`
-	DiscountProhibited  *bool          `json:"discountProhibited,omitempty"`
-	EffectiveVat        *int           `json:"effectiveVat,omitempty"`
-	EffectiveVatEnabled *bool          `json:"effectiveVatEnabled,omitempty"`
-	Files               *Files         `json:"files,omitempty"`
-	Group               *Group         `json:"group,omitempty"`
-	Images              *Images        `json:"images,omitempty"`
-	IsSerialTrackable   *bool          `json:"isSerialTrackable,omitempty"`
-	MinPrice            *MinPrice      `json:"minPrice,omitempty"`
-	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
-	UseParentVat        *bool          `json:"useParentVat,omitempty"`
-	Owner               *Employee      `json:"owner,omitempty"`
-	Packs               Packs          `json:"packs,omitempty"`
-	PartialDisposal     *bool          `json:"partialDisposal,omitempty"`
-	PathName            *string        `json:"pathName,omitempty"`
-	Weight              *float64       `json:"weight,omitempty"`
-	PpeType             *string        `json:"ppeType,omitempty"`
-	ProductFolder       *ProductFolder `json:"productFolder,omitempty"`
-	SalePrices          SalePrices     `json:"salePrices,omitempty"`
-	Shared              *bool          `json:"shared,omitempty"`
-	MinimumBalance      *float64       `json:"minimumBalance,omitempty"`
-	SyncID              *uuid.UUID     `json:"syncId,omitempty"`
-	AccountID           *uuid.UUID     `json:"accountId,omitempty"`
-	Things              Things         `json:"things,omitempty"`
-	Tnved               *string        `json:"tnved,omitempty"`
-	VatEnabled          *bool          `json:"vatEnabled,omitempty"`
-	Uom                 *Uom           `json:"uom,omitempty"`
-	Updated             *Timestamp     `json:"updated,omitempty"`
-	Barcodes            Barcodes       `json:"barcodes,omitempty"`
-	VariantsCount       *int           `json:"variantsCount,omitempty"`
-	Vat                 *int           `json:"vat,omitempty"`
-	TrackingType        TrackingType   `json:"trackingType,omitempty"`
-	Volume              *float64       `json:"volume,omitempty"`
-	Attributes          Attributes     `json:"attributes,omitempty"`
+	Supplier            *Counterparty         `json:"supplier,omitempty"`
+	OnTap               *bool                 `json:"onTap,omitempty"`
+	Code                *string               `json:"code,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	ExternalCode        *string               `json:"externalCode,omitempty"`
+	ID                  *uuid.UUID            `json:"id,omitempty"`
+	Meta                *Meta                 `json:"meta,omitempty"`
+	Name                *string               `json:"name,omitempty"`
+	Alcoholic           *Alcoholic            `json:"alcoholic,omitempty"`
+	Archived            *bool                 `json:"archived,omitempty"`
+	Article             *string               `json:"article,omitempty"`
+	PaymentItemType     PaymentItem           `json:"paymentItemType,omitempty"`
+	BuyPrice            *BuyPrice             `json:"buyPrice,omitempty"`
+	Country             *Country              `json:"country,omitempty"`
+	DiscountProhibited  *bool                 `json:"discountProhibited,omitempty"`
+	EffectiveVat        *int                  `json:"effectiveVat,omitempty"`
+	EffectiveVatEnabled *bool                 `json:"effectiveVatEnabled,omitempty"`
+	Files               *MetaArray[File]      `json:"files,omitempty"`
+	Group               *Group                `json:"group,omitempty"`
+	Images              *MetaArray[Image]     `json:"images,omitempty"`
+	IsSerialTrackable   *bool                 `json:"isSerialTrackable,omitempty"`
+	MinPrice            *MinPrice             `json:"minPrice,omitempty"`
+	TaxSystem           GoodTaxSystem         `json:"taxSystem,omitempty"`
+	UseParentVat        *bool                 `json:"useParentVat,omitempty"`
+	Owner               *Employee             `json:"owner,omitempty"`
+	Packs               Slice[Pack]           `json:"packs,omitempty"`
+	PartialDisposal     *bool                 `json:"partialDisposal,omitempty"`
+	PathName            *string               `json:"pathName,omitempty"`
+	Weight              *float64              `json:"weight,omitempty"`
+	PpeType             *string               `json:"ppeType,omitempty"`
+	ProductFolder       *ProductFolder        `json:"productFolder,omitempty"`
+	SalePrices          Slice[SalePrice]      `json:"salePrices,omitempty"`
+	Shared              *bool                 `json:"shared,omitempty"`
+	MinimumBalance      *float64              `json:"minimumBalance,omitempty"`
+	SyncID              *uuid.UUID            `json:"syncId,omitempty"`
+	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
+	Things              Slice[string]         `json:"things,omitempty"`
+	Tnved               *string               `json:"tnved,omitempty"`
+	VatEnabled          *bool                 `json:"vatEnabled,omitempty"`
+	Uom                 *Uom                  `json:"uom,omitempty"`
+	Updated             *Timestamp            `json:"updated,omitempty"`
+	Barcodes            Slice[Barcode]        `json:"barcodes,omitempty"`
+	VariantsCount       *int                  `json:"variantsCount,omitempty"`
+	Vat                 *int                  `json:"vat,omitempty"`
+	TrackingType        TrackingType          `json:"trackingType,omitempty"`
+	Volume              *float64              `json:"volume,omitempty"`
+	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
 func NewProductFromAssortment(assortmentPosition AssortmentPosition) *Product {
@@ -139,7 +139,7 @@ func (product Product) GetEffectiveVatEnabled() bool {
 	return Deref(product.EffectiveVatEnabled)
 }
 
-func (product Product) GetFiles() Files {
+func (product Product) GetFiles() MetaArray[File] {
 	return Deref(product.Files)
 }
 
@@ -147,7 +147,7 @@ func (product Product) GetGroup() Group {
 	return Deref(product.Group)
 }
 
-func (product Product) GetImages() Images {
+func (product Product) GetImages() MetaArray[Image] {
 	return Deref(product.Images)
 }
 
@@ -171,7 +171,7 @@ func (product Product) GetOwner() Employee {
 	return Deref(product.Owner)
 }
 
-func (product Product) GetPacks() Packs {
+func (product Product) GetPacks() Slice[Pack] {
 	return product.Packs
 }
 
@@ -195,7 +195,7 @@ func (product Product) GetProductFolder() ProductFolder {
 	return Deref(product.ProductFolder)
 }
 
-func (product Product) GetSalePrices() SalePrices {
+func (product Product) GetSalePrices() Slice[SalePrice] {
 	return product.SalePrices
 }
 
@@ -215,7 +215,7 @@ func (product Product) GetAccountID() uuid.UUID {
 	return Deref(product.AccountID)
 }
 
-func (product Product) GetThings() Things {
+func (product Product) GetThings() Slice[string] {
 	return product.Things
 }
 
@@ -235,7 +235,7 @@ func (product Product) GetUpdated() Timestamp {
 	return Deref(product.Updated)
 }
 
-func (product Product) GetBarcodes() Barcodes {
+func (product Product) GetBarcodes() Slice[Barcode] {
 	return product.Barcodes
 }
 
@@ -255,7 +255,7 @@ func (product Product) GetVolume() float64 {
 	return Deref(product.Volume)
 }
 
-func (product Product) GetAttributes() Attributes {
+func (product Product) GetAttributes() Slice[AttributeValue] {
 	return product.Attributes
 }
 
@@ -329,8 +329,8 @@ func (product *Product) SetDiscountProhibited(discountProhibited bool) *Product 
 	return product
 }
 
-func (product *Product) SetFiles(files *Files) *Product {
-	product.Files = files
+func (product *Product) SetFiles(files Slice[File]) *Product {
+	product.Files = NewMetaArrayRows(files)
 	return product
 }
 
@@ -339,8 +339,8 @@ func (product *Product) SetGroup(group *Group) *Product {
 	return product
 }
 
-func (product *Product) SetImages(images *Images) *Product {
-	product.Images = images
+func (product *Product) SetImages(images Slice[Image]) *Product {
+	product.Images = NewMetaArrayRows(images)
 	return product
 }
 
@@ -369,7 +369,7 @@ func (product *Product) SetOwner(owner *Employee) *Product {
 	return product
 }
 
-func (product *Product) SetPacks(packs Packs) *Product {
+func (product *Product) SetPacks(packs Slice[Pack]) *Product {
 	product.Packs = packs
 	return product
 }
@@ -394,7 +394,7 @@ func (product *Product) SetProductFolder(productFolder *ProductFolder) *Product 
 	return product
 }
 
-func (product *Product) SetSalePrices(salePrices SalePrices) *Product {
+func (product *Product) SetSalePrices(salePrices Slice[SalePrice]) *Product {
 	product.SalePrices = salePrices
 	return product
 }
@@ -409,12 +409,12 @@ func (product *Product) SetMinimumBalance(minimumBalance float64) *Product {
 	return product
 }
 
-func (product *Product) SetSyncID(syncID *uuid.UUID) *Product {
-	product.SyncID = syncID
+func (product *Product) SetSyncID(syncID uuid.UUID) *Product {
+	product.SyncID = &syncID
 	return product
 }
 
-func (product *Product) SetThings(things Things) *Product {
+func (product *Product) SetThings(things Slice[string]) *Product {
 	product.Things = things
 	return product
 }
@@ -434,7 +434,7 @@ func (product *Product) SetUom(uom *Uom) *Product {
 	return product
 }
 
-func (product *Product) SetBarcodes(barcodes Barcodes) *Product {
+func (product *Product) SetBarcodes(barcodes Slice[Barcode]) *Product {
 	product.Barcodes = barcodes
 	return product
 }
@@ -454,7 +454,7 @@ func (product *Product) SetVolume(volume float64) *Product {
 	return product
 }
 
-func (product *Product) SetAttributes(attributes Attributes) *Product {
+func (product *Product) SetAttributes(attributes Slice[AttributeValue]) *Product {
 	product.Attributes = attributes
 	return product
 }
@@ -523,28 +523,28 @@ type ProductService interface {
 	Create(ctx context.Context, product *Product, params *Params) (*Product, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productList []*Product, params *Params) (*[]Product, *resty.Response, error)
 	DeleteMany(ctx context.Context, productList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Product, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, product *Product, params *Params) (*Product, *resty.Response, error)
-	GetImages(ctx context.Context, id *uuid.UUID) (*MetaArray[Image], *resty.Response, error)
-	CreateImage(ctx context.Context, id *uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
-	UpdateImages(ctx context.Context, id *uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
-	DeleteImage(ctx context.Context, id *uuid.UUID, imageId *uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id *uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*Product, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Product, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, product *Product, params *Params) (*Product, *resty.Response, error)
+	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
+	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
+	UpdateImages(ctx context.Context, id uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
+	DeleteImage(ctx context.Context, id uuid.UUID, imageId uuid.UUID) (bool, *resty.Response, error)
+	DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Product, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	GetAudit(ctx context.Context, id *uuid.UUID, params *Params) (*List[AuditEvent], *resty.Response, error)
-	PrintLabel(ctx context.Context, id *uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetAudit(ctx context.Context, id uuid.UUID, params *Params) (*List[AuditEvent], *resty.Response, error)
+	PrintLabel(ctx context.Context, id uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error)
 }
 
 func NewProductService(client *Client) ProductService {

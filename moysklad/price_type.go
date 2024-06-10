@@ -14,12 +14,41 @@ type PriceType struct {
 	Name         *string    `json:"name,omitempty"`         // Наименование Типа цены
 }
 
-func (p PriceType) String() string {
-	return Stringify(p)
+func (priceType PriceType) GetExternalCode() string {
+	return Deref(priceType.ExternalCode)
 }
 
-func (p PriceType) MetaType() MetaType {
+func (priceType PriceType) GetID() uuid.UUID {
+	return Deref(priceType.ID)
+}
+
+func (priceType PriceType) GetMeta() Meta {
+	return Deref(priceType.Meta)
+}
+
+func (priceType PriceType) GetName() string {
+	return Deref(priceType.Name)
+}
+
+func (priceType *PriceType) SetExternalCode(externalCode string) *PriceType {
+	priceType.ExternalCode = &externalCode
+	return priceType
+}
+
+func (priceType *PriceType) SetMeta(meta *Meta) *PriceType {
+	priceType.Meta = meta
+	return priceType
+}
+
+func (priceType *PriceType) SetName(name string) *PriceType {
+	priceType.Name = &name
+	return priceType
+}
+
+func (priceType PriceType) String() string {
+	return Stringify(priceType)
+}
+
+func (priceType PriceType) MetaType() MetaType {
 	return MetaTypePriceType
 }
-
-type PriceTypes = Slice[PriceType]
