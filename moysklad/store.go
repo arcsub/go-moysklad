@@ -396,97 +396,97 @@ func NewStoreService(client *Client) StoreService {
 
 // GetSlots Получить список всех Ячеек Склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-poluchit-qchejki-sklada
-func (s *storeService) GetSlots(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots", s.uri, storeID)
-	return NewRequestBuilder[List[Slot]](s.client, path).Get(ctx)
+func (service *storeService) GetSlots(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
+	return NewRequestBuilder[List[Slot]](service.client, path).Get(ctx)
 }
 
 // CreateSlot Запрос на создание Ячейки Склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-sozdat-qchejku-sklada
-func (s *storeService) CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots", s.uri, storeID)
-	return NewRequestBuilder[Slot](s.client, path).Post(ctx, slot)
+func (service *storeService) CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
+	return NewRequestBuilder[Slot](service.client, path).Post(ctx, slot)
 }
 
 // CreateOrUpdateSlots Запрос создания и обновления нескольких Ячеек Склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-massowoe-sozdanie-i-obnowlenie-qcheek-sklada
-func (s *storeService) CreateOrUpdateSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*Slice[Slot], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots", s.uri, storeID)
-	return NewRequestBuilder[Slice[Slot]](s.client, path).Post(ctx, slots)
+func (service *storeService) CreateOrUpdateSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*Slice[Slot], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
+	return NewRequestBuilder[Slice[Slot]](service.client, path).Post(ctx, slots)
 }
 
 // DeleteSlots Запрос на массовое удаление Ячеек склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-massowoe-udalenie-qcheek-sklada
-func (s *storeService) DeleteSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/delete", s.uri, storeID)
-	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, slots)
+func (service *storeService) DeleteSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*DeleteManyResponse, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots/delete", service.uri, storeID)
+	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, slots)
 }
 
 // GetSlotByID Запрос на получение отдельной Ячейки Склада с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-poluchit-qchejku-sklada
-func (s *storeService) GetSlotByID(ctx context.Context, storeID, slotID uuid.UUID) (*Slot, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/%s", s.uri, storeID, slotID)
-	return NewRequestBuilder[Slot](s.client, path).Get(ctx)
+func (service *storeService) GetSlotByID(ctx context.Context, storeID, slotID uuid.UUID) (*Slot, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots/%s", service.uri, storeID, slotID)
+	return NewRequestBuilder[Slot](service.client, path).Get(ctx)
 }
 
 // DeleteSlot Запрос на удаление Ячейки склада с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-udalit-qchejku-sklada
-func (s *storeService) DeleteSlot(ctx context.Context, storeID, slotID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/%s", s.uri, storeID, slotID)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+func (service *storeService) DeleteSlot(ctx context.Context, storeID, slotID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots/%s", service.uri, storeID, slotID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // UpdateSlot Запрос на обновление Ячейки склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-izmenit-qchejku-sklada
-func (s *storeService) UpdateSlot(ctx context.Context, storeID, slotID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/%s", s.uri, storeID, slotID)
-	return NewRequestBuilder[Slot](s.client, path).Put(ctx, slot)
+func (service *storeService) UpdateSlot(ctx context.Context, storeID, slotID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/slots/%s", service.uri, storeID, slotID)
+	return NewRequestBuilder[Slot](service.client, path).Put(ctx, slot)
 }
 
 // GetZones Получить список всех Зон.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-poluchit-zony-sklada
-func (s *storeService) GetZones(ctx context.Context, storeID uuid.UUID) (*List[Zone], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones", s.uri, storeID)
-	return NewRequestBuilder[List[Zone]](s.client, path).Get(ctx)
+func (service *storeService) GetZones(ctx context.Context, storeID uuid.UUID) (*List[Zone], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
+	return NewRequestBuilder[List[Zone]](service.client, path).Get(ctx)
 }
 
 // CreateZone Запрос на создание Зоны склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-sozdat-zonu-sklada
-func (s *storeService) CreateZone(ctx context.Context, storeID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones", s.uri, storeID)
-	return NewRequestBuilder[Zone](s.client, path).Post(ctx, zone)
+func (service *storeService) CreateZone(ctx context.Context, storeID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
+	return NewRequestBuilder[Zone](service.client, path).Post(ctx, zone)
 }
 
 // CreateOrUpdateZones Запрос на создание и обновление нескольких Зон склада.
-func (s *storeService) CreateOrUpdateZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*Slice[Zone], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones", s.uri, storeID)
-	return NewRequestBuilder[Slice[Zone]](s.client, path).Post(ctx, zones)
+func (service *storeService) CreateOrUpdateZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*Slice[Zone], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
+	return NewRequestBuilder[Slice[Zone]](service.client, path).Post(ctx, zones)
 }
 
 // DeleteZones Запрос на массовое удаление Зон склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-massowoe-udalenie-zon-sklada
-func (s *storeService) DeleteZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/delete", s.uri, storeID)
-	return NewRequestBuilder[DeleteManyResponse](s.client, path).Post(ctx, zones)
+func (service *storeService) DeleteZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*DeleteManyResponse, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones/delete", service.uri, storeID)
+	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, zones)
 }
 
 // DeleteZone Запрос на удаление Зоны склада с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-udalit-zonu-sklada
-func (s *storeService) DeleteZone(ctx context.Context, storeID, zoneID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/%s", s.uri, storeID, zoneID)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+func (service *storeService) DeleteZone(ctx context.Context, storeID, zoneID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones/%s", service.uri, storeID, zoneID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // GetZoneByID Запрос на получение отдельной Зоны Склада с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-poluchit-zonu-sklada
-func (s *storeService) GetZoneByID(ctx context.Context, storeID, zoneID uuid.UUID) (*Zone, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/%s", s.uri, storeID, zoneID)
-	return NewRequestBuilder[Zone](s.client, path).Get(ctx)
+func (service *storeService) GetZoneByID(ctx context.Context, storeID, zoneID uuid.UUID) (*Zone, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones/%s", service.uri, storeID, zoneID)
+	return NewRequestBuilder[Zone](service.client, path).Get(ctx)
 }
 
 // UpdateZone Запрос на обновление Зоны склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-izmenit-zonu-sklada
-func (s *storeService) UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/%s", s.uri, storeID, zoneID)
-	return NewRequestBuilder[Zone](s.client, path).Put(ctx, zone)
+func (service *storeService) UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/zones/%s", service.uri, storeID, zoneID)
+	return NewRequestBuilder[Zone](service.client, path).Put(ctx, zone)
 }

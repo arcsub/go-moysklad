@@ -141,7 +141,7 @@ func (factureOut FactureOut) GetState() State {
 	return Deref(factureOut.State)
 }
 
-func (factureOut FactureOut) GetStateContractId() string {
+func (factureOut FactureOut) GetStateContractID() string {
 	return Deref(factureOut.StateContractID)
 }
 

@@ -541,7 +541,7 @@ type ProductService interface {
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
 	UpdateImages(ctx context.Context, id uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
-	DeleteImage(ctx context.Context, id uuid.UUID, imageId uuid.UUID) (bool, *resty.Response, error)
+	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
 	DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Product, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)

@@ -14,51 +14,6 @@ type Address struct {
 	Street     *string  `json:"street,omitempty"`     // Улица
 }
 
-func (address *Address) SetAddInfo(addInfo string) *Address {
-	address.AddInfo = &addInfo
-	return address
-}
-
-func (address *Address) SetApartment(apartment string) *Address {
-	address.Apartment = &apartment
-	return address
-}
-
-func (address *Address) SetCity(city string) *Address {
-	address.City = &city
-	return address
-}
-
-func (address *Address) SetComment(comment string) *Address {
-	address.Comment = &comment
-	return address
-}
-
-func (address *Address) SetCountry(country *Country) *Address {
-	address.Country = &Country{Meta: country.Meta}
-	return address
-}
-
-func (address *Address) SetHouse(house string) *Address {
-	address.House = &house
-	return address
-}
-
-func (address *Address) SetPostalCode(postalCode string) *Address {
-	address.PostalCode = &postalCode
-	return address
-}
-
-func (address *Address) SetRegion(region *Region) *Address {
-	address.Region = &Region{Meta: region.Meta}
-	return address
-}
-
-func (address *Address) SetStreet(street string) *Address {
-	address.Street = &street
-	return address
-}
-
 func (address Address) GetAddInfo() string {
 	return Deref(address.AddInfo)
 }
@@ -93,6 +48,51 @@ func (address Address) GetRegion() Region {
 
 func (address Address) GetStreet() string {
 	return Deref(address.Street)
+}
+
+func (address *Address) SetAddInfo(addInfo string) *Address {
+	address.AddInfo = &addInfo
+	return address
+}
+
+func (address *Address) SetApartment(apartment string) *Address {
+	address.Apartment = &apartment
+	return address
+}
+
+func (address *Address) SetCity(city string) *Address {
+	address.City = &city
+	return address
+}
+
+func (address *Address) SetComment(comment string) *Address {
+	address.Comment = &comment
+	return address
+}
+
+func (address *Address) SetCountry(country *Country) *Address {
+	address.Country = country.Clean()
+	return address
+}
+
+func (address *Address) SetHouse(house string) *Address {
+	address.House = &house
+	return address
+}
+
+func (address *Address) SetPostalCode(postalCode string) *Address {
+	address.PostalCode = &postalCode
+	return address
+}
+
+func (address *Address) SetRegion(region *Region) *Address {
+	address.Region = region.Clean()
+	return address
+}
+
+func (address *Address) SetStreet(street string) *Address {
+	address.Street = &street
+	return address
 }
 
 func (address Address) String() string {

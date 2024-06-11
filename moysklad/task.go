@@ -8,6 +8,7 @@ import (
 )
 
 // Task Задача.
+// TODO
 // Ключевое слово: task
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha
 type Task struct {
@@ -148,41 +149,41 @@ func NewTaskService(client *Client) TaskService {
 
 // GetNotes Запрос на получение списка всех комментариев данной Задачи.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarii-zadachi
-func (s *taskService) GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskID)
-	return NewRequestBuilder[List[TaskNote]](s.client, path).SetParams(params).Get(ctx)
+func (service *taskService) GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateNote Запрос на создание нового комментария к Задаче.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-sozdat-kommentarij-zadachi
-func (s *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskID)
-	return NewRequestBuilder[TaskNote](s.client, path).Post(ctx, taskNote)
+func (service *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	return NewRequestBuilder[TaskNote](service.client, path).Post(ctx, taskNote)
 }
 
 // CreateNotes Запрос на создание нескольких комментариев к Задаче.
-func (s *taskService) CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskID)
-	return NewRequestBuilder[[]TaskNote](s.client, path).Post(ctx, taskNotes)
+func (service *taskService) CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	return NewRequestBuilder[[]TaskNote](service.client, path).Post(ctx, taskNotes)
 }
 
 // GetNoteByID Отдельный комментарий к Задаче с указанным id комментария.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarij-k-zadache
-func (s *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskID, taskNoteID)
-	return NewRequestBuilder[TaskNote](s.client, path).Get(ctx)
+func (service *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, taskID, taskNoteID)
+	return NewRequestBuilder[TaskNote](service.client, path).Get(ctx)
 }
 
 // UpdateNote Запрос на обновление отдельного комментария к Задаче.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-izmenit-kommentarij-k-zadache
-func (s *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskID, taskNoteID)
-	return NewRequestBuilder[TaskNote](s.client, path).Put(ctx, taskNote)
+func (service *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, taskID, taskNoteID)
+	return NewRequestBuilder[TaskNote](service.client, path).Put(ctx, taskNote)
 }
 
 // DeleteNote Запрос на удаление отдельного комментария к Задаче с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-udalit-kommentarij
-func (s *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error) {
+func (service *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("%s/notes/%s", taskID, taskNoteID)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

@@ -204,8 +204,8 @@ const (
 	GroupByConsignment GroupByType = "consignment" // Выдает товары, модификации, серии
 )
 
-func (s GroupByType) String() string {
-	return string(s)
+func (groupByType GroupByType) String() string {
+	return string(groupByType)
 }
 
 // Листание.

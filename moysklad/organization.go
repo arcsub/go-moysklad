@@ -508,7 +508,7 @@ type OrganizationService interface {
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
-	GetAccountByID(ctx context.Context, id uuid.UUID, accountId uuid.UUID) (*AgentAccount, *resty.Response, error)
+	GetAccountByID(ctx context.Context, id uuid.UUID, accountID uuid.UUID) (*AgentAccount, *resty.Response, error)
 	UpdateAccounts(ctx context.Context, id uuid.UUID, accounts Slice[AgentAccount]) (*MetaArray[AgentAccount], *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Organization, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)

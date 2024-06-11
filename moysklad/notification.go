@@ -57,16 +57,16 @@ func NewNotificationService(client *Client) NotificationService {
 
 // MarkAsRead Отметить Уведомление как прочитанное.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-uwedomlenie-kak-prochitannoe
-func (s *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/markasread", s.uri, id)
-	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
+func (service *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/markasread", service.uri, id)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }
 
 // MarkAsReadAll Отметить все Уведомления как прочитанные.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/notification/#uwedomleniq-uwedomlenie-otmetit-wse-uwedomleniq-kak-prochitannye
-func (s *notificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/markasreadall", s.uri)
-	_, resp, err := NewRequestBuilder[any](s.client, path).Put(ctx, nil)
+func (service *notificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/markasreadall", service.uri)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }

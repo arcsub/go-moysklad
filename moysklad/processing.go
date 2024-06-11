@@ -459,7 +459,7 @@ type processingService struct {
 	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointAttributes
 	endpointSyncID[Processing]
-	endpointRemove
+	endpointTrash
 	endpointStates
 }
 
@@ -477,7 +477,7 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[Processing]{e},
-		endpointRemove:           endpointRemove{e},
+		endpointTrash:            endpointTrash{e},
 		endpointStates:           endpointStates{e},
 	}
 }

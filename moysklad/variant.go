@@ -324,7 +324,7 @@ type VariantService interface {
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*[]*Image, *resty.Response, error)
 	UpdateImages(ctx context.Context, id uuid.UUID, images []*Image) (*[]Image, *resty.Response, error)
-	DeleteImage(ctx context.Context, id uuid.UUID, imageId uuid.UUID) (bool, *resty.Response, error)
+	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
 	DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
@@ -368,33 +368,33 @@ func NewVariantService(client *Client) VariantService {
 
 // CreateCharacteristic Создать характеристику.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-harakteristiki-modifikacij-sozdat-harakteristiku
-func (s *variantService) CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics", s.uri)
-	return NewRequestBuilder[Characteristic](s.client, path).Post(ctx, characteristic)
+func (service *variantService) CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
+	path := fmt.Sprintf("%s/metadata/characteristics", service.uri)
+	return NewRequestBuilder[Characteristic](service.client, path).Post(ctx, characteristic)
 }
 
 // CreateCharacteristics Массовое создание Характеристик.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-harakteristiki-modifikacij-massowoe-sozdanie-harakteristik
-func (s *variantService) CreateCharacteristics(ctx context.Context, characteristics []*Characteristic) (*[]Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics", s.uri)
-	return NewRequestBuilder[[]Characteristic](s.client, path).Post(ctx, characteristics)
+func (service *variantService) CreateCharacteristics(ctx context.Context, characteristics []*Characteristic) (*[]Characteristic, *resty.Response, error) {
+	path := fmt.Sprintf("%s/metadata/characteristics", service.uri)
+	return NewRequestBuilder[[]Characteristic](service.client, path).Post(ctx, characteristics)
 }
 
 // GetCharacteristicByID Получить Характеристику.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-harakteristiki-modifikacij-poluchit-harakteristiku
-func (s *variantService) GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
-	return NewRequestBuilder[Characteristic](s.client, path).Get(ctx)
+func (service *variantService) GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error) {
+	path := fmt.Sprintf("%s/metadata/characteristics/%s", service.uri, id)
+	return NewRequestBuilder[Characteristic](service.client, path).Get(ctx)
 }
 
 // UpdateCharacteristic Изменить характеристику.
-func (s *variantService) UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
-	return NewRequestBuilder[Characteristic](s.client, path).Put(ctx, characteristic)
+func (service *variantService) UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
+	path := fmt.Sprintf("%s/metadata/characteristics/%s", service.uri, id)
+	return NewRequestBuilder[Characteristic](service.client, path).Put(ctx, characteristic)
 }
 
 // DeleteCharacteristic Удалить характеристику.
-func (s *variantService) DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics/%s", s.uri, id)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+func (service *variantService) DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/metadata/characteristics/%s", service.uri, id)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

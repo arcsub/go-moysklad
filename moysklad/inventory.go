@@ -358,7 +358,7 @@ type inventoryService struct {
 	endpointPositions[InventoryPosition]
 	endpointAttributes
 	endpointSyncID[Inventory]
-	endpointRemove
+	endpointTrash
 	endpointStates
 }
 
@@ -378,7 +378,7 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointPositions:  endpointPositions[InventoryPosition]{e},
 		endpointAttributes: endpointAttributes{e},
 		endpointSyncID:     endpointSyncID[Inventory]{e},
-		endpointRemove:     endpointRemove{e},
+		endpointTrash:      endpointTrash{e},
 		endpointStates:     endpointStates{e},
 	}
 }

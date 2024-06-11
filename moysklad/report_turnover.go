@@ -106,7 +106,7 @@ func (service *reportTurnoverService) GetAll(ctx context.Context) (*List[Turnove
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaru-s-detalizaciej-po-skladam
 func (service *reportTurnoverService) GetByStoreWithProduct(ctx context.Context, product *Product) (*List[TurnoverByOperation], *resty.Response, error) {
 	path := fmt.Sprintf("%s/bystore", service.uri)
-	params := NewParams().WithFilterEquals("product", *product.Meta.Href)
+	params := NewParams().WithFilterEquals("product", product.GetMeta().GetHref())
 	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
 }
 
@@ -114,7 +114,7 @@ func (service *reportTurnoverService) GetByStoreWithProduct(ctx context.Context,
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-oboroty-po-towaru-s-detalizaciej-po-skladam
 func (service *reportTurnoverService) GetByStoreWithVariant(ctx context.Context, variant *Variant) (*List[TurnoverByOperation], *resty.Response, error) {
 	path := fmt.Sprintf("%s/bystore", service.uri)
-	params := NewParams().WithFilterEquals("variant", *variant.Meta.Href)
+	params := NewParams().WithFilterEquals("variant", variant.GetMeta().GetHref())
 	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
 }
 
@@ -122,7 +122,7 @@ func (service *reportTurnoverService) GetByStoreWithVariant(ctx context.Context,
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-poluchit-oboroty-po-towaru-s-detalizaciej-po-dokumentam
 func (service *reportTurnoverService) GetByOperationsWithProduct(ctx context.Context, product *Product) (*List[TurnoverByOperation], *resty.Response, error) {
 	path := fmt.Sprintf("%s/byoperations", service.uri)
-	params := NewParams().WithFilterEquals("product", *product.Meta.Href)
+	params := NewParams().WithFilterEquals("product", product.GetMeta().GetHref())
 	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
 }
 
@@ -130,6 +130,6 @@ func (service *reportTurnoverService) GetByOperationsWithProduct(ctx context.Con
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-oboroty-poluchit-oboroty-po-towaru-s-detalizaciej-po-dokumentam
 func (service *reportTurnoverService) GetByOperationsWithVariant(ctx context.Context, variant *Variant) (*List[TurnoverByOperation], *resty.Response, error) {
 	path := fmt.Sprintf("%s/byoperations", service.uri)
-	params := NewParams().WithFilterEquals("variant", *variant.Meta.Href)
+	params := NewParams().WithFilterEquals("variant", variant.GetMeta().GetHref())
 	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
 }

@@ -343,26 +343,27 @@ func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
 	return l != nil && r != nil && lMeta.IsEqual(&rMeta)
 }
 
-type DeleteManyRequest []MetaWrapper
+type DeleteManyRequest Slice[MetaOwner]
+
+// MarshalJSON implements the json.Marshaler interface.
+func (deleteManyRequest DeleteManyRequest) MarshalJSON() ([]byte, error) {
+	var tmp []MetaWrapper
+	for _, meta := range deleteManyRequest {
+		if meta != nil {
+			tmp = append(tmp, (*meta).GetMeta().Wrap())
+		}
+	}
+	return json.Marshal(tmp)
+}
+
+// Push добавляет элементы в конец среза.
+func (deleteManyRequest *DeleteManyRequest) Push(elements ...*MetaOwner) *DeleteManyRequest {
+	*deleteManyRequest = append(*deleteManyRequest, elements...)
+	return deleteManyRequest
+}
 
 func NewDeleteManyRequest() DeleteManyRequest {
 	return make(DeleteManyRequest, 0)
-}
-
-// Push добавляет элементы MetaOwner в конец среза.
-func (s *DeleteManyRequest) Push(entities ...MetaOwner) *DeleteManyRequest {
-	for _, entity := range entities {
-		*s = append(*s, MetaWrapper{entity.GetMeta()})
-	}
-	return s
-}
-
-// PushMeta добавляет элементы Meta в конец среза.
-func (s *DeleteManyRequest) PushMeta(entities ...Meta) *DeleteManyRequest {
-	for _, entity := range entities {
-		*s = append(*s, MetaWrapper{entity})
-	}
-	return s
 }
 
 // Stock Остатки и себестоимость в позициях документов

@@ -305,28 +305,28 @@ func NewRoleService(client *Client) RoleService {
 
 // GetAdminRole Запрос на получение роли админа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-roli-admina
-func (s *roleService) GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error) {
+func (service *roleService) GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error) {
 	path := "entity/role/admin"
-	return NewRequestBuilder[AdminRole](s.client, path).Get(ctx)
+	return NewRequestBuilder[AdminRole](service.client, path).Get(ctx)
 }
 
 // GetIndividualRole Запрос на получение индивидуальной роли.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-indiwidual-noj-roli
-func (s *roleService) GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error) {
+func (service *roleService) GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error) {
 	path := "entity/role/individual"
-	return NewRequestBuilder[IndividualRole](s.client, path).Get(ctx)
+	return NewRequestBuilder[IndividualRole](service.client, path).Get(ctx)
 }
 
 // GetCashierRole Запрос на получение роли кассира.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-indiwidual-noj-roli
-func (s *roleService) GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error) {
+func (service *roleService) GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error) {
 	path := "entity/role/cashier"
-	return NewRequestBuilder[CashierRole](s.client, path).Get(ctx)
+	return NewRequestBuilder[CashierRole](service.client, path).Get(ctx)
 }
 
 // GetWorkerRole Запрос на получение роли кассира.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-roli-sotrudnika-proizwodstwa
-func (s *roleService) GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error) {
+func (service *roleService) GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error) {
 	path := "entity/role/worker"
-	return NewRequestBuilder[WorkerRole](s.client, path).Get(ctx)
+	return NewRequestBuilder[WorkerRole](service.client, path).Get(ctx)
 }

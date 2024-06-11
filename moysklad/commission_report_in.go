@@ -676,7 +676,7 @@ type commissionReportInService struct {
 	endpointSyncID[CommissionReportIn]
 	endpointNamedFilter
 	endpointPublication
-	endpointRemove
+	endpointTrash
 	endpointStates
 }
 
@@ -698,7 +698,7 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointNamedFilter:      endpointNamedFilter{e},
 		//endpointTemplate:         endpointTemplate[CommissionReportIn]{e},
 		endpointPublication: endpointPublication{e},
-		endpointRemove:      endpointRemove{e},
+		endpointTrash:       endpointTrash{e},
 		endpointStates:      endpointStates{e},
 	}
 }
