@@ -6,6 +6,15 @@ type GTD struct {
 	Name *string `json:"name"` // Номер ГТД
 }
 
-func (g GTD) String() string {
-	return Stringify(g)
+func (gtd GTD) GetName() string {
+	return Deref(gtd.Name)
+}
+
+func (gtd *GTD) SetName(name string) *GTD {
+	gtd.Name = &name
+	return gtd
+}
+
+func (gtd GTD) String() string {
+	return Stringify(gtd)
 }

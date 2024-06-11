@@ -8,26 +8,26 @@ import (
 )
 
 // Task Задача.
+// TODO
 // Ключевое слово: task
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha
 type Task struct {
-	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учетной записи
-	Agent             *Counterparty `json:"agent,omitempty"`             // Метаданные Контрагента или юрлица, связанного с задачей. Задача может быть привязана либо к конрагенту, либо к юрлицу, либо к документу
-	Assignee          *Employee     `json:"assignee,omitempty"`          // Метаданные ответственного за выполнение задачи
-	Author            *Employee     `json:"author,omitempty"`            // Метаданные Сотрудника, создавшего задачу (администратор аккаунта, если автор - Приложение)
-	AuthorApplication *Application  `json:"authorApplication,omitempty"` // Метаданные Приложения, создавшего задачу
-	Completed         *Timestamp    `json:"completed,omitempty"`         // Время выполнения задачи
-	Created           *Timestamp    `json:"created,omitempty"`           // Момент создания
-	Description       *string       `json:"description,omitempty"`       // Текст задачи
-	Done              *bool         `json:"done,omitempty"`              // Отметка о выполнении задачи
-	DueToDate         *Timestamp    `json:"dueToDate,omitempty"`         // Срок задачи
-	Files             *Files        `json:"files,omitempty"`             // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	ID                *uuid.UUID    `json:"id,omitempty"`                // ID Задачи
-	Implementer       *Employee     `json:"implementer,omitempty"`       // Метаданные Сотрудника, выполнившего задачу
-	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные
-	Notes             *TaskNotes    `json:"notes,omitempty"`             // Метаданные комментария к задаче
-	//Operation         *Operations   `json:"operation,omitempty"`         // Метаданные Документа, связанного с задачей. Задача может быть привязана либо к конрагенту, либо к юрлицу, либо к документу
-	Updated *Timestamp `json:"updated,omitempty"` // Момент последнего обновления Задачи
+	Done              *bool            `json:"done,omitempty"`
+	Created           *Timestamp       `json:"created,omitempty"`
+	Assignee          *Employee        `json:"assignee,omitempty"`
+	Author            *Employee        `json:"author,omitempty"`
+	AccountID         *uuid.UUID       `json:"accountId,omitempty"`
+	Completed         *Timestamp       `json:"completed,omitempty"`
+	Agent             *Counterparty    `json:"agent,omitempty"`
+	Description       *string          `json:"description,omitempty"`
+	AuthorApplication *Application     `json:"authorApplication,omitempty"`
+	DueToDate         *Timestamp       `json:"dueToDate,omitempty"`
+	Files             *MetaArray[File] `json:"files,omitempty"`
+	ID                *uuid.UUID       `json:"id,omitempty"`
+	Implementer       *Employee        `json:"implementer,omitempty"`
+	Meta              *Meta            `json:"meta,omitempty"`
+	Updated           *Timestamp       `json:"updated,omitempty"`
+	Notes             Slice[TaskNote]  `json:"notes,omitempty"`
 }
 
 func (t Task) String() string {
@@ -56,26 +56,73 @@ func (t TaskNote) MetaType() MetaType {
 	return MetaTypeTaskNote
 }
 
-type TaskNotes = Slice[TaskNote]
+//// TODO
+//
+//type OperationTask struct {
+//	wrapper[operationTask]
+//	OperationIn
+//	OperationOut
+//	OperationRetail
+//}
+//
+//type operationTask struct {
+//	Meta *Meta `json:"meta,omitempty"` // Метаданные
+//	raw  json.RawMessage
+//}
+//
+//func (o *OperationTask) UnmarshalJSON(data []byte) (err error) {
+//	type alias OperationTask
+//	var t alias
+//
+//	if err = json.Unmarshal(data, &t); err != nil {
+//		return err
+//	}
+//
+//	t.w.raw = data
+//	*o = OperationTask(t)
+//
+//	return nil
+//}
+//
+//func (o OperationTask) Data() json.RawMessage {
+//	return o.w.raw
+//}
+//
+//func (o OperationTask) Meta() Meta {
+//	return utils.Deref[Meta](o.w.Meta)
+//}
+//
+//func (o OperationTask) Counterparty() (Counterparty, bool) {
+//	return ElementAsType[Counterparty](o)
+//}
+//
+//func (o OperationTask) Organization() (Organization, bool) {
+//	return ElementAsType[Organization](o)
+//}
 
 // TaskService
 // Сервис для работы с задачами.
 type TaskService interface {
 	GetList(ctx context.Context, params *Params) (*List[Task], *resty.Response, error)
 	Create(ctx context.Context, task *Task, params *Params) (*Task, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, taskList []*Task, params *Params) (*[]Task, *resty.Response, error)
-	DeleteMany(ctx context.Context, taskList []*Task) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Task, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, task *Task, params *Params) (*Task, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params *Params) (*Slice[Task], *resty.Response, error)
+	DeleteMany(ctx context.Context, taskList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Task, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, task *Task, params *Params) (*Task, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
-	GetNamedFilterByID(ctx context.Context, id *uuid.UUID) (*NamedFilter, *resty.Response, error)
-	GetNotes(ctx context.Context, taskId *uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error)
-	CreateNote(ctx context.Context, taskId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
-	CreateNotes(ctx context.Context, taskId *uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error)
-	GetNoteById(ctx context.Context, taskId, taskNoteId *uuid.UUID) (*TaskNote, *resty.Response, error)
-	UpdateNote(ctx context.Context, taskId, taskNoteId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
-	DeleteNote(ctx context.Context, taskId, taskNoteId *uuid.UUID) (bool, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error)
+	CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
+	CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error)
+	GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error)
+	UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
+	DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type taskService struct {
@@ -85,9 +132,10 @@ type taskService struct {
 	endpointCreateUpdateMany[Task]
 	endpointDeleteMany[Task]
 	endpointDelete
-	endpointGetById[Task]
+	endpointGetByID[Task]
 	endpointUpdate[Task]
 	endpointNamedFilter
+	endpointFiles
 }
 
 func NewTaskService(client *Client) TaskService {
@@ -99,49 +147,50 @@ func NewTaskService(client *Client) TaskService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Task]{e},
 		endpointDeleteMany:       endpointDeleteMany[Task]{e},
 		endpointDelete:           endpointDelete{e},
-		endpointGetById:          endpointGetById[Task]{e},
+		endpointGetByID:          endpointGetByID[Task]{e},
 		endpointUpdate:           endpointUpdate[Task]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
+		endpointFiles:            endpointFiles{e},
 	}
 }
 
 // GetNotes Запрос на получение списка всех комментариев данной Задачи.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarii-zadachi
-func (s *taskService) GetNotes(ctx context.Context, taskId *uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskId)
-	return NewRequestBuilder[List[TaskNote]](s.client, path).SetParams(params).Get(ctx)
+func (service *taskService) GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateNote Запрос на создание нового комментария к Задаче.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-sozdat-kommentarij-zadachi
-func (s *taskService) CreateNote(ctx context.Context, taskId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskId)
-	return NewRequestBuilder[TaskNote](s.client, path).Post(ctx, taskNote)
+func (service *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	return NewRequestBuilder[TaskNote](service.client, path).Post(ctx, taskNote)
 }
 
 // CreateNotes Запрос на создание нескольких комментариев к Задаче.
-func (s *taskService) CreateNotes(ctx context.Context, taskId *uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", s.uri, taskId)
-	return NewRequestBuilder[[]TaskNote](s.client, path).Post(ctx, taskNotes)
+func (service *taskService) CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	return NewRequestBuilder[Slice[TaskNote]](service.client, path).Post(ctx, taskNotes)
 }
 
-// GetNoteById Отдельный комментарий к Задаче с указанным id комментария.
+// GetNoteByID Отдельный комментарий к Задаче с указанным id комментария.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarij-k-zadache
-func (s *taskService) GetNoteById(ctx context.Context, taskId, taskNoteId *uuid.UUID) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskId, taskNoteId)
-	return NewRequestBuilder[TaskNote](s.client, path).Get(ctx)
+func (service *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, taskID, taskNoteID)
+	return NewRequestBuilder[TaskNote](service.client, path).Get(ctx)
 }
 
 // UpdateNote Запрос на обновление отдельного комментария к Задаче.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-izmenit-kommentarij-k-zadache
-func (s *taskService) UpdateNote(ctx context.Context, taskId, taskNoteId *uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", s.uri, taskId, taskNoteId)
-	return NewRequestBuilder[TaskNote](s.client, path).Put(ctx, taskNote)
+func (service *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, taskID, taskNoteID)
+	return NewRequestBuilder[TaskNote](service.client, path).Put(ctx, taskNote)
 }
 
 // DeleteNote Запрос на удаление отдельного комментария к Задаче с указанным id.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-udalit-kommentarij
-func (s *taskService) DeleteNote(ctx context.Context, taskId, taskNoteId *uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/notes/%s", taskId, taskNoteId)
-	return NewRequestBuilder[any](s.client, path).Delete(ctx)
+func (service *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/notes/%s", taskID, taskNoteID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

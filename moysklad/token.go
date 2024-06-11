@@ -11,8 +11,8 @@ type Token struct {
 	AccessToken string `json:"access_token"`
 }
 
-func (t Token) String() string {
-	return Stringify(t)
+func (token Token) String() string {
+	return Stringify(token)
 }
 
 // SecurityTokenService
@@ -32,6 +32,6 @@ func NewSecurityTokenService(client *Client) SecurityTokenService {
 
 // GetNewToken Запрос на получение нового токена.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-autentifikaciq-poluchenie-nowogo-tokena
-func (s *securityTokenService) GetNewToken(ctx context.Context) (*Token, *resty.Response, error) {
-	return NewRequestBuilder[Token](s.client, s.uri).Post(ctx, nil)
+func (service *securityTokenService) GetNewToken(ctx context.Context) (*Token, *resty.Response, error) {
+	return NewRequestBuilder[Token](service.client, service.uri).Post(ctx, nil)
 }

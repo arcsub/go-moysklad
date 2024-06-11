@@ -15,6 +15,6 @@ type ReceiptTemplate struct {
 	Footer    *string    `json:"footer,omitempty"`
 }
 
-func (r ReceiptTemplate) String() string {
-	return Stringify(r)
+func (receiptTemplate ReceiptTemplate) String() string {
+	return Stringify(receiptTemplate)
 }

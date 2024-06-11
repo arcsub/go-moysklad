@@ -7,6 +7,24 @@ type UniqueCodeRules struct {
 	FillUniqueCode  *bool `json:"fillUniqueCode,omitempty"`  // Устанавливать уникальный код при создании создании сущностей справочника товаров
 }
 
-func (u UniqueCodeRules) String() string {
-	return Stringify(u)
+func (uniqueCodeRules UniqueCodeRules) GetCheckUniqueCode() bool {
+	return Deref(uniqueCodeRules.CheckUniqueCode)
+}
+
+func (uniqueCodeRules UniqueCodeRules) GetFillUniqueCode() bool {
+	return Deref(uniqueCodeRules.FillUniqueCode)
+}
+
+func (uniqueCodeRules *UniqueCodeRules) SetCheckUniqueCode(checkUniqueCode bool) *UniqueCodeRules {
+	uniqueCodeRules.CheckUniqueCode = &checkUniqueCode
+	return uniqueCodeRules
+}
+
+func (uniqueCodeRules *UniqueCodeRules) SetFillUniqueCode(fillUniqueCode bool) *UniqueCodeRules {
+	uniqueCodeRules.FillUniqueCode = &fillUniqueCode
+	return uniqueCodeRules
+}
+
+func (uniqueCodeRules UniqueCodeRules) String() string {
+	return Stringify(uniqueCodeRules)
 }

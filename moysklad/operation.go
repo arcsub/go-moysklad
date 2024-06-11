@@ -11,156 +11,172 @@ import (
 // `LinkedSum` для хранения суммы по операции
 // `data` для хранения сырых данных
 type Operation struct {
-	// Общие поля
-	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учетной записи
-	Attributes   *Attributes   `json:"attributes,omitempty"`   // Коллекция метаданных доп. полей. Поля объекта
-	Created      *Timestamp    `json:"created,omitempty"`      // Дата создания
-	Deleted      *Timestamp    `json:"deleted,omitempty"`      // Момент последнего удаления
-	Description  *string       `json:"description,omitempty"`  // Комментарий
-	ExternalCode *string       `json:"externalCode,omitempty"` // Внешний код
-	Files        *Files        `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group        *Group        `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID    `json:"id,omitempty"`           // ID сущности
-	Meta         Meta          `json:"meta,omitempty"`         // Метаданные
-	Name         *string       `json:"name,omitempty"`         // Наименование
-	Organization *Organization `json:"organization,omitempty"` // Метаданные юрлица
-	Owner        *Employee     `json:"owner,omitempty"`        // Владелец (Сотрудник)
-	Printed      *bool         `json:"printed,omitempty"`      // Напечатан ли документ
-	Published    *bool         `json:"published,omitempty"`    // Опубликован ли документ
-	Shared       *bool         `json:"shared,omitempty"`       // Общий доступ
-	SyncID       *uuid.UUID    `json:"syncId,omitempty"`       // ID синхронизации. После заполнения недоступен для изменения
-	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
-	VatEnabled   *bool         `json:"vatEnabled,omitempty"`   // Учитывается ли НДС
-	VatIncluded  *bool         `json:"vatIncluded,omitempty"`  // Включен ли НДС в цену
-	LinkedSum    *Decimal      `json:"linkedSum,omitempty"`    // Сумма, оплаченная по данному документу
-	Payments     *Payments     `json:"payments,omitempty"`     // Массив ссылок на связанные платежи в формате Метаданных
-
-	// сырые данные
-	data json.RawMessage
+	Group        Group        `json:"group,omitempty"`
+	Updated      Timestamp    `json:"updated,omitempty"`
+	Created      Timestamp    `json:"created,omitempty"`
+	Deleted      Timestamp    `json:"deleted,omitempty"`
+	Meta         Meta         `json:"meta,omitempty"`
+	Name         string       `json:"name,omitempty"`
+	ExternalCode string       `json:"externalCode,omitempty"`
+	Description  string       `json:"description,omitempty"`
+	Organization Organization `json:"organization,omitempty"`
+	Owner        Employee     `json:"owner,omitempty"`
+	raw          json.RawMessage
+	Payments     Slice[Payment]        `json:"payments,omitempty"`
+	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	Files        MetaArray[File]       `json:"files,omitempty"`
+	LinkedSum    float64               `json:"linkedSum,omitempty"`
+	AccountID    uuid.UUID             `json:"accountId,omitempty"`
+	ID           uuid.UUID             `json:"id,omitempty"`
+	SyncID       uuid.UUID             `json:"syncId,omitempty"`
+	Published    bool                  `json:"published,omitempty"`
+	VatIncluded  bool                  `json:"vatIncluded,omitempty"`
+	VatEnabled   bool                  `json:"vatEnabled,omitempty"`
+	Shared       bool                  `json:"shared,omitempty"`
+	Printed      bool                  `json:"printed,omitempty"`
 }
 
-func (o Operation) String() string {
-	return Stringify(o.Meta)
+type OperationType interface {
+	CustomerOrder | PurchaseReturn | Demand | InvoiceOut | RetailShift |
+		CommissionReportIn | SalesReturn | Supply | InvoiceIn | PurchaseOrder | CommissionReportOut
+	MetaOwner
+}
+
+func NewOperation[T OperationType](entity T) *Operation {
+	return &Operation{Meta: entity.GetMeta()}
+}
+
+func (operation Operation) String() string {
+	return Stringify(operation.Meta)
 }
 
 // MetaType удовлетворяет интерфейсу MetaTyper
-func (o Operation) MetaType() MetaType {
-	return o.Meta.Type
+func (operation Operation) MetaType() MetaType {
+	return operation.Meta.GetType()
 }
 
-// Data удовлетворяет интерфейсу DataMetaTyper
-func (o Operation) Data() json.RawMessage {
-	return o.data
+// Raw удовлетворяет интерфейсу RawMetaTyper
+func (operation Operation) Raw() json.RawMessage {
+	return operation.raw
 }
 
-func (o *Operation) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (operation *Operation) UnmarshalJSON(data []byte) error {
 	type alias Operation
 	var t alias
 
 	if err := json.Unmarshal(data, &t); err != nil {
 		return err
 	}
-	t.data = data
+	t.raw = data
 
-	*o = Operation(t)
+	*operation = Operation(t)
 	return nil
 }
 
-func (o Operation) CustomerOrder() (*CustomerOrder, error) {
-	return unmarshalTo[CustomerOrder](o)
+func (operation Operation) AsCustomerOrder() *CustomerOrder {
+	return unmarshalAsType[CustomerOrder](operation)
 }
 
-func (o Operation) PurchaseReturn() (*PurchaseReturn, error) {
-	return unmarshalTo[PurchaseReturn](o)
+func (operation Operation) AsPurchaseReturn() *PurchaseReturn {
+	return unmarshalAsType[PurchaseReturn](operation)
 }
 
-func (o Operation) Demand() (*Demand, error) {
-	return unmarshalTo[Demand](o)
+func (operation Operation) AsDemand() *Demand {
+	return unmarshalAsType[Demand](operation)
 }
 
-func (o Operation) InvoiceOut() (*InvoiceOut, error) {
-	return unmarshalTo[InvoiceOut](o)
+func (operation Operation) AsInvoiceOut() *InvoiceOut {
+	return unmarshalAsType[InvoiceOut](operation)
 }
 
-func (o Operation) RetailShift() (*RetailShift, error) {
-	return unmarshalTo[RetailShift](o)
+func (operation Operation) AsRetailShift() *RetailShift {
+	return unmarshalAsType[RetailShift](operation)
 }
 
-func (o Operation) CommissionReportIn() (*CommissionReportIn, error) {
-	return unmarshalTo[CommissionReportIn](o)
+func (operation Operation) AsCommissionReportIn() *CommissionReportIn {
+	return unmarshalAsType[CommissionReportIn](operation)
 }
 
-func (o Operation) SalesReturn() (*SalesReturn, error) {
-	return unmarshalTo[SalesReturn](o)
+func (operation Operation) AsSalesReturn() *SalesReturn {
+	return unmarshalAsType[SalesReturn](operation)
 }
 
-func (o Operation) Supply() (*Supply, error) {
-	return unmarshalTo[Supply](o)
+func (operation Operation) AsSupply() *Supply {
+	return unmarshalAsType[Supply](operation)
 }
 
-func (o Operation) InvoiceIn() (*InvoiceIn, error) {
-	return unmarshalTo[InvoiceIn](o)
+func (operation Operation) AsInvoiceIn() *InvoiceIn {
+	return unmarshalAsType[InvoiceIn](operation)
 }
 
-func (o Operation) PurchaseOrder() (*PurchaseOrder, error) {
-	return unmarshalTo[PurchaseOrder](o)
+func (operation Operation) AsPurchaseOrder() *PurchaseOrder {
+	return unmarshalAsType[PurchaseOrder](operation)
 }
 
-func (o Operation) CommissionReportOut() (*CommissionReportOut, error) {
-	return unmarshalTo[CommissionReportOut](o)
+func (operation Operation) AsCommissionReportOut() *CommissionReportOut {
+	return unmarshalAsType[CommissionReportOut](operation)
 }
 
-type Operations []Operation
+type Operations Slice[Operation]
 
-func (o Operations) FilterCustomerOrder() Slice[CustomerOrder] {
-	return filterEntity[CustomerOrder](o)
+// Push Привязка платежей к документам.
+// Необходимо передать *Operation, которые были созданы через NewOperation.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
+func (operations *Operations) Push(elements ...*Operation) *Operations {
+	*operations = append(*operations, elements...)
+	return operations
 }
 
-func (o Operations) FilterPurchaseReturn() Slice[PurchaseReturn] {
-	return filterEntity[PurchaseReturn](o)
+func (operations Operations) FilterCustomerOrder() Slice[CustomerOrder] {
+	return filterType[CustomerOrder](operations)
 }
 
-func (o Operations) FilterDemand() Slice[Demand] {
-	return filterEntity[Demand](o)
+func (operations Operations) FilterPurchaseReturn() Slice[PurchaseReturn] {
+	return filterType[PurchaseReturn](operations)
 }
 
-func (o Operations) FilterInvoiceOut() Slice[InvoiceOut] {
-	return filterEntity[InvoiceOut](o)
+func (operations Operations) FilterDemand() Slice[Demand] {
+	return filterType[Demand](operations)
 }
 
-func (o Operations) FilterCommissionReportIn() Slice[CommissionReportIn] {
-	return filterEntity[CommissionReportIn](o)
+func (operations Operations) FilterInvoiceOut() Slice[InvoiceOut] {
+	return filterType[InvoiceOut](operations)
 }
 
-func (o Operations) FilterSalesReturn() Slice[SalesReturn] {
-	return filterEntity[SalesReturn](o)
+func (operations Operations) FilterCommissionReportIn() Slice[CommissionReportIn] {
+	return filterType[CommissionReportIn](operations)
 }
 
-func (o Operations) FilterSupply() Slice[Supply] {
-	return filterEntity[Supply](o)
+func (operations Operations) FilterSalesReturn() Slice[SalesReturn] {
+	return filterType[SalesReturn](operations)
 }
 
-func (o Operations) FilterInvoiceIn() Slice[InvoiceIn] {
-	return filterEntity[InvoiceIn](o)
+func (operations Operations) FilterSupply() Slice[Supply] {
+	return filterType[Supply](operations)
 }
 
-func (o Operations) FilterPurchaseOrder() Slice[PurchaseOrder] {
-	return filterEntity[PurchaseOrder](o)
+func (operations Operations) FilterInvoiceIn() Slice[InvoiceIn] {
+	return filterType[InvoiceIn](operations)
 }
 
-func (o Operations) FilterCommissionReportOut() Slice[CommissionReportOut] {
-	return filterEntity[CommissionReportOut](o)
+func (operations Operations) FilterPurchaseOrder() Slice[PurchaseOrder] {
+	return filterType[PurchaseOrder](operations)
 }
 
-func (o Operations) FilterRetailShift() Slice[RetailShift] {
-	return filterEntity[RetailShift](o)
+func (operations Operations) FilterCommissionReportOut() Slice[CommissionReportOut] {
+	return filterType[CommissionReportOut](operations)
+}
+
+func (operations Operations) FilterRetailShift() Slice[RetailShift] {
+	return filterType[RetailShift](operations)
 }
 
 //
 //	func (o Operations) FilterCounterparty() Slice[Counterparty] {
-//		return filterEntity[Counterparty](o)
+//		return filterType[Counterparty](o)
 //	}
 //
 //	func (o Operations) FilterOrganization() Slice[Organization] {
-//		return filterEntity[Organization](o)
+//		return filterType[Organization](o)
 //	}

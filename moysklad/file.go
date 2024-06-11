@@ -15,22 +15,61 @@ type File struct {
 	Title     *string    `json:"title,omitempty"`     // Название Файла
 }
 
-func (f File) String() string {
-	return Stringify(f)
+func (file File) GetCreated() Timestamp {
+	return Deref(file.Created)
 }
 
-func (f File) MetaType() MetaType {
+func (file File) GetCreatedBy() Employee {
+	return Deref(file.CreatedBy)
+}
+
+func (file File) GetContent() string {
+	return Deref(file.Content)
+}
+
+func (file File) GetFilename() string {
+	return Deref(file.Filename)
+}
+
+func (file File) GetMeta() Meta {
+	return Deref(file.Meta)
+}
+
+func (file File) GetMiniature() Meta {
+	return Deref(file.Miniature)
+}
+
+func (file File) GetSize() int {
+	return Deref(file.Size)
+}
+
+func (file File) GetTiny() Meta {
+	return Deref(file.Tiny)
+}
+
+func (file File) GetTitle() string {
+	return Deref(file.Title)
+}
+
+func (file *File) SetContent(content string) *File {
+	file.Content = &content
+	return file
+}
+
+func (file *File) SetFilename(filename string) *File {
+	file.Filename = &filename
+	return file
+}
+
+func (file *File) SetMeta(meta *Meta) *File {
+	file.Meta = meta
+	return file
+}
+
+func (file File) String() string {
+	return Stringify(file)
+}
+
+func (file File) MetaType() MetaType {
 	return MetaTypeFiles
-}
-
-type Files MetaArray[File]
-
-// Push добавляет элементы в срез.
-// Элементы, превышающее максимальное значение MaxFiles, игнорируются
-func (f *Files) Push(elements ...*File) *Files {
-	f.Rows = append(f.Rows, elements...)
-	if len(f.Rows) > MaxFiles {
-		f.Rows = f.Rows[:MaxFiles]
-	}
-	return f
 }

@@ -7,7 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/shopspring/decimal"
+	"net/http"
+	"reflect"
 
 	"image/color"
 	"io"
@@ -38,22 +39,82 @@ func Float(v float64) *float64 { return &v }
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
 
-// DecimalPtr is a helper routine that allocates a new decimal value
-// to store v and returns a pointer to it.
-func DecimalPtr(v decimal.Decimal) *Decimal { return &Decimal{v} }
-
-// DecimalFloatPtr is a helper routine that allocates a new decimal value
-// to store v and returns a pointer to it.
-func DecimalFloatPtr(v float64) *Decimal {
-	d := decimal.NewFromFloat(v)
-	return &Decimal{d}
+// Stringify attempts to create a reasonable string representation of types in
+// the Moysklad library. It does things like resolve pointers to their values
+// and omits struct fields with nil values.
+func Stringify(message any) string {
+	var buf bytes.Buffer
+	v := reflect.ValueOf(message)
+	stringifyValue(&buf, v)
+	return buf.String()
 }
 
-// DecimalIntPtr is a helper routine that allocates a new decimal value
-// to store v and returns a pointer to it.
-func DecimalIntPtr(v int64) *Decimal {
-	d := decimal.NewFromInt(v)
-	return &Decimal{d}
+func stringifyValue(w io.Writer, val reflect.Value) {
+	if val.Kind() == reflect.Ptr && val.IsNil() {
+		w.Write([]byte("<nil>"))
+		return
+	}
+
+	v := reflect.Indirect(val)
+
+	switch v.Kind() {
+	case reflect.String:
+		fmt.Fprintf(w, `"%s"`, v)
+	case reflect.Slice:
+		w.Write([]byte{'['})
+		for i := 0; i < v.Len(); i++ {
+			if i > 0 {
+				w.Write([]byte{' '})
+			}
+
+			stringifyValue(w, v.Index(i))
+		}
+
+		w.Write([]byte{']'})
+		return
+	case reflect.Struct:
+		if v.Type().Name() != "" {
+			w.Write([]byte(v.Type().String()))
+		}
+
+		// special handling of Timestamp values
+		if v.Type() == reflect.TypeOf(Timestamp{}) {
+			fmt.Fprintf(w, "{%s}", v.Interface())
+			return
+		}
+
+		w.Write([]byte{'{'})
+
+		var sep bool
+		for i := 0; i < v.NumField(); i++ {
+			fv := v.Field(i)
+			if fv.Kind() == reflect.Ptr && fv.IsNil() {
+				continue
+			}
+			if fv.Kind() == reflect.Slice && fv.IsNil() {
+				continue
+			}
+			if fv.Kind() == reflect.Map && fv.IsNil() {
+				continue
+			}
+
+			if sep {
+				w.Write([]byte(", "))
+			} else {
+				sep = true
+			}
+
+			w.Write([]byte(v.Type().Field(i).Name))
+			w.Write([]byte{':'})
+			stringifyValue(w, fv)
+		}
+
+		w.Write([]byte{'}'})
+	default:
+		if v.CanInterface() {
+			fmt.Fprint(w, v.Interface())
+		}
+	}
 }
 
 // Clamp задаёт значение в диапазоне между указанными нижней и верхней границами
@@ -68,69 +129,113 @@ func Clamp(val, min, max int) int {
 	}
 }
 
-type FileTypes interface {
-	File | Image
+func getFilenameContent(filePath string) (string, string, error) {
+	b, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", "", err
+	}
+	return filepath.Base(filePath), base64.StdEncoding.EncodeToString(b), nil
+}
+
+func getContentFromURL(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(bodyBytes), nil
+}
+
+// NewFileFromURL возвращает *File, на основе переданного URL пути.
+func NewFileFromURL(url string) (*File, error) {
+	content, err := getContentFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	return &File{Content: String(content)}, nil
+}
+
+// NewImageFromURL возвращает *Image, на основе переданного URL пути.
+func NewImageFromURL(url string) (*Image, error) {
+	content, err := getContentFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	return &Image{Content: String(content)}, nil
 }
 
 // NewFileFromFilepath возвращает *File, на основе переданного пути до файла
 // и ошибку, если файл не удалось найти
 func NewFileFromFilepath(filePath string) (*File, error) {
-	b, err := os.ReadFile(filePath)
+	fileName, content, err := getFilenameContent(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	fileName := filepath.Base(filePath)
-	content := base64.StdEncoding.EncodeToString(b)
-	f := &File{
+	file := &File{
 		Title:    String(fileName),
 		Filename: String(fileName),
 		Content:  String(content),
 	}
-	return f, nil
+	return file, nil
 }
 
 // NewImageFromFilepath возвращает *Image, на основе переданного пути до файла
 // и ошибку, если файл не удалось найти
 func NewImageFromFilepath(filePath string) (*Image, error) {
-	b, err := os.ReadFile(filePath)
+	fileName, content, err := getFilenameContent(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	fileName := filepath.Base(filePath)
-	content := base64.StdEncoding.EncodeToString(b)
-	f := &Image{
+	image := &Image{
 		Title:    String(fileName),
 		Filename: String(fileName),
 		Content:  String(content),
 	}
-	return f, nil
+	return image, nil
 }
 
-type DataMetaTyper interface {
+// RawMetaTyper описывает методы, необходимые для преобразования одного типа в другой.
+type RawMetaTyper interface {
 	MetaTyper
-	Data() json.RawMessage
+	Raw() json.RawMessage
 }
 
-// unmarshalTo принимает объект, удовлетворяющий интерфейсу DataMetaTyper
-// и структурирует в тип T
-func unmarshalTo[T MetaTyper, E DataMetaTyper](element E) (*T, error) {
-	t := new(T)
-	needType := (*t).MetaType()
-	haveType := element.MetaType()
+// filterType преобразует слайс элементов типа D в слайс элементов типа M
+func filterType[M MetaTyper, D RawMetaTyper](elements []D) Slice[M] {
+	var slice = Slice[M]{}
+	for _, el := range elements {
+		if e := unmarshalAsType[M](el); e != nil {
+			slice.Push(e)
+		}
+	}
+	return slice
+}
 
-	if haveType != needType {
-		return t, ErrWrongMetaType{haveType, needType}
+// unmarshalAsType принимает объект, удовлетворяющий интерфейсу RawMetaTyper
+// и структурирует в тип T
+func unmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
+	var t = *new(M)
+
+	if t.MetaType() != element.MetaType() {
+		return nil
 	}
-	data := element.Data()
+
+	data := element.Raw()
 	if data == nil {
-		return nil, errors.New("data is empty")
+		return nil
 	}
+
 	if err := json.Unmarshal(data, &t); err != nil {
-		return t, err
+		return nil
 	}
-	return t, nil
+
+	return &t
 }
 
 type Interval string
@@ -233,13 +338,44 @@ func IsEqualPtr[T comparable](l *T, r *T) bool {
 
 // IsMetaEqual сравнивает `meta.href` двух сущностей типа *T
 func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
-	return l != nil && r != nil && Deref(l).GetMeta().IsEqual(Deref(r).GetMeta())
+	lMeta := Deref(l).GetMeta()
+	rMeta := Deref(r).GetMeta()
+	return l != nil && r != nil && lMeta.IsEqual(&rMeta)
 }
 
-type Decimal struct {
-	decimal.Decimal
+type DeleteManyRequest Slice[MetaOwner]
+
+// MarshalJSON implements the json.Marshaler interface.
+func (deleteManyRequest DeleteManyRequest) MarshalJSON() ([]byte, error) {
+	var tmp []MetaWrapper
+	for _, meta := range deleteManyRequest {
+		if meta != nil {
+			tmp = append(tmp, (*meta).GetMeta().Wrap())
+		}
+	}
+	return json.Marshal(tmp)
 }
 
-func (d Decimal) MarshalJSON() ([]byte, error) {
-	return []byte(d.StringFixed(2)), nil
+// Push добавляет элементы в конец среза.
+func (deleteManyRequest *DeleteManyRequest) Push(elements ...*MetaOwner) *DeleteManyRequest {
+	*deleteManyRequest = append(*deleteManyRequest, elements...)
+	return deleteManyRequest
+}
+
+func NewDeleteManyRequest() DeleteManyRequest {
+	return make(DeleteManyRequest, 0)
+}
+
+// Stock Остатки и себестоимость в позициях документов
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ostatki-i-sebestoimost-w-poziciqh-dokumentow
+type Stock struct {
+	Cost      float64 `json:"cost"`
+	Quantity  float64 `json:"quantity"`
+	Reserve   float64 `json:"reserve"`
+	InTransit float64 `json:"intransit"`
+	Available float64 `json:"available"`
+}
+
+func (stock Stock) String() string {
+	return Stringify(stock)
 }

@@ -50,8 +50,9 @@ func (application Application) MetaType() MetaType {
 type ApplicationService interface {
 	// GetList выполняет запрос на получение списка сущностей установленных приложений.
 	GetList(ctx context.Context, params *Params) (*List[Application], *resty.Response, error)
+
 	// GetByID выполняет запрос на получение сущности установленного приложения.
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*Application, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Application, *resty.Response, error)
 }
 
 func NewApplicationService(client *Client) ApplicationService {

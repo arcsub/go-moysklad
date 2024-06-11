@@ -11,20 +11,20 @@ import (
 // Ключевое слово: counterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-pokazateli-kontragentow
 type ReportCounterparty struct {
-	FirstDemandDate Timestamp        `json:"firstDemandDate"`
 	Updated         Timestamp        `json:"updated"`
 	LastEventDate   Timestamp        `json:"lastEventDate"`
 	LastDemandDate  Timestamp        `json:"lastDemandDate"`
+	FirstDemandDate Timestamp        `json:"firstDemandDate"`
 	Counterparty    CounterpartyData `json:"counterparty"`
 	Meta            Meta             `json:"meta"`
-	DiscountsSum    Decimal          `json:"discountsSum"`
 	LastEventText   string           `json:"lastEventText"`
-	DemandsSum      Decimal          `json:"demandsSum"`
-	AverageReceipt  Decimal          `json:"averageReceipt"`
-	BonusBalance    Decimal          `json:"bonusBalance"`
-	Profit          Decimal          `json:"profit"`
-	ReturnsSum      Decimal          `json:"returnsSum"`
-	Balance         Decimal          `json:"balance"`
+	DemandsSum      float64          `json:"demandsSum"`
+	DiscountsSum    float64          `json:"discountsSum"`
+	AverageReceipt  float64          `json:"averageReceipt"`
+	BonusBalance    float64          `json:"bonusBalance"`
+	Profit          float64          `json:"profit"`
+	ReturnsSum      float64          `json:"returnsSum"`
+	Balance         float64          `json:"balance"`
 	DemandsCount    int              `json:"demandsCount"`
 	ReturnsCount    int              `json:"returnsCount"`
 }
@@ -39,7 +39,7 @@ type CounterpartyData struct {
 	Name         string      `json:"name"`         // Наименование Контрагента
 }
 
-func (r ReportCounterparty) MetaType() MetaType {
+func (reportCounterparty ReportCounterparty) MetaType() MetaType {
 	return MetaTypeReportCounterparty
 }
 
@@ -51,14 +51,9 @@ type CounterpartiesMeta struct {
 	Counterparties Slice[CounterpartyElement] `json:"counterparties"`
 }
 
-func (c *CounterpartiesMeta) Push(elements ...*Counterparty) {
+func (counterpartiesMeta *CounterpartiesMeta) Push(elements ...*Counterparty) {
 	for _, element := range elements {
-		ce := &CounterpartyElement{
-			Counterparty: MetaWrapper{
-				Meta: *element.GetMeta(),
-			},
-		}
-		c.Counterparties = append(c.Counterparties, ce)
+		counterpartiesMeta.Counterparties.Push(&CounterpartyElement{element.GetMeta().Wrap()})
 	}
 }
 
@@ -68,7 +63,7 @@ type ReportCounterpartyService interface {
 	GetList(ctx context.Context, params *Params) (*List[ReportCounterparty], *resty.Response, error)
 	GetListAsync(ctx context.Context) (AsyncResultService[List[ReportCounterparty]], *resty.Response, error)
 	GetByCounterparties(ctx context.Context, data *CounterpartiesMeta) (*List[ReportCounterparty], *resty.Response, error)
-	GetByCounterpartyId(ctx context.Context, id *uuid.UUID) (*ReportCounterparty, *resty.Response, error)
+	GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error)
 }
 
 type reportCounterpartyService struct {
@@ -82,25 +77,25 @@ func NewReportCounterpartyService(client *Client) ReportCounterpartyService {
 
 // GetList Запрос на получение отчета по контрагентам
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-poluchit-pokazateli-kontragentow
-func (s *reportCounterpartyService) GetList(ctx context.Context, params *Params) (*List[ReportCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ReportCounterparty]](s.client, s.uri).SetParams(params).Get(ctx)
+func (service *reportCounterpartyService) GetList(ctx context.Context, params *Params) (*List[ReportCounterparty], *resty.Response, error) {
+	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 // GetListAsync Запрос на получение отчета по контрагентам (асинхронно)
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-poluchit-pokazateli-kontragentow
-func (s *reportCounterpartyService) GetListAsync(ctx context.Context) (AsyncResultService[List[ReportCounterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[ReportCounterparty]](s.client, s.uri).Async(ctx)
+func (service *reportCounterpartyService) GetListAsync(ctx context.Context) (AsyncResultService[List[ReportCounterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).Async(ctx)
 }
 
 // GetByCounterparties Пример запроса отчетов для нескольких контрагентов
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-vyborochnye-pokazateli-kontragentow
-func (s *reportCounterpartyService) GetByCounterparties(ctx context.Context, data *CounterpartiesMeta) (*List[ReportCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ReportCounterparty]](s.client, s.uri).Post(ctx, data)
+func (service *reportCounterpartyService) GetByCounterparties(ctx context.Context, data *CounterpartiesMeta) (*List[ReportCounterparty], *resty.Response, error) {
+	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).Post(ctx, data)
 }
 
-// GetByCounterpartyId Запрос на получение отчета по контрагенту с указанным id
+// GetByCounterpartyID Запрос на получение отчета по контрагенту с указанным id
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-pokazateli-kontragenta
-func (s *reportCounterpartyService) GetByCounterpartyId(ctx context.Context, id *uuid.UUID) (*ReportCounterparty, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s", s.uri, id)
-	return NewRequestBuilder[ReportCounterparty](s.client, path).Get(ctx)
+func (service *reportCounterpartyService) GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s", service.uri, id)
+	return NewRequestBuilder[ReportCounterparty](service.client, path).Get(ctx)
 }

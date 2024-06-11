@@ -18,5 +18,5 @@ type Event struct {
 	AccountID     string        `json:"accountId,omitempty"`     // ID учетной записи
 	Action        WebhookAction `json:"action,omitempty"`        // Действие, которое вызвало срабатывание вебхука.
 	Meta          Meta          `json:"meta,omitempty"`          // Метаданные измененной сущности
-	UpdatedFields []string      `json:"updatedFields,omitempty"` // Поля сущности, измененные пользователем
+	UpdatedFields Slice[string] `json:"updatedFields,omitempty"` // Поля сущности, измененные пользователем
 }

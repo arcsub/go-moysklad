@@ -9,7 +9,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-series
 type SeriesElement struct {
 	Date     Timestamp `json:"date"`
-	Sum      Decimal   `json:"sum"`
+	Sum      float64   `json:"sum"`
 	Quantity float64   `json:"quantity"`
 }
 
@@ -22,7 +22,7 @@ type SalesPlotSeries struct {
 	Series  []SeriesElement `json:"series"` // Массив показателей
 }
 
-func (s SalesPlotSeries) MetaType() MetaType {
+func (salesPlotSeries SalesPlotSeries) MetaType() MetaType {
 	return MetaTypeReportSales
 }
 
@@ -35,7 +35,7 @@ type OrdersPlotSeries struct {
 	Series  []SeriesElement `json:"series"` // Массив показателей
 }
 
-func (o OrdersPlotSeries) MetaType() MetaType {
+func (ordersPlotSeries OrdersPlotSeries) MetaType() MetaType {
 	return MetaTypeReportOrders
 }
 
@@ -57,16 +57,16 @@ func NewReportSalesService(client *Client) ReportSalesService {
 
 // GetPlotSeries Запрос на получение показателей продаж.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *reportSalesService) GetPlotSeries(ctx context.Context, params *Params) (*SalesPlotSeries, *resty.Response, error) {
+func (service *reportSalesService) GetPlotSeries(ctx context.Context, params *Params) (*SalesPlotSeries, *resty.Response, error) {
 	path := "report/sales/plotseries"
-	return NewRequestBuilder[SalesPlotSeries](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[SalesPlotSeries](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetPlotSeriesAsync Запрос на получение показателей продаж (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *reportSalesService) GetPlotSeriesAsync(ctx context.Context, params *Params) (AsyncResultService[SalesPlotSeries], *resty.Response, error) {
+func (service *reportSalesService) GetPlotSeriesAsync(ctx context.Context, params *Params) (AsyncResultService[SalesPlotSeries], *resty.Response, error) {
 	path := "report/sales/plotseries"
-	return NewRequestBuilder[SalesPlotSeries](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[SalesPlotSeries](service.client, path).SetParams(params).Async(ctx)
 }
 
 // ReportOrdersService
@@ -87,14 +87,14 @@ func NewReportOrdersService(client *Client) ReportOrdersService {
 
 // GetPlotSeries Запрос на получение показателей заказов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *reportOrdersService) GetPlotSeries(ctx context.Context, params *Params) (*OrdersPlotSeries, *resty.Response, error) {
+func (service *reportOrdersService) GetPlotSeries(ctx context.Context, params *Params) (*OrdersPlotSeries, *resty.Response, error) {
 	path := "report/orders/plotseries"
-	return NewRequestBuilder[OrdersPlotSeries](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[OrdersPlotSeries](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetPlotSeriesAsync Запрос на получение показателей заказов (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-pokazateli-prodazh-i-zakazow-pokazateli-zakazow
-func (s *reportOrdersService) GetPlotSeriesAsync(ctx context.Context, params *Params) (AsyncResultService[OrdersPlotSeries], *resty.Response, error) {
+func (service *reportOrdersService) GetPlotSeriesAsync(ctx context.Context, params *Params) (AsyncResultService[OrdersPlotSeries], *resty.Response, error) {
 	path := "report/orders/plotseries"
-	return NewRequestBuilder[OrdersPlotSeries](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[OrdersPlotSeries](service.client, path).SetParams(params).Async(ctx)
 }

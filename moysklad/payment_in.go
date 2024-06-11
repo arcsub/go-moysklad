@@ -10,64 +10,337 @@ import (
 // Ключевое слово: paymentin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vhodqschij-platezh
 type PaymentIn struct {
-	AccountID           *uuid.UUID    `json:"accountId,omitempty"`           // ID учетной записи
-	Agent               *Counterparty `json:"agent,omitempty"`               // Метаданные контрагента
-	AgentAccount        *AgentAccount `json:"agentAccount,omitempty"`        // Метаданные счета контрагента
-	Applicable          *bool         `json:"applicable,omitempty"`          // Отметка о проведении
-	Attributes          *Attributes   `json:"attributes,omitempty"`          // Коллекция метаданных доп. полей. Поля объекта
-	Code                *string       `json:"code,omitempty"`                // Код
-	Contract            *Contract     `json:"contract,omitempty"`            // Метаданные договора
-	Created             *Timestamp    `json:"created,omitempty"`             // Дата создания
-	Deleted             *Timestamp    `json:"deleted,omitempty"`             // Момент последнего удаления
-	Description         *string       `json:"description,omitempty"`         // Комментарий
-	ExternalCode        *string       `json:"externalCode,omitempty"`        // Внешний код
-	Files               *Files        `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group               *Group        `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID    `json:"id,omitempty"`                  // ID сущности
-	IncomingDate        *Timestamp    `json:"incomingDate,omitempty"`        // Входящая дата
-	IncomingNumber      *string       `json:"incomingNumber,omitempty"`      // Входящий номер
-	Meta                *Meta         `json:"meta,omitempty"`                // Метаданные
-	Moment              *Timestamp    `json:"moment,omitempty"`              // Дата документа
-	Name                *string       `json:"name,omitempty"`                // Наименование
-	Organization        *Organization `json:"organization,omitempty"`        // Метаданные юрлица
-	OrganizationAccount *AgentAccount `json:"organizationAccount,omitempty"` // Метаданные счета юрлица
-	Owner               *Employee     `json:"owner,omitempty"`               // Владелец (Сотрудник)
-	PaymentPurpose      *string       `json:"paymentPurpose,omitempty"`      // Назначение платежа
-	Printed             *bool         `json:"printed,omitempty"`             // Напечатан ли документ
-	Project             *Project      `json:"project,omitempty"`             // Проект
-	Published           *bool         `json:"published,omitempty"`           // Опубликован ли документ
-	Rate                *Rate         `json:"rate,omitempty"`                // Валюта
-	Shared              *bool         `json:"shared,omitempty"`              // Общий доступ
-	SalesChannel        *SalesChannel `json:"salesChannel,omitempty"`        // Метаданные канала продаж
-	State               *State        `json:"state,omitempty"`               // Метаданные статуса
-	Sum                 *Decimal      `json:"sum,omitempty"`                 // Сумма
-	SyncID              *uuid.UUID    `json:"syncId,omitempty"`              // ID синхронизации. После заполнения недоступен для изменения
-	Updated             *Timestamp    `json:"updated,omitempty"`             // Момент последнего обновления
-	FactureOut          *FactureOut   `json:"factureOut,omitempty"`          // Ссылка на Счет-фактуру выданный, с которым связан этот платеж в формате Метаданных
-	Operations          *Operations   `json:"operations,omitempty"`          // Массив ссылок на связанные операции в формате Метаданных
+	Meta                *Meta                 `json:"meta,omitempty"`
+	Applicable          *bool                 `json:"applicable,omitempty"`
+	AgentAccount        *AgentAccount         `json:"agentAccount,omitempty"`
+	Moment              *Timestamp            `json:"moment,omitempty"`
+	Operations          Operations            `json:"operations,omitempty"`
+	Name                *string               `json:"name,omitempty"`
+	Contract            *Contract             `json:"contract,omitempty"`
+	Created             *Timestamp            `json:"created,omitempty"`
+	Deleted             *Timestamp            `json:"deleted,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	ExternalCode        *string               `json:"externalCode,omitempty"`
+	Files               *MetaArray[File]      `json:"files,omitempty"`
+	Group               *Group                `json:"group,omitempty"`
+	ID                  *uuid.UUID            `json:"id,omitempty"`
+	IncomingDate        *Timestamp            `json:"incomingDate,omitempty"`
+	IncomingNumber      *string               `json:"incomingNumber,omitempty"`
+	FactureOut          *FactureOut           `json:"factureOut,omitempty"`
+	Agent               *Counterparty         `json:"agent,omitempty"`
+	Code                *string               `json:"code,omitempty"`
+	Organization        *Organization         `json:"organization,omitempty"`
+	OrganizationAccount *AgentAccount         `json:"organizationAccount,omitempty"`
+	Owner               *Employee             `json:"owner,omitempty"`
+	PaymentPurpose      *string               `json:"paymentPurpose,omitempty"`
+	Printed             *bool                 `json:"printed,omitempty"`
+	Project             *Project              `json:"project,omitempty"`
+	Published           *bool                 `json:"published,omitempty"`
+	Rate                *Rate                 `json:"rate,omitempty"`
+	Shared              *bool                 `json:"shared,omitempty"`
+	SalesChannel        *SalesChannel         `json:"salesChannel,omitempty"`
+	State               *State                `json:"state,omitempty"`
+	Sum                 *float64              `json:"sum,omitempty"`
+	SyncID              *uuid.UUID            `json:"syncId,omitempty"`
+	Updated             *Timestamp            `json:"updated,omitempty"`
+	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
+	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
-func (p PaymentIn) String() string {
-	return Stringify(p)
+func (paymentIn PaymentIn) Clean() *PaymentIn {
+	return &PaymentIn{Meta: paymentIn.Meta}
 }
 
-func (p PaymentIn) MetaType() MetaType {
+func (paymentIn PaymentIn) GetMeta() Meta {
+	return Deref(paymentIn.Meta)
+}
+
+func (paymentIn PaymentIn) GetApplicable() bool {
+	return Deref(paymentIn.Applicable)
+}
+
+func (paymentIn PaymentIn) GetAgentAccount() AgentAccount {
+	return Deref(paymentIn.AgentAccount)
+}
+
+func (paymentIn PaymentIn) GetMoment() Timestamp {
+	return Deref(paymentIn.Moment)
+}
+
+func (paymentIn PaymentIn) GetOperations() Operations {
+	return paymentIn.Operations
+}
+
+func (paymentIn PaymentIn) GetName() string {
+	return Deref(paymentIn.Name)
+}
+
+func (paymentIn PaymentIn) GetContract() Contract {
+	return Deref(paymentIn.Contract)
+}
+
+func (paymentIn PaymentIn) GetCreated() Timestamp {
+	return Deref(paymentIn.Created)
+}
+
+func (paymentIn PaymentIn) GetDeleted() Timestamp {
+	return Deref(paymentIn.Deleted)
+}
+
+func (paymentIn PaymentIn) GetDescription() string {
+	return Deref(paymentIn.Description)
+}
+
+func (paymentIn PaymentIn) GetExternalCode() string {
+	return Deref(paymentIn.ExternalCode)
+}
+
+func (paymentIn PaymentIn) GetFiles() MetaArray[File] {
+	return Deref(paymentIn.Files)
+}
+
+func (paymentIn PaymentIn) GetGroup() Group {
+	return Deref(paymentIn.Group)
+}
+
+func (paymentIn PaymentIn) GetID() uuid.UUID {
+	return Deref(paymentIn.ID)
+}
+
+func (paymentIn PaymentIn) GetIncomingDate() Timestamp {
+	return Deref(paymentIn.IncomingDate)
+}
+
+func (paymentIn PaymentIn) GetIncomingNumber() string {
+	return Deref(paymentIn.IncomingNumber)
+}
+
+func (paymentIn PaymentIn) GetFactureOut() FactureOut {
+	return Deref(paymentIn.FactureOut)
+}
+
+func (paymentIn PaymentIn) GetAgent() Counterparty {
+	return Deref(paymentIn.Agent)
+}
+
+func (paymentIn PaymentIn) GetCode() string {
+	return Deref(paymentIn.Code)
+}
+
+func (paymentIn PaymentIn) GetOrganization() Organization {
+	return Deref(paymentIn.Organization)
+}
+
+func (paymentIn PaymentIn) GetOrganizationAccount() AgentAccount {
+	return Deref(paymentIn.OrganizationAccount)
+}
+
+func (paymentIn PaymentIn) GetOwner() Employee {
+	return Deref(paymentIn.Owner)
+}
+
+func (paymentIn PaymentIn) GetPaymentPurpose() string {
+	return Deref(paymentIn.PaymentPurpose)
+}
+
+func (paymentIn PaymentIn) GetPrinted() bool {
+	return Deref(paymentIn.Printed)
+}
+
+func (paymentIn PaymentIn) GetProject() Project {
+	return Deref(paymentIn.Project)
+}
+
+func (paymentIn PaymentIn) GetPublished() bool {
+	return Deref(paymentIn.Published)
+}
+
+func (paymentIn PaymentIn) GetRate() Rate {
+	return Deref(paymentIn.Rate)
+}
+
+func (paymentIn PaymentIn) GetShared() bool {
+	return Deref(paymentIn.Shared)
+}
+
+func (paymentIn PaymentIn) GetSalesChannel() SalesChannel {
+	return Deref(paymentIn.SalesChannel)
+}
+
+func (paymentIn PaymentIn) GetState() State {
+	return Deref(paymentIn.State)
+}
+
+func (paymentIn PaymentIn) GetSum() float64 {
+	return Deref(paymentIn.Sum)
+}
+
+func (paymentIn PaymentIn) GetSyncID() uuid.UUID {
+	return Deref(paymentIn.SyncID)
+}
+
+func (paymentIn PaymentIn) GetUpdated() Timestamp {
+	return Deref(paymentIn.Updated)
+}
+
+func (paymentIn PaymentIn) GetAccountID() uuid.UUID {
+	return Deref(paymentIn.AccountID)
+}
+
+func (paymentIn PaymentIn) GetAttributes() Slice[AttributeValue] {
+	return paymentIn.Attributes
+}
+
+func (paymentIn *PaymentIn) SetMeta(meta *Meta) *PaymentIn {
+	paymentIn.Meta = meta
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetApplicable(applicable bool) *PaymentIn {
+	paymentIn.Applicable = &applicable
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetAgentAccount(agentAccount *AgentAccount) *PaymentIn {
+	paymentIn.AgentAccount = agentAccount.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetMoment(moment *Timestamp) *PaymentIn {
+	paymentIn.Moment = moment
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetOperations(operations Operations) *PaymentIn {
+	paymentIn.Operations = operations
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetName(name string) *PaymentIn {
+	paymentIn.Name = &name
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetContract(contract *Contract) *PaymentIn {
+	paymentIn.Contract = contract.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetDescription(description string) *PaymentIn {
+	paymentIn.Description = &description
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetExternalCode(externalCode string) *PaymentIn {
+	paymentIn.ExternalCode = &externalCode
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetFiles(files Slice[File]) *PaymentIn {
+	paymentIn.Files = NewMetaArrayRows(files)
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetGroup(group *Group) *PaymentIn {
+	paymentIn.Group = group.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetIncomingDate(incomingDate *Timestamp) *PaymentIn {
+	paymentIn.IncomingDate = incomingDate
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetIncomingNumber(incomingNumber string) *PaymentIn {
+	paymentIn.IncomingNumber = &incomingNumber
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetFactureOut(factureOut *FactureOut) *PaymentIn {
+	paymentIn.FactureOut = factureOut.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetAgent(agent *Counterparty) *PaymentIn {
+	paymentIn.Agent = agent.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetCode(code string) *PaymentIn {
+	paymentIn.Code = &code
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetOrganization(organization *Organization) *PaymentIn {
+	paymentIn.Organization = organization.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetOrganizationAccount(organizationAccount *AgentAccount) *PaymentIn {
+	paymentIn.OrganizationAccount = organizationAccount.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetOwner(owner *Employee) *PaymentIn {
+	paymentIn.Owner = owner.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetPaymentPurpose(paymentPurpose string) *PaymentIn {
+	paymentIn.PaymentPurpose = &paymentPurpose
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetProject(project *Project) *PaymentIn {
+	paymentIn.Project = project.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetRate(rate *Rate) *PaymentIn {
+	paymentIn.Rate = rate
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetShared(shared bool) *PaymentIn {
+	paymentIn.Shared = &shared
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetSalesChannel(salesChannel *SalesChannel) *PaymentIn {
+	paymentIn.SalesChannel = salesChannel.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetState(state *State) *PaymentIn {
+	paymentIn.State = state.Clean()
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetSum(sum float64) *PaymentIn {
+	paymentIn.Sum = &sum
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetSyncID(syncID uuid.UUID) *PaymentIn {
+	paymentIn.SyncID = &syncID
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetAttributes(attributes Slice[AttributeValue]) *PaymentIn {
+	paymentIn.Attributes = attributes
+	return paymentIn
+}
+
+func (paymentIn PaymentIn) String() string {
+	return Stringify(paymentIn)
+}
+
+func (paymentIn PaymentIn) MetaType() MetaType {
 	return MetaTypePaymentIn
 }
 
-// BindDocuments Привязка платежей к документам.
-// Необходимо передать *Meta документов, к которым необходимо привязать платёж.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-priwqzka-platezhej-k-dokumentam
-func (p *PaymentIn) BindDocuments(documentsMeta ...*Meta) *PaymentIn {
-	if p.Operations == nil {
-		p.Operations = &Operations{}
-	}
-
-	for _, meta := range documentsMeta {
-		*p.Operations = append(*p.Operations, Operation{Meta: Deref(meta)})
-	}
-
-	return p
+func (paymentIn PaymentIn) AsPayment() *Payment {
+	return &Payment{Meta: paymentIn.GetMeta()}
 }
 
 // PaymentInTemplateArg
@@ -78,44 +351,54 @@ func (p *PaymentIn) BindDocuments(documentsMeta ...*Meta) *PaymentIn {
 // - Отгрузка (demand)
 // - Счет покупателю (invoiceout)
 // - Полученный отчет комиссионера (commissionreportin)
-type PaymentInTemplateArg struct {
-	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
-	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
-	Demand             *MetaWrapper `json:"demand,omitempty"`
-	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
-	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
-}
+//type PaymentInTemplateArg struct {
+//	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
+//	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
+//	Demand             *MetaWrapper `json:"demand,omitempty"`
+//	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
+//	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
+//}
 
 // PaymentInService
 // Сервис для работы с входящими платежами.
 type PaymentInService interface {
 	GetList(ctx context.Context, params *Params) (*List[PaymentIn], *resty.Response, error)
 	Create(ctx context.Context, paymentIn *PaymentIn, params *Params) (*PaymentIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, paymentInList []*PaymentIn, params *Params) (*[]PaymentIn, *resty.Response, error)
-	DeleteMany(ctx context.Context, paymentInList []*PaymentIn) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*PaymentIn, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, paymentIn *PaymentIn, params *Params) (*PaymentIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, paymentInList Slice[PaymentIn], params *Params) (*Slice[PaymentIn], *resty.Response, error)
+	DeleteMany(ctx context.Context, paymentInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PaymentIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, paymentIn *PaymentIn, params *Params) (*PaymentIn, *resty.Response, error)
 	//endpointTemplate[PaymentIn]
 	//endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]
-	GetMetadata(ctx context.Context) (*MetadataAttributeSharedStates, *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
-	GetAttributeByID(ctx context.Context, id *uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
-	UpdateAttribute(ctx context.Context, id *uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
-	DeleteAttribute(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []*Attribute) (*DeleteManyResponse, *resty.Response, error)
-	GetPublications(ctx context.Context, id *uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
-	GetPublicationByID(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id *uuid.UUID, template *Templater) (*Publication, *resty.Response, error)
-	DeletePublication(ctx context.Context, id *uuid.UUID, publicationID *uuid.UUID) (bool, *resty.Response, error)
-	GetBySyncID(ctx context.Context, syncID *uuid.UUID) (*PaymentIn, *resty.Response, error)
-	DeleteBySyncID(ctx context.Context, syncID *uuid.UUID) (bool, *resty.Response, error)
-	Remove(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PaymentIn, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewPaymentInService(client *Client) PaymentInService {
 	e := NewEndpoint(client, "entity/paymentin")
-	return newMainService[PaymentIn, any, MetadataAttributeSharedStates, any](e)
+	return newMainService[PaymentIn, any, MetaAttributesSharedStatesWrapper, any](e)
 }

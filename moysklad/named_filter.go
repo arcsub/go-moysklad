@@ -15,10 +15,34 @@ type NamedFilter struct {
 	Owner     *Employee  `json:"owner,omitempty"`     // Владелец (Сотрудник)
 }
 
-func (n NamedFilter) String() string {
-	return Stringify(n)
+func (namedFilter NamedFilter) Clean() *NamedFilter {
+	return &NamedFilter{Meta: namedFilter.Meta}
 }
 
-func (n NamedFilter) MetaType() MetaType {
+func (namedFilter NamedFilter) GetAccountID() uuid.UUID {
+	return Deref(namedFilter.AccountID)
+}
+
+func (namedFilter NamedFilter) GetID() uuid.UUID {
+	return Deref(namedFilter.ID)
+}
+
+func (namedFilter NamedFilter) GetMeta() Meta {
+	return Deref(namedFilter.Meta)
+}
+
+func (namedFilter NamedFilter) GetName() string {
+	return Deref(namedFilter.Name)
+}
+
+func (namedFilter NamedFilter) GetOwner() Employee {
+	return Deref(namedFilter.Owner)
+}
+
+func (namedFilter NamedFilter) String() string {
+	return Stringify(namedFilter)
+}
+
+func (namedFilter NamedFilter) MetaType() MetaType {
 	return MetaTypeNamedFilter
 }

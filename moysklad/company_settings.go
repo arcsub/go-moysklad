@@ -17,17 +17,112 @@ type CompanySettings struct {
 	CompanyAddress           *string          `json:"companyAddress,omitempty"`
 	Currency                 *Currency        `json:"currency,omitempty"`
 	GlobalOperationNumbering *bool            `json:"globalOperationNumbering,omitempty"`
-	PriceTypes               *PriceTypes      `json:"priceTypes,omitempty"`
 	UseCompanyAddress        *bool            `json:"useCompanyAddress,omitempty"`
 	UseRecycleBin            *bool            `json:"useRecycleBin,omitempty"`
 	DiscountStrategy         DiscountStrategy `json:"discountStrategy,omitempty"`
+	AccountCountry           AccountCountry   `json:"accountCountry,omitempty"`
+	PriceTypes               Slice[PriceType] `json:"priceTypes,omitempty"`
 }
 
-func (c CompanySettings) String() string {
-	return Stringify(c)
+func (companySettings CompanySettings) GetMeta() Meta {
+	return Deref(companySettings.Meta)
 }
 
-func (c CompanySettings) MetaType() MetaType {
+func (companySettings CompanySettings) GetCheckMinPrice() bool {
+	return Deref(companySettings.CheckShippingStock)
+}
+
+func (companySettings CompanySettings) GetCheckShippingStock() bool {
+	return Deref(companySettings.CheckShippingStock)
+}
+
+func (companySettings CompanySettings) GetCompanyAddress() string {
+	return Deref(companySettings.CompanyAddress)
+}
+
+func (companySettings CompanySettings) GetCurrency() Currency {
+	return Deref(companySettings.Currency)
+}
+
+func (companySettings CompanySettings) GetGlobalOperationNumbering() bool {
+	return Deref(companySettings.GlobalOperationNumbering)
+}
+
+func (companySettings CompanySettings) GetPriceTypes() Slice[PriceType] {
+	return companySettings.PriceTypes
+}
+
+func (companySettings CompanySettings) GetUseCompanyAddress() bool {
+	return Deref(companySettings.UseCompanyAddress)
+}
+
+func (companySettings CompanySettings) GetUseRecycleBin() bool {
+	return Deref(companySettings.UseRecycleBin)
+}
+
+func (companySettings CompanySettings) GetDiscountStrategy() DiscountStrategy {
+	return companySettings.DiscountStrategy
+}
+
+func (companySettings CompanySettings) GetAccountCountry() AccountCountry {
+	return companySettings.AccountCountry
+}
+
+func (companySettings *CompanySettings) SetMeta(meta *Meta) *CompanySettings {
+	companySettings.Meta = meta
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCheckMinPrice(checkMinPrice bool) *CompanySettings {
+	companySettings.CheckMinPrice = &checkMinPrice
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCheckShippingStock(checkShippingStock bool) *CompanySettings {
+	companySettings.CheckShippingStock = &checkShippingStock
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCompanyAddress(companyAddress string) *CompanySettings {
+	companySettings.CompanyAddress = &companyAddress
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetCurrency(currency *Currency) *CompanySettings {
+	companySettings.Currency = currency.Clean()
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetGlobalOperationNumbering(globalOperationNumbering bool) *CompanySettings {
+	companySettings.GlobalOperationNumbering = &globalOperationNumbering
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetPriceTypes(priceTypes Slice[PriceType]) *CompanySettings {
+	companySettings.PriceTypes = priceTypes
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetUseCompanyAddress(useCompanyAddress bool) *CompanySettings {
+	companySettings.UseCompanyAddress = &useCompanyAddress
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetUseRecycleBin(useRecycleBin bool) *CompanySettings {
+	companySettings.UseRecycleBin = &useRecycleBin
+	return companySettings
+}
+
+func (companySettings *CompanySettings) SetDiscountStrategy(discountStrategy DiscountStrategy) *CompanySettings {
+	companySettings.DiscountStrategy = discountStrategy
+	return companySettings
+}
+
+func (companySettings CompanySettings) String() string {
+	return Stringify(companySettings)
+}
+
+func (companySettings CompanySettings) MetaType() MetaType {
 	return MetaTypeCompanySettings
 }
 
@@ -40,16 +135,24 @@ const (
 	DiscountStrategyByPriority DiscountStrategy = "byPriority" // Приоритетная (должна действовать одна, наиболее выгодная для покупателя скидка)
 )
 
+type AccountCountry string
+
+const (
+	AccountCountryRU AccountCountry = "RU"
+	AccountCountryBY AccountCountry = "BY"
+	AccountCountryKZ AccountCountry = "KZ"
+)
+
 // ContextCompanySettingsService
 // Сервис для работы с настройками компании.
 type ContextCompanySettingsService interface {
 	Get(ctx context.Context, params *Params) (*CompanySettings, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, settings *CompanySettings, params *Params) (*CompanySettings, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, settings *CompanySettings, params *Params) (*CompanySettings, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetadataCompanySettings, *resty.Response, error)
-	GetPriceTypes(ctx context.Context) (*[]PriceType, *resty.Response, error)
-	CreatePriceType(ctx context.Context, priceType *PriceType) (*[]PriceType, *resty.Response, error)
-	UpdatePriceTypes(ctx context.Context, priceTypeList []*PriceType) (*[]PriceType, *resty.Response, error)
-	GetPriceTypeById(ctx context.Context, id *uuid.UUID) (*PriceType, *resty.Response, error)
+	GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error)
+	CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error)
+	UpdatePriceTypes(ctx context.Context, priceTypeList Slice[PriceType]) (*Slice[PriceType], *resty.Response, error)
+	GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
 	GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error)
 }
 
@@ -72,35 +175,39 @@ func NewContextCompanySettingsService(client *Client) ContextCompanySettingsServ
 
 // GetPriceTypes Получить список всех типов цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-spisok-wseh-tipow-cen
-func (s *contextCompanySettingsService) GetPriceTypes(ctx context.Context) (*[]PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error) {
 	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[[]PriceType](s.client, path).Get(ctx)
+	return NewRequestBuilder[Slice[PriceType]](service.client, path).Get(ctx)
 }
 
 // CreatePriceType Создать тип цен.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-redaktirowanie-spiska-tipow-cen
-func (s *contextCompanySettingsService) CreatePriceType(ctx context.Context, priceType *PriceType) (*[]PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error) {
+	priceTypes, resp, err := service.GetPriceTypes(ctx)
+	if err != nil {
+		return nil, resp, err
+	}
+	priceTypes.Push(priceType)
 	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[[]PriceType](s.client, path).Post(ctx, priceType)
+	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
 }
 
 // UpdatePriceTypes Редактирование списка типов цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-redaktirowanie-spiska-tipow-cen
-func (s *contextCompanySettingsService) UpdatePriceTypes(ctx context.Context, priceTypeList []*PriceType) (*[]PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) UpdatePriceTypes(ctx context.Context, priceTypeList Slice[PriceType]) (*Slice[PriceType], *resty.Response, error) {
 	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[[]PriceType](s.client, path).Post(ctx, priceTypeList)
+	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypeList)
 }
 
 // GetPriceTypeById Получить тип цены по ID.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-tip-ceny-po-id
-func (s *contextCompanySettingsService) GetPriceTypeById(ctx context.Context, id *uuid.UUID) (*PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
 	path := fmt.Sprintf("context/companysettings/pricetype/%s", id)
-	return NewRequestBuilder[PriceType](s.client, path).Get(ctx)
+	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
 }
 
 // GetPriceTypeDefault Получить тип цены по умолчанию.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-tip-ceny-po-umolchaniu
-func (s *contextCompanySettingsService) GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error) {
 	path := "context/companysettings/pricetype/default"
-	return NewRequestBuilder[PriceType](s.client, path).Get(ctx)
+	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
 }

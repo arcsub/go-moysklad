@@ -2,32 +2,29 @@ package moysklad
 
 import "encoding/json"
 
-type PositionTypes interface {
+type PositionType interface {
 	BundleComponent | CommissionReportInPosition | CommissionReportInReturnPosition |
 		CommissionReportOutPosition | CustomerOrderPosition | DemandPosition | EnterPosition |
-		InternalOrderPosition | InventoryPosition | InvoicePosition | LossPosition | MovePosition |
+		InternalOrderPosition | InventoryPosition | InvoiceInPosition | InvoiceOutPosition | LossPosition | MovePosition |
 		PrepaymentPosition | PrepaymentReturnPosition | PriceListPosition | ProcessingOrderPosition |
 		ProcessingPlanMaterial | ProcessingPlanProduct | ProcessingProcessPosition | PurchaseOrderPosition |
-		PurchaseReturnPosition | RetailPosition | SalesReturnPosition | SupplyPosition | ProductionTaskMaterial |
-		ProductionStageCompletionMaterial | ProductionStageCompletionResult | ProductionRow | ProductionTaskResult
+		PurchaseReturnPosition | SalesReturnPosition | SupplyPosition | ProductionTaskMaterial |
+		ProductionStageCompletionMaterial | ProductionStageCompletionResult | ProductionRow | ProductionTaskResult |
+		RetailSalesReturnPosition | RetailDemandPosition
 }
 
-type Positions[T PositionTypes] MetaArray[T]
+type Positions[T PositionType] MetaArray[T]
 
 // MarshalJSON implements the json.Marshaler interface.
-func (p Positions[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.Rows)
+func (positions Positions[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(positions.Rows)
 }
 
-func (p *Positions[T]) Push(elements ...*T) {
-	p.Rows = append(p.Rows, elements...)
-
-	if len(p.Rows) > MaxPositions {
-		p.Rows = p.Rows[:MaxPositions]
-	}
+func (positions *Positions[T]) Push(elements ...*T) {
+	positions.Rows.Push(elements...)
 }
 
-func newPositions[T PositionTypes]() *Positions[T] {
+func newPositions[T PositionType]() *Positions[T] {
 	return &Positions[T]{Rows: make(Slice[T], 0, 1000)}
 }
 
@@ -67,8 +64,12 @@ func NewInventoryPositions() *Positions[InventoryPosition] {
 	return newPositions[InventoryPosition]()
 }
 
-func NewInvoicePositions() *Positions[InvoicePosition] {
-	return newPositions[InvoicePosition]()
+func NewInvoiceInPositions() *Positions[InvoiceInPosition] {
+	return newPositions[InvoiceInPosition]()
+}
+
+func NewInvoiceOutPositions() *Positions[InvoiceOutPosition] {
+	return newPositions[InvoiceOutPosition]()
 }
 
 func NewLossPositions() *Positions[LossPosition] {
@@ -115,8 +116,12 @@ func NewPurchaseReturnPositions() *Positions[PurchaseReturnPosition] {
 	return newPositions[PurchaseReturnPosition]()
 }
 
-func NewRetailPositions() *Positions[RetailPosition] {
-	return newPositions[RetailPosition]()
+func NewRetailDemandPositions() *Positions[RetailDemandPosition] {
+	return newPositions[RetailDemandPosition]()
+}
+
+func NewRetailSalesReturnPositions() *Positions[RetailSalesReturnPosition] {
+	return newPositions[RetailSalesReturnPosition]()
 }
 
 func NewSalesReturnPositions() *Positions[SalesReturnPosition] {

@@ -25,11 +25,117 @@ type SalesChannel struct {
 	SalesChannelType SalesChannelType `json:"type,omitempty"`
 }
 
-func (s SalesChannel) String() string {
-	return Stringify(s)
+func (salesChannel SalesChannel) Clean() *SalesChannel {
+	return &SalesChannel{Meta: salesChannel.Meta}
 }
 
-func (s SalesChannel) MetaType() MetaType {
+func (salesChannel SalesChannel) GetID() uuid.UUID {
+	return Deref(salesChannel.ID)
+}
+
+func (salesChannel SalesChannel) GetArchived() bool {
+	return Deref(salesChannel.Archived)
+}
+
+func (salesChannel SalesChannel) GetCode() string {
+	return Deref(salesChannel.Code)
+}
+
+func (salesChannel SalesChannel) GetDescription() string {
+	return Deref(salesChannel.Description)
+}
+
+func (salesChannel SalesChannel) GetExternalCode() string {
+	return Deref(salesChannel.ExternalCode)
+}
+
+func (salesChannel SalesChannel) GetGroup() Group {
+	return Deref(salesChannel.Group)
+}
+
+func (salesChannel SalesChannel) GetAccountID() uuid.UUID {
+	return Deref(salesChannel.AccountID)
+}
+
+func (salesChannel SalesChannel) GetMeta() Meta {
+	return Deref(salesChannel.Meta)
+}
+
+func (salesChannel SalesChannel) GetName() string {
+	return Deref(salesChannel.Name)
+}
+
+func (salesChannel SalesChannel) GetOwner() Employee {
+	return Deref(salesChannel.Owner)
+}
+
+func (salesChannel SalesChannel) GetShared() bool {
+	return Deref(salesChannel.Shared)
+}
+
+func (salesChannel SalesChannel) GetUpdated() Timestamp {
+	return Deref(salesChannel.Updated)
+}
+
+func (salesChannel SalesChannel) GetSalesChannelType() SalesChannelType {
+	return salesChannel.SalesChannelType
+}
+
+func (salesChannel *SalesChannel) SetArchived(archived bool) *SalesChannel {
+	salesChannel.Archived = &archived
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetCode(code string) *SalesChannel {
+	salesChannel.Code = &code
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetDescription(description string) *SalesChannel {
+	salesChannel.Description = &description
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetExternalCode(externalCode string) *SalesChannel {
+	salesChannel.ExternalCode = &externalCode
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetGroup(group *Group) *SalesChannel {
+	salesChannel.Group = group.Clean()
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetMeta(meta *Meta) *SalesChannel {
+	salesChannel.Meta = meta
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetName(name string) *SalesChannel {
+	salesChannel.Name = &name
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetOwner(owner *Employee) *SalesChannel {
+	salesChannel.Owner = owner.Clean()
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetShared(shared bool) *SalesChannel {
+	salesChannel.Shared = &shared
+	return salesChannel
+}
+
+func (salesChannel *SalesChannel) SetSalesChannelType(salesChannelType SalesChannelType) *SalesChannel {
+	salesChannel.SalesChannelType = salesChannelType
+	return salesChannel
+}
+
+func (salesChannel SalesChannel) String() string {
+	return Stringify(salesChannel)
+}
+
+func (salesChannel SalesChannel) MetaType() MetaType {
 	return MetaTypeSalesChannel
 }
 
@@ -52,11 +158,11 @@ const (
 type SalesChannelService interface {
 	GetList(ctx context.Context, params *Params) (*List[SalesChannel], *resty.Response, error)
 	Create(ctx context.Context, salesChannel *SalesChannel, params *Params) (*SalesChannel, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, salesChannelList []*SalesChannel, params *Params) (*[]SalesChannel, *resty.Response, error)
-	DeleteMany(ctx context.Context, salesChannelList []*SalesChannel) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id *uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id *uuid.UUID, params *Params) (*SalesChannel, *resty.Response, error)
-	Update(ctx context.Context, id *uuid.UUID, salesChannel *SalesChannel, params *Params) (*SalesChannel, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, salesChannelList Slice[SalesChannel], params *Params) (*Slice[SalesChannel], *resty.Response, error)
+	DeleteMany(ctx context.Context, salesChannelList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*SalesChannel, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, salesChannel *SalesChannel, params *Params) (*SalesChannel, *resty.Response, error)
 }
 
 func NewSalesChannelService(client *Client) SalesChannelService {

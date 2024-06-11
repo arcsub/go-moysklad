@@ -7,14 +7,14 @@ import (
 
 // Profit общие поля для структур отчёта "Прибыльность"
 type Profit struct {
-	Margin         Decimal `json:"margin"`
-	Profit         Decimal `json:"profit"`
-	ReturnAvgCheck Decimal `json:"returnAvgCheck"`
-	ReturnCostSum  Decimal `json:"returnCostSum"`
-	ReturnSum      Decimal `json:"returnSum"`
-	SalesAvgCheck  Decimal `json:"salesAvgCheck"`
-	SellCostSum    Decimal `json:"sellCostSum"`
-	SellSum        Decimal `json:"sellSum"`
+	Margin         float64 `json:"margin"`
+	Profit         float64 `json:"profit"`
+	ReturnAvgCheck float64 `json:"returnAvgCheck"`
+	ReturnCostSum  float64 `json:"returnCostSum"`
+	ReturnSum      float64 `json:"returnSum"`
+	SalesAvgCheck  float64 `json:"salesAvgCheck"`
+	SellCostSum    float64 `json:"sellCostSum"`
+	SellSum        float64 `json:"sellSum"`
 	ReturnCount    float64 `json:"returnCount"`
 	SalesCount     float64 `json:"salesCount"`
 }
@@ -23,16 +23,16 @@ type Profit struct {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
 type ProfitByAssortment struct {
 	Assortment     ProfitReportAssortment `json:"assortment"`
-	SellCostSum    Decimal                `json:"sellCostSum"`
-	Profit         Decimal                `json:"profit"`
-	ReturnCost     Decimal                `json:"returnCost"`
-	ReturnCostSum  Decimal                `json:"returnCostSum"`
-	ReturnPrice    Decimal                `json:"returnPrice"`
-	ReturnSum      Decimal                `json:"returnSum"`
-	SellCost       Decimal                `json:"sellCost"`
-	Margin         Decimal                `json:"margin"`
-	SellPrice      Decimal                `json:"SellPrice"`
-	SellSum        Decimal                `json:"sellSum"`
+	SellCostSum    float64                `json:"sellCostSum"`
+	Profit         float64                `json:"profit"`
+	ReturnCost     float64                `json:"returnCost"`
+	ReturnCostSum  float64                `json:"returnCostSum"`
+	ReturnPrice    float64                `json:"returnPrice"`
+	ReturnSum      float64                `json:"returnSum"`
+	SellCost       float64                `json:"sellCost"`
+	Margin         float64                `json:"margin"`
+	SellPrice      float64                `json:"SellPrice"`
+	SellSum        float64                `json:"sellSum"`
 	ReturnQuantity float64                `json:"returnQuantity"`
 	SellQuantity   float64                `json:"sellQuantity"`
 }
@@ -41,21 +41,21 @@ type ProfitByAssortment struct {
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-struktura-ob-ekta-assortment
 type ProfitReportAssortment struct {
 	Image Meta `json:"image"`
-	MetaName
-	Uom     MetaName `json:"uom,omitempty"`
-	Code    string   `json:"code"`
-	Article string   `json:"article"`
+	MetaNameWrapper
+	Uom     MetaNameWrapper `json:"uom,omitempty"`
+	Code    string          `json:"code"`
+	Article string          `json:"article"`
 }
 
 // ProfitByCounterparty Прибыльность по покупателям
 // Ключевое слово: salesbyCounterparty
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-pokupatelqm
 type ProfitByCounterparty struct {
-	Counterparty MetaName `json:"counterparty"`
+	Counterparty MetaNameWrapper `json:"counterparty"`
 	Profit
 }
 
-func (r ProfitByCounterparty) MetaType() MetaType {
+func (profitByCounterparty ProfitByCounterparty) MetaType() MetaType {
 	return MetaTypeReportProfitByCounterparty
 }
 
@@ -63,11 +63,11 @@ func (r ProfitByCounterparty) MetaType() MetaType {
 // Ключевое слово: salesbyemployee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-sotrudnikam
 type ProfitByEmployee struct {
-	Employee MetaName `json:"employee"`
+	Employee MetaNameWrapper `json:"employee"`
 	Profit
 }
 
-func (r ProfitByEmployee) MetaType() MetaType {
+func (profitByEmployee ProfitByEmployee) MetaType() MetaType {
 	return MetaTypeReportProfitByEmployee
 }
 
@@ -78,7 +78,7 @@ type ProfitByProduct struct {
 	ProfitByAssortment
 }
 
-func (r ProfitByProduct) MetaType() MetaType {
+func (profitByProduct ProfitByProduct) MetaType() MetaType {
 	return MetaTypeReportProfitByProduct
 }
 
@@ -94,7 +94,7 @@ type ProfitBySalesChannel struct {
 	Profit
 }
 
-func (r ProfitBySalesChannel) MetaType() MetaType {
+func (profitBySalesChannel ProfitBySalesChannel) MetaType() MetaType {
 	return MetaTypeReportProfitBySalesChannel
 }
 
@@ -105,7 +105,7 @@ type ProfitByVariant struct {
 	ProfitByAssortment
 }
 
-func (r ProfitByVariant) MetaType() MetaType {
+func (profitByVariant ProfitByVariant) MetaType() MetaType {
 	return MetaTypeReportProfitByVariant
 }
 
@@ -135,70 +135,70 @@ func NewReportProfitService(client *Client) ReportProfitService {
 
 // GetByProduct  Запрос на получение отчета "Прибыльность по товарам".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
-func (s *reportProfitService) GetByProduct(ctx context.Context, params *Params) (*List[ProfitByProduct], *resty.Response, error) {
+func (service *reportProfitService) GetByProduct(ctx context.Context, params *Params) (*List[ProfitByProduct], *resty.Response, error) {
 	path := "report/profit/byproduct"
-	return NewRequestBuilder[List[ProfitByProduct]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetByVariant Запрос на получение отчета "Прибыльность по модификациям".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-modifikaciqm
-func (s *reportProfitService) GetByVariant(ctx context.Context, params *Params) (*List[ProfitByVariant], *resty.Response, error) {
+func (service *reportProfitService) GetByVariant(ctx context.Context, params *Params) (*List[ProfitByVariant], *resty.Response, error) {
 	path := "report/profit/byvariant"
-	return NewRequestBuilder[List[ProfitByVariant]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetByEmployee Запрос на получение отчета "Прибыльность по сотрудникам".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-sotrudnikam
-func (s *reportProfitService) GetByEmployee(ctx context.Context, params *Params) (*List[ProfitByEmployee], *resty.Response, error) {
+func (service *reportProfitService) GetByEmployee(ctx context.Context, params *Params) (*List[ProfitByEmployee], *resty.Response, error) {
 	path := "report/profit/byemployee"
-	return NewRequestBuilder[List[ProfitByEmployee]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetByCounterparty Запрос на получение отчета "Прибыльность по покупателям".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-pokupatelqm
-func (s *reportProfitService) GetByCounterparty(ctx context.Context, params *Params) (*List[ProfitByCounterparty], *resty.Response, error) {
+func (service *reportProfitService) GetByCounterparty(ctx context.Context, params *Params) (*List[ProfitByCounterparty], *resty.Response, error) {
 	path := "report/profit/bycounterparty"
-	return NewRequestBuilder[List[ProfitByCounterparty]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetBySalesChannel Запрос на получение отчета "Прибыльность по каналам продаж".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-kanalam-prodazh
-func (s *reportProfitService) GetBySalesChannel(ctx context.Context, params *Params) (*List[ProfitBySalesChannel], *resty.Response, error) {
+func (service *reportProfitService) GetBySalesChannel(ctx context.Context, params *Params) (*List[ProfitBySalesChannel], *resty.Response, error) {
 	path := "report/profit/bysaleschannel"
-	return NewRequestBuilder[List[ProfitBySalesChannel]](s.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetByProductAsync Запрос на получение отчета "Прибыльность по товарам" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
-func (s *reportProfitService) GetByProductAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
+func (service *reportProfitService) GetByProductAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
 	path := "report/profit/byproduct"
-	return NewRequestBuilder[List[ProfitByProduct]](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, path).SetParams(params).Async(ctx)
 }
 
 // GetByVariantAsync Запрос на получение отчета "Прибыльность по модификациям" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-modifikaciqm
-func (s *reportProfitService) GetByVariantAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
+func (service *reportProfitService) GetByVariantAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
 	path := "report/profit/byvariant"
-	return NewRequestBuilder[List[ProfitByVariant]](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, path).SetParams(params).Async(ctx)
 }
 
 // GetByEmployeeAsync Запрос на получение отчета "Прибыльность по сотрудникам" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-sotrudnikam
-func (s *reportProfitService) GetByEmployeeAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
+func (service *reportProfitService) GetByEmployeeAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
 	path := "report/profit/byemployee"
-	return NewRequestBuilder[List[ProfitByEmployee]](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, path).SetParams(params).Async(ctx)
 }
 
 // GetByCounterpartyAsync Запрос на получение отчета "Прибыльность по покупателям" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-pokupatelqm
-func (s *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
+func (service *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
 	path := "report/profit/bycounterparty"
-	return NewRequestBuilder[List[ProfitByCounterparty]](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, path).SetParams(params).Async(ctx)
 }
 
 // GetBySalesChannelAsync Запрос на получение отчета "Прибыльность по каналам продаж" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-kanalam-prodazh
-func (s *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
+func (service *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
 	path := "report/profit/bysaleschannel"
-	return NewRequestBuilder[List[ProfitBySalesChannel]](s.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, path).SetParams(params).Async(ctx)
 }

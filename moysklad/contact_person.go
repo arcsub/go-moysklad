@@ -21,10 +21,98 @@ type ContactPerson struct {
 	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
 }
 
-func (c ContactPerson) String() string {
-	return Stringify(c)
+func (contactPerson ContactPerson) Clean() *ContactPerson {
+	return &ContactPerson{Meta: contactPerson.Meta}
 }
 
-func (c ContactPerson) MetaType() MetaType {
+func (contactPerson ContactPerson) GetAccountID() uuid.UUID {
+	return Deref(contactPerson.AccountID)
+}
+
+func (contactPerson ContactPerson) GetAgent() Counterparty {
+	return Deref(contactPerson.Agent)
+}
+
+func (contactPerson ContactPerson) GetDescription() string {
+	return Deref(contactPerson.Description)
+}
+
+func (contactPerson ContactPerson) GetEmail() string {
+	return Deref(contactPerson.Email)
+}
+
+func (contactPerson ContactPerson) GetExternalCode() string {
+	return Deref(contactPerson.ExternalCode)
+}
+
+func (contactPerson ContactPerson) GetID() uuid.UUID {
+	return Deref(contactPerson.ID)
+}
+
+func (contactPerson ContactPerson) GetMeta() Meta {
+	return Deref(contactPerson.Meta)
+}
+
+func (contactPerson ContactPerson) GetName() string {
+	return Deref(contactPerson.Name)
+}
+
+func (contactPerson ContactPerson) GetPhone() string {
+	return Deref(contactPerson.Phone)
+}
+
+func (contactPerson ContactPerson) GetPosition() string {
+	return Deref(contactPerson.Position)
+}
+
+func (contactPerson ContactPerson) GetUpdated() Timestamp {
+	return Deref(contactPerson.Updated)
+}
+
+func (contactPerson *ContactPerson) SetAgent(agent *Counterparty) *ContactPerson {
+	contactPerson.Agent = agent.Clean()
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetDescription(description string) *ContactPerson {
+	contactPerson.Description = &description
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetEmail(email string) *ContactPerson {
+	contactPerson.Email = &email
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetExternalCode(externalCode string) *ContactPerson {
+	contactPerson.ExternalCode = &externalCode
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetMeta(meta *Meta) *ContactPerson {
+	contactPerson.Meta = meta
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetName(name string) *ContactPerson {
+	contactPerson.Name = &name
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetPhone(phone string) *ContactPerson {
+	contactPerson.Phone = &phone
+	return contactPerson
+}
+
+func (contactPerson *ContactPerson) SetPosition(position string) *ContactPerson {
+	contactPerson.Position = &position
+	return contactPerson
+}
+
+func (contactPerson ContactPerson) String() string {
+	return Stringify(contactPerson)
+}
+
+func (contactPerson ContactPerson) MetaType() MetaType {
 	return MetaTypeContactPerson
 }

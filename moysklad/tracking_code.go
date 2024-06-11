@@ -11,11 +11,58 @@ type TrackingCode struct {
 	TrackingCode1162 Slice[TrackingCode] `json:"trackingCodes_1162,omitempty"` // Массив вложенных кодов маркировки. Может присутствовать, только если type имеет значения consumerpack или transportpack
 }
 
-func (t TrackingCode) String() string {
-	return Stringify(t)
+func (trackingCode TrackingCode) GetID() string {
+	return Deref(trackingCode.ID)
 }
 
-type TrackingCodes = Slice[TrackingCode]
+func (trackingCode TrackingCode) GetCis() string {
+	return Deref(trackingCode.Cis)
+}
+
+func (trackingCode TrackingCode) GetCis1162() string {
+	return Deref(trackingCode.Cis1162)
+}
+
+func (trackingCode TrackingCode) GetType() TrackingCodeType {
+	return trackingCode.Type
+}
+
+func (trackingCode TrackingCode) GetTrackingCodes() Slice[TrackingCode] {
+	return trackingCode.TrackingCodes
+}
+
+func (trackingCode TrackingCode) GetTrackingCode1162() Slice[TrackingCode] {
+	return trackingCode.TrackingCode1162
+}
+
+func (trackingCode *TrackingCode) SetCis(cis string) *TrackingCode {
+	trackingCode.Cis = &cis
+	return trackingCode
+}
+
+func (trackingCode *TrackingCode) SetCis1162(cis1162 string) *TrackingCode {
+	trackingCode.Cis1162 = &cis1162
+	return trackingCode
+}
+
+func (trackingCode *TrackingCode) SetType(trackingCodeType TrackingCodeType) *TrackingCode {
+	trackingCode.Type = trackingCodeType
+	return trackingCode
+}
+
+func (trackingCode *TrackingCode) SetTrackingCodes(trackingCodes Slice[TrackingCode]) *TrackingCode {
+	trackingCode.TrackingCodes = trackingCodes
+	return trackingCode
+}
+
+func (trackingCode *TrackingCode) SetTrackingCode1162(trackingCode1162 Slice[TrackingCode]) *TrackingCode {
+	trackingCode.TrackingCode1162 = trackingCode1162
+	return trackingCode
+}
+
+func (trackingCode TrackingCode) String() string {
+	return Stringify(trackingCode)
+}
 
 // TrackingCodeType Коды маркировки товаров и транспортных упаковок
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-priemka-priemki-kody-markirowki-towarow-i-transportnyh-upakowok
