@@ -490,8 +490,8 @@ func (commissionReportInPosition *CommissionReportInPosition) SetMeta(meta *Meta
 	return commissionReportInPosition
 }
 
-func (commissionReportInPosition *CommissionReportInPosition) SetPrice(price *float64) *CommissionReportInPosition {
-	commissionReportInPosition.Price = price
+func (commissionReportInPosition *CommissionReportInPosition) SetPrice(price float64) *CommissionReportInPosition {
+	commissionReportInPosition.Price = &price
 	return commissionReportInPosition
 }
 
@@ -500,8 +500,8 @@ func (commissionReportInPosition *CommissionReportInPosition) SetQuantity(quanti
 	return commissionReportInPosition
 }
 
-func (commissionReportInPosition *CommissionReportInPosition) SetReward(reward *float64) *CommissionReportInPosition {
-	commissionReportInPosition.Reward = reward
+func (commissionReportInPosition *CommissionReportInPosition) SetReward(reward float64) *CommissionReportInPosition {
+	commissionReportInPosition.Reward = &reward
 	return commissionReportInPosition
 }
 
