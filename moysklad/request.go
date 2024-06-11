@@ -151,23 +151,23 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 	return &result, r, nil
 }
 
-func (rb *RequestBuilder[T]) SetHeader(header, value string) *RequestBuilder[T] {
-	rb.req.Header.Set(header, value)
-	return rb
+func (requestBuilder *RequestBuilder[T]) SetHeader(header, value string) *RequestBuilder[T] {
+	requestBuilder.req.Header.Set(header, value)
+	return requestBuilder
 }
 
-func (rb *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
+func (requestBuilder *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
 	v, _ := query.Values(params)
-	rb.req.SetQueryParamsFromValues(v)
-	return rb
+	requestBuilder.req.SetQueryParamsFromValues(v)
+	return requestBuilder
 }
 
-func (rb *RequestBuilder[T]) send(ctx context.Context, method string, body any) (*T, *resty.Response, error) {
+func (requestBuilder *RequestBuilder[T]) Send(ctx context.Context, method string, body any) (*T, *resty.Response, error) {
 	// Ограничения на количество запросов
-	rb.client.limits.Wait()
-	defer rb.client.limits.Done()
+	requestBuilder.client.limits.Wait()
+	defer requestBuilder.client.limits.Done()
 
-	resp, err := rb.req.SetContext(ctx).SetBody(body).Execute(method, rb.uri)
+	resp, err := requestBuilder.req.SetContext(ctx).SetBody(body).Execute(method, requestBuilder.uri)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -175,39 +175,45 @@ func (rb *RequestBuilder[T]) send(ctx context.Context, method string, body any) 
 	return parseResponse[T](resp)
 }
 
-func (rb *RequestBuilder[T]) Get(ctx context.Context) (*T, *resty.Response, error) {
-	return rb.send(ctx, http.MethodGet, nil)
+func (requestBuilder *RequestBuilder[T]) Get(ctx context.Context) (*T, *resty.Response, error) {
+	return requestBuilder.Send(ctx, http.MethodGet, nil)
 }
 
-func (rb *RequestBuilder[T]) Put(ctx context.Context, body any) (*T, *resty.Response, error) {
-	return rb.send(ctx, http.MethodPut, body)
+func (requestBuilder *RequestBuilder[T]) Put(ctx context.Context, body any) (*T, *resty.Response, error) {
+	return requestBuilder.Send(ctx, http.MethodPut, body)
 }
 
-func (rb *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Response, error) {
-	return rb.send(ctx, http.MethodPost, body)
+func (requestBuilder *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Response, error) {
+	return requestBuilder.Send(ctx, http.MethodPost, body)
 }
 
-func (rb *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
+func (requestBuilder *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
 	// Ограничения на количество запросов
-	rb.client.limits.Wait()
-	defer rb.client.limits.Done()
+	requestBuilder.client.limits.Wait()
+	defer requestBuilder.client.limits.Done()
 
-	_, resp, err := rb.send(ctx, http.MethodDelete, nil)
+	_, resp, err := requestBuilder.Send(ctx, http.MethodDelete, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }
 
-func (rb *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
+func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
 	// Ограничения на количество запросов
-	rb.client.limits.Wait()
-	defer rb.client.limits.Done()
+	requestBuilder.client.limits.Wait()
+	defer requestBuilder.client.limits.Done()
 
 	// устанавливаем флаг async=true на создание асинхронной операции
-	rb.req.SetContext(ctx).SetQueryParam("async", "true")
+	requestBuilder.req.SetContext(ctx).SetQueryParam("async", "true")
 
-	resp, err := rb.req.Get(rb.uri)
+	resp, err := requestBuilder.req.Get(requestBuilder.uri)
 	if err != nil {
 		return nil, resp, err
 	}
-	async := NewAsyncResultService[T](rb.client, resp)
+	async := NewAsyncResultService[T](requestBuilder.client, resp)
 	return async, resp, nil
+}
+
+// FetchMeta позволяет выполнить точечный запрос по переданному объекту Meta.
+// Необходимо точно указать обобщённый тип T, который ожидаем получить в ответ, иначе есть риск получить ошибку.
+func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params *Params) (*T, *resty.Response, error) {
+	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params).Get(ctx)
 }
