@@ -110,34 +110,20 @@ func (client *Client) WithTimeout(timeout time.Duration) *Client {
 
 // WithTokenAuth возвращает клиент с авторизацией через токен.
 func (client *Client) WithTokenAuth(token string) *Client {
-	clone := client.copy()
-	clone.SetAuthToken(token)
-	return clone
+	client.SetAuthToken(token)
+	return client
 }
 
 // WithBasicAuth возвращает клиент с базовой авторизацией логин/пароль.
 func (client *Client) WithBasicAuth(username, password string) *Client {
-	clone := client.copy()
-	clone.SetBasicAuth(username, password)
-	return clone
+	client.SetBasicAuth(username, password)
+	return client
 }
 
 // WithDisabledWebhookContent устанавливает флаг, который отвечает
 // за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
 // Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
 func (client *Client) WithDisabledWebhookContent(value bool) *Client {
-	clone := client.copy()
-	client.copy().SetHeader(headerWebHookDisable, strconv.FormatBool(value))
-	return clone
-}
-
-// copy возвращает копию клиента.
-func (client *Client) copy() *Client {
-	client.clientMu.Lock()
-	defer client.clientMu.Unlock()
-	clone := &Client{
-		Client: client.Client,
-		limits: client.limits,
-	}
-	return clone
+	client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
+	return client
 }
