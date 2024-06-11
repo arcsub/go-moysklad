@@ -105,7 +105,7 @@ func (t TaskNote) MetaType() MetaType {
 type TaskService interface {
 	GetList(ctx context.Context, params *Params) (*List[Task], *resty.Response, error)
 	Create(ctx context.Context, task *Task, params *Params) (*Task, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, taskList []*Task, params *Params) (*[]Task, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params *Params) (*Slice[Task], *resty.Response, error)
 	DeleteMany(ctx context.Context, taskList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Task, *resty.Response, error)
@@ -114,7 +114,7 @@ type TaskService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error)
 	CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
-	CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error)
+	CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error)
 	GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error)
 	UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
 	DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error)
@@ -162,9 +162,9 @@ func (service *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, ta
 }
 
 // CreateNotes Запрос на создание нескольких комментариев к Задаче.
-func (service *taskService) CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes []*TaskNote) (*[]TaskNote, *resty.Response, error) {
+func (service *taskService) CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
-	return NewRequestBuilder[[]TaskNote](service.client, path).Post(ctx, taskNotes)
+	return NewRequestBuilder[Slice[TaskNote]](service.client, path).Post(ctx, taskNotes)
 }
 
 // GetNoteByID Отдельный комментарий к Задаче с указанным id комментария.

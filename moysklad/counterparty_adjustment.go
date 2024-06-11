@@ -199,7 +199,7 @@ func (counterPartyAdjustment CounterPartyAdjustment) MetaType() MetaType {
 type CounterPartyAdjustmentService interface {
 	GetList(ctx context.Context, params *Params) (*List[CounterPartyAdjustment], *resty.Response, error)
 	Create(ctx context.Context, counterPartyAdjustment *CounterPartyAdjustment, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList []*CounterPartyAdjustment, params *Params) (*[]CounterPartyAdjustment, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterPartyAdjustment], params *Params) (*Slice[CounterPartyAdjustment], *resty.Response, error)
 	DeleteMany(ctx context.Context, counterPartyAdjustmentList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CounterPartyAdjustment, *resty.Response, error)

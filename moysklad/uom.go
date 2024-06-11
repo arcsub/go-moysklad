@@ -124,7 +124,7 @@ func (uom Uom) MetaType() MetaType {
 type UomService interface {
 	GetList(ctx context.Context, params *Params) (*List[Uom], *resty.Response, error)
 	Create(ctx context.Context, uom *Uom, params *Params) (*Uom, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, uomList []*Uom, params *Params) (*[]Uom, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, uomList Slice[Uom], params *Params) (*Slice[Uom], *resty.Response, error)
 	DeleteMany(ctx context.Context, uomList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Uom, *resty.Response, error)

@@ -578,7 +578,7 @@ const (
 type CounterpartyService interface {
 	GetList(ctx context.Context, params *Params) (*List[Counterparty], *resty.Response, error)
 	Create(ctx context.Context, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, counterpartyList []*Counterparty, params *Params) (*[]Counterparty, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params *Params) (*Slice[Counterparty], *resty.Response, error)
 	DeleteMany(ctx context.Context, counterpartyList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Counterparty, *resty.Response, error)
@@ -587,7 +587,7 @@ type CounterpartyService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
@@ -603,7 +603,7 @@ type CounterpartyService interface {
 	GetAsync(ctx context.Context, params *Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
 	GetContactPersons(ctx context.Context, id uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error)
 	GetContactPersonById(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error)
-	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error)
+	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error)
 	UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
 	GetNotes(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error)
 	GetNoteById(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error)
@@ -673,9 +673,9 @@ func (service *counterpartyService) GetContactPersonById(ctx context.Context, id
 
 // CreateContactPerson Создать контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-sozdat-kontaktnoe-lico
-func (service *counterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*[]ContactPerson, *resty.Response, error) {
+func (service *counterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons", service.uri, id)
-	return NewRequestBuilder[[]ContactPerson](service.client, path).Post(ctx, contactPerson)
+	return NewRequestBuilder[Slice[ContactPerson]](service.client, path).Post(ctx, contactPerson)
 }
 
 // UpdateContactPerson Изменить контактное лицо.

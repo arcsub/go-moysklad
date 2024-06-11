@@ -901,7 +901,7 @@ const (
 type RetailStoreService interface {
 	GetList(ctx context.Context, params *Params) (*List[RetailStore], *resty.Response, error)
 	Create(ctx context.Context, retailStore *RetailStore, params *Params) (*RetailStore, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, retailStore []*RetailStore, params *Params) (*[]RetailStore, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params *Params) (*Slice[RetailStore], *resty.Response, error)
 	DeleteMany(ctx context.Context, retailStore *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*RetailStore, *resty.Response, error)

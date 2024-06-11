@@ -494,7 +494,7 @@ func (organization Organization) MetaType() MetaType {
 type OrganizationService interface {
 	GetList(ctx context.Context, params *Params) (*List[Organization], *resty.Response, error)
 	Create(ctx context.Context, organization *Organization, params *Params) (*Organization, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, organizationList []*Organization, params *Params) (*[]Organization, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params *Params) (*Slice[Organization], *resty.Response, error)
 	DeleteMany(ctx context.Context, organizationList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Organization, *resty.Response, error)
@@ -503,7 +503,7 @@ type OrganizationService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)

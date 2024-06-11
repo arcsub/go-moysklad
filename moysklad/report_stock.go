@@ -109,8 +109,8 @@ type StockFolder struct {
 type ReportStockService interface {
 	GetAll(ctx context.Context, params *Params) (*List[StockAll], *resty.Response, error)
 	GetByStore(ctx context.Context, params *Params) (*List[StockByStore], *resty.Response, error)
-	GetCurrentAll(ctx context.Context, params *Params) (*[]StockCurrentAll, *resty.Response, error)
-	GetCurrentByStore(ctx context.Context, params *Params) (*[]StockCurrentByStore, *resty.Response, error)
+	GetCurrentAll(ctx context.Context, params *Params) (*Slice[StockCurrentAll], *resty.Response, error)
+	GetCurrentByStore(ctx context.Context, params *Params) (*Slice[StockCurrentByStore], *resty.Response, error)
 	GetByOperationID(ctx context.Context, operationID uuid.UUID, params *Params) (*List[StockByOperation], *resty.Response, error)
 	GetAllAsync(ctx context.Context, params *Params) (AsyncResultService[List[StockAll]], *resty.Response, error)
 	GetByStoreAsync(ctx context.Context, params *Params) (AsyncResultService[List[StockByStore]], *resty.Response, error)
@@ -141,16 +141,16 @@ func (service *reportStockService) GetByStore(ctx context.Context, params *Param
 
 // GetCurrentAll Запрос на получение текущих остатков без разбиения по складам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-kratkij-otchet-ob-ostatkah
-func (service *reportStockService) GetCurrentAll(ctx context.Context, params *Params) (*[]StockCurrentAll, *resty.Response, error) {
+func (service *reportStockService) GetCurrentAll(ctx context.Context, params *Params) (*Slice[StockCurrentAll], *resty.Response, error) {
 	path := fmt.Sprintf("%s/all/current", service.uri)
-	return NewRequestBuilder[[]StockCurrentAll](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[Slice[StockCurrentAll]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetCurrentByStore Запрос на получение текущих остатков без разбиения по складам.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-kratkij-otchet-ob-ostatkah
-func (service *reportStockService) GetCurrentByStore(ctx context.Context, params *Params) (*[]StockCurrentByStore, *resty.Response, error) {
+func (service *reportStockService) GetCurrentByStore(ctx context.Context, params *Params) (*Slice[StockCurrentByStore], *resty.Response, error) {
 	path := fmt.Sprintf("%s/bystore/current", service.uri)
-	return NewRequestBuilder[[]StockCurrentByStore](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[Slice[StockCurrentByStore]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetByOperationID

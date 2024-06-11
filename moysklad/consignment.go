@@ -151,7 +151,7 @@ func (consignment Consignment) MetaType() MetaType {
 type ConsignmentService interface {
 	GetList(ctx context.Context, params *Params) (*List[Consignment], *resty.Response, error)
 	Create(ctx context.Context, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, consignmentList []*Consignment, params *Params) (*[]Consignment, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params *Params) (*Slice[Consignment], *resty.Response, error)
 	DeleteMany(ctx context.Context, consignmentList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Consignment, *resty.Response, error)
@@ -160,7 +160,7 @@ type ConsignmentService interface {
 	GetAttributes(context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attr *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)

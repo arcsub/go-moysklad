@@ -384,7 +384,7 @@ type RetailShiftService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)

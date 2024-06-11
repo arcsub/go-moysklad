@@ -239,7 +239,7 @@ func (retailDrawerCashIn RetailDrawerCashIn) MetaType() MetaType {
 type RetailDrawerCashInService interface {
 	GetList(ctx context.Context, params *Params) (*List[RetailDrawerCashIn], *resty.Response, error)
 	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, retailDrawerCashInList []*RetailDrawerCashIn, params *Params) (*[]RetailDrawerCashIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params *Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
 	DeleteMany(ctx context.Context, retailDrawerCashInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
@@ -249,7 +249,7 @@ type RetailDrawerCashInService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
@@ -265,7 +265,7 @@ type RetailDrawerCashInService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error)
+	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 

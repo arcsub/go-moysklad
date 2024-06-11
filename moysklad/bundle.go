@@ -471,7 +471,7 @@ func (bundleComponent BundleComponent) MetaType() MetaType {
 type BundleService interface {
 	GetList(ctx context.Context, params *Params) (*List[Bundle], *resty.Response, error)
 	Create(ctx context.Context, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, bundleList []*Bundle, params *Params) (*[]Bundle, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params *Params) (*Slice[Bundle], *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Bundle, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)

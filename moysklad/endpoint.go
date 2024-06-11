@@ -176,8 +176,8 @@ type endpointCreateUpdateMany[T any] struct{ Endpoint }
 
 // CreateUpdateMany Запрос на создание и обновление нескольких объектов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (endpoint *endpointCreateUpdateMany[T]) CreateUpdateMany(ctx context.Context, entities []*T, params *Params) (*[]T, *resty.Response, error) {
-	return NewRequestBuilder[[]T](endpoint.client, endpoint.uri).SetParams(params).Post(ctx, entities)
+func (endpoint *endpointCreateUpdateMany[T]) CreateUpdateMany(ctx context.Context, entities Slice[T], params *Params) (*Slice[T], *resty.Response, error) {
+	return NewRequestBuilder[Slice[T]](endpoint.client, endpoint.uri).SetParams(params).Post(ctx, entities)
 }
 
 type endpointUpdate[T any] struct{ Endpoint }
@@ -236,15 +236,15 @@ func (endpoint *endpointAttributes) CreateAttribute(ctx context.Context, attribu
 
 // CreateAttributes Создать несколько дополнительных полей.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-nye-polq-suschnostej-sozdat-dopolnitel-nye-polq
-func (endpoint *endpointAttributes) CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error) {
+func (endpoint *endpointAttributes) CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes", endpoint.uri)
 	// при передаче массива из 1-го доп поля сервис возвращает 1 доп поле, а не массив доп полей.
 	// если количество передаваемых доп полей равняется 1, то дополнительно оборачиваем в срез.
 	if len(attributeList) == 1 {
 		attribute, resp, err := NewRequestBuilder[Attribute](endpoint.client, path).Post(ctx, attributeList[0])
-		return &[]Attribute{*attribute}, resp, err
+		return (&Slice[Attribute]{}).Push(attribute), resp, err
 	}
-	return NewRequestBuilder[[]Attribute](endpoint.client, path).Post(ctx, attributeList)
+	return NewRequestBuilder[Slice[Attribute]](endpoint.client, path).Post(ctx, attributeList)
 }
 
 // UpdateAttribute Изменить дополнительное поле.
@@ -287,16 +287,16 @@ func (endpoint *endpointFiles) GetFiles(ctx context.Context, id uuid.UUID) (*Met
 }
 
 // CreateFile Добавить Файл.
-func (endpoint *endpointFiles) CreateFile(ctx context.Context, id uuid.UUID, file *File) (*[]File, *resty.Response, error) {
+func (endpoint *endpointFiles) CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/files", endpoint.uri, id)
-	return NewRequestBuilder[[]File](endpoint.client, path).Get(ctx)
+	return NewRequestBuilder[Slice[File]](endpoint.client, path).Post(ctx, file)
 }
 
 // UpdateFiles Добавить/обновить Файлы.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-fajly-dobawit-fajly-k-operacii-nomenklature-ili-kontragentu
-func (endpoint *endpointFiles) UpdateFiles(ctx context.Context, id uuid.UUID, files []*File) (*[]File, *resty.Response, error) {
+func (endpoint *endpointFiles) UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/files", endpoint.uri, id)
-	return NewRequestBuilder[[]File](endpoint.client, path).Post(ctx, files)
+	return NewRequestBuilder[Slice[File]](endpoint.client, path).Post(ctx, files)
 }
 
 // DeleteFile Удалить Файл.
@@ -323,16 +323,16 @@ func (endpoint *endpointImages) GetImages(ctx context.Context, id uuid.UUID) (*M
 
 // CreateImage Добавить Изображение.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-dobawit-izobrazhenie-k-towaru-komplektu-ili-modifikacii
-func (endpoint *endpointImages) CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*[]*Image, *resty.Response, error) {
+func (endpoint *endpointImages) CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/images", endpoint.uri, id)
-	return NewRequestBuilder[[]*Image](endpoint.client, path).Post(ctx, image)
+	return NewRequestBuilder[Slice[Image]](endpoint.client, path).Post(ctx, image)
 }
 
 // UpdateImages Изменение Изображений (списком).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-izmenenie-spiska-izobrazhenij-u-towara-komplekta-ili-modifikacii
-func (endpoint *endpointImages) UpdateImages(ctx context.Context, id uuid.UUID, images []*Image) (*[]Image, *resty.Response, error) {
+func (endpoint *endpointImages) UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/images", endpoint.uri, id)
-	return NewRequestBuilder[[]Image](endpoint.client, path).Post(ctx, images)
+	return NewRequestBuilder[Slice[Image]](endpoint.client, path).Post(ctx, images)
 }
 
 // DeleteImage Удалить Изображение.
@@ -392,9 +392,9 @@ func (endpoint *endpointPositions[T]) CreatePosition(ctx context.Context, id uui
 }
 
 // CreatePositions Массово создаёт позиции документа.
-func (endpoint *endpointPositions[T]) CreatePositions(ctx context.Context, id uuid.UUID, positions []*T) (*[]T, *resty.Response, error) {
+func (endpoint *endpointPositions[T]) CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[T]) (*Slice[T], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions", endpoint.uri, id)
-	return NewRequestBuilder[[]T](endpoint.client, path).Post(ctx, positions)
+	return NewRequestBuilder[Slice[T]](endpoint.client, path).Post(ctx, positions)
 }
 
 // DeletePosition Удаляет позицию документа.
@@ -418,9 +418,9 @@ func (endpoint *endpointPositions[T]) GetPositionTrackingCodes(ctx context.Conte
 
 // CreateOrUpdatePositionTrackingCodes Массовое создание и обновление Кодов маркировки.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kody-markirowki-massowoe-sozdanie-i-obnowlenie-kodow-markirowki
-func (endpoint *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*[]TrackingCode, *resty.Response, error) {
+func (endpoint *endpointPositions[T]) CreateOrUpdatePositionTrackingCodes(ctx context.Context, id, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/%s/trackingCodes", endpoint.uri, id, positionID)
-	return NewRequestBuilder[[]TrackingCode](endpoint.client, path).Post(ctx, trackingCodes)
+	return NewRequestBuilder[Slice[TrackingCode]](endpoint.client, path).Post(ctx, trackingCodes)
 }
 
 // DeletePositionTrackingCodes Массовое удаление Кодов маркировки.
@@ -543,9 +543,9 @@ func (endpoint *endpointStates) UpdateState(ctx context.Context, id uuid.UUID, s
 
 // CreateOrUpdateStates Массовое создание и обновление Статусов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow-massowoe-sozdanie-i-obnowlenie-statusow
-func (endpoint *endpointStates) CreateOrUpdateStates(ctx context.Context, states []*State) (*[]State, *resty.Response, error) {
+func (endpoint *endpointStates) CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/states", endpoint.uri)
-	return NewRequestBuilder[[]State](endpoint.client, path).Post(ctx, states)
+	return NewRequestBuilder[Slice[State]](endpoint.client, path).Post(ctx, states)
 }
 
 // DeleteState Запрос на удаление Статуса с указанным id.

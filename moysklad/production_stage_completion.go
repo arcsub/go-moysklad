@@ -298,7 +298,7 @@ func (productionStageCompletionResult ProductionStageCompletionResult) MetaType(
 type ProductionStageCompletionService interface {
 	GetList(ctx context.Context, params *Params) (*List[ProductionStageCompletion], *resty.Response, error)
 	Create(ctx context.Context, productionStageCompletion *ProductionStageCompletion, params *Params) (*ProductionStageCompletion, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, productionStageCompletionList []*ProductionStageCompletion, params *Params) (*[]ProductionStageCompletion, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productionStageCompletionList Slice[ProductionStageCompletion], params *Params) (*Slice[ProductionStageCompletion], *resty.Response, error)
 	DeleteMany(ctx context.Context, productionStageCompletionList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProductionStageCompletion, *resty.Response, error)

@@ -124,7 +124,7 @@ func (country Country) MetaType() MetaType {
 type CountryService interface {
 	GetList(ctx context.Context, params *Params) (*List[Country], *resty.Response, error)
 	Create(ctx context.Context, country *Country, params *Params) (*Country, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, countryList []*Country, params *Params) (*[]Country, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, countryList Slice[Country], params *Params) (*Slice[Country], *resty.Response, error)
 	DeleteMany(ctx context.Context, countryList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Country, *resty.Response, error)

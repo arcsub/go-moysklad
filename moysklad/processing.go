@@ -413,7 +413,7 @@ func (processingPositionProduct ProcessingPositionProduct) MetaType() MetaType {
 type ProcessingService interface {
 	GetList(ctx context.Context, params *Params) (*List[Processing], *resty.Response, error)
 	Create(ctx context.Context, processing *Processing, params *Params) (*Processing, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingList []*Processing, params *Params) (*[]Processing, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingList Slice[Processing], params *Params) (*Slice[Processing], *resty.Response, error)
 	DeleteMany(ctx context.Context, processingList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Processing, *resty.Response, error)
@@ -424,7 +424,7 @@ type ProcessingService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList []*Attribute) (*[]Attribute, *resty.Response, error)
+	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
@@ -433,13 +433,13 @@ type ProcessingService interface {
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
 	CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
-	CreateMaterials(ctx context.Context, id uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error)
+	CreateMaterials(ctx context.Context, id uuid.UUID, materials Slice[ProcessingPlanMaterial]) (*Slice[ProcessingPlanMaterial], *resty.Response, error)
 	GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error)
 	UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
 	DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error)
 	GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error)
 	CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	CreateProducts(ctx context.Context, id uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error)
+	CreateProducts(ctx context.Context, id uuid.UUID, products Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 	GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error)
 	UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
 	DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error)
@@ -497,9 +497,9 @@ func (service *processingService) CreateMaterial(ctx context.Context, id uuid.UU
 }
 
 // CreateMaterials Создать несколько материалов Тех. карты.
-func (service *processingService) CreateMaterials(ctx context.Context, id uuid.UUID, materials []*ProcessingPlanMaterial) (*[]ProcessingPlanMaterial, *resty.Response, error) {
+func (service *processingService) CreateMaterials(ctx context.Context, id uuid.UUID, materials Slice[ProcessingPlanMaterial]) (*Slice[ProcessingPlanMaterial], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
-	return NewRequestBuilder[[]ProcessingPlanMaterial](service.client, path).Post(ctx, materials)
+	return NewRequestBuilder[Slice[ProcessingPlanMaterial]](service.client, path).Post(ctx, materials)
 }
 
 // GetMaterialByID Получить материал.
@@ -538,9 +538,9 @@ func (service *processingService) CreateProduct(ctx context.Context, id uuid.UUI
 }
 
 // CreateProducts Создать несколько продуктов Тех. карты.
-func (service *processingService) CreateProducts(ctx context.Context, id uuid.UUID, products []*ProcessingPlanProduct) (*[]ProcessingPlanProduct, *resty.Response, error) {
+func (service *processingService) CreateProducts(ctx context.Context, id uuid.UUID, products Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/products", service.uri, id)
-	return NewRequestBuilder[[]ProcessingPlanProduct](service.client, path).Post(ctx, products)
+	return NewRequestBuilder[Slice[ProcessingPlanProduct]](service.client, path).Post(ctx, products)
 }
 
 // GetProductByID Получить продукт.

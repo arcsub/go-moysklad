@@ -311,7 +311,7 @@ func (service Service) MetaType() MetaType {
 type ServiceService interface {
 	GetList(ctx context.Context, params *Params) (*List[Service], *resty.Response, error)
 	Create(ctx context.Context, service *Service, params *Params) (*Service, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, serviceList []*Service, params *Params) (*[]Service, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, serviceList Slice[Service], params *Params) (*Slice[Service], *resty.Response, error)
 	DeleteMany(ctx context.Context, serviceList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Service, *resty.Response, error)
