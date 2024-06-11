@@ -486,6 +486,11 @@ type BundleService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
+	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
+	UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error)
+	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
+	DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type bundleService struct {
@@ -498,6 +503,7 @@ type bundleService struct {
 	endpointDelete
 	endpointDeleteMany[Bundle]
 	endpointFiles
+	endpointImages
 }
 
 func NewBundleService(client *Client) BundleService {
@@ -512,6 +518,7 @@ func NewBundleService(client *Client) BundleService {
 		endpointDelete:           endpointDelete{e},
 		endpointDeleteMany:       endpointDeleteMany[Bundle]{e},
 		endpointFiles:            endpointFiles{e},
+		endpointImages:           endpointImages{e},
 	}
 }
 
