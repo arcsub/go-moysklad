@@ -443,6 +443,11 @@ type ProcessingService interface {
 	GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error)
 	UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
 	DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type processingService struct {
@@ -461,6 +466,7 @@ type processingService struct {
 	endpointSyncID[Processing]
 	endpointTrash
 	endpointStates
+	endpointFiles
 }
 
 func NewProcessingService(client *Client) ProcessingService {
@@ -479,6 +485,7 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointSyncID:           endpointSyncID[Processing]{e},
 		endpointTrash:            endpointTrash{e},
 		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
 	}
 }
 

@@ -549,6 +549,11 @@ type ProductService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetAudit(ctx context.Context, id uuid.UUID, params *Params) (*List[AuditEvent], *resty.Response, error)
 	PrintLabel(ctx context.Context, id uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewProductService(client *Client) ProductService {

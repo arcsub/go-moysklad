@@ -481,6 +481,11 @@ type BundleService interface {
 	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
 	UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type bundleService struct {
@@ -492,6 +497,7 @@ type bundleService struct {
 	endpointUpdate[Bundle]
 	endpointDelete
 	endpointDeleteMany[Bundle]
+	endpointFiles
 }
 
 func NewBundleService(client *Client) BundleService {
@@ -505,6 +511,7 @@ func NewBundleService(client *Client) BundleService {
 		endpointUpdate:           endpointUpdate[Bundle]{e},
 		endpointDelete:           endpointDelete{e},
 		endpointDeleteMany:       endpointDeleteMany[Bundle]{e},
+		endpointFiles:            endpointFiles{e},
 	}
 }
 

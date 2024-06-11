@@ -659,6 +659,11 @@ type CommissionReportInService interface {
 	CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error)
 	UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
 	DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type commissionReportInService struct {
@@ -678,6 +683,7 @@ type commissionReportInService struct {
 	endpointPublication
 	endpointTrash
 	endpointStates
+	endpointFiles
 }
 
 func NewCommissionReportInService(client *Client) CommissionReportInService {
@@ -700,6 +706,7 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointPublication: endpointPublication{e},
 		endpointTrash:       endpointTrash{e},
 		endpointStates:      endpointStates{e},
+		endpointFiles:       endpointFiles{e},
 	}
 }
 

@@ -426,6 +426,11 @@ type ProductionTaskService interface {
 	UpdateProduct(ctx context.Context, id uuid.UUID, productID uuid.UUID, productionTaskResult *ProductionTaskResult, params *Params) (*ProductionTaskResult, *resty.Response, error)
 	DeleteProduct(ctx context.Context, id uuid.UUID, productID uuid.UUID) (bool, *resty.Response, error)
 	DeleteProductMany(ctx context.Context, id uuid.UUID) (*DeleteManyResponse, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type productionTaskService struct {
@@ -441,6 +446,7 @@ type productionTaskService struct {
 	endpointDelete
 	endpointPositions[ProductionRow]
 	endpointStates
+	endpointFiles
 }
 
 func NewProductionTaskService(client *Client) ProductionTaskService {
@@ -458,6 +464,7 @@ func NewProductionTaskService(client *Client) ProductionTaskService {
 		endpointDelete:           endpointDelete{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
 	}
 }
 

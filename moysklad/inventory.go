@@ -342,6 +342,11 @@ type InventoryService interface {
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type inventoryService struct {
@@ -360,6 +365,7 @@ type inventoryService struct {
 	endpointSyncID[Inventory]
 	endpointTrash
 	endpointStates
+	endpointFiles
 }
 
 func NewInventoryService(client *Client) InventoryService {
@@ -380,6 +386,7 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointSyncID:     endpointSyncID[Inventory]{e},
 		endpointTrash:      endpointTrash{e},
 		endpointStates:     endpointStates{e},
+		endpointFiles:      endpointFiles{e},
 	}
 }
 

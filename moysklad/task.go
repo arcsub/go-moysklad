@@ -118,6 +118,11 @@ type TaskService interface {
 	GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error)
 	UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
 	DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error)
+	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type taskService struct {
@@ -130,6 +135,7 @@ type taskService struct {
 	endpointGetByID[Task]
 	endpointUpdate[Task]
 	endpointNamedFilter
+	endpointFiles
 }
 
 func NewTaskService(client *Client) TaskService {
@@ -144,6 +150,7 @@ func NewTaskService(client *Client) TaskService {
 		endpointGetByID:          endpointGetByID[Task]{e},
 		endpointUpdate:           endpointUpdate[Task]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
+		endpointFiles:            endpointFiles{e},
 	}
 }
 
