@@ -3,8 +3,8 @@
 # go-moysklad (МойСклад)
 
 SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api)
-
-> **Внимание!** SDK находится в стадии разработки!
+> [!WARNING]
+> SDK находится в стадии разработки!
 > 
 > Некоторые методы могут отсутствовать или работать неправильно!
 
@@ -13,7 +13,7 @@ SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.
 > Требуемая версия go >= 1.9
 > 
 ```
-go get github.com/arcsub/go-moysklad
+go get -u github.com/arcsub/go-moysklad
 ```
 
 ## Особенности
@@ -31,24 +31,38 @@ func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Param
 
 ### Указатели
 Поля структур сущностей и документов являются указателями.
-- Для безопасного разыменовывания указателя необходимо передать указатель в метод `Deref()`
-```go
-  name := moysklad.Deref(product.Name)
-```
-- Чтобы установить указатель на примитивное значение поля также существуют вспомогательные методы:
-  - `Bool()` возвращает *bool
-  - `Int()` возвращает *int
-  - `Uint()` возвращает *uint64
-  - `Float()` возвращает *float64
-  - `String()` возвращает *string
 
-Пример:
+- Чтобы получить значение по указателю необходимо вызвать метод структуры `GetFieldName()`.
+  - `FieldName` - наименование поля.
+
+Например:
 ```go
-  product := &moysklad.Product{
-    Name: moysklad.String("Apple iPhone 15"),
-    Active: moysklad.Bool(false),
-  }
+name := product.GetName()
+id := product.GetID()
 ```
+
+- Чтобы установить значение необходимо передать значение в соответствующий метод `SetFieldName(value)`
+  - `FieldName` - наименование поля
+  - `value` - передаваемое значение.
+
+> [!NOTE]
+> Методы `SetFieldName()` возвращают указатель на объект, что позволяет вызывать методы по цепочке.
+
+
+Например:
+```go
+product := new(moysklad.Product)
+product.SetName("iPhone 15 Pro Max").SetCode("APPL15PM")
+```
+
+- ~~Для безопасного разыменовывания указателя необходимо передать указатель в метод `Deref()`~~
+- ~~Чтобы установить указатель на примитивное значение поля также существуют вспомогательные методы:~~
+  - ~~`Bool()` возвращает *bool~~
+  - ~~`Int()` возвращает *int~~
+  - ~~`Uint()` возвращает *uint64~~
+  - ~~`Float()` возвращает *float64~~
+  - ~~`String()` возвращает *string~~
+
 ## Использование
 ### Создание экземпляра клиента
 ```go
@@ -315,6 +329,25 @@ _ = client.Context().CompanySettings()
 
 // `/report/dashboard`
 _ = client.Report().Dashboard()
+```
+
+### Запрос по объекту `Meta`
+
+Если возникает необходимость точечно запросить информацию о сущности, имея только её `Meta`, можно использовать
+метод `FetchMeta`.
+
+Чтобы использовать данный функционал необходимо точно знать, какой тип данных мы ожидаем получить в ответ.
+
+Метод имеет следующую сигнатуру:
+
+```go
+func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params *Params) (*T, *resty.Response, error)
+```
+
+Пример:
+
+```go
+productFromMeta, resp, err := moysklad.FetchMeta[moysklad.Product](ctx, client, product.GetMeta(), nil)
 ```
 ### Пример работы
 ```go
