@@ -58,6 +58,10 @@ func (assortmentPosition AssortmentPosition) MetaType() MetaType {
 	return assortmentPosition.Meta.GetType()
 }
 
+func (assortmentPosition AssortmentPosition) GetMeta() Meta {
+	return assortmentPosition.Meta
+}
+
 // Raw удовлетворяет интерфейсу RawMetaTyper
 func (assortmentPosition AssortmentPosition) Raw() json.RawMessage {
 	return assortmentPosition.raw
@@ -297,7 +301,7 @@ const (
 type AssortmentService interface {
 	Get(ctx context.Context, params *Params) (*AssortmentResponse, *resty.Response, error)
 	GetAsync(ctx context.Context) (AsyncResultService[AssortmentResponse], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
 	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)

@@ -475,7 +475,7 @@ type BundleService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Bundle, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, bundleList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, bundleList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)
 	CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
@@ -485,12 +485,12 @@ type BundleService interface {
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
 	UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error)
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImages(ctx context.Context, id uuid.UUID, images []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type bundleService struct {

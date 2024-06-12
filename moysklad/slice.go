@@ -66,3 +66,22 @@ func (slice Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
 func NewSlice[T any]() Slice[T] {
 	return make(Slice[T], 0)
 }
+
+func (slice Slice[E]) UnPtr() []E {
+	var e []E
+	for _, row := range slice {
+		e = append(e, Deref(row))
+	}
+	return e
+}
+
+// AsMetaWrapper приводит элементы слайса к типу MetaWrapper
+func (slice Slice[E]) AsMetaWrapper() []MetaWrapper {
+	var mw []MetaWrapper
+	for _, elem := range slice {
+		if m, ok := any(elem).(MetaOwner); ok {
+			mw = append(mw, m.GetMeta().Wrap())
+		}
+	}
+	return mw
+}

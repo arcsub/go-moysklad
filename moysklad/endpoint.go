@@ -167,7 +167,7 @@ type endpointDeleteMany[T any] struct{ Endpoint }
 
 // DeleteMany Запрос на удаление нескольких объектов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (endpoint *endpointDeleteMany[T]) DeleteMany(ctx context.Context, entities *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error) {
+func (endpoint *endpointDeleteMany[T]) DeleteMany(ctx context.Context, entities []MetaWrapper) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/delete", endpoint.uri)
 	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, entities)
 }
@@ -263,7 +263,7 @@ func (endpoint *endpointAttributes) DeleteAttribute(ctx context.Context, id uuid
 
 // DeleteAttributes Удалить несколько дополнительных полей.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-dopolnitel-nye-polq-suschnostej-udalit-dopolnitel-nye-polq
-func (endpoint *endpointAttributes) DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error) {
+func (endpoint *endpointAttributes) DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/attributes/delete", endpoint.uri)
 	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, attributeList)
 }
@@ -307,7 +307,7 @@ func (endpoint *endpointFiles) DeleteFile(ctx context.Context, id, fileID uuid.U
 }
 
 // DeleteFiles Удалить несколько Файлов.
-func (endpoint *endpointFiles) DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error) {
+func (endpoint *endpointFiles) DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/files/delete", endpoint.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, files)
 }
@@ -344,7 +344,7 @@ func (endpoint *endpointImages) DeleteImage(ctx context.Context, id, imageID uui
 
 // DeleteImages Удалить несколько Изображений.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-izobrazhenie-udalit-gruppu-izobrazhenij
-func (endpoint *endpointImages) DeleteImages(ctx context.Context, id uuid.UUID, images *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error) {
+func (endpoint *endpointImages) DeleteImages(ctx context.Context, id uuid.UUID, images []MetaWrapper) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/images/delete", endpoint.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, images)
 }
@@ -404,7 +404,7 @@ func (endpoint *endpointPositions[T]) DeletePosition(ctx context.Context, id, po
 }
 
 // DeletePositionList запрос на удаление нескольких позиций документа.
-func (endpoint *endpointPositions[T]) DeletePositionList(ctx context.Context, id uuid.UUID, list *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error) {
+func (endpoint *endpointPositions[T]) DeletePositionList(ctx context.Context, id uuid.UUID, list []MetaWrapper) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/positions/delete", endpoint.uri, id)
 	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, list)
 }
