@@ -365,7 +365,7 @@ type PaymentOutService interface {
 	GetList(ctx context.Context, params *Params) (*List[PaymentOut], *resty.Response, error)
 	Create(ctx context.Context, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, paymentOutList Slice[PaymentOut], params *Params) (*Slice[PaymentOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, paymentOutList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, paymentOutList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PaymentOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
@@ -378,7 +378,7 @@ type PaymentOutService interface {
 	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
@@ -395,7 +395,7 @@ type PaymentOutService interface {
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewPaymentOutService(client *Client) PaymentOutService {

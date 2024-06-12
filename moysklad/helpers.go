@@ -343,29 +343,6 @@ func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
 	return l != nil && r != nil && lMeta.IsEqual(&rMeta)
 }
 
-type DeleteManyRequest Slice[MetaOwner]
-
-// MarshalJSON implements the json.Marshaler interface.
-func (deleteManyRequest DeleteManyRequest) MarshalJSON() ([]byte, error) {
-	var tmp []MetaWrapper
-	for _, meta := range deleteManyRequest {
-		if meta != nil {
-			tmp = append(tmp, (*meta).GetMeta().Wrap())
-		}
-	}
-	return json.Marshal(tmp)
-}
-
-// Push добавляет элементы в конец среза.
-func (deleteManyRequest *DeleteManyRequest) Push(elements ...*MetaOwner) *DeleteManyRequest {
-	*deleteManyRequest = append(*deleteManyRequest, elements...)
-	return deleteManyRequest
-}
-
-func NewDeleteManyRequest() DeleteManyRequest {
-	return make(DeleteManyRequest, 0)
-}
-
 // Stock Остатки и себестоимость в позициях документов
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ostatki-i-sebestoimost-w-poziciqh-dokumentow
 type Stock struct {

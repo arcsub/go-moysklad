@@ -1,4 +1,4 @@
-![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo.svg)
+![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
 # go-moysklad (МойСклад)
 

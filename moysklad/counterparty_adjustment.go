@@ -200,7 +200,7 @@ type CounterPartyAdjustmentService interface {
 	GetList(ctx context.Context, params *Params) (*List[CounterPartyAdjustment], *resty.Response, error)
 	Create(ctx context.Context, counterPartyAdjustment *CounterPartyAdjustment, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterPartyAdjustment], params *Params) (*Slice[CounterPartyAdjustment], *resty.Response, error)
-	DeleteMany(ctx context.Context, counterPartyAdjustmentList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, counterPartyAdjustmentList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, counterPartyAdjustment *CounterPartyAdjustment, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
@@ -212,7 +212,7 @@ type CounterPartyAdjustmentService interface {
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewCounterPartyAdjustmentService(client *Client) CounterPartyAdjustmentService {

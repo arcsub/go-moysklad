@@ -106,7 +106,7 @@ type TaskService interface {
 	GetList(ctx context.Context, params *Params) (*List[Task], *resty.Response, error)
 	Create(ctx context.Context, task *Task, params *Params) (*Task, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params *Params) (*Slice[Task], *resty.Response, error)
-	DeleteMany(ctx context.Context, taskList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, taskList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Task, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, task *Task, params *Params) (*Task, *resty.Response, error)
@@ -122,7 +122,7 @@ type TaskService interface {
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type taskService struct {

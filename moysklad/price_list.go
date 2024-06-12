@@ -352,7 +352,7 @@ type PriceListService interface {
 	GetList(ctx context.Context, params *Params) (*List[PriceList], *resty.Response, error)
 	Create(ctx context.Context, priceList *PriceList, params *Params) (*PriceList, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, priceListList Slice[PriceList], params *Params) (*Slice[PriceList], *resty.Response, error)
-	DeleteMany(ctx context.Context, priceListList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, priceListList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PriceList, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, priceList *PriceList, params *Params) (*PriceList, *resty.Response, error)
@@ -372,7 +372,7 @@ type PriceListService interface {
 	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PriceList, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
@@ -385,7 +385,7 @@ type PriceListService interface {
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewPriceListService(client *Client) PriceListService {

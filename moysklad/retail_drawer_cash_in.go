@@ -240,7 +240,7 @@ type RetailDrawerCashInService interface {
 	GetList(ctx context.Context, params *Params) (*List[RetailDrawerCashIn], *resty.Response, error)
 	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params *Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailDrawerCashInList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, retailDrawerCashInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDrawerCashIn *RetailDrawerCashIn, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
@@ -252,7 +252,7 @@ type RetailDrawerCashInService interface {
 	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
@@ -271,7 +271,7 @@ type RetailDrawerCashInService interface {
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewRetailDrawerCashInService(client *Client) RetailDrawerCashInService {

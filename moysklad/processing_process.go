@@ -183,7 +183,7 @@ type ProcessingProcessService interface {
 	GetList(ctx context.Context, params *Params) (*List[ProcessingProcess], *resty.Response, error)
 	Create(ctx context.Context, processingProcess *ProcessingProcess, params *Params) (*ProcessingProcess, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingProcessList Slice[ProcessingProcess], params *Params) (*Slice[ProcessingProcess], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingProcessList *DeleteManyRequest) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, processingProcessList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProcessingProcess, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingProcess *ProcessingProcess, params *Params) (*ProcessingProcess, *resty.Response, error)
