@@ -1,9 +1,12 @@
 package moysklad
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/ratelimit"
+	"net"
 	"net/http"
 	"strconv"
 	"sync"
@@ -11,23 +14,23 @@ import (
 )
 
 const (
-	Version                  = "v0.0.51"
+	Version                  = "v0.0.52"
 	baseApiURL               = "https://api.moysklad.ru/api/remap/1.2/"
 	headerWebHookDisable     = "X-Lognex-WebHook-Disable" // Заголовок временного отключения уведомлений через API.
 	headerGetContent         = "X-Lognex-Get-Content"     // Заголовок для получения файла напрямую.
 	headerContentDisposition = "Content-Disposition"      // Заголовок содержит название файла при `X-Lognex-Get-Content: true`
-	MaxFiles                 = 100                        // Максимальное количество файлов
-	MaxImages                = 10                         // Максимальное количество изображений
 	MaxPositions             = 1000                       // Максимальное число объектов, передаваемых в одном массиве в запросе
 	MaxQueriesPerSecond      = 15                         // Не более 45 запросов за 3 секундный период от аккаунта (45/3)
 	MaxQueriesPerUser        = 5                          // Не более 5 параллельных запросов от одного пользователя
 
+	//MaxFiles                = 100                           // Максимальное количество файлов
+	//MaxImages               = 10                            // Максимальное количество изображений
 	//headerRateLimit         = "X-RateLimit-Limit"           // Количество запросов, которые равномерно можно сделать в течение интервала до появления 429 ошибки.
 	//headerRateRemaining     = "X-RateLimit-Remaining"       // Число запросов, которые можно отправить до получения 429 ошибки.
 	//headerRetryTimeInterval = "X-Lognex-Retry-TimeInterval" // Интервал в миллисекундах, в течение которого можно сделать эти запросы
 	//headerRateReset         = "X-Lognex-Reset"              // Время до сброса ограничения в миллисекундах. Равно нулю, если ограничение не установлено.
 	//headerRetryAfter        = "X-Lognex-Retry-After"        // Время до сброса ограничения в миллисекундах.
-	//MaxPrintCount           = 1000                          // TODO: Максимальное количество ценников/термоэтикеток
+	//MaxPrintCount           = 1000                          // Максимальное количество ценников/термоэтикеток
 
 )
 
@@ -56,6 +59,16 @@ type Client struct {
 	clientMu sync.Mutex
 }
 
+// Возвращает true, если ошибка является одной из перечисленных:
+// net.Error, net.ErrClosed, context.DeadlineExceeded
+func isNE(err error) bool {
+	var ne net.Error
+	if errors.As(err, &ne) && ne.Timeout() {
+		return true
+	}
+	return errors.Is(err, net.ErrClosed) || errors.Is(err, context.DeadlineExceeded)
+}
+
 func (client *Client) init() *Client {
 	client.setQueryLimits().
 		SetBaseURL(baseApiURL).
@@ -66,7 +79,9 @@ func (client *Client) init() *Client {
 		}).
 		AddRetryCondition(
 			func(r *resty.Response, err error) bool {
-				return r.StatusCode() == http.StatusTooManyRequests || r.StatusCode() >= http.StatusBadGateway
+				return r.StatusCode() == http.StatusTooManyRequests || // 429
+					r.StatusCode() >= http.StatusInternalServerError || // 500+
+					isNE(err)
 			},
 		)
 
