@@ -377,15 +377,12 @@ func main() {
 
   // выводим названия полученных товаров
   for _, product := range products.Rows {
-    name := moysklad.Deref(product.Name) // Deref безопасно разыменовывает указатель
-    fmt.Println(name)
+    fmt.Println(product.GetName())
   }
 
   // создадим новый товар
   product := new(moysklad.Product)
-
-  // придумаем ему название (обязательное поле)
-  product.Name = moysklad.String("Created Product")
+  product.SetName("Created Product")
 
   // отправим запрос на создание товара
   // в качестве аргументов передадим контекст, указатель на товар и nil в качестве параметров
@@ -395,24 +392,24 @@ func main() {
   }
 
   // выведем название созданного товара
-  fmt.Println(moysklad.Deref(productCreated.Name))
+  fmt.Println(productCreated.GetName())
 
   // изменим название товара
-  productCreated.Name = moysklad.String("Updated Product")
+  productCreated.SetName("Updated Product")
 
   // отправим запрос на изменение товара
   // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
-  productUpdated, _, err := productService.Update(context.Background(), productCreated.ID, productCreated, nil)
+  productUpdated, _, err := productService.Update(context.Background(), productCreated.GetID(), productCreated, nil)
   if err != nil {
     panic(err)
   }
 
   // выведем название изменённого товара
-  fmt.Println(moysklad.Deref(productUpdated.Name))
+  fmt.Println(productUpdated.GetName())
 
   // отправим запрос на удаление товара
   // в качестве аргументов передадим контекст и указатель на ID удаляемой сущности
-  success, _, err := productService.Delete(context.Background(), productUpdated.ID)
+  success, _, err := productService.Delete(context.Background(), productUpdated.GetID())
   if err != nil {
     panic(err)
   }
