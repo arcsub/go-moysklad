@@ -17,6 +17,7 @@ type ProductionStageCompletion struct {
 	Group              *Group                                        `json:"group,omitempty"`              // Отдел сотрудника
 	ID                 *uuid.UUID                                    `json:"id,omitempty"`                 // ID Выполнения этапа производства
 	LabourUnitCost     *float64                                      `json:"labourUnitCost,omitempty"`     // Оплата труда за единицу объема производства
+	StandardHourUnit   *float64                                      `json:"standardHourUnit,omitempty"`   // Нормо-часы единицы объема производства
 	Materials          *Positions[ProductionStageCompletionMaterial] `json:"materials,omitempty"`          // Метаданные Материалов выполнения этапа производства
 	Meta               *Meta                                         `json:"meta,omitempty"`               // Метаданные Выполнения этапа производства
 	Moment             *Timestamp                                    `json:"moment,omitempty"`             // Дата документа
@@ -57,6 +58,10 @@ func (productionStageCompletion ProductionStageCompletion) GetID() uuid.UUID {
 
 func (productionStageCompletion ProductionStageCompletion) GetLabourUnitCost() float64 {
 	return Deref(productionStageCompletion.LabourUnitCost)
+}
+
+func (productionStageCompletion ProductionStageCompletion) GetStandardHourUnit() float64 {
+	return Deref(productionStageCompletion.StandardHourUnit)
 }
 
 func (productionStageCompletion ProductionStageCompletion) GetMaterials() Positions[ProductionStageCompletionMaterial] {
@@ -119,6 +124,11 @@ func (productionStageCompletion *ProductionStageCompletion) SetGroup(group *Grou
 
 func (productionStageCompletion *ProductionStageCompletion) SetLabourUnitCost(labourUnitCost float64) *ProductionStageCompletion {
 	productionStageCompletion.LabourUnitCost = &labourUnitCost
+	return productionStageCompletion
+}
+
+func (productionStageCompletion *ProductionStageCompletion) SetStandardHourUnit(standardHourUnit float64) *ProductionStageCompletion {
+	productionStageCompletion.StandardHourUnit = &standardHourUnit
 	return productionStageCompletion
 }
 
