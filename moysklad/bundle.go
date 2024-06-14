@@ -469,11 +469,11 @@ func (bundleComponent BundleComponent) MetaType() MetaType {
 // BundleService
 // Сервис для работы с комплектами.
 type BundleService interface {
-	GetList(ctx context.Context, params *Params) (*List[Bundle], *resty.Response, error)
-	Create(ctx context.Context, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params *Params) (*Slice[Bundle], *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Bundle, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params *Params) (*Bundle, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Bundle], *resty.Response, error)
+	Create(ctx context.Context, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Bundle, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, bundleList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)

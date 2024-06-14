@@ -509,19 +509,19 @@ func (invoiceInPosition InvoiceInPosition) MetaType() MetaType {
 // InvoiceInService
 // Сервис для работы со счетами поставщиков.
 type InvoiceInService interface {
-	GetList(ctx context.Context, params *Params) (*List[InvoiceIn], *resty.Response, error)
-	Create(ctx context.Context, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, invoiceInList Slice[InvoiceIn], params *Params) (*Slice[InvoiceIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[InvoiceIn], *resty.Response, error)
+	Create(ctx context.Context, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, invoiceInList Slice[InvoiceIn], params ...*Params) (*Slice[InvoiceIn], *resty.Response, error)
 	DeleteMany(ctx context.Context, invoiceInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*InvoiceIn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, invoiceIn *InvoiceIn, params *Params) (*InvoiceIn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InvoiceIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
 	//endpointTemplate[InvoiceIn]
 	//endpointTemplateBasedOn[InvoiceIn, InvoiceInTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[InvoiceInPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*InvoiceInPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InvoiceInPosition, params *Params) (*InvoiceInPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InvoiceInPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InvoiceInPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InvoiceInPosition, params ...*Params) (*InvoiceInPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *InvoiceInPosition) (*InvoiceInPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[InvoiceInPosition]) (*Slice[InvoiceInPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

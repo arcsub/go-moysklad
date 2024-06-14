@@ -31,8 +31,8 @@ func (notification Notification) MetaType() MetaType {
 // NotificationService
 // Сервис для работы с уведомлениями.
 type NotificationService interface {
-	GetList(ctx context.Context, params *Params) (*List[Notification], *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Notification, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Notification], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Notification, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error)

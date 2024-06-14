@@ -197,9 +197,9 @@ func (productFolder ProductFolder) MetaType() MetaType {
 // ProductFolderService
 // Сервис для работы с группами товаров.
 type ProductFolderService interface {
-	GetList(ctx context.Context, params *Params) (*List[ProductFolder], *resty.Response, error)
-	Create(ctx context.Context, productFolder *ProductFolder, params *Params) (*ProductFolder, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, productFolderList Slice[ProductFolder], params *Params) (*Slice[ProductFolder], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[ProductFolder], *resty.Response, error)
+	Create(ctx context.Context, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productFolderList Slice[ProductFolder], params ...*Params) (*Slice[ProductFolder], *resty.Response, error)
 	DeleteMany(ctx context.Context, productFolderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesWrapper, *resty.Response, error)
@@ -210,8 +210,8 @@ type ProductFolderService interface {
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProductFolder, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, productFolder *ProductFolder, params *Params) (*ProductFolder, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductFolder, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
 }
 
 func NewProductFolderService(client *Client) ProductFolderService {

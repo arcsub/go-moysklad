@@ -271,11 +271,11 @@ type EmployeePermissions struct {
 // RoleService
 // Сервис для работы с ролями и правами сотрудников.
 type RoleService interface {
-	GetList(ctx context.Context, params *Params) (*List[Role], *resty.Response, error)
-	Create(ctx context.Context, role *Role, params *Params) (*Role, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Role], *resty.Response, error)
+	Create(ctx context.Context, role *Role, params ...*Params) (*Role, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Role, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, role *Role, params *Params) (*Role, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Role, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, role *Role, params ...*Params) (*Role, *resty.Response, error)
 	GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error)
 	GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error)
 	GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error)

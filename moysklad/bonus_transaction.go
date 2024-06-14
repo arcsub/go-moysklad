@@ -247,13 +247,13 @@ const (
 // BonusTransactionService
 // Сервис для работы с бонусными операциями.
 type BonusTransactionService interface {
-	GetList(ctx context.Context, params *Params) (*List[BonusTransaction], *resty.Response, error)
-	Create(ctx context.Context, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params *Params) (*Slice[BonusTransaction], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[BonusTransaction], *resty.Response, error)
+	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
 	DeleteMany(ctx context.Context, bonusTransactionList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*BonusTransaction, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params *Params) (*BonusTransaction, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 }
 
 func NewBonusTransactionService(client *Client) BonusTransactionService {

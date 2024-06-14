@@ -60,7 +60,7 @@ func (counterpartiesMeta *CounterpartiesMeta) Push(elements ...*Counterparty) {
 // ReportCounterpartyService
 // Сервис для работы с показателями контрагентов.
 type ReportCounterpartyService interface {
-	GetList(ctx context.Context, params *Params) (*List[ReportCounterparty], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error)
 	GetListAsync(ctx context.Context) (AsyncResultService[List[ReportCounterparty]], *resty.Response, error)
 	GetByCounterparties(ctx context.Context, data *CounterpartiesMeta) (*List[ReportCounterparty], *resty.Response, error)
 	GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error)
@@ -77,8 +77,8 @@ func NewReportCounterpartyService(client *Client) ReportCounterpartyService {
 
 // GetList Запрос на получение отчета по контрагентам
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pokazateli-kontragentow-poluchit-pokazateli-kontragentow
-func (service *reportCounterpartyService) GetList(ctx context.Context, params *Params) (*List[ReportCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params).Get(ctx)
+func (service *reportCounterpartyService) GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error) {
+	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
 // GetListAsync Запрос на получение отчета по контрагентам (асинхронно)

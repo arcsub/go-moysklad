@@ -899,14 +899,14 @@ const (
 // RetailStoreService
 // Сервис для работы с точками продаж.
 type RetailStoreService interface {
-	GetList(ctx context.Context, params *Params) (*List[RetailStore], *resty.Response, error)
-	Create(ctx context.Context, retailStore *RetailStore, params *Params) (*RetailStore, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params *Params) (*Slice[RetailStore], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[RetailStore], *resty.Response, error)
+	Create(ctx context.Context, retailStore *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...*Params) (*Slice[RetailStore], *resty.Response, error)
 	DeleteMany(ctx context.Context, retailStore []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*RetailStore, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, entity *RetailStore, params *Params) (*RetailStore, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailStore, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, entity *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetCashiers(ctx context.Context, id uuid.UUID) (*MetaArray[Cashier], *resty.Response, error)
 	GetCashierByID(ctx context.Context, id, cashierID uuid.UUID) (*Cashier, *resty.Response, error)

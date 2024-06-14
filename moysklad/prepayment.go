@@ -451,13 +451,13 @@ func (prepaymentPosition PrepaymentPosition) MetaType() MetaType {
 // PrepaymentService
 // Сервис для работы с предоплатами.
 type PrepaymentService interface {
-	GetList(ctx context.Context, params *Params) (*List[Prepayment], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Prepayment], *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Prepayment, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Prepayment, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[PrepaymentPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*PrepaymentPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PrepaymentPosition, params *Params) (*PrepaymentPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[PrepaymentPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PrepaymentPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PrepaymentPosition, params ...*Params) (*PrepaymentPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PrepaymentPosition) (*PrepaymentPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[PrepaymentPosition]) (*Slice[PrepaymentPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

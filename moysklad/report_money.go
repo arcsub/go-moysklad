@@ -45,9 +45,9 @@ type PlotSeriesElement struct {
 // ReportMoneyService
 // Сервис для работы с отчётом "Деньги".
 type ReportMoneyService interface {
-	GetPlotSeries(ctx context.Context, params *Params) (*MoneyPlotSeries, *resty.Response, error)
+	GetPlotSeries(ctx context.Context, params ...*Params) (*MoneyPlotSeries, *resty.Response, error)
 	GetMoney(ctx context.Context) (*List[Money], *resty.Response, error)
-	GetPlotSeriesAsync(ctx context.Context, params *Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error)
+	GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error)
 	GetMoneyReportAsync(ctx context.Context) (AsyncResultService[List[Money]], *resty.Response, error)
 }
 type reportMoneyService struct {
@@ -61,9 +61,9 @@ func NewReportMoneyService(client *Client) ReportMoneyService {
 
 // GetPlotSeries Запрос на получение графика движения денежных средств.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw
-func (service *reportMoneyService) GetPlotSeries(ctx context.Context, params *Params) (*MoneyPlotSeries, *resty.Response, error) {
+func (service *reportMoneyService) GetPlotSeries(ctx context.Context, params ...*Params) (*MoneyPlotSeries, *resty.Response, error) {
 	path := "report/money/plotseries"
-	return NewRequestBuilder[MoneyPlotSeries](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[MoneyPlotSeries](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetMoney Запрос на получение остатков денежных средств по кассам и счетам.
@@ -75,10 +75,16 @@ func (service *reportMoneyService) GetMoney(ctx context.Context) (*List[Money], 
 
 // GetPlotSeriesAsync Запрос на получение графика движения денежных средств (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw
-func (service *reportMoneyService) GetPlotSeriesAsync(ctx context.Context, params *Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error) {
+func (service *reportMoneyService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error) {
 	path := "report/money/plotseries"
-	params.withAsync()
-	return NewRequestBuilder[MoneyPlotSeries](service.client, path).SetParams(params).Async(ctx)
+	var param *Params
+	if len(params) > 0 {
+		param = params[0]
+	} else {
+		param = new(Params)
+	}
+	param.withAsync()
+	return NewRequestBuilder[MoneyPlotSeries](service.client, path).SetParams(param).Async(ctx)
 }
 
 // GetMoneyReportAsync Запрос на получение остатков денежных средств по кассам и счетам (асинхронно).

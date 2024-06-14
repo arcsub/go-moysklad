@@ -1,7 +1,7 @@
 package moysklad
 
 import (
-	"encoding/json"
+	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 )
 
@@ -38,7 +38,7 @@ type Payment struct {
 	VatSum         *float64              `json:"vatSum,omitempty"`         // Сумма включая НДС
 	LinkedSum      *float64              `json:"linkedSum,omitempty"`      // Сумма, оплаченная по документу из этого платежа
 	Operations     Operations            `json:"operations,omitempty"`     // Массив ссылок на связанные операции в формате Метаданных
-	raw            json.RawMessage       // сырые данные
+	raw            []byte                // сырые данные
 }
 
 func (payment Payment) GetAccountID() uuid.UUID {
@@ -175,7 +175,7 @@ func (payment Payment) MetaType() MetaType {
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
-func (payment Payment) Raw() json.RawMessage {
+func (payment Payment) Raw() []byte {
 	return payment.raw
 }
 

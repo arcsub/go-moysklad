@@ -362,13 +362,13 @@ func (paymentIn PaymentIn) AsPayment() *Payment {
 // PaymentInService
 // Сервис для работы с входящими платежами.
 type PaymentInService interface {
-	GetList(ctx context.Context, params *Params) (*List[PaymentIn], *resty.Response, error)
-	Create(ctx context.Context, paymentIn *PaymentIn, params *Params) (*PaymentIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, paymentInList Slice[PaymentIn], params *Params) (*Slice[PaymentIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[PaymentIn], *resty.Response, error)
+	Create(ctx context.Context, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, paymentInList Slice[PaymentIn], params ...*Params) (*Slice[PaymentIn], *resty.Response, error)
 	DeleteMany(ctx context.Context, paymentInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PaymentIn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, paymentIn *PaymentIn, params *Params) (*PaymentIn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
 	//endpointTemplate[PaymentIn]
 	//endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)

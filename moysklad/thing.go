@@ -62,8 +62,8 @@ func (thing Thing) MetaType() MetaType {
 // ThingService
 // Сервис для работы с серийными номерами.
 type ThingService interface {
-	GetList(ctx context.Context, params *Params) (*List[Thing], *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Thing, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Thing], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Thing, *resty.Response, error)
 }
 
 func NewThingService(client *Client) ThingService {

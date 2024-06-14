@@ -186,10 +186,10 @@ const (
 // BonusProgramService
 // Сервис для работы с бонусными программами.
 type BonusProgramService interface {
-	GetList(ctx context.Context, params *Params) (*List[BonusProgram], *resty.Response, error)
-	Create(ctx context.Context, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params *Params) (*BonusProgram, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*BonusProgram, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[BonusProgram], *resty.Response, error)
+	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusProgram, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, bonusProgramList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 }

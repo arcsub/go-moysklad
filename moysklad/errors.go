@@ -1,8 +1,8 @@
 package moysklad
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/goccy/go-json"
 )
 
 // ApiError Структура ошибки API МойСклад.

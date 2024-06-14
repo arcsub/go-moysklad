@@ -92,13 +92,13 @@ func (expenseItem ExpenseItem) MetaType() MetaType {
 // ExpenseItemService
 // Сервис для работы со статьями расходов.
 type ExpenseItemService interface {
-	GetList(ctx context.Context, params *Params) (*List[ExpenseItem], *resty.Response, error)
-	Create(ctx context.Context, expenseItem *ExpenseItem, params *Params) (*ExpenseItem, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, expenseItemList Slice[ExpenseItem], params *Params) (*Slice[ExpenseItem], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[ExpenseItem], *resty.Response, error)
+	Create(ctx context.Context, expenseItem *ExpenseItem, params ...*Params) (*ExpenseItem, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, expenseItemList Slice[ExpenseItem], params ...*Params) (*Slice[ExpenseItem], *resty.Response, error)
 	DeleteMany(ctx context.Context, expenseItemList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ExpenseItem, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, expenseItem *ExpenseItem, params *Params) (*ExpenseItem, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ExpenseItem, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, expenseItem *ExpenseItem, params ...*Params) (*ExpenseItem, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 

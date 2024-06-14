@@ -1,6 +1,6 @@
 package moysklad
 
-import "encoding/json"
+import "github.com/goccy/go-json"
 
 type PositionType interface {
 	BundleComponent | CommissionReportInPosition | CommissionReportInReturnPosition |

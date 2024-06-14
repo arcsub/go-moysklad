@@ -371,19 +371,19 @@ func (lossPosition LossPosition) MetaType() MetaType {
 // LossService
 // Сервис для работы со списаниями.
 type LossService interface {
-	GetList(ctx context.Context, params *Params) (*List[Loss], *resty.Response, error)
-	Create(ctx context.Context, loss *Loss, params *Params) (*Loss, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, lossList Slice[Loss], params *Params) (*Slice[Loss], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Loss], *resty.Response, error)
+	Create(ctx context.Context, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, lossList Slice[Loss], params ...*Params) (*Slice[Loss], *resty.Response, error)
 	DeleteMany(ctx context.Context, lossList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Loss, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, loss *Loss, params *Params) (*Loss, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Loss, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)
 	//endpointTemplate[Loss]
 	//endpointTemplateBasedOn[Loss, LossTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[LossPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*LossPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *LossPosition, params *Params) (*LossPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[LossPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*LossPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *LossPosition, params ...*Params) (*LossPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *LossPosition) (*LossPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[LossPosition]) (*Slice[LossPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

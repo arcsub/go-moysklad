@@ -125,7 +125,7 @@ type AuditService interface {
 	// GetContexts выполняет запрос на получение Контекстов Audit.
 	//
 	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-kontexty
-	GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error)
+	GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error)
 
 	// GetEvents выполняет запрос на получение Событий по Контексту AuditEvent.
 	//
@@ -146,8 +146,8 @@ func NewAuditService(client *Client) AuditService {
 	return &auditService{NewEndpoint(client, "audit")}
 }
 
-func (service *auditService) GetContexts(ctx context.Context, params *Params) (*List[Audit], *resty.Response, error) {
-	return NewRequestBuilder[List[Audit]](service.client, service.uri).SetParams(params).Get(ctx)
+func (service *auditService) GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error) {
+	return NewRequestBuilder[List[Audit]](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
 func (service *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {

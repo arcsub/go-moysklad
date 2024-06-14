@@ -41,7 +41,7 @@ const (
 // SubscriptionService
 // Сервис для работы с подпиской компании.
 type SubscriptionService interface {
-	Get(ctx context.Context, params *Params) (*Subscription, *resty.Response, error)
+	Get(ctx context.Context, params ...*Params) (*Subscription, *resty.Response, error)
 }
 
 func NewSubscriptionService(client *Client) SubscriptionService {

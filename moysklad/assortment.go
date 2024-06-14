@@ -2,8 +2,8 @@ package moysklad
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/go-resty/resty/v2"
+	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 )
 
@@ -21,15 +21,15 @@ func (assortment Assortment) MetaType() MetaType {
 // Создать позицию можно с помощью NewAssortmentPosition, передав в качестве аргумента объект,
 // удовлетворяющий интерфейсу AssortmentType.
 type AssortmentPosition struct {
-	Meta         Meta            `json:"meta"`
-	Code         string          `json:"code,omitempty"`
-	Description  string          `json:"description,omitempty"`
-	ExternalCode string          `json:"externalCode,omitempty"`
-	Name         string          `json:"name,omitempty"`
-	Barcodes     Slice[Barcode]  `json:"barcodes,omitempty"`
-	raw          json.RawMessage // сырые данные для последующей десериализации в нужный тип
-	AccountID    uuid.UUID       `json:"accountId,omitempty"`
-	ID           uuid.UUID       `json:"id,omitempty"`
+	Meta         Meta           `json:"meta"`
+	Code         string         `json:"code,omitempty"`
+	Description  string         `json:"description,omitempty"`
+	ExternalCode string         `json:"externalCode,omitempty"`
+	Name         string         `json:"name,omitempty"`
+	Barcodes     Slice[Barcode] `json:"barcodes,omitempty"`
+	raw          []byte         // сырые данные для последующей десериализации в нужный тип
+	AccountID    uuid.UUID      `json:"accountId,omitempty"`
+	ID           uuid.UUID      `json:"id,omitempty"`
 }
 
 // AssortmentType описывает типы, которые входят в состав ассортимента.
@@ -63,7 +63,7 @@ func (assortmentPosition AssortmentPosition) GetMeta() Meta {
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
-func (assortmentPosition AssortmentPosition) Raw() json.RawMessage {
+func (assortmentPosition AssortmentPosition) Raw() []byte {
 	return assortmentPosition.raw
 }
 
@@ -299,7 +299,7 @@ const (
 // AssortmentService
 // Сервис для работы с ассортиментом.
 type AssortmentService interface {
-	Get(ctx context.Context, params *Params) (*AssortmentResponse, *resty.Response, error)
+	Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
 	GetAsync(ctx context.Context) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)

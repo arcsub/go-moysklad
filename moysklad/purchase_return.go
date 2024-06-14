@@ -514,19 +514,19 @@ func (purchaseReturnPosition PurchaseReturnPosition) MetaType() MetaType {
 // PurchaseReturnService
 // Сервис для работы с возвратами поставщикам.
 type PurchaseReturnService interface {
-	GetList(ctx context.Context, params *Params) (*List[PurchaseReturn], *resty.Response, error)
-	Create(ctx context.Context, purchaseReturn *PurchaseReturn, params *Params) (*PurchaseReturn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, purchaseReturnList Slice[PurchaseReturn], params *Params) (*Slice[PurchaseReturn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[PurchaseReturn], *resty.Response, error)
+	Create(ctx context.Context, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, purchaseReturnList Slice[PurchaseReturn], params ...*Params) (*Slice[PurchaseReturn], *resty.Response, error)
 	DeleteMany(ctx context.Context, purchaseReturnList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PurchaseReturn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, purchaseReturn *PurchaseReturn, params *Params) (*PurchaseReturn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseReturn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
 	//endpointTemplate[PurchaseReturn]
 	//endpointTemplateBasedOn[PurchaseReturn, PurchaseReturnTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[PurchaseReturnPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*PurchaseReturnPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PurchaseReturnPosition, params *Params) (*PurchaseReturnPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[PurchaseReturnPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PurchaseReturnPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PurchaseReturnPosition, params ...*Params) (*PurchaseReturnPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PurchaseReturnPosition) (*PurchaseReturnPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[PurchaseReturnPosition]) (*Slice[PurchaseReturnPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -546,7 +546,7 @@ type PurchaseReturnService interface {
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PurchaseReturn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)

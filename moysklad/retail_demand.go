@@ -616,19 +616,19 @@ func (retailDemandPosition RetailDemandPosition) MetaType() MetaType {
 // RetailDemandService
 // Сервис для работы с розничными продажами.
 type RetailDemandService interface {
-	GetList(ctx context.Context, params *Params) (*List[RetailDemand], *resty.Response, error)
-	Create(ctx context.Context, retailDemand *RetailDemand, params *Params) (*RetailDemand, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, retailDemandList Slice[RetailDemand], params *Params) (*Slice[RetailDemand], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[RetailDemand], *resty.Response, error)
+	Create(ctx context.Context, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailDemandList Slice[RetailDemand], params ...*Params) (*Slice[RetailDemand], *resty.Response, error)
 	DeleteMany(ctx context.Context, retailDemandList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*RetailDemand, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, retailDemand *RetailDemand, params *Params) (*RetailDemand, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDemand, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
 	//endpointTemplate[RetailDemand]
 	//endpointTemplateBasedOn[RetailDemand, RetailDemandTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[RetailDemandPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*RetailDemandPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *RetailDemandPosition, params *Params) (*RetailDemandPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[RetailDemandPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *RetailDemandPosition, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *RetailDemandPosition) (*RetailDemandPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[RetailDemandPosition]) (*Slice[RetailDemandPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -648,7 +648,7 @@ type RetailDemandService interface {
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailDemand, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)

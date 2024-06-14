@@ -1,7 +1,7 @@
 package moysklad
 
 import (
-	"encoding/json"
+	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 )
 
@@ -21,7 +21,7 @@ type Operation struct {
 	Description  string       `json:"description,omitempty"`
 	Organization Organization `json:"organization,omitempty"`
 	Owner        Employee     `json:"owner,omitempty"`
-	raw          json.RawMessage
+	raw          []byte
 	Payments     Slice[Payment]        `json:"payments,omitempty"`
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 	Files        MetaArray[File]       `json:"files,omitempty"`
@@ -56,7 +56,7 @@ func (operation Operation) MetaType() MetaType {
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
-func (operation Operation) Raw() json.RawMessage {
+func (operation Operation) Raw() []byte {
 	return operation.raw
 }
 

@@ -313,18 +313,18 @@ func (inventoryPosition InventoryPosition) MetaType() MetaType {
 // InventoryService
 // Сервис для работы с инвентаризациями.
 type InventoryService interface {
-	GetList(ctx context.Context, params *Params) (*List[Inventory], *resty.Response, error)
-	Create(ctx context.Context, inventory *Inventory, params *Params) (*Inventory, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params *Params) (*Slice[Inventory], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Inventory], *resty.Response, error)
+	Create(ctx context.Context, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...*Params) (*Slice[Inventory], *resty.Response, error)
 	DeleteMany(ctx context.Context, inventoryList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Inventory, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, inventory *Inventory, params *Params) (*Inventory, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Inventory, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
 	//endpointTemplate[Inventory]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[InventoryPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*InventoryPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InventoryPosition, params *Params) (*InventoryPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InventoryPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InventoryPosition, params ...*Params) (*InventoryPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *InventoryPosition) (*InventoryPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[InventoryPosition]) (*Slice[InventoryPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

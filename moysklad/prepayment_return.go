@@ -441,8 +441,8 @@ func (prepaymentReturnPosition PrepaymentReturnPosition) MetaType() MetaType {
 // PrepaymentReturnService
 // Сервис для работы с возвратами предоплат.
 type PrepaymentReturnService interface {
-	GetList(ctx context.Context, params *Params) (*List[PrepaymentReturn], *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PrepaymentReturn, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[PrepaymentReturn], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PrepaymentReturn, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
@@ -451,9 +451,9 @@ type PrepaymentReturnService interface {
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[PrepaymentReturnPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*PrepaymentReturnPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PrepaymentReturnPosition, params *Params) (*PrepaymentReturnPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[PrepaymentReturnPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PrepaymentReturnPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PrepaymentReturnPosition, params ...*Params) (*PrepaymentReturnPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PrepaymentReturnPosition) (*PrepaymentReturnPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[PrepaymentReturnPosition]) (*Slice[PrepaymentReturnPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

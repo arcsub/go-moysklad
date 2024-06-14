@@ -103,16 +103,16 @@ func (t TaskNote) MetaType() MetaType {
 // TaskService
 // Сервис для работы с задачами.
 type TaskService interface {
-	GetList(ctx context.Context, params *Params) (*List[Task], *resty.Response, error)
-	Create(ctx context.Context, task *Task, params *Params) (*Task, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params *Params) (*Slice[Task], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Task], *resty.Response, error)
+	Create(ctx context.Context, task *Task, params ...*Params) (*Task, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...*Params) (*Slice[Task], *resty.Response, error)
 	DeleteMany(ctx context.Context, taskList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Task, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, task *Task, params *Params) (*Task, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Task, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, task *Task, params ...*Params) (*Task, *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
-	GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error)
+	GetNotes(ctx context.Context, taskID uuid.UUID, params ...*Params) (*List[TaskNote], *resty.Response, error)
 	CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
 	CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error)
 	GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error)
@@ -156,9 +156,9 @@ func NewTaskService(client *Client) TaskService {
 
 // GetNotes Запрос на получение списка всех комментариев данной Задачи.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha-poluchit-kommentarii-zadachi
-func (service *taskService) GetNotes(ctx context.Context, taskID uuid.UUID, params *Params) (*List[TaskNote], *resty.Response, error) {
+func (service *taskService) GetNotes(ctx context.Context, taskID uuid.UUID, params ...*Params) (*List[TaskNote], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
-	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // CreateNote Запрос на создание нового комментария к Задаче.

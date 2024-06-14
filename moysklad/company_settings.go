@@ -146,8 +146,8 @@ const (
 // ContextCompanySettingsService
 // Сервис для работы с настройками компании.
 type ContextCompanySettingsService interface {
-	Get(ctx context.Context, params *Params) (*CompanySettings, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, settings *CompanySettings, params *Params) (*CompanySettings, *resty.Response, error)
+	Get(ctx context.Context, params ...*Params) (*CompanySettings, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, settings *CompanySettings, params ...*Params) (*CompanySettings, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetadataCompanySettings, *resty.Response, error)
 	GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error)
 	CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error)

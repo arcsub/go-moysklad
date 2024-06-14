@@ -149,13 +149,13 @@ func (consignment Consignment) MetaType() MetaType {
 // ConsignmentService
 // Сервис для работы с сериями.
 type ConsignmentService interface {
-	GetList(ctx context.Context, params *Params) (*List[Consignment], *resty.Response, error)
-	Create(ctx context.Context, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params *Params) (*Slice[Consignment], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Consignment], *resty.Response, error)
+	Create(ctx context.Context, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params ...*Params) (*Slice[Consignment], *resty.Response, error)
 	DeleteMany(ctx context.Context, consignmentList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Consignment, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, consignment *Consignment, params *Params) (*Consignment, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Consignment, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
 	GetMetadata(context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 	GetAttributes(context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
@@ -164,7 +164,7 @@ type ConsignmentService interface {
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attr *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 

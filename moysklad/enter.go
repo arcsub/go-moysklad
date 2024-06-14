@@ -394,19 +394,19 @@ func (enterPosition EnterPosition) MetaType() MetaType {
 // EnterService
 // Сервис для работы с оприходованиями.
 type EnterService interface {
-	GetList(ctx context.Context, params *Params) (*List[Enter], *resty.Response, error)
-	Create(ctx context.Context, enter *Enter, params *Params) (*Enter, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, enterList Slice[Enter], params *Params) (*Slice[Enter], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Enter], *resty.Response, error)
+	Create(ctx context.Context, enter *Enter, params ...*Params) (*Enter, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, enterList Slice[Enter], params ...*Params) (*Slice[Enter], *resty.Response, error)
 	DeleteMany(ctx context.Context, enterList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Enter, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, enter *Enter, params *Params) (*Enter, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Enter, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, enter *Enter, params ...*Params) (*Enter, *resty.Response, error)
 	//endpointTemplate[Enter]
 	//endpointTemplateBasedOn[Enter, EnterTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[EnterPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*EnterPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *EnterPosition, params *Params) (*EnterPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[EnterPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*EnterPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *EnterPosition, params ...*Params) (*EnterPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *EnterPosition) (*EnterPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[EnterPosition]) (*Slice[EnterPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -426,7 +426,7 @@ type EnterService interface {
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Enter, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)

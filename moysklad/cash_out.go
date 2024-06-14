@@ -342,9 +342,9 @@ func (cashOut CashOut) AsPayment() *Payment {
 // CashOutService cashout
 // Сервис для работы с расходными ордерами.
 type CashOutService interface {
-	GetList(ctx context.Context, params *Params) (*List[CashOut], *resty.Response, error)
-	Create(ctx context.Context, cashOut *CashOut, params *Params) (*CashOut, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params *Params) (*Slice[CashOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[CashOut], *resty.Response, error)
+	Create(ctx context.Context, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params ...*Params) (*Slice[CashOut], *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteMany(ctx context.Context, cashOutList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
@@ -356,8 +356,8 @@ type CashOutService interface {
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	//Template(ctx context.Context) (*CashOut, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CashOut, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, cashOut *CashOut, params *Params) (*CashOut, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashOut, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)

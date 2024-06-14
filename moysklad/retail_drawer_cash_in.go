@@ -237,13 +237,13 @@ func (retailDrawerCashIn RetailDrawerCashIn) MetaType() MetaType {
 // RetailDrawerCashInService
 // Сервис для работы с внесениями денег.
 type RetailDrawerCashInService interface {
-	GetList(ctx context.Context, params *Params) (*List[RetailDrawerCashIn], *resty.Response, error)
-	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params *Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[RetailDrawerCashIn], *resty.Response, error)
+	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params ...*Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
 	DeleteMany(ctx context.Context, retailDrawerCashInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, retailDrawerCashIn *RetailDrawerCashIn, params *Params) (*RetailDrawerCashIn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, retailDrawerCashIn *RetailDrawerCashIn, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	//endpointTemplate[RetailDrawerCashIn]
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
@@ -259,7 +259,7 @@ type RetailDrawerCashInService interface {
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailDrawerCashIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)

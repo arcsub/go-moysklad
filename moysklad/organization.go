@@ -492,13 +492,13 @@ func (organization Organization) MetaType() MetaType {
 // OrganizationService
 // Сервис для работы с юридическими лицами.
 type OrganizationService interface {
-	GetList(ctx context.Context, params *Params) (*List[Organization], *resty.Response, error)
-	Create(ctx context.Context, organization *Organization, params *Params) (*Organization, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params *Params) (*Slice[Organization], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Organization], *resty.Response, error)
+	Create(ctx context.Context, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params ...*Params) (*Slice[Organization], *resty.Response, error)
 	DeleteMany(ctx context.Context, organizationList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Organization, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, organization *Organization, params *Params) (*Organization, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Organization, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)

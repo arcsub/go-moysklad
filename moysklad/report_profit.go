@@ -112,16 +112,16 @@ func (profitByVariant ProfitByVariant) MetaType() MetaType {
 // ReportProfitService
 // Сервис для работы с отчётом "Прибыльность".
 type ReportProfitService interface {
-	GetByProduct(ctx context.Context, params *Params) (*List[ProfitByProduct], *resty.Response, error)
-	GetByVariant(ctx context.Context, params *Params) (*List[ProfitByVariant], *resty.Response, error)
-	GetByEmployee(ctx context.Context, params *Params) (*List[ProfitByEmployee], *resty.Response, error)
-	GetByCounterparty(ctx context.Context, params *Params) (*List[ProfitByCounterparty], *resty.Response, error)
-	GetBySalesChannel(ctx context.Context, params *Params) (*List[ProfitBySalesChannel], *resty.Response, error)
-	GetByProductAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error)
-	GetByVariantAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error)
-	GetByEmployeeAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error)
-	GetByCounterpartyAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error)
-	GetBySalesChannelAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error)
+	GetByProduct(ctx context.Context, params ...*Params) (*List[ProfitByProduct], *resty.Response, error)
+	GetByVariant(ctx context.Context, params ...*Params) (*List[ProfitByVariant], *resty.Response, error)
+	GetByEmployee(ctx context.Context, params ...*Params) (*List[ProfitByEmployee], *resty.Response, error)
+	GetByCounterparty(ctx context.Context, params ...*Params) (*List[ProfitByCounterparty], *resty.Response, error)
+	GetBySalesChannel(ctx context.Context, params ...*Params) (*List[ProfitBySalesChannel], *resty.Response, error)
+	GetByProductAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error)
+	GetByVariantAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error)
+	GetByEmployeeAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error)
+	GetByCounterpartyAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error)
+	GetBySalesChannelAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error)
 }
 
 type reportProfitService struct {
@@ -135,70 +135,70 @@ func NewReportProfitService(client *Client) ReportProfitService {
 
 // GetByProduct  Запрос на получение отчета "Прибыльность по товарам".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
-func (service *reportProfitService) GetByProduct(ctx context.Context, params *Params) (*List[ProfitByProduct], *resty.Response, error) {
+func (service *reportProfitService) GetByProduct(ctx context.Context, params ...*Params) (*List[ProfitByProduct], *resty.Response, error) {
 	path := "report/profit/byproduct"
-	return NewRequestBuilder[List[ProfitByProduct]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetByVariant Запрос на получение отчета "Прибыльность по модификациям".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-modifikaciqm
-func (service *reportProfitService) GetByVariant(ctx context.Context, params *Params) (*List[ProfitByVariant], *resty.Response, error) {
+func (service *reportProfitService) GetByVariant(ctx context.Context, params ...*Params) (*List[ProfitByVariant], *resty.Response, error) {
 	path := "report/profit/byvariant"
-	return NewRequestBuilder[List[ProfitByVariant]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetByEmployee Запрос на получение отчета "Прибыльность по сотрудникам".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-sotrudnikam
-func (service *reportProfitService) GetByEmployee(ctx context.Context, params *Params) (*List[ProfitByEmployee], *resty.Response, error) {
+func (service *reportProfitService) GetByEmployee(ctx context.Context, params ...*Params) (*List[ProfitByEmployee], *resty.Response, error) {
 	path := "report/profit/byemployee"
-	return NewRequestBuilder[List[ProfitByEmployee]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetByCounterparty Запрос на получение отчета "Прибыльность по покупателям".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-pokupatelqm
-func (service *reportProfitService) GetByCounterparty(ctx context.Context, params *Params) (*List[ProfitByCounterparty], *resty.Response, error) {
+func (service *reportProfitService) GetByCounterparty(ctx context.Context, params ...*Params) (*List[ProfitByCounterparty], *resty.Response, error) {
 	path := "report/profit/bycounterparty"
-	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetBySalesChannel Запрос на получение отчета "Прибыльность по каналам продаж".
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-kanalam-prodazh
-func (service *reportProfitService) GetBySalesChannel(ctx context.Context, params *Params) (*List[ProfitBySalesChannel], *resty.Response, error) {
+func (service *reportProfitService) GetBySalesChannel(ctx context.Context, params ...*Params) (*List[ProfitBySalesChannel], *resty.Response, error) {
 	path := "report/profit/bysaleschannel"
-	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetByProductAsync Запрос на получение отчета "Прибыльность по товарам" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-towaram
-func (service *reportProfitService) GetByProductAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
+func (service *reportProfitService) GetByProductAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
 	path := "report/profit/byproduct"
-	return NewRequestBuilder[List[ProfitByProduct]](service.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, path).SetParams(params...).Async(ctx)
 }
 
 // GetByVariantAsync Запрос на получение отчета "Прибыльность по модификациям" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-modifikaciqm
-func (service *reportProfitService) GetByVariantAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
+func (service *reportProfitService) GetByVariantAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
 	path := "report/profit/byvariant"
-	return NewRequestBuilder[List[ProfitByVariant]](service.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, path).SetParams(params...).Async(ctx)
 }
 
 // GetByEmployeeAsync Запрос на получение отчета "Прибыльность по сотрудникам" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-sotrudnikam
-func (service *reportProfitService) GetByEmployeeAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
+func (service *reportProfitService) GetByEmployeeAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
 	path := "report/profit/byemployee"
-	return NewRequestBuilder[List[ProfitByEmployee]](service.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, path).SetParams(params...).Async(ctx)
 }
 
 // GetByCounterpartyAsync Запрос на получение отчета "Прибыльность по покупателям" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-pokupatelqm
-func (service *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
+func (service *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
 	path := "report/profit/bycounterparty"
-	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, path).SetParams(params...).Async(ctx)
 }
 
 // GetBySalesChannelAsync Запрос на получение отчета "Прибыльность по каналам продаж" (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-pribyl-nost-poluchit-pribyl-nost-po-kanalam-prodazh
-func (service *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params *Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
+func (service *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
 	path := "report/profit/bysaleschannel"
-	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, path).SetParams(params...).Async(ctx)
 }

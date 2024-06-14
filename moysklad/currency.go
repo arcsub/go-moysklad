@@ -232,14 +232,14 @@ const (
 // CurrencyService
 // Сервис для работы с валютами.
 type CurrencyService interface {
-	GetList(ctx context.Context, params *Params) (*List[Currency], *resty.Response, error)
-	Create(ctx context.Context, currency *Currency, params *Params) (*Currency, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, currencyList Slice[Currency], params *Params) (*Slice[Currency], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Currency], *resty.Response, error)
+	Create(ctx context.Context, currency *Currency, params ...*Params) (*Currency, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, currencyList Slice[Currency], params ...*Params) (*Slice[Currency], *resty.Response, error)
 	DeleteMany(ctx context.Context, currencyList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Currency, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, currency *Currency, params *Params) (*Currency, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Currency, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, currency *Currency, params ...*Params) (*Currency, *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
