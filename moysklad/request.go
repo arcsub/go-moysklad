@@ -156,7 +156,7 @@ func (requestBuilder *RequestBuilder[T]) SetHeader(header, value string) *Reques
 	return requestBuilder
 }
 
-func (requestBuilder *RequestBuilder[T]) SetParams(params *Params) *RequestBuilder[T] {
+func (requestBuilder *RequestBuilder[T]) SetParams(params ...*Params) *RequestBuilder[T] {
 	v, _ := query.Values(params)
 	requestBuilder.req.SetQueryParamsFromValues(v)
 	return requestBuilder
@@ -214,6 +214,6 @@ func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResult
 
 // FetchMeta позволяет выполнить точечный запрос по переданному объекту Meta.
 // Необходимо точно указать обобщённый тип T, который ожидаем получить в ответ, иначе есть риск получить ошибку.
-func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params *Params) (*T, *resty.Response, error) {
-	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params).Get(ctx)
+func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...*Params) (*T, *resty.Response, error) {
+	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params...).Get(ctx)
 }

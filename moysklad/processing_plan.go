@@ -323,16 +323,16 @@ const (
 // ProcessingPlanService
 // Сервис для работы с тех картами.
 type ProcessingPlanService interface {
-	GetList(ctx context.Context, params *Params) (*List[ProcessingPlan], *resty.Response, error)
-	Create(ctx context.Context, processingPlan *ProcessingPlan, params *Params) (*ProcessingPlan, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params *Params) (*Slice[ProcessingPlan], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlan], *resty.Response, error)
+	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
 	DeleteMany(ctx context.Context, processingPlanList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProcessingPlan, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params *Params) (*ProcessingPlan, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[ProcessingPlanProduct], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*ProcessingPlanProduct, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingPlanProduct, params *Params) (*ProcessingPlanProduct, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlan, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingPlanProduct], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -340,7 +340,7 @@ type ProcessingPlanService interface {
 	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
 	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetStages(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[ProcessingStage], *resty.Response, error)
+	GetStages(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error)
 	GetStageByID(ctx context.Context, id, stageID uuid.UUID) (*ProcessingStage, *resty.Response, error)
 	UpdateStage(ctx context.Context, id, stageID uuid.UUID, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error)
 	GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
@@ -384,9 +384,9 @@ func NewProcessingPlanService(client *Client) ProcessingPlanService {
 	}
 }
 
-func (service *processingPlanService) GetStages(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[ProcessingStage], *resty.Response, error) {
+func (service *processingPlanService) GetStages(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/stages", service.uri, id)
-	return NewRequestBuilder[MetaArray[ProcessingStage]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProcessingStage]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 func (service *processingPlanService) GetStageByID(ctx context.Context, id, stageID uuid.UUID) (*ProcessingStage, *resty.Response, error) {

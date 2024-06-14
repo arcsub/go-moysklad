@@ -87,8 +87,8 @@ func (region Region) MetaType() MetaType {
 // RegionService
 // Сервис для работы с регионами.
 type RegionService interface {
-	GetList(ctx context.Context, params *Params) (*List[Region], *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Region, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Region], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Region, *resty.Response, error)
 }
 
 func NewRegionService(client *Client) RegionService {

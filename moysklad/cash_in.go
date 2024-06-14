@@ -332,9 +332,9 @@ func (cashIn CashIn) AsPayment() *Payment {
 // CashInService
 // Сервис для работы с приходными ордерами.
 type CashInService interface {
-	GetList(ctx context.Context, params *Params) (*List[CashIn], *resty.Response, error)
-	Create(ctx context.Context, cashIn *CashIn, params *Params) (*CashIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params *Params) (*Slice[CashIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[CashIn], *resty.Response, error)
+	Create(ctx context.Context, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
 	DeleteMany(ctx context.Context, cashInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
@@ -346,8 +346,8 @@ type CashInService interface {
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	//Template(ctx context.Context) (*CashIn, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CashIn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params *Params) (*CashIn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)

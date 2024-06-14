@@ -157,8 +157,8 @@ func (customEntityElement CustomEntityElement) String() string {
 // CustomEntityService
 // Сервис для работы с пользовательскими справочниками.
 type CustomEntityService interface {
-	Create(ctx context.Context, customEntity *CustomEntity, params *Params) (*CustomEntity, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, customEntity *CustomEntity, params *Params) (*CustomEntity, *resty.Response, error)
+	Create(ctx context.Context, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetElements(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error)
 	CreateElement(ctx context.Context, id uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)

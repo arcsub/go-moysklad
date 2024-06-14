@@ -139,7 +139,7 @@ type MetadataCompanySettings struct {
 // MetadataService
 // Сервис для работы с метаданными.
 type MetadataService interface {
-	Get(ctx context.Context, params *Params) (*Metadata, *resty.Response, error)
+	Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error)
 }
 
 func NewMetadataService(client *Client) MetadataService {

@@ -299,7 +299,7 @@ const (
 // AssortmentService
 // Сервис для работы с ассортиментом.
 type AssortmentService interface {
-	Get(ctx context.Context, params *Params) (*AssortmentResponse, *resty.Response, error)
+	Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
 	GetAsync(ctx context.Context) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)

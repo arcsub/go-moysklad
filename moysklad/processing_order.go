@@ -364,19 +364,19 @@ func (processingOrderPosition ProcessingOrderPosition) MetaType() MetaType {
 // ProcessingOrderService
 // Сервис для работы с заказами на производство.
 type ProcessingOrderService interface {
-	GetList(ctx context.Context, params *Params) (*List[ProcessingOrder], *resty.Response, error)
-	Create(ctx context.Context, processingOrder *ProcessingOrder, params *Params) (*ProcessingOrder, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params *Params) (*Slice[ProcessingOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[ProcessingOrder], *resty.Response, error)
+	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
 	DeleteMany(ctx context.Context, processingOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*ProcessingOrder, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params *Params) (*ProcessingOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	//endpointTemplate[ProcessingOrder]
 	//endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingOrderPosition, params *Params) (*ProcessingOrderPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingOrderPosition) (*ProcessingOrderPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingOrderPosition]) (*Slice[ProcessingOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

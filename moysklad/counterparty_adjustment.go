@@ -197,15 +197,15 @@ func (counterPartyAdjustment CounterPartyAdjustment) MetaType() MetaType {
 // CounterPartyAdjustmentService
 // Сервис для работы с корректировками баланса контрагента.
 type CounterPartyAdjustmentService interface {
-	GetList(ctx context.Context, params *Params) (*List[CounterPartyAdjustment], *resty.Response, error)
-	Create(ctx context.Context, counterPartyAdjustment *CounterPartyAdjustment, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterPartyAdjustment], params *Params) (*Slice[CounterPartyAdjustment], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[CounterPartyAdjustment], *resty.Response, error)
+	Create(ctx context.Context, counterPartyAdjustment *CounterPartyAdjustment, params ...*Params) (*CounterPartyAdjustment, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterPartyAdjustment], params ...*Params) (*Slice[CounterPartyAdjustment], *resty.Response, error)
 	DeleteMany(ctx context.Context, counterPartyAdjustmentList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, counterPartyAdjustment *CounterPartyAdjustment, params *Params) (*CounterPartyAdjustment, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CounterPartyAdjustment, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, counterPartyAdjustment *CounterPartyAdjustment, params ...*Params) (*CounterPartyAdjustment, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)

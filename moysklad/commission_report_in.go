@@ -620,17 +620,17 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) MetaTyp
 // CommissionReportInService
 // Сервис для работы с полученными отчётами комиссионера.
 type CommissionReportInService interface {
-	GetList(ctx context.Context, params *Params) (*List[CommissionReportIn], *resty.Response, error)
-	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params *Params) (*CommissionReportIn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params *Params) (*Slice[CommissionReportIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportIn], *resty.Response, error)
+	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
 	DeleteMany(ctx context.Context, commissionReportInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*CommissionReportIn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params *Params) (*CommissionReportIn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportIn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CommissionReportInPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*CommissionReportInPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportInPosition, params *Params) (*CommissionReportInPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CommissionReportInPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportInPosition, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *CommissionReportInPosition) (*CommissionReportInPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[CommissionReportInPosition]) (*Slice[CommissionReportInPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -646,7 +646,7 @@ type CommissionReportInService interface {
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	// Template(ctx context.Context) (*CommissionReportIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
@@ -654,10 +654,10 @@ type CommissionReportInService interface {
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetReturnPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error)
-	GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
+	GetReturnPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error)
+	GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error)
 	CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error)
-	UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error)
+	UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error)
 	DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
@@ -716,16 +716,16 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 
 // GetReturnPositions Получить позиции возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-pozicii-wozwrata-na-sklad-komissionera
-func (service *commissionReportInService) GetReturnPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error) {
+func (service *commissionReportInService) GetReturnPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
-	return NewRequestBuilder[MetaArray[CommissionReportInReturnPosition]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[MetaArray[CommissionReportInReturnPosition]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetReturnPositionByID Получить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchit-poziciu-wozwrata-na-sklad-komissionera
-func (service *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (service *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionID)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // CreateReturnPosition Создать позицию возврата на склад комиссионера.
@@ -737,9 +737,9 @@ func (service *commissionReportInService) CreateReturnPosition(ctx context.Conte
 
 // UpdateReturnPosition Изменить позицию возврата на склад комиссионера.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-izmenit-poziciu-wozwrata-na-sklad-komissionera
-func (service *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params *Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (service *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionID)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params).Put(ctx, position)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Put(ctx, position)
 }
 
 // DeleteReturnPosition Удалить позицию возврата на склад комиссионера.

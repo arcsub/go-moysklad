@@ -576,13 +576,13 @@ const (
 // CounterpartyService
 // Сервис для работы с контрагентами.
 type CounterpartyService interface {
-	GetList(ctx context.Context, params *Params) (*List[Counterparty], *resty.Response, error)
-	Create(ctx context.Context, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params *Params) (*Slice[Counterparty], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Counterparty], *resty.Response, error)
+	Create(ctx context.Context, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...*Params) (*Slice[Counterparty], *resty.Response, error)
 	DeleteMany(ctx context.Context, counterpartyList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Counterparty, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, counterparty *Counterparty, params *Params) (*Counterparty, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Counterparty, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaTagsWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
@@ -598,10 +598,10 @@ type CounterpartyService interface {
 	UpdateAccounts(ctx context.Context, id uuid.UUID, accounts Slice[AgentAccount]) (*MetaArray[AgentAccount], *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Counterparty, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
-	GetAsync(ctx context.Context, params *Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
-	GetContactPersons(ctx context.Context, id uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error)
+	GetAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
+	GetContactPersons(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error)
 	GetContactPersonById(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error)
 	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error)
 	UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
@@ -660,15 +660,15 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 
 // GetAsync Запрос на получения списка Контрагентов (асинхронно).
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-spisok-kontragentow
-func (service *counterpartyService) GetAsync(ctx context.Context, params *Params) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params).Async(ctx)
+func (service *counterpartyService) GetAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params...).Async(ctx)
 }
 
 // GetContactPersons Список контактных лиц.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-spisok-kontaktnyh-lic
-func (service *counterpartyService) GetContactPersons(ctx context.Context, id uuid.UUID, params *Params) (*List[ContactPerson], *resty.Response, error) {
+func (service *counterpartyService) GetContactPersons(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons", service.uri, id)
-	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // GetContactPersonById Получить контактное лицо.

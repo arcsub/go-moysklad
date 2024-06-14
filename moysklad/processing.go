@@ -411,13 +411,13 @@ func (processingPositionProduct ProcessingPositionProduct) MetaType() MetaType {
 // ProcessingService
 // Сервис для работы с Техоперациями.
 type ProcessingService interface {
-	GetList(ctx context.Context, params *Params) (*List[Processing], *resty.Response, error)
-	Create(ctx context.Context, processing *Processing, params *Params) (*Processing, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingList Slice[Processing], params *Params) (*Slice[Processing], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Processing], *resty.Response, error)
+	Create(ctx context.Context, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingList Slice[Processing], params ...*Params) (*Slice[Processing], *resty.Response, error)
 	DeleteMany(ctx context.Context, processingList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Processing, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processing *Processing, params *Params) (*Processing, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Processing, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
 	//endpointTemplate[Processing]
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)

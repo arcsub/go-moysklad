@@ -309,16 +309,16 @@ func (service Service) MetaType() MetaType {
 // ServiceService
 // Сервис для работы с услугами.
 type ServiceService interface {
-	GetList(ctx context.Context, params *Params) (*List[Service], *resty.Response, error)
-	Create(ctx context.Context, service *Service, params *Params) (*Service, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, serviceList Slice[Service], params *Params) (*Slice[Service], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Service], *resty.Response, error)
+	Create(ctx context.Context, service *Service, params ...*Params) (*Service, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, serviceList Slice[Service], params ...*Params) (*Slice[Service], *resty.Response, error)
 	DeleteMany(ctx context.Context, serviceList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Service, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, service *Service, params *Params) (*Service, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Service, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, service *Service, params ...*Params) (*Service, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Service, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)

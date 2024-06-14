@@ -340,9 +340,9 @@ func (employeePermission EmployeePermission) String() string {
 // EmployeeService
 // Сервис для работы с сотрудниками.
 type EmployeeService interface {
-	GetList(ctx context.Context, params *Params) (*List[Employee], *resty.Response, error)
-	Create(ctx context.Context, employee *Employee, params *Params) (*Employee, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, employeeList Slice[Employee], params *Params) (*Slice[Employee], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Employee], *resty.Response, error)
+	Create(ctx context.Context, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, employeeList Slice[Employee], params ...*Params) (*Slice[Employee], *resty.Response, error)
 	DeleteMany(ctx context.Context, employeeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
@@ -353,8 +353,8 @@ type EmployeeService interface {
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Employee, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, employee *Employee, params *Params) (*Employee, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Employee, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
 	GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error)
 	UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error)
 	Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*MailActivationRequired, *resty.Response, error)

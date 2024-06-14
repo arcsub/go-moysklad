@@ -396,18 +396,18 @@ func (internalOrderPosition InternalOrderPosition) MetaType() MetaType {
 // InternalOrderService
 // Сервис для работы с внутренними заказами.
 type InternalOrderService interface {
-	GetList(ctx context.Context, params *Params) (*List[InternalOrder], *resty.Response, error)
-	Create(ctx context.Context, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params *Params) (*Slice[InternalOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[InternalOrder], *resty.Response, error)
+	Create(ctx context.Context, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params ...*Params) (*Slice[InternalOrder], *resty.Response, error)
 	DeleteMany(ctx context.Context, internalOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*InternalOrder, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params *Params) (*InternalOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InternalOrder, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
 	//endpointTemplate[InternalOrder]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*InternalOrderPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InternalOrderPosition, params *Params) (*InternalOrderPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InternalOrderPosition, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *InternalOrderPosition) (*InternalOrderPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[InternalOrderPosition]) (*Slice[InternalOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)

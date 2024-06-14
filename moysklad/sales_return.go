@@ -536,19 +536,19 @@ func (salesReturnPosition SalesReturnPosition) MetaType() MetaType {
 // SalesReturnService
 // Сервис для работы с возвратами покупателей.
 type SalesReturnService interface {
-	GetList(ctx context.Context, params *Params) (*List[SalesReturn], *resty.Response, error)
-	Create(ctx context.Context, salesReturn *SalesReturn, params *Params) (*SalesReturn, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params *Params) (*Slice[SalesReturn], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[SalesReturn], *resty.Response, error)
+	Create(ctx context.Context, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
 	DeleteMany(ctx context.Context, salesReturnList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*SalesReturn, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, salesReturn *SalesReturn, params *Params) (*SalesReturn, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SalesReturn, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
 	//endpointTemplate[SalesReturn]
 	//endpointTemplateBasedOn[SalesReturn, SalesReturnTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[SalesReturnPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*SalesReturnPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *SalesReturnPosition, params *Params) (*SalesReturnPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[SalesReturnPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *SalesReturnPosition, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *SalesReturnPosition) (*SalesReturnPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[SalesReturnPosition]) (*Slice[SalesReturnPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -568,7 +568,7 @@ type SalesReturnService interface {
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*SalesReturn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)

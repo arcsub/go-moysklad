@@ -659,19 +659,19 @@ func (demandPosition DemandPosition) MetaType() MetaType {
 // DemandService
 // Сервис для работы с отгрузками.
 type DemandService interface {
-	GetList(ctx context.Context, params *Params) (*List[Demand], *resty.Response, error)
-	Create(ctx context.Context, demand *Demand, params *Params) (*Demand, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, demandList Slice[Demand], params *Params) (*Slice[Demand], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Demand], *resty.Response, error)
+	Create(ctx context.Context, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, demandList Slice[Demand], params ...*Params) (*Slice[Demand], *resty.Response, error)
 	DeleteMany(ctx context.Context, demandList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Demand, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, demand *Demand, params *Params) (*Demand, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Demand, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
 	//endpointTemplate[Demand]
 	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetPositions(ctx context.Context, id uuid.UUID, params *Params) (*MetaArray[DemandPosition], *resty.Response, error)
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params *Params) (*DemandPosition, *resty.Response, error)
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *DemandPosition, params *Params) (*DemandPosition, *resty.Response, error)
+	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[DemandPosition], *resty.Response, error)
+	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*DemandPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *DemandPosition, params ...*Params) (*DemandPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *DemandPosition) (*DemandPosition, *resty.Response, error)
 	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[DemandPosition]) (*Slice[DemandPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
@@ -691,7 +691,7 @@ type DemandService interface {
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Demand, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)

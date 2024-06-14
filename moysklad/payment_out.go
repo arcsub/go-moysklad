@@ -362,13 +362,13 @@ func (paymentOut PaymentOut) AsPayment() *Payment {
 // PaymentOutService
 // Сервис для работы с исходящими платежами.
 type PaymentOutService interface {
-	GetList(ctx context.Context, params *Params) (*List[PaymentOut], *resty.Response, error)
-	Create(ctx context.Context, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, paymentOutList Slice[PaymentOut], params *Params) (*Slice[PaymentOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[PaymentOut], *resty.Response, error)
+	Create(ctx context.Context, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, paymentOutList Slice[PaymentOut], params ...*Params) (*Slice[PaymentOut], *resty.Response, error)
 	DeleteMany(ctx context.Context, paymentOutList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*PaymentOut, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, paymentOut *PaymentOut, params *Params) (*PaymentOut, *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentOut, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
 	//endpointTemplate[PaymentOut]
 	//endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)

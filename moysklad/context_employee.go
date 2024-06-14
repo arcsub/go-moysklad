@@ -533,7 +533,7 @@ func (contextEmployee ContextEmployee) MetaType() MetaType {
 // ContextEmployeeService
 // Сервис для работы с контекстом сотрудника.
 type ContextEmployeeService interface {
-	Get(ctx context.Context, params *Params) (*ContextEmployee, *resty.Response, error)
+	Get(ctx context.Context, params ...*Params) (*ContextEmployee, *resty.Response, error)
 }
 
 func NewContextEmployeeService(client *Client) ContextEmployeeService {

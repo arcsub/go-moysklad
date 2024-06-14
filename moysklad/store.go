@@ -330,9 +330,9 @@ func (zone Zone) MetaType() MetaType {
 // StoreService
 // Сервис для работы со складами.
 type StoreService interface {
-	GetList(ctx context.Context, params *Params) (*List[Store], *resty.Response, error)
-	Create(ctx context.Context, store *Store, params *Params) (*Store, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, storeList Slice[Store], params *Params) (*Slice[Store], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Store], *resty.Response, error)
+	Create(ctx context.Context, store *Store, params ...*Params) (*Store, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, storeList Slice[Store], params ...*Params) (*Slice[Store], *resty.Response, error)
 	DeleteMany(ctx context.Context, storeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
@@ -343,9 +343,9 @@ type StoreService interface {
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params *Params) (*Store, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, store *Store, params *Params) (*Store, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params *Params) (*List[NamedFilter], *resty.Response, error)
+	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Store, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, store *Store, params ...*Params) (*Store, *resty.Response, error)
+	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetSlots(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error)
 	CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error)

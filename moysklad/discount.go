@@ -568,21 +568,21 @@ func (specialPrice SpecialPrice) String() string {
 // DiscountService
 // Сервис для работы со скидками.
 type DiscountService interface {
-	GetList(ctx context.Context, params *Params) (*List[Discount], *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*List[Discount], *resty.Response, error)
 	UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error)
-	GetAccumulationDiscounts(ctx context.Context, params *Params) (*List[AccumulationDiscount], *resty.Response, error)
+	GetAccumulationDiscounts(ctx context.Context, params ...*Params) (*List[AccumulationDiscount], *resty.Response, error)
 	CreateAccumulationDiscount(ctx context.Context, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
-	GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error)
+	GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*AccumulationDiscount, *resty.Response, error)
 	UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
 	DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetPersonalDiscounts(ctx context.Context, params *Params) (*List[PersonalDiscount], *resty.Response, error)
+	GetPersonalDiscounts(ctx context.Context, params ...*Params) (*List[PersonalDiscount], *resty.Response, error)
 	CreatePersonalDiscount(ctx context.Context, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
-	GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error)
+	GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PersonalDiscount, *resty.Response, error)
 	UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
 	DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetSpecialPriceDiscounts(ctx context.Context, params *Params) (*List[SpecialPriceDiscount], *resty.Response, error)
+	GetSpecialPriceDiscounts(ctx context.Context, params ...*Params) (*List[SpecialPriceDiscount], *resty.Response, error)
 	CreateSpecialPriceDiscount(ctx context.Context, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
-	GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error)
+	GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error)
 	UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
 	DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
@@ -608,9 +608,9 @@ func (service *discountService) UpdateRoundOffDiscount(ctx context.Context, id u
 }
 
 // GetAccumulationDiscounts Получить все накопительные скидки.
-func (service *discountService) GetAccumulationDiscounts(ctx context.Context, params *Params) (*List[AccumulationDiscount], *resty.Response, error) {
+func (service *discountService) GetAccumulationDiscounts(ctx context.Context, params ...*Params) (*List[AccumulationDiscount], *resty.Response, error) {
 	path := "entity/accumulationdiscount"
-	return NewRequestBuilder[List[AccumulationDiscount]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[AccumulationDiscount]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // CreateAccumulationDiscount Создать накопительную скидку.
@@ -622,9 +622,9 @@ func (service *discountService) CreateAccumulationDiscount(ctx context.Context, 
 
 // GetAccumulationDiscountByID Получить накопительную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-nakopitel-nuu-skidku
-func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
-	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // UpdateAccumulationDiscount Изменить накопительную скидку.
@@ -642,9 +642,9 @@ func (service *discountService) DeleteAccumulationDiscount(ctx context.Context, 
 }
 
 // GetPersonalDiscounts Получить все персональные скидки.
-func (service *discountService) GetPersonalDiscounts(ctx context.Context, params *Params) (*List[PersonalDiscount], *resty.Response, error) {
+func (service *discountService) GetPersonalDiscounts(ctx context.Context, params ...*Params) (*List[PersonalDiscount], *resty.Response, error) {
 	path := "entity/personaldiscount"
-	return NewRequestBuilder[List[PersonalDiscount]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[PersonalDiscount]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // CreatePersonalDiscount Создать персональную скидку.
@@ -656,9 +656,9 @@ func (service *discountService) CreatePersonalDiscount(ctx context.Context, enti
 
 // GetPersonalDiscountByID Получить персональную скидку.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-personal-nuu-skidku
-func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
-	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // UpdatePersonalDiscount Изменить персональную скидку.
@@ -676,9 +676,9 @@ func (service *discountService) DeletePersonalDiscount(ctx context.Context, id u
 
 // GetSpecialPriceDiscounts Получить все специальные цены.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-personal-nuu-skidku
-func (service *discountService) GetSpecialPriceDiscounts(ctx context.Context, params *Params) (*List[SpecialPriceDiscount], *resty.Response, error) {
+func (service *discountService) GetSpecialPriceDiscounts(ctx context.Context, params ...*Params) (*List[SpecialPriceDiscount], *resty.Response, error) {
 	path := "entity/specialpricediscount"
-	return NewRequestBuilder[List[SpecialPriceDiscount]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[SpecialPriceDiscount]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // CreateSpecialPriceDiscount Создать специальную цену.
@@ -690,9 +690,9 @@ func (service *discountService) CreateSpecialPriceDiscount(ctx context.Context, 
 
 // GetSpecialPriceDiscountByID Получить специальную цену.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-special-nuu-cenu
-func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params *Params) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
-	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // UpdateSpecialPriceDiscount Изменить специальную цену.
