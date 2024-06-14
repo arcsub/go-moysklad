@@ -18,7 +18,7 @@ type ProcessingPlan struct {
 	ExternalCode         *string                            `json:"externalCode,omitempty"`         // Внешний код
 	Group                *Group                             `json:"group,omitempty"`                // Отдел сотрудника
 	ID                   *uuid.UUID                         `json:"id,omitempty"`                   // ID сущности
-	Stages               *MetaArray[ProcessingStage]        `json:"stages,omitempty"`               // Коллекция метаданных этапов Тех. карты
+	Stages               *MetaArray[ProcessingPlanStages]   `json:"stages,omitempty"`               // Коллекция метаданных этапов Тех. карты
 	Materials            *Positions[ProcessingPlanMaterial] `json:"materials,omitempty"`            // Список Метаданных материалов Тех. операции
 	Meta                 *Meta                              `json:"meta,omitempty"`                 // Метаданные
 	Name                 *string                            `json:"name,omitempty"`                 // Наименование
@@ -68,7 +68,7 @@ func (processingPlan ProcessingPlan) GetID() uuid.UUID {
 	return Deref(processingPlan.ID)
 }
 
-func (processingPlan ProcessingPlan) GetStages() MetaArray[ProcessingStage] {
+func (processingPlan ProcessingPlan) GetStages() MetaArray[ProcessingPlanStages] {
 	return Deref(processingPlan.Stages)
 }
 
@@ -137,7 +137,7 @@ func (processingPlan *ProcessingPlan) SetGroup(group *Group) *ProcessingPlan {
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetStages(stages Slice[ProcessingStage]) *ProcessingPlan {
+func (processingPlan *ProcessingPlan) SetStages(stages Slice[ProcessingPlanStages]) *ProcessingPlan {
 	processingPlan.Stages = NewMetaArrayRows(stages)
 	return processingPlan
 }
@@ -188,6 +188,57 @@ func (processingPlan ProcessingPlan) String() string {
 
 func (processingPlan ProcessingPlan) MetaType() MetaType {
 	return MetaTypeProcessingPlan
+}
+
+// ProcessingPlanStages Этапы Техкарты.
+// // Ключевое слово: processingplanstages.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-jetapy-tehkarty
+type ProcessingPlanStages struct {
+	AccountID                 *uuid.UUID `json:"accountId,omitempty"`                 // ID учетной записи
+	ID                        *uuid.UUID `json:"id,omitempty"`                        // ID Материала
+	Cost                      *float64   `json:"cost,omitempty"`                      // Стоимость производства, на определенном этапе
+	LabourCost                *float64   `json:"labourCost,omitempty"`                // Оплата труда, на определенном этапе
+	StandardHour              *float64   `json:"standardHour,omitempty"`              // Нормо-часы, на определенном этапе
+	ProcessingProcessPosition *Meta      `json:"processingProcessPosition,omitempty"` // Метаданные позиции техпроцесса
+}
+
+func (processingPlanStages ProcessingPlanStages) GetAccountID() uuid.UUID {
+	return Deref(processingPlanStages.AccountID)
+}
+
+func (processingPlanStages ProcessingPlanStages) GetID() uuid.UUID {
+	return Deref(processingPlanStages.ID)
+}
+
+func (processingPlanStages ProcessingPlanStages) GetCost() float64 {
+	return Deref(processingPlanStages.Cost)
+}
+
+func (processingPlanStages ProcessingPlanStages) GetLabourCost() float64 {
+	return Deref(processingPlanStages.LabourCost)
+}
+
+func (processingPlanStages ProcessingPlanStages) GetStandardHour() float64 {
+	return Deref(processingPlanStages.StandardHour)
+}
+
+func (processingPlanStages ProcessingPlanStages) GetProcessingProcessPosition() Meta {
+	return Deref(processingPlanStages.ProcessingProcessPosition)
+}
+
+func (processingPlanStages *ProcessingPlanStages) SetCost(cost float64) *ProcessingPlanStages {
+	processingPlanStages.Cost = &cost
+	return processingPlanStages
+}
+
+func (processingPlanStages *ProcessingPlanStages) SetLabourCost(labourCost float64) *ProcessingPlanStages {
+	processingPlanStages.LabourCost = &labourCost
+	return processingPlanStages
+}
+
+func (processingPlanStages *ProcessingPlanStages) SetStandardHour(standardHour float64) *ProcessingPlanStages {
+	processingPlanStages.StandardHour = &standardHour
+	return processingPlanStages
 }
 
 // ProcessingPlanProduct Продукт Тех. карты.

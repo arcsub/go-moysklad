@@ -14,14 +14,15 @@ import (
 )
 
 const (
-	Version                  = "v0.0.54"
-	baseApiURL               = "https://api.moysklad.ru/api/remap/1.2/"
-	headerWebHookDisable     = "X-Lognex-WebHook-Disable" // Заголовок временного отключения уведомлений через API.
-	headerGetContent         = "X-Lognex-Get-Content"     // Заголовок для получения файла напрямую.
-	headerContentDisposition = "Content-Disposition"      // Заголовок содержит название файла при `X-Lognex-Get-Content: true`
-	MaxPositions             = 1000                       // Максимальное число объектов, передаваемых в одном массиве в запросе
-	MaxQueriesPerSecond      = 15                         // Не более 45 запросов за 3 секундный период от аккаунта (45/3)
-	MaxQueriesPerUser        = 5                          // Не более 5 параллельных запросов от одного пользователя
+	Version                      = "v0.0.55"
+	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/"
+	headerWebHookDisable         = "X-Lognex-WebHook-Disable"         // Заголовок временного отключения уведомлений через API.
+	headerGetContent             = "X-Lognex-Get-Content"             // Заголовок для получения файла напрямую.
+	headerWebHookDisableByPrefix = "X-Lognex-WebHook-DisableByPrefix" // Заголовок временного отключения
+	headerContentDisposition     = "Content-Disposition"              // Заголовок содержит название файла при `X-Lognex-Get-Content: true`
+	MaxPositions                 = 1000                               // Максимальное число объектов, передаваемых в одном массиве в запросе
+	MaxQueriesPerSecond          = 15                                 // Не более 45 запросов за 3 секундный период от аккаунта (45/3)
+	MaxQueriesPerUser            = 5                                  // Не более 5 параллельных запросов от одного пользователя
 
 	//MaxFiles                = 100                           // Максимальное количество файлов
 	//MaxImages               = 10                            // Максимальное количество изображений
@@ -140,5 +141,15 @@ func (client *Client) WithBasicAuth(username, password string) *Client {
 // Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
 func (client *Client) WithDisabledWebhookContent(value bool) *Client {
 	client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
+	return client
+}
+
+// WithDisabledWebhookByPrefix позволяет указать набор префиксов url-адресов.
+// Если адрес вебхука содержит один из указанных префиксов, то этот вебхук не будет инициирован по результатам запроса.
+// Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
+func (client *Client) WithDisabledWebhookByPrefix(urls ...string) *Client {
+	for _, url := range urls {
+		client.Header.Add("headerWebHookDisableByPrefix", url)
+	}
 	return client
 }

@@ -320,6 +320,7 @@ const (
 	MetaTypeProductionStageCompletion         MetaType = "productionstagecompletion"
 	MetaTypeProductionStageCompletionMaterial MetaType = "productionstagecompletionmaterial"
 	MetaTypeProductionStageCompletionResult   MetaType = "productionstagecompletionresult"
+	MetaTypeProcessingPlanStages              MetaType = "processingplanstages"
 )
 
 func MetaTypeFromEntity(v any) (MetaType, error) {

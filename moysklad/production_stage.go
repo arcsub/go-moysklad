@@ -25,6 +25,7 @@ type ProductionStage struct {
 	BlockedQuantity    *float64                           `json:"blockedQuantity,omitempty"`    // Количество, которое на данный момент выполнять нельзя. Например, ещё не выполнен предыдущий этап
 	SkippedQuantity    *float64                           `json:"skippedQuantity,omitempty"`    // Количество, которое не будет выполнено. Например, из-за остановки производства
 	ProcessingUnitCost *float64                           `json:"processingUnitCost,omitempty"` // Затраты на единицу объема производства
+	StandardHourUnit   *float64                           `json:"standardHourUnit,omitempty"`   // Нормо-часы единицы объема производства
 }
 
 func (productionStage ProductionStage) Clean() *ProductionStage {
@@ -85,6 +86,35 @@ func (productionStage ProductionStage) GetSkippedQuantity() float64 {
 
 func (productionStage ProductionStage) GetProcessingUnitCost() float64 {
 	return Deref(productionStage.ProcessingUnitCost)
+}
+
+func (productionStage ProductionStage) GetStandardHourUnit() float64 {
+	return Deref(productionStage.StandardHourUnit)
+}
+
+func (productionStage *ProductionStage) SetMeta(meta *Meta) *ProductionStage {
+	productionStage.Meta = meta
+	return productionStage
+}
+
+func (productionStage *ProductionStage) SetLabourUnitCost(labourUnitCost float64) *ProductionStage {
+	productionStage.LabourUnitCost = &labourUnitCost
+	return productionStage
+}
+
+func (productionStage *ProductionStage) SetMaterials(materials *Positions[ProductionTaskMaterial]) *ProductionStage {
+	productionStage.Materials = materials
+	return productionStage
+}
+
+func (productionStage *ProductionStage) SetProcessingUnitCost(processingUnitCost float64) *ProductionStage {
+	productionStage.ProcessingUnitCost = &processingUnitCost
+	return productionStage
+}
+
+func (productionStage *ProductionStage) SetStandardHourUnit(standardHourUnit float64) *ProductionStage {
+	productionStage.StandardHourUnit = &standardHourUnit
+	return productionStage
 }
 
 func (productionStage ProductionStage) String() string {
