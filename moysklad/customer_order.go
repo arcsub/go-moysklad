@@ -578,12 +578,12 @@ func (customerOrderPosition CustomerOrderPosition) MetaType() MetaType {
 // Ключевое слово: eventnote.
 // https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-lenta-sobytij
 type EventNote struct {
-	Meta        Meta      `json:"meta,omitempty"`        // Метаданные События
-	ID          uuid.UUID `json:"id,omitempty"`          // ID События
-	AccountId   uuid.UUID `json:"accountId,omitempty"`   // ID учетной записи
-	Created     Timestamp `json:"created,omitempty"`     // Момент создания События
-	Description string    `json:"description,omitempty"` // Текст События
-	Author      Employee  `json:"author,omitempty"`      // Метаданные Сотрудника - создателя События
+	Meta        Meta      `json:"meta,omitempty"`
+	Created     Timestamp `json:"created,omitempty"`
+	Description string    `json:"description,omitempty"`
+	Author      Employee  `json:"author,omitempty"`
+	ID          uuid.UUID `json:"id,omitempty"`
+	AccountId   uuid.UUID `json:"accountId,omitempty"`
 }
 
 type customerOrderService struct {
