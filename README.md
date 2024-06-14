@@ -22,7 +22,7 @@ go get -u github.com/arcsub/go-moysklad
 Каждый запрос на создание/изменение/удаление возвращает 3 аргумента.
 Рассмотрим объявление функции 
 ```go
-func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params *Params) (*T, *resty.Response, error)
+func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params ...*Params) (*T, *resty.Response, error)
 ```
 В примере выше нас интересуют возвращаемые аргументы: `(*T, *resty.Response, error)`
 1. `*T` – указатель на сущность/документ, например *Product при вызове `Create()` (возвращает `bool` при вызове метода `Delete()`).
@@ -369,8 +369,8 @@ func main() {
   // сервис для работы с товарами
   productService := client.Entity().Product()
 
-  // выполняем запрос на получение списка товаров без дополнительных параметров (nil)
-  products, _, err := productService.GetList(context.Background(), nil)
+  // выполняем запрос на получение списка товаров без дополнительных параметров
+  products, _, err := productService.GetList(context.Background())
   if err != nil {
     panic(err)
   }
@@ -385,8 +385,8 @@ func main() {
   product.SetName("Created Product")
 
   // отправим запрос на создание товара
-  // в качестве аргументов передадим контекст, указатель на товар и nil в качестве параметров
-  productCreated, _, err := productService.Create(context.Background(), product, nil)
+  // в качестве аргументов передадим контекст, указатель на товар
+  productCreated, _, err := productService.Create(context.Background(), product)
   if err != nil {
     panic(err)
   }
@@ -398,8 +398,8 @@ func main() {
   productCreated.SetName("Updated Product")
 
   // отправим запрос на изменение товара
-  // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар и nil в качестве параметров
-  productUpdated, _, err := productService.Update(context.Background(), productCreated.GetID(), productCreated, nil)
+  // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар
+  productUpdated, _, err := productService.Update(context.Background(), productCreated.GetID(), productCreated)
   if err != nil {
     panic(err)
   }
