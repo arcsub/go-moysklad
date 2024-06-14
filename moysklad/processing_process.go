@@ -133,10 +133,11 @@ func (processingProcess ProcessingProcess) MetaType() MetaType {
 // Ключевое слово: processingprocessposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehprocess-pozicii-tehprocessa
 type ProcessingProcessPosition struct {
-	AccountID       *uuid.UUID       `json:"accountId,omitempty"`       // ID учетной записи
-	ID              *uuid.UUID       `json:"id,omitempty"`              // ID позиции
-	Meta            *Meta            `json:"meta,omitempty"`            // Метаданные позиции Тех. процесса
-	ProcessingStage *ProcessingStage `json:"processingstage,omitempty"` // Метаданные этапа, который представляет собой позиция
+	AccountID       *uuid.UUID                            `json:"accountId,omitempty"`       // ID учетной записи
+	ID              *uuid.UUID                            `json:"id,omitempty"`              // ID позиции
+	Meta            *Meta                                 `json:"meta,omitempty"`            // Метаданные позиции Тех. процесса
+	ProcessingStage *ProcessingStage                      `json:"processingstage,omitempty"` // Метаданные этапа, который представляет собой позиция
+	NextPositions   *MetaArray[ProcessingProcessPosition] `json:"nextPositions,omitempty"`   // Метаданные следующих позиций позиции Техпроцесса
 }
 
 func (processingProcessPosition ProcessingProcessPosition) Clean() *ProcessingProcessPosition {
@@ -157,6 +158,10 @@ func (processingProcessPosition ProcessingProcessPosition) GetMeta() Meta {
 
 func (processingProcessPosition ProcessingProcessPosition) GetProcessingStage() ProcessingStage {
 	return Deref(processingProcessPosition.ProcessingStage)
+}
+
+func (processingProcessPosition ProcessingProcessPosition) GetNextPositions() MetaArray[ProcessingProcessPosition] {
+	return Deref(processingProcessPosition.NextPositions)
 }
 
 func (processingProcessPosition *ProcessingProcessPosition) SetMeta(meta *Meta) *ProcessingProcessPosition {
