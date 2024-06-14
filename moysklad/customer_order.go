@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
@@ -573,6 +574,39 @@ func (customerOrderPosition CustomerOrderPosition) MetaType() MetaType {
 	return MetaTypeCustomerOrderPosition
 }
 
+// EventNote Лента событий.
+// Ключевое слово: eventnote.
+// https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-lenta-sobytij
+type EventNote struct {
+	Meta        Meta      `json:"meta,omitempty"`        // Метаданные События
+	ID          uuid.UUID `json:"id,omitempty"`          // ID События
+	AccountId   uuid.UUID `json:"accountId,omitempty"`   // ID учетной записи
+	Created     Timestamp `json:"created,omitempty"`     // Момент создания События
+	Description string    `json:"description,omitempty"` // Текст События
+	Author      Employee  `json:"author,omitempty"`      // Метаданные Сотрудника - создателя События
+}
+
+type customerOrderService struct {
+	Endpoint
+	endpointGetList[CustomerOrder]
+	endpointCreate[CustomerOrder]
+	endpointCreateUpdateMany[CustomerOrder]
+	endpointGetByID[CustomerOrder]
+	endpointUpdate[CustomerOrder]
+	endpointMetadata[MetaAttributesSharedStatesWrapper]
+	endpointPositions[CustomerOrderPosition]
+	endpointAttributes
+	endpointPublication
+	endpointStates
+	endpointFiles
+	endpointPrintTemplates
+	endpointSyncID[CustomerOrder]
+	endpointDelete
+	endpointNamedFilter
+	endpointDeleteMany[CustomerOrder]
+	endpointTrash
+}
+
 // CustomerOrderService
 // Сервис для работы с заказами покупателя.
 type CustomerOrderService interface {
@@ -624,9 +658,35 @@ type CustomerOrderService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	GetNotes(ctx context.Context, id uuid.UUID) (*List[EventNote], *resty.Response, error)
+	GetNoteByID(ctx context.Context, id uuid.UUID, noteID uuid.UUID) (*EventNote, *resty.Response, error)
 }
 
 func NewCustomerOrderService(client *Client) CustomerOrderService {
 	e := NewEndpoint(client, "entity/customerorder")
-	return newMainService[CustomerOrder, CustomerOrderPosition, MetaAttributesSharedStatesWrapper, any](e)
+	return &customerOrderService{
+		endpointGetList:          endpointGetList[CustomerOrder]{e},
+		endpointCreate:           endpointCreate[CustomerOrder]{e},
+		endpointCreateUpdateMany: endpointCreateUpdateMany[CustomerOrder]{e},
+		endpointGetByID:          endpointGetByID[CustomerOrder]{e},
+		endpointUpdate:           endpointUpdate[CustomerOrder]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
+		endpointPositions:        endpointPositions[CustomerOrderPosition]{e},
+		endpointAttributes:       endpointAttributes{e},
+		endpointPublication:      endpointPublication{e},
+		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
+		endpointPrintTemplates:   endpointPrintTemplates{e},
+		endpointSyncID:           endpointSyncID[CustomerOrder]{e},
+	}
+}
+
+func (service *customerOrderService) GetNotes(ctx context.Context, id uuid.UUID) (*List[EventNote], *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes", service.uri, id)
+	return NewRequestBuilder[List[EventNote]](service.client, path).Get(ctx)
+}
+
+func (service *customerOrderService) GetNoteByID(ctx context.Context, id uuid.UUID, noteID uuid.UUID) (*EventNote, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
+	return NewRequestBuilder[EventNote](service.client, path).Get(ctx)
 }

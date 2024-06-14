@@ -606,7 +606,7 @@ type CounterpartyService interface {
 	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error)
 	UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
 	GetNotes(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error)
-	GetNoteById(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error)
+	GetNoteByID(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error)
 	CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error)
 	UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error)
 	DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error)
@@ -699,9 +699,9 @@ func (service *counterpartyService) GetNotes(ctx context.Context, id uuid.UUID) 
 	return NewRequestBuilder[List[Note]](service.client, path).Get(ctx)
 }
 
-// GetNoteById Получить событие.
+// GetNoteByID Получить событие.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-sobytie
-func (service *counterpartyService) GetNoteById(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error) {
+func (service *counterpartyService) GetNoteByID(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
 	return NewRequestBuilder[Note](service.client, path).Get(ctx)
 }
