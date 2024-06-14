@@ -34,6 +34,7 @@ type Employee struct {
 	Archived     *bool                 `json:"archived,omitempty"`
 	Phone        *string               `json:"phone,omitempty"`
 	Position     *string               `json:"position,omitempty"`
+	Salary       *Salary               `json:"salary,omitempty"`
 	Shared       *bool                 `json:"shared,omitempty"`
 	ShortFio     *string               `json:"shortFio,omitempty"`
 	UID          *string               `json:"uid,omitempty"`
@@ -132,6 +133,10 @@ func (employee Employee) GetPosition() string {
 	return Deref(employee.Position)
 }
 
+func (employee Employee) GetSalary() Salary {
+	return Deref(employee.Salary)
+}
+
 func (employee Employee) GetShared() bool {
 	return Deref(employee.Shared)
 }
@@ -223,6 +228,11 @@ func (employee *Employee) SetPosition(position string) *Employee {
 	return employee
 }
 
+func (employee *Employee) SetSalary(salary *Salary) *Employee {
+	employee.Salary = salary
+	return employee
+}
+
 func (employee *Employee) SetShared(shared bool) *Employee {
 	employee.Shared = &shared
 	return employee
@@ -239,6 +249,21 @@ func (employee Employee) String() string {
 
 func (employee Employee) MetaType() MetaType {
 	return MetaTypeEmployee
+}
+
+// Salary Оклад.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-sotrudniki-atributy-wlozhennyh-suschnostej-oklad
+type Salary struct {
+	Value *float64 `json:"value,omitempty"` // Сумма оклада
+}
+
+func (salary Salary) GetValue() float64 {
+	return Deref(salary.Value)
+}
+
+func (salary *Salary) SetValue(value float64) *Salary {
+	salary.Value = &value
+	return salary
 }
 
 // MailActivationRequired структура ответа на запрос активации сотрудника
