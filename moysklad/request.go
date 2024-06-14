@@ -2,8 +2,8 @@ package moysklad
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/go-resty/resty/v2"
+	"github.com/goccy/go-json"
 	"github.com/google/go-querystring/query"
 	"log"
 	"net/http"
@@ -56,7 +56,7 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 			}
 
 		case statusCode >= http.StatusBadRequest: // error
-			var rawSlice []json.RawMessage
+			var rawSlice [][]byte
 			if err := json.Unmarshal(bodyBytes, &rawSlice); err != nil {
 				return nil, r, err
 			}

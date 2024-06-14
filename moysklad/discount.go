@@ -2,9 +2,9 @@ package moysklad
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 )
 
@@ -27,14 +27,14 @@ func NewDiscount[T DiscountType](entity T) *Discount {
 //
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki
 type Discount struct {
-	Meta      *Meta           `json:"meta,omitempty"`
-	ID        *uuid.UUID      `json:"id,omitempty"`
-	AccountID *uuid.UUID      `json:"accountId,omitempty"`
-	Name      *string         `json:"name,omitempty"`
-	Active    *bool           `json:"active,omitempty"`
-	AllAgents *bool           `json:"allAgents,omitempty"`
-	AgentTags Slice[string]   `json:"agentTags,omitempty"`
-	data      json.RawMessage // сырые данные для последующей десериализации в нужный тип
+	Meta      *Meta         `json:"meta,omitempty"`
+	ID        *uuid.UUID    `json:"id,omitempty"`
+	AccountID *uuid.UUID    `json:"accountId,omitempty"`
+	Name      *string       `json:"name,omitempty"`
+	Active    *bool         `json:"active,omitempty"`
+	AllAgents *bool         `json:"allAgents,omitempty"`
+	AgentTags Slice[string] `json:"agentTags,omitempty"`
+	data      []byte        // сырые данные для последующей десериализации в нужный тип
 }
 
 func (discount Discount) Clean() *Discount {
@@ -104,7 +104,7 @@ func (discount *Discount) MetaType() MetaType {
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
-func (discount *Discount) Raw() json.RawMessage {
+func (discount *Discount) Raw() []byte {
 	return discount.data
 }
 

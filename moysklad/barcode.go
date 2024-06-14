@@ -1,7 +1,7 @@
 package moysklad
 
 import (
-	"encoding/json"
+	"github.com/goccy/go-json"
 	"reflect"
 )
 

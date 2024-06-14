@@ -1,10 +1,10 @@
 package moysklad
 
-import "encoding/json"
+import "github.com/goccy/go-json"
 
 type RetailOperation struct {
 	Meta Meta `json:"meta"`
-	data json.RawMessage
+	data []byte
 }
 
 func (retailOperation RetailOperation) String() string {
@@ -17,7 +17,7 @@ func (retailOperation RetailOperation) MetaType() MetaType {
 }
 
 // Raw удовлетворяет интерфейсу RawMetaTyper
-func (retailOperation RetailOperation) Raw() json.RawMessage {
+func (retailOperation RetailOperation) Raw() []byte {
 	return retailOperation.data
 }
 

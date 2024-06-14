@@ -3,10 +3,10 @@ package moysklad
 import (
 	"bytes"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"github.com/goccy/go-json"
 	"net/http"
 	"reflect"
 
@@ -203,7 +203,7 @@ func NewImageFromFilepath(filePath string) (*Image, error) {
 // RawMetaTyper описывает методы, необходимые для преобразования одного типа в другой.
 type RawMetaTyper interface {
 	MetaTyper
-	Raw() json.RawMessage
+	Raw() []byte
 }
 
 // filterType преобразует слайс элементов типа D в слайс элементов типа M
