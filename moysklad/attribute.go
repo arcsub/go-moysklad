@@ -71,7 +71,7 @@ type attributeValueFile struct {
 // Ключевое слово: attributemetadata
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-rabota-s-dopolnitel-nymi-polqmi-atributy-dop-polq-so-znacheniem
 type AttributeValue struct {
-	Value    any                 `json:"value,omitempty"`
+	Value    *NullValueAny       `json:"value,omitempty"`
 	Meta     *Meta               `json:"meta,omitempty"`
 	ID       *uuid.UUID          `json:"id,omitempty"`
 	Name     *string             `json:"name,omitempty"`
@@ -112,7 +112,7 @@ func (attributeValue AttributeValue) GetType() AttributeType {
 }
 
 func (attributeValue AttributeValue) GetValue() any {
-	return attributeValue.Value
+	return attributeValue.Value.Get()
 }
 
 func (attributeValue AttributeValue) GetDownload() Meta {
@@ -139,7 +139,12 @@ func (attributeValue *AttributeValue) SetType(attributeType AttributeType) *Attr
 }
 
 func (attributeValue *AttributeValue) SetValue(value any) *AttributeValue {
-	attributeValue.Value = value
+	attributeValue.Value = NewNullValueAnyWith(value)
+	return attributeValue
+}
+
+func (attributeValue *AttributeValue) SetNullValue() *AttributeValue {
+	attributeValue.Value = NewNullValueAny()
 	return attributeValue
 }
 

@@ -356,3 +356,123 @@ type Stock struct {
 func (stock Stock) String() string {
 	return Stringify(stock)
 }
+
+// NullValue тип для поля, которое может быть указано как null.
+// Имеет обобщённый тип T
+type NullValue[T any] struct {
+	value T
+	null  bool
+}
+
+// NewNullValue устанавливает значение поля null
+func NewNullValue[T any]() *NullValue[T] {
+	return &NullValue[T]{null: true}
+}
+
+// NewNullValueWith устанавливает значение поля value
+func NewNullValueWith[T any](value *T) *NullValue[T] {
+	return &NullValue[T]{value: Deref(value)}
+}
+
+// IsNull возвращает true, если поле null
+func (nullValue NullValue[T]) IsNull() bool {
+	return nullValue.null
+}
+
+// Get возвращает значение поля
+func (nullValue NullValue[T]) Get() T {
+	return nullValue.value
+}
+
+// Set устанавливает значение поля
+func (nullValue *NullValue[T]) Set(value T) *NullValue[T] {
+	nullValue.value = value
+	nullValue.null = false
+	return nullValue
+}
+
+// SetPtr устанавливает значение поля.
+// В качестве аргумента передаётся указатель на тип T.
+func (nullValue *NullValue[T]) SetPtr(value *T) *NullValue[T] {
+	nullValue.value = Deref(value)
+	nullValue.null = false
+	return nullValue
+}
+
+// SetNull устанавливает значение поля null
+func (nullValue *NullValue[T]) SetNull() *NullValue[T] {
+	nullValue.null = true
+	return nullValue
+}
+
+func (nullValue NullValue[T]) String() string {
+	return fmt.Sprintf("%v", nullValue.value)
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
+	if nullValue.IsNull() {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(nullValue.Get())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (nullValue *NullValue[T]) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &nullValue.value)
+}
+
+// NullValueAny тип для поля Value структуры AttributeValue
+type NullValueAny struct {
+	value any
+	null  bool
+}
+
+// NewNullValueAny устанавливает значение поля null
+func NewNullValueAny() *NullValueAny {
+	return &NullValueAny{null: true}
+}
+
+// NewNullValueAnyWith устанавливает значение value
+func NewNullValueAnyWith(value any) *NullValueAny {
+	return &NullValueAny{value: value}
+}
+
+// IsNull возвращает true, если поле null
+func (nullValueAny NullValueAny) IsNull() bool {
+	return nullValueAny.null
+}
+
+// Get возвращает значение поля
+func (nullValueAny NullValueAny) Get() any {
+	return nullValueAny.value
+}
+
+// Set устанавливает значение поля
+func (nullValueAny *NullValueAny) Set(value any) *NullValueAny {
+	nullValueAny.value = value
+	return nullValueAny
+}
+
+// SetNull устанавливает значение поля null
+func (nullValueAny *NullValueAny) SetNull() *NullValueAny {
+	nullValueAny.null = true
+	return nullValueAny
+}
+
+func (nullValueAny NullValueAny) String() string {
+	return fmt.Sprintf("%v", nullValueAny.value)
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
+	if nullValueAny.IsNull() {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(nullValueAny.Get())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &nullValueAny.value)
+}
