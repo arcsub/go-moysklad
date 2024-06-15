@@ -385,7 +385,7 @@ func main() {
   product.SetName("Created Product")
 
   // отправим запрос на создание товара
-  // в качестве аргументов передадим контекст, указатель на товар
+  // в качестве аргументов передадим контекст и товар
   productCreated, _, err := productService.Create(context.Background(), product)
   if err != nil {
     panic(err)
@@ -398,7 +398,7 @@ func main() {
   productCreated.SetName("Updated Product")
 
   // отправим запрос на изменение товара
-  // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар
+  // в качестве аргументов передадим контекст, ID изменяемой сущности и изменённый товар
   productUpdated, _, err := productService.Update(context.Background(), productCreated.GetID(), productCreated)
   if err != nil {
     panic(err)
@@ -408,7 +408,7 @@ func main() {
   fmt.Println(productUpdated.GetName())
 
   // отправим запрос на удаление товара
-  // в качестве аргументов передадим контекст и указатель на ID удаляемой сущности
+  // в качестве аргументов передадим контекст и ID удаляемой сущности
   success, _, err := productService.Delete(context.Background(), productUpdated.GetID())
   if err != nil {
     panic(err)
