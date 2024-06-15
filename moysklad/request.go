@@ -157,8 +157,10 @@ func (requestBuilder *RequestBuilder[T]) SetHeader(header, value string) *Reques
 }
 
 func (requestBuilder *RequestBuilder[T]) SetParams(params ...*Params) *RequestBuilder[T] {
-	v, _ := query.Values(params)
-	requestBuilder.req.SetQueryParamsFromValues(v)
+	if len(params) > 0 {
+		v, _ := query.Values(params[0])
+		requestBuilder.req.SetQueryParamsFromValues(v)
+	}
 	return requestBuilder
 }
 
