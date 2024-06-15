@@ -144,6 +144,26 @@ func NewMetaArrayRows[T any](rows Slice[T]) *MetaArray[T] {
 	return &MetaArray[T]{Rows: rows}
 }
 
+// Len возвращает количество элементов Rows
+func (metaArray MetaArray[T]) Len() int {
+	return len(metaArray.Rows)
+}
+
+// Size возвращает размер выданного списка
+func (metaArray MetaArray[T]) Size() int {
+	return metaArray.Meta.Size
+}
+
+// NextHref возвращает ссылку на следующую страницу сущностей.
+func (metaArray MetaArray[T]) NextHref() string {
+	return metaArray.Meta.NextHref
+}
+
+// PreviousHref возвращает ссылку на предыдущую страницу сущностей.
+func (metaArray MetaArray[T]) PreviousHref() string {
+	return metaArray.Meta.PreviousHref
+}
+
 // Push добавляет элементы в срез.
 func (metaArray *MetaArray[T]) Push(elements ...*T) *MetaArray[T] {
 	metaArray.Rows.Push(elements...)
