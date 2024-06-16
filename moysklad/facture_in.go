@@ -30,7 +30,7 @@ type FactureIn struct {
 	Owner          *Employee             `json:"owner,omitempty"`
 	Printed        *bool                 `json:"printed,omitempty"`
 	Published      *bool                 `json:"published,omitempty"`
-	Rate           *Rate                 `json:"rate,omitempty"`
+	Rate           *NullValue[Rate]      `json:"rate,omitempty"`
 	Shared         *bool                 `json:"shared,omitempty"`
 	State          *NullValue[State]     `json:"state,omitempty"`
 	Sum            *float64              `json:"sum,omitempty"`
@@ -133,7 +133,7 @@ func (factureIn FactureIn) GetPublished() bool {
 }
 
 func (factureIn FactureIn) GetRate() Rate {
-	return Deref(factureIn.Rate)
+	return factureIn.Rate.Get()
 }
 
 func (factureIn FactureIn) GetShared() bool {
@@ -248,7 +248,12 @@ func (factureIn *FactureIn) SetOwner(owner *Employee) *FactureIn {
 }
 
 func (factureIn *FactureIn) SetRate(rate *Rate) *FactureIn {
-	factureIn.Rate = rate
+	factureIn.Rate = NewNullValueWith(rate)
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetNullRate() *FactureIn {
+	factureIn.Rate = NewNullValue[Rate]()
 	return factureIn
 }
 

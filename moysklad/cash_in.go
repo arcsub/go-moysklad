@@ -32,7 +32,7 @@ type CashIn struct {
 	Printed        *bool                    `json:"printed,omitempty"`
 	Project        *NullValue[Project]      `json:"project,omitempty"`
 	Published      *bool                    `json:"published,omitempty"`
-	Rate           *Rate                    `json:"rate,omitempty"`
+	Rate           *NullValue[Rate]         `json:"rate,omitempty"`
 	SalesChannel   *NullValue[SalesChannel] `json:"salesChannel,omitempty"`
 	Shared         *bool                    `json:"shared,omitempty"`
 	State          *NullValue[State]        `json:"state,omitempty"`
@@ -138,7 +138,7 @@ func (cashIn CashIn) GetPublished() bool {
 }
 
 func (cashIn CashIn) GetRate() Rate {
-	return Deref(cashIn.Rate)
+	return cashIn.Rate.Get()
 }
 
 func (cashIn CashIn) GetSalesChannel() SalesChannel {
@@ -268,7 +268,12 @@ func (cashIn *CashIn) SetNullProject() *CashIn {
 }
 
 func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
-	cashIn.Rate = rate
+	cashIn.Rate = NewNullValueWith(rate)
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullRate() *CashIn {
+	cashIn.Rate = NewNullValue[Rate]()
 	return cashIn
 }
 

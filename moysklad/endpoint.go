@@ -6,6 +6,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
+	"strings"
 )
 
 type mainService[E any, P any, M any, S any] struct {
@@ -36,6 +37,7 @@ type mainService[E any, P any, M any, S any] struct {
 	endpointStates
 	endpointFiles
 	endpointTemplateBased[E]
+	endpointEvaluate[E]
 }
 
 func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M, S] {
@@ -67,6 +69,7 @@ func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M
 		endpointFiles:            endpointFiles{e},
 		endpointTemplate:         endpointTemplate[E]{e},
 		endpointTemplateBased:    endpointTemplateBased[E]{e},
+		endpointEvaluate:         endpointEvaluate[E]{e},
 	}
 }
 
@@ -653,4 +656,15 @@ func (endpoint *endpointTrash) MoveToTrash(ctx context.Context, id uuid.UUID) (b
 	path := fmt.Sprintf("%s/%s/trash", endpoint.uri, id)
 	_, resp, err := NewRequestBuilder[any](endpoint.client, path).Post(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
+}
+
+type endpointEvaluate[T any] struct{ Endpoint }
+
+// Evaluate Автозаполнение.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-awtozapolnenie
+func (endpoint *endpointEvaluate[T]) Evaluate(ctx context.Context, entity *T, evaluate ...Evaluate) (*T, *resty.Response, error) {
+	uriParts := strings.Split(endpoint.uri, "/")
+	path := fmt.Sprintf("wizard/%s", uriParts[len(uriParts)-1])
+	params := NewParams().WithEvaluate(evaluate)
+	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Post(ctx, entity)
 }

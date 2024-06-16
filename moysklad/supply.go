@@ -38,7 +38,7 @@ type Supply struct {
 	Printed             *bool                      `json:"printed,omitempty"`
 	Project             *NullValue[Project]        `json:"project,omitempty"`
 	Published           *bool                      `json:"published,omitempty"`
-	Rate                *Rate                      `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]           `json:"rate,omitempty"`
 	Shared              *bool                      `json:"shared,omitempty"`
 	State               *State                     `json:"state,omitempty"`
 	Store               *Store                     `json:"store,omitempty"`
@@ -178,7 +178,7 @@ func (supply Supply) GetPublished() bool {
 }
 
 func (supply Supply) GetRate() Rate {
-	return Deref(supply.Rate)
+	return supply.Rate.Get()
 }
 
 func (supply Supply) GetShared() bool {
@@ -353,7 +353,12 @@ func (supply *Supply) SetNullProject() *Supply {
 }
 
 func (supply *Supply) SetRate(rate *Rate) *Supply {
-	supply.Rate = rate
+	supply.Rate = NewNullValueWith(rate)
+	return supply
+}
+
+func (supply *Supply) SetNullRate() *Supply {
+	supply.Rate = NewNullValue[Rate]()
 	return supply
 }
 
@@ -617,6 +622,7 @@ type SupplyService interface {
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Supply, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Supply, evaluate ...Evaluate) (*Supply, *resty.Response, error)
 }
 
 func NewSupplyService(client *Client) SupplyService {

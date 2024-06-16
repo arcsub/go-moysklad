@@ -34,7 +34,7 @@ type SalesReturn struct {
 	Printed             *bool                           `json:"printed,omitempty"`
 	Project             *NullValue[Project]             `json:"project,omitempty"`
 	Published           *bool                           `json:"published,omitempty"`
-	Rate                *Rate                           `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]                `json:"rate,omitempty"`
 	SalesChannel        *NullValue[SalesChannel]        `json:"salesChannel,omitempty"`
 	Shared              *bool                           `json:"shared,omitempty"`
 	State               *NullValue[State]               `json:"state,omitempty"`
@@ -159,7 +159,7 @@ func (salesReturn SalesReturn) GetPublished() bool {
 }
 
 func (salesReturn SalesReturn) GetRate() Rate {
-	return Deref(salesReturn.Rate)
+	return salesReturn.Rate.Get()
 }
 
 func (salesReturn SalesReturn) GetSalesChannel() SalesChannel {
@@ -313,7 +313,12 @@ func (salesReturn *SalesReturn) SetNullProject() *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetRate(rate *Rate) *SalesReturn {
-	salesReturn.Rate = rate
+	salesReturn.Rate = NewNullValueWith(rate)
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullRate() *SalesReturn {
+	salesReturn.Rate = NewNullValue[Rate]()
 	return salesReturn
 }
 
@@ -592,6 +597,7 @@ type SalesReturnService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *SalesReturn, evaluate ...Evaluate) (*SalesReturn, *resty.Response, error)
 }
 
 func NewSalesReturnService(client *Client) SalesReturnService {

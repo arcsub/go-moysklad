@@ -47,7 +47,7 @@ type RetailDemand struct {
 	Project             *NullValue[Project]              `json:"project,omitempty"`
 	Published           *bool                            `json:"published,omitempty"`
 	QRSum               *float64                         `json:"qrSum,omitempty"`
-	Rate                *Rate                            `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]                 `json:"rate,omitempty"`
 	RetailShift         *RetailShift                     `json:"retailShift,omitempty"`
 	RetailStore         *RetailStore                     `json:"retailStore,omitempty"`
 	SessionNumber       *string                          `json:"sessionNumber,omitempty"`
@@ -218,7 +218,7 @@ func (retailDemand RetailDemand) GetQRSum() float64 {
 }
 
 func (retailDemand RetailDemand) GetRate() Rate {
-	return Deref(retailDemand.Rate)
+	return retailDemand.Rate.Get()
 }
 
 func (retailDemand RetailDemand) GetRetailShift() RetailShift {
@@ -418,7 +418,12 @@ func (retailDemand *RetailDemand) SetQRSum(qrSum float64) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetRate(rate *Rate) *RetailDemand {
-	retailDemand.Rate = rate
+	retailDemand.Rate = NewNullValueWith(rate)
+	return retailDemand
+}
+
+func (retailDemand *RetailDemand) SetNullRate() *RetailDemand {
+	retailDemand.Rate = NewNullValue[Rate]()
 	return retailDemand
 }
 
@@ -657,6 +662,7 @@ type RetailDemandService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *RetailDemand, evaluate ...Evaluate) (*RetailDemand, *resty.Response, error)
 }
 
 func NewRetailDemandService(client *Client) RetailDemandService {

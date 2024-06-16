@@ -20,6 +20,7 @@ type Params struct {
 	Order       []string    `url:"order,omitempty" del:";"`
 	Expand      []string    `url:"expand,omitempty" del:","`
 	Filter      []string    `url:"filter,omitempty" del:";"`
+	Action      []Evaluate  `url:"action,omitempty" del:","`
 	Offset      int         `url:"offset,omitempty"`
 	Limit       int         `url:"limit,omitempty"`
 	Async       bool        `url:"async,omitempty"`
@@ -308,4 +309,25 @@ const (
 
 func (stockType StockType) String() string {
 	return string(stockType)
+}
+
+// Evaluate определяет какую информацию нужно заполнить.
+type Evaluate string
+
+const (
+	EvaluateDiscount = "evaluate_discount" // скидки
+	EvaluatePrice    = "evaluate_price"    // цены
+	EvaluateVat      = "evaluate_vat"      // ндс
+	EvaluateCost     = "evaluate_cost"     // себестоимость
+)
+
+func (evaluate Evaluate) String() string {
+	return string(evaluate)
+}
+
+// WithEvaluate автозаполнение.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-awtozapolnenie
+func (params *Params) WithEvaluate(evaluate []Evaluate) *Params {
+	params.Action = append(params.Action, evaluate...)
+	return params
 }

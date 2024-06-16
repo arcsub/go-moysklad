@@ -28,7 +28,7 @@ type Payment struct {
 	Printed        *bool                    `json:"printed,omitempty"`        // Напечатан ли документ
 	Project        *NullValue[Project]      `json:"project,omitempty"`        // Метаданные проекта
 	Published      *bool                    `json:"published,omitempty"`      // Опубликован ли документ
-	Rate           *Rate                    `json:"rate,omitempty"`           // Валюта
+	Rate           *NullValue[Rate]         `json:"rate,omitempty"`           // Валюта
 	SalesChannel   *NullValue[SalesChannel] `json:"salesChannel,omitempty"`   // Метаданные канала продаж
 	Shared         *bool                    `json:"shared,omitempty"`         // Общий доступ
 	State          *State                   `json:"state,omitempty"`          // Метаданные статуса
@@ -130,7 +130,7 @@ func (payment Payment) GetPublished() bool {
 }
 
 func (payment Payment) GetRate() Rate {
-	return Deref(payment.Rate)
+	return payment.Rate.Get()
 }
 
 func (payment Payment) GetSalesChannel() SalesChannel {

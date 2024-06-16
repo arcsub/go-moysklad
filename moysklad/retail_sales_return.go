@@ -37,7 +37,7 @@ type RetailSalesReturn struct {
 	Project             *NullValue[Project]                   `json:"project,omitempty"`
 	Published           *bool                                 `json:"published,omitempty"`
 	QrSum               *float64                              `json:"qrSum,omitempty"`
-	Rate                *Rate                                 `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]                      `json:"rate,omitempty"`
 	RetailShift         *RetailShift                          `json:"retailShift,omitempty"`
 	RetailStore         *RetailStore                          `json:"retailStore,omitempty"`
 	Shared              *bool                                 `json:"shared,omitempty"`
@@ -166,7 +166,7 @@ func (retailSalesReturn RetailSalesReturn) GetQrSum() float64 {
 }
 
 func (retailSalesReturn RetailSalesReturn) GetRate() Rate {
-	return Deref(retailSalesReturn.Rate)
+	return retailSalesReturn.Rate.Get()
 }
 
 func (retailSalesReturn RetailSalesReturn) GetRetailShift() RetailShift {
@@ -328,7 +328,12 @@ func (retailSalesReturn *RetailSalesReturn) SetQrSum(qrSum float64) *RetailSales
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetRate(rate *Rate) *RetailSalesReturn {
-	retailSalesReturn.Rate = rate
+	retailSalesReturn.Rate = NewNullValueWith(rate)
+	return retailSalesReturn
+}
+
+func (retailSalesReturn *RetailSalesReturn) SetNullRate() *RetailSalesReturn {
+	retailSalesReturn.Rate = NewNullValue[Rate]()
 	return retailSalesReturn
 }
 
@@ -556,6 +561,7 @@ type RetailSalesReturnService interface {
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
 	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *RetailSalesReturn, evaluate ...Evaluate) (*RetailSalesReturn, *resty.Response, error)
 }
 
 func NewRetailSalesReturnService(client *Client) RetailSalesReturnService {

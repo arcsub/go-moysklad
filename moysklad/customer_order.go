@@ -38,7 +38,7 @@ type CustomerOrder struct {
 	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
 	Contract              *NullValue[Contract]              `json:"contract,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
-	Rate                  *Rate                             `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                  `json:"rate,omitempty"`
 	ReservedSum           *float64                          `json:"reservedSum,omitempty"`
 	SalesChannel          *NullValue[SalesChannel]          `json:"salesChannel,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
@@ -181,7 +181,7 @@ func (customerOrder CustomerOrder) GetPublished() bool {
 }
 
 func (customerOrder CustomerOrder) GetRate() Rate {
-	return Deref(customerOrder.Rate)
+	return customerOrder.Rate.Get()
 }
 
 func (customerOrder CustomerOrder) GetReservedSum() float64 {
@@ -374,7 +374,12 @@ func (customerOrder *CustomerOrder) SetNullContract() *CustomerOrder {
 }
 
 func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
-	customerOrder.Rate = rate
+	customerOrder.Rate = NewNullValueWith(rate)
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullRate() *CustomerOrder {
+	customerOrder.Rate = NewNullValue[Rate]()
 	return customerOrder
 }
 
@@ -637,6 +642,7 @@ type customerOrderService struct {
 	endpointDeleteMany[CustomerOrder]
 	endpointTrash
 	endpointTemplate[CustomerOrder]
+	endpointEvaluate[CustomerOrder]
 }
 
 // CustomerOrderService
@@ -692,6 +698,7 @@ type CustomerOrderService interface {
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetNotes(ctx context.Context, id uuid.UUID) (*List[EventNote], *resty.Response, error)
 	GetNoteByID(ctx context.Context, id uuid.UUID, noteID uuid.UUID) (*EventNote, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *CustomerOrder, evaluate ...Evaluate) (*CustomerOrder, *resty.Response, error)
 }
 
 func NewCustomerOrderService(client *Client) CustomerOrderService {
@@ -711,6 +718,7 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointPrintTemplates:   endpointPrintTemplates{e},
 		endpointSyncID:           endpointSyncID[CustomerOrder]{e},
 		endpointTemplate:         endpointTemplate[CustomerOrder]{e},
+		endpointEvaluate:         endpointEvaluate[CustomerOrder]{e},
 	}
 }
 

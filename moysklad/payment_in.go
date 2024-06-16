@@ -36,7 +36,7 @@ type PaymentIn struct {
 	Printed             *bool                    `json:"printed,omitempty"`
 	Project             *NullValue[Project]      `json:"project,omitempty"`
 	Published           *bool                    `json:"published,omitempty"`
-	Rate                *Rate                    `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]         `json:"rate,omitempty"`
 	Shared              *bool                    `json:"shared,omitempty"`
 	SalesChannel        *NullValue[SalesChannel] `json:"salesChannel,omitempty"`
 	State               *NullValue[State]        `json:"state,omitempty"`
@@ -157,7 +157,7 @@ func (paymentIn PaymentIn) GetPublished() bool {
 }
 
 func (paymentIn PaymentIn) GetRate() Rate {
-	return Deref(paymentIn.Rate)
+	return paymentIn.Rate.Get()
 }
 
 func (paymentIn PaymentIn) GetShared() bool {
@@ -308,7 +308,12 @@ func (paymentIn *PaymentIn) SetNullProject() *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetRate(rate *Rate) *PaymentIn {
-	paymentIn.Rate = rate
+	paymentIn.Rate = NewNullValueWith(rate)
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetNullRate() *PaymentIn {
+	paymentIn.Rate = NewNullValue[Rate]()
 	return paymentIn
 }
 

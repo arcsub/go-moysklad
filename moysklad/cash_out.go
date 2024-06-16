@@ -33,7 +33,7 @@ type CashOut struct {
 	Printed        *bool                    `json:"printed,omitempty"`
 	Project        *NullValue[Project]      `json:"project,omitempty"`
 	Published      *bool                    `json:"published,omitempty"`
-	Rate           *Rate                    `json:"rate,omitempty"`
+	Rate           *NullValue[Rate]         `json:"rate,omitempty"`
 	SalesChannel   *NullValue[SalesChannel] `json:"salesChannel,omitempty"`
 	Shared         *bool                    `json:"shared,omitempty"`
 	State          *NullValue[State]        `json:"state,omitempty"`
@@ -143,7 +143,7 @@ func (cashOut CashOut) GetPublished() bool {
 }
 
 func (cashOut CashOut) GetRate() Rate {
-	return Deref(cashOut.Rate)
+	return cashOut.Rate.Get()
 }
 
 func (cashOut CashOut) GetSalesChannel() SalesChannel {
@@ -273,7 +273,12 @@ func (cashOut *CashOut) SetNullProject() *CashOut {
 }
 
 func (cashOut *CashOut) SetRate(rate *Rate) *CashOut {
-	cashOut.Rate = rate
+	cashOut.Rate = NewNullValueWith(rate)
+	return cashOut
+}
+
+func (cashOut *CashOut) SetNullRate() *CashOut {
+	cashOut.Rate = NewNullValue[Rate]()
 	return cashOut
 }
 

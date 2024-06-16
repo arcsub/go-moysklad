@@ -353,6 +353,7 @@ type InventoryService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Inventory, evaluate ...Evaluate) (*Inventory, *resty.Response, error)
 }
 
 type inventoryService struct {
@@ -372,6 +373,7 @@ type inventoryService struct {
 	endpointTrash
 	endpointStates
 	endpointFiles
+	endpointEvaluate[Inventory]
 }
 
 func NewInventoryService(client *Client) InventoryService {
@@ -393,6 +395,7 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointTrash:            endpointTrash{e},
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
+		endpointEvaluate:         endpointEvaluate[Inventory]{e},
 	}
 }
 

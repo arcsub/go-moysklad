@@ -30,7 +30,7 @@ type FactureOut struct {
 	Agent           *Counterparty         `json:"agent,omitempty"`
 	Meta            *Meta                 `json:"meta,omitempty"`
 	Published       *bool                 `json:"published,omitempty"`
-	Rate            *Rate                 `json:"rate,omitempty"`
+	Rate            *NullValue[Rate]      `json:"rate,omitempty"`
 	Shared          *bool                 `json:"shared,omitempty"`
 	State           *NullValue[State]     `json:"state,omitempty"`
 	StateContractID *string               `json:"stateContractId,omitempty"`
@@ -136,7 +136,7 @@ func (factureOut FactureOut) GetPublished() bool {
 }
 
 func (factureOut FactureOut) GetRate() Rate {
-	return Deref(factureOut.Rate)
+	return factureOut.Rate.Get()
 }
 
 func (factureOut FactureOut) GetShared() bool {
@@ -263,7 +263,12 @@ func (factureOut *FactureOut) SetMeta(meta *Meta) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetRate(rate *Rate) *FactureOut {
-	factureOut.Rate = rate
+	factureOut.Rate = NewNullValueWith(rate)
+	return factureOut
+}
+
+func (factureOut *FactureOut) SetNullRate() *FactureOut {
+	factureOut.Rate = NewNullValue[Rate]()
 	return factureOut
 }
 

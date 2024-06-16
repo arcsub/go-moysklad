@@ -34,7 +34,7 @@ type Move struct {
 	Printed       *bool                     `json:"printed,omitempty"`
 	Project       *NullValue[Project]       `json:"project,omitempty"`
 	Published     *bool                     `json:"published,omitempty"`
-	Rate          *Rate                     `json:"rate,omitempty"`
+	Rate          *NullValue[Rate]          `json:"rate,omitempty"`
 	Shared        *bool                     `json:"shared,omitempty"`
 	SourceStore   *Store                    `json:"sourceStore,omitempty"`
 	State         *NullValue[State]         `json:"state,omitempty"`
@@ -143,7 +143,7 @@ func (move Move) GetPublished() bool {
 }
 
 func (move Move) GetRate() Rate {
-	return Deref(move.Rate)
+	return move.Rate.Get()
 }
 
 func (move Move) GetShared() bool {
@@ -278,7 +278,12 @@ func (move *Move) SetNullProject() *Move {
 }
 
 func (move *Move) SetRate(rate *Rate) *Move {
-	move.Rate = rate
+	move.Rate = NewNullValueWith(rate)
+	return move
+}
+
+func (move *Move) SetNullRate() *Move {
+	move.Rate = NewNullValue[Rate]()
 	return move
 }
 
@@ -470,6 +475,7 @@ type MoveService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Move, evaluate ...Evaluate) (*Move, *resty.Response, error)
 }
 
 func NewMoveService(client *Client) MoveService {

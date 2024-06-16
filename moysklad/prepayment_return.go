@@ -34,7 +34,7 @@ type PrepaymentReturn struct {
 	Printed      *bool                                `json:"printed,omitempty"`
 	Published    *bool                                `json:"published,omitempty"`
 	QRSum        *float64                             `json:"qrSum,omitempty"`
-	Rate         *Rate                                `json:"rate,omitempty"`
+	Rate         *NullValue[Rate]                     `json:"rate,omitempty"`
 	RetailShift  *RetailShift                         `json:"retailShift,omitempty"`
 	RetailStore  *RetailStore                         `json:"retailStore,omitempty"`
 	Shared       *bool                                `json:"shared,omitempty"`
@@ -150,7 +150,7 @@ func (prepaymentReturn PrepaymentReturn) GetQRSum() float64 {
 }
 
 func (prepaymentReturn PrepaymentReturn) GetRate() Rate {
-	return Deref(prepaymentReturn.Rate)
+	return prepaymentReturn.Rate.Get()
 }
 
 func (prepaymentReturn PrepaymentReturn) GetRetailShift() RetailShift {
@@ -288,7 +288,12 @@ func (prepaymentReturn *PrepaymentReturn) SetQRSum(qrSum float64) *PrepaymentRet
 }
 
 func (prepaymentReturn *PrepaymentReturn) SetRate(rate *Rate) *PrepaymentReturn {
-	prepaymentReturn.Rate = rate
+	prepaymentReturn.Rate = NewNullValueWith(rate)
+	return prepaymentReturn
+}
+
+func (prepaymentReturn *PrepaymentReturn) SetNullRate() *PrepaymentReturn {
+	prepaymentReturn.Rate = NewNullValue[Rate]()
 	return prepaymentReturn
 }
 

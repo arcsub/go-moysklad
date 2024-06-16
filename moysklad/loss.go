@@ -30,7 +30,7 @@ type Loss struct {
 	Printed      *bool                    `json:"printed,omitempty"`
 	AccountID    *uuid.UUID               `json:"accountId,omitempty"`
 	Published    *bool                    `json:"published,omitempty"`
-	Rate         *Rate                    `json:"rate,omitempty"`
+	Rate         *NullValue[Rate]         `json:"rate,omitempty"`
 	Shared       *bool                    `json:"shared,omitempty"`
 	State        *NullValue[State]        `json:"state,omitempty"`
 	Store        *Store                   `json:"store,omitempty"`
@@ -126,7 +126,7 @@ func (loss Loss) GetPublished() bool {
 }
 
 func (loss Loss) GetRate() Rate {
-	return Deref(loss.Rate)
+	return loss.Rate.Get()
 }
 
 func (loss Loss) GetShared() bool {
@@ -233,7 +233,12 @@ func (loss *Loss) SetPositions(positions *Positions[LossPosition]) *Loss {
 }
 
 func (loss *Loss) SetRate(rate *Rate) *Loss {
-	loss.Rate = rate
+	loss.Rate = NewNullValueWith(rate)
+	return loss
+}
+
+func (loss *Loss) SetNullRate() *Loss {
+	loss.Rate = NewNullValue[Rate]()
 	return loss
 }
 
@@ -415,6 +420,7 @@ type LossService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Loss, evaluate ...Evaluate) (*Loss, *resty.Response, error)
 }
 
 func NewLossService(client *Client) LossService {

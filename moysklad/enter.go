@@ -31,7 +31,7 @@ type Enter struct {
 	AccountID    *uuid.UUID                `json:"accountId,omitempty"`
 	Project      *NullValue[Project]       `json:"project,omitempty"`
 	Published    *bool                     `json:"published,omitempty"`
-	Rate         *Rate                     `json:"rate,omitempty"`
+	Rate         *NullValue[Rate]          `json:"rate,omitempty"`
 	Shared       *bool                     `json:"shared,omitempty"`
 	State        *NullValue[State]         `json:"state,omitempty"`
 	Store        *Store                    `json:"store,omitempty"`
@@ -130,7 +130,7 @@ func (enter Enter) GetPublished() bool {
 }
 
 func (enter Enter) GetRate() Rate {
-	return Deref(enter.Rate)
+	return enter.Rate.Get()
 }
 
 func (enter Enter) GetShared() bool {
@@ -228,7 +228,12 @@ func (enter *Enter) SetNullProject() *Enter {
 }
 
 func (enter *Enter) SetRate(rate *Rate) *Enter {
-	enter.Rate = rate
+	enter.Rate = NewNullValueWith(rate)
+	return enter
+}
+
+func (enter *Enter) SetNullRate() *Enter {
+	enter.Rate = NewNullValue[Rate]()
 	return enter
 }
 
@@ -442,6 +447,7 @@ type EnterService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Enter, evaluate ...Evaluate) (*Enter, *resty.Response, error)
 }
 
 func NewEnterService(client *Client) EnterService {

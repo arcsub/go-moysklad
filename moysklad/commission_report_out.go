@@ -38,7 +38,7 @@ type CommissionReportOut struct {
 	Printed               *bool                                   `json:"printed,omitempty"`
 	Project               *NullValue[Project]                     `json:"project,omitempty"`
 	Published             *bool                                   `json:"published,omitempty"`
-	Rate                  *Rate                                   `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                        `json:"rate,omitempty"`
 	RewardPercent         *float64                                `json:"rewardPercent,omitempty"`
 	Payments              Slice[Payment]                          `json:"payments,omitempty"`
 	SalesChannel          *NullValue[SalesChannel]                `json:"salesChannel,omitempty"`
@@ -176,7 +176,7 @@ func (commissionReportOut CommissionReportOut) GetPublished() bool {
 }
 
 func (commissionReportOut CommissionReportOut) GetRate() Rate {
-	return Deref(commissionReportOut.Rate)
+	return commissionReportOut.Rate.Get()
 }
 
 func (commissionReportOut CommissionReportOut) GetRewardPercent() float64 {
@@ -328,7 +328,12 @@ func (commissionReportOut *CommissionReportOut) SetNullProject() *CommissionRepo
 }
 
 func (commissionReportOut *CommissionReportOut) SetRate(rate *Rate) *CommissionReportOut {
-	commissionReportOut.Rate = rate
+	commissionReportOut.Rate = NewNullValueWith(rate)
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetNullRate() *CommissionReportOut {
+	commissionReportOut.Rate = NewNullValue[Rate]()
 	return commissionReportOut
 }
 
@@ -551,6 +556,7 @@ type CommissionReportOutService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *CommissionReportOut, evaluate ...Evaluate) (*CommissionReportOut, *resty.Response, error)
 }
 
 func NewCommissionReportOutService(client *Client) CommissionReportOutService {

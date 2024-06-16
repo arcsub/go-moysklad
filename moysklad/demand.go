@@ -35,7 +35,7 @@ type Demand struct {
 	Printed                 *bool                      `json:"printed,omitempty"`
 	Project                 *NullValue[Project]        `json:"project,omitempty"`
 	Published               *bool                      `json:"published,omitempty"`
-	Rate                    *Rate                      `json:"rate,omitempty"`
+	Rate                    *NullValue[Rate]           `json:"rate,omitempty"`
 	SalesChannel            *NullValue[SalesChannel]   `json:"salesChannel,omitempty"`
 	Shared                  *bool                      `json:"shared,omitempty"`
 	ShipmentAddress         *string                    `json:"shipmentAddress,omitempty"`
@@ -175,7 +175,7 @@ func (demand Demand) GetPublished() bool {
 }
 
 func (demand Demand) GetRate() Rate {
-	return Deref(demand.Rate)
+	return demand.Rate.Get()
 }
 
 func (demand Demand) GetSalesChannel() SalesChannel {
@@ -383,7 +383,12 @@ func (demand *Demand) SetNullProject() *Demand {
 }
 
 func (demand *Demand) SetRate(rate *Rate) *Demand {
-	demand.Rate = rate
+	demand.Rate = NewNullValueWith(rate)
+	return demand
+}
+
+func (demand *Demand) SetNullRate() *Demand {
+	demand.Rate = NewNullValue[Rate]()
 	return demand
 }
 
@@ -727,6 +732,7 @@ type DemandService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Demand, evaluate ...Evaluate) (*Demand, *resty.Response, error)
 }
 
 func NewDemandService(client *Client) DemandService {

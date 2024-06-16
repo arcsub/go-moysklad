@@ -40,7 +40,7 @@ type CommissionReportIn struct {
 	Printed                       *bool                                        `json:"printed,omitempty"`
 	Project                       *NullValue[Project]                          `json:"project,omitempty"`
 	Published                     *bool                                        `json:"published,omitempty"`
-	Rate                          *Rate                                        `json:"rate,omitempty"`
+	Rate                          *NullValue[Rate]                             `json:"rate,omitempty"`
 	ReturnToCommissionerPositions *Positions[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"`
 	RewardPercent                 *float64                                     `json:"rewardPercent,omitempty"`
 	Payments                      Slice[Payment]                               `json:"payments,omitempty"`
@@ -183,7 +183,7 @@ func (commissionReportIn CommissionReportIn) GetPublished() bool {
 }
 
 func (commissionReportIn CommissionReportIn) GetRate() Rate {
-	return Deref(commissionReportIn.Rate)
+	return commissionReportIn.Rate.Get()
 }
 
 func (commissionReportIn CommissionReportIn) GetReturnToCommissionerPositions() Positions[CommissionReportInReturnPosition] {
@@ -344,7 +344,12 @@ func (commissionReportIn *CommissionReportIn) SetNullProject() *CommissionReport
 }
 
 func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionReportIn {
-	commissionReportIn.Rate = rate
+	commissionReportIn.Rate = NewNullValueWith(rate)
+	return commissionReportIn
+}
+
+func (commissionReportIn *CommissionReportIn) SetNullRate() *CommissionReportIn {
+	commissionReportIn.Rate = NewNullValue[Rate]()
 	return commissionReportIn
 }
 
@@ -689,6 +694,7 @@ type CommissionReportInService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *CommissionReportIn, evaluate ...Evaluate) (*CommissionReportIn, *resty.Response, error)
 }
 
 type commissionReportInService struct {
@@ -710,6 +716,7 @@ type commissionReportInService struct {
 	endpointStates
 	endpointFiles
 	endpointTemplate[CommissionReportIn]
+	endpointEvaluate[CommissionReportIn]
 }
 
 func NewCommissionReportInService(client *Client) CommissionReportInService {
@@ -733,6 +740,7 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointTrash:            endpointTrash{e},
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
+		endpointEvaluate:         endpointEvaluate[CommissionReportIn]{e},
 	}
 }
 

@@ -33,7 +33,7 @@ type PurchaseReturn struct {
 	Organization        *Organization                      `json:"organization,omitempty"`
 	Project             *NullValue[Project]                `json:"project,omitempty"`
 	Published           *bool                              `json:"published,omitempty"`
-	Rate                *Rate                              `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]                   `json:"rate,omitempty"`
 	Shared              *bool                              `json:"shared,omitempty"`
 	State               *State                             `json:"state,omitempty"`
 	Store               *Store                             `json:"store,omitempty"`
@@ -155,7 +155,7 @@ func (purchaseReturn PurchaseReturn) GetPublished() bool {
 }
 
 func (purchaseReturn PurchaseReturn) GetRate() Rate {
-	return Deref(purchaseReturn.Rate)
+	return purchaseReturn.Rate.Get()
 }
 
 func (purchaseReturn PurchaseReturn) GetShared() bool {
@@ -313,7 +313,12 @@ func (purchaseReturn *PurchaseReturn) SetNullProject() *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetRate(rate *Rate) *PurchaseReturn {
-	purchaseReturn.Rate = rate
+	purchaseReturn.Rate = NewNullValueWith(rate)
+	return purchaseReturn
+}
+
+func (purchaseReturn *PurchaseReturn) SetNullRate() *PurchaseReturn {
+	purchaseReturn.Rate = NewNullValue[Rate]()
 	return purchaseReturn
 }
 
@@ -562,6 +567,7 @@ type PurchaseReturnService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *PurchaseReturn, evaluate ...Evaluate) (*PurchaseReturn, *resty.Response, error)
 }
 
 func NewPurchaseReturnService(client *Client) PurchaseReturnService {

@@ -38,7 +38,7 @@ type InvoiceIn struct {
 	Printed              *bool                         `json:"printed,omitempty"`
 	Project              *NullValue[Project]           `json:"project,omitempty"`
 	Published            *bool                         `json:"published,omitempty"`
-	Rate                 *Rate                         `json:"rate,omitempty"`
+	Rate                 *NullValue[Rate]              `json:"rate,omitempty"`
 	Shared               *bool                         `json:"shared,omitempty"`
 	ShippedSum           *float64                      `json:"shippedSum,omitempty"`
 	State                *NullValue[State]             `json:"state,omitempty"`
@@ -177,7 +177,7 @@ func (invoiceIn InvoiceIn) GetPublished() bool {
 }
 
 func (invoiceIn InvoiceIn) GetRate() Rate {
-	return Deref(invoiceIn.Rate)
+	return invoiceIn.Rate.Get()
 }
 
 func (invoiceIn InvoiceIn) GetShared() bool {
@@ -348,7 +348,12 @@ func (invoiceIn *InvoiceIn) SetNullProject() *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetRate(rate *Rate) *InvoiceIn {
-	invoiceIn.Rate = rate
+	invoiceIn.Rate = NewNullValueWith(rate)
+	return invoiceIn
+}
+
+func (invoiceIn *InvoiceIn) SetNullRate() *InvoiceIn {
+	invoiceIn.Rate = NewNullValue[Rate]()
 	return invoiceIn
 }
 
@@ -570,6 +575,7 @@ type InvoiceInService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *InvoiceIn, evaluate ...Evaluate) (*InvoiceIn, *resty.Response, error)
 }
 
 func NewInvoiceInService(client *Client) InvoiceInService {

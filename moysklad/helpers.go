@@ -358,7 +358,8 @@ func (stock Stock) String() string {
 }
 
 // NullValue тип для поля, которое может быть указано как null.
-// Имеет обобщённый тип T
+// Имеет обобщённый тип T.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-podderzhka-null
 type NullValue[T any] struct {
 	value T
 	null  bool

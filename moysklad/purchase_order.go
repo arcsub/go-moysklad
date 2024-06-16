@@ -37,7 +37,7 @@ type PurchaseOrder struct {
 	Printed               *bool                             `json:"printed,omitempty"`
 	Project               *NullValue[Project]               `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
-	Rate                  *Rate                             `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                  `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
 	State                 *NullValue[State]                 `json:"state,omitempty"`
@@ -175,7 +175,7 @@ func (purchaseOrder PurchaseOrder) GetPublished() bool {
 }
 
 func (purchaseOrder PurchaseOrder) GetRate() Rate {
-	return Deref(purchaseOrder.Rate)
+	return purchaseOrder.Rate.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetShared() bool {
@@ -343,7 +343,12 @@ func (purchaseOrder *PurchaseOrder) SetNullProject() *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetRate(rate *Rate) *PurchaseOrder {
-	purchaseOrder.Rate = rate
+	purchaseOrder.Rate = NewNullValueWith(rate)
+	return purchaseOrder
+}
+
+func (purchaseOrder *PurchaseOrder) SetNullRate() *PurchaseOrder {
+	purchaseOrder.Rate = NewNullValue[Rate]()
 	return purchaseOrder
 }
 
@@ -592,6 +597,7 @@ type PurchaseOrderService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *PurchaseOrder, evaluate ...Evaluate) (*PurchaseOrder, *resty.Response, error)
 }
 
 func NewPurchaseOrderService(client *Client) PurchaseOrderService {

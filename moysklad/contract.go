@@ -27,7 +27,7 @@ type Contract struct {
 	OrganizationAccount *AgentAccount         `json:"organizationAccount,omitempty"`
 	OwnAgent            *Organization         `json:"ownAgent,omitempty"`
 	Owner               *Employee             `json:"owner,omitempty"`
-	Rate                *Rate                 `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]      `json:"rate,omitempty"`
 	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
 	Updated             *Timestamp            `json:"updated,omitempty"`
 	Shared              *bool                 `json:"shared,omitempty"`
@@ -113,7 +113,7 @@ func (contract Contract) GetOwner() Employee {
 }
 
 func (contract Contract) GetRate() Rate {
-	return Deref(contract.Rate)
+	return contract.Rate.Get()
 }
 
 func (contract Contract) GetAccountID() uuid.UUID {
@@ -223,7 +223,12 @@ func (contract *Contract) SetOwner(owner *Employee) *Contract {
 }
 
 func (contract *Contract) SetRate(rate *Rate) *Contract {
-	contract.Rate = rate
+	contract.Rate = NewNullValueWith(rate)
+	return contract
+}
+
+func (contract *Contract) SetNullRate() *Contract {
+	contract.Rate = NewNullValue[Rate]()
 	return contract
 }
 

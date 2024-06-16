@@ -28,7 +28,7 @@ type RetailDrawerCashIn struct {
 	Owner        *Employee             `json:"owner,omitempty"`
 	Printed      *bool                 `json:"printed,omitempty"`
 	Published    *bool                 `json:"published,omitempty"`
-	Rate         *Rate                 `json:"rate,omitempty"`
+	Rate         *NullValue[Rate]      `json:"rate,omitempty"`
 	Shared       *bool                 `json:"shared,omitempty"`
 	State        *State                `json:"state,omitempty"`
 	Sum          *float64              `json:"sum,omitempty"`
@@ -115,7 +115,7 @@ func (retailDrawerCashIn RetailDrawerCashIn) GetPublished() bool {
 }
 
 func (retailDrawerCashIn RetailDrawerCashIn) GetRate() Rate {
-	return Deref(retailDrawerCashIn.Rate)
+	return retailDrawerCashIn.Rate.Get()
 }
 
 func (retailDrawerCashIn RetailDrawerCashIn) GetShared() bool {
@@ -203,7 +203,12 @@ func (retailDrawerCashIn *RetailDrawerCashIn) SetOwner(owner *Employee) *RetailD
 }
 
 func (retailDrawerCashIn *RetailDrawerCashIn) SetRate(rate *Rate) *RetailDrawerCashIn {
-	retailDrawerCashIn.Rate = rate
+	retailDrawerCashIn.Rate = NewNullValueWith(rate)
+	return retailDrawerCashIn
+}
+
+func (retailDrawerCashIn *RetailDrawerCashIn) SetNullRate() *RetailDrawerCashIn {
+	retailDrawerCashIn.Rate = NewNullValue[Rate]()
 	return retailDrawerCashIn
 }
 

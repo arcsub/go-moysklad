@@ -33,7 +33,7 @@ type InternalOrder struct {
 	Project               *NullValue[Project]               `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
 	PurchaseOrders        Slice[PurchaseOrder]              `json:"purchaseOrders,omitempty"`
-	Rate                  *Rate                             `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                  `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	State                 *NullValue[State]                 `json:"state,omitempty"`
 	Store                 *NullValue[Store]                 `json:"store,omitempty"`
@@ -142,7 +142,7 @@ func (internalOrder InternalOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 }
 
 func (internalOrder InternalOrder) GetRate() Rate {
-	return Deref(internalOrder.Rate)
+	return internalOrder.Rate.Get()
 }
 
 func (internalOrder InternalOrder) GetShared() bool {
@@ -267,7 +267,12 @@ func (internalOrder *InternalOrder) SetPurchaseOrders(purchaseOrders Slice[Purch
 }
 
 func (internalOrder *InternalOrder) SetRate(rate *Rate) *InternalOrder {
-	internalOrder.Rate = rate
+	internalOrder.Rate = NewNullValueWith(rate)
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullRate() *InternalOrder {
+	internalOrder.Rate = NewNullValue[Rate]()
 	return internalOrder
 }
 
@@ -453,6 +458,7 @@ type InternalOrderService interface {
 	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *InternalOrder, evaluate ...Evaluate) (*InternalOrder, *resty.Response, error)
 }
 
 func NewInternalOrderService(client *Client) InternalOrderService {
