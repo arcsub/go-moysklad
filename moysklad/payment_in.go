@@ -391,7 +391,7 @@ type PaymentInService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
 	Template(ctx context.Context) (*PaymentIn, *resty.Response, error)
-	//endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*PaymentIn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)

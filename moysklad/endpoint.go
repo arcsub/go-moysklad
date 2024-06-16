@@ -35,6 +35,7 @@ type mainService[E any, P any, M any, S any] struct {
 	endpointAccounts
 	endpointStates
 	endpointFiles
+	endpointTemplateBased[E]
 }
 
 func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M, S] {
@@ -65,6 +66,7 @@ func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
 		endpointTemplate:         endpointTemplate[E]{e},
+		endpointTemplateBased:    endpointTemplateBased[E]{e},
 	}
 }
 
@@ -133,23 +135,66 @@ func (endpoint *endpointTemplate[T]) Template(ctx context.Context) (*T, *resty.R
 	return NewRequestBuilder[T](endpoint.client, path).Put(ctx, nil)
 }
 
-// TemplateArg типы, которые могут быть использованы в качестве документа-основания
-// при запросе на создание шаблона документа
-//type TemplateArg interface {
-//	InvoiceOutTemplateArg | SalesReturnTemplateArg | PurchaseReturnTemplateArg |
-//		PaymentInTemplateArg | ProcessingOrderTemplateArg | PurchaseOrderTemplateArg |
-//		PaymentOutTemplateArg | EnterTemplateArg | DemandTemplateArg | MoveTemplateArg |
-//		CashInTemplateArg | CashOutTemplateArg | RetailDemandTemplateArg | LossTemplateArg |
-//		InvoiceInTemplateArg | ProcessingTemplateArg
-//}
+type endpointTemplateBased[T any] struct{ Endpoint }
 
-//type endpointTemplateBasedOn[T MetaTyper, A TemplateArg] struct{ Endpoint }
-//
-//// TemplateBasedOn Получить предзаполненный стандартными полями объект на основании документа(-ов)
-//func (endpoint *endpointTemplateBasedOn[T, A]) TemplateBasedOn(ctx context.Context, arg *A) (*T, *resty.Response, error) {
-//	path := fmt.Sprintf("%s/new", endpoint.uri)
-//	return NewRequestBuilder[T](endpoint.client, path).Put(ctx, arg)
-//}
+func templateBasedPrepare(based []MetaOwner) map[string]MetaWrapper {
+	if len(based) == 0 {
+		return nil
+	}
+
+	var body = make(map[string]MetaWrapper)
+	for _, el := range based {
+		metaType := el.GetMeta().GetType()
+		if metaType.String() == "" {
+			continue
+		}
+		var metaTypeTemplate string
+		switch metaType {
+		case MetaTypeCustomerOrder:
+			metaTypeTemplate = "customerOrder"
+		case MetaTypeRetailDemand:
+			metaTypeTemplate = "retailDemand"
+		case MetaTypePurchaseReturn:
+			metaTypeTemplate = "purchaseReturn"
+		case MetaTypeInvoiceOut:
+			metaTypeTemplate = "invoiceOut"
+		case MetaTypeInvoiceIn:
+			metaTypeTemplate = "invoiceIn"
+		case MetaTypeCommissionReportOut:
+			metaTypeTemplate = "commissionReportOut"
+		case MetaTypeCommissionReportIn:
+			metaTypeTemplate = "commissionReportIn"
+		case MetaTypeProcessingPlan:
+			metaTypeTemplate = "processingPlan"
+		case MetaTypeProcessingOrder:
+			metaTypeTemplate = "processingOrder"
+		case MetaTypeInternalOrder:
+			metaTypeTemplate = "internalOrder"
+		case MetaTypeSalesReturn:
+			metaTypeTemplate = "salesReturn"
+		case MetaTypeRetailShift:
+			metaTypeTemplate = "retailShift"
+		case MetaTypePaymentOut:
+			metaTypeTemplate = "paymentOut"
+		case MetaTypePaymentIn:
+			metaTypeTemplate = "paymentIn"
+
+		default:
+			metaTypeTemplate = metaType.String()
+		}
+
+		body[metaTypeTemplate] = el.GetMeta().Wrap()
+	}
+
+	return body
+}
+
+// TemplateBased Получить предзаполненный стандартными полями объект на основе переданных документов.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-shablony-dokumentow
+func (endpoint *endpointTemplateBased[T]) TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*T, *resty.Response, error) {
+	path := fmt.Sprintf("%s/new", endpoint.uri)
+	return NewRequestBuilder[T](endpoint.client, path).Put(ctx, templateBasedPrepare(basedOn))
+}
 
 type endpointCreate[T any] struct{ Endpoint }
 

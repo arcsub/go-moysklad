@@ -688,7 +688,7 @@ type DemandService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Demand, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
 	Template(ctx context.Context) (*Demand, *resty.Response, error)
-	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*Demand, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[DemandPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*DemandPosition, *resty.Response, error)

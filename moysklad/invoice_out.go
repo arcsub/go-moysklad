@@ -503,9 +503,12 @@ func (invoiceOutPosition InvoiceOutPosition) MetaType() MetaType {
 // Документ: Cчет покупателю (invoiceout)
 // Основание, на котором он может быть создан:
 // - Заказ покупателя (customerorder)
-//type InvoiceOutTemplateArg struct {
-//	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
-//}
+// - Отгрузка (demand)
+type InvoiceOutTemplateArg interface {
+	CustomerOrder | Demand
+
+	//CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
+}
 
 // InvoiceOutService
 // Сервис для работы со счетами покупателей.
@@ -518,7 +521,7 @@ type InvoiceOutService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InvoiceOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, invoiceOut *InvoiceOut, params ...*Params) (*InvoiceOut, *resty.Response, error)
 	Template(ctx context.Context) (*InvoiceOut, *resty.Response, error)
-	//endpointTemplateBasedOn[InvoiceOut, InvoiceOutTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*InvoiceOut, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InvoiceOutPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InvoiceOutPosition, *resty.Response, error)

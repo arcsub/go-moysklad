@@ -443,7 +443,7 @@ type MoveService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Move, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, move *Move, params ...*Params) (*Move, *resty.Response, error)
 	Template(ctx context.Context) (*Move, *resty.Response, error)
-	//endpointTemplateBasedOn[Move, MoveTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*Move, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[MovePosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*MovePosition, *resty.Response, error)

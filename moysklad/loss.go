@@ -390,7 +390,7 @@ type LossService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Loss, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)
 	Template(ctx context.Context) (*Loss, *resty.Response, error)
-	//endpointTemplateBasedOn[Loss, LossTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*Loss, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[LossPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*LossPosition, *resty.Response, error)

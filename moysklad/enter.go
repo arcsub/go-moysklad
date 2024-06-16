@@ -413,7 +413,7 @@ type EnterService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Enter, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, enter *Enter, params ...*Params) (*Enter, *resty.Response, error)
 	Template(ctx context.Context) (*Enter, *resty.Response, error)
-	//endpointTemplateBasedOn[Enter, EnterTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*Enter, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[EnterPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*EnterPosition, *resty.Response, error)

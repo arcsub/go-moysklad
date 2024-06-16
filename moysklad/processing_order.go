@@ -383,7 +383,7 @@ type ProcessingOrderService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	Template(ctx context.Context) (*ProcessingOrder, *resty.Response, error)
-	//endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*ProcessingOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)

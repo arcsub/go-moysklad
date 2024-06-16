@@ -705,7 +705,7 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointFiles:            endpointFiles{e},
 		endpointPrintTemplates:   endpointPrintTemplates{e},
 		endpointSyncID:           endpointSyncID[CustomerOrder]{e},
-		endpointTemplate:         endpointTemplate[CustomerOrder]{},
+		endpointTemplate:         endpointTemplate[CustomerOrder]{e},
 	}
 }
 
