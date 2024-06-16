@@ -32,11 +32,12 @@ type PriceList struct {
 	Printed      *bool                         `json:"printed,omitempty"`
 	Published    *bool                         `json:"published,omitempty"`
 	Shared       *bool                         `json:"shared,omitempty"`
-	State        *State                        `json:"state,omitempty"`
+	State        *NullValue[State]             `json:"state,omitempty"`
 	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`
 	Attributes   Slice[AttributeValue]         `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (priceList PriceList) Clean() *PriceList {
 	return &PriceList{Meta: priceList.Meta}
 }
@@ -130,7 +131,7 @@ func (priceList PriceList) GetShared() bool {
 }
 
 func (priceList PriceList) GetState() State {
-	return Deref(priceList.State)
+	return priceList.State.Get()
 }
 
 func (priceList PriceList) GetSyncID() uuid.UUID {
@@ -212,7 +213,12 @@ func (priceList *PriceList) SetShared(shared bool) *PriceList {
 }
 
 func (priceList *PriceList) SetState(state *State) *PriceList {
-	priceList.State = state.Clean()
+	priceList.State = NewNullValueWith(state.Clean())
+	return priceList
+}
+
+func (priceList *PriceList) SetNullState() *PriceList {
+	priceList.State = NewNullValue[State]()
 	return priceList
 }
 

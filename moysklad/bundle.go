@@ -23,26 +23,26 @@ type Bundle struct {
 	Article             *string                     `json:"article,omitempty"`
 	Images              *MetaArray[Image]           `json:"images,omitempty"`
 	Components          *Positions[BundleComponent] `json:"components,omitempty"`
-	Country             *Country                    `json:"country,omitempty"`
+	Country             *NullValue[Country]         `json:"country,omitempty"`
 	DiscountProhibited  *bool                       `json:"discountProhibited"`
 	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`
 	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"`
 	Files               *MetaArray[File]            `json:"files,omitempty"`
 	Group               *Group                      `json:"group,omitempty"`
 	Vat                 *int                        `json:"vat,omitempty"`
-	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`
-	Overhead            *BundleOverhead             `json:"overhead,omitempty"`
+	MinPrice            *NullValue[MinPrice]        `json:"minPrice,omitempty"`
+	Overhead            *NullValue[BundleOverhead]  `json:"overhead,omitempty"`
 	Owner               *Employee                   `json:"owner,omitempty"`
 	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`
 	PathName            *string                     `json:"pathName,omitempty"`
 	Weight              *float64                    `json:"weight,omitempty"`
-	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`
+	ProductFolder       *NullValue[ProductFolder]   `json:"productFolder,omitempty"`
 	Shared              *bool                       `json:"shared,omitempty"`
 	Updated             *Timestamp                  `json:"updated,omitempty"`
 	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`
 	Tnved               *string                     `json:"tnved,omitempty"`
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
-	Uom                 *Uom                        `json:"uom,omitempty"`
+	Uom                 *NullValue[Uom]             `json:"uom,omitempty"`
 	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
 	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`
@@ -113,7 +113,7 @@ func (bundle Bundle) GetComponents() Positions[BundleComponent] {
 }
 
 func (bundle Bundle) GetCountry() Country {
-	return Deref(bundle.Country)
+	return bundle.Country.Get()
 }
 
 func (bundle Bundle) GetDiscountProhibited() bool {
@@ -141,11 +141,11 @@ func (bundle Bundle) GetVat() int {
 }
 
 func (bundle Bundle) GetMinPrice() MinPrice {
-	return Deref(bundle.MinPrice)
+	return bundle.MinPrice.Get()
 }
 
 func (bundle Bundle) GetOverhead() BundleOverhead {
-	return Deref(bundle.Overhead)
+	return bundle.Overhead.Get()
 }
 
 func (bundle Bundle) GetOwner() Employee {
@@ -169,7 +169,7 @@ func (bundle Bundle) GetSalePrices() Slice[SalePrice] {
 }
 
 func (bundle Bundle) GetProductFolder() ProductFolder {
-	return Deref(bundle.ProductFolder)
+	return bundle.ProductFolder.Get()
 }
 
 func (bundle Bundle) GetShared() bool {
@@ -193,7 +193,7 @@ func (bundle Bundle) GetVatEnabled() bool {
 }
 
 func (bundle Bundle) GetUom() Uom {
-	return Deref(bundle.Uom)
+	return bundle.Uom.Get()
 }
 
 func (bundle Bundle) GetBarcodes() Slice[Barcode] {
@@ -276,7 +276,12 @@ func (bundle *Bundle) SetComponents(components *Positions[BundleComponent]) *Bun
 }
 
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
-	bundle.Country = country.Clean()
+	bundle.Country = NewNullValueWith(country.Clean())
+	return bundle
+}
+
+func (bundle *Bundle) SetNullCountry() *Bundle {
+	bundle.Country = NewNullValue[Country]()
 	return bundle
 }
 
@@ -301,12 +306,22 @@ func (bundle *Bundle) SetVat(vat int) *Bundle {
 }
 
 func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
-	bundle.MinPrice = minPrice
+	bundle.MinPrice = NewNullValueWith(minPrice)
+	return bundle
+}
+
+func (bundle *Bundle) SetNullMinPrice() *Bundle {
+	bundle.MinPrice = NewNullValue[MinPrice]()
 	return bundle
 }
 
 func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
-	bundle.Overhead = overhead
+	bundle.Overhead = NewNullValueWith(overhead)
+	return bundle
+}
+
+func (bundle *Bundle) SetNullOverhead() *Bundle {
+	bundle.Overhead = NewNullValue[BundleOverhead]()
 	return bundle
 }
 
@@ -331,7 +346,12 @@ func (bundle *Bundle) SetSalePrices(salePrices Slice[SalePrice]) *Bundle {
 }
 
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
-	bundle.ProductFolder = productFolder.Clean()
+	bundle.ProductFolder = NewNullValueWith(productFolder.Clean())
+	return bundle
+}
+
+func (bundle *Bundle) SetNullProductFolder() *Bundle {
+	bundle.ProductFolder = NewNullValue[ProductFolder]()
 	return bundle
 }
 
@@ -351,7 +371,12 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 }
 
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
-	bundle.Uom = uom.Clean()
+	bundle.Uom = NewNullValueWith(uom.Clean())
+	return bundle
+}
+
+func (bundle *Bundle) SetNullUom() *Bundle {
+	bundle.Uom = NewNullValue[Uom]()
 	return bundle
 }
 

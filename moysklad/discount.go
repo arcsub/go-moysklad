@@ -37,6 +37,7 @@ type Discount struct {
 	data      []byte        // сырые данные для последующей десериализации в нужный тип
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (discount Discount) Clean() *Discount {
 	return &Discount{Meta: discount.Meta}
 }
@@ -306,6 +307,7 @@ type PersonalDiscount struct {
 	Assortment     Assortment                `json:"assortment,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (personalDiscount PersonalDiscount) Clean() *PersonalDiscount {
 	return &PersonalDiscount{Meta: personalDiscount.Meta}
 }
@@ -417,6 +419,7 @@ type SpecialPriceDiscount struct {
 	AgentTags      Slice[string]             `json:"agentTags,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (specialPriceDiscount SpecialPriceDiscount) Clean() *SpecialPriceDiscount {
 	return &SpecialPriceDiscount{Meta: specialPriceDiscount.Meta}
 }

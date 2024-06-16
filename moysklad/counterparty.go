@@ -18,7 +18,7 @@ type Counterparty struct {
 	Archived           *bool                     `json:"archived,omitempty"`
 	Notes              *MetaArray[Note]          `json:"notes,omitempty"`
 	BonusPoints        *int                      `json:"bonusPoints,omitempty"`
-	BonusProgram       *BonusProgram             `json:"bonusProgram,omitempty"`
+	BonusProgram       *NullValue[BonusProgram]  `json:"bonusProgram,omitempty"`
 	Code               *string                   `json:"code,omitempty"`
 	OGRNIP             *string                   `json:"ogrnip,omitempty"`
 	ContactPersons     *MetaArray[ContactPerson] `json:"contactpersons,omitempty"`
@@ -40,7 +40,7 @@ type Counterparty struct {
 	PriceType          *PriceType                `json:"priceType,omitempty"`
 	SalesAmount        *float64                  `json:"salesAmount,omitempty"`
 	Shared             *bool                     `json:"shared,omitempty"`
-	State              *State                    `json:"state,omitempty"`
+	State              *NullValue[State]         `json:"state,omitempty"`
 	SyncID             *uuid.UUID                `json:"syncId,omitempty"`
 	Tags               Slice[string]             `json:"tags,omitempty"`
 	Updated            *Timestamp                `json:"updated,omitempty"`
@@ -58,6 +58,7 @@ type Counterparty struct {
 	Attributes         Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (counterparty Counterparty) Clean() *Counterparty {
 	return &Counterparty{Meta: counterparty.Meta}
 }
@@ -91,7 +92,7 @@ func (counterparty Counterparty) GetBonusPoints() int {
 }
 
 func (counterparty Counterparty) GetBonusProgram() BonusProgram {
-	return Deref(counterparty.BonusProgram)
+	return counterparty.BonusProgram.Get()
 }
 
 func (counterparty Counterparty) GetCode() string {
@@ -179,7 +180,7 @@ func (counterparty Counterparty) GetShared() bool {
 }
 
 func (counterparty Counterparty) GetState() State {
-	return Deref(counterparty.State)
+	return counterparty.State.Get()
 }
 
 func (counterparty Counterparty) GetSyncID() uuid.UUID {
@@ -268,7 +269,12 @@ func (counterparty *Counterparty) SetNotes(notes Slice[Note]) *Counterparty {
 }
 
 func (counterparty *Counterparty) SetBonusProgram(bonusProgram *BonusProgram) *Counterparty {
-	counterparty.BonusProgram = bonusProgram.Clean()
+	counterparty.BonusProgram = NewNullValueWith(bonusProgram.Clean())
+	return counterparty
+}
+
+func (counterparty *Counterparty) SetNullBonusProgram() *Counterparty {
+	counterparty.BonusProgram = NewNullValue[BonusProgram]()
 	return counterparty
 }
 
@@ -368,7 +374,12 @@ func (counterparty *Counterparty) SetShared(shared bool) *Counterparty {
 }
 
 func (counterparty *Counterparty) SetState(state *State) *Counterparty {
-	counterparty.State = state
+	counterparty.State = NewNullValueWith(state.Clean())
+	return counterparty
+}
+
+func (counterparty *Counterparty) SetNullState() *Counterparty {
+	counterparty.State = NewNullValue[State]()
 	return counterparty
 }
 

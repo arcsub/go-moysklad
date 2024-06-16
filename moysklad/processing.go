@@ -34,7 +34,7 @@ type Processing struct {
 	ProcessingSum       *float64                          `json:"processingSum,omitempty"`
 	Updated             *Timestamp                        `json:"updated,omitempty"`
 	ProductsStore       *Store                            `json:"productsStore,omitempty"`
-	Project             *Project                          `json:"project,omitempty"`
+	Project             *NullValue[Project]               `json:"project,omitempty"`
 	Published           *bool                             `json:"published,omitempty"`
 	Quantity            *float64                          `json:"quantity,omitempty"`
 	Shared              *bool                             `json:"shared,omitempty"`
@@ -45,6 +45,7 @@ type Processing struct {
 	Attributes          Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processing Processing) Clean() *Processing {
 	return &Processing{Meta: processing.Meta}
 }
@@ -142,7 +143,7 @@ func (processing Processing) GetProductsStore() Store {
 }
 
 func (processing Processing) GetProject() Project {
-	return Deref(processing.Project)
+	return processing.Project.Get()
 }
 
 func (processing Processing) GetPublished() bool {
@@ -263,7 +264,12 @@ func (processing *Processing) SetProductsStore(productsStore *Store) *Processing
 }
 
 func (processing *Processing) SetProject(project *Project) *Processing {
-	processing.Project = project.Clean()
+	processing.Project = NewNullValueWith(project.Clean())
+	return processing
+}
+
+func (processing *Processing) SetNullProject() *Processing {
+	processing.Project = NewNullValue[Project]()
 	return processing
 }
 

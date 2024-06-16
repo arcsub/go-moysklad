@@ -19,6 +19,7 @@ type AgentAccount struct {
 	Updated              *Timestamp `json:"updated,omitempty"`              // Момент последнего обновления
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (agentAccount AgentAccount) Clean() *AgentAccount {
 	return &AgentAccount{Meta: agentAccount.Meta}
 }

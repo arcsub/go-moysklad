@@ -12,7 +12,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-pokupatelq
 type CustomerOrder struct {
 	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Project               *NullValue[Project]               `json:"project,omitempty"`
 	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`
 	Applicable            *bool                             `json:"applicable,omitempty"`
 	Moves                 Slice[Move]                       `json:"moves,omitempty"`
@@ -36,17 +36,17 @@ type CustomerOrder struct {
 	PayedSum              *float64                          `json:"payedSum,omitempty"`
 	Positions             *Positions[CustomerOrderPosition] `json:"positions,omitempty"`
 	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
-	Contract              *Contract                         `json:"contract,omitempty"`
+	Contract              *NullValue[Contract]              `json:"contract,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
 	ReservedSum           *float64                          `json:"reservedSum,omitempty"`
-	SalesChannel          *SalesChannel                     `json:"salesChannel,omitempty"`
+	SalesChannel          *NullValue[SalesChannel]          `json:"salesChannel,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	ShipmentAddress       *string                           `json:"shipmentAddress,omitempty"`
 	ShipmentAddressFull   *Address                          `json:"shipmentAddressFull,omitempty"`
 	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
-	State                 *State                            `json:"state,omitempty"`
-	Store                 *Store                            `json:"store,omitempty"`
+	State                 *NullValue[State]                 `json:"state,omitempty"`
+	Store                 *NullValue[Store]                 `json:"store,omitempty"`
 	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
 	Updated               *Timestamp                        `json:"updated,omitempty"`
@@ -62,6 +62,7 @@ type CustomerOrder struct {
 	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 	return &CustomerOrder{Meta: customerOrder.Meta}
 }
@@ -71,7 +72,7 @@ func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
 }
 
 func (customerOrder CustomerOrder) GetProject() Project {
-	return Deref(customerOrder.Project)
+	return customerOrder.Project.Get()
 }
 
 func (customerOrder CustomerOrder) GetAgentAccount() AgentAccount {
@@ -167,7 +168,7 @@ func (customerOrder CustomerOrder) GetAccountID() uuid.UUID {
 }
 
 func (customerOrder CustomerOrder) GetContract() Contract {
-	return Deref(customerOrder.Contract)
+	return customerOrder.Contract.Get()
 }
 
 func (customerOrder CustomerOrder) GetPublished() bool {
@@ -183,7 +184,7 @@ func (customerOrder CustomerOrder) GetReservedSum() float64 {
 }
 
 func (customerOrder CustomerOrder) GetSalesChannel() SalesChannel {
-	return Deref(customerOrder.SalesChannel)
+	return customerOrder.SalesChannel.Get()
 }
 
 func (customerOrder CustomerOrder) GetShared() bool {
@@ -203,11 +204,11 @@ func (customerOrder CustomerOrder) GetShippedSum() float64 {
 }
 
 func (customerOrder CustomerOrder) GetState() State {
-	return Deref(customerOrder.State)
+	return customerOrder.State.Get()
 }
 
 func (customerOrder CustomerOrder) GetStore() Store {
-	return Deref(customerOrder.Store)
+	return customerOrder.Store.Get()
 }
 
 func (customerOrder CustomerOrder) GetSum() float64 {
@@ -268,7 +269,12 @@ func (customerOrder *CustomerOrder) SetOrganizationAccount(organizationAccount *
 }
 
 func (customerOrder *CustomerOrder) SetProject(project *Project) *CustomerOrder {
-	customerOrder.Project = project.Clean()
+	customerOrder.Project = NewNullValueWith(project.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullProject() *CustomerOrder {
+	customerOrder.Project = NewNullValue[Project]()
 	return customerOrder
 }
 
@@ -353,7 +359,12 @@ func (customerOrder *CustomerOrder) SetPositions(positions *Positions[CustomerOr
 }
 
 func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrder {
-	customerOrder.Contract = contract.Clean()
+	customerOrder.Contract = NewNullValueWith(contract.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullContract() *CustomerOrder {
+	customerOrder.Contract = NewNullValue[Contract]()
 	return customerOrder
 }
 
@@ -363,7 +374,12 @@ func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
 }
 
 func (customerOrder *CustomerOrder) SetSalesChannel(salesChannel *SalesChannel) *CustomerOrder {
-	customerOrder.SalesChannel = salesChannel.Clean()
+	customerOrder.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullSalesChannel() *CustomerOrder {
+	customerOrder.SalesChannel = NewNullValue[SalesChannel]()
 	return customerOrder
 }
 
@@ -383,12 +399,22 @@ func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull A
 }
 
 func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
-	customerOrder.State = state.Clean()
+	customerOrder.State = NewNullValueWith(state.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullState() *CustomerOrder {
+	customerOrder.State = NewNullValue[State]()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetStore(store *Store) *CustomerOrder {
-	customerOrder.Store = store.Clean()
+	customerOrder.Store = NewNullValueWith(store.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullStore() *CustomerOrder {
+	customerOrder.Store = NewNullValue[Store]()
 	return customerOrder
 }
 

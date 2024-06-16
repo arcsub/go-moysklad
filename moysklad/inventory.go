@@ -31,13 +31,14 @@ type Inventory struct {
 	Printed      *bool                         `json:"printed,omitempty"`
 	Published    *bool                         `json:"published,omitempty"`
 	Shared       *bool                         `json:"shared,omitempty"`
-	State        *State                        `json:"state,omitempty"`
+	State        *NullValue[State]             `json:"state,omitempty"`
 	Store        *Store                        `json:"store,omitempty"`
 	Moment       *Timestamp                    `json:"moment,omitempty"`
 	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`
 	Attributes   Slice[AttributeValue]         `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (inventory Inventory) Clean() *Inventory {
 	return &Inventory{Meta: inventory.Meta}
 }
@@ -119,7 +120,7 @@ func (inventory Inventory) GetShared() bool {
 }
 
 func (inventory Inventory) GetState() State {
-	return Deref(inventory.State)
+	return inventory.State.Get()
 }
 
 func (inventory Inventory) GetStore() Store {
@@ -194,7 +195,12 @@ func (inventory *Inventory) SetShared(shared bool) *Inventory {
 }
 
 func (inventory *Inventory) SetState(state *State) *Inventory {
-	inventory.State = state.Clean()
+	inventory.State = NewNullValueWith(state.Clean())
+	return inventory
+}
+
+func (inventory *Inventory) SetNullState() *Inventory {
+	inventory.State = NewNullValue[State]()
 	return inventory
 }
 

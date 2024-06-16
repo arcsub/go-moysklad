@@ -24,7 +24,7 @@ type Loss struct {
 	Meta         *Meta                    `json:"meta,omitempty"`
 	SalesReturn  *SalesReturn             `json:"salesReturn,omitempty"`
 	Applicable   *bool                    `json:"applicable,omitempty"`
-	Project      *Project                 `json:"project,omitempty"`
+	Project      *NullValue[Project]      `json:"project,omitempty"`
 	Owner        *Employee                `json:"owner,omitempty"`
 	Positions    *Positions[LossPosition] `json:"positions,omitempty"`
 	Printed      *bool                    `json:"printed,omitempty"`
@@ -32,7 +32,7 @@ type Loss struct {
 	Published    *bool                    `json:"published,omitempty"`
 	Rate         *Rate                    `json:"rate,omitempty"`
 	Shared       *bool                    `json:"shared,omitempty"`
-	State        *State                   `json:"state,omitempty"`
+	State        *NullValue[State]        `json:"state,omitempty"`
 	Store        *Store                   `json:"store,omitempty"`
 	Sum          *float64                 `json:"sum,omitempty"`
 	Name         *string                  `json:"name,omitempty"`
@@ -40,6 +40,7 @@ type Loss struct {
 	Attributes   Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (loss Loss) Clean() *Loss {
 	return &Loss{Meta: loss.Meta}
 }
@@ -101,7 +102,7 @@ func (loss Loss) GetApplicable() bool {
 }
 
 func (loss Loss) GetProject() Project {
-	return Deref(loss.Project)
+	return loss.Project.Get()
 }
 
 func (loss Loss) GetOwner() Employee {
@@ -133,7 +134,7 @@ func (loss Loss) GetShared() bool {
 }
 
 func (loss Loss) GetState() State {
-	return Deref(loss.State)
+	return loss.State.Get()
 }
 
 func (loss Loss) GetStore() Store {
@@ -212,7 +213,12 @@ func (loss *Loss) SetApplicable(applicable bool) *Loss {
 }
 
 func (loss *Loss) SetProject(project *Project) *Loss {
-	loss.Project = project.Clean()
+	loss.Project = NewNullValueWith(project.Clean())
+	return loss
+}
+
+func (loss *Loss) SetNullProject() *Loss {
+	loss.Project = NewNullValue[Project]()
 	return loss
 }
 
@@ -237,7 +243,12 @@ func (loss *Loss) SetShared(shared bool) *Loss {
 }
 
 func (loss *Loss) SetState(state *State) *Loss {
-	loss.State = state.Clean()
+	loss.State = NewNullValueWith(state.Clean())
+	return loss
+}
+
+func (loss *Loss) SetNullState() *Loss {
+	loss.State = NewNullValue[State]()
 	return loss
 }
 

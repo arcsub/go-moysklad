@@ -35,6 +35,7 @@ type BonusTransaction struct {
 	CategoryType      BonusTransactionCategory `json:"categoryType,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }

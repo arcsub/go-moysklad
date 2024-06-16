@@ -32,6 +32,7 @@ type ProcessingPlan struct {
 	CostDistributionType CostDistributionType               `json:"costDistributionType,omitempty"` // Тип распределения себестоимости. Возможные значения: BY_PRICE, BY_PRODUCTION
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingPlan ProcessingPlan) Clean() *ProcessingPlan {
 	return &ProcessingPlan{Meta: processingPlan.Meta}
 }

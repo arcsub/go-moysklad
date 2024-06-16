@@ -32,6 +32,7 @@ type ProductFolder struct {
 	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (productFolder ProductFolder) Clean() *ProductFolder {
 	return &ProductFolder{Meta: productFolder.Meta}
 }

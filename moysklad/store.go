@@ -32,6 +32,7 @@ type Store struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (store Store) Clean() *Store {
 	return &Store{Meta: store.Meta}
 }
@@ -204,6 +205,7 @@ type Slot struct {
 	Zone         *Zone      `json:"zone,omitempty"`         // Зона ячейки
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (slot Slot) Clean() *Slot {
 	return &Slot{Meta: slot.Meta}
 }

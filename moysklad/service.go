@@ -42,6 +42,7 @@ type Service struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (service Service) Clean() *Service {
 	return &Service{Meta: service.Meta}
 }

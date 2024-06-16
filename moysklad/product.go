@@ -18,7 +18,7 @@ type Product struct {
 	ID                  *uuid.UUID            `json:"id,omitempty"`
 	Meta                *Meta                 `json:"meta,omitempty"`
 	Name                *string               `json:"name,omitempty"`
-	Alcoholic           *Alcoholic            `json:"alcoholic,omitempty"`
+	Alcoholic           *NullValue[Alcoholic] `json:"alcoholic,omitempty"`
 	Archived            *bool                 `json:"archived,omitempty"`
 	Article             *string               `json:"article,omitempty"`
 	PaymentItemType     PaymentItem           `json:"paymentItemType,omitempty"`
@@ -59,6 +59,7 @@ type Product struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (product Product) Clean() *Product {
 	return &Product{Meta: product.Meta}
 }
@@ -108,7 +109,7 @@ func (product Product) GetName() string {
 }
 
 func (product Product) GetAlcoholic() Alcoholic {
-	return Deref(product.Alcoholic)
+	return product.Alcoholic.Get()
 }
 
 func (product Product) GetArchived() bool {
@@ -299,7 +300,7 @@ func (product *Product) SetName(name string) *Product {
 }
 
 func (product *Product) SetAlcoholic(alcoholic *Alcoholic) *Product {
-	product.Alcoholic = alcoholic
+	product.Alcoholic = NewNullValueWith(alcoholic)
 	return product
 }
 

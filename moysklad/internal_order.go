@@ -30,13 +30,13 @@ type InternalOrder struct {
 	Applicable            *bool                             `json:"applicable,omitempty"`
 	Moment                *Timestamp                        `json:"moment,omitempty"`
 	Printed               *bool                             `json:"printed,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Project               *NullValue[Project]               `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
 	PurchaseOrders        Slice[PurchaseOrder]              `json:"purchaseOrders,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
-	State                 *State                            `json:"state,omitempty"`
-	Store                 *Store                            `json:"store,omitempty"`
+	State                 *NullValue[State]                 `json:"state,omitempty"`
+	Store                 *NullValue[Store]                 `json:"store,omitempty"`
 	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
 	Updated               *Timestamp                        `json:"updated,omitempty"`
@@ -130,7 +130,7 @@ func (internalOrder InternalOrder) GetPrinted() bool {
 }
 
 func (internalOrder InternalOrder) GetProject() Project {
-	return Deref(internalOrder.Project)
+	return internalOrder.Project.Get()
 }
 
 func (internalOrder InternalOrder) GetPublished() bool {
@@ -150,11 +150,11 @@ func (internalOrder InternalOrder) GetShared() bool {
 }
 
 func (internalOrder InternalOrder) GetState() State {
-	return Deref(internalOrder.State)
+	return internalOrder.State.Get()
 }
 
 func (internalOrder InternalOrder) GetStore() Store {
-	return Deref(internalOrder.Store)
+	return internalOrder.Store.Get()
 }
 
 func (internalOrder InternalOrder) GetSum() float64 {
@@ -252,7 +252,12 @@ func (internalOrder *InternalOrder) SetMoment(moment *Timestamp) *InternalOrder 
 }
 
 func (internalOrder *InternalOrder) SetProject(project *Project) *InternalOrder {
-	internalOrder.Project = project.Clean()
+	internalOrder.Project = NewNullValueWith(project.Clean())
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullProject() *InternalOrder {
+	internalOrder.Project = NewNullValue[Project]()
 	return internalOrder
 }
 
@@ -272,12 +277,22 @@ func (internalOrder *InternalOrder) SetShared(shared bool) *InternalOrder {
 }
 
 func (internalOrder *InternalOrder) SetState(state *State) *InternalOrder {
-	internalOrder.State = state.Clean()
+	internalOrder.State = NewNullValueWith(state.Clean())
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullState() *InternalOrder {
+	internalOrder.State = NewNullValue[State]()
 	return internalOrder
 }
 
 func (internalOrder *InternalOrder) SetStore(store *Store) *InternalOrder {
-	internalOrder.Store = store.Clean()
+	internalOrder.Store = NewNullValueWith(store.Clean())
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullStore() *InternalOrder {
+	internalOrder.Store = NewNullValue[Store]()
 	return internalOrder
 }
 

@@ -16,6 +16,7 @@ type Role struct {
 	Permissions *EmployeePermissions `json:"permissions,omitempty"` // Список пермиссий
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (role Role) Clean() *Role {
 	return &Role{Meta: role.Meta}
 }

@@ -16,7 +16,7 @@ type Supply struct {
 	Overhead            *Overhead                  `json:"overhead,omitempty"`
 	Returns             Slice[PurchaseReturn]      `json:"returns,omitempty"`
 	Code                *string                    `json:"code,omitempty"`
-	Contract            *Contract                  `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]       `json:"contract,omitempty"`
 	Created             *Timestamp                 `json:"created,omitempty"`
 	Deleted             *Timestamp                 `json:"deleted,omitempty"`
 	Description         *string                    `json:"description,omitempty"`
@@ -36,7 +36,7 @@ type Supply struct {
 	PayedSum            *float64                   `json:"payedSum,omitempty"`
 	Positions           *Positions[SupplyPosition] `json:"positions,omitempty"`
 	Printed             *bool                      `json:"printed,omitempty"`
-	Project             *Project                   `json:"project,omitempty"`
+	Project             *NullValue[Project]        `json:"project,omitempty"`
 	Published           *bool                      `json:"published,omitempty"`
 	Rate                *Rate                      `json:"rate,omitempty"`
 	Shared              *bool                      `json:"shared,omitempty"`
@@ -55,6 +55,7 @@ type Supply struct {
 	Attributes          Slice[AttributeValue]      `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (supply Supply) Clean() *Supply {
 	return &Supply{Meta: supply.Meta}
 }
@@ -84,7 +85,7 @@ func (supply Supply) GetCode() string {
 }
 
 func (supply Supply) GetContract() Contract {
-	return Deref(supply.Contract)
+	return supply.Contract.Get()
 }
 
 func (supply Supply) GetCreated() Timestamp {
@@ -164,7 +165,7 @@ func (supply Supply) GetPrinted() bool {
 }
 
 func (supply Supply) GetProject() Project {
-	return Deref(supply.Project)
+	return supply.Project.Get()
 }
 
 func (supply Supply) GetPublished() bool {
@@ -262,7 +263,7 @@ func (supply *Supply) SetCode(code string) *Supply {
 }
 
 func (supply *Supply) SetContract(contract *Contract) *Supply {
-	supply.Contract = contract.Clean()
+	supply.Contract = NewNullValueWith(contract.Clean())
 	return supply
 }
 
@@ -337,7 +338,12 @@ func (supply *Supply) SetPositions(positions *Positions[SupplyPosition]) *Supply
 }
 
 func (supply *Supply) SetProject(project *Project) *Supply {
-	supply.Project = project.Clean()
+	supply.Project = NewNullValueWith(project.Clean())
+	return supply
+}
+
+func (supply *Supply) SetNullProject() *Supply {
+	supply.Project = NewNullValue[Project]()
 	return supply
 }
 

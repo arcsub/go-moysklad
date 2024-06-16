@@ -28,6 +28,7 @@ type ProductionStage struct {
 	StandardHourUnit   *float64                           `json:"standardHourUnit,omitempty"`   // Нормо-часы единицы объема производства
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (productionStage ProductionStage) Clean() *ProductionStage {
 	return &ProductionStage{Meta: productionStage.Meta}
 }

@@ -16,7 +16,7 @@ type PurchaseOrder struct {
 	Owner                 *Employee                         `json:"owner,omitempty"`
 	InternalOrder         *InternalOrder                    `json:"internalOrder,omitempty"`
 	Code                  *string                           `json:"code,omitempty"`
-	Contract              *Contract                         `json:"contract,omitempty"`
+	Contract              *NullValue[Contract]              `json:"contract,omitempty"`
 	Created               *Timestamp                        `json:"created,omitempty"`
 	Deleted               *Timestamp                        `json:"deleted,omitempty"`
 	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
@@ -35,12 +35,12 @@ type PurchaseOrder struct {
 	Files                 *MetaArray[File]                  `json:"files,omitempty"`
 	Positions             *Positions[PurchaseOrderPosition] `json:"positions,omitempty"`
 	Printed               *bool                             `json:"printed,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Project               *NullValue[Project]               `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
 	Rate                  *Rate                             `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
-	State                 *State                            `json:"state,omitempty"`
+	State                 *NullValue[State]                 `json:"state,omitempty"`
 	Store                 *Store                            `json:"store,omitempty"`
 	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
@@ -56,6 +56,7 @@ type PurchaseOrder struct {
 	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (purchaseOrder PurchaseOrder) Clean() *PurchaseOrder {
 	return &PurchaseOrder{Meta: purchaseOrder.Meta}
 }
@@ -85,7 +86,7 @@ func (purchaseOrder PurchaseOrder) GetCode() string {
 }
 
 func (purchaseOrder PurchaseOrder) GetContract() Contract {
-	return Deref(purchaseOrder.Contract)
+	return purchaseOrder.Contract.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetCreated() Timestamp {
@@ -161,7 +162,7 @@ func (purchaseOrder PurchaseOrder) GetPrinted() bool {
 }
 
 func (purchaseOrder PurchaseOrder) GetProject() Project {
-	return Deref(purchaseOrder.Project)
+	return purchaseOrder.Project.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetPublished() bool {
@@ -181,7 +182,7 @@ func (purchaseOrder PurchaseOrder) GetShippedSum() float64 {
 }
 
 func (purchaseOrder PurchaseOrder) GetState() State {
-	return Deref(purchaseOrder.State)
+	return purchaseOrder.State.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetStore() Store {
@@ -262,7 +263,7 @@ func (purchaseOrder *PurchaseOrder) SetCode(code string) *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetContract(contract *Contract) *PurchaseOrder {
-	purchaseOrder.Contract = contract.Clean()
+	purchaseOrder.Contract = NewNullValueWith(contract.Clean())
 	return purchaseOrder
 }
 
@@ -327,7 +328,12 @@ func (purchaseOrder *PurchaseOrder) SetPositions(positions *Positions[PurchaseOr
 }
 
 func (purchaseOrder *PurchaseOrder) SetProject(project *Project) *PurchaseOrder {
-	purchaseOrder.Project = project.Clean()
+	purchaseOrder.Project = NewNullValueWith(project.Clean())
+	return purchaseOrder
+}
+
+func (purchaseOrder *PurchaseOrder) SetNullProject() *PurchaseOrder {
+	purchaseOrder.Project = NewNullValue[Project]()
 	return purchaseOrder
 }
 
@@ -342,7 +348,12 @@ func (purchaseOrder *PurchaseOrder) SetShared(shared bool) *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetState(state *State) *PurchaseOrder {
-	purchaseOrder.State = state.Clean()
+	purchaseOrder.State = NewNullValueWith(state.Clean())
+	return purchaseOrder
+}
+
+func (purchaseOrder *PurchaseOrder) SetNullState() *PurchaseOrder {
+	purchaseOrder.State = NewNullValue[State]()
 	return purchaseOrder
 }
 

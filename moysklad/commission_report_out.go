@@ -36,14 +36,14 @@ type CommissionReportOut struct {
 	PayedSum              *float64                                `json:"payedSum,omitempty"`
 	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`
 	Printed               *bool                                   `json:"printed,omitempty"`
-	Project               *Project                                `json:"project,omitempty"`
+	Project               *NullValue[Project]                     `json:"project,omitempty"`
 	Published             *bool                                   `json:"published,omitempty"`
 	Rate                  *Rate                                   `json:"rate,omitempty"`
 	RewardPercent         *float64                                `json:"rewardPercent,omitempty"`
 	Payments              Slice[Payment]                          `json:"payments,omitempty"`
-	SalesChannel          *SalesChannel                           `json:"salesChannel,omitempty"`
+	SalesChannel          *NullValue[SalesChannel]                `json:"salesChannel,omitempty"`
 	Shared                *bool                                   `json:"shared,omitempty"`
-	State                 *State                                  `json:"state,omitempty"`
+	State                 *NullValue[State]                       `json:"state,omitempty"`
 	Sum                   *float64                                `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                              `json:"syncId,omitempty"`
 	Updated               *Timestamp                              `json:"updated,omitempty"`
@@ -53,6 +53,7 @@ type CommissionReportOut struct {
 	Attributes            Slice[AttributeValue]                   `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (commissionReportOut CommissionReportOut) Clean() *CommissionReportOut {
 	return &CommissionReportOut{Meta: commissionReportOut.Meta}
 }
@@ -162,7 +163,7 @@ func (commissionReportOut CommissionReportOut) GetPrinted() bool {
 }
 
 func (commissionReportOut CommissionReportOut) GetProject() Project {
-	return Deref(commissionReportOut.Project)
+	return commissionReportOut.Project.Get()
 }
 
 func (commissionReportOut CommissionReportOut) GetPublished() bool {
@@ -182,7 +183,7 @@ func (commissionReportOut CommissionReportOut) GetPayments() Slice[Payment] {
 }
 
 func (commissionReportOut CommissionReportOut) GetSalesChannel() SalesChannel {
-	return Deref(commissionReportOut.SalesChannel)
+	return commissionReportOut.SalesChannel.Get()
 }
 
 func (commissionReportOut CommissionReportOut) GetShared() bool {
@@ -190,7 +191,7 @@ func (commissionReportOut CommissionReportOut) GetShared() bool {
 }
 
 func (commissionReportOut CommissionReportOut) GetState() State {
-	return Deref(commissionReportOut.State)
+	return commissionReportOut.State.Get()
 }
 
 func (commissionReportOut CommissionReportOut) GetSum() float64 {
@@ -312,7 +313,12 @@ func (commissionReportOut *CommissionReportOut) SetPositions(positions *Position
 }
 
 func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *CommissionReportOut {
-	commissionReportOut.Project = project.Clean()
+	commissionReportOut.Project = NewNullValueWith(project.Clean())
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetNullProject() *CommissionReportOut {
+	commissionReportOut.Project = NewNullValue[Project]()
 	return commissionReportOut
 }
 
@@ -332,7 +338,12 @@ func (commissionReportOut *CommissionReportOut) SetPayments(payments Slice[Payme
 }
 
 func (commissionReportOut *CommissionReportOut) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportOut {
-	commissionReportOut.SalesChannel = salesChannel.Clean()
+	commissionReportOut.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetNullSalesChannel() *CommissionReportOut {
+	commissionReportOut.SalesChannel = NewNullValue[SalesChannel]()
 	return commissionReportOut
 }
 
@@ -342,7 +353,12 @@ func (commissionReportOut *CommissionReportOut) SetShared(shared bool) *Commissi
 }
 
 func (commissionReportOut *CommissionReportOut) SetState(state *State) *CommissionReportOut {
-	commissionReportOut.State = state.Clean()
+	commissionReportOut.State = NewNullValueWith(state.Clean())
+	return commissionReportOut
+}
+
+func (commissionReportOut *CommissionReportOut) SetNullState() *CommissionReportOut {
+	commissionReportOut.State = NewNullValue[State]()
 	return commissionReportOut
 }
 

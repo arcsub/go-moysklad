@@ -30,11 +30,11 @@ type ProcessingOrder struct {
 	Positions             *Positions[ProcessingOrderPosition] `json:"positions,omitempty"`
 	Printed               *bool                               `json:"printed,omitempty"`
 	ProcessingPlan        *ProcessingPlan                     `json:"processingPlan,omitempty"`
-	Project               *Project                            `json:"project,omitempty"`
+	Project               *NullValue[Project]                 `json:"project,omitempty"`
 	Applicable            *bool                               `json:"applicable,omitempty"`
 	Quantity              *float64                            `json:"quantity,omitempty"`
 	Shared                *bool                               `json:"shared,omitempty"`
-	State                 *State                              `json:"state,omitempty"`
+	State                 *NullValue[State]                   `json:"state,omitempty"`
 	Store                 *Store                              `json:"store,omitempty"`
 	SyncID                *uuid.UUID                          `json:"syncId,omitempty"`
 	Updated               *Timestamp                          `json:"updated,omitempty"`
@@ -42,6 +42,7 @@ type ProcessingOrder struct {
 	Attributes            Slice[AttributeValue]               `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingOrder ProcessingOrder) Clean() *ProcessingOrder {
 	return &ProcessingOrder{Meta: processingOrder.Meta}
 }
@@ -127,7 +128,7 @@ func (processingOrder ProcessingOrder) GetProcessingPlan() ProcessingPlan {
 }
 
 func (processingOrder ProcessingOrder) GetProject() Project {
-	return Deref(processingOrder.Project)
+	return processingOrder.Project.Get()
 }
 
 func (processingOrder ProcessingOrder) GetApplicable() bool {
@@ -143,7 +144,7 @@ func (processingOrder ProcessingOrder) GetShared() bool {
 }
 
 func (processingOrder ProcessingOrder) GetState() State {
-	return Deref(processingOrder.State)
+	return processingOrder.State.Get()
 }
 
 func (processingOrder ProcessingOrder) GetStore() Store {
@@ -237,7 +238,12 @@ func (processingOrder *ProcessingOrder) SetProcessingPlan(processingPlan *Proces
 }
 
 func (processingOrder *ProcessingOrder) SetProject(project *Project) *ProcessingOrder {
-	processingOrder.Project = project.Clean()
+	processingOrder.Project = NewNullValueWith(project.Clean())
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetNullProject() *ProcessingOrder {
+	processingOrder.Project = NewNullValue[Project]()
 	return processingOrder
 }
 
@@ -257,7 +263,12 @@ func (processingOrder *ProcessingOrder) SetShared(shared bool) *ProcessingOrder 
 }
 
 func (processingOrder *ProcessingOrder) SetState(state *State) *ProcessingOrder {
-	processingOrder.State = state.Clean()
+	processingOrder.State = NewNullValueWith(state.Clean())
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetNullState() *ProcessingOrder {
+	processingOrder.State = NewNullValue[State]()
 	return processingOrder
 }
 

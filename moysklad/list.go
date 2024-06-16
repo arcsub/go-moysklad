@@ -1,9 +1,8 @@
 package moysklad
 
 type List[T any] struct {
-	Context Context        `json:"context"`
-	Rows    Slice[T]       `json:"rows"`
-	Meta    MetaCollection `json:"meta"`
+	Context Context `json:"context"`
+	MetaArray[T]
 }
 
 func (list List[T]) String() string {

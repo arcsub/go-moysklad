@@ -28,6 +28,7 @@ type Currency struct {
 	RateUpdateType RateUpdateType `json:"rateUpdateType,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (currency Currency) Clean() *Currency {
 	return &Currency{Meta: currency.Meta}
 }

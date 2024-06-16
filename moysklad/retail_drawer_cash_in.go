@@ -37,6 +37,7 @@ type RetailDrawerCashIn struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailDrawerCashIn RetailDrawerCashIn) Clean() *RetailDrawerCashIn {
 	return &RetailDrawerCashIn{Meta: retailDrawerCashIn.Meta}
 }

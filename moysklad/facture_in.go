@@ -15,7 +15,7 @@ type FactureIn struct {
 	Name           *string               `json:"name,omitempty"`
 	AccountID      *uuid.UUID            `json:"accountId,omitempty"`
 	Code           *string               `json:"code,omitempty"`
-	Contract       *Contract             `json:"contract,omitempty"`
+	Contract       *NullValue[Contract]  `json:"contract,omitempty"`
 	Created        *Timestamp            `json:"created,omitempty"`
 	Deleted        *Timestamp            `json:"deleted,omitempty"`
 	Description    *string               `json:"description,omitempty"`
@@ -32,7 +32,7 @@ type FactureIn struct {
 	Published      *bool                 `json:"published,omitempty"`
 	Rate           *Rate                 `json:"rate,omitempty"`
 	Shared         *bool                 `json:"shared,omitempty"`
-	State          *State                `json:"state,omitempty"`
+	State          *NullValue[State]     `json:"state,omitempty"`
 	Sum            *float64              `json:"sum,omitempty"`
 	SyncID         *uuid.UUID            `json:"syncId,omitempty"`
 	Updated        *Timestamp            `json:"updated,omitempty"`
@@ -42,6 +42,7 @@ type FactureIn struct {
 	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (factureIn FactureIn) Clean() *FactureIn {
 	return &FactureIn{Meta: factureIn.Meta}
 }
@@ -67,7 +68,7 @@ func (factureIn FactureIn) GetCode() string {
 }
 
 func (factureIn FactureIn) GetContract() Contract {
-	return Deref(factureIn.Contract)
+	return factureIn.Contract.Get()
 }
 
 func (factureIn FactureIn) GetCreated() Timestamp {
@@ -135,7 +136,7 @@ func (factureIn FactureIn) GetShared() bool {
 }
 
 func (factureIn FactureIn) GetState() State {
-	return Deref(factureIn.State)
+	return factureIn.State.Get()
 }
 
 func (factureIn FactureIn) GetSum() float64 {
@@ -187,7 +188,12 @@ func (factureIn *FactureIn) SetCode(code string) *FactureIn {
 }
 
 func (factureIn *FactureIn) SetContract(contract *Contract) *FactureIn {
-	factureIn.Contract = contract.Clean()
+	factureIn.Contract = NewNullValueWith(contract.Clean())
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetNullContract() *FactureIn {
+	factureIn.Contract = NewNullValue[Contract]()
 	return factureIn
 }
 
@@ -247,7 +253,12 @@ func (factureIn *FactureIn) SetShared(shared bool) *FactureIn {
 }
 
 func (factureIn *FactureIn) SetState(state *State) *FactureIn {
-	factureIn.State = state.Clean()
+	factureIn.State = NewNullValueWith(state.Clean())
+	return factureIn
+}
+
+func (factureIn *FactureIn) SetNullState() *FactureIn {
+	factureIn.State = NewNullValue[State]()
 	return factureIn
 }
 

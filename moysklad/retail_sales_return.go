@@ -17,7 +17,7 @@ type RetailSalesReturn struct {
 	VatIncluded         *bool                                 `json:"vatIncluded,omitempty"`
 	CashSum             *float64                              `json:"cashSum,omitempty"`
 	Code                *string                               `json:"code,omitempty"`
-	Contract            *Contract                             `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]                  `json:"contract,omitempty"`
 	Created             *Timestamp                            `json:"created,omitempty"`
 	Deleted             *Timestamp                            `json:"deleted,omitempty"`
 	Demand              *RetailDemand                         `json:"demand,omitempty"`
@@ -34,14 +34,14 @@ type RetailSalesReturn struct {
 	Owner               *Employee                             `json:"owner,omitempty"`
 	Positions           *Positions[RetailSalesReturnPosition] `json:"positions,omitempty"`
 	Printed             *bool                                 `json:"printed,omitempty"`
-	Project             *Project                              `json:"project,omitempty"`
+	Project             *NullValue[Project]                   `json:"project,omitempty"`
 	Published           *bool                                 `json:"published,omitempty"`
 	QrSum               *float64                              `json:"qrSum,omitempty"`
 	Rate                *Rate                                 `json:"rate,omitempty"`
 	RetailShift         *RetailShift                          `json:"retailShift,omitempty"`
 	RetailStore         *RetailStore                          `json:"retailStore,omitempty"`
 	Shared              *bool                                 `json:"shared,omitempty"`
-	State               *State                                `json:"state,omitempty"`
+	State               *NullValue[State]                     `json:"state,omitempty"`
 	Store               *Store                                `json:"store,omitempty"`
 	Sum                 *float64                              `json:"sum,omitempty"`
 	Agent               *Counterparty                         `json:"agent,omitempty"`
@@ -52,6 +52,7 @@ type RetailSalesReturn struct {
 	Attributes          Slice[AttributeValue]                 `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailSalesReturn RetailSalesReturn) Clean() *RetailSalesReturn {
 	return &RetailSalesReturn{Meta: retailSalesReturn.Meta}
 }
@@ -85,7 +86,7 @@ func (retailSalesReturn RetailSalesReturn) GetCode() string {
 }
 
 func (retailSalesReturn RetailSalesReturn) GetContract() Contract {
-	return Deref(retailSalesReturn.Contract)
+	return retailSalesReturn.Contract.Get()
 }
 
 func (retailSalesReturn RetailSalesReturn) GetCreated() Timestamp {
@@ -153,7 +154,7 @@ func (retailSalesReturn RetailSalesReturn) GetPrinted() bool {
 }
 
 func (retailSalesReturn RetailSalesReturn) GetProject() Project {
-	return Deref(retailSalesReturn.Project)
+	return retailSalesReturn.Project.Get()
 }
 
 func (retailSalesReturn RetailSalesReturn) GetPublished() bool {
@@ -181,7 +182,7 @@ func (retailSalesReturn RetailSalesReturn) GetShared() bool {
 }
 
 func (retailSalesReturn RetailSalesReturn) GetState() State {
-	return Deref(retailSalesReturn.State)
+	return retailSalesReturn.State.Get()
 }
 
 func (retailSalesReturn RetailSalesReturn) GetStore() Store {
@@ -252,7 +253,7 @@ func (retailSalesReturn *RetailSalesReturn) SetCode(code string) *RetailSalesRet
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetContract(contract *Contract) *RetailSalesReturn {
-	retailSalesReturn.Contract = contract.Clean()
+	retailSalesReturn.Contract = NewNullValueWith(contract.Clean())
 	return retailSalesReturn
 }
 
@@ -312,7 +313,12 @@ func (retailSalesReturn *RetailSalesReturn) SetPositions(positions *Positions[Re
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetProject(project *Project) *RetailSalesReturn {
-	retailSalesReturn.Project = project.Clean()
+	retailSalesReturn.Project = NewNullValueWith(project.Clean())
+	return retailSalesReturn
+}
+
+func (retailSalesReturn *RetailSalesReturn) SetNullProject() *RetailSalesReturn {
+	retailSalesReturn.Project = NewNullValue[Project]()
 	return retailSalesReturn
 }
 
@@ -342,7 +348,12 @@ func (retailSalesReturn *RetailSalesReturn) SetShared(shared bool) *RetailSalesR
 }
 
 func (retailSalesReturn *RetailSalesReturn) SetState(state *State) *RetailSalesReturn {
-	retailSalesReturn.State = state.Clean()
+	retailSalesReturn.State = NewNullValueWith(state.Clean())
+	return retailSalesReturn
+}
+
+func (retailSalesReturn *RetailSalesReturn) SetNullState() *RetailSalesReturn {
+	retailSalesReturn.State = NewNullValue[State]()
 	return retailSalesReturn
 }
 

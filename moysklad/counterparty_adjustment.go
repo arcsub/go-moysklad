@@ -33,6 +33,7 @@ type CounterPartyAdjustment struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (counterPartyAdjustment CounterPartyAdjustment) Clean() *CounterPartyAdjustment {
 	return &CounterPartyAdjustment{Meta: counterPartyAdjustment.Meta}
 }

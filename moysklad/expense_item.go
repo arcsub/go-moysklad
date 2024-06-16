@@ -20,6 +20,7 @@ type ExpenseItem struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (expenseItem ExpenseItem) Clean() *ExpenseItem {
 	return &ExpenseItem{Meta: expenseItem.Meta}
 }

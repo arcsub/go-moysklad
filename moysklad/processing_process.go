@@ -24,6 +24,7 @@ type ProcessingProcess struct {
 	Updated      *Timestamp                            `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingProcess ProcessingProcess) Clean() *ProcessingProcess {
 	return &ProcessingProcess{Meta: processingProcess.Meta}
 }
@@ -140,6 +141,7 @@ type ProcessingProcessPosition struct {
 	NextPositions   *MetaArray[ProcessingProcessPosition] `json:"nextPositions,omitempty"`   // Метаданные следующих позиций позиции Техпроцесса
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingProcessPosition ProcessingProcessPosition) Clean() *ProcessingProcessPosition {
 	return &ProcessingProcessPosition{Meta: processingProcessPosition.Meta}
 }

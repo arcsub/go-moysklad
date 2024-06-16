@@ -15,7 +15,7 @@ type Organization struct {
 	ActualAddressFull      *Address                 `json:"actualAddressFull,omitempty"`
 	Archived               *bool                    `json:"archived,omitempty"`
 	BonusPoints            *int                     `json:"bonusPoints,omitempty"`
-	BonusProgram           *BonusProgram            `json:"bonusProgram,omitempty"`
+	BonusProgram           *NullValue[BonusProgram] `json:"bonusProgram,omitempty"`
 	ActualAddress          *string                  `json:"actualAddress,omitempty"`
 	UTMUrl                 *string                  `json:"utmUrl,omitempty"`
 	Created                *Timestamp               `json:"created,omitempty"`
@@ -61,6 +61,7 @@ type Organization struct {
 	Attributes             Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (organization Organization) Clean() *Organization {
 	return &Organization{Meta: organization.Meta}
 }
@@ -86,7 +87,7 @@ func (organization Organization) GetBonusPoints() int {
 }
 
 func (organization Organization) GetBonusProgram() BonusProgram {
-	return Deref(organization.BonusProgram)
+	return organization.BonusProgram.Get()
 }
 
 func (organization Organization) GetActualAddress() string {
@@ -277,7 +278,12 @@ func (organization *Organization) SetArchived(archived bool) *Organization {
 }
 
 func (organization *Organization) SetBonusProgram(bonusProgram *BonusProgram) *Organization {
-	organization.BonusProgram = bonusProgram.Clean()
+	organization.BonusProgram = NewNullValueWith(bonusProgram.Clean())
+	return organization
+}
+
+func (organization *Organization) SetNullBonusProgram() *Organization {
+	organization.BonusProgram = NewNullValue[BonusProgram]()
 	return organization
 }
 

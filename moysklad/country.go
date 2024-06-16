@@ -23,6 +23,7 @@ type Country struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (country Country) Clean() *Country {
 	return &Country{Meta: country.Meta}
 }

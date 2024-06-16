@@ -10,40 +10,41 @@ import (
 // Ключевое слово: cashin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prihodnyj-order
 type CashIn struct {
-	Organization   *Organization         `json:"organization,omitempty"`
-	VatSum         *float64              `json:"vatSum,omitempty"`
-	Applicable     *bool                 `json:"applicable,omitempty"`
-	Moment         *Timestamp            `json:"moment,omitempty"`
-	Code           *string               `json:"code,omitempty"`
-	Contract       *Contract             `json:"contract,omitempty"`
-	AccountID      *uuid.UUID            `json:"accountId,omitempty"`
-	Deleted        *Timestamp            `json:"deleted,omitempty"`
-	Description    *string               `json:"description,omitempty"`
-	ExternalCode   *string               `json:"externalCode,omitempty"`
-	Files          *MetaArray[File]      `json:"files,omitempty"`
-	Group          *Group                `json:"group,omitempty"`
-	ID             *uuid.UUID            `json:"id,omitempty"`
-	Meta           *Meta                 `json:"meta,omitempty"`
-	Operations     Operations            `json:"operations,omitempty"`
-	Agent          *Counterparty         `json:"agent,omitempty"`
-	Created        *Timestamp            `json:"created,omitempty"`
-	Owner          *Employee             `json:"owner,omitempty"`
-	PaymentPurpose *string               `json:"paymentPurpose,omitempty"`
-	Printed        *bool                 `json:"printed,omitempty"`
-	Project        *Project              `json:"project,omitempty"`
-	Published      *bool                 `json:"published,omitempty"`
-	Rate           *Rate                 `json:"rate,omitempty"`
-	SalesChannel   *SalesChannel         `json:"salesChannel,omitempty"`
-	Shared         *bool                 `json:"shared,omitempty"`
-	State          *State                `json:"state,omitempty"`
-	Sum            *float64              `json:"sum,omitempty"`
-	SyncID         *uuid.UUID            `json:"syncId,omitempty"`
-	Updated        *Timestamp            `json:"updated,omitempty"`
-	Name           *string               `json:"name,omitempty"`
-	FactureIn      *FactureIn            `json:"factureIn,omitempty"`
-	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
+	Organization   *Organization            `json:"organization,omitempty"`
+	VatSum         *float64                 `json:"vatSum,omitempty"`
+	Applicable     *bool                    `json:"applicable,omitempty"`
+	Moment         *Timestamp               `json:"moment,omitempty"`
+	Code           *string                  `json:"code,omitempty"`
+	Contract       *NullValue[Contract]     `json:"contract,omitempty"`
+	AccountID      *uuid.UUID               `json:"accountId,omitempty"`
+	Deleted        *Timestamp               `json:"deleted,omitempty"`
+	Description    *string                  `json:"description,omitempty"`
+	ExternalCode   *string                  `json:"externalCode,omitempty"`
+	Files          *MetaArray[File]         `json:"files,omitempty"`
+	Group          *Group                   `json:"group,omitempty"`
+	ID             *uuid.UUID               `json:"id,omitempty"`
+	Meta           *Meta                    `json:"meta,omitempty"`
+	Operations     Operations               `json:"operations,omitempty"`
+	Agent          *Counterparty            `json:"agent,omitempty"`
+	Created        *Timestamp               `json:"created,omitempty"`
+	Owner          *Employee                `json:"owner,omitempty"`
+	PaymentPurpose *string                  `json:"paymentPurpose,omitempty"`
+	Printed        *bool                    `json:"printed,omitempty"`
+	Project        *NullValue[Project]      `json:"project,omitempty"`
+	Published      *bool                    `json:"published,omitempty"`
+	Rate           *Rate                    `json:"rate,omitempty"`
+	SalesChannel   *NullValue[SalesChannel] `json:"salesChannel,omitempty"`
+	Shared         *bool                    `json:"shared,omitempty"`
+	State          *NullValue[State]        `json:"state,omitempty"`
+	Sum            *float64                 `json:"sum,omitempty"`
+	SyncID         *uuid.UUID               `json:"syncId,omitempty"`
+	Updated        *Timestamp               `json:"updated,omitempty"`
+	Name           *string                  `json:"name,omitempty"`
+	FactureIn      *FactureIn               `json:"factureIn,omitempty"`
+	Attributes     Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
@@ -69,7 +70,7 @@ func (cashIn CashIn) GetCode() string {
 }
 
 func (cashIn CashIn) GetContract() Contract {
-	return Deref(cashIn.Contract)
+	return cashIn.Contract.Get()
 }
 
 func (cashIn CashIn) GetAccountID() uuid.UUID {
@@ -129,7 +130,7 @@ func (cashIn CashIn) GetPrinted() bool {
 }
 
 func (cashIn CashIn) GetProject() Project {
-	return Deref(cashIn.Project)
+	return cashIn.Project.Get()
 }
 
 func (cashIn CashIn) GetPublished() bool {
@@ -141,7 +142,7 @@ func (cashIn CashIn) GetRate() Rate {
 }
 
 func (cashIn CashIn) GetSalesChannel() SalesChannel {
-	return Deref(cashIn.SalesChannel)
+	return cashIn.SalesChannel.Get()
 }
 
 func (cashIn CashIn) GetShared() bool {
@@ -149,7 +150,7 @@ func (cashIn CashIn) GetShared() bool {
 }
 
 func (cashIn CashIn) GetState() State {
-	return Deref(cashIn.State)
+	return cashIn.State.Get()
 }
 
 func (cashIn CashIn) GetSum() float64 {
@@ -202,7 +203,12 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 }
 
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
-	cashIn.Contract = contract.Clean()
+	cashIn.Contract = NewNullValueWith(contract.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullContract() *CashIn {
+	cashIn.Contract = NewNullValue[Contract]()
 	return cashIn
 }
 
@@ -252,7 +258,12 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 }
 
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
-	cashIn.Project = project.Clean()
+	cashIn.Project = NewNullValueWith(project.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullProject() *CashIn {
+	cashIn.Project = NewNullValue[Project]()
 	return cashIn
 }
 
@@ -262,7 +273,12 @@ func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 }
 
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
-	cashIn.SalesChannel = salesChannel.Clean()
+	cashIn.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullSalesChannel() *CashIn {
+	cashIn.SalesChannel = NewNullValue[SalesChannel]()
 	return cashIn
 }
 
@@ -272,7 +288,12 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 }
 
 func (cashIn *CashIn) SetState(state *State) *CashIn {
-	cashIn.State = state.Clean()
+	cashIn.State = NewNullValueWith(state.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullState() *CashIn {
+	cashIn.State = NewNullValue[State]()
 	return cashIn
 }
 

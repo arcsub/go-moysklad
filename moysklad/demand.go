@@ -15,7 +15,7 @@ type Demand struct {
 	AgentAccount            *AgentAccount              `json:"agentAccount,omitempty"`
 	Applicable              *bool                      `json:"applicable,omitempty"`
 	Code                    *string                    `json:"code,omitempty"`
-	Contract                *Contract                  `json:"contract,omitempty"`
+	Contract                *NullValue[Contract]       `json:"contract,omitempty"`
 	Created                 *Timestamp                 `json:"created,omitempty"`
 	Deleted                 *Timestamp                 `json:"deleted,omitempty"`
 	Description             *string                    `json:"description,omitempty"`
@@ -33,14 +33,14 @@ type Demand struct {
 	PayedSum                *float64                   `json:"payedSum,omitempty"`
 	Positions               *Positions[DemandPosition] `json:"positions,omitempty"`
 	Printed                 *bool                      `json:"printed,omitempty"`
-	Project                 *Project                   `json:"project,omitempty"`
+	Project                 *NullValue[Project]        `json:"project,omitempty"`
 	Published               *bool                      `json:"published,omitempty"`
 	Rate                    *Rate                      `json:"rate,omitempty"`
-	SalesChannel            *SalesChannel              `json:"salesChannel,omitempty"`
+	SalesChannel            *NullValue[SalesChannel]   `json:"salesChannel,omitempty"`
 	Shared                  *bool                      `json:"shared,omitempty"`
 	ShipmentAddress         *string                    `json:"shipmentAddress,omitempty"`
 	ShipmentAddressFull     *Address                   `json:"shipmentAddressFull,omitempty"`
-	State                   *State                     `json:"state,omitempty"`
+	State                   *NullValue[State]          `json:"state,omitempty"`
 	Store                   *Store                     `json:"store,omitempty"`
 	Sum                     *float64                   `json:"sum,omitempty"`
 	SyncID                  *uuid.UUID                 `json:"syncId,omitempty"`
@@ -64,6 +64,7 @@ type Demand struct {
 	Attributes              Slice[AttributeValue]      `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (demand Demand) Clean() *Demand {
 	return &Demand{Meta: demand.Meta}
 }
@@ -89,7 +90,7 @@ func (demand Demand) GetCode() string {
 }
 
 func (demand Demand) GetContract() Contract {
-	return Deref(demand.Contract)
+	return demand.Contract.Get()
 }
 
 func (demand Demand) GetCreated() Timestamp {
@@ -161,7 +162,7 @@ func (demand Demand) GetPrinted() bool {
 }
 
 func (demand Demand) GetProject() Project {
-	return Deref(demand.Project)
+	return demand.Project.Get()
 }
 
 func (demand Demand) GetPublished() bool {
@@ -173,7 +174,7 @@ func (demand Demand) GetRate() Rate {
 }
 
 func (demand Demand) GetSalesChannel() SalesChannel {
-	return Deref(demand.SalesChannel)
+	return demand.SalesChannel.Get()
 }
 
 func (demand Demand) GetShared() bool {
@@ -189,7 +190,7 @@ func (demand Demand) GetShipmentAddressFull() Address {
 }
 
 func (demand Demand) GetState() State {
-	return Deref(demand.State)
+	return demand.State.Get()
 }
 
 func (demand Demand) GetStore() Store {
@@ -297,7 +298,12 @@ func (demand *Demand) SetCode(code string) *Demand {
 }
 
 func (demand *Demand) SetContract(contract *Contract) *Demand {
-	demand.Contract = contract.Clean()
+	demand.Contract = NewNullValueWith(contract.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullContract() *Demand {
+	demand.Contract = NewNullValue[Contract]()
 	return demand
 }
 
@@ -362,7 +368,12 @@ func (demand *Demand) SetPositions(positions *Positions[DemandPosition]) *Demand
 }
 
 func (demand *Demand) SetProject(project *Project) *Demand {
-	demand.Project = project.Clean()
+	demand.Project = NewNullValueWith(project.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullProject() *Demand {
+	demand.Project = NewNullValue[Project]()
 	return demand
 }
 
@@ -372,7 +383,12 @@ func (demand *Demand) SetRate(rate *Rate) *Demand {
 }
 
 func (demand *Demand) SetSalesChannel(salesChannel *SalesChannel) *Demand {
-	demand.SalesChannel = salesChannel.Clean()
+	demand.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullSalesChannel() *Demand {
+	demand.SalesChannel = NewNullValue[SalesChannel]()
 	return demand
 }
 
@@ -392,7 +408,12 @@ func (demand *Demand) SetShipmentAddressFull(shipmentAddressFull *Address) *Dema
 }
 
 func (demand *Demand) SetState(state *State) *Demand {
-	demand.State = state.Clean()
+	demand.State = NewNullValueWith(state.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullState() *Demand {
+	demand.State = NewNullValue[State]()
 	return demand
 }
 

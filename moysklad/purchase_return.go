@@ -28,10 +28,10 @@ type PurchaseReturn struct {
 	Moment              *Timestamp                         `json:"moment,omitempty"`
 	Name                *string                            `json:"name,omitempty"`
 	AccountID           *uuid.UUID                         `json:"accountId,omitempty"`
-	Contract            *Contract                          `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]               `json:"contract,omitempty"`
 	Agent               *Counterparty                      `json:"agent,omitempty"`
 	Organization        *Organization                      `json:"organization,omitempty"`
-	Project             *Project                           `json:"project,omitempty"`
+	Project             *NullValue[Project]                `json:"project,omitempty"`
 	Published           *bool                              `json:"published,omitempty"`
 	Rate                *Rate                              `json:"rate,omitempty"`
 	Shared              *bool                              `json:"shared,omitempty"`
@@ -52,6 +52,7 @@ type PurchaseReturn struct {
 	Attributes          Slice[AttributeValue]              `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (purchaseReturn PurchaseReturn) Clean() *PurchaseReturn {
 	return &PurchaseReturn{Meta: purchaseReturn.Meta}
 }
@@ -129,7 +130,7 @@ func (purchaseReturn PurchaseReturn) GetAccountID() uuid.UUID {
 }
 
 func (purchaseReturn PurchaseReturn) GetContract() Contract {
-	return Deref(purchaseReturn.Contract)
+	return purchaseReturn.Contract.Get()
 }
 
 func (purchaseReturn PurchaseReturn) GetAgent() Counterparty {
@@ -141,7 +142,7 @@ func (purchaseReturn PurchaseReturn) GetOrganization() Organization {
 }
 
 func (purchaseReturn PurchaseReturn) GetProject() Project {
-	return Deref(purchaseReturn.Project)
+	return purchaseReturn.Project.Get()
 }
 
 func (purchaseReturn PurchaseReturn) GetPublished() bool {
@@ -282,7 +283,7 @@ func (purchaseReturn *PurchaseReturn) SetName(name string) *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetContract(contract *Contract) *PurchaseReturn {
-	purchaseReturn.Contract = contract.Clean()
+	purchaseReturn.Contract = NewNullValueWith(contract.Clean())
 	return purchaseReturn
 }
 
@@ -297,7 +298,12 @@ func (purchaseReturn *PurchaseReturn) SetOrganization(organization *Organization
 }
 
 func (purchaseReturn *PurchaseReturn) SetProject(project *Project) *PurchaseReturn {
-	purchaseReturn.Project = project.Clean()
+	purchaseReturn.Project = NewNullValueWith(project.Clean())
+	return purchaseReturn
+}
+
+func (purchaseReturn *PurchaseReturn) SetNullProject() *PurchaseReturn {
+	purchaseReturn.Project = NewNullValue[Project]()
 	return purchaseReturn
 }
 

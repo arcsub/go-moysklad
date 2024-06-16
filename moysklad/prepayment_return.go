@@ -48,6 +48,7 @@ type PrepaymentReturn struct {
 	Attributes   Slice[AttributeValue]                `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (prepaymentReturn PrepaymentReturn) Clean() *PrepaymentReturn {
 	return &PrepaymentReturn{Meta: prepaymentReturn.Meta}
 }

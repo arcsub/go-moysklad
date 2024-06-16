@@ -17,6 +17,7 @@ type Group struct {
 	Name      *string    `json:"name,omitempty"`      // Наименование Отдела
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (group Group) Clean() *Group {
 	return &Group{Meta: group.Meta}
 }

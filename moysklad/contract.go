@@ -31,7 +31,7 @@ type Contract struct {
 	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
 	Updated             *Timestamp            `json:"updated,omitempty"`
 	Shared              *bool                 `json:"shared,omitempty"`
-	State               *State                `json:"state,omitempty"`
+	State               *NullValue[State]     `json:"state,omitempty"`
 	Sum                 *float64              `json:"sum,omitempty"`
 	SyncID              *uuid.UUID            `json:"syncId,omitempty"`
 	ContractType        ContractType          `json:"contractType,omitempty"`
@@ -39,6 +39,7 @@ type Contract struct {
 	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (contract Contract) Clean() *Contract {
 	return &Contract{Meta: contract.Meta}
 }
@@ -128,7 +129,7 @@ func (contract Contract) GetShared() bool {
 }
 
 func (contract Contract) GetState() State {
-	return Deref(contract.State)
+	return contract.State.Get()
 }
 
 func (contract Contract) GetSum() float64 {
@@ -232,7 +233,12 @@ func (contract *Contract) SetShared(shared bool) *Contract {
 }
 
 func (contract *Contract) SetState(state *State) *Contract {
-	contract.State = state.Clean()
+	contract.State = NewNullValueWith(state.Clean())
+	return contract
+}
+
+func (contract *Contract) SetNullState() *Contract {
+	contract.State = NewNullValue[State]()
 	return contract
 }
 

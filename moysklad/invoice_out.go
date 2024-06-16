@@ -28,19 +28,19 @@ type InvoiceOut struct {
 	Moment               *Timestamp                     `json:"moment,omitempty"`
 	Name                 *string                        `json:"name,omitempty"`
 	AccountID            *uuid.UUID                     `json:"accountId,omitempty"`
-	Contract             *Contract                      `json:"contract,omitempty"`
+	Contract             *NullValue[Contract]           `json:"contract,omitempty"`
 	Agent                *Counterparty                  `json:"agent,omitempty"`
 	Organization         *Organization                  `json:"organization,omitempty"`
 	PaymentPlannedMoment *Timestamp                     `json:"paymentPlannedMoment,omitempty"`
 	Positions            *Positions[InvoiceOutPosition] `json:"positions,omitempty"`
 	Printed              *bool                          `json:"printed,omitempty"`
-	Project              *Project                       `json:"project,omitempty"`
+	Project              *NullValue[Project]            `json:"project,omitempty"`
 	Published            *bool                          `json:"published,omitempty"`
 	Rate                 *Rate                          `json:"rate,omitempty"`
 	Shared               *bool                          `json:"shared,omitempty"`
 	ShippedSum           *float64                       `json:"shippedSum,omitempty"`
-	State                *State                         `json:"state,omitempty"`
-	Store                *Store                         `json:"store,omitempty"`
+	State                *NullValue[State]              `json:"state,omitempty"`
+	Store                *NullValue[Store]              `json:"store,omitempty"`
 	Sum                  *float64                       `json:"sum,omitempty"`
 	SyncID               *uuid.UUID                     `json:"syncId,omitempty"`
 	Updated              *Timestamp                     `json:"updated,omitempty"`
@@ -52,6 +52,7 @@ type InvoiceOut struct {
 	Attributes           Slice[AttributeValue]          `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (invoiceOut InvoiceOut) Clean() *InvoiceOut {
 	return &InvoiceOut{Meta: invoiceOut.Meta}
 }
@@ -129,7 +130,7 @@ func (invoiceOut InvoiceOut) GetAccountID() uuid.UUID {
 }
 
 func (invoiceOut InvoiceOut) GetContract() Contract {
-	return Deref(invoiceOut.Contract)
+	return invoiceOut.Contract.Get()
 }
 
 func (invoiceOut InvoiceOut) GetAgent() Counterparty {
@@ -153,7 +154,7 @@ func (invoiceOut InvoiceOut) GetPrinted() bool {
 }
 
 func (invoiceOut InvoiceOut) GetProject() Project {
-	return Deref(invoiceOut.Project)
+	return invoiceOut.Project.Get()
 }
 
 func (invoiceOut InvoiceOut) GetPublished() bool {
@@ -173,11 +174,11 @@ func (invoiceOut InvoiceOut) GetShippedSum() float64 {
 }
 
 func (invoiceOut InvoiceOut) GetState() State {
-	return Deref(invoiceOut.State)
+	return invoiceOut.State.Get()
 }
 
 func (invoiceOut InvoiceOut) GetStore() Store {
-	return Deref(invoiceOut.Store)
+	return invoiceOut.Store.Get()
 }
 
 func (invoiceOut InvoiceOut) GetSum() float64 {
@@ -282,7 +283,12 @@ func (invoiceOut *InvoiceOut) SetName(name string) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetContract(contract *Contract) *InvoiceOut {
-	invoiceOut.Contract = contract.Clean()
+	invoiceOut.Contract = NewNullValueWith(contract.Clean())
+	return invoiceOut
+}
+
+func (invoiceOut *InvoiceOut) SetNullContract() *InvoiceOut {
+	invoiceOut.Contract = NewNullValue[Contract]()
 	return invoiceOut
 }
 
@@ -307,7 +313,12 @@ func (invoiceOut *InvoiceOut) SetPositions(positions *Positions[InvoiceOutPositi
 }
 
 func (invoiceOut *InvoiceOut) SetProject(project *Project) *InvoiceOut {
-	invoiceOut.Project = project.Clean()
+	invoiceOut.Project = NewNullValueWith(project.Clean())
+	return invoiceOut
+}
+
+func (invoiceOut *InvoiceOut) SetNullProject() *InvoiceOut {
+	invoiceOut.Project = NewNullValue[Project]()
 	return invoiceOut
 }
 
@@ -322,12 +333,22 @@ func (invoiceOut *InvoiceOut) SetShared(shared bool) *InvoiceOut {
 }
 
 func (invoiceOut *InvoiceOut) SetState(state *State) *InvoiceOut {
-	invoiceOut.State = state.Clean()
+	invoiceOut.State = NewNullValueWith(state.Clean())
+	return invoiceOut
+}
+
+func (invoiceOut *InvoiceOut) SetNullState() *InvoiceOut {
+	invoiceOut.State = NewNullValue[State]()
 	return invoiceOut
 }
 
 func (invoiceOut *InvoiceOut) SetStore(store *Store) *InvoiceOut {
-	invoiceOut.Store = store.Clean()
+	invoiceOut.Store = NewNullValueWith(store.Clean())
+	return invoiceOut
+}
+
+func (invoiceOut *InvoiceOut) SetNullStore() *InvoiceOut {
+	invoiceOut.Store = NewNullValue[Store]()
 	return invoiceOut
 }
 

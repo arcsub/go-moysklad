@@ -14,7 +14,7 @@ import (
 type Employee struct {
 	ID           *uuid.UUID            `json:"id,omitempty"`
 	Owner        *Employee             `json:"owner,omitempty"`
-	Image        *Image                `json:"image,omitempty"`
+	Image        *NullValue[Image]     `json:"image,omitempty"`
 	INN          *string               `json:"inn,omitempty"`
 	Code         *string               `json:"code,omitempty"`
 	Created      *Timestamp            `json:"created,omitempty"`
@@ -41,6 +41,7 @@ type Employee struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (employee Employee) Clean() *Employee {
 	return &Employee{Meta: employee.Meta}
 }
@@ -54,7 +55,7 @@ func (employee Employee) GetOwner() Employee {
 }
 
 func (employee Employee) GetImage() Image {
-	return Deref(employee.Image)
+	return employee.Image.Get()
 }
 
 func (employee Employee) GetINN() string {
@@ -159,7 +160,12 @@ func (employee *Employee) SetOwner(owner *Employee) *Employee {
 }
 
 func (employee *Employee) SetImage(image *Image) *Employee {
-	employee.Image = image
+	employee.Image = NewNullValueWith(image)
+	return employee
+}
+
+func (employee *Employee) SetNullImage() *Employee {
+	employee.Image = NewNullValue[Image]()
 	return employee
 }
 

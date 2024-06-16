@@ -15,7 +15,7 @@ type FactureOut struct {
 	Applicable      *bool                 `json:"applicable,omitempty"`
 	AccountID       *uuid.UUID            `json:"accountId,omitempty"`
 	Code            *string               `json:"code,omitempty"`
-	Contract        *Contract             `json:"contract,omitempty"`
+	Contract        *NullValue[Contract]  `json:"contract,omitempty"`
 	Created         *Timestamp            `json:"created,omitempty"`
 	Owner           *Employee             `json:"owner,omitempty"`
 	Description     *string               `json:"description,omitempty"`
@@ -32,7 +32,7 @@ type FactureOut struct {
 	Published       *bool                 `json:"published,omitempty"`
 	Rate            *Rate                 `json:"rate,omitempty"`
 	Shared          *bool                 `json:"shared,omitempty"`
-	State           *State                `json:"state,omitempty"`
+	State           *NullValue[State]     `json:"state,omitempty"`
 	StateContractID *string               `json:"stateContractId,omitempty"`
 	Sum             *float64              `json:"sum,omitempty"`
 	SyncID          *uuid.UUID            `json:"syncId,omitempty"`
@@ -45,6 +45,7 @@ type FactureOut struct {
 	Attributes      Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (factureOut FactureOut) Clean() *FactureOut {
 	return &FactureOut{Meta: factureOut.Meta}
 }
@@ -70,7 +71,7 @@ func (factureOut FactureOut) GetCode() string {
 }
 
 func (factureOut FactureOut) GetContract() Contract {
-	return Deref(factureOut.Contract)
+	return factureOut.Contract.Get()
 }
 
 func (factureOut FactureOut) GetCreated() Timestamp {
@@ -138,7 +139,7 @@ func (factureOut FactureOut) GetShared() bool {
 }
 
 func (factureOut FactureOut) GetState() State {
-	return Deref(factureOut.State)
+	return factureOut.State.Get()
 }
 
 func (factureOut FactureOut) GetStateContractID() string {
@@ -197,7 +198,12 @@ func (factureOut *FactureOut) SetCode(code string) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetContract(contract *Contract) *FactureOut {
-	factureOut.Contract = contract.Clean()
+	factureOut.Contract = NewNullValueWith(contract.Clean())
+	return factureOut
+}
+
+func (factureOut *FactureOut) SetNullContract() *FactureOut {
+	factureOut.Contract = NewNullValue[Contract]()
 	return factureOut
 }
 
@@ -262,7 +268,12 @@ func (factureOut *FactureOut) SetShared(shared bool) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetState(state *State) *FactureOut {
-	factureOut.State = state.Clean()
+	factureOut.State = NewNullValueWith(state.Clean())
+	return factureOut
+}
+
+func (factureOut *FactureOut) SetNullState() *FactureOut {
+	factureOut.State = NewNullValue[State]()
 	return factureOut
 }
 

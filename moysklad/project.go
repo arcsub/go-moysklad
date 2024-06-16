@@ -25,6 +25,7 @@ type Project struct {
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (project Project) Clean() *Project {
 	return &Project{Meta: project.Meta}
 }

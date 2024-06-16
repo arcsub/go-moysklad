@@ -23,6 +23,7 @@ type Uom struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Единицы измерения
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (uom Uom) Clean() *Uom {
 	return &Uom{Meta: uom.Meta}
 }

@@ -28,16 +28,16 @@ type SalesReturn struct {
 	Moment              *Timestamp                      `json:"moment,omitempty"`
 	Name                *string                         `json:"name,omitempty"`
 	AccountID           *uuid.UUID                      `json:"accountId,omitempty"`
-	Contract            *Contract                       `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]            `json:"contract,omitempty"`
 	Agent               *Counterparty                   `json:"agent,omitempty"`
 	Organization        *Organization                   `json:"organization,omitempty"`
 	Printed             *bool                           `json:"printed,omitempty"`
-	Project             *Project                        `json:"project,omitempty"`
+	Project             *NullValue[Project]             `json:"project,omitempty"`
 	Published           *bool                           `json:"published,omitempty"`
 	Rate                *Rate                           `json:"rate,omitempty"`
-	SalesChannel        *SalesChannel                   `json:"salesChannel,omitempty"`
+	SalesChannel        *NullValue[SalesChannel]        `json:"salesChannel,omitempty"`
 	Shared              *bool                           `json:"shared,omitempty"`
-	State               *State                          `json:"state,omitempty"`
+	State               *NullValue[State]               `json:"state,omitempty"`
 	Store               *Store                          `json:"store,omitempty"`
 	Sum                 *float64                        `json:"sum,omitempty"`
 	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`
@@ -52,6 +52,7 @@ type SalesReturn struct {
 	Attributes          Slice[AttributeValue]           `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (salesReturn SalesReturn) Clean() *SalesReturn {
 	return &SalesReturn{Meta: salesReturn.Meta}
 }
@@ -129,7 +130,7 @@ func (salesReturn SalesReturn) GetAccountID() uuid.UUID {
 }
 
 func (salesReturn SalesReturn) GetContract() Contract {
-	return Deref(salesReturn.Contract)
+	return salesReturn.Contract.Get()
 }
 
 func (salesReturn SalesReturn) GetAgent() Counterparty {
@@ -145,7 +146,7 @@ func (salesReturn SalesReturn) GetPrinted() bool {
 }
 
 func (salesReturn SalesReturn) GetProject() Project {
-	return Deref(salesReturn.Project)
+	return salesReturn.Project.Get()
 }
 
 func (salesReturn SalesReturn) GetPublished() bool {
@@ -157,7 +158,7 @@ func (salesReturn SalesReturn) GetRate() Rate {
 }
 
 func (salesReturn SalesReturn) GetSalesChannel() SalesChannel {
-	return Deref(salesReturn.SalesChannel)
+	return salesReturn.SalesChannel.Get()
 }
 
 func (salesReturn SalesReturn) GetShared() bool {
@@ -165,7 +166,7 @@ func (salesReturn SalesReturn) GetShared() bool {
 }
 
 func (salesReturn SalesReturn) GetState() State {
-	return Deref(salesReturn.State)
+	return salesReturn.State.Get()
 }
 
 func (salesReturn SalesReturn) GetStore() Store {
@@ -282,7 +283,7 @@ func (salesReturn *SalesReturn) SetName(name string) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetContract(contract *Contract) *SalesReturn {
-	salesReturn.Contract = contract
+	salesReturn.Contract = NewNullValueWith(contract.Clean())
 	return salesReturn
 }
 
@@ -297,7 +298,12 @@ func (salesReturn *SalesReturn) SetOrganization(organization *Organization) *Sal
 }
 
 func (salesReturn *SalesReturn) SetProject(project *Project) *SalesReturn {
-	salesReturn.Project = project.Clean()
+	salesReturn.Project = NewNullValueWith(project.Clean())
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullProject() *SalesReturn {
+	salesReturn.Project = NewNullValue[Project]()
 	return salesReturn
 }
 
@@ -307,7 +313,12 @@ func (salesReturn *SalesReturn) SetRate(rate *Rate) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetSalesChannel(salesChannel *SalesChannel) *SalesReturn {
-	salesReturn.SalesChannel = salesChannel.Clean()
+	salesReturn.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullSalesChannel() *SalesReturn {
+	salesReturn.SalesChannel = NewNullValue[SalesChannel]()
 	return salesReturn
 }
 
@@ -317,7 +328,12 @@ func (salesReturn *SalesReturn) SetShared(shared bool) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetState(state *State) *SalesReturn {
-	salesReturn.State = state.Clean()
+	salesReturn.State = NewNullValueWith(state.Clean())
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullState() *SalesReturn {
+	salesReturn.State = NewNullValue[State]()
 	return salesReturn
 }
 

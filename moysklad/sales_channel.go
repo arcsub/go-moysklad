@@ -25,6 +25,7 @@ type SalesChannel struct {
 	SalesChannelType SalesChannelType `json:"type,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (salesChannel SalesChannel) Clean() *SalesChannel {
 	return &SalesChannel{Meta: salesChannel.Meta}
 }

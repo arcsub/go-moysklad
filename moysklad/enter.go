@@ -29,17 +29,18 @@ type Enter struct {
 	Owner        *Employee                 `json:"owner,omitempty"`
 	Positions    *Positions[EnterPosition] `json:"positions,omitempty"`
 	AccountID    *uuid.UUID                `json:"accountId,omitempty"`
-	Project      *Project                  `json:"project,omitempty"`
+	Project      *NullValue[Project]       `json:"project,omitempty"`
 	Published    *bool                     `json:"published,omitempty"`
 	Rate         *Rate                     `json:"rate,omitempty"`
 	Shared       *bool                     `json:"shared,omitempty"`
-	State        *State                    `json:"state,omitempty"`
+	State        *NullValue[State]         `json:"state,omitempty"`
 	Store        *Store                    `json:"store,omitempty"`
 	Name         *string                   `json:"name,omitempty"`
 	SyncID       *uuid.UUID                `json:"syncId,omitempty"`
 	Attributes   Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (enter Enter) Clean() *Enter {
 	return &Enter{Meta: enter.Meta}
 }
@@ -121,7 +122,7 @@ func (enter Enter) GetAccountID() uuid.UUID {
 }
 
 func (enter Enter) GetProject() Project {
-	return Deref(enter.Project)
+	return enter.Project.Get()
 }
 
 func (enter Enter) GetPublished() bool {
@@ -137,7 +138,7 @@ func (enter Enter) GetShared() bool {
 }
 
 func (enter Enter) GetState() State {
-	return Deref(enter.State)
+	return enter.State.Get()
 }
 
 func (enter Enter) GetStore() Store {
@@ -217,7 +218,12 @@ func (enter *Enter) SetPositions(positions *Positions[EnterPosition]) *Enter {
 }
 
 func (enter *Enter) SetProject(project *Project) *Enter {
-	enter.Project = project.Clean()
+	enter.Project = NewNullValueWith(project.Clean())
+	return enter
+}
+
+func (enter *Enter) SetNullProject() *Enter {
+	enter.Project = NewNullValue[Project]()
 	return enter
 }
 
@@ -232,7 +238,12 @@ func (enter *Enter) SetShared(shared bool) *Enter {
 }
 
 func (enter *Enter) SetState(state *State) *Enter {
-	enter.State = state.Clean()
+	enter.State = NewNullValueWith(state.Clean())
+	return enter
+}
+
+func (enter *Enter) SetNullState() *Enter {
+	enter.State = NewNullValue[State]()
 	return enter
 }
 

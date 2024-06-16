@@ -19,12 +19,13 @@ type Consignment struct {
 	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
 	Name         *string               `json:"name,omitempty"`
 	Assortment   *AssortmentPosition   `json:"assortment,omitempty"`
-	Image        *Image                `json:"image,omitempty"`
+	Image        *NullValue[Image]     `json:"image,omitempty"`
 	Label        *string               `json:"label,omitempty"`
 	Updated      *Timestamp            `json:"updated,omitempty"`
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (consignment Consignment) Clean() *Consignment {
 	return &Consignment{Meta: consignment.Meta}
 }
@@ -78,7 +79,7 @@ func (consignment Consignment) GetAssortment() AssortmentPosition {
 }
 
 func (consignment Consignment) GetImage() Image {
-	return Deref(consignment.Image)
+	return consignment.Image.Get()
 }
 
 func (consignment Consignment) GetLabel() string {
@@ -124,7 +125,12 @@ func (consignment *Consignment) SetAssortment(assortment AsAssortment) *Consignm
 }
 
 func (consignment *Consignment) SetImage(image *Image) *Consignment {
-	consignment.Image = image
+	consignment.Image = NewNullValueWith(image)
+	return consignment
+}
+
+func (consignment *Consignment) SetNullImage() *Consignment {
+	consignment.Image = NewNullValue[Image]()
 	return consignment
 }
 

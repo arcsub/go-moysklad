@@ -18,7 +18,7 @@ type RetailDemand struct {
 	CheckNumber         *string                          `json:"checkNumber,omitempty"`
 	CheckSum            *float64                         `json:"checkSum,omitempty"`
 	Code                *string                          `json:"code,omitempty"`
-	Contract            *Contract                        `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]             `json:"contract,omitempty"`
 	Created             *Timestamp                       `json:"created,omitempty"`
 	CustomerOrder       *CustomerOrder                   `json:"customerOrder,omitempty"`
 	Deleted             *Timestamp                       `json:"deleted,omitempty"`
@@ -44,7 +44,7 @@ type RetailDemand struct {
 	PrepaymentNoCashSum *float64                         `json:"prepaymentNoCashSum,omitempty"`
 	PrepaymentQRSum     *float64                         `json:"prepaymentQrSum,omitempty"`
 	Printed             *bool                            `json:"printed,omitempty"`
-	Project             *Project                         `json:"project,omitempty"`
+	Project             *NullValue[Project]              `json:"project,omitempty"`
 	Published           *bool                            `json:"published,omitempty"`
 	QRSum               *float64                         `json:"qrSum,omitempty"`
 	Rate                *Rate                            `json:"rate,omitempty"`
@@ -64,6 +64,7 @@ type RetailDemand struct {
 	Attributes          Slice[AttributeValue]            `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailDemand RetailDemand) Clean() *RetailDemand {
 	return &RetailDemand{Meta: retailDemand.Meta}
 }
@@ -101,7 +102,7 @@ func (retailDemand RetailDemand) GetCode() string {
 }
 
 func (retailDemand RetailDemand) GetContract() Contract {
-	return Deref(retailDemand.Contract)
+	return retailDemand.Contract.Get()
 }
 
 func (retailDemand RetailDemand) GetCreated() Timestamp {
@@ -205,7 +206,7 @@ func (retailDemand RetailDemand) GetPrinted() bool {
 }
 
 func (retailDemand RetailDemand) GetProject() Project {
-	return Deref(retailDemand.Project)
+	return retailDemand.Project.Get()
 }
 
 func (retailDemand RetailDemand) GetPublished() bool {
@@ -312,7 +313,7 @@ func (retailDemand *RetailDemand) SetCode(code string) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetContract(contract *Contract) *RetailDemand {
-	retailDemand.Contract = contract.Clean()
+	retailDemand.Contract = NewNullValueWith(contract.Clean())
 	return retailDemand
 }
 
@@ -402,7 +403,12 @@ func (retailDemand *RetailDemand) SetPrepaymentQRSum(prepaymentQRSum float64) *R
 }
 
 func (retailDemand *RetailDemand) SetProject(project *Project) *RetailDemand {
-	retailDemand.Project = project.Clean()
+	retailDemand.Project = NewNullValueWith(project.Clean())
+	return retailDemand
+}
+
+func (retailDemand *RetailDemand) SetNullProject() *RetailDemand {
+	retailDemand.Project = NewNullValue[Project]()
 	return retailDemand
 }
 

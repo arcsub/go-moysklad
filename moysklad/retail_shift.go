@@ -18,7 +18,7 @@ type RetailShift struct {
 	BankPercent         *float64               `json:"bankPercent,omitempty"`
 	Name                *string                `json:"name,omitempty"`
 	CloseDate           *Timestamp             `json:"closeDate,omitempty"`
-	Contract            *Contract              `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]   `json:"contract,omitempty"`
 	Created             *Timestamp             `json:"created,omitempty"`
 	Deleted             *Timestamp             `json:"deleted,omitempty"`
 	Description         *string                `json:"description,omitempty"`
@@ -52,6 +52,7 @@ type RetailShift struct {
 	Attributes          Slice[AttributeValue]  `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailShift RetailShift) Clean() *RetailShift {
 	return &RetailShift{Meta: retailShift.Meta}
 }
@@ -89,7 +90,7 @@ func (retailShift RetailShift) GetCloseDate() Timestamp {
 }
 
 func (retailShift RetailShift) GetContract() Contract {
-	return Deref(retailShift.Contract)
+	return retailShift.Contract.Get()
 }
 
 func (retailShift RetailShift) GetCreated() Timestamp {

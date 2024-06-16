@@ -16,6 +16,7 @@ type CustomEntity struct {
 	Name *string    `json:"name,omitempty"` // Наименование Пользовательского справочника
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (customEntity CustomEntity) Clean() *CustomEntity {
 	return &CustomEntity{Meta: customEntity.Meta}
 }

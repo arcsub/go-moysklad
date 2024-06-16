@@ -16,7 +16,7 @@ type InvoiceIn struct {
 	Applicable           *bool                         `json:"applicable,omitempty"`
 	Supplies             Slice[Supply]                 `json:"supplies,omitempty"`
 	Code                 *string                       `json:"code,omitempty"`
-	Contract             *Contract                     `json:"contract,omitempty"`
+	Contract             *NullValue[Contract]          `json:"contract,omitempty"`
 	Owner                *Employee                     `json:"owner,omitempty"`
 	Deleted              *Timestamp                    `json:"deleted,omitempty"`
 	Description          *string                       `json:"description,omitempty"`
@@ -36,13 +36,13 @@ type InvoiceIn struct {
 	PaymentPlannedMoment *Timestamp                    `json:"paymentPlannedMoment,omitempty"`
 	Positions            *Positions[InvoiceInPosition] `json:"positions,omitempty"`
 	Printed              *bool                         `json:"printed,omitempty"`
-	Project              *Project                      `json:"project,omitempty"`
+	Project              *NullValue[Project]           `json:"project,omitempty"`
 	Published            *bool                         `json:"published,omitempty"`
 	Rate                 *Rate                         `json:"rate,omitempty"`
 	Shared               *bool                         `json:"shared,omitempty"`
 	ShippedSum           *float64                      `json:"shippedSum,omitempty"`
-	State                *State                        `json:"state,omitempty"`
-	Store                *Store                        `json:"store,omitempty"`
+	State                *NullValue[State]             `json:"state,omitempty"`
+	Store                *NullValue[Store]             `json:"store,omitempty"`
 	Sum                  *float64                      `json:"sum,omitempty"`
 	SyncID               *uuid.UUID                    `json:"syncId,omitempty"`
 	Updated              *Timestamp                    `json:"updated,omitempty"`
@@ -54,6 +54,7 @@ type InvoiceIn struct {
 	Attributes           Slice[AttributeValue]         `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (invoiceIn InvoiceIn) Clean() *InvoiceIn {
 	return &InvoiceIn{Meta: invoiceIn.Meta}
 }
@@ -83,7 +84,7 @@ func (invoiceIn InvoiceIn) GetCode() string {
 }
 
 func (invoiceIn InvoiceIn) GetContract() Contract {
-	return Deref(invoiceIn.Contract)
+	return invoiceIn.Contract.Get()
 }
 
 func (invoiceIn InvoiceIn) GetOwner() Employee {
@@ -163,7 +164,7 @@ func (invoiceIn InvoiceIn) GetPrinted() bool {
 }
 
 func (invoiceIn InvoiceIn) GetProject() Project {
-	return Deref(invoiceIn.Project)
+	return invoiceIn.Project.Get()
 }
 
 func (invoiceIn InvoiceIn) GetPublished() bool {
@@ -183,11 +184,11 @@ func (invoiceIn InvoiceIn) GetShippedSum() float64 {
 }
 
 func (invoiceIn InvoiceIn) GetState() State {
-	return Deref(invoiceIn.State)
+	return invoiceIn.State.Get()
 }
 
 func (invoiceIn InvoiceIn) GetStore() Store {
-	return Deref(invoiceIn.Store)
+	return invoiceIn.Store.Get()
 }
 
 func (invoiceIn InvoiceIn) GetSum() float64 {
@@ -247,7 +248,12 @@ func (invoiceIn *InvoiceIn) SetCode(code string) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetContract(contract *Contract) *InvoiceIn {
-	invoiceIn.Contract = contract.Clean()
+	invoiceIn.Contract = NewNullValueWith(contract.Clean())
+	return invoiceIn
+}
+
+func (invoiceIn *InvoiceIn) SetNullContract() *InvoiceIn {
+	invoiceIn.Contract = NewNullValue[Contract]()
 	return invoiceIn
 }
 
@@ -327,7 +333,12 @@ func (invoiceIn *InvoiceIn) SetPositions(positions *Positions[InvoiceInPosition]
 }
 
 func (invoiceIn *InvoiceIn) SetProject(project *Project) *InvoiceIn {
-	invoiceIn.Project = project.Clean()
+	invoiceIn.Project = NewNullValueWith(project.Clean())
+	return invoiceIn
+}
+
+func (invoiceIn *InvoiceIn) SetNullProject() *InvoiceIn {
+	invoiceIn.Project = NewNullValue[Project]()
 	return invoiceIn
 }
 
@@ -342,12 +353,22 @@ func (invoiceIn *InvoiceIn) SetShared(shared bool) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetState(state *State) *InvoiceIn {
-	invoiceIn.State = state.Clean()
+	invoiceIn.State = NewNullValueWith(state.Clean())
+	return invoiceIn
+}
+
+func (invoiceIn *InvoiceIn) SetNullState() *InvoiceIn {
+	invoiceIn.State = NewNullValue[State]()
 	return invoiceIn
 }
 
 func (invoiceIn *InvoiceIn) SetStore(store *Store) *InvoiceIn {
-	invoiceIn.Store = store.Clean()
+	invoiceIn.Store = NewNullValueWith(store.Clean())
+	return invoiceIn
+}
+
+func (invoiceIn *InvoiceIn) SetNullStore() *InvoiceIn {
+	invoiceIn.Store = NewNullValue[Store]()
 	return invoiceIn
 }
 

@@ -28,6 +28,7 @@ type BonusProgram struct {
 	AgentTags                 Slice[string]      `json:"agentTags,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (bonusProgram BonusProgram) Clean() *BonusProgram {
 	return &BonusProgram{Meta: bonusProgram.Meta}
 }

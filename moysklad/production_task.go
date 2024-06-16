@@ -38,10 +38,11 @@ type ProductionTask struct {
 	Published             *bool                            `json:"published,omitempty"`
 	Reserve               *bool                            `json:"reserve,omitempty"`
 	Shared                *bool                            `json:"shared,omitempty"`
-	State                 *State                           `json:"state,omitempty"`
+	State                 *NullValue[State]                `json:"state,omitempty"`
 	Attributes            Slice[AttributeValue]            `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (productionTask ProductionTask) Clean() *ProductionTask {
 	return &ProductionTask{Meta: productionTask.Meta}
 }
@@ -155,7 +156,7 @@ func (productionTask ProductionTask) GetShared() bool {
 }
 
 func (productionTask ProductionTask) GetState() State {
-	return Deref(productionTask.State)
+	return productionTask.State.Get()
 }
 
 func (productionTask ProductionTask) GetAttributes() Slice[AttributeValue] {
@@ -258,7 +259,12 @@ func (productionTask *ProductionTask) SetShared(shared bool) *ProductionTask {
 }
 
 func (productionTask *ProductionTask) SetState(state *State) *ProductionTask {
-	productionTask.State = state.Clean()
+	productionTask.State = NewNullValueWith(state.Clean())
+	return productionTask
+}
+
+func (productionTask *ProductionTask) SetNullState() *ProductionTask {
+	productionTask.State = NewNullValue[State]()
 	return productionTask
 }
 

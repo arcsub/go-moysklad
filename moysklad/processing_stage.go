@@ -25,6 +25,7 @@ type ProcessingStage struct {
 	Updated       *Timestamp           `json:"updated,omitempty"`       // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingStage ProcessingStage) Clean() *ProcessingStage {
 	return &ProcessingStage{Meta: processingStage.Meta}
 }

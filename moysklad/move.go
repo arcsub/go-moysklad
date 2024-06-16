@@ -10,41 +10,42 @@ import (
 // Ключевое слово: move
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-peremeschenie
 type Move struct {
-	Moment        *Timestamp               `json:"moment,omitempty"`
-	Updated       *Timestamp               `json:"updated,omitempty"`
-	AccountID     *uuid.UUID               `json:"accountId,omitempty"`
-	Code          *string                  `json:"code,omitempty"`
-	Created       *Timestamp               `json:"created,omitempty"`
-	Deleted       *Timestamp               `json:"deleted,omitempty"`
-	Demand        *Demand                  `json:"demand,omitempty"`
-	Description   *string                  `json:"description,omitempty"`
-	ExternalCode  *string                  `json:"externalCode,omitempty"`
-	Files         *MetaArray[File]         `json:"files,omitempty"`
-	Group         *Group                   `json:"group,omitempty"`
-	ID            *uuid.UUID               `json:"id,omitempty"`
-	InternalOrder *InternalOrder           `json:"internalOrder,omitempty"`
-	CustomerOrder *CustomerOrder           `json:"customerOrder,omitempty"`
-	Meta          *Meta                    `json:"meta,omitempty"`
-	Name          *string                  `json:"name,omitempty"`
-	Organization  *Organization            `json:"organization,omitempty"`
-	Applicable    *bool                    `json:"applicable,omitempty"`
-	Overhead      *Overhead                `json:"overhead,omitempty"`
-	Owner         *Employee                `json:"owner,omitempty"`
-	Positions     *Positions[MovePosition] `json:"positions,omitempty"`
-	Printed       *bool                    `json:"printed,omitempty"`
-	Project       *Project                 `json:"project,omitempty"`
-	Published     *bool                    `json:"published,omitempty"`
-	Rate          *Rate                    `json:"rate,omitempty"`
-	Shared        *bool                    `json:"shared,omitempty"`
-	SourceStore   *Store                   `json:"sourceStore,omitempty"`
-	State         *State                   `json:"state,omitempty"`
-	Sum           *float64                 `json:"sum,omitempty"`
-	SyncID        *uuid.UUID               `json:"syncId,omitempty"`
-	Supply        *Supply                  `json:"supply,omitempty"`
-	TargetStore   *Store                   `json:"targetStore,omitempty"`
-	Attributes    Slice[AttributeValue]    `json:"attributes,omitempty"`
+	Moment        *Timestamp                `json:"moment,omitempty"`
+	Updated       *Timestamp                `json:"updated,omitempty"`
+	AccountID     *uuid.UUID                `json:"accountId,omitempty"`
+	Code          *string                   `json:"code,omitempty"`
+	Created       *Timestamp                `json:"created,omitempty"`
+	Deleted       *Timestamp                `json:"deleted,omitempty"`
+	Demand        *Demand                   `json:"demand,omitempty"`
+	Description   *string                   `json:"description,omitempty"`
+	ExternalCode  *string                   `json:"externalCode,omitempty"`
+	Files         *MetaArray[File]          `json:"files,omitempty"`
+	Group         *Group                    `json:"group,omitempty"`
+	ID            *uuid.UUID                `json:"id,omitempty"`
+	InternalOrder *NullValue[InternalOrder] `json:"internalOrder,omitempty"`
+	CustomerOrder *NullValue[CustomerOrder] `json:"customerOrder,omitempty"`
+	Meta          *Meta                     `json:"meta,omitempty"`
+	Name          *string                   `json:"name,omitempty"`
+	Organization  *Organization             `json:"organization,omitempty"`
+	Applicable    *bool                     `json:"applicable,omitempty"`
+	Overhead      *Overhead                 `json:"overhead,omitempty"`
+	Owner         *Employee                 `json:"owner,omitempty"`
+	Positions     *Positions[MovePosition]  `json:"positions,omitempty"`
+	Printed       *bool                     `json:"printed,omitempty"`
+	Project       *NullValue[Project]       `json:"project,omitempty"`
+	Published     *bool                     `json:"published,omitempty"`
+	Rate          *Rate                     `json:"rate,omitempty"`
+	Shared        *bool                     `json:"shared,omitempty"`
+	SourceStore   *Store                    `json:"sourceStore,omitempty"`
+	State         *NullValue[State]         `json:"state,omitempty"`
+	Sum           *float64                  `json:"sum,omitempty"`
+	SyncID        *uuid.UUID                `json:"syncId,omitempty"`
+	Supply        *Supply                   `json:"supply,omitempty"`
+	TargetStore   *Store                    `json:"targetStore,omitempty"`
+	Attributes    Slice[AttributeValue]     `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (move Move) Clean() *Move {
 	return &Move{Meta: move.Meta}
 }
@@ -94,11 +95,11 @@ func (move Move) GetID() uuid.UUID {
 }
 
 func (move Move) GetInternalOrder() InternalOrder {
-	return Deref(move.InternalOrder)
+	return move.InternalOrder.Get()
 }
 
 func (move Move) GetCustomerOrder() CustomerOrder {
-	return Deref(move.CustomerOrder)
+	return move.CustomerOrder.Get()
 }
 
 func (move Move) GetMeta() Meta {
@@ -134,7 +135,7 @@ func (move Move) GetPrinted() bool {
 }
 
 func (move Move) GetProject() Project {
-	return Deref(move.Project)
+	return move.Project.Get()
 }
 
 func (move Move) GetPublished() bool {
@@ -154,7 +155,7 @@ func (move Move) GetSourceStore() Store {
 }
 
 func (move Move) GetState() State {
-	return Deref(move.State)
+	return move.State.Get()
 }
 
 func (move Move) GetSum() float64 {
@@ -212,12 +213,22 @@ func (move *Move) SetGroup(group *Group) *Move {
 }
 
 func (move *Move) SetInternalOrder(internalOrder *InternalOrder) *Move {
-	move.InternalOrder = internalOrder.Clean()
+	move.InternalOrder = NewNullValueWith(internalOrder.Clean())
+	return move
+}
+
+func (move *Move) SetNullInternalOrder() *Move {
+	move.InternalOrder = NewNullValue[InternalOrder]()
 	return move
 }
 
 func (move *Move) SetCustomerOrder(customerOrder *CustomerOrder) *Move {
-	move.CustomerOrder = customerOrder.Clean()
+	move.CustomerOrder = NewNullValueWith(customerOrder.Clean())
+	return move
+}
+
+func (move *Move) SetNullCustomerOrder() *Move {
+	move.CustomerOrder = NewNullValue[CustomerOrder]()
 	return move
 }
 
@@ -257,7 +268,12 @@ func (move *Move) SetPositions(positions *Positions[MovePosition]) *Move {
 }
 
 func (move *Move) SetProject(project *Project) *Move {
-	move.Project = project.Clean()
+	move.Project = NewNullValueWith(project.Clean())
+	return move
+}
+
+func (move *Move) SetNullProject() *Move {
+	move.Project = NewNullValue[Project]()
 	return move
 }
 
@@ -277,7 +293,12 @@ func (move *Move) SetSourceStore(sourceStore *Store) *Move {
 }
 
 func (move *Move) SetState(state *State) *Move {
-	move.State = state.Clean()
+	move.State = NewNullValueWith(state.Clean())
+	return move
+}
+
+func (move *Move) SetNullState() *Move {
+	move.State = NewNullValue[State]()
 	return move
 }
 

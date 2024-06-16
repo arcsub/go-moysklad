@@ -10,43 +10,44 @@ import (
 // Ключевое слово: paymentin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vhodqschij-platezh
 type PaymentIn struct {
-	Meta                *Meta                 `json:"meta,omitempty"`
-	Applicable          *bool                 `json:"applicable,omitempty"`
-	AgentAccount        *AgentAccount         `json:"agentAccount,omitempty"`
-	Moment              *Timestamp            `json:"moment,omitempty"`
-	Operations          Operations            `json:"operations,omitempty"`
-	Name                *string               `json:"name,omitempty"`
-	Contract            *Contract             `json:"contract,omitempty"`
-	Created             *Timestamp            `json:"created,omitempty"`
-	Deleted             *Timestamp            `json:"deleted,omitempty"`
-	Description         *string               `json:"description,omitempty"`
-	ExternalCode        *string               `json:"externalCode,omitempty"`
-	Files               *MetaArray[File]      `json:"files,omitempty"`
-	Group               *Group                `json:"group,omitempty"`
-	ID                  *uuid.UUID            `json:"id,omitempty"`
-	IncomingDate        *Timestamp            `json:"incomingDate,omitempty"`
-	IncomingNumber      *string               `json:"incomingNumber,omitempty"`
-	FactureOut          *FactureOut           `json:"factureOut,omitempty"`
-	Agent               *Counterparty         `json:"agent,omitempty"`
-	Code                *string               `json:"code,omitempty"`
-	Organization        *Organization         `json:"organization,omitempty"`
-	OrganizationAccount *AgentAccount         `json:"organizationAccount,omitempty"`
-	Owner               *Employee             `json:"owner,omitempty"`
-	PaymentPurpose      *string               `json:"paymentPurpose,omitempty"`
-	Printed             *bool                 `json:"printed,omitempty"`
-	Project             *Project              `json:"project,omitempty"`
-	Published           *bool                 `json:"published,omitempty"`
-	Rate                *Rate                 `json:"rate,omitempty"`
-	Shared              *bool                 `json:"shared,omitempty"`
-	SalesChannel        *SalesChannel         `json:"salesChannel,omitempty"`
-	State               *State                `json:"state,omitempty"`
-	Sum                 *float64              `json:"sum,omitempty"`
-	SyncID              *uuid.UUID            `json:"syncId,omitempty"`
-	Updated             *Timestamp            `json:"updated,omitempty"`
-	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
-	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
+	Meta                *Meta                    `json:"meta,omitempty"`
+	Applicable          *bool                    `json:"applicable,omitempty"`
+	AgentAccount        *AgentAccount            `json:"agentAccount,omitempty"`
+	Moment              *Timestamp               `json:"moment,omitempty"`
+	Operations          Operations               `json:"operations,omitempty"`
+	Name                *string                  `json:"name,omitempty"`
+	Contract            *NullValue[Contract]     `json:"contract,omitempty"`
+	Created             *Timestamp               `json:"created,omitempty"`
+	Deleted             *Timestamp               `json:"deleted,omitempty"`
+	Description         *string                  `json:"description,omitempty"`
+	ExternalCode        *string                  `json:"externalCode,omitempty"`
+	Files               *MetaArray[File]         `json:"files,omitempty"`
+	Group               *Group                   `json:"group,omitempty"`
+	ID                  *uuid.UUID               `json:"id,omitempty"`
+	IncomingDate        *Timestamp               `json:"incomingDate,omitempty"`
+	IncomingNumber      *string                  `json:"incomingNumber,omitempty"`
+	FactureOut          *FactureOut              `json:"factureOut,omitempty"`
+	Agent               *Counterparty            `json:"agent,omitempty"`
+	Code                *string                  `json:"code,omitempty"`
+	Organization        *Organization            `json:"organization,omitempty"`
+	OrganizationAccount *AgentAccount            `json:"organizationAccount,omitempty"`
+	Owner               *Employee                `json:"owner,omitempty"`
+	PaymentPurpose      *string                  `json:"paymentPurpose,omitempty"`
+	Printed             *bool                    `json:"printed,omitempty"`
+	Project             *NullValue[Project]      `json:"project,omitempty"`
+	Published           *bool                    `json:"published,omitempty"`
+	Rate                *Rate                    `json:"rate,omitempty"`
+	Shared              *bool                    `json:"shared,omitempty"`
+	SalesChannel        *NullValue[SalesChannel] `json:"salesChannel,omitempty"`
+	State               *NullValue[State]        `json:"state,omitempty"`
+	Sum                 *float64                 `json:"sum,omitempty"`
+	SyncID              *uuid.UUID               `json:"syncId,omitempty"`
+	Updated             *Timestamp               `json:"updated,omitempty"`
+	AccountID           *uuid.UUID               `json:"accountId,omitempty"`
+	Attributes          Slice[AttributeValue]    `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (paymentIn PaymentIn) Clean() *PaymentIn {
 	return &PaymentIn{Meta: paymentIn.Meta}
 }
@@ -76,7 +77,7 @@ func (paymentIn PaymentIn) GetName() string {
 }
 
 func (paymentIn PaymentIn) GetContract() Contract {
-	return Deref(paymentIn.Contract)
+	return paymentIn.Contract.Get()
 }
 
 func (paymentIn PaymentIn) GetCreated() Timestamp {
@@ -148,7 +149,7 @@ func (paymentIn PaymentIn) GetPrinted() bool {
 }
 
 func (paymentIn PaymentIn) GetProject() Project {
-	return Deref(paymentIn.Project)
+	return paymentIn.Project.Get()
 }
 
 func (paymentIn PaymentIn) GetPublished() bool {
@@ -164,11 +165,11 @@ func (paymentIn PaymentIn) GetShared() bool {
 }
 
 func (paymentIn PaymentIn) GetSalesChannel() SalesChannel {
-	return Deref(paymentIn.SalesChannel)
+	return paymentIn.SalesChannel.Get()
 }
 
 func (paymentIn PaymentIn) GetState() State {
-	return Deref(paymentIn.State)
+	return paymentIn.State.Get()
 }
 
 func (paymentIn PaymentIn) GetSum() float64 {
@@ -222,7 +223,12 @@ func (paymentIn *PaymentIn) SetName(name string) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetContract(contract *Contract) *PaymentIn {
-	paymentIn.Contract = contract.Clean()
+	paymentIn.Contract = NewNullValueWith(contract.Clean())
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetNullContract() *PaymentIn {
+	paymentIn.Contract = NewNullValue[Contract]()
 	return paymentIn
 }
 
@@ -292,7 +298,12 @@ func (paymentIn *PaymentIn) SetPaymentPurpose(paymentPurpose string) *PaymentIn 
 }
 
 func (paymentIn *PaymentIn) SetProject(project *Project) *PaymentIn {
-	paymentIn.Project = project.Clean()
+	paymentIn.Project = NewNullValueWith(project.Clean())
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetNullProject() *PaymentIn {
+	paymentIn.Project = NewNullValue[Project]()
 	return paymentIn
 }
 
@@ -307,12 +318,22 @@ func (paymentIn *PaymentIn) SetShared(shared bool) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetSalesChannel(salesChannel *SalesChannel) *PaymentIn {
-	paymentIn.SalesChannel = salesChannel.Clean()
+	paymentIn.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetNullSalesChannel() *PaymentIn {
+	paymentIn.SalesChannel = NewNullValue[SalesChannel]()
 	return paymentIn
 }
 
 func (paymentIn *PaymentIn) SetState(state *State) *PaymentIn {
-	paymentIn.State = state.Clean()
+	paymentIn.State = NewNullValueWith(state.Clean())
+	return paymentIn
+}
+
+func (paymentIn *PaymentIn) SetNullState() *PaymentIn {
+	paymentIn.State = NewNullValue[State]()
 	return paymentIn
 }
 

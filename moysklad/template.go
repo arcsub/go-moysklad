@@ -177,8 +177,8 @@ type PrintLabelArgSalePrice struct {
 // Аргументы: организация, тип цен, шаблон и кол-во ценников
 func NewPrintLabelArg(organization *Organization, priceType *PriceType, template Templater, count int) *PrintLabelArg {
 	return &PrintLabelArg{
-		Organization: MetaWrapper{Meta: Deref(organization.Meta)},
-		SalePrice:    PrintLabelArgSalePrice{PriceType: MetaWrapper{Meta: Deref(priceType.Meta)}},
+		Organization: MetaWrapper{Meta: organization.GetMeta()},
+		SalePrice:    PrintLabelArgSalePrice{PriceType: MetaWrapper{Meta: priceType.GetMeta()}},
 		Template:     MetaWrapper{Meta: template.GetMeta()},
 		Count:        count,
 	}

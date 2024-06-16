@@ -32,6 +32,7 @@ type Variant struct {
 	Packs              Slice[VariantPack]    `json:"packs,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (variant Variant) Clean() *Variant {
 	return &Variant{Meta: variant.Meta}
 }

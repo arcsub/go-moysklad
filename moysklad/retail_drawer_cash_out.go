@@ -31,13 +31,14 @@ type RetailDrawerCashOut struct {
 	Published    *bool                 `json:"published,omitempty"`
 	Rate         *Rate                 `json:"rate,omitempty"`
 	Shared       *bool                 `json:"shared,omitempty"`
-	State        *State                `json:"state,omitempty"`
+	State        *NullValue[State]     `json:"state,omitempty"`
 	Sum          *float64              `json:"sum,omitempty"`
 	SyncID       *uuid.UUID            `json:"syncId,omitempty"`
 	Updated      *Timestamp            `json:"updated,omitempty"`
 	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailDrawerCashOut RetailDrawerCashOut) Clean() *RetailDrawerCashOut {
 	return &RetailDrawerCashOut{Meta: retailDrawerCashOut.Meta}
 }
@@ -127,7 +128,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetShared() bool {
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetState() State {
-	return Deref(retailDrawerCashOut.State)
+	return retailDrawerCashOut.State.Get()
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetSum() float64 {
@@ -222,7 +223,12 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetShared(shared bool) *RetailDr
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetState(state *State) *RetailDrawerCashOut {
-	retailDrawerCashOut.State = state.Clean()
+	retailDrawerCashOut.State = NewNullValueWith(state.Clean())
+	return retailDrawerCashOut
+}
+
+func (retailDrawerCashOut *RetailDrawerCashOut) SetNullState() *RetailDrawerCashOut {
+	retailDrawerCashOut.State = NewNullValue[State]()
 	return retailDrawerCashOut
 }
 
