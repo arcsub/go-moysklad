@@ -530,7 +530,7 @@ type CommissionReportOutService interface {
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
-	//endpointTemplate[CommissionReportOut]
+	Template(ctx context.Context) (*CommissionReportOut, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)

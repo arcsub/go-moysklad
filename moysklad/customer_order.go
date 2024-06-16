@@ -631,6 +631,7 @@ type customerOrderService struct {
 	endpointNamedFilter
 	endpointDeleteMany[CustomerOrder]
 	endpointTrash
+	endpointTemplate[CustomerOrder]
 }
 
 // CustomerOrderService
@@ -643,7 +644,7 @@ type CustomerOrderService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CustomerOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)
-	//endpointTemplate[CustomerOrder]
+	Template(ctx context.Context) (*CustomerOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CustomerOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CustomerOrderPosition, *resty.Response, error)
@@ -704,6 +705,7 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointFiles:            endpointFiles{e},
 		endpointPrintTemplates:   endpointPrintTemplates{e},
 		endpointSyncID:           endpointSyncID[CustomerOrder]{e},
+		endpointTemplate:         endpointTemplate[CustomerOrder]{},
 	}
 }
 

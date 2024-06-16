@@ -390,7 +390,7 @@ type PaymentInService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
-	//endpointTemplate[PaymentIn]
+	Template(ctx context.Context) (*PaymentIn, *resty.Response, error)
 	//endpointTemplateBasedOn[PaymentIn, PaymentInTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

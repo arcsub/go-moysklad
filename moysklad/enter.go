@@ -412,7 +412,7 @@ type EnterService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Enter, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, enter *Enter, params ...*Params) (*Enter, *resty.Response, error)
-	//endpointTemplate[Enter]
+	Template(ctx context.Context) (*Enter, *resty.Response, error)
 	//endpointTemplateBasedOn[Enter, EnterTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[EnterPosition], *resty.Response, error)

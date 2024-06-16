@@ -418,7 +418,7 @@ type InternalOrderService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InternalOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
-	//endpointTemplate[InternalOrder]
+	Template(ctx context.Context) (*InternalOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InternalOrderPosition, *resty.Response, error)

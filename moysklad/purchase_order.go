@@ -557,7 +557,7 @@ type PurchaseOrderService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, purchaseOrder *PurchaseOrder, params ...*Params) (*PurchaseOrder, *resty.Response, error)
-	//endpointTemplate[PurchaseOrder]
+	Template(ctx context.Context) (*PurchaseOrder, *resty.Response, error)
 	//endpointTemplateBasedOn[PurchaseOrder, PurchaseOrderTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[PurchaseOrderPosition], *resty.Response, error)

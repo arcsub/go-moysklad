@@ -687,7 +687,7 @@ type DemandService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Demand, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
-	//endpointTemplate[Demand]
+	Template(ctx context.Context) (*Demand, *resty.Response, error)
 	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[DemandPosition], *resty.Response, error)

@@ -25,7 +25,7 @@ type mainService[E any, P any, M any, S any] struct {
 	endpointAudit
 	endpointPrintLabel
 	endpointPositions[P]
-	//endpointTemplate[E]
+	endpointTemplate[E]
 	endpointPublication
 	endpointSettings[S]
 	endpointGetOneAsync[E]
@@ -64,6 +64,7 @@ func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M
 		endpointAccounts:         endpointAccounts{e},
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
+		endpointTemplate:         endpointTemplate[E]{e},
 	}
 }
 
@@ -123,7 +124,7 @@ func (endpoint *endpointMetadata[T]) GetMetadata(ctx context.Context) (*T, *rest
 	return NewRequestBuilder[T](endpoint.client, path).Get(ctx)
 }
 
-type endpointTemplate[T MetaTyper] struct{ Endpoint }
+type endpointTemplate[T any] struct{ Endpoint }
 
 // Template Получить предзаполненный стандартными полями объект.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-obschie-swedeniq-shablony-dokumentow

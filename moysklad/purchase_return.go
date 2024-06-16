@@ -527,7 +527,7 @@ type PurchaseReturnService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
-	//endpointTemplate[PurchaseReturn]
+	Template(ctx context.Context) (*PurchaseReturn, *resty.Response, error)
 	//endpointTemplateBasedOn[PurchaseReturn, PurchaseReturnTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[PurchaseReturnPosition], *resty.Response, error)

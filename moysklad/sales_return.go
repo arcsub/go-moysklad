@@ -559,7 +559,7 @@ type SalesReturnService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SalesReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
-	//endpointTemplate[SalesReturn]
+	Template(ctx context.Context) (*SalesReturn, *resty.Response, error)
 	//endpointTemplateBasedOn[SalesReturn, SalesReturnTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[SalesReturnPosition], *resty.Response, error)

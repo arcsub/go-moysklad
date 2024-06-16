@@ -517,7 +517,7 @@ type InvoiceOutService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InvoiceOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, invoiceOut *InvoiceOut, params ...*Params) (*InvoiceOut, *resty.Response, error)
-	//endpointTemplate[InvoiceOut]
+	Template(ctx context.Context) (*InvoiceOut, *resty.Response, error)
 	//endpointTemplateBasedOn[InvoiceOut, InvoiceOutTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InvoiceOutPosition], *resty.Response, error)

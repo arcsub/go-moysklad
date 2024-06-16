@@ -424,7 +424,7 @@ type ProcessingService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Processing, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
-	//endpointTemplate[Processing]
+	Template(ctx context.Context) (*Processing, *resty.Response, error)
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
@@ -465,7 +465,7 @@ type processingService struct {
 	endpointDelete
 	endpointGetByID[Processing]
 	endpointUpdate[Processing]
-	//endpointTemplate[Processing]
+	endpointTemplate[Processing]
 	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
 	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointAttributes
@@ -492,6 +492,7 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointTrash:            endpointTrash{e},
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
+		endpointTemplate:         endpointTemplate[Processing]{},
 	}
 }
 

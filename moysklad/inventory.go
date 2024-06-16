@@ -326,7 +326,7 @@ type InventoryService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Inventory, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
-	//endpointTemplate[Inventory]
+	Template(ctx context.Context) (*Inventory, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InventoryPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InventoryPosition, *resty.Response, error)
@@ -364,7 +364,7 @@ type inventoryService struct {
 	endpointDelete
 	endpointGetByID[Inventory]
 	endpointUpdate[Inventory]
-	//endpointTemplate[Inventory]
+	endpointTemplate[Inventory]
 	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointPositions[InventoryPosition]
 	endpointAttributes
@@ -385,14 +385,14 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[Inventory]{e},
 		endpointUpdate:           endpointUpdate[Inventory]{e},
-		//endpointTemplate:         endpointTemplate[Inventory]{e},
-		endpointMetadata:   endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
-		endpointPositions:  endpointPositions[InventoryPosition]{e},
-		endpointAttributes: endpointAttributes{e},
-		endpointSyncID:     endpointSyncID[Inventory]{e},
-		endpointTrash:      endpointTrash{e},
-		endpointStates:     endpointStates{e},
-		endpointFiles:      endpointFiles{e},
+		endpointTemplate:         endpointTemplate[Inventory]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
+		endpointPositions:        endpointPositions[InventoryPosition]{e},
+		endpointAttributes:       endpointAttributes{e},
+		endpointSyncID:           endpointSyncID[Inventory]{e},
+		endpointTrash:            endpointTrash{e},
+		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
 	}
 }
 

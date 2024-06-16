@@ -575,7 +575,7 @@ type SupplyService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Supply, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, supply *Supply, params ...*Params) (*Supply, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	//endpointTemplate[Supply]
+	Template(ctx context.Context) (*Supply, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[SupplyPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*SupplyPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *SupplyPosition, params ...*Params) (*SupplyPosition, *resty.Response, error)

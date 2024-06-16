@@ -345,6 +345,7 @@ type FactureOutService interface {
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	Template(ctx context.Context) (*FactureOut, *resty.Response, error)
 	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*FactureOut, *resty.Response, error)

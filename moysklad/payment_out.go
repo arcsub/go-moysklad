@@ -390,7 +390,7 @@ type PaymentOutService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
-	//endpointTemplate[PaymentOut]
+	Template(ctx context.Context) (*PaymentOut, *resty.Response, error)
 	//endpointTemplateBasedOn[PaymentOut, PaymentOutTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

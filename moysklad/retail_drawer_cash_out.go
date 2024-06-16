@@ -261,7 +261,7 @@ type RetailDrawerCashOutService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	//endpointTemplate[RetailDrawerCashOut]
+	Template(ctx context.Context) (*RetailDrawerCashOut, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)

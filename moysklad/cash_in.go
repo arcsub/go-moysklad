@@ -366,7 +366,7 @@ type CashInService interface {
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	//Template(ctx context.Context) (*CashIn, *resty.Response, error)
+	Template(ctx context.Context) (*CashIn, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)

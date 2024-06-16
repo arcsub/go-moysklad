@@ -537,7 +537,7 @@ type InvoiceInService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InvoiceIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
-	//endpointTemplate[InvoiceIn]
+	Template(ctx context.Context) (*InvoiceIn, *resty.Response, error)
 	//endpointTemplateBasedOn[InvoiceIn, InvoiceInTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InvoiceInPosition], *resty.Response, error)

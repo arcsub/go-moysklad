@@ -524,7 +524,7 @@ type RetailSalesReturnService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailSalesReturn *RetailSalesReturn, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
-	//endpointTemplate[RetailSalesReturn]
+	Template(ctx context.Context) (*RetailSalesReturn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[RetailSalesReturnPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*RetailSalesReturnPosition, *resty.Response, error)

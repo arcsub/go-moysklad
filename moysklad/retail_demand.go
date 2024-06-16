@@ -629,7 +629,7 @@ type RetailDemandService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDemand, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
-	//endpointTemplate[RetailDemand]
+	Template(ctx context.Context) (*RetailDemand, *resty.Response, error)
 	//endpointTemplateBasedOn[RetailDemand, RetailDemandTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[RetailDemandPosition], *resty.Response, error)

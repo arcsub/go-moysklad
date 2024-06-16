@@ -371,7 +371,7 @@ type CashOutService interface {
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	//Template(ctx context.Context) (*CashOut, *resty.Response, error)
+	Template(ctx context.Context) (*CashOut, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)

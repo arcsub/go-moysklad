@@ -442,7 +442,7 @@ type MoveService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Move, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, move *Move, params ...*Params) (*Move, *resty.Response, error)
-	//endpointTemplate[Move]
+	Template(ctx context.Context) (*Move, *resty.Response, error)
 	//endpointTemplateBasedOn[Move, MoveTemplateArg]
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[MovePosition], *resty.Response, error)
