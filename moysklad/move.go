@@ -424,14 +424,6 @@ func (movePosition MovePosition) MetaType() MetaType {
 	return MetaTypeMovePosition
 }
 
-// MoveTemplateArg
-// Документ: Перемещение (move)
-// Основание, на котором он может быть создан:
-// - Внутренний заказ (internalorder)
-//type MoveTemplateArg struct {
-//	InternalOrder *MetaWrapper `json:"internalOrder,omitempty"`
-//}
-
 // MoveService
 // Сервис для работы со перемещениями.
 type MoveService interface {

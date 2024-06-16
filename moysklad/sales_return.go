@@ -544,16 +544,6 @@ func (salesReturnPosition SalesReturnPosition) MetaType() MetaType {
 	return MetaTypeSalesReturnPosition
 }
 
-// SalesReturnTemplateArg
-// Документ: Возврат покупателя (salesreturn)
-// Основание, на котором он может быть создан:
-// - Отгрузка (demand)
-// - Розничная продажа (retaildemand)
-//type SalesReturnTemplateArg struct {
-//	Demand       *MetaWrapper `json:"demand,omitempty"`
-//	RetailDemand *MetaWrapper `json:"retailDemand,omitempty"`
-//}
-
 // SalesReturnService
 // Сервис для работы с возвратами покупателей.
 type SalesReturnService interface {

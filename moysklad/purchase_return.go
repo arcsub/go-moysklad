@@ -514,14 +514,6 @@ func (purchaseReturnPosition PurchaseReturnPosition) MetaType() MetaType {
 	return MetaTypePurchaseReturnPosition
 }
 
-// PurchaseReturnTemplateArg
-// Документ: Возврат поставщику (purchasereturn)
-// Основание, на котором он может быть создан:
-// - Приемка (supply)
-//type PurchaseReturnTemplateArg struct {
-//	Supply *MetaWrapper `json:"supply,omitempty"`
-//}
-
 // PurchaseReturnService
 // Сервис для работы с возвратами поставщикам.
 type PurchaseReturnService interface {

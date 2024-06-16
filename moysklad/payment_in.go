@@ -365,22 +365,6 @@ func (paymentIn PaymentIn) AsOperation() *Operation {
 	return &Operation{Meta: paymentIn.GetMeta()}
 }
 
-// PaymentInTemplateArg
-// Документ: Входящий платеж (paymentin)
-// Основание, на котором он может быть создан:
-// - Заказ покупателя (customerorder)
-// - Возврат поставщику (purchasereturn)
-// - Отгрузка (demand)
-// - Счет покупателю (invoiceout)
-// - Полученный отчет комиссионера (commissionreportin)
-//type PaymentInTemplateArg struct {
-//	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
-//	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
-//	Demand             *MetaWrapper `json:"demand,omitempty"`
-//	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
-//	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
-//}
-
 // PaymentInService
 // Сервис для работы с входящими платежами.
 type PaymentInService interface {

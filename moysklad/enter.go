@@ -394,14 +394,6 @@ func (enterPosition EnterPosition) MetaType() MetaType {
 	return MetaTypeEnterPosition
 }
 
-// EnterTemplateArg
-// Документ: Оприходование (enter)
-// Основание, на котором он может быть создан:
-// - Инвентаризация(inventory)
-//type EnterTemplateArg struct {
-//	Inventory *MetaWrapper `json:"inventory,omitempty"`
-//}
-
 // EnterService
 // Сервис для работы с оприходованиями.
 type EnterService interface {

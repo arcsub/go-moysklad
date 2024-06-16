@@ -544,14 +544,6 @@ func (purchaseOrderPosition PurchaseOrderPosition) MetaType() MetaType {
 	return MetaTypePurchaseOrderPosition
 }
 
-// PurchaseOrderTemplateArg
-// Документ: Заказ поставщику (purchaseorder)
-// Основание, на котором он может быть создан:
-// - Внутренний заказ (internalorder)
-//type PurchaseOrderTemplateArg struct {
-//	InternalOrder *MetaWrapper `json:"internalOrder,omitempty"`
-//}
-
 // PurchaseOrderService
 // Сервис для работы с заказами поставщикам.
 type PurchaseOrderService interface {

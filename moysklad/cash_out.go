@@ -339,22 +339,6 @@ func (cashOut CashOut) AsOperation() *Operation {
 	return &Operation{Meta: cashOut.GetMeta()}
 }
 
-// CashOutTemplateArg
-// Документ: Расходный ордер (cashout)
-// Основание, на котором он может быть создан:
-// - Возврат покупателя (salesreturn)
-// - Приемка (supply)
-// - Счет поставщика (invoicein)
-// - Заказ поставщику (purchaseorder)
-// - Выданный отчет комиссионера (commissionreportout)
-//type CashOutTemplateArg struct {
-//	SalesReturn         *MetaWrapper `json:"salesReturn,omitempty"`
-//	Supply              *MetaWrapper `json:"supply,omitempty"`
-//	InvoiceIn           *MetaWrapper `json:"invoiceIn,omitempty"`
-//	PurchaseOrder       *MetaWrapper `json:"purchaseOrder,omitempty"`
-//	CommissionReportOut *MetaWrapper `json:"commissionReportOut,omitempty"`
-//}
-
 // CashOutService cashout
 // Сервис для работы с расходными ордерами.
 type CashOutService interface {

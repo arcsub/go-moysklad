@@ -524,14 +524,6 @@ func (invoiceInPosition InvoiceInPosition) MetaType() MetaType {
 	return MetaTypeInvoicePosition
 }
 
-// InvoiceInTemplateArg
-// Документ: Счет поставщика (invoicein)
-// Основание, на котором он может быть создан:
-// - Заказ поставщику (purchaseorder)
-//type InvoiceInTemplateArg struct {
-//	PurchaseOrder *MetaWrapper `json:"purchaseOrder,omitempty"`
-//}
-
 // InvoiceInService
 // Сервис для работы со счетами поставщиков.
 type InvoiceInService interface {

@@ -504,17 +504,6 @@ func (invoiceOutPosition InvoiceOutPosition) MetaType() MetaType {
 	return MetaTypeInvoicePosition
 }
 
-// InvoiceOutTemplateArg
-// Документ: Cчет покупателю (invoiceout)
-// Основание, на котором он может быть создан:
-// - Заказ покупателя (customerorder)
-// - Отгрузка (demand)
-type InvoiceOutTemplateArg interface {
-	CustomerOrder | Demand
-
-	//CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
-}
-
 // InvoiceOutService
 // Сервис для работы со счетами покупателей.
 type InvoiceOutService interface {

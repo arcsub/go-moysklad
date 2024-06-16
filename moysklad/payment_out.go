@@ -365,22 +365,6 @@ func (paymentOut PaymentOut) AsOperation() *Operation {
 	return &Operation{Meta: paymentOut.GetMeta()}
 }
 
-// PaymentOutTemplateArg
-// Документ: Исходящий платеж (paymentout)
-// Основание, на котором он может быть создан:
-// - Возврат покупателя (salesreturn)
-// - Приемка (supply)
-// - Счет поставщика (invoicein)
-// - Заказ поставщику (purchaseorder)
-// - Выданный отчет комиссионера (commissionreportout)
-//type PaymentOutTemplateArg struct {
-//	SalesReturn         *MetaWrapper `json:"salesReturn,omitempty"`
-//	Supply              *MetaWrapper `json:"supply,omitempty"`
-//	InvoiceIn           *MetaWrapper `json:"invoiceIn,omitempty"`
-//	PurchaseOrder       *MetaWrapper `json:"purchaseOrder,omitempty"`
-//	CommissionReportOut *MetaWrapper `json:"commissionReportOut,omitempty"`
-//}
-
 // PaymentOutService
 // Сервис для работы с исходящими платежами.
 type PaymentOutService interface {

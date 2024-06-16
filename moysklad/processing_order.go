@@ -364,14 +364,6 @@ func (processingOrderPosition ProcessingOrderPosition) MetaType() MetaType {
 	return MetaTypeProcessingOrderPosition
 }
 
-// ProcessingOrderTemplateArg
-// Документ: Заказ на производство (processingorder)
-// Основание, на котором он может быть создан:
-// - Техкарта (processingplan)
-//type ProcessingOrderTemplateArg struct {
-//	ProcessingPlan *MetaWrapper `json:"processingPlan,omitempty"`
-//}
-
 // ProcessingOrderService
 // Сервис для работы с заказами на производство.
 type ProcessingOrderService interface {
