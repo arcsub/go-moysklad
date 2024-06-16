@@ -307,6 +307,21 @@ func (service Service) MetaType() MetaType {
 	return MetaTypeService
 }
 
+// Update shortcut
+func (service Service) Update(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
+	return client.Entity().Service().Update(ctx, service.GetID(), &service, params...)
+}
+
+// Create shortcut
+func (service Service) Create(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
+	return client.Entity().Service().Create(ctx, &service, params...)
+}
+
+// Delete shortcut
+func (service Service) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Service().Delete(ctx, service.GetID())
+}
+
 // ServiceService
 // Сервис для работы с услугами.
 type ServiceService interface {

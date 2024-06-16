@@ -400,6 +400,21 @@ func (invoiceOut InvoiceOut) MetaType() MetaType {
 	return MetaTypeInvoiceOut
 }
 
+// Update shortcut
+func (invoiceOut InvoiceOut) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
+	return client.Entity().InvoiceOut().Update(ctx, invoiceOut.GetID(), &invoiceOut, params...)
+}
+
+// Create shortcut
+func (invoiceOut InvoiceOut) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
+	return client.Entity().InvoiceOut().Create(ctx, &invoiceOut, params...)
+}
+
+// Delete shortcut
+func (invoiceOut InvoiceOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().InvoiceOut().Delete(ctx, invoiceOut.GetID())
+}
+
 // InvoiceOutPosition Позиция Счета покупателю.
 // Ключевое слово: invoiceposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-pokupatelu-scheta-pokupatelqm-pozicii-scheta-pokupatelu

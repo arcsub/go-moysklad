@@ -370,6 +370,21 @@ func (paymentOut PaymentOut) AsOperation() *Operation {
 	return &Operation{Meta: paymentOut.GetMeta()}
 }
 
+// Update shortcut
+func (paymentOut PaymentOut) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
+	return client.Entity().PaymentOut().Update(ctx, paymentOut.GetID(), &paymentOut, params...)
+}
+
+// Create shortcut
+func (paymentOut PaymentOut) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
+	return client.Entity().PaymentOut().Create(ctx, &paymentOut, params...)
+}
+
+// Delete shortcut
+func (paymentOut PaymentOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().PaymentOut().Delete(ctx, paymentOut.GetID())
+}
+
 // PaymentOutService
 // Сервис для работы с исходящими платежами.
 type PaymentOutService interface {

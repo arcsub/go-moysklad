@@ -472,6 +472,21 @@ func (product Product) MetaType() MetaType {
 	return MetaTypeProduct
 }
 
+// Update shortcut
+func (product Product) Update(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+	return client.Entity().Product().Update(ctx, product.GetID(), &product, params...)
+}
+
+// Create shortcut
+func (product Product) Create(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+	return client.Entity().Product().Create(ctx, &product, params...)
+}
+
+// Delete shortcut
+func (product Product) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Product().Delete(ctx, product.GetID())
+}
+
 // Alcoholic Объект, содержащий поля алкогольной продукции
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-ob-ekt-soderzhaschij-polq-alkogol-noj-produkcii
 type Alcoholic struct {

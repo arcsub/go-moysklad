@@ -339,6 +339,21 @@ func (cashIn CashIn) AsOperation() *Operation {
 	return &Operation{Meta: cashIn.GetMeta()}
 }
 
+// Update shortcut
+func (cashIn CashIn) Update(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+	return client.Entity().CashIn().Update(ctx, cashIn.GetID(), &cashIn, params...)
+}
+
+// Create shortcut
+func (cashIn CashIn) Create(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+	return client.Entity().CashIn().Create(ctx, &cashIn, params...)
+}
+
+// Delete shortcut
+func (cashIn CashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CashIn().Delete(ctx, cashIn.GetID())
+}
+
 // CashInService
 // Сервис для работы с приходными ордерами.
 type CashInService interface {

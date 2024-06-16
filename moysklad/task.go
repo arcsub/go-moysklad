@@ -30,13 +30,28 @@ type Task struct {
 	Notes             Slice[TaskNote]  `json:"notes,omitempty"`
 }
 
-func (t Task) String() string {
-	return Stringify(t)
+func (task Task) String() string {
+	return Stringify(task)
 }
 
-func (t Task) MetaType() MetaType {
+func (task Task) MetaType() MetaType {
 	return MetaTypeTask
 }
+
+//// Update shortcut
+//func (task Task) Update(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+//	return client.Entity().Task().Update(ctx, task.GetID(), &task, params...)
+//}
+//
+//// Create shortcut
+//func (task Task) Create(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+//	return client.Entity().Task().Create(ctx, &task, params...)
+//}
+//
+//// Delete shortcut
+//func (task Task) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+//	return client.Entity().Task().Delete(ctx, task.GetID())
+//}
 
 // TaskNote Комментарии задачи.
 // Ключевое слово: tasknote

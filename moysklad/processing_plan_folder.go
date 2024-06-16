@@ -135,6 +135,21 @@ func (processingPlanFolder ProcessingPlanFolder) MetaType() MetaType {
 	return MetaTypeProcessingPlanFolder
 }
 
+// Update shortcut
+func (processingPlanFolder ProcessingPlanFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
+	return client.Entity().ProcessingPlanFolder().Update(ctx, processingPlanFolder.GetID(), &processingPlanFolder, params...)
+}
+
+// Create shortcut
+func (processingPlanFolder ProcessingPlanFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
+	return client.Entity().ProcessingPlanFolder().Create(ctx, &processingPlanFolder, params...)
+}
+
+// Delete shortcut
+func (processingPlanFolder ProcessingPlanFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingPlanFolder().Delete(ctx, processingPlanFolder.GetID())
+}
+
 // ProcessingPlanFolderService
 // Сервис для работы с группами техкарт.
 type ProcessingPlanFolderService interface {

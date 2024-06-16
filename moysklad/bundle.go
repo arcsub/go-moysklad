@@ -418,6 +418,21 @@ func (bundle Bundle) MetaType() MetaType {
 	return MetaTypeBundle
 }
 
+// Update shortcut
+func (bundle Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+	return client.Entity().Bundle().Update(ctx, bundle.GetID(), &bundle, params...)
+}
+
+// Create shortcut
+func (bundle Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+	return client.Entity().Bundle().Create(ctx, &bundle, params...)
+}
+
+// Delete shortcut
+func (bundle Bundle) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Bundle().Delete(ctx, bundle.GetID())
+}
+
 // BundleOverhead Дополнительные расходы
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-atributy-wlozhennyh-suschnostej-dopolnitel-nye-rashody
 type BundleOverhead struct {

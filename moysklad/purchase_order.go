@@ -420,6 +420,21 @@ func (purchaseOrder PurchaseOrder) MetaType() MetaType {
 	return MetaTypePurchaseOrder
 }
 
+// Update shortcut
+func (purchaseOrder PurchaseOrder) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
+	return client.Entity().PurchaseOrder().Update(ctx, purchaseOrder.GetID(), &purchaseOrder, params...)
+}
+
+// Create shortcut
+func (purchaseOrder PurchaseOrder) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
+	return client.Entity().PurchaseOrder().Create(ctx, &purchaseOrder, params...)
+}
+
+// Delete shortcut
+func (purchaseOrder PurchaseOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().PurchaseOrder().Delete(ctx, purchaseOrder.GetID())
+}
+
 // PurchaseOrderPosition Позиция Заказа поставщику.
 // Ключевое слово: purchaseorderposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-postawschiku-zakazy-postawschikam-pozicii-zakaza-postawschiku

@@ -400,6 +400,21 @@ func (purchaseReturn PurchaseReturn) MetaType() MetaType {
 	return MetaTypePurchaseReturn
 }
 
+// Update shortcut
+func (purchaseReturn PurchaseReturn) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseReturn, *resty.Response, error) {
+	return client.Entity().PurchaseReturn().Update(ctx, purchaseReturn.GetID(), &purchaseReturn, params...)
+}
+
+// Create shortcut
+func (purchaseReturn PurchaseReturn) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseReturn, *resty.Response, error) {
+	return client.Entity().PurchaseReturn().Create(ctx, &purchaseReturn, params...)
+}
+
+// Delete shortcut
+func (purchaseReturn PurchaseReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().PurchaseReturn().Delete(ctx, purchaseReturn.GetID())
+}
+
 // PurchaseReturnPosition Позиция Возврата поставщику.
 // Ключевое слово: purchasereturnposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-postawschiku-vozwraty-postawschikam-pozicii-vozwrata-postawschiku

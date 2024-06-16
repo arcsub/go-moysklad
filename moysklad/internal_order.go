@@ -329,6 +329,21 @@ func (internalOrder InternalOrder) MetaType() MetaType {
 	return MetaTypeInternalOrder
 }
 
+// Update shortcut
+func (internalOrder InternalOrder) Update(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+	return client.Entity().InternalOrder().Update(ctx, internalOrder.GetID(), &internalOrder, params...)
+}
+
+// Create shortcut
+func (internalOrder InternalOrder) Create(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+	return client.Entity().InternalOrder().Create(ctx, &internalOrder, params...)
+}
+
+// Delete shortcut
+func (internalOrder InternalOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().InternalOrder().Delete(ctx, internalOrder.GetID())
+}
+
 // InternalOrderPosition Позиция Внутреннего заказа.
 // Ключевое слово: internalorderposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vnutrennij-zakaz-vnutrennie-zakazy-pozicii-vnutrennego-zakaza

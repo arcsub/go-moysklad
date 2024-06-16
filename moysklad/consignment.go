@@ -152,6 +152,21 @@ func (consignment Consignment) MetaType() MetaType {
 	return MetaTypeConsignment
 }
 
+// Update shortcut
+func (consignment Consignment) Update(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
+	return client.Entity().Consignment().Update(ctx, consignment.GetID(), &consignment, params...)
+}
+
+// Create shortcut
+func (consignment Consignment) Create(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
+	return client.Entity().Consignment().Create(ctx, &consignment, params...)
+}
+
+// Delete shortcut
+func (consignment Consignment) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Consignment().Delete(ctx, consignment.GetID())
+}
+
 // ConsignmentService
 // Сервис для работы с сериями.
 type ConsignmentService interface {

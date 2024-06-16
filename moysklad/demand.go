@@ -525,6 +525,21 @@ func (demand Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
 
+// Update shortcut
+func (demand Demand) Update(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+	return client.Entity().Demand().Update(ctx, demand.GetID(), &demand, params...)
+}
+
+// Create shortcut
+func (demand Demand) Create(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+	return client.Entity().Demand().Create(ctx, &demand, params...)
+}
+
+// Delete shortcut
+func (demand Demand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Demand().Delete(ctx, demand.GetID())
+}
+
 // DemandPosition Позиция Отгрузки
 // Ключевое слово: demandposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-otgruzka-otgruzki-pozicii-otgruzki

@@ -140,6 +140,21 @@ func (project Project) MetaType() MetaType {
 	return MetaTypeProject
 }
 
+// Update shortcut
+func (project Project) Update(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+	return client.Entity().Project().Update(ctx, project.GetID(), &project, params...)
+}
+
+// Create shortcut
+func (project Project) Create(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+	return client.Entity().Project().Create(ctx, &project, params...)
+}
+
+// Delete shortcut
+func (project Project) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Project().Delete(ctx, project.GetID())
+}
+
 // ProjectService
 // Сервис для работы с проектами.
 type ProjectService interface {

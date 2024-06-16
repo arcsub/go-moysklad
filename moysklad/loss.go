@@ -280,6 +280,21 @@ func (loss Loss) MetaType() MetaType {
 	return MetaTypeLoss
 }
 
+// Update shortcut
+func (loss Loss) Update(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
+	return client.Entity().Loss().Update(ctx, loss.GetID(), &loss, params...)
+}
+
+// Create shortcut
+func (loss Loss) Create(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
+	return client.Entity().Loss().Create(ctx, &loss, params...)
+}
+
+// Delete shortcut
+func (loss Loss) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Loss().Delete(ctx, loss.GetID())
+}
+
 // LossPosition Позиция Списания.
 // Ключевое слово: lossposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-spisanie-spisaniq-pozicii-spisaniq

@@ -240,6 +240,21 @@ func (priceList PriceList) MetaType() MetaType {
 	return MetaTypePriceList
 }
 
+// Update shortcut
+func (priceList PriceList) Update(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+	return client.Entity().PriceList().Update(ctx, priceList.GetID(), &priceList, params...)
+}
+
+// Create shortcut
+func (priceList PriceList) Create(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+	return client.Entity().PriceList().Create(ctx, &priceList, params...)
+}
+
+// Delete shortcut
+func (priceList PriceList) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().PriceList().Delete(ctx, priceList.GetID())
+}
+
 // PriceListCell Ячейка прайс листа.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-yachejki
 type PriceListCell struct {

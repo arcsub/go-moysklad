@@ -51,6 +51,21 @@ func (customEntity CustomEntity) MetaType() MetaType {
 	return MetaTypeCustomEntity
 }
 
+// Update shortcut
+func (customEntity CustomEntity) Update(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+	return client.Entity().CustomEntity().Update(ctx, customEntity.GetID(), &customEntity, params...)
+}
+
+// Create shortcut
+func (customEntity CustomEntity) Create(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+	return client.Entity().CustomEntity().Create(ctx, &customEntity, params...)
+}
+
+// Delete shortcut
+func (customEntity CustomEntity) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CustomEntity().Delete(ctx, customEntity.GetID())
+}
+
 // CustomEntityElement Элемент Пользовательского справочника.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skij-sprawochnik-jelementy-pol-zowatel-skogo-sprawochnika
 type CustomEntityElement struct {

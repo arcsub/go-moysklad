@@ -60,6 +60,21 @@ func (role Role) MetaType() MetaType {
 	return MetaTypeRole
 }
 
+// Update shortcut
+func (role Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+	return client.Entity().Role().Update(ctx, role.GetID(), &role, params...)
+}
+
+// Create shortcut
+func (role Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+	return client.Entity().Role().Create(ctx, &role, params...)
+}
+
+// Delete shortcut
+func (role Role) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Role().Delete(ctx, role.GetID())
+}
+
 // AdminRole Роль администратора
 type AdminRole struct {
 	Meta Meta `json:"meta,omitempty"`

@@ -208,6 +208,21 @@ func (variant Variant) MetaType() MetaType {
 	return MetaTypeVariant
 }
 
+// Update shortcut
+func (variant Variant) Update(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+	return client.Entity().Variant().Update(ctx, variant.GetID(), &variant, params...)
+}
+
+// Create shortcut
+func (variant Variant) Create(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+	return client.Entity().Variant().Create(ctx, &variant, params...)
+}
+
+// Delete shortcut
+func (variant Variant) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Variant().Delete(ctx, variant.GetID())
+}
+
 // VariantPack Упаковка модификации.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-upakowki-modifikacii
 type VariantPack struct {

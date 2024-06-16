@@ -120,6 +120,21 @@ func (country Country) MetaType() MetaType {
 	return MetaTypeCountry
 }
 
+// Update shortcut
+func (country Country) Update(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+	return client.Entity().Country().Update(ctx, country.GetID(), &country, params...)
+}
+
+// Create shortcut
+func (country Country) Create(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+	return client.Entity().Country().Create(ctx, &country, params...)
+}
+
+// Delete shortcut
+func (country Country) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Country().Delete(ctx, country.GetID())
+}
+
 // CountryService
 // Сервис для работы со странами.
 type CountryService interface {

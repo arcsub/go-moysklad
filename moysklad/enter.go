@@ -280,6 +280,21 @@ func (enter Enter) MetaType() MetaType {
 	return MetaTypeEnter
 }
 
+// Update shortcut
+func (enter Enter) Update(ctx context.Context, client *Client, params ...*Params) (*Enter, *resty.Response, error) {
+	return client.Entity().Enter().Update(ctx, enter.GetID(), &enter, params...)
+}
+
+// Create shortcut
+func (enter Enter) Create(ctx context.Context, client *Client, params ...*Params) (*Enter, *resty.Response, error) {
+	return client.Entity().Enter().Create(ctx, &enter, params...)
+}
+
+// Delete shortcut
+func (enter Enter) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Enter().Delete(ctx, enter.GetID())
+}
+
 // EnterPosition Позиция оприходования
 // Ключевое слово: enterposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-oprihodowanie-oprihodowaniq-pozicii-oprihodowaniq

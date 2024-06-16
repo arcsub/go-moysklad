@@ -281,6 +281,21 @@ func (productionTask ProductionTask) MetaType() MetaType {
 	return MetaTypeProductionTask
 }
 
+// Update shortcut
+func (productionTask ProductionTask) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+	return client.Entity().ProductionTask().Update(ctx, productionTask.GetID(), &productionTask, params...)
+}
+
+// Create shortcut
+func (productionTask ProductionTask) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+	return client.Entity().ProductionTask().Create(ctx, &productionTask, params...)
+}
+
+// Delete shortcut
+func (productionTask ProductionTask) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProductionTask().Delete(ctx, productionTask.GetID())
+}
+
 // ProductionRow Позиция производственного задания
 // Ключевое слово: productionrow
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-zadaniq-pozicii-proizwodstwennogo-zadaniq

@@ -90,6 +90,21 @@ func (expenseItem ExpenseItem) MetaType() MetaType {
 	return MetaTypeExpenseItem
 }
 
+// Update shortcut
+func (expenseItem ExpenseItem) Update(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+	return client.Entity().ExpenseItem().Update(ctx, expenseItem.GetID(), &expenseItem, params...)
+}
+
+// Create shortcut
+func (expenseItem ExpenseItem) Create(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+	return client.Entity().ExpenseItem().Create(ctx, &expenseItem, params...)
+}
+
+// Delete shortcut
+func (expenseItem ExpenseItem) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ExpenseItem().Delete(ctx, expenseItem.GetID())
+}
+
 // ExpenseItemService
 // Сервис для работы со статьями расходов.
 type ExpenseItemService interface {

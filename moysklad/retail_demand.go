@@ -495,6 +495,21 @@ func (retailDemand RetailDemand) MetaType() MetaType {
 	return MetaTypeRetailDemand
 }
 
+// Update shortcut
+func (retailDemand RetailDemand) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+	return client.Entity().RetailDemand().Update(ctx, retailDemand.GetID(), &retailDemand, params...)
+}
+
+// Create shortcut
+func (retailDemand RetailDemand) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+	return client.Entity().RetailDemand().Create(ctx, &retailDemand, params...)
+}
+
+// Delete shortcut
+func (retailDemand RetailDemand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailDemand().Delete(ctx, retailDemand.GetID())
+}
+
 // RetailDemandPosition позиция розничной продажи.
 // Ключевое слово: demandposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-roznichnaq-prodazha-roznichnye-prodazhi-pozicii-roznichnoj-prodazhi

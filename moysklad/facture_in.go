@@ -305,6 +305,21 @@ func (factureIn FactureIn) MetaType() MetaType {
 	return MetaTypeFactureIn
 }
 
+// Update shortcut
+func (factureIn FactureIn) Update(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
+	return client.Entity().FactureIn().Update(ctx, factureIn.GetID(), &factureIn, params...)
+}
+
+// Create shortcut
+func (factureIn FactureIn) Create(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
+	return client.Entity().FactureIn().Create(ctx, &factureIn, params...)
+}
+
+// Delete shortcut
+func (factureIn FactureIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().FactureIn().Delete(ctx, factureIn.GetID())
+}
+
 // FactureInService
 // Сервис для работы со счетами-фактурами полученными.
 type FactureInService interface {

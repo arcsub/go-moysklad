@@ -191,6 +191,21 @@ func (processingPlan ProcessingPlan) MetaType() MetaType {
 	return MetaTypeProcessingPlan
 }
 
+// Update shortcut
+func (processingPlan ProcessingPlan) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+	return client.Entity().ProcessingPlan().Update(ctx, processingPlan.GetID(), &processingPlan, params...)
+}
+
+// Create shortcut
+func (processingPlan ProcessingPlan) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+	return client.Entity().ProcessingPlan().Create(ctx, &processingPlan, params...)
+}
+
+// Delete shortcut
+func (processingPlan ProcessingPlan) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingPlan().Delete(ctx, processingPlan.GetID())
+}
+
 // ProcessingPlanStages Этапы Техкарты.
 // // Ключевое слово: processingplanstages.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-jetapy-tehkarty

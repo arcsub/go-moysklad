@@ -335,6 +335,21 @@ func (factureOut FactureOut) MetaType() MetaType {
 	return MetaTypeFactureOut
 }
 
+// Update shortcut
+func (factureOut FactureOut) Update(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
+	return client.Entity().FactureOut().Update(ctx, factureOut.GetID(), &factureOut, params...)
+}
+
+// Create shortcut
+func (factureOut FactureOut) Create(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
+	return client.Entity().FactureOut().Create(ctx, &factureOut, params...)
+}
+
+// Delete shortcut
+func (factureOut FactureOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().FactureOut().Delete(ctx, factureOut.GetID())
+}
+
 // FactureOutService
 // Сервис для работы со счетами-фактурами выданными.
 type FactureOutService interface {

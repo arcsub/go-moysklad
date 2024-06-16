@@ -195,6 +195,21 @@ func (productFolder ProductFolder) MetaType() MetaType {
 	return MetaTypeProductFolder
 }
 
+// Update shortcut
+func (productFolder ProductFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+	return client.Entity().ProductFolder().Update(ctx, productFolder.GetID(), &productFolder, params...)
+}
+
+// Create shortcut
+func (productFolder ProductFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+	return client.Entity().ProductFolder().Create(ctx, &productFolder, params...)
+}
+
+// Delete shortcut
+func (productFolder ProductFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProductFolder().Delete(ctx, productFolder.GetID())
+}
+
 // ProductFolderService
 // Сервис для работы с группами товаров.
 type ProductFolderService interface {

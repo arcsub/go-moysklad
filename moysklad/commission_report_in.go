@@ -426,6 +426,21 @@ func (commissionReportIn CommissionReportIn) MetaType() MetaType {
 	return MetaTypeCommissionReportIn
 }
 
+// Update shortcut
+func (commissionReportIn CommissionReportIn) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+	return client.Entity().CommissionReportIn().Update(ctx, commissionReportIn.GetID(), &commissionReportIn, params...)
+}
+
+// Create shortcut
+func (commissionReportIn CommissionReportIn) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+	return client.Entity().CommissionReportIn().Create(ctx, &commissionReportIn, params...)
+}
+
+// Delete shortcut
+func (commissionReportIn CommissionReportIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CommissionReportIn().Delete(ctx, commissionReportIn.GetID())
+}
+
 // CommissionOverhead Прочие расходы
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-prochie-rashody
 type CommissionOverhead struct {

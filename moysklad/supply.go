@@ -420,6 +420,21 @@ func (supply Supply) MetaType() MetaType {
 	return MetaTypeSupply
 }
 
+// Update shortcut
+func (supply Supply) Update(ctx context.Context, client *Client, params ...*Params) (*Supply, *resty.Response, error) {
+	return client.Entity().Supply().Update(ctx, supply.GetID(), &supply, params...)
+}
+
+// Create shortcut
+func (supply Supply) Create(ctx context.Context, client *Client, params ...*Params) (*Supply, *resty.Response, error) {
+	return client.Entity().Supply().Create(ctx, &supply, params...)
+}
+
+// Delete shortcut
+func (supply Supply) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Supply().Delete(ctx, supply.GetID())
+}
+
 // SupplyPosition Позиция Приемки.
 // Ключевое слово: supplyposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-priemka-priemki-pozicii-priemki

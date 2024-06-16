@@ -420,6 +420,21 @@ func (invoiceIn InvoiceIn) MetaType() MetaType {
 	return MetaTypeInvoiceIn
 }
 
+// Update shortcut
+func (invoiceIn InvoiceIn) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceIn, *resty.Response, error) {
+	return client.Entity().InvoiceIn().Update(ctx, invoiceIn.GetID(), &invoiceIn, params...)
+}
+
+// Create shortcut
+func (invoiceIn InvoiceIn) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceIn, *resty.Response, error) {
+	return client.Entity().InvoiceIn().Create(ctx, &invoiceIn, params...)
+}
+
+// Delete shortcut
+func (invoiceIn InvoiceIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().InvoiceIn().Delete(ctx, invoiceIn.GetID())
+}
+
 // InvoiceInPosition Позиция Счета поставщика.
 // Ключевое слово: invoiceposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-schet-postawschika-scheta-postawschikow-pozicii-scheta-postawschika

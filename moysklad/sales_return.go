@@ -400,6 +400,21 @@ func (salesReturn SalesReturn) MetaType() MetaType {
 	return MetaTypeSalesReturn
 }
 
+// Update shortcut
+func (salesReturn SalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+	return client.Entity().SalesReturn().Update(ctx, salesReturn.GetID(), &salesReturn, params...)
+}
+
+// Create shortcut
+func (salesReturn SalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+	return client.Entity().SalesReturn().Create(ctx, &salesReturn, params...)
+}
+
+// Delete shortcut
+func (salesReturn SalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().SalesReturn().Delete(ctx, salesReturn.GetID())
+}
+
 // SalesReturnPosition Позиция Возврата покупателя.
 // Ключевое слово: salesreturnposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-pokupatelq-vozwraty-pokupatelej-pozicii-vozwrata-pokupatelq

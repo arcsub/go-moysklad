@@ -316,6 +316,21 @@ func (processing Processing) MetaType() MetaType {
 	return MetaTypeProcessing
 }
 
+// Update shortcut
+func (processing Processing) Update(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+	return client.Entity().Processing().Update(ctx, processing.GetID(), &processing, params...)
+}
+
+// Create shortcut
+func (processing Processing) Create(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+	return client.Entity().Processing().Create(ctx, &processing, params...)
+}
+
+// Delete shortcut
+func (processing Processing) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Processing().Delete(ctx, processing.GetID())
+}
+
 // ProcessingPositionMaterial Материал Техоперации.
 // Ключевое слово: processingpositionmaterial
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-tehoperaciq-tehoperacii-materialy-tehoperacii

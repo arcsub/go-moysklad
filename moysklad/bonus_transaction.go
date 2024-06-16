@@ -220,6 +220,21 @@ func (bonusTransaction BonusTransaction) MetaType() MetaType {
 	return MetaTypeBonusTransaction
 }
 
+// Update shortcut
+func (bonusTransaction BonusTransaction) Update(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+	return client.Entity().BonusTransaction().Update(ctx, bonusTransaction.GetID(), &bonusTransaction, params...)
+}
+
+// Create shortcut
+func (bonusTransaction BonusTransaction) Create(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+	return client.Entity().BonusTransaction().Create(ctx, &bonusTransaction, params...)
+}
+
+// Delete shortcut
+func (bonusTransaction BonusTransaction) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().BonusTransaction().Delete(ctx, bonusTransaction.GetID())
+}
+
 // BonusTransactionCategory Категория бонусной операции
 type BonusTransactionCategory string
 

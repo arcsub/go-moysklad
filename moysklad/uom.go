@@ -120,6 +120,21 @@ func (uom Uom) MetaType() MetaType {
 	return MetaTypeUom
 }
 
+// Update shortcut
+func (uom Uom) Update(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+	return client.Entity().Uom().Update(ctx, uom.GetID(), &uom, params...)
+}
+
+// Create shortcut
+func (uom Uom) Create(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+	return client.Entity().Uom().Create(ctx, &uom, params...)
+}
+
+// Delete shortcut
+func (uom Uom) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Uom().Delete(ctx, uom.GetID())
+}
+
 // UomService
 // Сервис для работы с единицами измерения.
 type UomService interface {

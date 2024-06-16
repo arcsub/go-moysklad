@@ -232,6 +232,21 @@ func (inventory Inventory) MetaType() MetaType {
 	return MetaTypeInventory
 }
 
+// Update shortcut
+func (inventory Inventory) Update(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+	return client.Entity().Inventory().Update(ctx, inventory.GetID(), &inventory, params...)
+}
+
+// Create shortcut
+func (inventory Inventory) Create(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+	return client.Entity().Inventory().Create(ctx, &inventory, params...)
+}
+
+// Delete shortcut
+func (inventory Inventory) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Inventory().Delete(ctx, inventory.GetID())
+}
+
 // InventoryPosition Позиция Инвентаризации.
 // Ключевое слово: inventoryposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-inwentarizaciq-inwentarizaciq-pozicii-inwentarizacii

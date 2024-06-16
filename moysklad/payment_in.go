@@ -370,6 +370,21 @@ func (paymentIn PaymentIn) AsOperation() *Operation {
 	return &Operation{Meta: paymentIn.GetMeta()}
 }
 
+// Update shortcut
+func (paymentIn PaymentIn) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
+	return client.Entity().PaymentIn().Update(ctx, paymentIn.GetID(), &paymentIn, params...)
+}
+
+// Create shortcut
+func (paymentIn PaymentIn) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
+	return client.Entity().PaymentIn().Create(ctx, &paymentIn, params...)
+}
+
+// Delete shortcut
+func (paymentIn PaymentIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().PaymentIn().Delete(ctx, paymentIn.GetID())
+}
+
 // PaymentInService
 // Сервис для работы с входящими платежами.
 type PaymentInService interface {

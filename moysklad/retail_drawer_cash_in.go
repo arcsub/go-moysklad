@@ -240,6 +240,21 @@ func (retailDrawerCashIn RetailDrawerCashIn) MetaType() MetaType {
 	return MetaTypeRetailDrawerCashIn
 }
 
+// Update shortcut
+func (retailDrawerCashIn RetailDrawerCashIn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
+	return client.Entity().RetailDrawerCashIn().Update(ctx, retailDrawerCashIn.GetID(), &retailDrawerCashIn, params...)
+}
+
+// Create shortcut
+func (retailDrawerCashIn RetailDrawerCashIn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
+	return client.Entity().RetailDrawerCashIn().Create(ctx, &retailDrawerCashIn, params...)
+}
+
+// Delete shortcut
+func (retailDrawerCashIn RetailDrawerCashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailDrawerCashIn().Delete(ctx, retailDrawerCashIn.GetID())
+}
+
 // RetailDrawerCashInService
 // Сервис для работы с внесениями денег.
 type RetailDrawerCashInService interface {

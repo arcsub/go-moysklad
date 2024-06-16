@@ -706,6 +706,21 @@ func (retailStore RetailStore) MetaType() MetaType {
 	return MetaTypeRetailStore
 }
 
+// Update shortcut
+func (retailStore RetailStore) Update(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+	return client.Entity().RetailStore().Update(ctx, retailStore.GetID(), &retailStore, params...)
+}
+
+// Create shortcut
+func (retailStore RetailStore) Create(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+	return client.Entity().RetailStore().Create(ctx, &retailStore, params...)
+}
+
+// Delete shortcut
+func (retailStore RetailStore) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailStore().Delete(ctx, retailStore.GetID())
+}
+
 // Cashier Кассир.
 // Ключевое слово: cashier
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir

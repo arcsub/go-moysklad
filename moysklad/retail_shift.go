@@ -335,6 +335,21 @@ func (retailShift RetailShift) MetaType() MetaType {
 	return MetaTypeRetailShift
 }
 
+// Update shortcut
+func (retailShift RetailShift) Update(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+	return client.Entity().RetailShift().Update(ctx, retailShift.GetID(), &retailShift, params...)
+}
+
+// Create shortcut
+func (retailShift RetailShift) Create(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+	return client.Entity().RetailShift().Create(ctx, &retailShift, params...)
+}
+
+// Delete shortcut
+func (retailShift RetailShift) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailShift().Delete(ctx, retailShift.GetID())
+}
+
 // Cheque Информация о смене ККТ
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-roznichnaq-smena-roznichnye-smeny-informaciq-o-smene-kkt
 type Cheque struct {

@@ -130,6 +130,21 @@ func (processingProcess ProcessingProcess) MetaType() MetaType {
 	return MetaTypeProcessingProcess
 }
 
+// Update shortcut
+func (processingProcess ProcessingProcess) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+	return client.Entity().ProcessingProcess().Update(ctx, processingProcess.GetID(), &processingProcess, params...)
+}
+
+// Create shortcut
+func (processingProcess ProcessingProcess) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+	return client.Entity().ProcessingProcess().Create(ctx, &processingProcess, params...)
+}
+
+// Delete shortcut
+func (processingProcess ProcessingProcess) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingProcess().Delete(ctx, processingProcess.GetID())
+}
+
 // ProcessingProcessPosition Позиция Тех. процесса.
 // Ключевое слово: processingprocessposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehprocess-pozicii-tehprocessa

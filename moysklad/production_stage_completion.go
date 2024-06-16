@@ -196,6 +196,21 @@ func (productionStageCompletion ProductionStageCompletion) MetaType() MetaType {
 	return MetaTypeProductionStageCompletion
 }
 
+// Update shortcut
+func (productionStageCompletion ProductionStageCompletion) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+	return client.Entity().ProductionStageCompletion().Update(ctx, productionStageCompletion.GetID(), &productionStageCompletion, params...)
+}
+
+// Create shortcut
+func (productionStageCompletion ProductionStageCompletion) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+	return client.Entity().ProductionStageCompletion().Create(ctx, &productionStageCompletion, params...)
+}
+
+// Delete shortcut
+func (productionStageCompletion ProductionStageCompletion) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProductionStageCompletion().Delete(ctx, productionStageCompletion.GetID())
+}
+
 // ProductionStageCompletionMaterial Материалы Выполнения этапа производства
 // Ключевое слово: productionstagecompletionmaterial
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-vypolnenie-atapa-proizwodstwa-materialy-vypolneniq-atapa-proizwodstwa

@@ -257,6 +257,21 @@ func (employee Employee) MetaType() MetaType {
 	return MetaTypeEmployee
 }
 
+// Update shortcut
+func (employee Employee) Update(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+	return client.Entity().Employee().Update(ctx, employee.GetID(), &employee, params...)
+}
+
+// Create shortcut
+func (employee Employee) Create(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+	return client.Entity().Employee().Create(ctx, &employee, params...)
+}
+
+// Delete shortcut
+func (employee Employee) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Employee().Delete(ctx, employee.GetID())
+}
+
 // Salary Оклад.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-sotrudniki-atributy-wlozhennyh-suschnostej-oklad
 type Salary struct {

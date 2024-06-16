@@ -105,6 +105,21 @@ func (taxRate TaxRate) MetaType() MetaType {
 	return MetaTypeTaxRate
 }
 
+// Update shortcut
+func (taxRate TaxRate) Update(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+	return client.Entity().TaxRate().Update(ctx, taxRate.GetID(), &taxRate, params...)
+}
+
+// Create shortcut
+func (taxRate TaxRate) Create(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+	return client.Entity().TaxRate().Create(ctx, &taxRate, params...)
+}
+
+// Delete shortcut
+func (taxRate TaxRate) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().TaxRate().Delete(ctx, taxRate.GetID())
+}
+
 // TaxRateService
 // Сервис для работы со ставками НДС.
 type TaxRateService interface {

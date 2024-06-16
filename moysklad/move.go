@@ -330,6 +330,21 @@ func (move Move) MetaType() MetaType {
 	return MetaTypeMove
 }
 
+// Update shortcut
+func (move Move) Update(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+	return client.Entity().Move().Update(ctx, move.GetID(), &move, params...)
+}
+
+// Create shortcut
+func (move Move) Create(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+	return client.Entity().Move().Create(ctx, &move, params...)
+}
+
+// Delete shortcut
+func (move Move) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Move().Delete(ctx, move.GetID())
+}
+
 // MovePosition Позиция перемещения.
 // Ключевое слово: moveposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-peremeschenie-peremescheniq-pozicii-peremescheniq

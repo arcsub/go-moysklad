@@ -191,6 +191,21 @@ func (store Store) MetaType() MetaType {
 	return MetaTypeStore
 }
 
+// Update shortcut
+func (store Store) Update(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+	return client.Entity().Store().Update(ctx, store.GetID(), &store, params...)
+}
+
+// Create shortcut
+func (store Store) Create(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+	return client.Entity().Store().Create(ctx, &store, params...)
+}
+
+// Delete shortcut
+func (store Store) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Store().Delete(ctx, store.GetID())
+}
+
 // Slot Ячейка склада.
 // Ключевое слово: slot
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-yachejki-sklada

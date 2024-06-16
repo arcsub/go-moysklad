@@ -300,6 +300,21 @@ func (processingOrder ProcessingOrder) MetaType() MetaType {
 	return MetaTypeProcessingOrder
 }
 
+// Update shortcut
+func (processingOrder ProcessingOrder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+	return client.Entity().ProcessingOrder().Update(ctx, processingOrder.GetID(), &processingOrder, params...)
+}
+
+// Create shortcut
+func (processingOrder ProcessingOrder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+	return client.Entity().ProcessingOrder().Create(ctx, &processingOrder, params...)
+}
+
+// Delete shortcut
+func (processingOrder ProcessingOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingOrder().Delete(ctx, processingOrder.GetID())
+}
+
 // ProcessingOrderPosition Позиция Заказа на производство.
 // Ключевое слово: processingorderposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-na-proizwodstwo-zakazy-na-proizwodstwo-pozicii-zakaza-na-proizwodstwo

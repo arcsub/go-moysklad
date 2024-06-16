@@ -495,6 +495,21 @@ func (organization Organization) MetaType() MetaType {
 	return MetaTypeOrganization
 }
 
+// Update shortcut
+func (organization Organization) Update(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+	return client.Entity().Organization().Update(ctx, organization.GetID(), &organization, params...)
+}
+
+// Create shortcut
+func (organization Organization) Create(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+	return client.Entity().Organization().Create(ctx, &organization, params...)
+}
+
+// Delete shortcut
+func (organization Organization) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Organization().Delete(ctx, organization.GetID())
+}
+
 // OrganizationService
 // Сервис для работы с юридическими лицами.
 type OrganizationService interface {

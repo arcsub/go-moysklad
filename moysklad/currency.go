@@ -165,6 +165,21 @@ func (currency Currency) MetaType() MetaType {
 	return MetaTypeCurrency
 }
 
+// Update shortcut
+func (currency Currency) Update(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+	return client.Entity().Currency().Update(ctx, currency.GetID(), &currency, params...)
+}
+
+// Create shortcut
+func (currency Currency) Create(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+	return client.Entity().Currency().Create(ctx, &currency, params...)
+}
+
+// Delete shortcut
+func (currency Currency) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Currency().Delete(ctx, currency.GetID())
+}
+
 // RateUpdateType Способ обновления курса.
 type RateUpdateType string
 

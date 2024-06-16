@@ -140,6 +140,21 @@ func (processingStage ProcessingStage) MetaType() MetaType {
 	return MetaTypeProcessingStage
 }
 
+// Update shortcut
+func (processingStage ProcessingStage) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+	return client.Entity().ProcessingStage().Update(ctx, processingStage.GetID(), &processingStage, params...)
+}
+
+// Create shortcut
+func (processingStage ProcessingStage) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+	return client.Entity().ProcessingStage().Create(ctx, &processingStage, params...)
+}
+
+// Delete shortcut
+func (processingStage ProcessingStage) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingStage().Delete(ctx, processingStage.GetID())
+}
+
 // ProcessingStageService
 // Сервис для работы с этапами производства.
 type ProcessingStageService interface {

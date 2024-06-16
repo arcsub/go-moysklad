@@ -400,6 +400,21 @@ func (retailSalesReturn RetailSalesReturn) MetaType() MetaType {
 	return MetaTypeRetailSalesReturn
 }
 
+// Update shortcut
+func (retailSalesReturn RetailSalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
+	return client.Entity().RetailSalesReturn().Update(ctx, retailSalesReturn.GetID(), &retailSalesReturn, params...)
+}
+
+// Create shortcut
+func (retailSalesReturn RetailSalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
+	return client.Entity().RetailSalesReturn().Create(ctx, &retailSalesReturn, params...)
+}
+
+// Delete shortcut
+func (retailSalesReturn RetailSalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailSalesReturn().Delete(ctx, retailSalesReturn.GetID())
+}
+
 // RetailSalesReturnPosition позиция розничного возврата.
 // Ключевое слово: salesreturnposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-roznichnyj-wozwrat-roznichnye-wozwraty-pozicii-roznichnogo-wozwrata

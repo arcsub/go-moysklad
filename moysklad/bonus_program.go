@@ -175,6 +175,21 @@ func (bonusProgram BonusProgram) MetaType() MetaType {
 	return MetaTypeBonusProgram
 }
 
+// Update shortcut
+func (bonusProgram BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+	return client.Entity().BonusProgram().Update(ctx, bonusProgram.GetID(), &bonusProgram, params...)
+}
+
+// Create shortcut
+func (bonusProgram BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+	return client.Entity().BonusProgram().Create(ctx, &bonusProgram, params...)
+}
+
+// Delete shortcut
+func (bonusProgram BonusProgram) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().BonusProgram().Delete(ctx, bonusProgram.GetID())
+}
+
 // WelcomeBonusesMode Условия бонусных баллов
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-bonusnaq-programma-bonusnye-programmy-atributy-suschnosti-uslowiq-bonusnyh-ballow
 type WelcomeBonusesMode string

@@ -140,6 +140,21 @@ func (salesChannel SalesChannel) MetaType() MetaType {
 	return MetaTypeSalesChannel
 }
 
+// Update shortcut
+func (salesChannel SalesChannel) Update(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+	return client.Entity().SalesChannel().Update(ctx, salesChannel.GetID(), &salesChannel, params...)
+}
+
+// Create shortcut
+func (salesChannel SalesChannel) Create(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+	return client.Entity().SalesChannel().Create(ctx, &salesChannel, params...)
+}
+
+// Delete shortcut
+func (salesChannel SalesChannel) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().SalesChannel().Delete(ctx, salesChannel.GetID())
+}
+
 // SalesChannelType Тип канала продаж.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kanal-prodazh-kanaly-prodazh-tip-kanala-prodazh
 type SalesChannelType string

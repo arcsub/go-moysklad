@@ -405,6 +405,21 @@ func (commissionReportOut CommissionReportOut) MetaType() MetaType {
 	return MetaTypeCommissionReportOut
 }
 
+// Update shortcut
+func (commissionReportOut CommissionReportOut) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
+	return client.Entity().CommissionReportOut().Update(ctx, commissionReportOut.GetID(), &commissionReportOut, params...)
+}
+
+// Create shortcut
+func (commissionReportOut CommissionReportOut) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
+	return client.Entity().CommissionReportOut().Create(ctx, &commissionReportOut, params...)
+}
+
+// Delete shortcut
+func (commissionReportOut CommissionReportOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CommissionReportOut().Delete(ctx, commissionReportOut.GetID())
+}
+
 // CommissionReportOutPosition Позиция Выданного отчета комиссионера.
 // Ключевое слово: commissionreportoutposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vydannyj-otchet-komissionera-vydannye-otchety-komissionera-pozicii-vydannogo-otcheta-komissionera

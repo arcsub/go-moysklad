@@ -344,6 +344,21 @@ func (cashOut CashOut) AsOperation() *Operation {
 	return &Operation{Meta: cashOut.GetMeta()}
 }
 
+// Update shortcut
+func (cashOut CashOut) Update(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
+	return client.Entity().CashOut().Update(ctx, cashOut.GetID(), &cashOut, params...)
+}
+
+// Create shortcut
+func (cashOut CashOut) Create(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
+	return client.Entity().CashOut().Create(ctx, &cashOut, params...)
+}
+
+// Delete shortcut
+func (cashOut CashOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CashOut().Delete(ctx, cashOut.GetID())
+}
+
 // CashOutService cashout
 // Сервис для работы с расходными ордерами.
 type CashOutService interface {

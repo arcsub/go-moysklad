@@ -486,6 +486,21 @@ func (customerOrder CustomerOrder) MetaType() MetaType {
 	return MetaTypeCustomerOrder
 }
 
+// Update shortcut
+func (customerOrder CustomerOrder) Update(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+	return client.Entity().CustomerOrder().Update(ctx, customerOrder.GetID(), &customerOrder, params...)
+}
+
+// Create shortcut
+func (customerOrder CustomerOrder) Create(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+	return client.Entity().CustomerOrder().Create(ctx, &customerOrder, params...)
+}
+
+// Delete shortcut
+func (customerOrder CustomerOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CustomerOrder().Delete(ctx, customerOrder.GetID())
+}
+
 // CustomerOrderPosition Позиция Заказа покупателя.
 // Ключевое слово: customerorderposition
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-pokupatelq-zakazy-pokupatelej-pozicii-zakaza-pokupatelq

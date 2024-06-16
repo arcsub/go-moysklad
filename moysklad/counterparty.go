@@ -461,6 +461,21 @@ func (counterparty Counterparty) MetaType() MetaType {
 	return MetaTypeCounterparty
 }
 
+// Update shortcut
+func (counterparty Counterparty) Update(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+	return client.Entity().Counterparty().Update(ctx, counterparty.GetID(), &counterparty, params...)
+}
+
+// Create shortcut
+func (counterparty Counterparty) Create(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+	return client.Entity().Counterparty().Create(ctx, &counterparty, params...)
+}
+
+// Delete shortcut
+func (counterparty Counterparty) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Counterparty().Delete(ctx, counterparty.GetID())
+}
+
 type DiscountsData struct {
 	Discount             MetaWrapper `json:"discount,omitempty"`             // Скидка
 	PersonalDiscount     float64     `json:"personalDiscount,omitempty"`     // Значение персональной скидки
