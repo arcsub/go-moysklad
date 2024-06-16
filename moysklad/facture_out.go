@@ -50,6 +50,11 @@ func (factureOut FactureOut) Clean() *FactureOut {
 	return &FactureOut{Meta: factureOut.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (factureOut FactureOut) AsOperation() *Operation {
+	return &Operation{Meta: factureOut.GetMeta()}
+}
+
 func (factureOut FactureOut) GetOrganization() Organization {
 	return Deref(factureOut.Organization)
 }

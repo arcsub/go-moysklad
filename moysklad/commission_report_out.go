@@ -58,6 +58,11 @@ func (commissionReportOut CommissionReportOut) Clean() *CommissionReportOut {
 	return &CommissionReportOut{Meta: commissionReportOut.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
+	return &Operation{Meta: commissionReportOut.GetMeta()}
+}
+
 func (commissionReportOut CommissionReportOut) GetApplicable() bool {
 	return Deref(commissionReportOut.Applicable)
 }

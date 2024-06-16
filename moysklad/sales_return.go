@@ -57,6 +57,11 @@ func (salesReturn SalesReturn) Clean() *SalesReturn {
 	return &SalesReturn{Meta: salesReturn.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (salesReturn SalesReturn) AsOperation() *Operation {
+	return &Operation{Meta: salesReturn.GetMeta()}
+}
+
 func (salesReturn SalesReturn) GetPositions() Positions[SalesReturnPosition] {
 	return Deref(salesReturn.Positions)
 }

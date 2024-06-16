@@ -360,8 +360,9 @@ func (paymentOut PaymentOut) MetaType() MetaType {
 	return MetaTypePaymentOut
 }
 
-func (paymentOut PaymentOut) AsPayment() *Payment {
-	return &Payment{Meta: paymentOut.GetMeta()}
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (paymentOut PaymentOut) AsOperation() *Operation {
+	return &Operation{Meta: paymentOut.GetMeta()}
 }
 
 // PaymentOutTemplateArg

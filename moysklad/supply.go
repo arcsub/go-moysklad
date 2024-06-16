@@ -60,6 +60,11 @@ func (supply Supply) Clean() *Supply {
 	return &Supply{Meta: supply.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (supply Supply) AsOperation() *Operation {
+	return &Operation{Meta: supply.GetMeta()}
+}
+
 func (supply Supply) GetOrganizationAccount() AgentAccount {
 	return Deref(supply.OrganizationAccount)
 }

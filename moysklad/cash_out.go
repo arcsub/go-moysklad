@@ -335,8 +335,8 @@ func (cashOut CashOut) MetaType() MetaType {
 	return MetaTypeCashOut
 }
 
-func (cashOut CashOut) AsPayment() *Payment {
-	return &Payment{Meta: cashOut.GetMeta()}
+func (cashOut CashOut) AsOperation() *Operation {
+	return &Operation{Meta: cashOut.GetMeta()}
 }
 
 // CashOutTemplateArg

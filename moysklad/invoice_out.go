@@ -57,6 +57,11 @@ func (invoiceOut InvoiceOut) Clean() *InvoiceOut {
 	return &InvoiceOut{Meta: invoiceOut.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (invoiceOut InvoiceOut) AsOperation() *Operation {
+	return &Operation{Meta: invoiceOut.GetMeta()}
+}
+
 func (invoiceOut InvoiceOut) GetPayedSum() float64 {
 	return Deref(invoiceOut.PayedSum)
 }

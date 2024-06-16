@@ -330,8 +330,8 @@ func (cashIn CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
 }
 
-func (cashIn CashIn) AsPayment() *Payment {
-	return &Payment{Meta: cashIn.GetMeta()}
+func (cashIn CashIn) AsOperation() *Operation {
+	return &Operation{Meta: cashIn.GetMeta()}
 }
 
 // CashInTemplateArg

@@ -67,6 +67,11 @@ func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 	return &CustomerOrder{Meta: customerOrder.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (customerOrder CustomerOrder) AsOperation() *Operation {
+	return &Operation{Meta: customerOrder.GetMeta()}
+}
+
 func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
 	return Deref(customerOrder.OrganizationAccount)
 }

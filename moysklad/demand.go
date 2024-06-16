@@ -69,6 +69,11 @@ func (demand Demand) Clean() *Demand {
 	return &Demand{Meta: demand.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (demand Demand) AsOperation() *Operation {
+	return &Operation{Meta: demand.GetMeta()}
+}
+
 func (demand Demand) GetAccountID() uuid.UUID {
 	return Deref(demand.AccountID)
 }

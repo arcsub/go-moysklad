@@ -61,6 +61,11 @@ func (purchaseOrder PurchaseOrder) Clean() *PurchaseOrder {
 	return &PurchaseOrder{Meta: purchaseOrder.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (purchaseOrder PurchaseOrder) AsOperation() *Operation {
+	return &Operation{Meta: purchaseOrder.GetMeta()}
+}
+
 func (purchaseOrder PurchaseOrder) GetPayedSum() float64 {
 	return Deref(purchaseOrder.PayedSum)
 }

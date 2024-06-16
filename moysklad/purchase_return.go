@@ -57,6 +57,11 @@ func (purchaseReturn PurchaseReturn) Clean() *PurchaseReturn {
 	return &PurchaseReturn{Meta: purchaseReturn.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (purchaseReturn PurchaseReturn) AsOperation() *Operation {
+	return &Operation{Meta: purchaseReturn.GetMeta()}
+}
+
 func (purchaseReturn PurchaseReturn) GetPrinted() bool {
 	return Deref(purchaseReturn.Printed)
 }

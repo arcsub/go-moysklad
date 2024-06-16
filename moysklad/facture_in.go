@@ -47,6 +47,11 @@ func (factureIn FactureIn) Clean() *FactureIn {
 	return &FactureIn{Meta: factureIn.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (factureIn FactureIn) AsOperation() *Operation {
+	return &Operation{Meta: factureIn.GetMeta()}
+}
+
 func (factureIn FactureIn) GetMoment() Timestamp {
 	return Deref(factureIn.Moment)
 }

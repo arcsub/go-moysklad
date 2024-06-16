@@ -61,6 +61,11 @@ func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
 	return &CommissionReportIn{Meta: commissionReportIn.Meta}
 }
 
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
+	return &Operation{Meta: commissionReportIn.GetMeta()}
+}
+
 func (commissionReportIn CommissionReportIn) GetVatSum() float64 {
 	return Deref(commissionReportIn.VatSum)
 }
