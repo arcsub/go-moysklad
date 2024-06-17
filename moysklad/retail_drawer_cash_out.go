@@ -43,6 +43,11 @@ func (retailDrawerCashOut RetailDrawerCashOut) Clean() *RetailDrawerCashOut {
 	return &RetailDrawerCashOut{Meta: retailDrawerCashOut.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailDrawerCashOut RetailDrawerCashOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailDrawerCashOut.Meta}
+}
+
 func (retailDrawerCashOut RetailDrawerCashOut) GetMeta() Meta {
 	return Deref(retailDrawerCashOut.Meta)
 }

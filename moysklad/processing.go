@@ -50,6 +50,11 @@ func (processing Processing) Clean() *Processing {
 	return &Processing{Meta: processing.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (processing Processing) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: processing.Meta}
+}
+
 func (processing Processing) GetOrganization() Organization {
 	return Deref(processing.Organization)
 }

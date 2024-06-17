@@ -174,7 +174,7 @@ func (metaArray MetaArray[T]) String() string {
 	return Stringify(metaArray)
 }
 
-// MarshalJSON implements the json.Marshaler interface.
+// MarshalJSON реализует интерфейс json.Marshaler
 func (metaArray MetaArray[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(metaArray.Rows)
 }
@@ -341,6 +341,8 @@ const (
 	MetaTypeProductionStageCompletionMaterial MetaType = "productionstagecompletionmaterial"
 	MetaTypeProductionStageCompletionResult   MetaType = "productionstagecompletionresult"
 	MetaTypeProcessingPlanStages              MetaType = "processingplanstages"
+	MetaTypePayroll                           MetaType = "payroll"
+	MetaTypeUnknown                           MetaType = ""
 )
 
 func MetaTypeFromEntity(v any) (MetaType, error) {
@@ -563,7 +565,7 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeAssortmentSettings
 	case SalesChannel:
 		metaType = MetaTypeSalesChannel
-	case CounterPartyAdjustment:
+	case CounterpartyAdjustment:
 		metaType = MetaTypeCounterPartyAdjustment
 	case Metadata:
 		metaType = MetaTypeMetadata

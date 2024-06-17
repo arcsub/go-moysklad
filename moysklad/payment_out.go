@@ -52,6 +52,11 @@ func (paymentOut PaymentOut) Clean() *PaymentOut {
 	return &PaymentOut{Meta: paymentOut.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (paymentOut PaymentOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: paymentOut.Meta}
+}
+
 func (paymentOut PaymentOut) GetMoment() Timestamp {
 	return Deref(paymentOut.Moment)
 }

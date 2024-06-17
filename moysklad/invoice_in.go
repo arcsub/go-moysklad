@@ -64,6 +64,11 @@ func (invoiceIn InvoiceIn) AsOperation() *Operation {
 	return &Operation{Meta: invoiceIn.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (invoiceIn InvoiceIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: invoiceIn.Meta}
+}
+
 func (invoiceIn InvoiceIn) GetOrganizationAccount() AgentAccount {
 	return Deref(invoiceIn.OrganizationAccount)
 }

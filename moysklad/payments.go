@@ -169,12 +169,12 @@ func (payment Payment) GetOperations() Operations {
 	return payment.Operations
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
+// MetaType реализует интерфейс MetaTyper
 func (payment Payment) MetaType() MetaType {
 	return payment.Meta.GetType()
 }
 
-// Raw удовлетворяет интерфейсу RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper
 func (payment Payment) Raw() []byte {
 	return payment.raw
 }
@@ -183,7 +183,7 @@ func (payment Payment) String() string {
 	return Stringify(payment.Meta)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (payment *Payment) UnmarshalJSON(data []byte) (err error) {
 	type alias Payment
 	var t alias
@@ -197,32 +197,32 @@ func (payment *Payment) UnmarshalJSON(data []byte) (err error) {
 	return nil
 }
 
-// AsCashIn десериализует сырые данные в тип *CashIn
+// AsCashIn десериализует объект в тип *CashIn
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (payment *Payment) AsCashIn() *CashIn {
-	return unmarshalAsType[CashIn](payment)
+	return UnmarshalAsType[CashIn](payment)
 }
 
-// AsCashOut десериализует сырые данные в тип *CashOut
+// AsCashOut десериализует объект в тип *CashOut
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (payment *Payment) AsCashOut() *CashOut {
-	return unmarshalAsType[CashOut](payment)
+	return UnmarshalAsType[CashOut](payment)
 }
 
-// AsPaymentIn десериализует сырые данные в тип *PaymentIn
+// AsPaymentIn десериализует объект в тип *PaymentIn
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (payment *Payment) AsPaymentIn() *PaymentIn {
-	return unmarshalAsType[PaymentIn](payment)
+	return UnmarshalAsType[PaymentIn](payment)
 }
 
-// AsPaymentOut десериализует сырые данные в тип *PaymentOut
+// AsPaymentOut десериализует объект в тип *PaymentOut
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (payment *Payment) AsPaymentOut() *PaymentOut {
-	return unmarshalAsType[PaymentOut](payment)
+	return UnmarshalAsType[PaymentOut](payment)
 }
 
 func NewPayments() Slice[Payment] {

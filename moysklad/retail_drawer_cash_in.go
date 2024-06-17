@@ -42,6 +42,11 @@ func (retailDrawerCashIn RetailDrawerCashIn) Clean() *RetailDrawerCashIn {
 	return &RetailDrawerCashIn{Meta: retailDrawerCashIn.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailDrawerCashIn RetailDrawerCashIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailDrawerCashIn.Meta}
+}
+
 func (retailDrawerCashIn RetailDrawerCashIn) GetMoment() Timestamp {
 	return Deref(retailDrawerCashIn.Moment)
 }

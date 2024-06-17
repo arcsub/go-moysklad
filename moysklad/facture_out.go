@@ -55,6 +55,11 @@ func (factureOut FactureOut) AsOperation() *Operation {
 	return &Operation{Meta: factureOut.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (factureOut FactureOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: factureOut.Meta}
+}
+
 func (factureOut FactureOut) GetOrganization() Organization {
 	return Deref(factureOut.Organization)
 }

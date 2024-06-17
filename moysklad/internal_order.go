@@ -49,6 +49,11 @@ func (internalOrder InternalOrder) Clean() *InternalOrder {
 	return &InternalOrder{Meta: internalOrder.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (internalOrder InternalOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: internalOrder.Meta}
+}
+
 func (internalOrder InternalOrder) GetOrganization() Organization {
 	return Deref(internalOrder.Organization)
 }

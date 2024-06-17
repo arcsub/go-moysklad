@@ -69,6 +69,11 @@ func (retailDemand RetailDemand) Clean() *RetailDemand {
 	return &RetailDemand{Meta: retailDemand.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailDemand RetailDemand) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailDemand.Meta}
+}
+
 func (retailDemand RetailDemand) GetAccountID() uuid.UUID {
 	return Deref(retailDemand.AccountID)
 }

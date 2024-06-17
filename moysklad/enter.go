@@ -45,6 +45,11 @@ func (enter Enter) Clean() *Enter {
 	return &Enter{Meta: enter.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (enter Enter) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: enter.Meta}
+}
+
 func (enter Enter) GetOrganization() Organization {
 	return Deref(enter.Organization)
 }

@@ -62,6 +62,11 @@ func (salesReturn SalesReturn) AsOperation() *Operation {
 	return &Operation{Meta: salesReturn.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (salesReturn SalesReturn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: salesReturn.Meta}
+}
+
 func (salesReturn SalesReturn) GetPositions() Positions[SalesReturnPosition] {
 	return Deref(salesReturn.Positions)
 }

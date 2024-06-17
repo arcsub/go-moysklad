@@ -65,11 +65,11 @@ func (product Product) Clean() *Product {
 }
 
 func NewProductFromAssortment(assortmentPosition AssortmentPosition) *Product {
-	return unmarshalAsType[Product](assortmentPosition)
+	return UnmarshalAsType[Product](assortmentPosition)
 }
 
 func (product Product) FromAssortment(assortmentPosition AssortmentPosition) *Product {
-	return unmarshalAsType[Product](assortmentPosition)
+	return UnmarshalAsType[Product](assortmentPosition)
 }
 
 func (product Product) AsAssortment() *AssortmentPosition {

@@ -99,17 +99,17 @@ func (discount Discount) String() string {
 	return Stringify(discount.Meta)
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
+// MetaType реализует интерфейс MetaTyper
 func (discount *Discount) MetaType() MetaType {
 	return discount.Meta.GetType()
 }
 
-// Raw удовлетворяет интерфейсу RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper
 func (discount *Discount) Raw() []byte {
 	return discount.data
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (discount *Discount) UnmarshalJSON(data []byte) error {
 	type alias Discount
 	var t alias
@@ -121,32 +121,32 @@ func (discount *Discount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// AsBonusProgram десериализует сырые данные в тип *BonusProgram
+// AsBonusProgram десериализует объект в тип *BonusProgram
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsBonusProgram() *BonusProgram {
-	return unmarshalAsType[BonusProgram](discount)
+	return UnmarshalAsType[BonusProgram](discount)
 }
 
-// AsAccumulationDiscount десериализует сырые данные в тип *AccumulationDiscount
+// AsAccumulationDiscount десериализует объект в тип *AccumulationDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsAccumulationDiscount() *AccumulationDiscount {
-	return unmarshalAsType[AccumulationDiscount](discount)
+	return UnmarshalAsType[AccumulationDiscount](discount)
 }
 
-// AsPersonalDiscount десериализует сырые данные в тип *PersonalDiscount
+// AsPersonalDiscount десериализует объект в тип *PersonalDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsPersonalDiscount() *PersonalDiscount {
-	return unmarshalAsType[PersonalDiscount](discount)
+	return UnmarshalAsType[PersonalDiscount](discount)
 }
 
-// AsSpecialPriceDiscount десериализует сырые данные в тип *SpecialPriceDiscount
+// AsSpecialPriceDiscount десериализует объект в тип *SpecialPriceDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsSpecialPriceDiscount() *SpecialPriceDiscount {
-	return unmarshalAsType[SpecialPriceDiscount](discount)
+	return UnmarshalAsType[SpecialPriceDiscount](discount)
 }
 
 // AccumulationDiscount Накопительная скидка.

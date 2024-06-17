@@ -148,7 +148,7 @@ func templateBasedPrepare(based []MetaOwner) map[string]MetaWrapper {
 	var body = make(map[string]MetaWrapper)
 	for _, el := range based {
 		metaType := el.GetMeta().GetType()
-		if metaType.String() == "" {
+		if metaType == MetaTypeUnknown {
 			continue
 		}
 		var metaTypeTemplate string

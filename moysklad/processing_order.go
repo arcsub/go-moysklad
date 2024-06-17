@@ -47,6 +47,11 @@ func (processingOrder ProcessingOrder) Clean() *ProcessingOrder {
 	return &ProcessingOrder{Meta: processingOrder.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (processingOrder ProcessingOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: processingOrder.Meta}
+}
+
 func (processingOrder ProcessingOrder) GetName() string {
 	return Deref(processingOrder.Name)
 }

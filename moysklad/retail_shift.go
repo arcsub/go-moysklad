@@ -57,6 +57,11 @@ func (retailShift RetailShift) Clean() *RetailShift {
 	return &RetailShift{Meta: retailShift.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailShift RetailShift) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailShift.Meta}
+}
+
 func (retailShift RetailShift) GetOrganization() Organization {
 	return Deref(retailShift.Organization)
 }

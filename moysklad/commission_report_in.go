@@ -66,6 +66,11 @@ func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportIn.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (commissionReportIn CommissionReportIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: commissionReportIn.Meta}
+}
+
 func (commissionReportIn CommissionReportIn) GetVatSum() float64 {
 	return Deref(commissionReportIn.VatSum)
 }

@@ -52,6 +52,11 @@ func (paymentIn PaymentIn) Clean() *PaymentIn {
 	return &PaymentIn{Meta: paymentIn.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (paymentIn PaymentIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: paymentIn.Meta}
+}
+
 func (paymentIn PaymentIn) GetMeta() Meta {
 	return Deref(paymentIn.Meta)
 }

@@ -53,6 +53,11 @@ func (prepaymentReturn PrepaymentReturn) Clean() *PrepaymentReturn {
 	return &PrepaymentReturn{Meta: prepaymentReturn.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (prepaymentReturn PrepaymentReturn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: prepaymentReturn.Meta}
+}
+
 func (prepaymentReturn PrepaymentReturn) GetAgent() Counterparty {
 	return Deref(prepaymentReturn.Agent)
 }

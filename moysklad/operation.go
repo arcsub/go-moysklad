@@ -50,17 +50,17 @@ func (operation Operation) String() string {
 	return Stringify(operation.Meta)
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
+// MetaType реализует интерфейс MetaTyper
 func (operation Operation) MetaType() MetaType {
 	return operation.Meta.GetType()
 }
 
-// Raw удовлетворяет интерфейсу RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper
 func (operation Operation) Raw() []byte {
 	return operation.raw
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (operation *Operation) UnmarshalJSON(data []byte) error {
 	type alias Operation
 	var t alias
@@ -75,47 +75,47 @@ func (operation *Operation) UnmarshalJSON(data []byte) error {
 }
 
 func (operation Operation) AsCustomerOrder() *CustomerOrder {
-	return unmarshalAsType[CustomerOrder](operation)
+	return UnmarshalAsType[CustomerOrder](operation)
 }
 
 func (operation Operation) AsPurchaseReturn() *PurchaseReturn {
-	return unmarshalAsType[PurchaseReturn](operation)
+	return UnmarshalAsType[PurchaseReturn](operation)
 }
 
 func (operation Operation) AsDemand() *Demand {
-	return unmarshalAsType[Demand](operation)
+	return UnmarshalAsType[Demand](operation)
 }
 
 func (operation Operation) AsInvoiceOut() *InvoiceOut {
-	return unmarshalAsType[InvoiceOut](operation)
+	return UnmarshalAsType[InvoiceOut](operation)
 }
 
 func (operation Operation) AsRetailShift() *RetailShift {
-	return unmarshalAsType[RetailShift](operation)
+	return UnmarshalAsType[RetailShift](operation)
 }
 
 func (operation Operation) AsCommissionReportIn() *CommissionReportIn {
-	return unmarshalAsType[CommissionReportIn](operation)
+	return UnmarshalAsType[CommissionReportIn](operation)
 }
 
 func (operation Operation) AsSalesReturn() *SalesReturn {
-	return unmarshalAsType[SalesReturn](operation)
+	return UnmarshalAsType[SalesReturn](operation)
 }
 
 func (operation Operation) AsSupply() *Supply {
-	return unmarshalAsType[Supply](operation)
+	return UnmarshalAsType[Supply](operation)
 }
 
 func (operation Operation) AsInvoiceIn() *InvoiceIn {
-	return unmarshalAsType[InvoiceIn](operation)
+	return UnmarshalAsType[InvoiceIn](operation)
 }
 
 func (operation Operation) AsPurchaseOrder() *PurchaseOrder {
-	return unmarshalAsType[PurchaseOrder](operation)
+	return UnmarshalAsType[PurchaseOrder](operation)
 }
 
 func (operation Operation) AsCommissionReportOut() *CommissionReportOut {
-	return unmarshalAsType[CommissionReportOut](operation)
+	return UnmarshalAsType[CommissionReportOut](operation)
 }
 
 type Operations Slice[Operation]

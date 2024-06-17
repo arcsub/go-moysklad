@@ -66,6 +66,11 @@ func (organization Organization) Clean() *Organization {
 	return &Organization{Meta: organization.Meta}
 }
 
+// AsAgent реализует интерфейс AsAgentInterface
+func (organization Organization) AsAgent() *Agent {
+	return &Agent{Meta: organization.Meta}
+}
+
 func (organization Organization) GetUpdated() Timestamp {
 	return Deref(organization.Updated)
 }

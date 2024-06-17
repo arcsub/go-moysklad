@@ -66,6 +66,11 @@ func (purchaseOrder PurchaseOrder) AsOperation() *Operation {
 	return &Operation{Meta: purchaseOrder.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (purchaseOrder PurchaseOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: purchaseOrder.Meta}
+}
+
 func (purchaseOrder PurchaseOrder) GetPayedSum() float64 {
 	return Deref(purchaseOrder.PayedSum)
 }

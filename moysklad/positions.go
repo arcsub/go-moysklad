@@ -15,7 +15,7 @@ type PositionType interface {
 
 type Positions[T PositionType] MetaArray[T]
 
-// MarshalJSON implements the json.Marshaler interface.
+// MarshalJSON реализует интерфейс json.Marshaler
 func (positions Positions[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(positions.Rows)
 }

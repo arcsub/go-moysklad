@@ -69,12 +69,12 @@ func (iterator *Iterator[E]) Slice() Slice[E] {
 	return iterator.el
 }
 
-// MarshalJSON implements the json.Marshaler interface.
+// MarshalJSON реализует интерфейс json.Marshaler
 func (iterator *Iterator[E]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(iterator.el)
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (iterator *Iterator[E]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &iterator.el)
 }

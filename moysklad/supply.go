@@ -65,6 +65,11 @@ func (supply Supply) AsOperation() *Operation {
 	return &Operation{Meta: supply.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (supply Supply) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: supply.Meta}
+}
+
 func (supply Supply) GetOrganizationAccount() AgentAccount {
 	return Deref(supply.OrganizationAccount)
 }

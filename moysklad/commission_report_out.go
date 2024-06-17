@@ -63,6 +63,11 @@ func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportOut.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (commissionReportOut CommissionReportOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: commissionReportOut.Meta}
+}
+
 func (commissionReportOut CommissionReportOut) GetApplicable() bool {
 	return Deref(commissionReportOut.Applicable)
 }

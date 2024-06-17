@@ -42,6 +42,11 @@ func (priceList PriceList) Clean() *PriceList {
 	return &PriceList{Meta: priceList.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (priceList PriceList) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: priceList.Meta}
+}
+
 func (priceList PriceList) GetMeta() Meta {
 	return Deref(priceList.Meta)
 }

@@ -210,16 +210,16 @@ type RawMetaTyper interface {
 func filterType[M MetaTyper, D RawMetaTyper](elements []D) Slice[M] {
 	var slice = Slice[M]{}
 	for _, el := range elements {
-		if e := unmarshalAsType[M](el); e != nil {
+		if e := UnmarshalAsType[M](el); e != nil {
 			slice.Push(e)
 		}
 	}
 	return slice
 }
 
-// unmarshalAsType принимает объект, удовлетворяющий интерфейсу RawMetaTyper
-// и структурирует в тип T
-func unmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
+// UnmarshalAsType принимает объект D, реализующий интерфейс RawMetaTyper и приводит его к типу M
+// Возвращает nil в случае неудачи или при несоответствии типов MetaType
+func UnmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
 	var t = *new(M)
 
 	if t.MetaType() != element.MetaType() {
@@ -237,18 +237,6 @@ func unmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
 
 	return &t
 }
-
-type Interval string
-
-func (i Interval) String() string {
-	return string(i)
-}
-
-const (
-	IntervalHour  Interval = "hour"
-	IntervalDay   Interval = "day"
-	IntervalMonth Interval = "month"
-)
 
 // RGBtoUint64 конвертирует код цвета из формата RRGGBB и RGB в uint64
 // Example
@@ -410,7 +398,7 @@ func (nullValue NullValue[T]) String() string {
 	return fmt.Sprintf("%v", nullValue.value)
 }
 
-// MarshalJSON implements the json.Marshaler interface.
+// MarshalJSON реализует интерфейс json.Marshaler
 func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
 	if nullValue.IsNull() {
 		return json.Marshal(nil)
@@ -418,7 +406,7 @@ func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nullValue.Get())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (nullValue *NullValue[T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValue.value)
 }
@@ -465,7 +453,7 @@ func (nullValueAny NullValueAny) String() string {
 	return fmt.Sprintf("%v", nullValueAny.value)
 }
 
-// MarshalJSON implements the json.Marshaler interface.
+// MarshalJSON реализует интерфейс json.Marshaler
 func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 	if nullValueAny.IsNull() {
 		return json.Marshal(nil)
@@ -473,7 +461,7 @@ func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nullValueAny.Get())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValueAny.value)
 }

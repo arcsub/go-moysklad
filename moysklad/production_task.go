@@ -47,6 +47,11 @@ func (productionTask ProductionTask) Clean() *ProductionTask {
 	return &ProductionTask{Meta: productionTask.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (productionTask ProductionTask) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: productionTask.Meta}
+}
+
 func (productionTask ProductionTask) GetMoment() Timestamp {
 	return Deref(productionTask.Moment)
 }

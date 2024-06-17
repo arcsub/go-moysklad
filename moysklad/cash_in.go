@@ -49,6 +49,11 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (cashIn CashIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: cashIn.Meta}
+}
+
 func (cashIn CashIn) GetOrganization() Organization {
 	return Deref(cashIn.Organization)
 }

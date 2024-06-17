@@ -57,6 +57,11 @@ func (retailSalesReturn RetailSalesReturn) Clean() *RetailSalesReturn {
 	return &RetailSalesReturn{Meta: retailSalesReturn.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailSalesReturn RetailSalesReturn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailSalesReturn.Meta}
+}
+
 func (retailSalesReturn RetailSalesReturn) GetName() string {
 	return Deref(retailSalesReturn.Name)
 }

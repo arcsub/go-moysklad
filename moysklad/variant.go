@@ -38,11 +38,11 @@ func (variant Variant) Clean() *Variant {
 }
 
 func NewVariantFromAssortment(assortmentPosition AssortmentPosition) *Variant {
-	return unmarshalAsType[Variant](assortmentPosition)
+	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
 func (variant Variant) FromAssortment(assortmentPosition AssortmentPosition) *Variant {
-	return unmarshalAsType[Variant](assortmentPosition)
+	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
 func (variant Variant) AsAssortment() *AssortmentPosition {

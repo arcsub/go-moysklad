@@ -62,6 +62,11 @@ func (purchaseReturn PurchaseReturn) AsOperation() *Operation {
 	return &Operation{Meta: purchaseReturn.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (purchaseReturn PurchaseReturn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: purchaseReturn.Meta}
+}
+
 func (purchaseReturn PurchaseReturn) GetPrinted() bool {
 	return Deref(purchaseReturn.Printed)
 }

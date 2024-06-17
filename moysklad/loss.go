@@ -45,6 +45,11 @@ func (loss Loss) Clean() *Loss {
 	return &Loss{Meta: loss.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (loss Loss) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: loss.Meta}
+}
+
 func (loss Loss) GetOrganization() Organization {
 	return Deref(loss.Organization)
 }

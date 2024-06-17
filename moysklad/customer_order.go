@@ -72,6 +72,11 @@ func (customerOrder CustomerOrder) AsOperation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (customerOrder CustomerOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: customerOrder.Meta}
+}
+
 func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
 	return Deref(customerOrder.OrganizationAccount)
 }

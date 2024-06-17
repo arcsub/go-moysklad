@@ -63,6 +63,11 @@ func (counterparty Counterparty) Clean() *Counterparty {
 	return &Counterparty{Meta: counterparty.Meta}
 }
 
+// AsAgent реализует интерфейс AsAgentInterface
+func (counterparty Counterparty) AsAgent() *Agent {
+	return &Agent{Meta: counterparty.Meta}
+}
+
 func (counterparty Counterparty) GetName() string {
 	return Deref(counterparty.Name)
 }

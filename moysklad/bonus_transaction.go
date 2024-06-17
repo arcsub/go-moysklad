@@ -40,6 +40,11 @@ func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (bonusTransaction BonusTransaction) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: bonusTransaction.Meta}
+}
+
 func (bonusTransaction BonusTransaction) GetOrganization() Organization {
 	return Deref(bonusTransaction.Organization)
 }

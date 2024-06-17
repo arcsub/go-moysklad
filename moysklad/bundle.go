@@ -53,11 +53,11 @@ type Bundle struct {
 }
 
 func NewBundleFromAssortment(assortmentPosition AssortmentPosition) *Bundle {
-	return unmarshalAsType[Bundle](assortmentPosition)
+	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
 func (bundle Bundle) FromAssortment(assortmentPosition AssortmentPosition) *Bundle {
-	return unmarshalAsType[Bundle](assortmentPosition)
+	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
 func (bundle Bundle) AsAssortment() *AssortmentPosition {
@@ -488,8 +488,8 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 	return Deref(bundleComponent.Quantity)
 }
 
-func (bundleComponent *BundleComponent) SetAssortment(assortment MetaOwner) *BundleComponent {
-	bundleComponent.Assortment = &AssortmentPosition{Meta: assortment.GetMeta()}
+func (bundleComponent *BundleComponent) SetAssortment(assortment AsAssortment) *BundleComponent {
+	bundleComponent.Assortment = assortment.AsAssortment()
 	return bundleComponent
 }
 

@@ -9,21 +9,21 @@ import (
 
 // Params структура параметров запроса.
 type Params struct {
-	MomentFrom  string      `url:"momentFrom,omitempty"`
-	GroupBy     GroupByType `url:"groupBy,omitempty"`
-	Fields      string      `url:"fields,omitempty"`
-	Interval    Interval    `url:"interval,omitempty"`
-	Search      string      `url:"search,omitempty"`
-	NamedFilter string      `url:"namedfilter,omitempty"`
-	MomentTo    string      `url:"momentTo,omitempty"`
-	StockType   StockType   `url:"stockType,omitempty"`
-	Order       []string    `url:"order,omitempty" del:";"`
-	Expand      []string    `url:"expand,omitempty" del:","`
-	Filter      []string    `url:"filter,omitempty" del:";"`
-	Action      []Evaluate  `url:"action,omitempty" del:","`
-	Offset      int         `url:"offset,omitempty"`
-	Limit       int         `url:"limit,omitempty"`
-	Async       bool        `url:"async,omitempty"`
+	MomentFrom  string     `url:"momentFrom,omitempty"`
+	GroupBy     GroupBy    `url:"groupBy,omitempty"`
+	Fields      string     `url:"fields,omitempty"`
+	Interval    Interval   `url:"interval,omitempty"`
+	Search      string     `url:"search,omitempty"`
+	NamedFilter string     `url:"namedfilter,omitempty"`
+	MomentTo    string     `url:"momentTo,omitempty"`
+	StockType   StockType  `url:"stockType,omitempty"`
+	Order       []string   `url:"order,omitempty" del:";"`
+	Expand      []string   `url:"expand,omitempty" del:","`
+	Filter      []string   `url:"filter,omitempty" del:";"`
+	Action      []Evaluate `url:"action,omitempty" del:","`
+	Offset      int        `url:"offset,omitempty"`
+	Limit       int        `url:"limit,omitempty"`
+	Async       bool       `url:"async,omitempty"`
 }
 
 func NewParams() *Params {
@@ -45,6 +45,24 @@ func (params *Params) WithMomentTo(momentTo time.Time) *Params {
 // WithInterval Интервал, с которым будет построен отчет.
 func (params *Params) WithInterval(interval Interval) *Params {
 	params.Interval = interval
+	return params
+}
+
+// WithIntervalHour Интервал, с которым будет построен отчет (час).
+func (params *Params) WithIntervalHour() *Params {
+	params.Interval = IntervalHour
+	return params
+}
+
+// WithIntervalDay Интервал, с которым будет построен отчет (день).
+func (params *Params) WithIntervalDay() *Params {
+	params.Interval = IntervalDay
+	return params
+}
+
+// WithIntervalMonth Интервал, с которым будет построен отчет (месяц).
+func (params *Params) WithIntervalMonth() *Params {
+	params.Interval = IntervalMonth
 	return params
 }
 
@@ -71,6 +89,18 @@ func (params *Params) WithExpand(fieldName string) *Params {
 	params.Expand = append(params.Expand, fieldName)
 	return params
 }
+
+type Interval string
+
+func (interval Interval) String() string {
+	return string(interval)
+}
+
+const (
+	IntervalHour  Interval = "hour"
+	IntervalDay   Interval = "day"
+	IntervalMonth Interval = "month"
+)
 
 // FilterType Фильтрация выборки с помощью параметра Filter.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-fil-traciq-wyborki-s-pomosch-u-parametra-filter
@@ -191,21 +221,39 @@ func (params *Params) WithFilterArchived(value bool) *Params {
 }
 
 // WithGroupBy Группировка выдачи.
-func (params *Params) WithGroupBy(value GroupByType) *Params {
+func (params *Params) WithGroupBy(value GroupBy) *Params {
 	params.GroupBy = value
 	return params
 }
 
-// GroupByType Тип группировки выдачи.
-type GroupByType string
+// WithGroupByProduct Группировка выдачи (только товары).
+func (params *Params) WithGroupByProduct() *Params {
+	params.GroupBy = GroupByProduct
+	return params
+}
+
+// WithGroupByVariant Группировка выдачи (товары и модификации).
+func (params *Params) WithGroupByVariant() *Params {
+	params.GroupBy = GroupByVariant
+	return params
+}
+
+// WithGroupByConsignment Группировка выдачи (товары, модификации и серии).
+func (params *Params) WithGroupByConsignment() *Params {
+	params.GroupBy = GroupByConsignment
+	return params
+}
+
+// GroupBy Тип группировки выдачи.
+type GroupBy string
 
 const (
-	GroupByProduct     GroupByType = "product"     // Выдает только товары
-	GroupByVariant     GroupByType = "variant"     // Выдает товары и модификации
-	GroupByConsignment GroupByType = "consignment" // Выдает товары, модификации, серии
+	GroupByProduct     GroupBy = "product"     // Выдает только товары
+	GroupByVariant     GroupBy = "variant"     // Выдает товары и модификации
+	GroupByConsignment GroupBy = "consignment" // Выдает товары, модификации, серии
 )
 
-func (groupByType GroupByType) String() string {
+func (groupByType GroupBy) String() string {
 	return string(groupByType)
 }
 
@@ -289,10 +337,39 @@ func (params *Params) WithStockType(stockType StockType) *Params {
 	return params
 }
 
+// WithStockDefault Физический остаток на складах, без учёта резерва и ожидания.
+func (params *Params) WithStockDefault() *Params {
+	params.StockType = StockDefault
+	return params
+}
+
+// WithStockFree Остаток на складах за вычетом резерва.
+func (params *Params) WithStockFree() *Params {
+	params.StockType = StockFreeStock
+	return params
+}
+
+// WithStockQuantity Доступно. Учитывает резерв и ожидания.
+func (params *Params) WithStockQuantity() *Params {
+	params.StockType = StockQuantity
+	return params
+}
+
+// WithStockReserve Резерв.
+func (params *Params) WithStockReserve() *Params {
+	params.StockType = StockReserve
+	return params
+}
+
+// WithStockInTransit Ожидание.
+func (params *Params) WithStockInTransit() *Params {
+	params.StockType = StockInTransit
+	return params
+}
+
 func (params *Params) QueryString() string {
 	v, _ := query.Values(params)
 	return v.Encode()
-
 }
 
 // StockType Параметр stockType.

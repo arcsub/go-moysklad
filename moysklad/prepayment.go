@@ -54,6 +54,11 @@ func (prepayment Prepayment) Clean() *Prepayment {
 	return &Prepayment{Meta: prepayment.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (prepayment Prepayment) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: prepayment.Meta}
+}
+
 func (prepayment Prepayment) GetReturns() Slice[PrepaymentReturn] {
 	return prepayment.Returns
 }

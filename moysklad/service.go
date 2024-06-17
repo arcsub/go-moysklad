@@ -48,11 +48,11 @@ func (service Service) Clean() *Service {
 }
 
 func NewServiceFromAssortment(assortmentPosition AssortmentPosition) *Service {
-	return unmarshalAsType[Service](assortmentPosition)
+	return UnmarshalAsType[Service](assortmentPosition)
 }
 
 func (service Service) FromAssortment(assortmentPosition AssortmentPosition) *Service {
-	return unmarshalAsType[Service](assortmentPosition)
+	return UnmarshalAsType[Service](assortmentPosition)
 }
 
 func (service Service) GetVatEnabled() bool {

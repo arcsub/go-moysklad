@@ -50,6 +50,11 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (cashOut CashOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: cashOut.Meta}
+}
+
 func (cashOut CashOut) GetName() string {
 	return Deref(cashOut.Name)
 }

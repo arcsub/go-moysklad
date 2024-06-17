@@ -43,6 +43,11 @@ func (inventory Inventory) Clean() *Inventory {
 	return &Inventory{Meta: inventory.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (inventory Inventory) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: inventory.Meta}
+}
+
 func (inventory Inventory) GetName() string {
 	return Deref(inventory.Name)
 }

@@ -31,11 +31,11 @@ func (consignment Consignment) Clean() *Consignment {
 }
 
 func NewConsignmentFromAssortment(assortmentPosition AssortmentPosition) *Consignment {
-	return unmarshalAsType[Consignment](assortmentPosition)
+	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
 func (consignment Consignment) FromAssortment(assortmentPosition AssortmentPosition) *Consignment {
-	return unmarshalAsType[Consignment](assortmentPosition)
+	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
 func (consignment Consignment) AsAssortment() *AssortmentPosition {

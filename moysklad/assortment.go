@@ -53,7 +53,7 @@ func (assortmentPosition *AssortmentPosition) String() string {
 	return Stringify(assortmentPosition.Meta)
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
+// MetaType реализует интерфейс MetaTyper
 func (assortmentPosition AssortmentPosition) MetaType() MetaType {
 	return assortmentPosition.Meta.GetType()
 }
@@ -62,12 +62,12 @@ func (assortmentPosition AssortmentPosition) GetMeta() Meta {
 	return assortmentPosition.Meta
 }
 
-// Raw удовлетворяет интерфейсу RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper
 func (assortmentPosition AssortmentPosition) Raw() []byte {
 	return assortmentPosition.raw
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (assortmentPosition *AssortmentPosition) UnmarshalJSON(data []byte) error {
 	type alias AssortmentPosition
 	var t alias
@@ -79,39 +79,39 @@ func (assortmentPosition *AssortmentPosition) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// AsProduct десериализует сырые данные в тип *Product
+// AsProduct десериализует объект в тип *Product
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsProduct() *Product {
-	return unmarshalAsType[Product](assortmentPosition)
+	return UnmarshalAsType[Product](assortmentPosition)
 }
 
-// AsVariant десериализует сырые данные в тип *Variant
+// AsVariant десериализует объект в тип *Variant
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsVariant() *Variant {
-	return unmarshalAsType[Variant](assortmentPosition)
+	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
-// AsBundle десериализует сырые данные в тип *Bundle
+// AsBundle десериализует объект в тип *Bundle
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsBundle() *Bundle {
-	return unmarshalAsType[Bundle](assortmentPosition)
+	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
-// AsService десериализует сырые данные в тип *Service
+// AsService десериализует объект в тип *Service
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsService() *Service {
-	return unmarshalAsType[Service](assortmentPosition)
+	return UnmarshalAsType[Service](assortmentPosition)
 }
 
-// AsConsignment десериализует сырые данные в тип *Consignment
+// AsConsignment десериализует объект в тип *Consignment
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsConsignment() *Consignment {
-	return unmarshalAsType[Consignment](assortmentPosition)
+	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
 // FilterBundle фильтрует позиции по типу Bundle (Комплект)

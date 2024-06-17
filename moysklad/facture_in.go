@@ -52,6 +52,11 @@ func (factureIn FactureIn) AsOperation() *Operation {
 	return &Operation{Meta: factureIn.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (factureIn FactureIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: factureIn.Meta}
+}
+
 func (factureIn FactureIn) GetMoment() Timestamp {
 	return Deref(factureIn.Moment)
 }

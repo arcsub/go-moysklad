@@ -62,6 +62,11 @@ func (invoiceOut InvoiceOut) AsOperation() *Operation {
 	return &Operation{Meta: invoiceOut.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (invoiceOut InvoiceOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: invoiceOut.Meta}
+}
+
 func (invoiceOut InvoiceOut) GetPayedSum() float64 {
 	return Deref(invoiceOut.PayedSum)
 }

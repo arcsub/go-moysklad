@@ -50,6 +50,11 @@ func (move Move) Clean() *Move {
 	return &Move{Meta: move.Meta}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (move Move) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: move.Meta}
+}
+
 func (move Move) GetMoment() Timestamp {
 	return Deref(move.Moment)
 }

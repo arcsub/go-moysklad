@@ -74,6 +74,11 @@ func (demand Demand) AsOperation() *Operation {
 	return &Operation{Meta: demand.GetMeta()}
 }
 
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (demand Demand) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: demand.Meta}
+}
+
 func (demand Demand) GetAccountID() uuid.UUID {
 	return Deref(demand.AccountID)
 }
