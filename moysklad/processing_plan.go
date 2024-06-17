@@ -257,6 +257,14 @@ func (processingPlanStages *ProcessingPlanStages) SetStandardHour(standardHour f
 	return processingPlanStages
 }
 
+func (processingPlanStages ProcessingPlanStages) String() string {
+	return Stringify(processingPlanStages)
+}
+
+func (processingPlanStages ProcessingPlanStages) MetaType() MetaType {
+	return MetaTypeProcessingPlanStages
+}
+
 // ProcessingPlanProduct Продукт Тех. карты.
 // Ключевое слово: processingplanresult
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-produkty-tehkarty
