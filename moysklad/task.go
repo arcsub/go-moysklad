@@ -231,6 +231,7 @@ type TaskOperation struct {
 	Meta *Meta   `json:"meta,omitempty"`
 	Name *string `json:"name,omitempty"`
 	raw  []byte
+	ID   uuid.UUID `json:"id"`
 }
 
 // MetaType реализует интерфейс MetaTyper
