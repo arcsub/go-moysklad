@@ -149,7 +149,7 @@ func (client *Client) WithDisabledWebhookContent(value bool) *Client {
 // Подробнее: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
 func (client *Client) WithDisabledWebhookByPrefix(urls ...string) *Client {
 	for _, url := range urls {
-		client.Header.Add("headerWebHookDisableByPrefix", url)
+		client.Header.Add(headerWebHookDisableByPrefix, url)
 	}
 	return client
 }
