@@ -173,7 +173,7 @@ type ConsignmentService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Consignment], *resty.Response, error)
 	Create(ctx context.Context, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params ...*Params) (*Slice[Consignment], *resty.Response, error)
-	DeleteMany(ctx context.Context, consignmentList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Consignment) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Consignment, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)

@@ -302,7 +302,7 @@ type ContractService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Contract], *resty.Response, error)
 	Create(ctx context.Context, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...*Params) (*Slice[Contract], *resty.Response, error)
-	DeleteMany(ctx context.Context, contractList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Contract) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

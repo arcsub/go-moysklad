@@ -216,7 +216,7 @@ type ProductFolderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProductFolder], *resty.Response, error)
 	Create(ctx context.Context, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productFolderList Slice[ProductFolder], params ...*Params) (*Slice[ProductFolder], *resty.Response, error)
-	DeleteMany(ctx context.Context, productFolderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...ProductFolder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

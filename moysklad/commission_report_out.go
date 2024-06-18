@@ -535,7 +535,7 @@ type CommissionReportOutService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportOut], *resty.Response, error)
 	Create(ctx context.Context, commissionReportOut *CommissionReportOut, params ...*Params) (*CommissionReportOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, commissionReportOutList Slice[CommissionReportOut], params ...*Params) (*Slice[CommissionReportOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, commissionReportOutList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...CommissionReportOut) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, commissionReportOut *CommissionReportOut, params ...*Params) (*CommissionReportOut, *resty.Response, error)

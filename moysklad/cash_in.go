@@ -365,7 +365,7 @@ type CashInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CashIn], *resty.Response, error)
 	Create(ctx context.Context, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, cashInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...CashIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

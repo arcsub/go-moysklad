@@ -126,7 +126,7 @@ type TaxRateService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[TaxRate], *resty.Response, error)
 	Create(ctx context.Context, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, taxRateList Slice[TaxRate], params ...*Params) (*Slice[TaxRate], *resty.Response, error)
-	DeleteMany(ctx context.Context, taxRateList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...TaxRate) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*TaxRate, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)

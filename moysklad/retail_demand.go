@@ -640,7 +640,7 @@ type RetailDemandService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailDemand], *resty.Response, error)
 	Create(ctx context.Context, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailDemandList Slice[RetailDemand], params ...*Params) (*Slice[RetailDemand], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailDemandList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...RetailDemand) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDemand, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)

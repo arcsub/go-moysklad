@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
@@ -298,21 +299,48 @@ const (
 	PatentBased                      TaxSystem = "PATENT_BASED"                         // Патент
 )
 
+type assortmentService struct {
+	Endpoint
+}
+
+func (service *assortmentService) Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
+	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
+}
+
+func (service *assortmentService) GetAsync(ctx context.Context) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
+	_, resp, err := NewRequestBuilder[any](service.client, service.uri).SetParams(NewParams().withAsync()).Get(ctx)
+	if err != nil {
+		return nil, resp, nil
+	}
+	async := NewAsyncResultService[AssortmentResponse](service.client, resp)
+	return async, resp, err
+}
+
+func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AsAssortment) (*DeleteManyResponse, *resty.Response, error) {
+	return NewRequestBuilder[DeleteManyResponse](service.client, service.uri).Post(ctx, entities)
+}
+
+func (service *assortmentService) GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error) {
+	path := fmt.Sprintf("%s/settings", service.uri)
+	return NewRequestBuilder[AssortmentSettings](service.client, path).Get(ctx)
+}
+
+func (service *assortmentService) UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error) {
+	path := fmt.Sprintf("%s/settings", service.uri)
+	return NewRequestBuilder[AssortmentSettings](service.client, path).Put(ctx, settings)
+}
+
 // AssortmentService
 // Сервис для работы с ассортиментом.
 type AssortmentService interface {
 	Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
 	GetAsync(ctx context.Context) (AsyncResultService[AssortmentResponse], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...AsAssortment) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
-	GetEmbeddedTemplates(ctx context.Context) (*List[EmbeddedTemplate], *resty.Response, error)
-	GetEmbeddedTemplateByID(ctx context.Context, id uuid.UUID) (*EmbeddedTemplate, *resty.Response, error)
-	GetCustomTemplates(ctx context.Context) (*List[CustomTemplate], *resty.Response, error)
-	GetCustomTemplateByID(ctx context.Context, id uuid.UUID) (*CustomTemplate, *resty.Response, error)
 }
 
 func NewAssortmentService(client *Client) AssortmentService {
 	e := NewEndpoint(client, "entity/assortment")
-	return newMainService[AssortmentResponse, any, any, AssortmentSettings](e)
+	return &assortmentService{e}
 }

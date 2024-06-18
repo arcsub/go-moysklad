@@ -671,7 +671,7 @@ type CustomerOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CustomerOrder], *resty.Response, error)
 	Create(ctx context.Context, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, customerOrderList Slice[CustomerOrder], params ...*Params) (*Slice[CustomerOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, customerOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...CustomerOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CustomerOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)

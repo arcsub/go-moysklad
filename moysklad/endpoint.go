@@ -9,8 +9,7 @@ import (
 	"strings"
 )
 
-type mainService[E any, P any, M any, S any] struct {
-	endpointGetOne[E]
+type mainService[E MetaOwner, P any, M any, S any] struct {
 	endpointGetList[E]
 	endpointCreate[E]
 	endpointCreateUpdateMany[E]
@@ -29,7 +28,6 @@ type mainService[E any, P any, M any, S any] struct {
 	endpointTemplate[E]
 	endpointPublication
 	endpointSettings[S]
-	endpointGetOneAsync[E]
 	endpointPrintTemplates
 	endpointTrash
 	endpointPrintDocument
@@ -40,9 +38,8 @@ type mainService[E any, P any, M any, S any] struct {
 	endpointEvaluate[E]
 }
 
-func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M, S] {
+func newMainService[E MetaOwner, P any, M any, S any](e Endpoint) *mainService[E, P, M, S] {
 	return &mainService[E, P, M, S]{
-		endpointGetOne:           endpointGetOne[E]{e},
 		endpointGetList:          endpointGetList[E]{e},
 		endpointCreate:           endpointCreate[E]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[E]{e},
@@ -60,7 +57,6 @@ func newMainService[E any, P any, M any, S any](e Endpoint) *mainService[E, P, M
 		endpointPositions:        endpointPositions[P]{e},
 		endpointPublication:      endpointPublication{e},
 		endpointSettings:         endpointSettings[S]{e},
-		endpointGetOneAsync:      endpointGetOneAsync[E]{e},
 		endpointPrintTemplates:   endpointPrintTemplates{e},
 		endpointTrash:            endpointTrash{e},
 		endpointPrintDocument:    endpointPrintDocument{e},
@@ -94,30 +90,6 @@ type endpointGetByID[T any] struct{ Endpoint }
 func (endpoint *endpointGetByID[T]) GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", endpoint.uri, id)
 	return NewRequestBuilder[T](endpoint.client, path).SetParams(params...).Get(ctx)
-}
-
-type endpointGetOne[T any] struct{ Endpoint }
-
-// Get Запрос (отдельный) на получение объекта. Например, ассортимент, контекст.
-func (endpoint *endpointGetOne[T]) Get(ctx context.Context, params ...*Params) (*T, *resty.Response, error) {
-	return NewRequestBuilder[T](endpoint.client, endpoint.uri).SetParams(params...).Get(ctx)
-}
-
-type endpointGetOneAsync[T any] struct{ Endpoint }
-
-// GetAsync Запрос на асинхронное выполнение задачи.
-// Первым возвращаемым аргументом является сервис для дальнейшей работы с конкретной асинхронной задачей.
-func (endpoint *endpointGetOneAsync[T]) GetAsync(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
-	_, resp, err := NewRequestBuilder[PrintFile](endpoint.client, endpoint.uri).
-		SetParams(NewParams().withAsync()).
-		Get(ctx)
-
-	if err != nil {
-		return nil, resp, nil
-	}
-
-	async := NewAsyncResultService[T](endpoint.client, resp)
-	return async, resp, err
 }
 
 type endpointMetadata[T any] struct{ Endpoint }
@@ -212,13 +184,17 @@ type DeleteManyResponse []struct {
 	ApiErrors ApiErrors `json:"errors"`
 }
 
-type endpointDeleteMany[T any] struct{ Endpoint }
+type endpointDeleteMany[T MetaOwner] struct{ Endpoint }
 
 // DeleteMany Запрос на удаление нескольких объектов.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (endpoint *endpointDeleteMany[T]) DeleteMany(ctx context.Context, entities []MetaWrapper) (*DeleteManyResponse, *resty.Response, error) {
+func (endpoint *endpointDeleteMany[T]) DeleteMany(ctx context.Context, entities ...T) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/delete", endpoint.uri)
-	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, entities)
+	var body []MetaWrapper
+	for _, entity := range entities {
+		body = append(body, entity.GetMeta().Wrap())
+	}
+	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, body)
 }
 
 type endpointCreateUpdateMany[T any] struct{ Endpoint }

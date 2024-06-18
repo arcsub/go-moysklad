@@ -342,7 +342,7 @@ type InventoryService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Inventory], *resty.Response, error)
 	Create(ctx context.Context, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...*Params) (*Slice[Inventory], *resty.Response, error)
-	DeleteMany(ctx context.Context, inventoryList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Inventory) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Inventory, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)

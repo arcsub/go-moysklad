@@ -545,7 +545,7 @@ type RetailSalesReturnService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailSalesReturn], *resty.Response, error)
 	Create(ctx context.Context, retailSalesReturn *RetailSalesReturn, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailSalesReturnList Slice[RetailSalesReturn], params ...*Params) (*Slice[RetailSalesReturn], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailSalesReturnList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...RetailSalesReturn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailSalesReturn *RetailSalesReturn, params ...*Params) (*RetailSalesReturn, *resty.Response, error)

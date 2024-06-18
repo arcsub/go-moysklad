@@ -455,7 +455,7 @@ type MoveService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Move], *resty.Response, error)
 	Create(ctx context.Context, move *Move, params ...*Params) (*Move, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, moveList Slice[Move], params ...*Params) (*Slice[Move], *resty.Response, error)
-	DeleteMany(ctx context.Context, moveList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Move) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Move, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, move *Move, params ...*Params) (*Move, *resty.Response, error)

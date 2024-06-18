@@ -521,7 +521,7 @@ type OrganizationService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Organization], *resty.Response, error)
 	Create(ctx context.Context, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params ...*Params) (*Slice[Organization], *resty.Response, error)
-	DeleteMany(ctx context.Context, organizationList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Organization) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Organization, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)

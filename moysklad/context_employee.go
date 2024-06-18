@@ -522,6 +522,10 @@ type ContextEmployee struct {
 	Archived     bool               `json:"archived"`
 }
 
+func (contextEmployee ContextEmployee) GetMeta() Meta {
+	return contextEmployee.Meta
+}
+
 func (contextEmployee ContextEmployee) String() string {
 	return Stringify(contextEmployee)
 }
@@ -530,13 +534,20 @@ func (contextEmployee ContextEmployee) MetaType() MetaType {
 	return MetaTypeEmployeeContext
 }
 
-// ContextEmployeeService
-// Сервис для работы с контекстом сотрудника.
+type contextEmployeeService struct {
+	Endpoint
+}
+
+func (service *contextEmployeeService) Get(ctx context.Context) (*ContextEmployee, *resty.Response, error) {
+	return NewRequestBuilder[ContextEmployee](service.client, service.uri).Get(ctx)
+}
+
+// ContextEmployeeService Сервис для работы с контекстом сотрудника.
 type ContextEmployeeService interface {
-	Get(ctx context.Context, params ...*Params) (*ContextEmployee, *resty.Response, error)
+	Get(ctx context.Context) (*ContextEmployee, *resty.Response, error)
 }
 
 func NewContextEmployeeService(client *Client) ContextEmployeeService {
 	e := NewEndpoint(client, "context/employee")
-	return newMainService[ContextEmployee, any, any, any](e)
+	return &contextEmployeeService{e}
 }

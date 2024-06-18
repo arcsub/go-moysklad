@@ -600,7 +600,7 @@ type SupplyService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Supply], *resty.Response, error)
 	Create(ctx context.Context, supply *Supply, params ...*Params) (*Supply, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, supplyList Slice[Supply], params ...*Params) (*Slice[Supply], *resty.Response, error)
-	DeleteMany(ctx context.Context, supplyList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Supply) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Supply, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, supply *Supply, params ...*Params) (*Supply, *resty.Response, error)

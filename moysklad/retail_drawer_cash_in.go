@@ -266,7 +266,7 @@ type RetailDrawerCashInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailDrawerCashIn], *resty.Response, error)
 	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params ...*Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailDrawerCashInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...RetailDrawerCashIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDrawerCashIn *RetailDrawerCashIn, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)

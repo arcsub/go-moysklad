@@ -425,7 +425,7 @@ type EnterService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Enter], *resty.Response, error)
 	Create(ctx context.Context, enter *Enter, params ...*Params) (*Enter, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, enterList Slice[Enter], params ...*Params) (*Slice[Enter], *resty.Response, error)
-	DeleteMany(ctx context.Context, enterList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Enter) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Enter, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, enter *Enter, params ...*Params) (*Enter, *resty.Response, error)

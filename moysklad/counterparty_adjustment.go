@@ -221,7 +221,7 @@ type CounterPartyAdjustmentService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CounterpartyAdjustment], *resty.Response, error)
 	Create(ctx context.Context, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterpartyAdjustment], params ...*Params) (*Slice[CounterpartyAdjustment], *resty.Response, error)
-	DeleteMany(ctx context.Context, counterPartyAdjustmentList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...CounterpartyAdjustment) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)

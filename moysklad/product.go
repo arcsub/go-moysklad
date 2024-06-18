@@ -542,7 +542,7 @@ type ProductService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Product], *resty.Response, error)
 	Create(ctx context.Context, product *Product, params ...*Params) (*Product, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productList Slice[Product], params ...*Params) (*Slice[Product], *resty.Response, error)
-	DeleteMany(ctx context.Context, productList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Product) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

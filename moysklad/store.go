@@ -350,7 +350,7 @@ type StoreService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Store], *resty.Response, error)
 	Create(ctx context.Context, store *Store, params ...*Params) (*Store, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, storeList Slice[Store], params ...*Params) (*Slice[Store], *resty.Response, error)
-	DeleteMany(ctx context.Context, storeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Store) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

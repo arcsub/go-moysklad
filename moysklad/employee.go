@@ -389,7 +389,7 @@ type EmployeeService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Employee], *resty.Response, error)
 	Create(ctx context.Context, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, employeeList Slice[Employee], params ...*Params) (*Slice[Employee], *resty.Response, error)
-	DeleteMany(ctx context.Context, employeeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Employee) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)

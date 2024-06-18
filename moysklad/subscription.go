@@ -38,13 +38,20 @@ const (
 	TariffTrial        Tariff = "TRIAL"        // Тариф "Пробный"
 )
 
-// SubscriptionService
-// Сервис для работы с подпиской компании.
+type subscriptionService struct {
+	Endpoint
+}
+
+func (service *subscriptionService) Get(ctx context.Context) (*Subscription, *resty.Response, error) {
+	return NewRequestBuilder[Subscription](service.client, service.uri).Get(ctx)
+}
+
+// SubscriptionService Сервис для работы с подпиской компании.
 type SubscriptionService interface {
-	Get(ctx context.Context, params ...*Params) (*Subscription, *resty.Response, error)
+	Get(ctx context.Context) (*Subscription, *resty.Response, error)
 }
 
 func NewSubscriptionService(client *Client) SubscriptionService {
 	e := NewEndpoint(client, "entity/subscription")
-	return newMainService[Subscription, any, any, any](e)
+	return &subscriptionService{e}
 }

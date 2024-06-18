@@ -331,7 +331,7 @@ type FactureInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[FactureIn], *resty.Response, error)
 	Create(ctx context.Context, factureIn *FactureIn, params ...*Params) (*FactureIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, factureInList Slice[FactureIn], params ...*Params) (*Slice[FactureIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, factureInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...FactureIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*FactureIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, factureIn *FactureIn, params ...*Params) (*FactureIn, *resty.Response, error)

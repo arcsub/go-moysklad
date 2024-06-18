@@ -519,7 +519,7 @@ type TaskService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Task], *resty.Response, error)
 	Create(ctx context.Context, task *Task, params ...*Params) (*Task, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...*Params) (*Slice[Task], *resty.Response, error)
-	DeleteMany(ctx context.Context, taskList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Task) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Task, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, task *Task, params ...*Params) (*Task, *resty.Response, error)

@@ -575,7 +575,7 @@ type PurchaseOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[PurchaseOrder], *resty.Response, error)
 	Create(ctx context.Context, purchaseOrder *PurchaseOrder, params ...*Params) (*PurchaseOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, purchaseOrderList Slice[PurchaseOrder], params ...*Params) (*Slice[PurchaseOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, purchaseOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...PurchaseOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, purchaseOrder *PurchaseOrder, params ...*Params) (*PurchaseOrder, *resty.Response, error)

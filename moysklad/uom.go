@@ -141,7 +141,7 @@ type UomService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Uom], *resty.Response, error)
 	Create(ctx context.Context, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, uomList Slice[Uom], params ...*Params) (*Slice[Uom], *resty.Response, error)
-	DeleteMany(ctx context.Context, uomList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Uom) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Uom, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)

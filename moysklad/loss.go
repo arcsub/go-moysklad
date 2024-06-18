@@ -400,7 +400,7 @@ type LossService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Loss], *resty.Response, error)
 	Create(ctx context.Context, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, lossList Slice[Loss], params ...*Params) (*Slice[Loss], *resty.Response, error)
-	DeleteMany(ctx context.Context, lossList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Loss) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Loss, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)

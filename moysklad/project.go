@@ -161,7 +161,7 @@ type ProjectService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Project], *resty.Response, error)
 	Create(ctx context.Context, project *Project, params ...*Params) (*Project, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, projectList Slice[Project], params ...*Params) (*Slice[Project], *resty.Response, error)
-	DeleteMany(ctx context.Context, projectList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Project) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Project, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, project *Project, params ...*Params) (*Project, *resty.Response, error)

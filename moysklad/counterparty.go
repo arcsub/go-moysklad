@@ -610,7 +610,7 @@ type CounterpartyService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Counterparty], *resty.Response, error)
 	Create(ctx context.Context, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...*Params) (*Slice[Counterparty], *resty.Response, error)
-	DeleteMany(ctx context.Context, counterpartyList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Counterparty) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Counterparty, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)

@@ -146,7 +146,7 @@ const (
 // ContextCompanySettingsService
 // Сервис для работы с настройками компании.
 type ContextCompanySettingsService interface {
-	Get(ctx context.Context, params ...*Params) (*CompanySettings, *resty.Response, error)
+	Get(ctx context.Context) (*CompanySettings, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, settings *CompanySettings, params ...*Params) (*CompanySettings, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetadataCompanySettings, *resty.Response, error)
 	GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error)
@@ -158,7 +158,6 @@ type ContextCompanySettingsService interface {
 
 type contextCompanySettingsService struct {
 	Endpoint
-	endpointGetOne[CompanySettings]
 	endpointUpdate[CompanySettings]
 	endpointMetadata[MetadataCompanySettings]
 }
@@ -167,10 +166,13 @@ func NewContextCompanySettingsService(client *Client) ContextCompanySettingsServ
 	e := NewEndpoint(client, "context/companysettings")
 	return &contextCompanySettingsService{
 		Endpoint:         e,
-		endpointGetOne:   endpointGetOne[CompanySettings]{e},
 		endpointUpdate:   endpointUpdate[CompanySettings]{e},
 		endpointMetadata: endpointMetadata[MetadataCompanySettings]{e},
 	}
+}
+
+func (service *contextCompanySettingsService) Get(ctx context.Context) (*CompanySettings, *resty.Response, error) {
+	return NewRequestBuilder[CompanySettings](service.client, service.uri).Get(ctx)
 }
 
 // GetPriceTypes Получить список всех типов цен.

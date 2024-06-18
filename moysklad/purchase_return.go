@@ -545,7 +545,7 @@ type PurchaseReturnService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[PurchaseReturn], *resty.Response, error)
 	Create(ctx context.Context, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, purchaseReturnList Slice[PurchaseReturn], params ...*Params) (*Slice[PurchaseReturn], *resty.Response, error)
-	DeleteMany(ctx context.Context, purchaseReturnList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...PurchaseReturn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)

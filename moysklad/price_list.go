@@ -378,7 +378,7 @@ type PriceListService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[PriceList], *resty.Response, error)
 	Create(ctx context.Context, priceList *PriceList, params ...*Params) (*PriceList, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, priceListList Slice[PriceList], params ...*Params) (*Slice[PriceList], *resty.Response, error)
-	DeleteMany(ctx context.Context, priceListList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...PriceList) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PriceList, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, priceList *PriceList, params ...*Params) (*PriceList, *resty.Response, error)

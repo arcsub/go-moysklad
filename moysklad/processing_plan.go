@@ -401,7 +401,7 @@ type ProcessingPlanService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlan], *resty.Response, error)
 	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingPlanList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)

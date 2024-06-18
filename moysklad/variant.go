@@ -332,7 +332,7 @@ type VariantService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Variant], *resty.Response, error)
 	Create(ctx context.Context, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, variantList Slice[Variant], params ...*Params) (*Slice[Variant], *resty.Response, error)
-	DeleteMany(ctx context.Context, variantList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...Variant) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Variant, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)

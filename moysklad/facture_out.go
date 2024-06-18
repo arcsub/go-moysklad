@@ -361,7 +361,7 @@ type FactureOutService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[FactureOut], *resty.Response, error)
 	Create(ctx context.Context, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, factureOutList Slice[FactureOut], params ...*Params) (*Slice[FactureOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, factureOutList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...FactureOut) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*FactureOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)

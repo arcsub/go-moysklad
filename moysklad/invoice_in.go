@@ -555,7 +555,7 @@ type InvoiceInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[InvoiceIn], *resty.Response, error)
 	Create(ctx context.Context, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, invoiceInList Slice[InvoiceIn], params ...*Params) (*Slice[InvoiceIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, invoiceInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...InvoiceIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InvoiceIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
