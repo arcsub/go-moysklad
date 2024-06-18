@@ -90,8 +90,8 @@ func (discount *Discount) SetAllAgents(allAgents bool) *Discount {
 	return discount
 }
 
-func (discount *Discount) SetAgentTags(agentTags Slice[string]) *Discount {
-	discount.AgentTags = agentTags
+func (discount *Discount) SetAgentTags(agentTags ...string) *Discount {
+	discount.AgentTags = NewSliceFrom(agentTags)
 	return discount
 }
 
@@ -229,8 +229,8 @@ func (accumulationDiscount *AccumulationDiscount) SetActive(active bool) *Accumu
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags Slice[string]) *AccumulationDiscount {
-	accumulationDiscount.AgentTags = agentTags
+func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags ...string) *AccumulationDiscount {
+	accumulationDiscount.AgentTags = NewSliceFrom(agentTags)
 	return accumulationDiscount
 }
 
@@ -249,12 +249,12 @@ func (accumulationDiscount *AccumulationDiscount) SetAssortment(assortment Assor
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *AccumulationDiscount {
-	accumulationDiscount.ProductFolders = NewMetaArrayRows(productFolders)
+func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders ...*ProductFolder) *AccumulationDiscount {
+	accumulationDiscount.ProductFolders = NewMetaArrayFrom(productFolders)
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetLevels(levels Slice[AccumulationLevel]) *AccumulationDiscount {
+func (accumulationDiscount *AccumulationDiscount) SetLevels(levels ...*AccumulationLevel) *AccumulationDiscount {
 	accumulationDiscount.Levels = levels
 	return accumulationDiscount
 }
@@ -367,8 +367,8 @@ func (personalDiscount *PersonalDiscount) SetActive(active bool) *PersonalDiscou
 	return personalDiscount
 }
 
-func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags Slice[string]) *PersonalDiscount {
-	personalDiscount.AgentTags = agentTags
+func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags ...string) *PersonalDiscount {
+	personalDiscount.AgentTags = NewSliceFrom(agentTags)
 	return personalDiscount
 }
 
@@ -387,8 +387,8 @@ func (personalDiscount *PersonalDiscount) SetAssortment(assortment Assortment) *
 	return personalDiscount
 }
 
-func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *PersonalDiscount {
-	personalDiscount.ProductFolders = NewMetaArrayRows(productFolders)
+func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders ...*ProductFolder) *PersonalDiscount {
+	personalDiscount.ProductFolders = NewMetaArrayFrom(productFolders)
 	return personalDiscount
 }
 
@@ -491,8 +491,8 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetActive(active bool) *Specia
 	return specialPriceDiscount
 }
 
-func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags Slice[string]) *SpecialPriceDiscount {
-	specialPriceDiscount.AgentTags = agentTags
+func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags ...string) *SpecialPriceDiscount {
+	specialPriceDiscount.AgentTags = NewSliceFrom(agentTags)
 	return specialPriceDiscount
 }
 
@@ -516,8 +516,8 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetAssortment(assortment Assor
 	return specialPriceDiscount
 }
 
-func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *SpecialPriceDiscount {
-	specialPriceDiscount.ProductFolders = NewMetaArrayRows(productFolders)
+func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders ...*ProductFolder) *SpecialPriceDiscount {
+	specialPriceDiscount.ProductFolders = NewMetaArrayFrom(productFolders)
 	return specialPriceDiscount
 }
 

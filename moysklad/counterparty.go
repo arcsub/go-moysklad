@@ -55,7 +55,7 @@ type Counterparty struct {
 	OGRN               *string                   `json:"ogrn,omitempty"`
 	CompanyType        CompanyType               `json:"companyType,omitempty"`
 	Sex                Sex                       `json:"sex,omitempty"`
-	Attributes         Slice[AttributeValue]     `json:"attributes,omitempty"`
+	Attributes         Slice[Attribute]          `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -244,7 +244,7 @@ func (counterparty Counterparty) GetSex() Sex {
 	return counterparty.Sex
 }
 
-func (counterparty Counterparty) GetAttributes() Slice[AttributeValue] {
+func (counterparty Counterparty) GetAttributes() Slice[Attribute] {
 	return counterparty.Attributes
 }
 
@@ -268,13 +268,13 @@ func (counterparty *Counterparty) SetArchived(archived bool) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetNotes(notes Slice[Note]) *Counterparty {
-	counterparty.Notes = NewMetaArrayRows(notes)
+func (counterparty *Counterparty) SetNotes(notes ...*Note) *Counterparty {
+	counterparty.Notes = NewMetaArrayFrom(notes)
 	return counterparty
 }
 
 func (counterparty *Counterparty) SetBonusProgram(bonusProgram *BonusProgram) *Counterparty {
-	counterparty.BonusProgram = NewNullValueWith(bonusProgram.Clean())
+	counterparty.BonusProgram = NewNullValueFrom(bonusProgram.Clean())
 	return counterparty
 }
 
@@ -293,8 +293,8 @@ func (counterparty *Counterparty) SetOGRNIP(ogrnip string) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetContactPersons(contactPersons Slice[ContactPerson]) *Counterparty {
-	counterparty.ContactPersons = NewMetaArrayRows(contactPersons)
+func (counterparty *Counterparty) SetContactPersons(contactPersons ...*ContactPerson) *Counterparty {
+	counterparty.ContactPersons = NewMetaArrayFrom(contactPersons)
 	return counterparty
 }
 
@@ -333,8 +333,8 @@ func (counterparty *Counterparty) SetOwner(owner *Employee) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetFiles(files Slice[File]) *Counterparty {
-	counterparty.Files = NewMetaArrayRows(files)
+func (counterparty *Counterparty) SetFiles(files ...*File) *Counterparty {
+	counterparty.Files = NewMetaArrayFrom(files)
 	return counterparty
 }
 
@@ -353,8 +353,8 @@ func (counterparty *Counterparty) SetActualAddressFull(actualAddressFull *Addres
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetAccounts(accounts Slice[AgentAccount]) *Counterparty {
-	counterparty.Accounts = NewMetaArrayRows(accounts)
+func (counterparty *Counterparty) SetAccounts(accounts ...*AgentAccount) *Counterparty {
+	counterparty.Accounts = NewMetaArrayFrom(accounts)
 	return counterparty
 }
 
@@ -379,7 +379,7 @@ func (counterparty *Counterparty) SetShared(shared bool) *Counterparty {
 }
 
 func (counterparty *Counterparty) SetState(state *State) *Counterparty {
-	counterparty.State = NewNullValueWith(state.Clean())
+	counterparty.State = NewNullValueFrom(state.Clean())
 	return counterparty
 }
 
@@ -453,7 +453,7 @@ func (counterparty *Counterparty) SetSex(sex Sex) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetAttributes(attributes Slice[AttributeValue]) *Counterparty {
+func (counterparty *Counterparty) SetAttributes(attributes ...*Attribute) *Counterparty {
 	counterparty.Attributes = attributes
 	return counterparty
 }
@@ -610,7 +610,7 @@ type CounterpartyService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Counterparty], *resty.Response, error)
 	Create(ctx context.Context, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...*Params) (*Slice[Counterparty], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Counterparty) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Counterparty) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Counterparty, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
@@ -618,15 +618,15 @@ type CounterpartyService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetSettings(ctx context.Context) (*CounterpartySettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *CounterpartySettings) (*CounterpartySettings, *resty.Response, error)
 	GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
 	GetAccountByID(ctx context.Context, id uuid.UUID, accountId uuid.UUID) (*AgentAccount, *resty.Response, error)
-	UpdateAccounts(ctx context.Context, id uuid.UUID, accounts Slice[AgentAccount]) (*MetaArray[AgentAccount], *resty.Response, error)
+	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Counterparty, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
@@ -643,9 +643,9 @@ type CounterpartyService interface {
 	DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type counterpartyService struct {

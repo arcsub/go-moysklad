@@ -44,7 +44,7 @@ type PaymentIn struct {
 	SyncID              *uuid.UUID               `json:"syncId,omitempty"`
 	Updated             *Timestamp               `json:"updated,omitempty"`
 	AccountID           *uuid.UUID               `json:"accountId,omitempty"`
-	Attributes          Slice[AttributeValue]    `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]         `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -193,7 +193,7 @@ func (paymentIn PaymentIn) GetAccountID() uuid.UUID {
 	return Deref(paymentIn.AccountID)
 }
 
-func (paymentIn PaymentIn) GetAttributes() Slice[AttributeValue] {
+func (paymentIn PaymentIn) GetAttributes() Slice[Attribute] {
 	return paymentIn.Attributes
 }
 
@@ -228,7 +228,7 @@ func (paymentIn *PaymentIn) SetName(name string) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetContract(contract *Contract) *PaymentIn {
-	paymentIn.Contract = NewNullValueWith(contract.Clean())
+	paymentIn.Contract = NewNullValueFrom(contract.Clean())
 	return paymentIn
 }
 
@@ -247,8 +247,8 @@ func (paymentIn *PaymentIn) SetExternalCode(externalCode string) *PaymentIn {
 	return paymentIn
 }
 
-func (paymentIn *PaymentIn) SetFiles(files Slice[File]) *PaymentIn {
-	paymentIn.Files = NewMetaArrayRows(files)
+func (paymentIn *PaymentIn) SetFiles(files ...*File) *PaymentIn {
+	paymentIn.Files = NewMetaArrayFrom(files)
 	return paymentIn
 }
 
@@ -303,7 +303,7 @@ func (paymentIn *PaymentIn) SetPaymentPurpose(paymentPurpose string) *PaymentIn 
 }
 
 func (paymentIn *PaymentIn) SetProject(project *Project) *PaymentIn {
-	paymentIn.Project = NewNullValueWith(project.Clean())
+	paymentIn.Project = NewNullValueFrom(project.Clean())
 	return paymentIn
 }
 
@@ -313,7 +313,7 @@ func (paymentIn *PaymentIn) SetNullProject() *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetRate(rate *Rate) *PaymentIn {
-	paymentIn.Rate = NewNullValueWith(rate)
+	paymentIn.Rate = NewNullValueFrom(rate)
 	return paymentIn
 }
 
@@ -328,7 +328,7 @@ func (paymentIn *PaymentIn) SetShared(shared bool) *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetSalesChannel(salesChannel *SalesChannel) *PaymentIn {
-	paymentIn.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	paymentIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
 	return paymentIn
 }
 
@@ -338,7 +338,7 @@ func (paymentIn *PaymentIn) SetNullSalesChannel() *PaymentIn {
 }
 
 func (paymentIn *PaymentIn) SetState(state *State) *PaymentIn {
-	paymentIn.State = NewNullValueWith(state.Clean())
+	paymentIn.State = NewNullValueFrom(state.Clean())
 	return paymentIn
 }
 
@@ -357,7 +357,7 @@ func (paymentIn *PaymentIn) SetSyncID(syncID uuid.UUID) *PaymentIn {
 	return paymentIn
 }
 
-func (paymentIn *PaymentIn) SetAttributes(attributes Slice[AttributeValue]) *PaymentIn {
+func (paymentIn *PaymentIn) SetAttributes(attributes ...*Attribute) *PaymentIn {
 	paymentIn.Attributes = attributes
 	return paymentIn
 }
@@ -396,7 +396,7 @@ type PaymentInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[PaymentIn], *resty.Response, error)
 	Create(ctx context.Context, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, paymentInList Slice[PaymentIn], params ...*Params) (*Slice[PaymentIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...PaymentIn) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*PaymentIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
@@ -406,13 +406,13 @@ type PaymentInService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PaymentIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -420,13 +420,13 @@ type PaymentInService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewPaymentInService(client *Client) PaymentInService {

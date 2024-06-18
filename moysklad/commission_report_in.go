@@ -53,7 +53,7 @@ type CommissionReportIn struct {
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`
 	RewardType                    RewardType                                   `json:"rewardType,omitempty"`
-	Attributes                    Slice[AttributeValue]                        `json:"attributes,omitempty"`
+	Attributes                    Slice[Attribute]                             `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -239,7 +239,7 @@ func (commissionReportIn CommissionReportIn) GetRewardType() RewardType {
 	return commissionReportIn.RewardType
 }
 
-func (commissionReportIn CommissionReportIn) GetAttributes() Slice[AttributeValue] {
+func (commissionReportIn CommissionReportIn) GetAttributes() Slice[Attribute] {
 	return commissionReportIn.Attributes
 }
 
@@ -298,8 +298,8 @@ func (commissionReportIn *CommissionReportIn) SetExternalCode(externalCode strin
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetFiles(files Slice[File]) *CommissionReportIn {
-	commissionReportIn.Files = NewMetaArrayRows(files)
+func (commissionReportIn *CommissionReportIn) SetFiles(files ...*File) *CommissionReportIn {
+	commissionReportIn.Files = NewMetaArrayFrom(files)
 	return commissionReportIn
 }
 
@@ -339,7 +339,7 @@ func (commissionReportIn *CommissionReportIn) SetPositions(positions *Positions[
 }
 
 func (commissionReportIn *CommissionReportIn) SetProject(project *Project) *CommissionReportIn {
-	commissionReportIn.Project = NewNullValueWith(project.Clean())
+	commissionReportIn.Project = NewNullValueFrom(project.Clean())
 	return commissionReportIn
 }
 
@@ -349,7 +349,7 @@ func (commissionReportIn *CommissionReportIn) SetNullProject() *CommissionReport
 }
 
 func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionReportIn {
-	commissionReportIn.Rate = NewNullValueWith(rate)
+	commissionReportIn.Rate = NewNullValueFrom(rate)
 	return commissionReportIn
 }
 
@@ -368,13 +368,13 @@ func (commissionReportIn *CommissionReportIn) SetRewardPercent(rewardPercent flo
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetPayments(payments Slice[Payment]) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetPayments(payments ...*Payment) *CommissionReportIn {
 	commissionReportIn.Payments = payments
 	return commissionReportIn
 }
 
 func (commissionReportIn *CommissionReportIn) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportIn {
-	commissionReportIn.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	commissionReportIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
 	return commissionReportIn
 }
 
@@ -389,7 +389,7 @@ func (commissionReportIn *CommissionReportIn) SetShared(shared bool) *Commission
 }
 
 func (commissionReportIn *CommissionReportIn) SetState(state *State) *CommissionReportIn {
-	commissionReportIn.State = NewNullValueWith(state.Clean())
+	commissionReportIn.State = NewNullValueFrom(state.Clean())
 	return commissionReportIn
 }
 
@@ -418,7 +418,7 @@ func (commissionReportIn *CommissionReportIn) SetRewardType(rewardType RewardTyp
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetAttributes(attributes Slice[AttributeValue]) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetAttributes(attributes ...*Attribute) *CommissionReportIn {
 	commissionReportIn.Attributes = attributes
 	return commissionReportIn
 }
@@ -669,7 +669,7 @@ type CommissionReportInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportIn], *resty.Response, error)
 	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...CommissionReportIn) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CommissionReportIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
@@ -678,18 +678,19 @@ type CommissionReportInService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportInPosition, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *CommissionReportInPosition) (*CommissionReportInPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[CommissionReportInPosition]) (*Slice[CommissionReportInPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportInPosition) (*Slice[CommissionReportInPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*CommissionReportInPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
@@ -697,7 +698,7 @@ type CommissionReportInService interface {
 	Template(ctx context.Context) (*CommissionReportIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetReturnPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error)
@@ -707,13 +708,13 @@ type CommissionReportInService interface {
 	DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	Evaluate(ctx context.Context, entity *CommissionReportIn, evaluate ...Evaluate) (*CommissionReportIn, *resty.Response, error)
 }
 

@@ -56,7 +56,7 @@ type Product struct {
 	Vat                 *int                  `json:"vat,omitempty"`
 	TrackingType        TrackingType          `json:"trackingType,omitempty"`
 	Volume              *float64              `json:"volume,omitempty"`
-	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]      `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -260,7 +260,7 @@ func (product Product) GetVolume() float64 {
 	return Deref(product.Volume)
 }
 
-func (product Product) GetAttributes() Slice[AttributeValue] {
+func (product Product) GetAttributes() Slice[Attribute] {
 	return product.Attributes
 }
 
@@ -300,7 +300,7 @@ func (product *Product) SetName(name string) *Product {
 }
 
 func (product *Product) SetAlcoholic(alcoholic *Alcoholic) *Product {
-	product.Alcoholic = NewNullValueWith(alcoholic)
+	product.Alcoholic = NewNullValueFrom(alcoholic)
 	return product
 }
 
@@ -334,8 +334,8 @@ func (product *Product) SetDiscountProhibited(discountProhibited bool) *Product 
 	return product
 }
 
-func (product *Product) SetFiles(files Slice[File]) *Product {
-	product.Files = NewMetaArrayRows(files)
+func (product *Product) SetFiles(files ...*File) *Product {
+	product.Files = NewMetaArrayFrom(files)
 	return product
 }
 
@@ -344,8 +344,8 @@ func (product *Product) SetGroup(group *Group) *Product {
 	return product
 }
 
-func (product *Product) SetImages(images Slice[Image]) *Product {
-	product.Images = NewMetaArrayRows(images)
+func (product *Product) SetImages(images ...*Image) *Product {
+	product.Images = NewMetaArrayFrom(images)
 	return product
 }
 
@@ -374,7 +374,7 @@ func (product *Product) SetOwner(owner *Employee) *Product {
 	return product
 }
 
-func (product *Product) SetPacks(packs Slice[Pack]) *Product {
+func (product *Product) SetPacks(packs ...*Pack) *Product {
 	product.Packs = packs
 	return product
 }
@@ -399,7 +399,7 @@ func (product *Product) SetProductFolder(productFolder *ProductFolder) *Product 
 	return product
 }
 
-func (product *Product) SetSalePrices(salePrices Slice[SalePrice]) *Product {
+func (product *Product) SetSalePrices(salePrices ...*SalePrice) *Product {
 	product.SalePrices = salePrices
 	return product
 }
@@ -419,8 +419,8 @@ func (product *Product) SetSyncID(syncID uuid.UUID) *Product {
 	return product
 }
 
-func (product *Product) SetThings(things Slice[string]) *Product {
-	product.Things = things
+func (product *Product) SetThings(things ...string) *Product {
+	product.Things = NewSliceFrom(things)
 	return product
 }
 
@@ -439,7 +439,7 @@ func (product *Product) SetUom(uom *Uom) *Product {
 	return product
 }
 
-func (product *Product) SetBarcodes(barcodes Slice[Barcode]) *Product {
+func (product *Product) SetBarcodes(barcodes ...*Barcode) *Product {
 	product.Barcodes = barcodes
 	return product
 }
@@ -459,7 +459,7 @@ func (product *Product) SetVolume(volume float64) *Product {
 	return product
 }
 
-func (product *Product) SetAttributes(attributes Slice[AttributeValue]) *Product {
+func (product *Product) SetAttributes(attributes ...*Attribute) *Product {
 	product.Attributes = attributes
 	return product
 }
@@ -542,23 +542,23 @@ type ProductService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Product], *resty.Response, error)
 	Create(ctx context.Context, product *Product, params ...*Params) (*Product, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productList Slice[Product], params ...*Params) (*Slice[Product], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Product) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Product) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Product, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, product *Product, params ...*Params) (*Product, *resty.Response, error)
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
-	UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id uuid.UUID, images []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Product, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
@@ -567,9 +567,9 @@ type ProductService interface {
 	PrintLabel(ctx context.Context, id uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewProductService(client *Client) ProductService {

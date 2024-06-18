@@ -40,7 +40,7 @@ type Agent struct {
 	Owner             *Employee                `json:"owner,omitempty"`
 	Email             *string                  `json:"email,omitempty"`
 	CompanyType       CompanyType              `json:"companyType,omitempty"`
-	Attributes        Slice[AttributeValue]    `json:"attributes,omitempty"`
+	Attributes        Slice[Attribute]         `json:"attributes,omitempty"`
 	raw               []byte
 }
 
@@ -181,7 +181,7 @@ func (agent Agent) GetCompanyType() CompanyType {
 	return agent.CompanyType
 }
 
-func (agent Agent) GetAttributes() Slice[AttributeValue] {
+func (agent Agent) GetAttributes() Slice[Attribute] {
 	return agent.Attributes
 }
 

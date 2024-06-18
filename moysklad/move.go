@@ -42,7 +42,7 @@ type Move struct {
 	SyncID        *uuid.UUID                `json:"syncId,omitempty"`
 	Supply        *Supply                   `json:"supply,omitempty"`
 	TargetStore   *Store                    `json:"targetStore,omitempty"`
-	Attributes    Slice[AttributeValue]     `json:"attributes,omitempty"`
+	Attributes    Slice[Attribute]          `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -183,7 +183,7 @@ func (move Move) GetSupply() Supply {
 	return Deref(move.Supply)
 }
 
-func (move Move) GetAttributes() Slice[AttributeValue] {
+func (move Move) GetAttributes() Slice[Attribute] {
 	return move.Attributes
 }
 
@@ -207,8 +207,8 @@ func (move *Move) SetExternalCode(externalCode string) *Move {
 	return move
 }
 
-func (move *Move) SetFiles(files Slice[File]) *Move {
-	move.Files = NewMetaArrayRows(files)
+func (move *Move) SetFiles(files ...*File) *Move {
+	move.Files = NewMetaArrayFrom(files)
 	return move
 }
 
@@ -218,7 +218,7 @@ func (move *Move) SetGroup(group *Group) *Move {
 }
 
 func (move *Move) SetInternalOrder(internalOrder *InternalOrder) *Move {
-	move.InternalOrder = NewNullValueWith(internalOrder.Clean())
+	move.InternalOrder = NewNullValueFrom(internalOrder.Clean())
 	return move
 }
 
@@ -228,7 +228,7 @@ func (move *Move) SetNullInternalOrder() *Move {
 }
 
 func (move *Move) SetCustomerOrder(customerOrder *CustomerOrder) *Move {
-	move.CustomerOrder = NewNullValueWith(customerOrder.Clean())
+	move.CustomerOrder = NewNullValueFrom(customerOrder.Clean())
 	return move
 }
 
@@ -273,7 +273,7 @@ func (move *Move) SetPositions(positions *Positions[MovePosition]) *Move {
 }
 
 func (move *Move) SetProject(project *Project) *Move {
-	move.Project = NewNullValueWith(project.Clean())
+	move.Project = NewNullValueFrom(project.Clean())
 	return move
 }
 
@@ -283,7 +283,7 @@ func (move *Move) SetNullProject() *Move {
 }
 
 func (move *Move) SetRate(rate *Rate) *Move {
-	move.Rate = NewNullValueWith(rate)
+	move.Rate = NewNullValueFrom(rate)
 	return move
 }
 
@@ -303,7 +303,7 @@ func (move *Move) SetSourceStore(sourceStore *Store) *Move {
 }
 
 func (move *Move) SetState(state *State) *Move {
-	move.State = NewNullValueWith(state.Clean())
+	move.State = NewNullValueFrom(state.Clean())
 	return move
 }
 
@@ -322,7 +322,7 @@ func (move *Move) SetTargetStore(targetStore *Store) *Move {
 	return move
 }
 
-func (move *Move) SetAttributes(attributes Slice[AttributeValue]) *Move {
+func (move *Move) SetAttributes(attributes ...*Attribute) *Move {
 	move.Attributes = attributes
 	return move
 }
@@ -436,8 +436,8 @@ func (movePosition *MovePosition) SetTargetSlot(targetSlot *Slot) *MovePosition 
 	return movePosition
 }
 
-func (movePosition *MovePosition) SetThings(things Slice[string]) *MovePosition {
-	movePosition.Things = things
+func (movePosition *MovePosition) SetThings(things ...string) *MovePosition {
+	movePosition.Things = NewSliceFrom(things)
 	return movePosition
 }
 
@@ -455,7 +455,7 @@ type MoveService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Move], *resty.Response, error)
 	Create(ctx context.Context, move *Move, params ...*Params) (*Move, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, moveList Slice[Move], params ...*Params) (*Slice[Move], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Move) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Move) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Move, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, move *Move, params ...*Params) (*Move, *resty.Response, error)
@@ -466,21 +466,22 @@ type MoveService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*MovePosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *MovePosition, params ...*Params) (*MovePosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *MovePosition) (*MovePosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[MovePosition]) (*Slice[MovePosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*MovePosition) (*Slice[MovePosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*MovePosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Move, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -488,13 +489,13 @@ type MoveService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	Evaluate(ctx context.Context, entity *Move, evaluate ...Evaluate) (*Move, *resty.Response, error)
 }
 

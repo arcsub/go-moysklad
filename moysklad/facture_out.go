@@ -42,7 +42,7 @@ type FactureOut struct {
 	Returns         Slice[PurchaseReturn] `json:"returns,omitempty"`
 	Consignee       *Counterparty         `json:"consignee,omitempty"`
 	PaymentNumber   *string               `json:"paymentNumber,omitempty"`
-	Attributes      Slice[AttributeValue] `json:"attributes,omitempty"`
+	Attributes      Slice[Attribute]      `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -188,7 +188,7 @@ func (factureOut FactureOut) GetPaymentNumber() string {
 	return Deref(factureOut.PaymentNumber)
 }
 
-func (factureOut FactureOut) GetAttributes() Slice[AttributeValue] {
+func (factureOut FactureOut) GetAttributes() Slice[Attribute] {
 	return factureOut.Attributes
 }
 
@@ -208,7 +208,7 @@ func (factureOut *FactureOut) SetCode(code string) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetContract(contract *Contract) *FactureOut {
-	factureOut.Contract = NewNullValueWith(contract.Clean())
+	factureOut.Contract = NewNullValueFrom(contract.Clean())
 	return factureOut
 }
 
@@ -232,8 +232,8 @@ func (factureOut *FactureOut) SetExternalCode(externalCode string) *FactureOut {
 	return factureOut
 }
 
-func (factureOut *FactureOut) SetFiles(files Slice[File]) *FactureOut {
-	factureOut.Files = NewMetaArrayRows(files)
+func (factureOut *FactureOut) SetFiles(files ...*File) *FactureOut {
+	factureOut.Files = NewMetaArrayFrom(files)
 	return factureOut
 }
 
@@ -268,7 +268,7 @@ func (factureOut *FactureOut) SetMeta(meta *Meta) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetRate(rate *Rate) *FactureOut {
-	factureOut.Rate = NewNullValueWith(rate)
+	factureOut.Rate = NewNullValueFrom(rate)
 	return factureOut
 }
 
@@ -283,7 +283,7 @@ func (factureOut *FactureOut) SetShared(shared bool) *FactureOut {
 }
 
 func (factureOut *FactureOut) SetState(state *State) *FactureOut {
-	factureOut.State = NewNullValueWith(state.Clean())
+	factureOut.State = NewNullValueFrom(state.Clean())
 	return factureOut
 }
 
@@ -302,12 +302,12 @@ func (factureOut *FactureOut) SetSyncID(syncID uuid.UUID) *FactureOut {
 	return factureOut
 }
 
-func (factureOut *FactureOut) SetDemands(demands Slice[Demand]) *FactureOut {
+func (factureOut *FactureOut) SetDemands(demands ...*Demand) *FactureOut {
 	factureOut.Demands = demands
 	return factureOut
 }
 
-func (factureOut *FactureOut) SetPayments(payments Slice[Payment]) *FactureOut {
+func (factureOut *FactureOut) SetPayments(payments ...*Payment) *FactureOut {
 	factureOut.Payments = payments
 	return factureOut
 }
@@ -327,7 +327,7 @@ func (factureOut *FactureOut) SetPaymentNumber(paymentNumber string) *FactureOut
 	return factureOut
 }
 
-func (factureOut *FactureOut) SetAttributes(attributes Slice[AttributeValue]) *FactureOut {
+func (factureOut *FactureOut) SetAttributes(attributes ...*Attribute) *FactureOut {
 	factureOut.Attributes = attributes
 	return factureOut
 }
@@ -361,7 +361,7 @@ type FactureOutService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[FactureOut], *resty.Response, error)
 	Create(ctx context.Context, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, factureOutList Slice[FactureOut], params ...*Params) (*Slice[FactureOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...FactureOut) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*FactureOut) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*FactureOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)
@@ -369,14 +369,14 @@ type FactureOutService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 	Template(ctx context.Context) (*FactureOut, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*FactureOut, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -384,13 +384,13 @@ type FactureOutService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewFactureOutService(client *Client) FactureOutService {

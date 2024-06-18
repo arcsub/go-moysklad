@@ -50,7 +50,7 @@ type CommissionReportOut struct {
 	VatEnabled            *bool                                   `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                                   `json:"vatIncluded,omitempty"`
 	RewardType            RewardType                              `json:"rewardType,omitempty"`
-	Attributes            Slice[AttributeValue]                   `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                        `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -228,7 +228,7 @@ func (commissionReportOut CommissionReportOut) GetRewardType() RewardType {
 	return commissionReportOut.RewardType
 }
 
-func (commissionReportOut CommissionReportOut) GetAttributes() Slice[AttributeValue] {
+func (commissionReportOut CommissionReportOut) GetAttributes() Slice[Attribute] {
 	return commissionReportOut.Attributes
 }
 
@@ -282,8 +282,8 @@ func (commissionReportOut *CommissionReportOut) SetExternalCode(externalCode str
 	return commissionReportOut
 }
 
-func (commissionReportOut *CommissionReportOut) SetFiles(files Slice[File]) *CommissionReportOut {
-	commissionReportOut.Files = NewMetaArrayRows(files)
+func (commissionReportOut *CommissionReportOut) SetFiles(files ...*File) *CommissionReportOut {
+	commissionReportOut.Files = NewMetaArrayFrom(files)
 	return commissionReportOut
 }
 
@@ -323,7 +323,7 @@ func (commissionReportOut *CommissionReportOut) SetPositions(positions *Position
 }
 
 func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *CommissionReportOut {
-	commissionReportOut.Project = NewNullValueWith(project.Clean())
+	commissionReportOut.Project = NewNullValueFrom(project.Clean())
 	return commissionReportOut
 }
 
@@ -333,7 +333,7 @@ func (commissionReportOut *CommissionReportOut) SetNullProject() *CommissionRepo
 }
 
 func (commissionReportOut *CommissionReportOut) SetRate(rate *Rate) *CommissionReportOut {
-	commissionReportOut.Rate = NewNullValueWith(rate)
+	commissionReportOut.Rate = NewNullValueFrom(rate)
 	return commissionReportOut
 }
 
@@ -347,13 +347,13 @@ func (commissionReportOut *CommissionReportOut) SetRewardPercent(rewardPercent f
 	return commissionReportOut
 }
 
-func (commissionReportOut *CommissionReportOut) SetPayments(payments Slice[Payment]) *CommissionReportOut {
+func (commissionReportOut *CommissionReportOut) SetPayments(payments ...*Payment) *CommissionReportOut {
 	commissionReportOut.Payments = payments
 	return commissionReportOut
 }
 
 func (commissionReportOut *CommissionReportOut) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportOut {
-	commissionReportOut.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	commissionReportOut.SalesChannel = NewNullValueFrom(salesChannel.Clean())
 	return commissionReportOut
 }
 
@@ -368,7 +368,7 @@ func (commissionReportOut *CommissionReportOut) SetShared(shared bool) *Commissi
 }
 
 func (commissionReportOut *CommissionReportOut) SetState(state *State) *CommissionReportOut {
-	commissionReportOut.State = NewNullValueWith(state.Clean())
+	commissionReportOut.State = NewNullValueFrom(state.Clean())
 	return commissionReportOut
 }
 
@@ -397,7 +397,7 @@ func (commissionReportOut *CommissionReportOut) SetRewardType(rewardType RewardT
 	return commissionReportOut
 }
 
-func (commissionReportOut *CommissionReportOut) SetAttributes(attributes Slice[AttributeValue]) *CommissionReportOut {
+func (commissionReportOut *CommissionReportOut) SetAttributes(attributes ...*Attribute) *CommissionReportOut {
 	commissionReportOut.Attributes = attributes
 	return commissionReportOut
 }
@@ -535,7 +535,7 @@ type CommissionReportOutService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportOut], *resty.Response, error)
 	Create(ctx context.Context, commissionReportOut *CommissionReportOut, params ...*Params) (*CommissionReportOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, commissionReportOutList Slice[CommissionReportOut], params ...*Params) (*Slice[CommissionReportOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...CommissionReportOut) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CommissionReportOut) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, commissionReportOut *CommissionReportOut, params ...*Params) (*CommissionReportOut, *resty.Response, error)
@@ -544,18 +544,19 @@ type CommissionReportOutService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CommissionReportOutPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportOutPosition, params ...*Params) (*CommissionReportOutPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *CommissionReportOutPosition) (*CommissionReportOutPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[CommissionReportOutPosition]) (*Slice[CommissionReportOutPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportOutPosition) (*Slice[CommissionReportOutPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*CommissionReportOutPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportOut, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
@@ -563,19 +564,19 @@ type CommissionReportOutService interface {
 	Template(ctx context.Context) (*CommissionReportOut, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	Evaluate(ctx context.Context, entity *CommissionReportOut, evaluate ...Evaluate) (*CommissionReportOut, *resty.Response, error)
 }
 

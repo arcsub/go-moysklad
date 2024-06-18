@@ -10,32 +10,32 @@ import (
 // Ключевое слово: retaildrawercashout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vyplata-deneg
 type RetailDrawerCashOut struct {
-	Meta         *Meta                 `json:"meta,omitempty"`
-	Applicable   *bool                 `json:"applicable,omitempty"`
-	Moment       *Timestamp            `json:"moment,omitempty"`
-	Name         *string               `json:"name,omitempty"`
-	Code         *string               `json:"code,omitempty"`
-	Created      *Timestamp            `json:"created,omitempty"`
-	Deleted      *Timestamp            `json:"deleted,omitempty"`
-	Description  *string               `json:"description,omitempty"`
-	ExternalCode *string               `json:"externalCode,omitempty"`
-	Files        *MetaArray[File]      `json:"files,omitempty"`
-	Group        *Group                `json:"group,omitempty"`
-	ID           *uuid.UUID            `json:"id,omitempty"`
-	RetailShift  *RetailShift          `json:"retailShift,omitempty"`
-	Agent        *Counterparty         `json:"agent,omitempty"`
-	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
-	Organization *Organization         `json:"organization,omitempty"`
-	Owner        *Employee             `json:"owner,omitempty"`
-	Printed      *bool                 `json:"printed,omitempty"`
-	Published    *bool                 `json:"published,omitempty"`
-	Rate         *NullValue[Rate]      `json:"rate,omitempty"`
-	Shared       *bool                 `json:"shared,omitempty"`
-	State        *NullValue[State]     `json:"state,omitempty"`
-	Sum          *float64              `json:"sum,omitempty"`
-	SyncID       *uuid.UUID            `json:"syncId,omitempty"`
-	Updated      *Timestamp            `json:"updated,omitempty"`
-	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	Meta         *Meta             `json:"meta,omitempty"`
+	Applicable   *bool             `json:"applicable,omitempty"`
+	Moment       *Timestamp        `json:"moment,omitempty"`
+	Name         *string           `json:"name,omitempty"`
+	Code         *string           `json:"code,omitempty"`
+	Created      *Timestamp        `json:"created,omitempty"`
+	Deleted      *Timestamp        `json:"deleted,omitempty"`
+	Description  *string           `json:"description,omitempty"`
+	ExternalCode *string           `json:"externalCode,omitempty"`
+	Files        *MetaArray[File]  `json:"files,omitempty"`
+	Group        *Group            `json:"group,omitempty"`
+	ID           *uuid.UUID        `json:"id,omitempty"`
+	RetailShift  *RetailShift      `json:"retailShift,omitempty"`
+	Agent        *Counterparty     `json:"agent,omitempty"`
+	AccountID    *uuid.UUID        `json:"accountId,omitempty"`
+	Organization *Organization     `json:"organization,omitempty"`
+	Owner        *Employee         `json:"owner,omitempty"`
+	Printed      *bool             `json:"printed,omitempty"`
+	Published    *bool             `json:"published,omitempty"`
+	Rate         *NullValue[Rate]  `json:"rate,omitempty"`
+	Shared       *bool             `json:"shared,omitempty"`
+	State        *NullValue[State] `json:"state,omitempty"`
+	Sum          *float64          `json:"sum,omitempty"`
+	SyncID       *uuid.UUID        `json:"syncId,omitempty"`
+	Updated      *Timestamp        `json:"updated,omitempty"`
+	Attributes   Slice[Attribute]  `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -148,7 +148,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetUpdated() Timestamp {
 	return Deref(retailDrawerCashOut.Updated)
 }
 
-func (retailDrawerCashOut RetailDrawerCashOut) GetAttributes() Slice[AttributeValue] {
+func (retailDrawerCashOut RetailDrawerCashOut) GetAttributes() Slice[Attribute] {
 	return retailDrawerCashOut.Attributes
 }
 
@@ -187,8 +187,8 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetExternalCode(externalCode str
 	return retailDrawerCashOut
 }
 
-func (retailDrawerCashOut *RetailDrawerCashOut) SetFiles(files Slice[File]) *RetailDrawerCashOut {
-	retailDrawerCashOut.Files = NewMetaArrayRows(files)
+func (retailDrawerCashOut *RetailDrawerCashOut) SetFiles(files ...*File) *RetailDrawerCashOut {
+	retailDrawerCashOut.Files = NewMetaArrayFrom(files)
 	return retailDrawerCashOut
 }
 
@@ -218,7 +218,7 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetOwner(owner *Employee) *Retai
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetRate(rate *Rate) *RetailDrawerCashOut {
-	retailDrawerCashOut.Rate = NewNullValueWith(rate)
+	retailDrawerCashOut.Rate = NewNullValueFrom(rate)
 	return retailDrawerCashOut
 }
 
@@ -233,7 +233,7 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetShared(shared bool) *RetailDr
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetState(state *State) *RetailDrawerCashOut {
-	retailDrawerCashOut.State = NewNullValueWith(state.Clean())
+	retailDrawerCashOut.State = NewNullValueFrom(state.Clean())
 	return retailDrawerCashOut
 }
 
@@ -247,7 +247,7 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetSyncID(syncID uuid.UUID) *Ret
 	return retailDrawerCashOut
 }
 
-func (retailDrawerCashOut *RetailDrawerCashOut) SetAttributes(attributes Slice[AttributeValue]) *RetailDrawerCashOut {
+func (retailDrawerCashOut *RetailDrawerCashOut) SetAttributes(attributes ...*Attribute) *RetailDrawerCashOut {
 	retailDrawerCashOut.Attributes = attributes
 	return retailDrawerCashOut
 }
@@ -281,7 +281,7 @@ type RetailDrawerCashOutService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailDrawerCashOut], *resty.Response, error)
 	Create(ctx context.Context, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailDrawerCashOutList Slice[RetailDrawerCashOut], params ...*Params) (*Slice[RetailDrawerCashOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...RetailDrawerCashOut) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*RetailDrawerCashOut) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
@@ -290,13 +290,13 @@ type RetailDrawerCashOutService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailDrawerCashOut, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -306,13 +306,13 @@ type RetailDrawerCashOutService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewRetailDrawerCashOutService(client *Client) RetailDrawerCashOutService {

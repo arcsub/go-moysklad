@@ -162,8 +162,8 @@ func (bonusProgram *BonusProgram) SetWelcomeBonusesMode(welcomeBonusesMode Welco
 	return bonusProgram
 }
 
-func (bonusProgram *BonusProgram) SetAgentTags(agentTags Slice[string]) *BonusProgram {
-	bonusProgram.AgentTags = agentTags
+func (bonusProgram *BonusProgram) SetAgentTags(agentTags ...string) *BonusProgram {
+	bonusProgram.AgentTags = NewSliceFrom(agentTags)
 	return bonusProgram
 }
 
@@ -207,7 +207,7 @@ type BonusProgramService interface {
 	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusProgram, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...BonusProgram) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewBonusProgramService(client *Client) BonusProgramService {

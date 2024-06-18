@@ -49,7 +49,7 @@ type Bundle struct {
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`
 	Barcodes            Slice[Barcode]              `json:"barcodes,omitempty"`
 	SalePrices          Slice[SalePrice]            `json:"salePrices,omitempty"`
-	Attributes          Slice[AttributeValue]       `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]            `json:"attributes,omitempty"`
 }
 
 func NewBundleFromAssortment(assortmentPosition AssortmentPosition) *Bundle {
@@ -216,7 +216,7 @@ func (bundle Bundle) GetPaymentItemType() PaymentItem {
 	return bundle.PaymentItemType
 }
 
-func (bundle Bundle) GetAttributes() Slice[AttributeValue] {
+func (bundle Bundle) GetAttributes() Slice[Attribute] {
 	return bundle.Attributes
 }
 
@@ -265,8 +265,8 @@ func (bundle *Bundle) SetArticle(article string) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetImages(images Slice[Image]) *Bundle {
-	bundle.Images = NewMetaArrayRows(images)
+func (bundle *Bundle) SetImages(images ...*Image) *Bundle {
+	bundle.Images = NewMetaArrayFrom(images)
 	return bundle
 }
 
@@ -276,7 +276,7 @@ func (bundle *Bundle) SetComponents(components *Positions[BundleComponent]) *Bun
 }
 
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
-	bundle.Country = NewNullValueWith(country.Clean())
+	bundle.Country = NewNullValueFrom(country.Clean())
 	return bundle
 }
 
@@ -290,8 +290,8 @@ func (bundle *Bundle) SetDiscountProhibited(discountProhibited bool) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetFiles(files Slice[File]) *Bundle {
-	bundle.Files = NewMetaArrayRows(files)
+func (bundle *Bundle) SetFiles(files ...*File) *Bundle {
+	bundle.Files = NewMetaArrayFrom(files)
 	return bundle
 }
 
@@ -306,7 +306,7 @@ func (bundle *Bundle) SetVat(vat int) *Bundle {
 }
 
 func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
-	bundle.MinPrice = NewNullValueWith(minPrice)
+	bundle.MinPrice = NewNullValueFrom(minPrice)
 	return bundle
 }
 
@@ -316,7 +316,7 @@ func (bundle *Bundle) SetNullMinPrice() *Bundle {
 }
 
 func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
-	bundle.Overhead = NewNullValueWith(overhead)
+	bundle.Overhead = NewNullValueFrom(overhead)
 	return bundle
 }
 
@@ -340,13 +340,13 @@ func (bundle *Bundle) SetWeight(weight float64) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetSalePrices(salePrices Slice[SalePrice]) *Bundle {
+func (bundle *Bundle) SetSalePrices(salePrices ...*SalePrice) *Bundle {
 	bundle.SalePrices = salePrices
 	return bundle
 }
 
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
-	bundle.ProductFolder = NewNullValueWith(productFolder.Clean())
+	bundle.ProductFolder = NewNullValueFrom(productFolder.Clean())
 	return bundle
 }
 
@@ -371,7 +371,7 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 }
 
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
-	bundle.Uom = NewNullValueWith(uom.Clean())
+	bundle.Uom = NewNullValueFrom(uom.Clean())
 	return bundle
 }
 
@@ -380,7 +380,7 @@ func (bundle *Bundle) SetNullUom() *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetBarcodes(barcodes Slice[Barcode]) *Bundle {
+func (bundle *Bundle) SetBarcodes(barcodes ...*Barcode) *Bundle {
 	bundle.Barcodes = barcodes
 	return bundle
 }
@@ -405,7 +405,7 @@ func (bundle *Bundle) SetPaymentItemType(paymentItemType PaymentItem) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetAttributes(attributes Slice[AttributeValue]) *Bundle {
+func (bundle *Bundle) SetAttributes(attributes ...*Attribute) *Bundle {
 	bundle.Attributes = attributes
 	return bundle
 }
@@ -515,7 +515,7 @@ type BundleService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Bundle, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Bundle) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Bundle) (*DeleteManyResponse, *resty.Response, error)
 	GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)
 	CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
@@ -523,14 +523,14 @@ type BundleService interface {
 	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
-	UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id uuid.UUID, images []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type bundleService struct {

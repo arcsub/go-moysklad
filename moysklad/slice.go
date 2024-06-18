@@ -2,6 +2,18 @@ package moysklad
 
 type Slice[E any] []*E
 
+func NewSlice[T any]() Slice[T] {
+	return make(Slice[T], 0)
+}
+
+func NewSliceFrom[T any](elements []T) Slice[T] {
+	s := make(Slice[T], len(elements))
+	for _, element := range elements {
+		s.Push(&element)
+	}
+	return s
+}
+
 // S возвращает простой срез.
 func (slice Slice[E]) S() []*E {
 	return slice
@@ -61,10 +73,6 @@ func (slice Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
 		items, chunks = items[chunkSize:], append(chunks, items[:chunkSize:chunkSize])
 	}
 	return append(chunks, items)
-}
-
-func NewSlice[T any]() Slice[T] {
-	return make(Slice[T], 0)
 }
 
 func (slice Slice[E]) UnPtr() []E {

@@ -49,7 +49,7 @@ type RetailShift struct {
 	VatEnabled          *bool                  `json:"vatEnabled,omitempty"`
 	PaymentOperations   Slice[Payment]         `json:"paymentOperations,omitempty"`
 	Operations          Slice[RetailOperation] `json:"operations,omitempty"`
-	Attributes          Slice[AttributeValue]  `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]       `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -218,7 +218,7 @@ func (retailShift RetailShift) GetOperations() Slice[RetailOperation] {
 	return retailShift.Operations
 }
 
-func (retailShift RetailShift) GetAttributes() Slice[AttributeValue] {
+func (retailShift RetailShift) GetAttributes() Slice[Attribute] {
 	return retailShift.Attributes
 }
 
@@ -267,8 +267,8 @@ func (retailShift *RetailShift) SetExternalCode(externalCode string) *RetailShif
 	return retailShift
 }
 
-func (retailShift *RetailShift) SetFiles(files Slice[File]) *RetailShift {
-	retailShift.Files = NewMetaArrayRows(files)
+func (retailShift *RetailShift) SetFiles(files ...*File) *RetailShift {
+	retailShift.Files = NewMetaArrayFrom(files)
 	return retailShift
 }
 
@@ -327,7 +327,7 @@ func (retailShift *RetailShift) SetSyncID(syncID uuid.UUID) *RetailShift {
 	return retailShift
 }
 
-func (retailShift *RetailShift) SetAttributes(attributes Slice[AttributeValue]) *RetailShift {
+func (retailShift *RetailShift) SetAttributes(attributes ...*Attribute) *RetailShift {
 	retailShift.Attributes = attributes
 	return retailShift
 }
@@ -405,10 +405,10 @@ type RetailShiftService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailShift, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
@@ -416,9 +416,9 @@ type RetailShiftService interface {
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewRetailShiftService(client *Client) RetailShiftService {

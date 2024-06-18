@@ -122,8 +122,8 @@ func (processingStage *ProcessingStage) SetOwner(owner *Employee) *ProcessingSta
 	return processingStage
 }
 
-func (processingStage *ProcessingStage) SetPerformers(performers Slice[Employee]) *ProcessingStage {
-	processingStage.Performers = NewMetaArrayRows[Employee](performers)
+func (processingStage *ProcessingStage) SetPerformers(performers ...*Employee) *ProcessingStage {
+	processingStage.Performers = NewMetaArrayFrom(performers)
 	return processingStage
 }
 
@@ -161,7 +161,7 @@ type ProcessingStageService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingStage], *resty.Response, error)
 	Create(ctx context.Context, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...*Params) (*Slice[ProcessingStage], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingStage, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)

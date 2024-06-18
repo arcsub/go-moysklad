@@ -140,7 +140,7 @@ type MetaArray[T any] struct {
 	Meta MetaCollection `json:"meta,omitempty"`
 }
 
-func NewMetaArrayRows[T any](rows Slice[T]) *MetaArray[T] {
+func NewMetaArrayFrom[T any](rows []*T) *MetaArray[T] {
 	return &MetaArray[T]{Rows: rows}
 }
 

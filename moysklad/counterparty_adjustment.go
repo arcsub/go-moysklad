@@ -10,27 +10,27 @@ import (
 // Ключевое слово: counterpartyadjustment
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-korrektirowka-wzaimoraschetow
 type CounterpartyAdjustment struct {
-	ExternalCode *string               `json:"externalCode,omitempty"`
-	Printed      *bool                 `json:"printed,omitempty"`
-	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
-	Group        *Group                `json:"group,omitempty"`
-	Files        *MetaArray[File]      `json:"files,omitempty"`
-	Applicable   *bool                 `json:"applicable,omitempty"`
-	Updated      *Timestamp            `json:"updated,omitempty"`
-	Created      *Timestamp            `json:"created,omitempty"`
-	Deleted      *Timestamp            `json:"deleted,omitempty"`
-	Description  *string               `json:"description,omitempty"`
-	Name         *string               `json:"name,omitempty"`
-	Agent        *Counterparty         `json:"agent,omitempty"`
-	Meta         *Meta                 `json:"meta,omitempty"`
-	Moment       *Timestamp            `json:"moment,omitempty"`
-	Organization *Organization         `json:"organization,omitempty"`
-	Owner        *Employee             `json:"owner,omitempty"`
-	ID           *uuid.UUID            `json:"id,omitempty"`
-	Published    *bool                 `json:"published,omitempty"`
-	Shared       *bool                 `json:"shared,omitempty"`
-	Sum          *float64              `json:"sum,omitempty"`
-	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	ExternalCode *string          `json:"externalCode,omitempty"`
+	Printed      *bool            `json:"printed,omitempty"`
+	AccountID    *uuid.UUID       `json:"accountId,omitempty"`
+	Group        *Group           `json:"group,omitempty"`
+	Files        *MetaArray[File] `json:"files,omitempty"`
+	Applicable   *bool            `json:"applicable,omitempty"`
+	Updated      *Timestamp       `json:"updated,omitempty"`
+	Created      *Timestamp       `json:"created,omitempty"`
+	Deleted      *Timestamp       `json:"deleted,omitempty"`
+	Description  *string          `json:"description,omitempty"`
+	Name         *string          `json:"name,omitempty"`
+	Agent        *Counterparty    `json:"agent,omitempty"`
+	Meta         *Meta            `json:"meta,omitempty"`
+	Moment       *Timestamp       `json:"moment,omitempty"`
+	Organization *Organization    `json:"organization,omitempty"`
+	Owner        *Employee        `json:"owner,omitempty"`
+	ID           *uuid.UUID       `json:"id,omitempty"`
+	Published    *bool            `json:"published,omitempty"`
+	Shared       *bool            `json:"shared,omitempty"`
+	Sum          *float64         `json:"sum,omitempty"`
+	Attributes   Slice[Attribute] `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -123,7 +123,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) GetSum() float64 {
 	return Deref(counterPartyAdjustment.Sum)
 }
 
-func (counterPartyAdjustment CounterpartyAdjustment) GetAttributes() Slice[AttributeValue] {
+func (counterPartyAdjustment CounterpartyAdjustment) GetAttributes() Slice[Attribute] {
 	return counterPartyAdjustment.Attributes
 }
 
@@ -137,8 +137,8 @@ func (counterPartyAdjustment *CounterpartyAdjustment) SetGroup(group *Group) *Co
 	return counterPartyAdjustment
 }
 
-func (counterPartyAdjustment *CounterpartyAdjustment) SetFiles(files Slice[File]) *CounterpartyAdjustment {
-	counterPartyAdjustment.Files = NewMetaArrayRows(files)
+func (counterPartyAdjustment *CounterpartyAdjustment) SetFiles(files ...*File) *CounterpartyAdjustment {
+	counterPartyAdjustment.Files = NewMetaArrayFrom(files)
 	return counterPartyAdjustment
 }
 
@@ -187,7 +187,7 @@ func (counterPartyAdjustment *CounterpartyAdjustment) SetShared(shared bool) *Co
 	return counterPartyAdjustment
 }
 
-func (counterPartyAdjustment *CounterpartyAdjustment) SetAttributes(attributes Slice[AttributeValue]) *CounterpartyAdjustment {
+func (counterPartyAdjustment *CounterpartyAdjustment) SetAttributes(attributes ...*Attribute) *CounterpartyAdjustment {
 	counterPartyAdjustment.Attributes = attributes
 	return counterPartyAdjustment
 }
@@ -221,7 +221,7 @@ type CounterPartyAdjustmentService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CounterpartyAdjustment], *resty.Response, error)
 	Create(ctx context.Context, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterpartyAdjustment], params ...*Params) (*Slice[CounterpartyAdjustment], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...CounterpartyAdjustment) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CounterpartyAdjustment) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
@@ -231,9 +231,9 @@ type CounterPartyAdjustmentService interface {
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewCounterPartyAdjustmentService(client *Client) CounterPartyAdjustmentService {

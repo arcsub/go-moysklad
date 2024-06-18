@@ -138,8 +138,8 @@ func (processingPlan *ProcessingPlan) SetGroup(group *Group) *ProcessingPlan {
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetStages(stages Slice[ProcessingPlanStages]) *ProcessingPlan {
-	processingPlan.Stages = NewMetaArrayRows(stages)
+func (processingPlan *ProcessingPlan) SetStages(stages ...*ProcessingPlanStages) *ProcessingPlan {
+	processingPlan.Stages = NewMetaArrayFrom(stages)
 	return processingPlan
 }
 
@@ -401,7 +401,7 @@ type ProcessingPlanService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlan], *resty.Response, error)
 	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
@@ -409,11 +409,12 @@ type ProcessingPlanService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*ProcessingPlanProduct) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStages(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error)
 	GetStageByID(ctx context.Context, id, stageID uuid.UUID) (*ProcessingStage, *resty.Response, error)

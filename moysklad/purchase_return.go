@@ -49,7 +49,7 @@ type PurchaseReturn struct {
 	FactureOut          *FactureOut                        `json:"factureOut,omitempty"`
 	InvoicedSum         *float64                           `json:"invoicedSum,omitempty"`
 	PayedSum            *float64                           `json:"payedSum,omitempty"`
-	Attributes          Slice[AttributeValue]              `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]                   `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -223,7 +223,7 @@ func (purchaseReturn PurchaseReturn) GetPayedSum() float64 {
 	return Deref(purchaseReturn.PayedSum)
 }
 
-func (purchaseReturn PurchaseReturn) GetAttributes() Slice[AttributeValue] {
+func (purchaseReturn PurchaseReturn) GetAttributes() Slice[Attribute] {
 	return purchaseReturn.Attributes
 }
 
@@ -242,7 +242,7 @@ func (purchaseReturn *PurchaseReturn) SetApplicable(applicable bool) *PurchaseRe
 	return purchaseReturn
 }
 
-func (purchaseReturn *PurchaseReturn) SetPayments(payments Slice[Payment]) *PurchaseReturn {
+func (purchaseReturn *PurchaseReturn) SetPayments(payments ...*Payment) *PurchaseReturn {
 	purchaseReturn.Payments = payments
 	return purchaseReturn
 }
@@ -267,8 +267,8 @@ func (purchaseReturn *PurchaseReturn) SetExternalCode(externalCode string) *Purc
 	return purchaseReturn
 }
 
-func (purchaseReturn *PurchaseReturn) SetFiles(files Slice[File]) *PurchaseReturn {
-	purchaseReturn.Files = NewMetaArrayRows(files)
+func (purchaseReturn *PurchaseReturn) SetFiles(files ...*File) *PurchaseReturn {
+	purchaseReturn.Files = NewMetaArrayFrom(files)
 	return purchaseReturn
 }
 
@@ -293,7 +293,7 @@ func (purchaseReturn *PurchaseReturn) SetName(name string) *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetContract(contract *Contract) *PurchaseReturn {
-	purchaseReturn.Contract = NewNullValueWith(contract.Clean())
+	purchaseReturn.Contract = NewNullValueFrom(contract.Clean())
 	return purchaseReturn
 }
 
@@ -308,7 +308,7 @@ func (purchaseReturn *PurchaseReturn) SetOrganization(organization *Organization
 }
 
 func (purchaseReturn *PurchaseReturn) SetProject(project *Project) *PurchaseReturn {
-	purchaseReturn.Project = NewNullValueWith(project.Clean())
+	purchaseReturn.Project = NewNullValueFrom(project.Clean())
 	return purchaseReturn
 }
 
@@ -318,7 +318,7 @@ func (purchaseReturn *PurchaseReturn) SetNullProject() *PurchaseReturn {
 }
 
 func (purchaseReturn *PurchaseReturn) SetRate(rate *Rate) *PurchaseReturn {
-	purchaseReturn.Rate = NewNullValueWith(rate)
+	purchaseReturn.Rate = NewNullValueFrom(rate)
 	return purchaseReturn
 }
 
@@ -392,7 +392,7 @@ func (purchaseReturn *PurchaseReturn) SetPayedSum(payedSum float64) *PurchaseRet
 	return purchaseReturn
 }
 
-func (purchaseReturn *PurchaseReturn) SetAttributes(attributes Slice[AttributeValue]) *PurchaseReturn {
+func (purchaseReturn *PurchaseReturn) SetAttributes(attributes ...*Attribute) *PurchaseReturn {
 	purchaseReturn.Attributes = attributes
 	return purchaseReturn
 }
@@ -526,8 +526,8 @@ func (purchaseReturnPosition *PurchaseReturnPosition) SetVatEnabled(vatEnabled b
 	return purchaseReturnPosition
 }
 
-func (purchaseReturnPosition *PurchaseReturnPosition) SetThings(things Slice[string]) *PurchaseReturnPosition {
-	purchaseReturnPosition.Things = things
+func (purchaseReturnPosition *PurchaseReturnPosition) SetThings(things ...string) *PurchaseReturnPosition {
+	purchaseReturnPosition.Things = NewSliceFrom(things)
 	return purchaseReturnPosition
 }
 
@@ -545,7 +545,7 @@ type PurchaseReturnService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[PurchaseReturn], *resty.Response, error)
 	Create(ctx context.Context, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, purchaseReturnList Slice[PurchaseReturn], params ...*Params) (*Slice[PurchaseReturn], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...PurchaseReturn) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*PurchaseReturn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
@@ -556,21 +556,22 @@ type PurchaseReturnService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PurchaseReturnPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PurchaseReturnPosition, params ...*Params) (*PurchaseReturnPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PurchaseReturnPosition) (*PurchaseReturnPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[PurchaseReturnPosition]) (*Slice[PurchaseReturnPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*PurchaseReturnPosition) (*Slice[PurchaseReturnPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*PurchaseReturnPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PurchaseReturn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -580,13 +581,13 @@ type PurchaseReturnService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	Evaluate(ctx context.Context, entity *PurchaseReturn, evaluate ...Evaluate) (*PurchaseReturn, *resty.Response, error)
 }
 

@@ -21,7 +21,7 @@ func (publication Publication) GetHref() string {
 	return Deref(publication.Href)
 }
 
-func (publication *Publication) SetTemplate(template Templater) *Publication {
+func (publication *Publication) SetTemplate(template TemplateInterface) *Publication {
 	meta := template.GetMeta()
 	publication.Template = &Template{Meta: &meta}
 	return publication

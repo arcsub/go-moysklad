@@ -428,8 +428,8 @@ func (retailStore *RetailStore) SetBankPercent(bankPercent float64) *RetailStore
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCashiers(cashiers Slice[Cashier]) *RetailStore {
-	retailStore.Cashiers = NewMetaArrayRows(cashiers)
+func (retailStore *RetailStore) SetCashiers(cashiers ...*Cashier) *RetailStore {
+	retailStore.Cashiers = NewMetaArrayFrom(cashiers)
 	return retailStore
 }
 
@@ -583,8 +583,8 @@ func (retailStore *RetailStore) SetSendMarksForCheck(sendMarksForCheck bool) *Re
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetProductFolders(productFolders Slice[ProductFolder]) *RetailStore {
-	retailStore.ProductFolders = NewMetaArrayRows(productFolders)
+func (retailStore *RetailStore) SetProductFolders(productFolders ...*ProductFolder) *RetailStore {
+	retailStore.ProductFolders = NewMetaArrayFrom(productFolders)
 	return retailStore
 }
 
@@ -678,23 +678,23 @@ func (retailStore *RetailStore) SetMarksCheckMode(marksCheckMode MarksCheckMode)
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetMasterRetailStores(masterRetailStores Slice[RetailStore]) *RetailStore {
+func (retailStore *RetailStore) SetMasterRetailStores(masterRetailStores ...*RetailStore) *RetailStore {
 	retailStore.MasterRetailStores = masterRetailStores
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetFilterAgentsTags(filterAgentsTags Slice[string]) *RetailStore {
-	retailStore.FilterAgentsTags = filterAgentsTags
+func (retailStore *RetailStore) SetFilterAgentsTags(filterAgentsTags ...string) *RetailStore {
+	retailStore.FilterAgentsTags = NewSliceFrom(filterAgentsTags)
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCustomerOrderStates(customerOrderStates Slice[State]) *RetailStore {
+func (retailStore *RetailStore) SetCustomerOrderStates(customerOrderStates ...*State) *RetailStore {
 	retailStore.CustomerOrderStates = customerOrderStates
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCreateAgentsTags(createAgentsTags Slice[string]) *RetailStore {
-	retailStore.CreateAgentsTags = createAgentsTags
+func (retailStore *RetailStore) SetCreateAgentsTags(createAgentsTags ...string) *RetailStore {
+	retailStore.CreateAgentsTags = NewSliceFrom(createAgentsTags)
 	return retailStore
 }
 
@@ -977,7 +977,7 @@ type RetailStoreService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailStore], *resty.Response, error)
 	Create(ctx context.Context, retailStore *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...*Params) (*Slice[RetailStore], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...RetailStore) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*RetailStore) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailStore, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, entity *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)

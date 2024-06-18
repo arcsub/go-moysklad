@@ -41,7 +41,7 @@ type CashIn struct {
 	Updated        *Timestamp               `json:"updated,omitempty"`
 	Name           *string                  `json:"name,omitempty"`
 	FactureIn      *FactureIn               `json:"factureIn,omitempty"`
-	Attributes     Slice[AttributeValue]    `json:"attributes,omitempty"`
+	Attributes     Slice[Attribute]         `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -178,7 +178,7 @@ func (cashIn CashIn) GetFactureIn() FactureIn {
 	return Deref(cashIn.FactureIn)
 }
 
-func (cashIn CashIn) GetAttributes() Slice[AttributeValue] {
+func (cashIn CashIn) GetAttributes() Slice[Attribute] {
 	return cashIn.Attributes
 }
 
@@ -208,7 +208,7 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 }
 
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
-	cashIn.Contract = NewNullValueWith(contract.Clean())
+	cashIn.Contract = NewNullValueFrom(contract.Clean())
 	return cashIn
 }
 
@@ -227,8 +227,8 @@ func (cashIn *CashIn) SetExternalCode(externalCode string) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetFiles(files Slice[File]) *CashIn {
-	cashIn.Files = NewMetaArrayRows(files)
+func (cashIn *CashIn) SetFiles(files ...*File) *CashIn {
+	cashIn.Files = NewMetaArrayFrom(files)
 	return cashIn
 }
 
@@ -263,7 +263,7 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 }
 
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
-	cashIn.Project = NewNullValueWith(project.Clean())
+	cashIn.Project = NewNullValueFrom(project.Clean())
 	return cashIn
 }
 
@@ -273,7 +273,7 @@ func (cashIn *CashIn) SetNullProject() *CashIn {
 }
 
 func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
-	cashIn.Rate = NewNullValueWith(rate)
+	cashIn.Rate = NewNullValueFrom(rate)
 	return cashIn
 }
 
@@ -283,7 +283,7 @@ func (cashIn *CashIn) SetNullRate() *CashIn {
 }
 
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
-	cashIn.SalesChannel = NewNullValueWith(salesChannel.Clean())
+	cashIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
 	return cashIn
 }
 
@@ -298,7 +298,7 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 }
 
 func (cashIn *CashIn) SetState(state *State) *CashIn {
-	cashIn.State = NewNullValueWith(state.Clean())
+	cashIn.State = NewNullValueFrom(state.Clean())
 	return cashIn
 }
 
@@ -327,7 +327,7 @@ func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetAttributes(attributes Slice[AttributeValue]) *CashIn {
+func (cashIn *CashIn) SetAttributes(attributes ...*Attribute) *CashIn {
 	cashIn.Attributes = attributes
 	return cashIn
 }
@@ -365,22 +365,22 @@ type CashInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CashIn], *resty.Response, error)
 	Create(ctx context.Context, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...CashIn) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CashIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	Template(ctx context.Context) (*CashIn, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CashIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -388,13 +388,13 @@ type CashInService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewCashInService(client *Client) CashInService {

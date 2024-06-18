@@ -39,7 +39,7 @@ type ProcessingOrder struct {
 	SyncID                *uuid.UUID                          `json:"syncId,omitempty"`
 	Updated               *Timestamp                          `json:"updated,omitempty"`
 	Processings           Slice[Processing]                   `json:"processings,omitempty"`
-	Attributes            Slice[AttributeValue]               `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                    `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -168,7 +168,7 @@ func (processingOrder ProcessingOrder) GetProcessings() Slice[Processing] {
 	return processingOrder.Processings
 }
 
-func (processingOrder ProcessingOrder) GetAttributes() Slice[AttributeValue] {
+func (processingOrder ProcessingOrder) GetAttributes() Slice[Attribute] {
 	return processingOrder.Attributes
 }
 
@@ -202,8 +202,8 @@ func (processingOrder *ProcessingOrder) SetExternalCode(externalCode string) *Pr
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetFiles(files Slice[File]) *ProcessingOrder {
-	processingOrder.Files = NewMetaArrayRows(files)
+func (processingOrder *ProcessingOrder) SetFiles(files ...*File) *ProcessingOrder {
+	processingOrder.Files = NewMetaArrayFrom(files)
 	return processingOrder
 }
 
@@ -243,7 +243,7 @@ func (processingOrder *ProcessingOrder) SetProcessingPlan(processingPlan *Proces
 }
 
 func (processingOrder *ProcessingOrder) SetProject(project *Project) *ProcessingOrder {
-	processingOrder.Project = NewNullValueWith(project.Clean())
+	processingOrder.Project = NewNullValueFrom(project.Clean())
 	return processingOrder
 }
 
@@ -268,7 +268,7 @@ func (processingOrder *ProcessingOrder) SetShared(shared bool) *ProcessingOrder 
 }
 
 func (processingOrder *ProcessingOrder) SetState(state *State) *ProcessingOrder {
-	processingOrder.State = NewNullValueWith(state.Clean())
+	processingOrder.State = NewNullValueFrom(state.Clean())
 	return processingOrder
 }
 
@@ -287,12 +287,12 @@ func (processingOrder *ProcessingOrder) SetSyncID(syncID uuid.UUID) *ProcessingO
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetProcessings(processings Slice[Processing]) *ProcessingOrder {
+func (processingOrder *ProcessingOrder) SetProcessings(processings ...*Processing) *ProcessingOrder {
 	processingOrder.Processings = processings
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetAttributes(attributes Slice[AttributeValue]) *ProcessingOrder {
+func (processingOrder *ProcessingOrder) SetAttributes(attributes ...*Attribute) *ProcessingOrder {
 	processingOrder.Attributes = attributes
 	return processingOrder
 }
@@ -390,7 +390,7 @@ type ProcessingOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingOrder], *resty.Response, error)
 	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...ProcessingOrder) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
@@ -401,31 +401,32 @@ type ProcessingOrderService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingOrderPosition) (*ProcessingOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingOrderPosition]) (*Slice[ProcessingOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingOrderPosition) (*Slice[ProcessingOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*ProcessingOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*ProcessingOrder, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewProcessingOrderService(client *Client) ProcessingOrderService {

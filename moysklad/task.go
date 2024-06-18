@@ -139,8 +139,8 @@ func (task *Task) SetDueToDate(dueToDate *Timestamp) *Task {
 	return task
 }
 
-func (task *Task) SetFiles(files Slice[File]) *Task {
-	task.Files = NewMetaArrayRows(files)
+func (task *Task) SetFiles(files ...*File) *Task {
+	task.Files = NewMetaArrayFrom(files)
 	return task
 }
 
@@ -154,8 +154,8 @@ func (task *Task) SetState(state *State) *Task {
 	return task
 }
 
-func (task *Task) SetNotes(notes Slice[TaskNote]) *Task {
-	task.Notes = NewMetaArrayRows(notes)
+func (task *Task) SetNotes(notes ...*TaskNote) *Task {
+	task.Notes = NewMetaArrayFrom(notes)
 	return task
 }
 
@@ -519,7 +519,7 @@ type TaskService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Task], *resty.Response, error)
 	Create(ctx context.Context, task *Task, params ...*Params) (*Task, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...*Params) (*Slice[Task], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Task) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Task) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Task, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, task *Task, params ...*Params) (*Task, *resty.Response, error)
@@ -527,15 +527,15 @@ type TaskService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetNotes(ctx context.Context, taskID uuid.UUID, params ...*Params) (*List[TaskNote], *resty.Response, error)
 	CreateNote(ctx context.Context, taskID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
-	CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error)
+	CreateNoteMany(ctx context.Context, taskID uuid.UUID, taskNotes ...*TaskNote) (*Slice[TaskNote], *resty.Response, error)
 	GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error)
 	UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNote *TaskNote) (*TaskNote, *resty.Response, error)
 	DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type taskService struct {
@@ -581,8 +581,8 @@ func (service *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, ta
 	return NewRequestBuilder[TaskNote](service.client, path).Post(ctx, taskNote)
 }
 
-// CreateNotes Запрос на создание нескольких комментариев к Задаче.
-func (service *taskService) CreateNotes(ctx context.Context, taskID uuid.UUID, taskNotes Slice[TaskNote]) (*Slice[TaskNote], *resty.Response, error) {
+// CreateNoteMany Запрос на создание нескольких комментариев к Задаче.
+func (service *taskService) CreateNoteMany(ctx context.Context, taskID uuid.UUID, taskNotes ...*TaskNote) (*Slice[TaskNote], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
 	return NewRequestBuilder[Slice[TaskNote]](service.client, path).Post(ctx, taskNotes)
 }

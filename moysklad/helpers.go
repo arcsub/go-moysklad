@@ -358,8 +358,8 @@ func NewNullValue[T any]() *NullValue[T] {
 	return &NullValue[T]{null: true}
 }
 
-// NewNullValueWith устанавливает значение поля value
-func NewNullValueWith[T any](value *T) *NullValue[T] {
+// NewNullValueFrom устанавливает значение поля value
+func NewNullValueFrom[T any](value *T) *NullValue[T] {
 	return &NullValue[T]{value: Deref(value)}
 }
 
@@ -411,7 +411,7 @@ func (nullValue *NullValue[T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValue.value)
 }
 
-// NullValueAny тип для поля Value структуры AttributeValue
+// NullValueAny тип для поля Value структуры Attribute
 type NullValueAny struct {
 	value any
 	null  bool
@@ -422,8 +422,8 @@ func NewNullValueAny() *NullValueAny {
 	return &NullValueAny{null: true}
 }
 
-// NewNullValueAnyWith устанавливает значение value
-func NewNullValueAnyWith(value any) *NullValueAny {
+// NewNullValueAnyFrom устанавливает значение value
+func NewNullValueAnyFrom(value any) *NullValueAny {
 	return &NullValueAny{value: value}
 }
 
@@ -464,4 +464,12 @@ func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValueAny.value)
+}
+
+func AsMetaWrapperSlice[T MetaOwner](entities []*T) []MetaWrapper {
+	var o []MetaWrapper
+	for _, entity := range entities {
+		o = append(o, (*entity).GetMeta().Wrap())
+	}
+	return o
 }

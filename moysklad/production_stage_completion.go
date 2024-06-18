@@ -252,8 +252,8 @@ func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetC
 	return productionStageCompletionMaterial
 }
 
-func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetThings(things Slice[string]) *ProductionStageCompletionMaterial {
-	productionStageCompletionMaterial.Things = things
+func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetThings(things ...string) *ProductionStageCompletionMaterial {
+	productionStageCompletionMaterial.Things = NewSliceFrom(things)
 	return productionStageCompletionMaterial
 }
 
@@ -306,8 +306,8 @@ func (productionStageCompletionResult *ProductionStageCompletionResult) SetProdu
 	return productionStageCompletionResult
 }
 
-func (productionStageCompletionResult *ProductionStageCompletionResult) SetThings(things Slice[string]) *ProductionStageCompletionResult {
-	productionStageCompletionResult.Things = things
+func (productionStageCompletionResult *ProductionStageCompletionResult) SetThings(things ...string) *ProductionStageCompletionResult {
+	productionStageCompletionResult.Things = NewSliceFrom(things)
 	return productionStageCompletionResult
 }
 
@@ -325,7 +325,7 @@ type ProductionStageCompletionService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProductionStageCompletion], *resty.Response, error)
 	Create(ctx context.Context, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productionStageCompletionList Slice[ProductionStageCompletion], params ...*Params) (*Slice[ProductionStageCompletion], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...ProductionStageCompletion) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProductionStageCompletion) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)

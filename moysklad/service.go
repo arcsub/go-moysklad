@@ -10,36 +10,36 @@ import (
 // Ключевое слово: service
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-usluga
 type Service struct {
-	VatEnabled          *bool                 `json:"vatEnabled,omitempty"`
-	Group               *Group                `json:"group,omitempty"`
-	Barcodes            Slice[Barcode]        `json:"barcodes,omitempty"`
-	Description         *string               `json:"description,omitempty"`
-	ExternalCode        *string               `json:"externalCode,omitempty"`
-	ID                  *uuid.UUID            `json:"id,omitempty"`
-	Meta                *Meta                 `json:"meta,omitempty"`
-	Name                *string               `json:"name,omitempty"`
-	Archived            *bool                 `json:"archived,omitempty"`
-	Files               *MetaArray[File]      `json:"files,omitempty"`
-	BuyPrice            *BuyPrice             `json:"buyPrice,omitempty"`
-	DiscountProhibited  *bool                 `json:"discountProhibited,omitempty"`
-	EffectiveVat        *int                  `json:"effectiveVat,omitempty"`
-	EffectiveVatEnabled *bool                 `json:"effectiveVatEnabled,omitempty"`
-	UseParentVat        *bool                 `json:"useParentVat,omitempty"`
-	Code                *string               `json:"code,omitempty"`
-	MinPrice            *MinPrice             `json:"minPrice,omitempty"`
-	Owner               *Employee             `json:"owner,omitempty"`
-	PathName            *string               `json:"pathName,omitempty"`
-	AccountID           *uuid.UUID            `json:"accountId,omitempty"`
-	ProductFolder       *ProductFolder        `json:"productFolder,omitempty"`
-	SalePrices          Slice[SalePrice]      `json:"salePrices,omitempty"`
-	Shared              *bool                 `json:"shared,omitempty"`
-	SyncID              *uuid.UUID            `json:"syncId,omitempty"`
-	Vat                 *int                  `json:"vat,omitempty"`
-	Uom                 *Uom                  `json:"uom,omitempty"`
-	Updated             *Timestamp            `json:"updated,omitempty"`
-	PaymentItemType     PaymentItem           `json:"paymentItemType,omitempty"`
-	TaxSystem           TaxSystem             `json:"taxSystem,omitempty"`
-	Attributes          Slice[AttributeValue] `json:"attributes,omitempty"`
+	VatEnabled          *bool            `json:"vatEnabled,omitempty"`
+	Group               *Group           `json:"group,omitempty"`
+	Barcodes            Slice[Barcode]   `json:"barcodes,omitempty"`
+	Description         *string          `json:"description,omitempty"`
+	ExternalCode        *string          `json:"externalCode,omitempty"`
+	ID                  *uuid.UUID       `json:"id,omitempty"`
+	Meta                *Meta            `json:"meta,omitempty"`
+	Name                *string          `json:"name,omitempty"`
+	Archived            *bool            `json:"archived,omitempty"`
+	Files               *MetaArray[File] `json:"files,omitempty"`
+	BuyPrice            *BuyPrice        `json:"buyPrice,omitempty"`
+	DiscountProhibited  *bool            `json:"discountProhibited,omitempty"`
+	EffectiveVat        *int             `json:"effectiveVat,omitempty"`
+	EffectiveVatEnabled *bool            `json:"effectiveVatEnabled,omitempty"`
+	UseParentVat        *bool            `json:"useParentVat,omitempty"`
+	Code                *string          `json:"code,omitempty"`
+	MinPrice            *MinPrice        `json:"minPrice,omitempty"`
+	Owner               *Employee        `json:"owner,omitempty"`
+	PathName            *string          `json:"pathName,omitempty"`
+	AccountID           *uuid.UUID       `json:"accountId,omitempty"`
+	ProductFolder       *ProductFolder   `json:"productFolder,omitempty"`
+	SalePrices          Slice[SalePrice] `json:"salePrices,omitempty"`
+	Shared              *bool            `json:"shared,omitempty"`
+	SyncID              *uuid.UUID       `json:"syncId,omitempty"`
+	Vat                 *int             `json:"vat,omitempty"`
+	Uom                 *Uom             `json:"uom,omitempty"`
+	Updated             *Timestamp       `json:"updated,omitempty"`
+	PaymentItemType     PaymentItem      `json:"paymentItemType,omitempty"`
+	TaxSystem           TaxSystem        `json:"taxSystem,omitempty"`
+	Attributes          Slice[Attribute] `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -171,7 +171,7 @@ func (service Service) GetTaxSystem() TaxSystem {
 	return service.TaxSystem
 }
 
-func (service Service) GetAttributes() Slice[AttributeValue] {
+func (service Service) GetAttributes() Slice[Attribute] {
 	return service.Attributes
 }
 
@@ -185,7 +185,7 @@ func (service *Service) SetGroup(group *Group) *Service {
 	return service
 }
 
-func (service *Service) SetBarcodes(barcodes Slice[Barcode]) *Service {
+func (service *Service) SetBarcodes(barcodes ...*Barcode) *Service {
 	service.Barcodes = barcodes
 	return service
 }
@@ -215,8 +215,8 @@ func (service *Service) SetArchived(archived bool) *Service {
 	return service
 }
 
-func (service *Service) SetFiles(files Slice[File]) *Service {
-	service.Files = NewMetaArrayRows(files)
+func (service *Service) SetFiles(files ...*File) *Service {
+	service.Files = NewMetaArrayFrom(files)
 	return service
 }
 
@@ -255,7 +255,7 @@ func (service *Service) SetProductFolder(productFolder *ProductFolder) *Service 
 	return service
 }
 
-func (service *Service) SetSalePrices(salePrices Slice[SalePrice]) *Service {
+func (service *Service) SetSalePrices(salePrices ...*SalePrice) *Service {
 	service.SalePrices = salePrices
 	return service
 }
@@ -290,7 +290,7 @@ func (service *Service) SetTaxSystem(taxSystem TaxSystem) *Service {
 	return service
 }
 
-func (service *Service) SetAttributes(attributes Slice[AttributeValue]) *Service {
+func (service *Service) SetAttributes(attributes ...*Attribute) *Service {
 	service.Attributes = attributes
 	return service
 }
@@ -328,7 +328,7 @@ type ServiceService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Service], *resty.Response, error)
 	Create(ctx context.Context, service *Service, params ...*Params) (*Service, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, serviceList Slice[Service], params ...*Params) (*Slice[Service], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Service) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Service) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Service, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, service *Service, params ...*Params) (*Service, *resty.Response, error)
@@ -338,9 +338,9 @@ type ServiceService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewServiceService(client *Client) ServiceService {

@@ -58,7 +58,7 @@ type Organization struct {
 	PayerVat               *bool                    `json:"payerVat,omitempty"`
 	Phone                  *string                  `json:"phone,omitempty"`
 	CompanyType            CompanyType              `json:"companyType,omitempty"`
-	Attributes             Slice[AttributeValue]    `json:"attributes,omitempty"`
+	Attributes             Slice[Attribute]         `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -263,7 +263,7 @@ func (organization Organization) GetCompanyType() CompanyType {
 	return organization.CompanyType
 }
 
-func (organization Organization) GetAttributes() Slice[AttributeValue] {
+func (organization Organization) GetAttributes() Slice[Attribute] {
 	return organization.Attributes
 }
 
@@ -283,7 +283,7 @@ func (organization *Organization) SetArchived(archived bool) *Organization {
 }
 
 func (organization *Organization) SetBonusProgram(bonusProgram *BonusProgram) *Organization {
-	organization.BonusProgram = NewNullValueWith(bonusProgram.Clean())
+	organization.BonusProgram = NewNullValueFrom(bonusProgram.Clean())
 	return organization
 }
 
@@ -357,8 +357,8 @@ func (organization *Organization) SetCertificateNumber(certificateNumber string)
 	return organization
 }
 
-func (organization *Organization) SetAccounts(accounts Slice[AgentAccount]) *Organization {
-	organization.Accounts = NewMetaArrayRows(accounts)
+func (organization *Organization) SetAccounts(accounts ...*AgentAccount) *Organization {
+	organization.Accounts = NewMetaArrayFrom(accounts)
 	return organization
 }
 
@@ -487,7 +487,7 @@ func (organization *Organization) SetCompanyType(companyType CompanyType) *Organ
 	return organization
 }
 
-func (organization *Organization) SetAttributes(attributes Slice[AttributeValue]) *Organization {
+func (organization *Organization) SetAttributes(attributes ...*Attribute) *Organization {
 	organization.Attributes = attributes
 	return organization
 }
@@ -521,7 +521,7 @@ type OrganizationService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Organization], *resty.Response, error)
 	Create(ctx context.Context, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params ...*Params) (*Slice[Organization], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Organization) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Organization) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Organization, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
@@ -529,13 +529,13 @@ type OrganizationService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
 	GetAccountByID(ctx context.Context, id uuid.UUID, accountID uuid.UUID) (*AgentAccount, *resty.Response, error)
-	UpdateAccounts(ctx context.Context, id uuid.UUID, accounts Slice[AgentAccount]) (*MetaArray[AgentAccount], *resty.Response, error)
+	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Organization, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }

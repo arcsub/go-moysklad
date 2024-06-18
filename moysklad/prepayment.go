@@ -46,7 +46,7 @@ type Prepayment struct {
 	Updated       *Timestamp                     `json:"updated,omitempty"`
 	VatEnabled    *bool                          `json:"vatEnabled,omitempty"`
 	TaxSystem     TaxSystem                      `json:"taxSystem,omitempty"`
-	Attributes    Slice[AttributeValue]          `json:"attributes,omitempty"`
+	Attributes    Slice[Attribute]               `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -203,11 +203,11 @@ func (prepayment Prepayment) GetTaxSystem() TaxSystem {
 	return prepayment.TaxSystem
 }
 
-func (prepayment Prepayment) GetAttributes() Slice[AttributeValue] {
+func (prepayment Prepayment) GetAttributes() Slice[Attribute] {
 	return prepayment.Attributes
 }
 
-func (prepayment *Prepayment) SetReturns(returns Slice[PrepaymentReturn]) *Prepayment {
+func (prepayment *Prepayment) SetReturns(returns ...*PrepaymentReturn) *Prepayment {
 	prepayment.Returns = returns
 	return prepayment
 }
@@ -252,8 +252,8 @@ func (prepayment *Prepayment) SetExternalCode(externalCode string) *Prepayment {
 	return prepayment
 }
 
-func (prepayment *Prepayment) SetFiles(files Slice[File]) *Prepayment {
-	prepayment.Files = NewMetaArrayRows(files)
+func (prepayment *Prepayment) SetFiles(files ...*File) *Prepayment {
+	prepayment.Files = NewMetaArrayFrom(files)
 	return prepayment
 }
 
@@ -298,7 +298,7 @@ func (prepayment *Prepayment) SetQRSum(qrSum float64) *Prepayment {
 }
 
 func (prepayment *Prepayment) SetRate(rate *Rate) *Prepayment {
-	prepayment.Rate = NewNullValueWith(rate)
+	prepayment.Rate = NewNullValueFrom(rate)
 	return prepayment
 }
 
@@ -352,7 +352,7 @@ func (prepayment *Prepayment) SetTaxSystem(taxSystem TaxSystem) *Prepayment {
 	return prepayment
 }
 
-func (prepayment *Prepayment) SetAttributes(attributes Slice[AttributeValue]) *Prepayment {
+func (prepayment *Prepayment) SetAttributes(attributes ...*Attribute) *Prepayment {
 	prepayment.Attributes = attributes
 	return prepayment
 }
@@ -470,31 +470,32 @@ type PrepaymentService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PrepaymentPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PrepaymentPosition, params ...*Params) (*PrepaymentPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PrepaymentPosition) (*PrepaymentPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[PrepaymentPosition]) (*Slice[PrepaymentPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*PrepaymentPosition) (*Slice[PrepaymentPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*PrepaymentPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Prepayment, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewPrepaymentService(client *Client) PrepaymentService {

@@ -39,7 +39,7 @@ type ProductionTask struct {
 	Reserve               *bool                            `json:"reserve,omitempty"`
 	Shared                *bool                            `json:"shared,omitempty"`
 	State                 *NullValue[State]                `json:"state,omitempty"`
-	Attributes            Slice[AttributeValue]            `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                 `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -164,7 +164,7 @@ func (productionTask ProductionTask) GetState() State {
 	return productionTask.State.Get()
 }
 
-func (productionTask ProductionTask) GetAttributes() Slice[AttributeValue] {
+func (productionTask ProductionTask) GetAttributes() Slice[Attribute] {
 	return productionTask.Attributes
 }
 
@@ -198,8 +198,8 @@ func (productionTask *ProductionTask) SetExternalCode(externalCode string) *Prod
 	return productionTask
 }
 
-func (productionTask *ProductionTask) SetFiles(files Slice[File]) *ProductionTask {
-	productionTask.Files = NewMetaArrayRows(files)
+func (productionTask *ProductionTask) SetFiles(files ...*File) *ProductionTask {
+	productionTask.Files = NewMetaArrayFrom(files)
 	return productionTask
 }
 
@@ -264,7 +264,7 @@ func (productionTask *ProductionTask) SetShared(shared bool) *ProductionTask {
 }
 
 func (productionTask *ProductionTask) SetState(state *State) *ProductionTask {
-	productionTask.State = NewNullValueWith(state.Clean())
+	productionTask.State = NewNullValueFrom(state.Clean())
 	return productionTask
 }
 
@@ -273,7 +273,7 @@ func (productionTask *ProductionTask) SetNullState() *ProductionTask {
 	return productionTask
 }
 
-func (productionTask *ProductionTask) SetAttributes(attributes Slice[AttributeValue]) *ProductionTask {
+func (productionTask *ProductionTask) SetAttributes(attributes ...*Attribute) *ProductionTask {
 	productionTask.Attributes = attributes
 	return productionTask
 }
@@ -425,15 +425,15 @@ type ProductionTaskService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProductionTask], *resty.Response, error)
 	Create(ctx context.Context, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productionTaskList Slice[ProductionTask], params ...*Params) (*Slice[ProductionTask], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...ProductionTask) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProductionTask) (*DeleteManyResponse, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductionTask, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
@@ -441,11 +441,12 @@ type ProductionTaskService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProductionRow, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProductionRow, params ...*Params) (*ProductionRow, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProductionRow) (*ProductionRow, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProductionRow]) (*Slice[ProductionRow], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProductionRow) (*Slice[ProductionRow], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*ProductionRow) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetProducts(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProductionTaskResult], *resty.Response, error)
 	GetProductByID(ctx context.Context, id uuid.UUID, productID uuid.UUID, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
 	CreateProduct(ctx context.Context, id uuid.UUID, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
@@ -454,9 +455,9 @@ type ProductionTaskService interface {
 	DeleteProductMany(ctx context.Context, id uuid.UUID) (*DeleteManyResponse, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type productionTaskService struct {

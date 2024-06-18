@@ -37,7 +37,7 @@ func (pack *Pack) SetUom(uom *Uom) *Pack {
 	return pack
 }
 
-func (pack *Pack) SetBarcodes(barcodes Slice[Barcode]) *Pack {
+func (pack *Pack) SetBarcodes(barcodes ...*Barcode) *Pack {
 	pack.Barcodes = barcodes
 	return pack
 }

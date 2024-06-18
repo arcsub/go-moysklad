@@ -52,7 +52,7 @@ type Supply struct {
 	FactureIn           *FactureIn                 `json:"factureIn,omitempty"`
 	InvoicesIn          Slice[InvoiceIn]           `json:"invoicesIn,omitempty"`
 	AccountID           *uuid.UUID                 `json:"accountId,omitempty"`
-	Attributes          Slice[AttributeValue]      `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]           `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -238,7 +238,7 @@ func (supply Supply) GetAccountID() uuid.UUID {
 	return Deref(supply.AccountID)
 }
 
-func (supply Supply) GetAttributes() Slice[AttributeValue] {
+func (supply Supply) GetAttributes() Slice[Attribute] {
 	return supply.Attributes
 }
 
@@ -262,7 +262,7 @@ func (supply *Supply) SetOverhead(overhead *Overhead) *Supply {
 	return supply
 }
 
-func (supply *Supply) SetReturns(returns Slice[PurchaseReturn]) *Supply {
+func (supply *Supply) SetReturns(returns ...*PurchaseReturn) *Supply {
 	supply.Returns = returns
 	return supply
 }
@@ -273,7 +273,7 @@ func (supply *Supply) SetCode(code string) *Supply {
 }
 
 func (supply *Supply) SetContract(contract *Contract) *Supply {
-	supply.Contract = NewNullValueWith(contract.Clean())
+	supply.Contract = NewNullValueFrom(contract.Clean())
 	return supply
 }
 
@@ -287,8 +287,8 @@ func (supply *Supply) SetExternalCode(externalCode string) *Supply {
 	return supply
 }
 
-func (supply *Supply) SetFiles(files Slice[File]) *Supply {
-	supply.Files = NewMetaArrayRows(files)
+func (supply *Supply) SetFiles(files ...*File) *Supply {
+	supply.Files = NewMetaArrayFrom(files)
 	return supply
 }
 
@@ -327,7 +327,7 @@ func (supply *Supply) SetOrganization(organization *Organization) *Supply {
 	return supply
 }
 
-func (supply *Supply) SetPayments(payments Slice[Payment]) *Supply {
+func (supply *Supply) SetPayments(payments ...*Payment) *Supply {
 	supply.Payments = payments
 	return supply
 }
@@ -348,7 +348,7 @@ func (supply *Supply) SetPositions(positions *Positions[SupplyPosition]) *Supply
 }
 
 func (supply *Supply) SetProject(project *Project) *Supply {
-	supply.Project = NewNullValueWith(project.Clean())
+	supply.Project = NewNullValueFrom(project.Clean())
 	return supply
 }
 
@@ -358,7 +358,7 @@ func (supply *Supply) SetNullProject() *Supply {
 }
 
 func (supply *Supply) SetRate(rate *Rate) *Supply {
-	supply.Rate = NewNullValueWith(rate)
+	supply.Rate = NewNullValueFrom(rate)
 	return supply
 }
 
@@ -407,12 +407,12 @@ func (supply *Supply) SetFactureIn(factureIn *FactureIn) *Supply {
 	return supply
 }
 
-func (supply *Supply) SetInvoicesIn(invoicesIn Slice[InvoiceIn]) *Supply {
+func (supply *Supply) SetInvoicesIn(invoicesIn ...*InvoiceIn) *Supply {
 	supply.InvoicesIn = invoicesIn
 	return supply
 }
 
-func (supply *Supply) SetAttributes(attributes Slice[AttributeValue]) *Supply {
+func (supply *Supply) SetAttributes(attributes ...*Attribute) *Supply {
 	supply.Attributes = attributes
 	return supply
 }
@@ -566,12 +566,12 @@ func (supplyPosition *SupplyPosition) SetSlot(slot *Slot) *SupplyPosition {
 	return supplyPosition
 }
 
-func (supplyPosition *SupplyPosition) SetThings(things Slice[string]) *SupplyPosition {
-	supplyPosition.Things = things
+func (supplyPosition *SupplyPosition) SetThings(things ...string) *SupplyPosition {
+	supplyPosition.Things = NewSliceFrom(things)
 	return supplyPosition
 }
 
-func (supplyPosition *SupplyPosition) SetTrackingCodes(trackingCodes Slice[TrackingCode]) *SupplyPosition {
+func (supplyPosition *SupplyPosition) SetTrackingCodes(trackingCodes ...*TrackingCode) *SupplyPosition {
 	supplyPosition.TrackingCodes = trackingCodes
 	return supplyPosition
 }
@@ -600,7 +600,7 @@ type SupplyService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Supply], *resty.Response, error)
 	Create(ctx context.Context, supply *Supply, params ...*Params) (*Supply, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, supplyList Slice[Supply], params ...*Params) (*Slice[Supply], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...Supply) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Supply) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Supply, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, supply *Supply, params ...*Params) (*Supply, *resty.Response, error)
@@ -610,34 +610,35 @@ type SupplyService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*SupplyPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *SupplyPosition, params ...*Params) (*SupplyPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *SupplyPosition) (*SupplyPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[SupplyPosition]) (*Slice[SupplyPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*SupplyPosition) (*Slice[SupplyPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*SupplyPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	PrintDocument(ctx context.Context, id uuid.UUID, PrintDocumentArg *PrintDocumentArg) (*PrintFile, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Supply, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)

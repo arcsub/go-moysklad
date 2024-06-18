@@ -51,7 +51,7 @@ type InvoiceIn struct {
 	VatSum               *float64                      `json:"vatSum,omitempty"`
 	Payments             Slice[Payment]                `json:"payments,omitempty"`
 	PurchaseOrder        *PurchaseOrder                `json:"purchaseOrder,omitempty"`
-	Attributes           Slice[AttributeValue]         `json:"attributes,omitempty"`
+	Attributes           Slice[Attribute]              `json:"attributes,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -233,7 +233,7 @@ func (invoiceIn InvoiceIn) GetPurchaseOrder() PurchaseOrder {
 	return Deref(invoiceIn.PurchaseOrder)
 }
 
-func (invoiceIn InvoiceIn) GetAttributes() Slice[AttributeValue] {
+func (invoiceIn InvoiceIn) GetAttributes() Slice[Attribute] {
 	return invoiceIn.Attributes
 }
 
@@ -247,7 +247,7 @@ func (invoiceIn *InvoiceIn) SetApplicable(applicable bool) *InvoiceIn {
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetSupplies(supplies Slice[Supply]) *InvoiceIn {
+func (invoiceIn *InvoiceIn) SetSupplies(supplies ...*Supply) *InvoiceIn {
 	invoiceIn.Supplies = supplies
 	return invoiceIn
 }
@@ -258,7 +258,7 @@ func (invoiceIn *InvoiceIn) SetCode(code string) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetContract(contract *Contract) *InvoiceIn {
-	invoiceIn.Contract = NewNullValueWith(contract.Clean())
+	invoiceIn.Contract = NewNullValueFrom(contract.Clean())
 	return invoiceIn
 }
 
@@ -282,8 +282,8 @@ func (invoiceIn *InvoiceIn) SetExternalCode(externalCode string) *InvoiceIn {
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetFiles(files Slice[File]) *InvoiceIn {
-	invoiceIn.Files = NewMetaArrayRows(files)
+func (invoiceIn *InvoiceIn) SetFiles(files ...*File) *InvoiceIn {
+	invoiceIn.Files = NewMetaArrayFrom(files)
 	return invoiceIn
 }
 
@@ -343,7 +343,7 @@ func (invoiceIn *InvoiceIn) SetPositions(positions *Positions[InvoiceInPosition]
 }
 
 func (invoiceIn *InvoiceIn) SetProject(project *Project) *InvoiceIn {
-	invoiceIn.Project = NewNullValueWith(project.Clean())
+	invoiceIn.Project = NewNullValueFrom(project.Clean())
 	return invoiceIn
 }
 
@@ -353,7 +353,7 @@ func (invoiceIn *InvoiceIn) SetNullProject() *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetRate(rate *Rate) *InvoiceIn {
-	invoiceIn.Rate = NewNullValueWith(rate)
+	invoiceIn.Rate = NewNullValueFrom(rate)
 	return invoiceIn
 }
 
@@ -368,7 +368,7 @@ func (invoiceIn *InvoiceIn) SetShared(shared bool) *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetState(state *State) *InvoiceIn {
-	invoiceIn.State = NewNullValueWith(state.Clean())
+	invoiceIn.State = NewNullValueFrom(state.Clean())
 	return invoiceIn
 }
 
@@ -378,7 +378,7 @@ func (invoiceIn *InvoiceIn) SetNullState() *InvoiceIn {
 }
 
 func (invoiceIn *InvoiceIn) SetStore(store *Store) *InvoiceIn {
-	invoiceIn.Store = NewNullValueWith(store.Clean())
+	invoiceIn.Store = NewNullValueFrom(store.Clean())
 	return invoiceIn
 }
 
@@ -402,7 +402,7 @@ func (invoiceIn *InvoiceIn) SetVatIncluded(vatIncluded bool) *InvoiceIn {
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetPayments(payments Slice[Payment]) *InvoiceIn {
+func (invoiceIn *InvoiceIn) SetPayments(payments ...*Payment) *InvoiceIn {
 	invoiceIn.Payments = payments
 	return invoiceIn
 }
@@ -412,7 +412,7 @@ func (invoiceIn *InvoiceIn) SetPurchaseOrder(purchaseOrder *PurchaseOrder) *Invo
 	return invoiceIn
 }
 
-func (invoiceIn *InvoiceIn) SetAttributes(attributes Slice[AttributeValue]) *InvoiceIn {
+func (invoiceIn *InvoiceIn) SetAttributes(attributes ...*Attribute) *InvoiceIn {
 	invoiceIn.Attributes = attributes
 	return invoiceIn
 }
@@ -555,7 +555,7 @@ type InvoiceInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[InvoiceIn], *resty.Response, error)
 	Create(ctx context.Context, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, invoiceInList Slice[InvoiceIn], params ...*Params) (*Slice[InvoiceIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, entities ...InvoiceIn) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*InvoiceIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InvoiceIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, invoiceIn *InvoiceIn, params ...*Params) (*InvoiceIn, *resty.Response, error)
@@ -566,21 +566,22 @@ type InvoiceInService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InvoiceInPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InvoiceInPosition, params ...*Params) (*InvoiceInPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *InvoiceInPosition) (*InvoiceInPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[InvoiceInPosition]) (*Slice[InvoiceInPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*InvoiceInPosition) (*Slice[InvoiceInPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*InvoiceInPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*InvoiceIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -588,13 +589,13 @@ type InvoiceInService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	Evaluate(ctx context.Context, entity *InvoiceIn, evaluate ...Evaluate) (*InvoiceIn, *resty.Response, error)
 }
 
