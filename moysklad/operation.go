@@ -171,12 +171,3 @@ func (operations Operations) FilterCommissionReportOut() Slice[CommissionReportO
 func (operations Operations) FilterRetailShift() Slice[RetailShift] {
 	return filterType[RetailShift](operations)
 }
-
-//
-//	func (o Operations) FilterCounterparty() Slice[Counterparty] {
-//		return filterType[Counterparty](o)
-//	}
-//
-//	func (o Operations) FilterOrganization() Slice[Organization] {
-//		return filterType[Organization](o)
-//	}
