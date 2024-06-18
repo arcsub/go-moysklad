@@ -71,13 +71,13 @@ type attributeValueFile struct {
 // Ключевое слово: attributemetadata
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-rabota-s-dopolnitel-nymi-polqmi-atributy-dop-polq-so-znacheniem
 type AttributeValue struct {
-	Value    *NullValueAny       `json:"value,omitempty"`
-	Meta     *Meta               `json:"meta,omitempty"`
-	ID       *uuid.UUID          `json:"id,omitempty"`
-	Name     *string             `json:"name,omitempty"`
-	File     *attributeValueFile `json:"file,omitempty"`
-	Download *Meta               `json:"download,omitempty"`
-	Type     AttributeType       `json:"type,omitempty"`
+	Value    *NullValueAny                  `json:"value,omitempty"`
+	Meta     *Meta                          `json:"meta,omitempty"`
+	ID       *uuid.UUID                     `json:"id,omitempty"`
+	Name     *string                        `json:"name,omitempty"`
+	File     *NullValue[attributeValueFile] `json:"file,omitempty"`
+	Download *Meta                          `json:"download,omitempty"`
+	Type     AttributeType                  `json:"type,omitempty"`
 }
 
 func NewAttributeValueFromFile(filePath string) (*AttributeValue, error) {
@@ -88,8 +88,8 @@ func NewAttributeValueFromFile(filePath string) (*AttributeValue, error) {
 
 	fileName := filepath.Base(filePath)
 	content := base64.StdEncoding.EncodeToString(b)
-	file := &attributeValueFile{fileName, content}
-	attributeValue := &AttributeValue{File: file}
+	file := attributeValueFile{fileName, content}
+	attributeValue := &AttributeValue{File: &NullValue[attributeValueFile]{value: file}}
 
 	return attributeValue, nil
 
@@ -145,6 +145,11 @@ func (attributeValue *AttributeValue) SetValue(value any) *AttributeValue {
 
 func (attributeValue *AttributeValue) SetNullValue() *AttributeValue {
 	attributeValue.Value = NewNullValueAny()
+	return attributeValue
+}
+
+func (attributeValue *AttributeValue) SetNullFile() *AttributeValue {
+	attributeValue.File = &NullValue[attributeValueFile]{null: true}
 	return attributeValue
 }
 
