@@ -30,6 +30,13 @@ func NewParams() *Params {
 	return &Params{}
 }
 
+// Clone копирует параметры запроса в новый указатель.
+func (params *Params) Clone() *Params {
+	clone := NewParams()
+	*clone = *params
+	return clone
+}
+
 // WithMomentFrom Начало периода.
 func (params *Params) WithMomentFrom(momentFrom time.Time) *Params {
 	params.MomentFrom = momentFrom.Format(time.DateTime)
