@@ -1,5 +1,12 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
+![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad)
+![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad)
+![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad)
+
+<a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank"><img src="https://github.com/arcsub/go-moysklad/assets/47686389/4565b816-dfcc-4393-b8ea-12a5cba51485" width="130px"></a>
+
 # go-moysklad (МойСклад)
 
 SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api)
@@ -10,7 +17,7 @@ SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.
 
 ## Установка
 
-> Требуемая версия go >= 1.9
+> Требуемая версия go >= 1.21
 > 
 ```
 go get -u github.com/arcsub/go-moysklad
