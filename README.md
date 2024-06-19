@@ -427,10 +427,11 @@ func main() {
 }
 ```
 
-<a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">
+
 <div align="center">
+  <a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">
   <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6431baa5-28e4-48b6-8d97-0e50bb6646d2" width="150px">
-</div>
 <div align="center">Поддержать проект</div>
 </a>
+</div>
 <br/>
