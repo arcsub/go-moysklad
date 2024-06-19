@@ -25,6 +25,7 @@ type ProcessingStage struct {
 	Updated       *Timestamp           `json:"updated,omitempty"`       // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingStage ProcessingStage) Clean() *ProcessingStage {
 	return &ProcessingStage{Meta: processingStage.Meta}
 }
@@ -121,8 +122,8 @@ func (processingStage *ProcessingStage) SetOwner(owner *Employee) *ProcessingSta
 	return processingStage
 }
 
-func (processingStage *ProcessingStage) SetPerformers(performers Slice[Employee]) *ProcessingStage {
-	processingStage.Performers = NewMetaArrayRows[Employee](performers)
+func (processingStage *ProcessingStage) SetPerformers(performers ...*Employee) *ProcessingStage {
+	processingStage.Performers = NewMetaArrayFrom(performers)
 	return processingStage
 }
 
@@ -135,8 +136,24 @@ func (processingStage ProcessingStage) String() string {
 	return Stringify(processingStage)
 }
 
-func (processingStage ProcessingStage) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingStage) MetaType() MetaType {
 	return MetaTypeProcessingStage
+}
+
+// Update shortcut
+func (processingStage ProcessingStage) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+	return client.Entity().ProcessingStage().Update(ctx, processingStage.GetID(), &processingStage, params...)
+}
+
+// Create shortcut
+func (processingStage ProcessingStage) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+	return client.Entity().ProcessingStage().Create(ctx, &processingStage, params...)
+}
+
+// Delete shortcut
+func (processingStage ProcessingStage) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingStage().Delete(ctx, processingStage.GetID())
 }
 
 // ProcessingStageService
@@ -145,7 +162,7 @@ type ProcessingStageService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingStage], *resty.Response, error)
 	Create(ctx context.Context, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...*Params) (*Slice[ProcessingStage], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingStageList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingStage, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)

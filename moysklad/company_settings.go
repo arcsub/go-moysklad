@@ -98,7 +98,7 @@ func (companySettings *CompanySettings) SetGlobalOperationNumbering(globalOperat
 	return companySettings
 }
 
-func (companySettings *CompanySettings) SetPriceTypes(priceTypes Slice[PriceType]) *CompanySettings {
+func (companySettings *CompanySettings) SetPriceTypes(priceTypes ...*PriceType) *CompanySettings {
 	companySettings.PriceTypes = priceTypes
 	return companySettings
 }
@@ -122,7 +122,8 @@ func (companySettings CompanySettings) String() string {
 	return Stringify(companySettings)
 }
 
-func (companySettings CompanySettings) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CompanySettings) MetaType() MetaType {
 	return MetaTypeCompanySettings
 }
 
@@ -146,19 +147,18 @@ const (
 // ContextCompanySettingsService
 // Сервис для работы с настройками компании.
 type ContextCompanySettingsService interface {
-	Get(ctx context.Context, params ...*Params) (*CompanySettings, *resty.Response, error)
+	Get(ctx context.Context) (*CompanySettings, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, settings *CompanySettings, params ...*Params) (*CompanySettings, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetadataCompanySettings, *resty.Response, error)
 	GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error)
 	CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error)
-	UpdatePriceTypes(ctx context.Context, priceTypeList Slice[PriceType]) (*Slice[PriceType], *resty.Response, error)
-	GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
+	UpdatePriceTypeMany(ctx context.Context, priceTypes ...*PriceType) (*Slice[PriceType], *resty.Response, error)
+	GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
 	GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error)
 }
 
 type contextCompanySettingsService struct {
 	Endpoint
-	endpointGetOne[CompanySettings]
 	endpointUpdate[CompanySettings]
 	endpointMetadata[MetadataCompanySettings]
 }
@@ -167,10 +167,13 @@ func NewContextCompanySettingsService(client *Client) ContextCompanySettingsServ
 	e := NewEndpoint(client, "context/companysettings")
 	return &contextCompanySettingsService{
 		Endpoint:         e,
-		endpointGetOne:   endpointGetOne[CompanySettings]{e},
 		endpointUpdate:   endpointUpdate[CompanySettings]{e},
 		endpointMetadata: endpointMetadata[MetadataCompanySettings]{e},
 	}
+}
+
+func (service *contextCompanySettingsService) Get(ctx context.Context) (*CompanySettings, *resty.Response, error) {
+	return NewRequestBuilder[CompanySettings](service.client, service.uri).Get(ctx)
 }
 
 // GetPriceTypes Получить список всех типов цен.
@@ -191,16 +194,16 @@ func (service *contextCompanySettingsService) CreatePriceType(ctx context.Contex
 	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
 }
 
-// UpdatePriceTypes Редактирование списка типов цен.
+// UpdatePriceTypeMany Редактирование списка типов цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-redaktirowanie-spiska-tipow-cen
-func (service *contextCompanySettingsService) UpdatePriceTypes(ctx context.Context, priceTypeList Slice[PriceType]) (*Slice[PriceType], *resty.Response, error) {
+func (service *contextCompanySettingsService) UpdatePriceTypeMany(ctx context.Context, priceTypes ...*PriceType) (*Slice[PriceType], *resty.Response, error) {
 	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypeList)
+	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
 }
 
-// GetPriceTypeById Получить тип цены по ID.
+// GetPriceTypeByID Получить тип цены по ID.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-tip-ceny-po-id
-func (service *contextCompanySettingsService) GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
 	path := fmt.Sprintf("context/companysettings/pricetype/%s", id)
 	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
 }

@@ -50,12 +50,12 @@ func (trackingCode *TrackingCode) SetType(trackingCodeType TrackingCodeType) *Tr
 	return trackingCode
 }
 
-func (trackingCode *TrackingCode) SetTrackingCodes(trackingCodes Slice[TrackingCode]) *TrackingCode {
+func (trackingCode *TrackingCode) SetTrackingCodes(trackingCodes ...*TrackingCode) *TrackingCode {
 	trackingCode.TrackingCodes = trackingCodes
 	return trackingCode
 }
 
-func (trackingCode *TrackingCode) SetTrackingCode1162(trackingCode1162 Slice[TrackingCode]) *TrackingCode {
+func (trackingCode *TrackingCode) SetTrackingCode1162(trackingCode1162 ...*TrackingCode) *TrackingCode {
 	trackingCode.TrackingCode1162 = trackingCode1162
 	return trackingCode
 }

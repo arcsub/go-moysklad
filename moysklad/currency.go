@@ -28,6 +28,7 @@ type Currency struct {
 	RateUpdateType RateUpdateType `json:"rateUpdateType,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (currency Currency) Clean() *Currency {
 	return &Currency{Meta: currency.Meta}
 }
@@ -160,8 +161,24 @@ func (currency Currency) String() string {
 	return Stringify(currency)
 }
 
-func (currency Currency) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Currency) MetaType() MetaType {
 	return MetaTypeCurrency
+}
+
+// Update shortcut
+func (currency Currency) Update(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+	return client.Entity().Currency().Update(ctx, currency.GetID(), &currency, params...)
+}
+
+// Create shortcut
+func (currency Currency) Create(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+	return client.Entity().Currency().Create(ctx, &currency, params...)
+}
+
+// Delete shortcut
+func (currency Currency) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Currency().Delete(ctx, currency.GetID())
 }
 
 // RateUpdateType Способ обновления курса.
@@ -235,7 +252,7 @@ type CurrencyService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Currency], *resty.Response, error)
 	Create(ctx context.Context, currency *Currency, params ...*Params) (*Currency, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, currencyList Slice[Currency], params ...*Params) (*Slice[Currency], *resty.Response, error)
-	DeleteMany(ctx context.Context, currencyList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Currency) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Currency, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, currency *Currency, params ...*Params) (*Currency, *resty.Response, error)

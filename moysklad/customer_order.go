@@ -12,7 +12,7 @@ import (
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-pokupatelq
 type CustomerOrder struct {
 	OrganizationAccount   *AgentAccount                     `json:"organizationAccount,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Project               *NullValue[Project]               `json:"project,omitempty"`
 	AgentAccount          *AgentAccount                     `json:"agentAccount,omitempty"`
 	Applicable            *bool                             `json:"applicable,omitempty"`
 	Moves                 Slice[Move]                       `json:"moves,omitempty"`
@@ -36,17 +36,17 @@ type CustomerOrder struct {
 	PayedSum              *float64                          `json:"payedSum,omitempty"`
 	Positions             *Positions[CustomerOrderPosition] `json:"positions,omitempty"`
 	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`
-	Contract              *Contract                         `json:"contract,omitempty"`
+	Contract              *NullValue[Contract]              `json:"contract,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
-	Rate                  *Rate                             `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                  `json:"rate,omitempty"`
 	ReservedSum           *float64                          `json:"reservedSum,omitempty"`
-	SalesChannel          *SalesChannel                     `json:"salesChannel,omitempty"`
+	SalesChannel          *NullValue[SalesChannel]          `json:"salesChannel,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	ShipmentAddress       *string                           `json:"shipmentAddress,omitempty"`
 	ShipmentAddressFull   *Address                          `json:"shipmentAddressFull,omitempty"`
 	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
-	State                 *State                            `json:"state,omitempty"`
-	Store                 *Store                            `json:"store,omitempty"`
+	State                 *NullValue[State]                 `json:"state,omitempty"`
+	Store                 *NullValue[Store]                 `json:"store,omitempty"`
 	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
 	Updated               *Timestamp                        `json:"updated,omitempty"`
@@ -59,11 +59,22 @@ type CustomerOrder struct {
 	Payments              Slice[Payment]                    `json:"payments,omitempty"`
 	InvoicesOut           Slice[InvoiceOut]                 `json:"invoicesOut,omitempty"`
 	TaxSystem             TaxSystem                         `json:"taxSystem,omitempty"`
-	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                  `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 	return &CustomerOrder{Meta: customerOrder.Meta}
+}
+
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (customerOrder CustomerOrder) AsOperation() *Operation {
+	return &Operation{Meta: customerOrder.GetMeta()}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (customerOrder CustomerOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: customerOrder.Meta}
 }
 
 func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
@@ -71,7 +82,7 @@ func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
 }
 
 func (customerOrder CustomerOrder) GetProject() Project {
-	return Deref(customerOrder.Project)
+	return customerOrder.Project.Get()
 }
 
 func (customerOrder CustomerOrder) GetAgentAccount() AgentAccount {
@@ -167,7 +178,7 @@ func (customerOrder CustomerOrder) GetAccountID() uuid.UUID {
 }
 
 func (customerOrder CustomerOrder) GetContract() Contract {
-	return Deref(customerOrder.Contract)
+	return customerOrder.Contract.Get()
 }
 
 func (customerOrder CustomerOrder) GetPublished() bool {
@@ -175,7 +186,7 @@ func (customerOrder CustomerOrder) GetPublished() bool {
 }
 
 func (customerOrder CustomerOrder) GetRate() Rate {
-	return Deref(customerOrder.Rate)
+	return customerOrder.Rate.Get()
 }
 
 func (customerOrder CustomerOrder) GetReservedSum() float64 {
@@ -183,7 +194,7 @@ func (customerOrder CustomerOrder) GetReservedSum() float64 {
 }
 
 func (customerOrder CustomerOrder) GetSalesChannel() SalesChannel {
-	return Deref(customerOrder.SalesChannel)
+	return customerOrder.SalesChannel.Get()
 }
 
 func (customerOrder CustomerOrder) GetShared() bool {
@@ -203,11 +214,11 @@ func (customerOrder CustomerOrder) GetShippedSum() float64 {
 }
 
 func (customerOrder CustomerOrder) GetState() State {
-	return Deref(customerOrder.State)
+	return customerOrder.State.Get()
 }
 
 func (customerOrder CustomerOrder) GetStore() Store {
-	return Deref(customerOrder.Store)
+	return customerOrder.Store.Get()
 }
 
 func (customerOrder CustomerOrder) GetSum() float64 {
@@ -258,7 +269,7 @@ func (customerOrder CustomerOrder) GetTaxSystem() TaxSystem {
 	return customerOrder.TaxSystem
 }
 
-func (customerOrder CustomerOrder) GetAttributes() Slice[AttributeValue] {
+func (customerOrder CustomerOrder) GetAttributes() Slice[Attribute] {
 	return customerOrder.Attributes
 }
 
@@ -268,7 +279,12 @@ func (customerOrder *CustomerOrder) SetOrganizationAccount(organizationAccount *
 }
 
 func (customerOrder *CustomerOrder) SetProject(project *Project) *CustomerOrder {
-	customerOrder.Project = project.Clean()
+	customerOrder.Project = NewNullValueFrom(project.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullProject() *CustomerOrder {
+	customerOrder.Project = NewNullValue[Project]()
 	return customerOrder
 }
 
@@ -282,7 +298,7 @@ func (customerOrder *CustomerOrder) SetApplicable(applicable bool) *CustomerOrde
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetMoves(moves Slice[Move]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetMoves(moves ...*Move) *CustomerOrder {
 	customerOrder.Moves = moves
 	return customerOrder
 }
@@ -312,8 +328,8 @@ func (customerOrder *CustomerOrder) SetExternalCode(externalCode string) *Custom
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetFiles(files Slice[File]) *CustomerOrder {
-	customerOrder.Files = NewMetaArrayRows(files)
+func (customerOrder *CustomerOrder) SetFiles(files ...*File) *CustomerOrder {
+	customerOrder.Files = NewMetaArrayFrom(files)
 	return customerOrder
 }
 
@@ -347,23 +363,38 @@ func (customerOrder *CustomerOrder) SetOwner(owner *Employee) *CustomerOrder {
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPositions(positions *Positions[CustomerOrderPosition]) *CustomerOrder {
-	customerOrder.Positions = positions
+func (customerOrder *CustomerOrder) SetPositions(positions ...*CustomerOrderPosition) *CustomerOrder {
+	customerOrder.Positions = NewPositionsFrom(positions)
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrder {
-	customerOrder.Contract = contract.Clean()
+	customerOrder.Contract = NewNullValueFrom(contract.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullContract() *CustomerOrder {
+	customerOrder.Contract = NewNullValue[Contract]()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
-	customerOrder.Rate = rate
+	customerOrder.Rate = NewNullValueFrom(rate)
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullRate() *CustomerOrder {
+	customerOrder.Rate = NewNullValue[Rate]()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetSalesChannel(salesChannel *SalesChannel) *CustomerOrder {
-	customerOrder.SalesChannel = salesChannel.Clean()
+	customerOrder.SalesChannel = NewNullValueFrom(salesChannel.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullSalesChannel() *CustomerOrder {
+	customerOrder.SalesChannel = NewNullValue[SalesChannel]()
 	return customerOrder
 }
 
@@ -377,18 +408,28 @@ func (customerOrder *CustomerOrder) SetShipmentAddress(shipmentAddress string) *
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull Address) *CustomerOrder {
-	customerOrder.ShipmentAddressFull = &shipmentAddressFull
+func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull *Address) *CustomerOrder {
+	customerOrder.ShipmentAddressFull = shipmentAddressFull
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
-	customerOrder.State = state.Clean()
+	customerOrder.State = NewNullValueFrom(state.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullState() *CustomerOrder {
+	customerOrder.State = NewNullValue[State]()
 	return customerOrder
 }
 
 func (customerOrder *CustomerOrder) SetStore(store *Store) *CustomerOrder {
-	customerOrder.Store = store.Clean()
+	customerOrder.Store = NewNullValueFrom(store.Clean())
+	return customerOrder
+}
+
+func (customerOrder *CustomerOrder) SetNullStore() *CustomerOrder {
+	customerOrder.Store = NewNullValue[Store]()
 	return customerOrder
 }
 
@@ -397,7 +438,7 @@ func (customerOrder *CustomerOrder) SetSyncID(syncID uuid.UUID) *CustomerOrder {
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPrepayments(prepayments Slice[Prepayment]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPrepayments(prepayments ...*Prepayment) *CustomerOrder {
 	customerOrder.Prepayments = prepayments
 	return customerOrder
 }
@@ -412,22 +453,22 @@ func (customerOrder *CustomerOrder) SetVatIncluded(vatIncluded bool) *CustomerOr
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders Slice[PurchaseOrder]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders ...*PurchaseOrder) *CustomerOrder {
 	customerOrder.PurchaseOrders = purchaseOrders
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetDemands(demands Slice[Demand]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetDemands(demands ...*Demand) *CustomerOrder {
 	customerOrder.Demands = demands
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPayments(payments Slice[Payment]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPayments(payments ...*Payment) *CustomerOrder {
 	customerOrder.Payments = payments
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetInvoicesOut(invoicesOut Slice[InvoiceOut]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetInvoicesOut(invoicesOut ...*InvoiceOut) *CustomerOrder {
 	customerOrder.InvoicesOut = invoicesOut
 	return customerOrder
 }
@@ -437,7 +478,7 @@ func (customerOrder *CustomerOrder) SetTaxSystem(taxSystem TaxSystem) *CustomerO
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetAttributes(attributes Slice[AttributeValue]) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetAttributes(attributes ...*Attribute) *CustomerOrder {
 	customerOrder.Attributes = attributes
 	return customerOrder
 }
@@ -446,8 +487,24 @@ func (customerOrder CustomerOrder) String() string {
 	return Stringify(customerOrder)
 }
 
-func (customerOrder CustomerOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomerOrder) MetaType() MetaType {
 	return MetaTypeCustomerOrder
+}
+
+// Update shortcut
+func (customerOrder CustomerOrder) Update(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+	return client.Entity().CustomerOrder().Update(ctx, customerOrder.GetID(), &customerOrder, params...)
+}
+
+// Create shortcut
+func (customerOrder CustomerOrder) Create(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+	return client.Entity().CustomerOrder().Create(ctx, &customerOrder, params...)
+}
+
+// Delete shortcut
+func (customerOrder CustomerOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CustomerOrder().Delete(ctx, customerOrder.GetID())
 }
 
 // CustomerOrderPosition Позиция Заказа покупателя.
@@ -570,7 +627,8 @@ func (customerOrderPosition CustomerOrderPosition) String() string {
 	return Stringify(customerOrderPosition)
 }
 
-func (customerOrderPosition CustomerOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomerOrderPosition) MetaType() MetaType {
 	return MetaTypeCustomerOrderPosition
 }
 
@@ -583,7 +641,7 @@ type EventNote struct {
 	Description string    `json:"description,omitempty"`
 	Author      Employee  `json:"author,omitempty"`
 	ID          uuid.UUID `json:"id,omitempty"`
-	AccountId   uuid.UUID `json:"accountId,omitempty"`
+	AccountID   uuid.UUID `json:"accountId,omitempty"`
 }
 
 type customerOrderService struct {
@@ -605,6 +663,8 @@ type customerOrderService struct {
 	endpointNamedFilter
 	endpointDeleteMany[CustomerOrder]
 	endpointTrash
+	endpointTemplate[CustomerOrder]
+	endpointEvaluate[CustomerOrder]
 }
 
 // CustomerOrderService
@@ -613,31 +673,32 @@ type CustomerOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CustomerOrder], *resty.Response, error)
 	Create(ctx context.Context, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, customerOrderList Slice[CustomerOrder], params ...*Params) (*Slice[CustomerOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, customerOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CustomerOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CustomerOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)
-	//endpointTemplate[CustomerOrder]
+	Template(ctx context.Context) (*CustomerOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CustomerOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CustomerOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CustomerOrderPosition, params ...*Params) (*CustomerOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *CustomerOrderPosition) (*CustomerOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[CustomerOrderPosition]) (*Slice[CustomerOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*CustomerOrderPosition) (*Slice[CustomerOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*CustomerOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CustomerOrder, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -651,15 +712,16 @@ type CustomerOrderService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	GetNotes(ctx context.Context, id uuid.UUID) (*List[EventNote], *resty.Response, error)
 	GetNoteByID(ctx context.Context, id uuid.UUID, noteID uuid.UUID) (*EventNote, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *CustomerOrder, evaluate ...Evaluate) (*CustomerOrder, *resty.Response, error)
 }
 
 func NewCustomerOrderService(client *Client) CustomerOrderService {
@@ -678,6 +740,8 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointFiles:            endpointFiles{e},
 		endpointPrintTemplates:   endpointPrintTemplates{e},
 		endpointSyncID:           endpointSyncID[CustomerOrder]{e},
+		endpointTemplate:         endpointTemplate[CustomerOrder]{e},
+		endpointEvaluate:         endpointEvaluate[CustomerOrder]{e},
 	}
 }
 

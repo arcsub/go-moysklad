@@ -35,8 +35,14 @@ type BonusTransaction struct {
 	CategoryType      BonusTransactionCategory `json:"categoryType,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (bonusTransaction BonusTransaction) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: bonusTransaction.Meta}
 }
 
 func (bonusTransaction BonusTransaction) GetOrganization() Organization {
@@ -215,8 +221,24 @@ func (bonusTransaction BonusTransaction) String() string {
 	return Stringify(bonusTransaction)
 }
 
-func (bonusTransaction BonusTransaction) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (BonusTransaction) MetaType() MetaType {
 	return MetaTypeBonusTransaction
+}
+
+// Update shortcut
+func (bonusTransaction BonusTransaction) Update(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+	return client.Entity().BonusTransaction().Update(ctx, bonusTransaction.GetID(), &bonusTransaction, params...)
+}
+
+// Create shortcut
+func (bonusTransaction BonusTransaction) Create(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+	return client.Entity().BonusTransaction().Create(ctx, &bonusTransaction, params...)
+}
+
+// Delete shortcut
+func (bonusTransaction BonusTransaction) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().BonusTransaction().Delete(ctx, bonusTransaction.GetID())
 }
 
 // BonusTransactionCategory Категория бонусной операции
@@ -250,7 +272,7 @@ type BonusTransactionService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[BonusTransaction], *resty.Response, error)
 	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
-	DeleteMany(ctx context.Context, bonusTransactionList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*BonusTransaction) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusTransaction, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)

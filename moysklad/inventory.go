@@ -31,15 +31,21 @@ type Inventory struct {
 	Printed      *bool                         `json:"printed,omitempty"`
 	Published    *bool                         `json:"published,omitempty"`
 	Shared       *bool                         `json:"shared,omitempty"`
-	State        *State                        `json:"state,omitempty"`
+	State        *NullValue[State]             `json:"state,omitempty"`
 	Store        *Store                        `json:"store,omitempty"`
 	Moment       *Timestamp                    `json:"moment,omitempty"`
 	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`
-	Attributes   Slice[AttributeValue]         `json:"attributes,omitempty"`
+	Attributes   Slice[Attribute]              `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (inventory Inventory) Clean() *Inventory {
 	return &Inventory{Meta: inventory.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (inventory Inventory) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: inventory.Meta}
 }
 
 func (inventory Inventory) GetName() string {
@@ -119,7 +125,7 @@ func (inventory Inventory) GetShared() bool {
 }
 
 func (inventory Inventory) GetState() State {
-	return Deref(inventory.State)
+	return inventory.State.Get()
 }
 
 func (inventory Inventory) GetStore() Store {
@@ -134,7 +140,7 @@ func (inventory Inventory) GetSyncID() uuid.UUID {
 	return Deref(inventory.SyncID)
 }
 
-func (inventory Inventory) GetAttributes() Slice[AttributeValue] {
+func (inventory Inventory) GetAttributes() Slice[Attribute] {
 	return inventory.Attributes
 }
 
@@ -158,8 +164,8 @@ func (inventory *Inventory) SetExternalCode(externalCode string) *Inventory {
 	return inventory
 }
 
-func (inventory *Inventory) SetFiles(files Slice[File]) *Inventory {
-	inventory.Files = NewMetaArrayRows(files)
+func (inventory *Inventory) SetFiles(files ...*File) *Inventory {
+	inventory.Files = NewMetaArrayFrom(files)
 	return inventory
 }
 
@@ -183,8 +189,8 @@ func (inventory *Inventory) SetOrganization(organization *Organization) *Invento
 	return inventory
 }
 
-func (inventory *Inventory) SetPositions(positions *Positions[InventoryPosition]) *Inventory {
-	inventory.Positions = positions
+func (inventory *Inventory) SetPositions(positions ...*InventoryPosition) *Inventory {
+	inventory.Positions = NewPositionsFrom(positions)
 	return inventory
 }
 
@@ -194,7 +200,12 @@ func (inventory *Inventory) SetShared(shared bool) *Inventory {
 }
 
 func (inventory *Inventory) SetState(state *State) *Inventory {
-	inventory.State = state.Clean()
+	inventory.State = NewNullValueFrom(state.Clean())
+	return inventory
+}
+
+func (inventory *Inventory) SetNullState() *Inventory {
+	inventory.State = NewNullValue[State]()
 	return inventory
 }
 
@@ -213,7 +224,7 @@ func (inventory *Inventory) SetSyncID(syncID uuid.UUID) *Inventory {
 	return inventory
 }
 
-func (inventory *Inventory) SetAttributes(attributes Slice[AttributeValue]) *Inventory {
+func (inventory *Inventory) SetAttributes(attributes ...*Attribute) *Inventory {
 	inventory.Attributes = attributes
 	return inventory
 }
@@ -222,8 +233,24 @@ func (inventory Inventory) String() string {
 	return Stringify(inventory)
 }
 
-func (inventory Inventory) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Inventory) MetaType() MetaType {
 	return MetaTypeInventory
+}
+
+// Update shortcut
+func (inventory Inventory) Update(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+	return client.Entity().Inventory().Update(ctx, inventory.GetID(), &inventory, params...)
+}
+
+// Create shortcut
+func (inventory Inventory) Create(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+	return client.Entity().Inventory().Create(ctx, &inventory, params...)
+}
+
+// Delete shortcut
+func (inventory Inventory) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Inventory().Delete(ctx, inventory.GetID())
 }
 
 // InventoryPosition Позиция Инвентаризации.
@@ -306,7 +333,8 @@ func (inventoryPosition InventoryPosition) String() string {
 	return Stringify(inventoryPosition)
 }
 
-func (inventoryPosition InventoryPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InventoryPosition) MetaType() MetaType {
 	return MetaTypeInventoryPosition
 }
 
@@ -316,37 +344,39 @@ type InventoryService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Inventory], *resty.Response, error)
 	Create(ctx context.Context, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...*Params) (*Slice[Inventory], *resty.Response, error)
-	DeleteMany(ctx context.Context, inventoryList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Inventory) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Inventory, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
-	//endpointTemplate[Inventory]
+	Template(ctx context.Context) (*Inventory, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InventoryPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InventoryPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InventoryPosition, params ...*Params) (*InventoryPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *InventoryPosition) (*InventoryPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[InventoryPosition]) (*Slice[InventoryPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*InventoryPosition) (*Slice[InventoryPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*InventoryPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Inventory, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Inventory, evaluate ...Evaluate) (*Inventory, *resty.Response, error)
 }
 
 type inventoryService struct {
@@ -358,7 +388,7 @@ type inventoryService struct {
 	endpointDelete
 	endpointGetByID[Inventory]
 	endpointUpdate[Inventory]
-	//endpointTemplate[Inventory]
+	endpointTemplate[Inventory]
 	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointPositions[InventoryPosition]
 	endpointAttributes
@@ -366,6 +396,7 @@ type inventoryService struct {
 	endpointTrash
 	endpointStates
 	endpointFiles
+	endpointEvaluate[Inventory]
 }
 
 func NewInventoryService(client *Client) InventoryService {
@@ -379,14 +410,15 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[Inventory]{e},
 		endpointUpdate:           endpointUpdate[Inventory]{e},
-		//endpointTemplate:         endpointTemplate[Inventory]{e},
-		endpointMetadata:   endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
-		endpointPositions:  endpointPositions[InventoryPosition]{e},
-		endpointAttributes: endpointAttributes{e},
-		endpointSyncID:     endpointSyncID[Inventory]{e},
-		endpointTrash:      endpointTrash{e},
-		endpointStates:     endpointStates{e},
-		endpointFiles:      endpointFiles{e},
+		endpointTemplate:         endpointTemplate[Inventory]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
+		endpointPositions:        endpointPositions[InventoryPosition]{e},
+		endpointAttributes:       endpointAttributes{e},
+		endpointSyncID:           endpointSyncID[Inventory]{e},
+		endpointTrash:            endpointTrash{e},
+		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
+		endpointEvaluate:         endpointEvaluate[Inventory]{e},
 	}
 }
 

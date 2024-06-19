@@ -41,7 +41,8 @@ func (application Application) String() string {
 	return Stringify(application)
 }
 
-func (application Application) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Application) MetaType() MetaType {
 	return MetaTypeApplication
 }
 

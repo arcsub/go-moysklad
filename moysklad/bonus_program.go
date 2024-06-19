@@ -28,6 +28,7 @@ type BonusProgram struct {
 	AgentTags                 Slice[string]      `json:"agentTags,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (bonusProgram BonusProgram) Clean() *BonusProgram {
 	return &BonusProgram{Meta: bonusProgram.Meta}
 }
@@ -161,8 +162,8 @@ func (bonusProgram *BonusProgram) SetWelcomeBonusesMode(welcomeBonusesMode Welco
 	return bonusProgram
 }
 
-func (bonusProgram *BonusProgram) SetAgentTags(agentTags Slice[string]) *BonusProgram {
-	bonusProgram.AgentTags = agentTags
+func (bonusProgram *BonusProgram) SetAgentTags(agentTags ...string) *BonusProgram {
+	bonusProgram.AgentTags = NewSliceFrom(agentTags)
 	return bonusProgram
 }
 
@@ -170,8 +171,24 @@ func (bonusProgram BonusProgram) String() string {
 	return Stringify(bonusProgram)
 }
 
-func (bonusProgram BonusProgram) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (BonusProgram) MetaType() MetaType {
 	return MetaTypeBonusProgram
+}
+
+// Update shortcut
+func (bonusProgram BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+	return client.Entity().BonusProgram().Update(ctx, bonusProgram.GetID(), &bonusProgram, params...)
+}
+
+// Create shortcut
+func (bonusProgram BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+	return client.Entity().BonusProgram().Create(ctx, &bonusProgram, params...)
+}
+
+// Delete shortcut
+func (bonusProgram BonusProgram) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().BonusProgram().Delete(ctx, bonusProgram.GetID())
 }
 
 // WelcomeBonusesMode Условия бонусных баллов
@@ -191,7 +208,7 @@ type BonusProgramService interface {
 	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusProgram, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, bonusProgramList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewBonusProgramService(client *Client) BonusProgramService {

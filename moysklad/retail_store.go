@@ -64,7 +64,7 @@ type RetailStore struct {
 	QRAcquire                           *Counterparty             `json:"qrAcquire,omitempty"`
 	QRBankPercent                       *float64                  `json:"qrBankPercent,omitempty"`
 	QRPayEnabled                        *bool                     `json:"qrPayEnabled,omitempty"`
-	QRTerminalId                        *string                   `json:"qrTerminalId,omitempty"`
+	QRTerminalID                        *string                   `json:"qrTerminalId,omitempty"`
 	ReceiptTemplate                     *Meta                     `json:"receiptTemplate,omitempty"`
 	RequiredFio                         *bool                     `json:"requiredFio,omitempty"`
 	RequiredPhone                       *bool                     `json:"requiredPhone,omitempty"`
@@ -86,6 +86,7 @@ type RetailStore struct {
 	CreateAgentsTags                    Slice[string]             `json:"createAgentsTags,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailStore RetailStore) Clean() *RetailStore {
 	return &RetailStore{Meta: retailStore.Meta}
 }
@@ -202,7 +203,7 @@ func (retailStore RetailStore) GetStore() Store {
 	return Deref(retailStore.Store)
 }
 
-func (retailStore RetailStore) GetIdQR() string {
+func (retailStore RetailStore) GetIDQR() string {
 	return Deref(retailStore.IDQR)
 }
 
@@ -302,8 +303,8 @@ func (retailStore RetailStore) GetQRPayEnabled() bool {
 	return Deref(retailStore.QRPayEnabled)
 }
 
-func (retailStore RetailStore) GetQRTerminalId() string {
-	return Deref(retailStore.QRTerminalId)
+func (retailStore RetailStore) GetQRTerminalID() string {
+	return Deref(retailStore.QRTerminalID)
 }
 
 func (retailStore RetailStore) GetReceiptTemplate() Meta {
@@ -427,8 +428,8 @@ func (retailStore *RetailStore) SetBankPercent(bankPercent float64) *RetailStore
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCashiers(cashiers Slice[Cashier]) *RetailStore {
-	retailStore.Cashiers = NewMetaArrayRows(cashiers)
+func (retailStore *RetailStore) SetCashiers(cashiers ...*Cashier) *RetailStore {
+	retailStore.Cashiers = NewMetaArrayFrom(cashiers)
 	return retailStore
 }
 
@@ -582,8 +583,8 @@ func (retailStore *RetailStore) SetSendMarksForCheck(sendMarksForCheck bool) *Re
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetProductFolders(productFolders Slice[ProductFolder]) *RetailStore {
-	retailStore.ProductFolders = NewMetaArrayRows(productFolders)
+func (retailStore *RetailStore) SetProductFolders(productFolders ...*ProductFolder) *RetailStore {
+	retailStore.ProductFolders = NewMetaArrayFrom(productFolders)
 	return retailStore
 }
 
@@ -602,8 +603,8 @@ func (retailStore *RetailStore) SetQRPayEnabled(qrPayEnabled bool) *RetailStore 
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetQRTerminalId(qrTerminalId string) *RetailStore {
-	retailStore.QRTerminalId = &qrTerminalId
+func (retailStore *RetailStore) SetQRTerminalID(qrTerminalID string) *RetailStore {
+	retailStore.QRTerminalID = &qrTerminalID
 	return retailStore
 }
 
@@ -677,23 +678,23 @@ func (retailStore *RetailStore) SetMarksCheckMode(marksCheckMode MarksCheckMode)
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetMasterRetailStores(masterRetailStores Slice[RetailStore]) *RetailStore {
+func (retailStore *RetailStore) SetMasterRetailStores(masterRetailStores ...*RetailStore) *RetailStore {
 	retailStore.MasterRetailStores = masterRetailStores
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetFilterAgentsTags(filterAgentsTags Slice[string]) *RetailStore {
-	retailStore.FilterAgentsTags = filterAgentsTags
+func (retailStore *RetailStore) SetFilterAgentsTags(filterAgentsTags ...string) *RetailStore {
+	retailStore.FilterAgentsTags = NewSliceFrom(filterAgentsTags)
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCustomerOrderStates(customerOrderStates Slice[State]) *RetailStore {
+func (retailStore *RetailStore) SetCustomerOrderStates(customerOrderStates ...*State) *RetailStore {
 	retailStore.CustomerOrderStates = customerOrderStates
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetCreateAgentsTags(createAgentsTags Slice[string]) *RetailStore {
-	retailStore.CreateAgentsTags = createAgentsTags
+func (retailStore *RetailStore) SetCreateAgentsTags(createAgentsTags ...string) *RetailStore {
+	retailStore.CreateAgentsTags = NewSliceFrom(createAgentsTags)
 	return retailStore
 }
 
@@ -701,8 +702,84 @@ func (retailStore RetailStore) String() string {
 	return Stringify(retailStore)
 }
 
-func (retailStore RetailStore) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailStore) MetaType() MetaType {
 	return MetaTypeRetailStore
+}
+
+// Update shortcut
+func (retailStore RetailStore) Update(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+	return client.Entity().RetailStore().Update(ctx, retailStore.GetID(), &retailStore, params...)
+}
+
+// Create shortcut
+func (retailStore RetailStore) Create(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+	return client.Entity().RetailStore().Create(ctx, &retailStore, params...)
+}
+
+// Delete shortcut
+func (retailStore RetailStore) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailStore().Delete(ctx, retailStore.GetID())
+}
+
+// Cashier Кассир.
+// Ключевое слово: cashier
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir
+type Cashier struct {
+	AccountID   *uuid.UUID   `json:"accountId,omitempty"`   // ID учетной записи
+	Employee    *Employee    `json:"employee,omitempty"`    // Метаданные сотрудника, которого представляет собой кассир
+	ID          *uuid.UUID   `json:"id,omitempty"`          // ID сущности
+	Meta        *Meta        `json:"meta,omitempty"`        // Метаданные
+	RetailStore *RetailStore `json:"retailStore,omitempty"` // Метаданные точки продаж, к которой прикреплен кассир
+}
+
+// Clean возвращает сущность с единственным заполненным полем Meta
+func (cashier Cashier) Clean() *Cashier {
+	return &Cashier{Meta: cashier.Meta}
+}
+
+func (cashier Cashier) GetAccountID() uuid.UUID {
+	return Deref(cashier.AccountID)
+}
+
+func (cashier Cashier) GetEmployee() Employee {
+	return Deref(cashier.Employee)
+}
+
+func (cashier Cashier) GetID() uuid.UUID {
+	return Deref(cashier.ID)
+}
+
+func (cashier Cashier) GetMeta() Meta {
+	return Deref(cashier.Meta)
+}
+
+func (cashier Cashier) GetRetailStore() RetailStore {
+	return Deref(cashier.RetailStore)
+}
+
+func (cashier *Cashier) SetEmployee(employee *Employee) *Cashier {
+	cashier.Employee = employee.Clean()
+	return cashier
+}
+
+func (cashier *Cashier) SetMeta(meta *Meta) *Cashier {
+	cashier.Meta = meta
+	return cashier
+}
+
+func (cashier *Cashier) SetRetailStore(retailStore *RetailStore) *Cashier {
+	cashier.RetailStore = retailStore.Clean()
+	return cashier
+}
+
+func (cashier Cashier) String() string {
+	return Stringify(cashier)
+}
+
+// MetaType возвращает тип сущности.
+func (Cashier) MetaType() MetaType {
+	return MetaTypeCashier
 }
 
 // RetailStoreState Информация статусе точки продаж
@@ -902,7 +979,7 @@ type RetailStoreService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailStore], *resty.Response, error)
 	Create(ctx context.Context, retailStore *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...*Params) (*Slice[RetailStore], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailStore []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*RetailStore) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailStore, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, entity *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)

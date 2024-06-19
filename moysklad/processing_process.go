@@ -24,6 +24,7 @@ type ProcessingProcess struct {
 	Updated      *Timestamp                            `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingProcess ProcessingProcess) Clean() *ProcessingProcess {
 	return &ProcessingProcess{Meta: processingProcess.Meta}
 }
@@ -111,8 +112,8 @@ func (processingProcess *ProcessingProcess) SetOwner(owner *Employee) *Processin
 	return processingProcess
 }
 
-func (processingProcess *ProcessingProcess) SetPositions(positions *Positions[ProcessingProcessPosition]) *ProcessingProcess {
-	processingProcess.Positions = positions
+func (processingProcess *ProcessingProcess) SetPositions(positions ...*ProcessingProcessPosition) *ProcessingProcess {
+	processingProcess.Positions = NewPositionsFrom(positions)
 	return processingProcess
 }
 
@@ -125,8 +126,24 @@ func (processingProcess ProcessingProcess) String() string {
 	return Stringify(processingProcess)
 }
 
-func (processingProcess ProcessingProcess) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingProcess) MetaType() MetaType {
 	return MetaTypeProcessingProcess
+}
+
+// Update shortcut
+func (processingProcess ProcessingProcess) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+	return client.Entity().ProcessingProcess().Update(ctx, processingProcess.GetID(), &processingProcess, params...)
+}
+
+// Create shortcut
+func (processingProcess ProcessingProcess) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+	return client.Entity().ProcessingProcess().Create(ctx, &processingProcess, params...)
+}
+
+// Delete shortcut
+func (processingProcess ProcessingProcess) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingProcess().Delete(ctx, processingProcess.GetID())
 }
 
 // ProcessingProcessPosition Позиция Тех. процесса.
@@ -140,6 +157,7 @@ type ProcessingProcessPosition struct {
 	NextPositions   *MetaArray[ProcessingProcessPosition] `json:"nextPositions,omitempty"`   // Метаданные следующих позиций позиции Техпроцесса
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingProcessPosition ProcessingProcessPosition) Clean() *ProcessingProcessPosition {
 	return &ProcessingProcessPosition{Meta: processingProcessPosition.Meta}
 }
@@ -178,7 +196,8 @@ func (processingProcessPosition ProcessingProcessPosition) String() string {
 	return Stringify(processingProcessPosition)
 }
 
-func (processingProcessPosition ProcessingProcessPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingProcessPosition) MetaType() MetaType {
 	return MetaTypeProcessingProcessPosition
 }
 
@@ -188,7 +207,7 @@ type ProcessingProcessService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingProcess], *resty.Response, error)
 	Create(ctx context.Context, processingProcess *ProcessingProcess, params ...*Params) (*ProcessingProcess, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingProcessList Slice[ProcessingProcess], params ...*Params) (*Slice[ProcessingProcess], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingProcessList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingProcess) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingProcess, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingProcess *ProcessingProcess, params ...*Params) (*ProcessingProcess, *resty.Response, error)
@@ -196,11 +215,12 @@ type ProcessingProcessService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingProcessPosition, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingProcessPosition) (*ProcessingProcessPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingProcessPosition]) (*Slice[ProcessingProcessPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingProcessPosition) (*Slice[ProcessingProcessPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*ProcessingProcessPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)

@@ -91,7 +91,8 @@ func (webhookStock WebhookStock) String() string {
 	return Stringify(webhookStock)
 }
 
-func (webhookStock WebhookStock) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (WebhookStock) MetaType() MetaType {
 	return MetaTypeWebhookStock
 }
 
@@ -115,7 +116,7 @@ type WebhookStockService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[WebhookStock], *resty.Response, error)
 	Create(ctx context.Context, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, webhookStockList Slice[WebhookStock], params ...*Params) (*Slice[WebhookStock], *resty.Response, error)
-	DeleteMany(ctx context.Context, webhookStockList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*WebhookStock) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*WebhookStock, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)

@@ -74,7 +74,8 @@ func (customTemplate CustomTemplate) String() string {
 	return Stringify(customTemplate)
 }
 
-func (customTemplate CustomTemplate) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomTemplate) MetaType() MetaType {
 	return MetaTypeCustomTemplate
 }
 
@@ -89,11 +90,12 @@ func (embeddedTemplate EmbeddedTemplate) String() string {
 	return Stringify(embeddedTemplate)
 }
 
-func (embeddedTemplate EmbeddedTemplate) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (EmbeddedTemplate) MetaType() MetaType {
 	return MetaTypeEmbeddedTemplate
 }
 
-type Templater interface {
+type TemplateInterface interface {
 	HasMeta
 	GetType() TemplateType
 }
@@ -118,14 +120,14 @@ const (
 // Документы
 
 type PrintDocumentArg struct {
-	Template  *MetaWrapper                   `json:"template,omitempty"`
-	Templates *Slice[PrintDocArgManyElement] `json:"templates,omitempty"`
-	Extension Extension                      `json:"extension,omitempty"`
+	Template  MetaWrapper                   `json:"template,omitempty"`
+	Extension Extension                     `json:"extension,omitempty"`
+	Templates Slice[PrintDocArgManyElement] `json:"templates,omitempty"`
 }
 
 type PrintDocArgManyElement struct {
-	Template *MetaWrapper `json:"template,omitempty"`
-	Count    int          `json:"count,omitempty"`
+	Template MetaWrapper `json:"template,omitempty"`
+	Count    int         `json:"count,omitempty"`
 }
 
 // NewPrintDocArgOne создаёт и возвращает заполненный объект для запроса печати документов.
@@ -135,18 +137,18 @@ type PrintDocArgManyElement struct {
 // – ExtensionPDF для документа с расширением .pdf
 // – ExtensionHTML для документа с расширением .html
 // – ExtensionODS для документа с расширением .ods
-func NewPrintDocArgOne(template Templater, ext Extension) *PrintDocumentArg {
+func NewPrintDocArgOne(template TemplateInterface, ext Extension) *PrintDocumentArg {
 	return &PrintDocumentArg{
-		Template:  &MetaWrapper{Meta: template.GetMeta()},
+		Template:  template.GetMeta().Wrap(),
 		Extension: ext,
 	}
 }
 
 // NewPrintDocArgManyElement создаёт и возвращает *PrintDocArgManyElement,
 // который служит аргументом для метода NewPrintDocArgMany
-func NewPrintDocArgManyElement(template Templater, count int) *PrintDocArgManyElement {
+func NewPrintDocArgManyElement(template TemplateInterface, count int) *PrintDocArgManyElement {
 	return &PrintDocArgManyElement{
-		Template: &MetaWrapper{template.GetMeta()},
+		Template: template.GetMeta().Wrap(),
 		Count:    count,
 	}
 }
@@ -156,7 +158,7 @@ func NewPrintDocArgManyElement(template Templater, count int) *PrintDocArgManyEl
 // Каждый аргумент создаётся с помощью метода NewPrintDocArgManyElement
 func NewPrintDocArgMany(templates ...*PrintDocArgManyElement) *PrintDocumentArg {
 	return &PrintDocumentArg{
-		Templates: (new(Slice[PrintDocArgManyElement])).Push(templates...),
+		Templates: templates,
 	}
 }
 
@@ -175,11 +177,11 @@ type PrintLabelArgSalePrice struct {
 
 // NewPrintLabelArg создаёт и возвращает заполненный объект для запроса печати ценников.
 // Аргументы: организация, тип цен, шаблон и кол-во ценников
-func NewPrintLabelArg(organization *Organization, priceType *PriceType, template Templater, count int) *PrintLabelArg {
+func NewPrintLabelArg(organization *Organization, priceType *PriceType, template TemplateInterface, count int) *PrintLabelArg {
 	return &PrintLabelArg{
-		Organization: MetaWrapper{Meta: Deref(organization.Meta)},
-		SalePrice:    PrintLabelArgSalePrice{PriceType: MetaWrapper{Meta: Deref(priceType.Meta)}},
-		Template:     MetaWrapper{Meta: template.GetMeta()},
+		Organization: organization.GetMeta().Wrap(),
+		SalePrice:    PrintLabelArgSalePrice{PriceType: priceType.GetMeta().Wrap()},
+		Template:     template.GetMeta().Wrap(),
 		Count:        count,
 	}
 }

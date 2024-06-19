@@ -11,27 +11,28 @@ import (
 // Ключевое слово: store
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad
 type Store struct {
-	Owner        *Employee             `json:"owner,omitempty"`
-	Slots        *MetaArray[Slot]      `json:"slots,omitempty"`
-	Group        *Group                `json:"group,omitempty"`
-	Archived     *bool                 `json:"archived,omitempty"`
-	ID           *uuid.UUID            `json:"id,omitempty"`
-	Code         *string               `json:"code,omitempty"`
-	Description  *string               `json:"description,omitempty"`
-	ExternalCode *string               `json:"externalCode,omitempty"`
-	AddressFull  *Address              `json:"addressFull,omitempty"`
-	Address      *string               `json:"address,omitempty"`
-	Name         *string               `json:"name,omitempty"`
-	Meta         *Meta                 `json:"meta,omitempty"`
-	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
-	Parent       *Store                `json:"parent,omitempty"`
-	PathName     *string               `json:"pathName,omitempty"`
-	Shared       *bool                 `json:"shared,omitempty"`
-	Updated      *Timestamp            `json:"updated,omitempty"`
-	Zones        *MetaArray[Zone]      `json:"zones,omitempty"`
-	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	Owner        *Employee        `json:"owner,omitempty"`
+	Slots        *MetaArray[Slot] `json:"slots,omitempty"`
+	Group        *Group           `json:"group,omitempty"`
+	Archived     *bool            `json:"archived,omitempty"`
+	ID           *uuid.UUID       `json:"id,omitempty"`
+	Code         *string          `json:"code,omitempty"`
+	Description  *string          `json:"description,omitempty"`
+	ExternalCode *string          `json:"externalCode,omitempty"`
+	AddressFull  *Address         `json:"addressFull,omitempty"`
+	Address      *string          `json:"address,omitempty"`
+	Name         *string          `json:"name,omitempty"`
+	Meta         *Meta            `json:"meta,omitempty"`
+	AccountID    *uuid.UUID       `json:"accountId,omitempty"`
+	Parent       *Store           `json:"parent,omitempty"`
+	PathName     *string          `json:"pathName,omitempty"`
+	Shared       *bool            `json:"shared,omitempty"`
+	Updated      *Timestamp       `json:"updated,omitempty"`
+	Zones        *MetaArray[Zone] `json:"zones,omitempty"`
+	Attributes   Slice[Attribute] `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (store Store) Clean() *Store {
 	return &Store{Meta: store.Meta}
 }
@@ -108,7 +109,7 @@ func (store Store) GetZones() MetaArray[Zone] {
 	return Deref(store.Zones)
 }
 
-func (store Store) GetAttributes() Slice[AttributeValue] {
+func (store Store) GetAttributes() Slice[Attribute] {
 	return store.Attributes
 }
 
@@ -177,7 +178,7 @@ func (store *Store) SetShared(shared bool) *Store {
 	return store
 }
 
-func (store *Store) SetAttributes(attributes Slice[AttributeValue]) *Store {
+func (store *Store) SetAttributes(attributes ...*Attribute) *Store {
 	store.Attributes = attributes
 	return store
 }
@@ -186,8 +187,24 @@ func (store Store) String() string {
 	return Stringify(store)
 }
 
-func (store Store) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Store) MetaType() MetaType {
 	return MetaTypeStore
+}
+
+// Update shortcut
+func (store Store) Update(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+	return client.Entity().Store().Update(ctx, store.GetID(), &store, params...)
+}
+
+// Create shortcut
+func (store Store) Create(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+	return client.Entity().Store().Create(ctx, &store, params...)
+}
+
+// Delete shortcut
+func (store Store) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Store().Delete(ctx, store.GetID())
 }
 
 // Slot Ячейка склада.
@@ -204,6 +221,7 @@ type Slot struct {
 	Zone         *Zone      `json:"zone,omitempty"`         // Зона ячейки
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (slot Slot) Clean() *Slot {
 	return &Slot{Meta: slot.Meta}
 }
@@ -264,7 +282,8 @@ func (slot Slot) String() string {
 	return Stringify(slot)
 }
 
-func (slot Slot) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Slot) MetaType() MetaType {
 	return MetaTypeSlot
 }
 
@@ -323,7 +342,8 @@ func (zone Zone) String() string {
 	return Stringify(zone)
 }
 
-func (zone Zone) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Zone) MetaType() MetaType {
 	return MetaTypeStoreZone
 }
 
@@ -333,31 +353,31 @@ type StoreService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Store], *resty.Response, error)
 	Create(ctx context.Context, store *Store, params ...*Params) (*Store, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, storeList Slice[Store], params ...*Params) (*Slice[Store], *resty.Response, error)
-	DeleteMany(ctx context.Context, storeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Store) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Store, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, store *Store, params ...*Params) (*Store, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetSlots(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error)
 	CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error)
-	CreateOrUpdateSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*Slice[Slot], *resty.Response, error)
-	DeleteSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdateSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*Slice[Slot], *resty.Response, error)
+	DeleteSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error)
 	GetSlotByID(ctx context.Context, storeID, slotID uuid.UUID) (*Slot, *resty.Response, error)
 	DeleteSlot(ctx context.Context, storeID, slotID uuid.UUID) (bool, *resty.Response, error)
 	UpdateSlot(ctx context.Context, storeID, slotID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error)
 	GetZones(ctx context.Context, storeID uuid.UUID) (*List[Zone], *resty.Response, error)
 	CreateZone(ctx context.Context, storeID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error)
-	CreateOrUpdateZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*Slice[Zone], *resty.Response, error)
-	DeleteZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdateZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*Slice[Zone], *resty.Response, error)
+	DeleteZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error)
 	DeleteZone(ctx context.Context, storeID, zoneID uuid.UUID) (bool, *resty.Response, error)
 	GetZoneByID(ctx context.Context, storeID, zoneID uuid.UUID) (*Zone, *resty.Response, error)
 	UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error)
@@ -408,18 +428,18 @@ func (service *storeService) CreateSlot(ctx context.Context, storeID uuid.UUID, 
 	return NewRequestBuilder[Slot](service.client, path).Post(ctx, slot)
 }
 
-// CreateOrUpdateSlots Запрос создания и обновления нескольких Ячеек Склада.
+// CreateUpdateSlotMany Запрос создания и обновления нескольких Ячеек Склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-massowoe-sozdanie-i-obnowlenie-qcheek-sklada
-func (service *storeService) CreateOrUpdateSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*Slice[Slot], *resty.Response, error) {
+func (service *storeService) CreateUpdateSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*Slice[Slot], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
 	return NewRequestBuilder[Slice[Slot]](service.client, path).Post(ctx, slots)
 }
 
-// DeleteSlots Запрос на массовое удаление Ячеек склада.
+// DeleteSlotMany Запрос на массовое удаление Ячеек склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-massowoe-udalenie-qcheek-sklada
-func (service *storeService) DeleteSlots(ctx context.Context, storeID uuid.UUID, slots Slice[Slot]) (*DeleteManyResponse, *resty.Response, error) {
+func (service *storeService) DeleteSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/slots/delete", service.uri, storeID)
-	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, slots)
+	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, AsMetaWrapperSlice(slots))
 }
 
 // GetSlotByID Запрос на получение отдельной Ячейки Склада с указанным id.
@@ -457,17 +477,17 @@ func (service *storeService) CreateZone(ctx context.Context, storeID uuid.UUID, 
 	return NewRequestBuilder[Zone](service.client, path).Post(ctx, zone)
 }
 
-// CreateOrUpdateZones Запрос на создание и обновление нескольких Зон склада.
-func (service *storeService) CreateOrUpdateZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*Slice[Zone], *resty.Response, error) {
+// CreateUpdateZoneMany Запрос на создание и обновление нескольких Зон склада.
+func (service *storeService) CreateUpdateZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*Slice[Zone], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
 	return NewRequestBuilder[Slice[Zone]](service.client, path).Post(ctx, zones)
 }
 
-// DeleteZones Запрос на массовое удаление Зон склада.
+// DeleteZoneMany Запрос на массовое удаление Зон склада.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-massowoe-udalenie-zon-sklada
-func (service *storeService) DeleteZones(ctx context.Context, storeID uuid.UUID, zones Slice[Zone]) (*DeleteManyResponse, *resty.Response, error) {
+func (service *storeService) DeleteZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/zones/delete", service.uri, storeID)
-	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, zones)
+	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, AsMetaWrapperSlice(zones))
 }
 
 // DeleteZone Запрос на удаление Зоны склада с указанным id.

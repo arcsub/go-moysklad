@@ -10,42 +10,48 @@ import (
 // Ключевое слово: cashin
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prihodnyj-order
 type CashIn struct {
-	Organization   *Organization         `json:"organization,omitempty"`
-	VatSum         *float64              `json:"vatSum,omitempty"`
-	Applicable     *bool                 `json:"applicable,omitempty"`
-	Moment         *Timestamp            `json:"moment,omitempty"`
-	Code           *string               `json:"code,omitempty"`
-	Contract       *Contract             `json:"contract,omitempty"`
-	AccountID      *uuid.UUID            `json:"accountId,omitempty"`
-	Deleted        *Timestamp            `json:"deleted,omitempty"`
-	Description    *string               `json:"description,omitempty"`
-	ExternalCode   *string               `json:"externalCode,omitempty"`
-	Files          *MetaArray[File]      `json:"files,omitempty"`
-	Group          *Group                `json:"group,omitempty"`
-	ID             *uuid.UUID            `json:"id,omitempty"`
-	Meta           *Meta                 `json:"meta,omitempty"`
-	Operations     Operations            `json:"operations,omitempty"`
-	Agent          *Counterparty         `json:"agent,omitempty"`
-	Created        *Timestamp            `json:"created,omitempty"`
-	Owner          *Employee             `json:"owner,omitempty"`
-	PaymentPurpose *string               `json:"paymentPurpose,omitempty"`
-	Printed        *bool                 `json:"printed,omitempty"`
-	Project        *Project              `json:"project,omitempty"`
-	Published      *bool                 `json:"published,omitempty"`
-	Rate           *Rate                 `json:"rate,omitempty"`
-	SalesChannel   *SalesChannel         `json:"salesChannel,omitempty"`
-	Shared         *bool                 `json:"shared,omitempty"`
-	State          *State                `json:"state,omitempty"`
-	Sum            *float64              `json:"sum,omitempty"`
-	SyncID         *uuid.UUID            `json:"syncId,omitempty"`
-	Updated        *Timestamp            `json:"updated,omitempty"`
-	Name           *string               `json:"name,omitempty"`
-	FactureIn      *FactureIn            `json:"factureIn,omitempty"`
-	Attributes     Slice[AttributeValue] `json:"attributes,omitempty"`
+	Organization   *Organization            `json:"organization,omitempty"`
+	VatSum         *float64                 `json:"vatSum,omitempty"`
+	Applicable     *bool                    `json:"applicable,omitempty"`
+	Moment         *Timestamp               `json:"moment,omitempty"`
+	Code           *string                  `json:"code,omitempty"`
+	Contract       *NullValue[Contract]     `json:"contract,omitempty"`
+	AccountID      *uuid.UUID               `json:"accountId,omitempty"`
+	Deleted        *Timestamp               `json:"deleted,omitempty"`
+	Description    *string                  `json:"description,omitempty"`
+	ExternalCode   *string                  `json:"externalCode,omitempty"`
+	Files          *MetaArray[File]         `json:"files,omitempty"`
+	Group          *Group                   `json:"group,omitempty"`
+	ID             *uuid.UUID               `json:"id,omitempty"`
+	Meta           *Meta                    `json:"meta,omitempty"`
+	Operations     Operations               `json:"operations,omitempty"`
+	Agent          *Counterparty            `json:"agent,omitempty"`
+	Created        *Timestamp               `json:"created,omitempty"`
+	Owner          *Employee                `json:"owner,omitempty"`
+	PaymentPurpose *string                  `json:"paymentPurpose,omitempty"`
+	Printed        *bool                    `json:"printed,omitempty"`
+	Project        *NullValue[Project]      `json:"project,omitempty"`
+	Published      *bool                    `json:"published,omitempty"`
+	Rate           *NullValue[Rate]         `json:"rate,omitempty"`
+	SalesChannel   *NullValue[SalesChannel] `json:"salesChannel,omitempty"`
+	Shared         *bool                    `json:"shared,omitempty"`
+	State          *NullValue[State]        `json:"state,omitempty"`
+	Sum            *float64                 `json:"sum,omitempty"`
+	SyncID         *uuid.UUID               `json:"syncId,omitempty"`
+	Updated        *Timestamp               `json:"updated,omitempty"`
+	Name           *string                  `json:"name,omitempty"`
+	FactureIn      *FactureIn               `json:"factureIn,omitempty"`
+	Attributes     Slice[Attribute]         `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (cashIn CashIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: cashIn.Meta}
 }
 
 func (cashIn CashIn) GetOrganization() Organization {
@@ -69,7 +75,7 @@ func (cashIn CashIn) GetCode() string {
 }
 
 func (cashIn CashIn) GetContract() Contract {
-	return Deref(cashIn.Contract)
+	return cashIn.Contract.Get()
 }
 
 func (cashIn CashIn) GetAccountID() uuid.UUID {
@@ -129,7 +135,7 @@ func (cashIn CashIn) GetPrinted() bool {
 }
 
 func (cashIn CashIn) GetProject() Project {
-	return Deref(cashIn.Project)
+	return cashIn.Project.Get()
 }
 
 func (cashIn CashIn) GetPublished() bool {
@@ -137,11 +143,11 @@ func (cashIn CashIn) GetPublished() bool {
 }
 
 func (cashIn CashIn) GetRate() Rate {
-	return Deref(cashIn.Rate)
+	return cashIn.Rate.Get()
 }
 
 func (cashIn CashIn) GetSalesChannel() SalesChannel {
-	return Deref(cashIn.SalesChannel)
+	return cashIn.SalesChannel.Get()
 }
 
 func (cashIn CashIn) GetShared() bool {
@@ -149,7 +155,7 @@ func (cashIn CashIn) GetShared() bool {
 }
 
 func (cashIn CashIn) GetState() State {
-	return Deref(cashIn.State)
+	return cashIn.State.Get()
 }
 
 func (cashIn CashIn) GetSum() float64 {
@@ -172,7 +178,7 @@ func (cashIn CashIn) GetFactureIn() FactureIn {
 	return Deref(cashIn.FactureIn)
 }
 
-func (cashIn CashIn) GetAttributes() Slice[AttributeValue] {
+func (cashIn CashIn) GetAttributes() Slice[Attribute] {
 	return cashIn.Attributes
 }
 
@@ -202,7 +208,12 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 }
 
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
-	cashIn.Contract = contract.Clean()
+	cashIn.Contract = NewNullValueFrom(contract.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullContract() *CashIn {
+	cashIn.Contract = NewNullValue[Contract]()
 	return cashIn
 }
 
@@ -216,8 +227,8 @@ func (cashIn *CashIn) SetExternalCode(externalCode string) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetFiles(files Slice[File]) *CashIn {
-	cashIn.Files = NewMetaArrayRows(files)
+func (cashIn *CashIn) SetFiles(files ...*File) *CashIn {
+	cashIn.Files = NewMetaArrayFrom(files)
 	return cashIn
 }
 
@@ -252,17 +263,32 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 }
 
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
-	cashIn.Project = project.Clean()
+	cashIn.Project = NewNullValueFrom(project.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullProject() *CashIn {
+	cashIn.Project = NewNullValue[Project]()
 	return cashIn
 }
 
 func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
-	cashIn.Rate = rate
+	cashIn.Rate = NewNullValueFrom(rate)
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullRate() *CashIn {
+	cashIn.Rate = NewNullValue[Rate]()
 	return cashIn
 }
 
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
-	cashIn.SalesChannel = salesChannel.Clean()
+	cashIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullSalesChannel() *CashIn {
+	cashIn.SalesChannel = NewNullValue[SalesChannel]()
 	return cashIn
 }
 
@@ -272,7 +298,12 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 }
 
 func (cashIn *CashIn) SetState(state *State) *CashIn {
-	cashIn.State = state.Clean()
+	cashIn.State = NewNullValueFrom(state.Clean())
+	return cashIn
+}
+
+func (cashIn *CashIn) SetNullState() *CashIn {
+	cashIn.State = NewNullValue[State]()
 	return cashIn
 }
 
@@ -296,7 +327,7 @@ func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
 	return cashIn
 }
 
-func (cashIn *CashIn) SetAttributes(attributes Slice[AttributeValue]) *CashIn {
+func (cashIn *CashIn) SetAttributes(attributes ...*Attribute) *CashIn {
 	cashIn.Attributes = attributes
 	return cashIn
 }
@@ -305,29 +336,29 @@ func (cashIn CashIn) String() string {
 	return Stringify(cashIn)
 }
 
-func (cashIn CashIn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
 }
 
-func (cashIn CashIn) AsPayment() *Payment {
-	return &Payment{Meta: cashIn.GetMeta()}
+func (cashIn CashIn) AsOperation() *Operation {
+	return &Operation{Meta: cashIn.GetMeta()}
 }
 
-// CashInTemplateArg
-// Документ: Приходный ордер (cashin)
-// Основание, на котором он может быть создан:
-// - Заказ покупателя (customerorder)
-// - Возврат поставщику (purchasereturn)
-// - Отгрузка (demand)
-// - Счет покупателю (invoiceout)
-// - Полученный отчет комиссионера (commissionreportin)
-//type CashInTemplateArg struct {
-//	CustomerOrder      *MetaWrapper `json:"customerOrder,omitempty"`
-//	PurchaseReturn     *MetaWrapper `json:"purchaseReturn,omitempty"`
-//	Demand             *MetaWrapper `json:"demand,omitempty"`
-//	InvoiceOut         *MetaWrapper `json:"invoiceOut,omitempty"`
-//	CommissionReportIn *MetaWrapper `json:"commissionReportIn,omitempty"`
-//}
+// Update shortcut
+func (cashIn CashIn) Update(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+	return client.Entity().CashIn().Update(ctx, cashIn.GetID(), &cashIn, params...)
+}
+
+// Create shortcut
+func (cashIn CashIn) Create(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+	return client.Entity().CashIn().Create(ctx, &cashIn, params...)
+}
+
+// Delete shortcut
+func (cashIn CashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CashIn().Delete(ctx, cashIn.GetID())
+}
 
 // CashInService
 // Сервис для работы с приходными ордерами.
@@ -335,22 +366,22 @@ type CashInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CashIn], *resty.Response, error)
 	Create(ctx context.Context, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, cashInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CashIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
-	//Template(ctx context.Context) (*CashIn, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
+	Template(ctx context.Context) (*CashIn, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CashIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -358,13 +389,13 @@ type CashInService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewCashInService(client *Client) CashInService {

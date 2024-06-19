@@ -16,6 +16,7 @@ type State struct {
 	StateType  StateType  `json:"stateType,omitempty"`  // Тип Статуса
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (state State) Clean() *State {
 	return &State{Meta: state.Meta}
 }

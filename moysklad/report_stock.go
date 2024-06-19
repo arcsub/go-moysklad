@@ -28,7 +28,8 @@ type StockAll struct {
 	StockDays    float64         `json:"stockDays"`
 }
 
-func (stockAll StockAll) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (StockAll) MetaType() MetaType {
 	return MetaTypeReportStock
 }
 
@@ -40,7 +41,8 @@ type StockByOperation struct {
 	Positions []StockByOperationPosition `json:"positions"` // Массив объектов, представляющий собой Остаток по каждой из позиций
 }
 
-func (stockByOperation StockByOperation) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (StockByOperation) MetaType() MetaType {
 	return MetaTypeReportStockByOperation
 }
 
@@ -64,7 +66,8 @@ type StockByStore struct {
 	StockByStore []StockByStorePosition `json:"stockByStore"` // Остатки по складам
 }
 
-func (stockByStore StockByStore) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (StockByStore) MetaType() MetaType {
 	return MetaTypeReportStockByStore
 }
 
@@ -81,7 +84,7 @@ type StockByStorePosition struct {
 // StockCurrentAll Краткий отчет об остатках
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-kratkij-otchet-ob-ostatkah
 type StockCurrentAll struct {
-	AssortmentId string `json:"assortmentId"`
+	AssortmentID string `json:"assortmentId"`
 	Stock        int    `json:"stock"`
 	Quantity     int    `json:"quantity"`
 }
@@ -89,8 +92,8 @@ type StockCurrentAll struct {
 // StockCurrentByStore Краткий отчет об остатках
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-ostatki-poluchit-kratkij-otchet-ob-ostatkah
 type StockCurrentByStore struct {
-	AssortmentId string  `json:"assortmentId"` // Выдать в отчёте только указанные товары, модификации и серии
-	StoreId      string  `json:"storeId"`      // ID склада
+	AssortmentID string  `json:"assortmentId"` // Выдать в отчёте только указанные товары, модификации и серии
+	StoreID      string  `json:"storeId"`      // ID склада
 	Stock        float64 `json:"stock"`        // Физический остаток на складах, без учёта резерва и ожидания
 	FreeStock    float64 `json:"freeStock"`    // Остаток на складах за вычетом резерва
 	Quantity     float64 `json:"quantity"`     // Доступно. Учитывает резерв и ожидания

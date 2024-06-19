@@ -28,16 +28,16 @@ type SalesReturn struct {
 	Moment              *Timestamp                      `json:"moment,omitempty"`
 	Name                *string                         `json:"name,omitempty"`
 	AccountID           *uuid.UUID                      `json:"accountId,omitempty"`
-	Contract            *Contract                       `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]            `json:"contract,omitempty"`
 	Agent               *Counterparty                   `json:"agent,omitempty"`
 	Organization        *Organization                   `json:"organization,omitempty"`
 	Printed             *bool                           `json:"printed,omitempty"`
-	Project             *Project                        `json:"project,omitempty"`
+	Project             *NullValue[Project]             `json:"project,omitempty"`
 	Published           *bool                           `json:"published,omitempty"`
-	Rate                *Rate                           `json:"rate,omitempty"`
-	SalesChannel        *SalesChannel                   `json:"salesChannel,omitempty"`
+	Rate                *NullValue[Rate]                `json:"rate,omitempty"`
+	SalesChannel        *NullValue[SalesChannel]        `json:"salesChannel,omitempty"`
 	Shared              *bool                           `json:"shared,omitempty"`
-	State               *State                          `json:"state,omitempty"`
+	State               *NullValue[State]               `json:"state,omitempty"`
 	Store               *Store                          `json:"store,omitempty"`
 	Sum                 *float64                        `json:"sum,omitempty"`
 	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`
@@ -49,11 +49,22 @@ type SalesReturn struct {
 	Losses              Slice[Loss]                     `json:"losses,omitempty"`
 	Payments            Slice[Payment]                  `json:"payments,omitempty"`
 	PayedSum            *float64                        `json:"payedSum,omitempty"`
-	Attributes          Slice[AttributeValue]           `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]                `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (salesReturn SalesReturn) Clean() *SalesReturn {
 	return &SalesReturn{Meta: salesReturn.Meta}
+}
+
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (salesReturn SalesReturn) AsOperation() *Operation {
+	return &Operation{Meta: salesReturn.GetMeta()}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (salesReturn SalesReturn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: salesReturn.Meta}
 }
 
 func (salesReturn SalesReturn) GetPositions() Positions[SalesReturnPosition] {
@@ -129,7 +140,7 @@ func (salesReturn SalesReturn) GetAccountID() uuid.UUID {
 }
 
 func (salesReturn SalesReturn) GetContract() Contract {
-	return Deref(salesReturn.Contract)
+	return salesReturn.Contract.Get()
 }
 
 func (salesReturn SalesReturn) GetAgent() Counterparty {
@@ -145,7 +156,7 @@ func (salesReturn SalesReturn) GetPrinted() bool {
 }
 
 func (salesReturn SalesReturn) GetProject() Project {
-	return Deref(salesReturn.Project)
+	return salesReturn.Project.Get()
 }
 
 func (salesReturn SalesReturn) GetPublished() bool {
@@ -153,11 +164,11 @@ func (salesReturn SalesReturn) GetPublished() bool {
 }
 
 func (salesReturn SalesReturn) GetRate() Rate {
-	return Deref(salesReturn.Rate)
+	return salesReturn.Rate.Get()
 }
 
 func (salesReturn SalesReturn) GetSalesChannel() SalesChannel {
-	return Deref(salesReturn.SalesChannel)
+	return salesReturn.SalesChannel.Get()
 }
 
 func (salesReturn SalesReturn) GetShared() bool {
@@ -165,7 +176,7 @@ func (salesReturn SalesReturn) GetShared() bool {
 }
 
 func (salesReturn SalesReturn) GetState() State {
-	return Deref(salesReturn.State)
+	return salesReturn.State.Get()
 }
 
 func (salesReturn SalesReturn) GetStore() Store {
@@ -212,12 +223,12 @@ func (salesReturn SalesReturn) GetPayedSum() float64 {
 	return Deref(salesReturn.PayedSum)
 }
 
-func (salesReturn SalesReturn) GetAttributes() Slice[AttributeValue] {
+func (salesReturn SalesReturn) GetAttributes() Slice[Attribute] {
 	return salesReturn.Attributes
 }
 
-func (salesReturn *SalesReturn) SetPositions(positions *Positions[SalesReturnPosition]) *SalesReturn {
-	salesReturn.Positions = positions
+func (salesReturn *SalesReturn) SetPositions(positions ...*SalesReturnPosition) *SalesReturn {
+	salesReturn.Positions = NewPositionsFrom(positions)
 	return salesReturn
 }
 
@@ -256,8 +267,8 @@ func (salesReturn *SalesReturn) SetExternalCode(externalCode string) *SalesRetur
 	return salesReturn
 }
 
-func (salesReturn *SalesReturn) SetFiles(files Slice[File]) *SalesReturn {
-	salesReturn.Files = NewMetaArrayRows(files)
+func (salesReturn *SalesReturn) SetFiles(files ...*File) *SalesReturn {
+	salesReturn.Files = NewMetaArrayFrom(files)
 	return salesReturn
 }
 
@@ -282,7 +293,7 @@ func (salesReturn *SalesReturn) SetName(name string) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetContract(contract *Contract) *SalesReturn {
-	salesReturn.Contract = contract
+	salesReturn.Contract = NewNullValueFrom(contract.Clean())
 	return salesReturn
 }
 
@@ -297,17 +308,32 @@ func (salesReturn *SalesReturn) SetOrganization(organization *Organization) *Sal
 }
 
 func (salesReturn *SalesReturn) SetProject(project *Project) *SalesReturn {
-	salesReturn.Project = project.Clean()
+	salesReturn.Project = NewNullValueFrom(project.Clean())
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullProject() *SalesReturn {
+	salesReturn.Project = NewNullValue[Project]()
 	return salesReturn
 }
 
 func (salesReturn *SalesReturn) SetRate(rate *Rate) *SalesReturn {
-	salesReturn.Rate = rate
+	salesReturn.Rate = NewNullValueFrom(rate)
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullRate() *SalesReturn {
+	salesReturn.Rate = NewNullValue[Rate]()
 	return salesReturn
 }
 
 func (salesReturn *SalesReturn) SetSalesChannel(salesChannel *SalesChannel) *SalesReturn {
-	salesReturn.SalesChannel = salesChannel.Clean()
+	salesReturn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullSalesChannel() *SalesReturn {
+	salesReturn.SalesChannel = NewNullValue[SalesChannel]()
 	return salesReturn
 }
 
@@ -317,7 +343,12 @@ func (salesReturn *SalesReturn) SetShared(shared bool) *SalesReturn {
 }
 
 func (salesReturn *SalesReturn) SetState(state *State) *SalesReturn {
-	salesReturn.State = state.Clean()
+	salesReturn.State = NewNullValueFrom(state.Clean())
+	return salesReturn
+}
+
+func (salesReturn *SalesReturn) SetNullState() *SalesReturn {
+	salesReturn.State = NewNullValue[State]()
 	return salesReturn
 }
 
@@ -351,17 +382,17 @@ func (salesReturn *SalesReturn) SetDemand(demand *Demand) *SalesReturn {
 	return salesReturn
 }
 
-func (salesReturn *SalesReturn) SetLosses(losses Slice[Loss]) *SalesReturn {
+func (salesReturn *SalesReturn) SetLosses(losses ...*Loss) *SalesReturn {
 	salesReturn.Losses = losses
 	return salesReturn
 }
 
-func (salesReturn *SalesReturn) SetPayments(payments Slice[Payment]) *SalesReturn {
+func (salesReturn *SalesReturn) SetPayments(payments ...*Payment) *SalesReturn {
 	salesReturn.Payments = payments
 	return salesReturn
 }
 
-func (salesReturn *SalesReturn) SetAttributes(attributes Slice[AttributeValue]) *SalesReturn {
+func (salesReturn *SalesReturn) SetAttributes(attributes ...*Attribute) *SalesReturn {
 	salesReturn.Attributes = attributes
 	return salesReturn
 }
@@ -370,8 +401,24 @@ func (salesReturn SalesReturn) String() string {
 	return Stringify(salesReturn)
 }
 
-func (salesReturn SalesReturn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesReturn) MetaType() MetaType {
 	return MetaTypeSalesReturn
+}
+
+// Update shortcut
+func (salesReturn SalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+	return client.Entity().SalesReturn().Update(ctx, salesReturn.GetID(), &salesReturn, params...)
+}
+
+// Create shortcut
+func (salesReturn SalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+	return client.Entity().SalesReturn().Create(ctx, &salesReturn, params...)
+}
+
+// Delete shortcut
+func (salesReturn SalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().SalesReturn().Delete(ctx, salesReturn.GetID())
 }
 
 // SalesReturnPosition Позиция Возврата покупателя.
@@ -500,8 +547,8 @@ func (salesReturnPosition *SalesReturnPosition) SetSlot(slot *Slot) *SalesReturn
 	return salesReturnPosition
 }
 
-func (salesReturnPosition *SalesReturnPosition) SetThings(things Slice[string]) *SalesReturnPosition {
-	salesReturnPosition.Things = things
+func (salesReturnPosition *SalesReturnPosition) SetThings(things ...string) *SalesReturnPosition {
+	salesReturnPosition.Things = NewSliceFrom(things)
 	return salesReturnPosition
 }
 
@@ -519,19 +566,10 @@ func (salesReturnPosition SalesReturnPosition) String() string {
 	return Stringify(salesReturnPosition)
 }
 
-func (salesReturnPosition SalesReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesReturnPosition) MetaType() MetaType {
 	return MetaTypeSalesReturnPosition
 }
-
-// SalesReturnTemplateArg
-// Документ: Возврат покупателя (salesreturn)
-// Основание, на котором он может быть создан:
-// - Отгрузка (demand)
-// - Розничная продажа (retaildemand)
-//type SalesReturnTemplateArg struct {
-//	Demand       *MetaWrapper `json:"demand,omitempty"`
-//	RetailDemand *MetaWrapper `json:"retailDemand,omitempty"`
-//}
 
 // SalesReturnService
 // Сервис для работы с возвратами покупателей.
@@ -539,32 +577,33 @@ type SalesReturnService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[SalesReturn], *resty.Response, error)
 	Create(ctx context.Context, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
-	DeleteMany(ctx context.Context, salesReturnList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*SalesReturn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SalesReturn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
-	//endpointTemplate[SalesReturn]
-	//endpointTemplateBasedOn[SalesReturn, SalesReturnTemplateArg]
+	Template(ctx context.Context) (*SalesReturn, *resty.Response, error)
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*SalesReturn, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[SalesReturnPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *SalesReturnPosition, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *SalesReturnPosition) (*SalesReturnPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[SalesReturnPosition]) (*Slice[SalesReturnPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*SalesReturnPosition) (*Slice[SalesReturnPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*SalesReturnPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*SalesReturn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -574,13 +613,14 @@ type SalesReturnService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *SalesReturn, evaluate ...Evaluate) (*SalesReturn, *resty.Response, error)
 }
 
 func NewSalesReturnService(client *Client) SalesReturnService {

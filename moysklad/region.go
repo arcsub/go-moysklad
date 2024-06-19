@@ -20,6 +20,7 @@ type Region struct {
 	Version      *int       `json:"version,omitempty"`      // Версия сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (region Region) Clean() *Region {
 	return &Region{Meta: region.Meta}
 }
@@ -80,7 +81,8 @@ func (region Region) String() string {
 	return Stringify(region)
 }
 
-func (region Region) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Region) MetaType() MetaType {
 	return MetaTypeRegion
 }
 

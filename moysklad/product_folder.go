@@ -32,6 +32,7 @@ type ProductFolder struct {
 	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (productFolder ProductFolder) Clean() *ProductFolder {
 	return &ProductFolder{Meta: productFolder.Meta}
 }
@@ -190,8 +191,24 @@ func (productFolder ProductFolder) String() string {
 	return Stringify(productFolder)
 }
 
-func (productFolder ProductFolder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductFolder) MetaType() MetaType {
 	return MetaTypeProductFolder
+}
+
+// Update shortcut
+func (productFolder ProductFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+	return client.Entity().ProductFolder().Update(ctx, productFolder.GetID(), &productFolder, params...)
+}
+
+// Create shortcut
+func (productFolder ProductFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+	return client.Entity().ProductFolder().Create(ctx, &productFolder, params...)
+}
+
+// Delete shortcut
+func (productFolder ProductFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProductFolder().Delete(ctx, productFolder.GetID())
 }
 
 // ProductFolderService
@@ -200,16 +217,16 @@ type ProductFolderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProductFolder], *resty.Response, error)
 	Create(ctx context.Context, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productFolderList Slice[ProductFolder], params ...*Params) (*Slice[ProductFolder], *resty.Response, error)
-	DeleteMany(ctx context.Context, productFolderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProductFolder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductFolder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
 }

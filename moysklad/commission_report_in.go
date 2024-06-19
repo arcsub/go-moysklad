@@ -38,26 +38,37 @@ type CommissionReportIn struct {
 	PayedSum                      *float64                                     `json:"payedSum,omitempty"`
 	Positions                     *Positions[CommissionReportInPosition]       `json:"positions,omitempty"`
 	Printed                       *bool                                        `json:"printed,omitempty"`
-	Project                       *Project                                     `json:"project,omitempty"`
+	Project                       *NullValue[Project]                          `json:"project,omitempty"`
 	Published                     *bool                                        `json:"published,omitempty"`
-	Rate                          *Rate                                        `json:"rate,omitempty"`
+	Rate                          *NullValue[Rate]                             `json:"rate,omitempty"`
 	ReturnToCommissionerPositions *Positions[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"`
 	RewardPercent                 *float64                                     `json:"rewardPercent,omitempty"`
 	Payments                      Slice[Payment]                               `json:"payments,omitempty"`
-	SalesChannel                  *SalesChannel                                `json:"salesChannel,omitempty"`
+	SalesChannel                  *NullValue[SalesChannel]                     `json:"salesChannel,omitempty"`
 	Shared                        *bool                                        `json:"shared,omitempty"`
-	State                         *State                                       `json:"state,omitempty"`
+	State                         *NullValue[State]                            `json:"state,omitempty"`
 	Sum                           *float64                                     `json:"sum,omitempty"`
 	SyncID                        *uuid.UUID                                   `json:"syncId,omitempty"`
 	Updated                       *Timestamp                                   `json:"updated,omitempty"`
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`
 	RewardType                    RewardType                                   `json:"rewardType,omitempty"`
-	Attributes                    Slice[AttributeValue]                        `json:"attributes,omitempty"`
+	Attributes                    Slice[Attribute]                             `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
 	return &CommissionReportIn{Meta: commissionReportIn.Meta}
+}
+
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
+	return &Operation{Meta: commissionReportIn.GetMeta()}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (commissionReportIn CommissionReportIn) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: commissionReportIn.Meta}
 }
 
 func (commissionReportIn CommissionReportIn) GetVatSum() float64 {
@@ -169,7 +180,7 @@ func (commissionReportIn CommissionReportIn) GetPrinted() bool {
 }
 
 func (commissionReportIn CommissionReportIn) GetProject() Project {
-	return Deref(commissionReportIn.Project)
+	return commissionReportIn.Project.Get()
 }
 
 func (commissionReportIn CommissionReportIn) GetPublished() bool {
@@ -177,7 +188,7 @@ func (commissionReportIn CommissionReportIn) GetPublished() bool {
 }
 
 func (commissionReportIn CommissionReportIn) GetRate() Rate {
-	return Deref(commissionReportIn.Rate)
+	return commissionReportIn.Rate.Get()
 }
 
 func (commissionReportIn CommissionReportIn) GetReturnToCommissionerPositions() Positions[CommissionReportInReturnPosition] {
@@ -193,7 +204,7 @@ func (commissionReportIn CommissionReportIn) GetPayments() Slice[Payment] {
 }
 
 func (commissionReportIn CommissionReportIn) GetSalesChannel() SalesChannel {
-	return Deref(commissionReportIn.SalesChannel)
+	return commissionReportIn.SalesChannel.Get()
 }
 
 func (commissionReportIn CommissionReportIn) GetShared() bool {
@@ -201,7 +212,7 @@ func (commissionReportIn CommissionReportIn) GetShared() bool {
 }
 
 func (commissionReportIn CommissionReportIn) GetState() State {
-	return Deref(commissionReportIn.State)
+	return commissionReportIn.State.Get()
 }
 
 func (commissionReportIn CommissionReportIn) GetSum() float64 {
@@ -228,7 +239,7 @@ func (commissionReportIn CommissionReportIn) GetRewardType() RewardType {
 	return commissionReportIn.RewardType
 }
 
-func (commissionReportIn CommissionReportIn) GetAttributes() Slice[AttributeValue] {
+func (commissionReportIn CommissionReportIn) GetAttributes() Slice[Attribute] {
 	return commissionReportIn.Attributes
 }
 
@@ -287,8 +298,8 @@ func (commissionReportIn *CommissionReportIn) SetExternalCode(externalCode strin
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetFiles(files Slice[File]) *CommissionReportIn {
-	commissionReportIn.Files = NewMetaArrayRows(files)
+func (commissionReportIn *CommissionReportIn) SetFiles(files ...*File) *CommissionReportIn {
+	commissionReportIn.Files = NewMetaArrayFrom(files)
 	return commissionReportIn
 }
 
@@ -322,23 +333,33 @@ func (commissionReportIn *CommissionReportIn) SetOwner(owner *Employee) *Commiss
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetPositions(positions *Positions[CommissionReportInPosition]) *CommissionReportIn {
-	commissionReportIn.Positions = positions
+func (commissionReportIn *CommissionReportIn) SetPositions(positions ...*CommissionReportInPosition) *CommissionReportIn {
+	commissionReportIn.Positions = NewPositionsFrom(positions)
 	return commissionReportIn
 }
 
 func (commissionReportIn *CommissionReportIn) SetProject(project *Project) *CommissionReportIn {
-	commissionReportIn.Project = project.Clean()
+	commissionReportIn.Project = NewNullValueFrom(project.Clean())
+	return commissionReportIn
+}
+
+func (commissionReportIn *CommissionReportIn) SetNullProject() *CommissionReportIn {
+	commissionReportIn.Project = NewNullValue[Project]()
 	return commissionReportIn
 }
 
 func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionReportIn {
-	commissionReportIn.Rate = rate
+	commissionReportIn.Rate = NewNullValueFrom(rate)
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetReturnToCommissionerPositions(returnToCommissionerPositions *Positions[CommissionReportInReturnPosition]) *CommissionReportIn {
-	commissionReportIn.ReturnToCommissionerPositions = returnToCommissionerPositions
+func (commissionReportIn *CommissionReportIn) SetNullRate() *CommissionReportIn {
+	commissionReportIn.Rate = NewNullValue[Rate]()
+	return commissionReportIn
+}
+
+func (commissionReportIn *CommissionReportIn) SetReturnToCommissionerPositions(returnToCommissionerPositions ...*CommissionReportInReturnPosition) *CommissionReportIn {
+	commissionReportIn.ReturnToCommissionerPositions = NewPositionsFrom(returnToCommissionerPositions)
 	return commissionReportIn
 }
 
@@ -347,13 +368,18 @@ func (commissionReportIn *CommissionReportIn) SetRewardPercent(rewardPercent flo
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetPayments(payments Slice[Payment]) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetPayments(payments ...*Payment) *CommissionReportIn {
 	commissionReportIn.Payments = payments
 	return commissionReportIn
 }
 
 func (commissionReportIn *CommissionReportIn) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportIn {
-	commissionReportIn.SalesChannel = salesChannel.Clean()
+	commissionReportIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
+	return commissionReportIn
+}
+
+func (commissionReportIn *CommissionReportIn) SetNullSalesChannel() *CommissionReportIn {
+	commissionReportIn.SalesChannel = NewNullValue[SalesChannel]()
 	return commissionReportIn
 }
 
@@ -363,7 +389,12 @@ func (commissionReportIn *CommissionReportIn) SetShared(shared bool) *Commission
 }
 
 func (commissionReportIn *CommissionReportIn) SetState(state *State) *CommissionReportIn {
-	commissionReportIn.State = state.Clean()
+	commissionReportIn.State = NewNullValueFrom(state.Clean())
+	return commissionReportIn
+}
+
+func (commissionReportIn *CommissionReportIn) SetNullState() *CommissionReportIn {
+	commissionReportIn.State = NewNullValue[State]()
 	return commissionReportIn
 }
 
@@ -387,7 +418,7 @@ func (commissionReportIn *CommissionReportIn) SetRewardType(rewardType RewardTyp
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetAttributes(attributes Slice[AttributeValue]) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetAttributes(attributes ...*Attribute) *CommissionReportIn {
 	commissionReportIn.Attributes = attributes
 	return commissionReportIn
 }
@@ -396,8 +427,24 @@ func (commissionReportIn CommissionReportIn) String() string {
 	return Stringify(commissionReportIn)
 }
 
-func (commissionReportIn CommissionReportIn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportIn) MetaType() MetaType {
 	return MetaTypeCommissionReportIn
+}
+
+// Update shortcut
+func (commissionReportIn CommissionReportIn) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+	return client.Entity().CommissionReportIn().Update(ctx, commissionReportIn.GetID(), &commissionReportIn, params...)
+}
+
+// Create shortcut
+func (commissionReportIn CommissionReportIn) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+	return client.Entity().CommissionReportIn().Create(ctx, &commissionReportIn, params...)
+}
+
+// Delete shortcut
+func (commissionReportIn CommissionReportIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CommissionReportIn().Delete(ctx, commissionReportIn.GetID())
 }
 
 // CommissionOverhead Прочие расходы
@@ -519,7 +566,8 @@ func (commissionReportInPosition CommissionReportInPosition) String() string {
 	return Stringify(commissionReportInPosition)
 }
 
-func (commissionReportInPosition CommissionReportInPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportInPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportInPosition
 }
 
@@ -613,7 +661,8 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) String(
 	return Stringify(commissionReportInReturnPosition)
 }
 
-func (commissionReportInReturnPosition CommissionReportInReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportInReturnPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportInReturnPosition
 }
 
@@ -623,7 +672,7 @@ type CommissionReportInService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportIn], *resty.Response, error)
 	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
-	DeleteMany(ctx context.Context, commissionReportInList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*CommissionReportIn) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
@@ -632,26 +681,27 @@ type CommissionReportInService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportInPosition, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *CommissionReportInPosition) (*CommissionReportInPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[CommissionReportInPosition]) (*Slice[CommissionReportInPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportInPosition) (*Slice[CommissionReportInPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*CommissionReportInPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportIn, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
-	// Template(ctx context.Context) (*CommissionReportIn, *resty.Response, error)
+	Template(ctx context.Context) (*CommissionReportIn, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetReturnPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[CommissionReportInReturnPosition], *resty.Response, error)
@@ -661,13 +711,14 @@ type CommissionReportInService interface {
 	DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *CommissionReportIn, evaluate ...Evaluate) (*CommissionReportIn, *resty.Response, error)
 }
 
 type commissionReportInService struct {
@@ -688,6 +739,8 @@ type commissionReportInService struct {
 	endpointTrash
 	endpointStates
 	endpointFiles
+	endpointTemplate[CommissionReportIn]
+	endpointEvaluate[CommissionReportIn]
 }
 
 func NewCommissionReportInService(client *Client) CommissionReportInService {
@@ -706,11 +759,12 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[CommissionReportIn]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
-		//endpointTemplate:         endpointTemplate[CommissionReportIn]{e},
-		endpointPublication: endpointPublication{e},
-		endpointTrash:       endpointTrash{e},
-		endpointStates:      endpointStates{e},
-		endpointFiles:       endpointFiles{e},
+		endpointTemplate:         endpointTemplate[CommissionReportIn]{e},
+		endpointPublication:      endpointPublication{e},
+		endpointTrash:            endpointTrash{e},
+		endpointStates:           endpointStates{e},
+		endpointFiles:            endpointFiles{e},
+		endpointEvaluate:         endpointEvaluate[CommissionReportIn]{e},
 	}
 }
 

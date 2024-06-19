@@ -14,7 +14,8 @@ type Money struct {
 	Balance      float64         `json:"balance"`      // Текущий остаток денежных средств
 }
 
-func (money Money) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Money) MetaType() MetaType {
 	return MetaTypeReportMoney
 }
 
@@ -29,7 +30,8 @@ type MoneyPlotSeries struct {
 	Debit   float64             `json:"debit"`
 }
 
-func (moneyPlotSeries MoneyPlotSeries) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (MoneyPlotSeries) MetaType() MetaType {
 	return MetaTypeReportMoneyPlotSeries
 }
 

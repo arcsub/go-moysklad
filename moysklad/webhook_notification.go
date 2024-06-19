@@ -10,7 +10,7 @@ type WebhookNotification struct {
 type AuditContext struct {
 	Meta   Meta      `json:"meta,omitempty"`   // Метаданные контекста аудита
 	Moment Timestamp `json:"moment,omitempty"` // Дата изменения
-	Uid    string    `json:"uid,omitempty"`    // Логин Сотрудника
+	UID    string    `json:"uid,omitempty"`    // Логин Сотрудника
 }
 
 // Event Данные о событии, вызвавшем срабатывание вебхука

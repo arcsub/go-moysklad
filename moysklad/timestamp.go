@@ -26,12 +26,12 @@ func (timestamp Timestamp) Time() time.Time {
 	return (time.Time)(timestamp)
 }
 
-// MarshalJSON implements the json.Marshaler interface.
+// MarshalJSON реализует интерфейс json.Marshaler
 func (timestamp Timestamp) MarshalJSON() ([]byte, error) {
 	return json.Marshal((time.Time)(timestamp).Format("2006-01-02 15:04:05"))
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (timestamp *Timestamp) UnmarshalJSON(data []byte) (err error) {
 	t, err := time.Parse(`"`+TimestampFormat+`"`, string(data))
 	*timestamp = Timestamp(t)

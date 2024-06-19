@@ -23,6 +23,7 @@ type Uom struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Единицы измерения
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (uom Uom) Clean() *Uom {
 	return &Uom{Meta: uom.Meta}
 }
@@ -115,8 +116,24 @@ func (uom Uom) String() string {
 	return Stringify(uom)
 }
 
-func (uom Uom) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Uom) MetaType() MetaType {
 	return MetaTypeUom
+}
+
+// Update shortcut
+func (uom Uom) Update(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+	return client.Entity().Uom().Update(ctx, uom.GetID(), &uom, params...)
+}
+
+// Create shortcut
+func (uom Uom) Create(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+	return client.Entity().Uom().Create(ctx, &uom, params...)
+}
+
+// Delete shortcut
+func (uom Uom) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Uom().Delete(ctx, uom.GetID())
 }
 
 // UomService
@@ -125,7 +142,7 @@ type UomService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Uom], *resty.Response, error)
 	Create(ctx context.Context, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, uomList Slice[Uom], params ...*Params) (*Slice[Uom], *resty.Response, error)
-	DeleteMany(ctx context.Context, uomList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Uom) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Uom, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)

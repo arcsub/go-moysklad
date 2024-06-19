@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
@@ -131,7 +132,8 @@ func (userSettings UserSettings) String() string {
 	return Stringify(userSettings)
 }
 
-func (userSettings UserSettings) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (UserSettings) MetaType() MetaType {
 	return MetaTypeUserSettings
 }
 
@@ -257,14 +259,26 @@ const (
 	PrintFormatOpenInBrowser PrintFormat = "individual" // Открыть в браузере
 )
 
-// UserSettingsService
-// Сервис для работы с настройками пользователей.
+type userSettingsService struct {
+	Endpoint
+}
+
+func (service *userSettingsService) Get(ctx context.Context) (*UserSettings, *resty.Response, error) {
+	return NewRequestBuilder[UserSettings](service.client, service.uri).Get(ctx)
+}
+
+func (service *userSettingsService) Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s", service.uri, id)
+	return NewRequestBuilder[UserSettings](service.client, path).Put(ctx, userSettings)
+}
+
+// UserSettingsService Сервис для работы с настройками пользователей.
 type UserSettingsService interface {
-	Get(ctx context.Context, params ...*Params) (*UserSettings, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings, params ...*Params) (*UserSettings, *resty.Response, error)
+	Get(ctx context.Context) (*UserSettings, *resty.Response, error)
+	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error)
 }
 
 func NewContextUserSettingsService(client *Client) UserSettingsService {
 	e := NewEndpoint(client, "context/usersettings")
-	return newMainService[UserSettings, any, any, any](e)
+	return &userSettingsService{e}
 }

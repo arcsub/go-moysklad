@@ -30,20 +30,26 @@ type ProcessingOrder struct {
 	Positions             *Positions[ProcessingOrderPosition] `json:"positions,omitempty"`
 	Printed               *bool                               `json:"printed,omitempty"`
 	ProcessingPlan        *ProcessingPlan                     `json:"processingPlan,omitempty"`
-	Project               *Project                            `json:"project,omitempty"`
+	Project               *NullValue[Project]                 `json:"project,omitempty"`
 	Applicable            *bool                               `json:"applicable,omitempty"`
 	Quantity              *float64                            `json:"quantity,omitempty"`
 	Shared                *bool                               `json:"shared,omitempty"`
-	State                 *State                              `json:"state,omitempty"`
+	State                 *NullValue[State]                   `json:"state,omitempty"`
 	Store                 *Store                              `json:"store,omitempty"`
 	SyncID                *uuid.UUID                          `json:"syncId,omitempty"`
 	Updated               *Timestamp                          `json:"updated,omitempty"`
 	Processings           Slice[Processing]                   `json:"processings,omitempty"`
-	Attributes            Slice[AttributeValue]               `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                    `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingOrder ProcessingOrder) Clean() *ProcessingOrder {
 	return &ProcessingOrder{Meta: processingOrder.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (processingOrder ProcessingOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: processingOrder.Meta}
 }
 
 func (processingOrder ProcessingOrder) GetName() string {
@@ -127,7 +133,7 @@ func (processingOrder ProcessingOrder) GetProcessingPlan() ProcessingPlan {
 }
 
 func (processingOrder ProcessingOrder) GetProject() Project {
-	return Deref(processingOrder.Project)
+	return processingOrder.Project.Get()
 }
 
 func (processingOrder ProcessingOrder) GetApplicable() bool {
@@ -143,7 +149,7 @@ func (processingOrder ProcessingOrder) GetShared() bool {
 }
 
 func (processingOrder ProcessingOrder) GetState() State {
-	return Deref(processingOrder.State)
+	return processingOrder.State.Get()
 }
 
 func (processingOrder ProcessingOrder) GetStore() Store {
@@ -162,7 +168,7 @@ func (processingOrder ProcessingOrder) GetProcessings() Slice[Processing] {
 	return processingOrder.Processings
 }
 
-func (processingOrder ProcessingOrder) GetAttributes() Slice[AttributeValue] {
+func (processingOrder ProcessingOrder) GetAttributes() Slice[Attribute] {
 	return processingOrder.Attributes
 }
 
@@ -196,8 +202,8 @@ func (processingOrder *ProcessingOrder) SetExternalCode(externalCode string) *Pr
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetFiles(files Slice[File]) *ProcessingOrder {
-	processingOrder.Files = NewMetaArrayRows(files)
+func (processingOrder *ProcessingOrder) SetFiles(files ...*File) *ProcessingOrder {
+	processingOrder.Files = NewMetaArrayFrom(files)
 	return processingOrder
 }
 
@@ -226,8 +232,8 @@ func (processingOrder *ProcessingOrder) SetOwner(owner *Employee) *ProcessingOrd
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetPositions(positions *Positions[ProcessingOrderPosition]) *ProcessingOrder {
-	processingOrder.Positions = positions
+func (processingOrder *ProcessingOrder) SetPositions(positions ...*ProcessingOrderPosition) *ProcessingOrder {
+	processingOrder.Positions = NewPositionsFrom(positions)
 	return processingOrder
 }
 
@@ -237,7 +243,12 @@ func (processingOrder *ProcessingOrder) SetProcessingPlan(processingPlan *Proces
 }
 
 func (processingOrder *ProcessingOrder) SetProject(project *Project) *ProcessingOrder {
-	processingOrder.Project = project.Clean()
+	processingOrder.Project = NewNullValueFrom(project.Clean())
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetNullProject() *ProcessingOrder {
+	processingOrder.Project = NewNullValue[Project]()
 	return processingOrder
 }
 
@@ -257,7 +268,12 @@ func (processingOrder *ProcessingOrder) SetShared(shared bool) *ProcessingOrder 
 }
 
 func (processingOrder *ProcessingOrder) SetState(state *State) *ProcessingOrder {
-	processingOrder.State = state.Clean()
+	processingOrder.State = NewNullValueFrom(state.Clean())
+	return processingOrder
+}
+
+func (processingOrder *ProcessingOrder) SetNullState() *ProcessingOrder {
+	processingOrder.State = NewNullValue[State]()
 	return processingOrder
 }
 
@@ -271,12 +287,12 @@ func (processingOrder *ProcessingOrder) SetSyncID(syncID uuid.UUID) *ProcessingO
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetProcessings(processings Slice[Processing]) *ProcessingOrder {
+func (processingOrder *ProcessingOrder) SetProcessings(processings ...*Processing) *ProcessingOrder {
 	processingOrder.Processings = processings
 	return processingOrder
 }
 
-func (processingOrder *ProcessingOrder) SetAttributes(attributes Slice[AttributeValue]) *ProcessingOrder {
+func (processingOrder *ProcessingOrder) SetAttributes(attributes ...*Attribute) *ProcessingOrder {
 	processingOrder.Attributes = attributes
 	return processingOrder
 }
@@ -285,8 +301,24 @@ func (processingOrder ProcessingOrder) String() string {
 	return Stringify(processingOrder)
 }
 
-func (processingOrder ProcessingOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingOrder) MetaType() MetaType {
 	return MetaTypeProcessingOrder
+}
+
+// Update shortcut
+func (processingOrder ProcessingOrder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+	return client.Entity().ProcessingOrder().Update(ctx, processingOrder.GetID(), &processingOrder, params...)
+}
+
+// Create shortcut
+func (processingOrder ProcessingOrder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+	return client.Entity().ProcessingOrder().Create(ctx, &processingOrder, params...)
+}
+
+// Delete shortcut
+func (processingOrder ProcessingOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingOrder().Delete(ctx, processingOrder.GetID())
 }
 
 // ProcessingOrderPosition Позиция Заказа на производство.
@@ -349,17 +381,10 @@ func (processingOrderPosition ProcessingOrderPosition) String() string {
 	return Stringify(processingOrderPosition)
 }
 
-func (processingOrderPosition ProcessingOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingOrderPosition) MetaType() MetaType {
 	return MetaTypeProcessingOrderPosition
 }
-
-// ProcessingOrderTemplateArg
-// Документ: Заказ на производство (processingorder)
-// Основание, на котором он может быть создан:
-// - Техкарта (processingplan)
-//type ProcessingOrderTemplateArg struct {
-//	ProcessingPlan *MetaWrapper `json:"processingPlan,omitempty"`
-//}
 
 // ProcessingOrderService
 // Сервис для работы с заказами на производство.
@@ -367,42 +392,43 @@ type ProcessingOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingOrder], *resty.Response, error)
 	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
-	//endpointTemplate[ProcessingOrder]
-	//endpointTemplateBasedOn[ProcessingOrder, ProcessingOrderTemplateArg]
+	Template(ctx context.Context) (*ProcessingOrder, *resty.Response, error)
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*ProcessingOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingOrderPosition) (*ProcessingOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingOrderPosition]) (*Slice[ProcessingOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingOrderPosition) (*Slice[ProcessingOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*ProcessingOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*ProcessingOrder, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewProcessingOrderService(client *Client) ProcessingOrderService {

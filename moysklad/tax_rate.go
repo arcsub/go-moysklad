@@ -101,8 +101,24 @@ func (taxRate TaxRate) String() string {
 	return Stringify(taxRate)
 }
 
-func (taxRate TaxRate) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (TaxRate) MetaType() MetaType {
 	return MetaTypeTaxRate
+}
+
+// Update shortcut
+func (taxRate TaxRate) Update(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+	return client.Entity().TaxRate().Update(ctx, taxRate.GetID(), &taxRate, params...)
+}
+
+// Create shortcut
+func (taxRate TaxRate) Create(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+	return client.Entity().TaxRate().Create(ctx, &taxRate, params...)
+}
+
+// Delete shortcut
+func (taxRate TaxRate) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().TaxRate().Delete(ctx, taxRate.GetID())
 }
 
 // TaxRateService
@@ -111,7 +127,7 @@ type TaxRateService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[TaxRate], *resty.Response, error)
 	Create(ctx context.Context, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, taxRateList Slice[TaxRate], params ...*Params) (*Slice[TaxRate], *resty.Response, error)
-	DeleteMany(ctx context.Context, taxRateList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*TaxRate) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*TaxRate, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)

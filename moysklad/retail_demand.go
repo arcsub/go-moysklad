@@ -18,7 +18,7 @@ type RetailDemand struct {
 	CheckNumber         *string                          `json:"checkNumber,omitempty"`
 	CheckSum            *float64                         `json:"checkSum,omitempty"`
 	Code                *string                          `json:"code,omitempty"`
-	Contract            *Contract                        `json:"contract,omitempty"`
+	Contract            *NullValue[Contract]             `json:"contract,omitempty"`
 	Created             *Timestamp                       `json:"created,omitempty"`
 	CustomerOrder       *CustomerOrder                   `json:"customerOrder,omitempty"`
 	Deleted             *Timestamp                       `json:"deleted,omitempty"`
@@ -44,10 +44,10 @@ type RetailDemand struct {
 	PrepaymentNoCashSum *float64                         `json:"prepaymentNoCashSum,omitempty"`
 	PrepaymentQRSum     *float64                         `json:"prepaymentQrSum,omitempty"`
 	Printed             *bool                            `json:"printed,omitempty"`
-	Project             *Project                         `json:"project,omitempty"`
+	Project             *NullValue[Project]              `json:"project,omitempty"`
 	Published           *bool                            `json:"published,omitempty"`
 	QRSum               *float64                         `json:"qrSum,omitempty"`
-	Rate                *Rate                            `json:"rate,omitempty"`
+	Rate                *NullValue[Rate]                 `json:"rate,omitempty"`
 	RetailShift         *RetailShift                     `json:"retailShift,omitempty"`
 	RetailStore         *RetailStore                     `json:"retailStore,omitempty"`
 	SessionNumber       *string                          `json:"sessionNumber,omitempty"`
@@ -61,11 +61,17 @@ type RetailDemand struct {
 	VatIncluded         *bool                            `json:"vatIncluded,omitempty"`
 	VatSum              *float64                         `json:"vatSum,omitempty"`
 	TaxSystem           TaxSystem                        `json:"taxSystem,omitempty"`
-	Attributes          Slice[AttributeValue]            `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]                 `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailDemand RetailDemand) Clean() *RetailDemand {
 	return &RetailDemand{Meta: retailDemand.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailDemand RetailDemand) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailDemand.Meta}
 }
 
 func (retailDemand RetailDemand) GetAccountID() uuid.UUID {
@@ -101,7 +107,7 @@ func (retailDemand RetailDemand) GetCode() string {
 }
 
 func (retailDemand RetailDemand) GetContract() Contract {
-	return Deref(retailDemand.Contract)
+	return retailDemand.Contract.Get()
 }
 
 func (retailDemand RetailDemand) GetCreated() Timestamp {
@@ -205,7 +211,7 @@ func (retailDemand RetailDemand) GetPrinted() bool {
 }
 
 func (retailDemand RetailDemand) GetProject() Project {
-	return Deref(retailDemand.Project)
+	return retailDemand.Project.Get()
 }
 
 func (retailDemand RetailDemand) GetPublished() bool {
@@ -217,7 +223,7 @@ func (retailDemand RetailDemand) GetQRSum() float64 {
 }
 
 func (retailDemand RetailDemand) GetRate() Rate {
-	return Deref(retailDemand.Rate)
+	return retailDemand.Rate.Get()
 }
 
 func (retailDemand RetailDemand) GetRetailShift() RetailShift {
@@ -272,7 +278,7 @@ func (retailDemand RetailDemand) GetTaxSystem() TaxSystem {
 	return retailDemand.TaxSystem
 }
 
-func (retailDemand RetailDemand) GetAttributes() Slice[AttributeValue] {
+func (retailDemand RetailDemand) GetAttributes() Slice[Attribute] {
 	return retailDemand.Attributes
 }
 
@@ -312,7 +318,7 @@ func (retailDemand *RetailDemand) SetCode(code string) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetContract(contract *Contract) *RetailDemand {
-	retailDemand.Contract = contract.Clean()
+	retailDemand.Contract = NewNullValueFrom(contract.Clean())
 	return retailDemand
 }
 
@@ -336,8 +342,8 @@ func (retailDemand *RetailDemand) SetExternalCode(externalCode string) *RetailDe
 	return retailDemand
 }
 
-func (retailDemand *RetailDemand) SetFiles(files Slice[File]) *RetailDemand {
-	retailDemand.Files = NewMetaArrayRows(files)
+func (retailDemand *RetailDemand) SetFiles(files ...*File) *RetailDemand {
+	retailDemand.Files = NewMetaArrayFrom(files)
 	return retailDemand
 }
 
@@ -381,8 +387,8 @@ func (retailDemand *RetailDemand) SetOwner(owner *Employee) *RetailDemand {
 	return retailDemand
 }
 
-func (retailDemand *RetailDemand) SetPositions(positions *Positions[RetailDemandPosition]) *RetailDemand {
-	retailDemand.Positions = positions
+func (retailDemand *RetailDemand) SetPositions(positions ...*RetailDemandPosition) *RetailDemand {
+	retailDemand.Positions = NewPositionsFrom(positions)
 	return retailDemand
 }
 
@@ -402,7 +408,12 @@ func (retailDemand *RetailDemand) SetPrepaymentQRSum(prepaymentQRSum float64) *R
 }
 
 func (retailDemand *RetailDemand) SetProject(project *Project) *RetailDemand {
-	retailDemand.Project = project.Clean()
+	retailDemand.Project = NewNullValueFrom(project.Clean())
+	return retailDemand
+}
+
+func (retailDemand *RetailDemand) SetNullProject() *RetailDemand {
+	retailDemand.Project = NewNullValue[Project]()
 	return retailDemand
 }
 
@@ -412,7 +423,12 @@ func (retailDemand *RetailDemand) SetQRSum(qrSum float64) *RetailDemand {
 }
 
 func (retailDemand *RetailDemand) SetRate(rate *Rate) *RetailDemand {
-	retailDemand.Rate = rate
+	retailDemand.Rate = NewNullValueFrom(rate)
+	return retailDemand
+}
+
+func (retailDemand *RetailDemand) SetNullRate() *RetailDemand {
+	retailDemand.Rate = NewNullValue[Rate]()
 	return retailDemand
 }
 
@@ -471,7 +487,7 @@ func (retailDemand *RetailDemand) SetTaxSystem(taxSystem TaxSystem) *RetailDeman
 	return retailDemand
 }
 
-func (retailDemand *RetailDemand) SetAttributes(attributes Slice[AttributeValue]) *RetailDemand {
+func (retailDemand *RetailDemand) SetAttributes(attributes ...*Attribute) *RetailDemand {
 	retailDemand.Attributes = attributes
 	return retailDemand
 }
@@ -480,8 +496,24 @@ func (retailDemand RetailDemand) String() string {
 	return Stringify(retailDemand)
 }
 
-func (retailDemand RetailDemand) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailDemand) MetaType() MetaType {
 	return MetaTypeRetailDemand
+}
+
+// Update shortcut
+func (retailDemand RetailDemand) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+	return client.Entity().RetailDemand().Update(ctx, retailDemand.GetID(), &retailDemand, params...)
+}
+
+// Create shortcut
+func (retailDemand RetailDemand) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+	return client.Entity().RetailDemand().Create(ctx, &retailDemand, params...)
+}
+
+// Delete shortcut
+func (retailDemand RetailDemand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailDemand().Delete(ctx, retailDemand.GetID())
 }
 
 // RetailDemandPosition позиция розничной продажи.
@@ -590,8 +622,8 @@ func (retailDemandPosition *RetailDemandPosition) SetVatEnabled(vatEnabled bool)
 	return retailDemandPosition
 }
 
-func (retailDemandPosition *RetailDemandPosition) SetThings(things Slice[string]) *RetailDemandPosition {
-	retailDemandPosition.Things = things
+func (retailDemandPosition *RetailDemandPosition) SetThings(things ...string) *RetailDemandPosition {
+	retailDemandPosition.Things = NewSliceFrom(things)
 	return retailDemandPosition
 }
 
@@ -599,19 +631,10 @@ func (retailDemandPosition RetailDemandPosition) String() string {
 	return Stringify(retailDemandPosition)
 }
 
-func (retailDemandPosition RetailDemandPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailDemandPosition) MetaType() MetaType {
 	return MetaTypeRetailDemandPosition
 }
-
-// RetailDemandTemplateArg
-// Документ: Розничная продажа (retaildemand)
-// Основание, на котором он может быть создан:
-// - Розничная смена
-// - Заказ покупателя
-//type RetailDemandTemplateArg struct {
-//	RetailShift   *MetaWrapper `json:"retailShift,omitempty"`
-//	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
-//}
 
 // RetailDemandService
 // Сервис для работы с розничными продажами.
@@ -619,32 +642,33 @@ type RetailDemandService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailDemand], *resty.Response, error)
 	Create(ctx context.Context, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailDemandList Slice[RetailDemand], params ...*Params) (*Slice[RetailDemand], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailDemandList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*RetailDemand) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDemand, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
-	//endpointTemplate[RetailDemand]
-	//endpointTemplateBasedOn[RetailDemand, RetailDemandTemplateArg]
+	Template(ctx context.Context) (*RetailDemand, *resty.Response, error)
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*RetailDemand, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[RetailDemandPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *RetailDemandPosition, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *RetailDemandPosition) (*RetailDemandPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[RetailDemandPosition]) (*Slice[RetailDemandPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*RetailDemandPosition) (*Slice[RetailDemandPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*RetailDemandPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailDemand, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -654,13 +678,14 @@ type RetailDemandService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *RetailDemand, evaluate ...Evaluate) (*RetailDemand, *resty.Response, error)
 }
 
 func NewRetailDemandService(client *Client) RetailDemandService {

@@ -15,7 +15,7 @@ type Organization struct {
 	ActualAddressFull      *Address                 `json:"actualAddressFull,omitempty"`
 	Archived               *bool                    `json:"archived,omitempty"`
 	BonusPoints            *int                     `json:"bonusPoints,omitempty"`
-	BonusProgram           *BonusProgram            `json:"bonusProgram,omitempty"`
+	BonusProgram           *NullValue[BonusProgram] `json:"bonusProgram,omitempty"`
 	ActualAddress          *string                  `json:"actualAddress,omitempty"`
 	UTMUrl                 *string                  `json:"utmUrl,omitempty"`
 	Created                *Timestamp               `json:"created,omitempty"`
@@ -58,11 +58,17 @@ type Organization struct {
 	PayerVat               *bool                    `json:"payerVat,omitempty"`
 	Phone                  *string                  `json:"phone,omitempty"`
 	CompanyType            CompanyType              `json:"companyType,omitempty"`
-	Attributes             Slice[AttributeValue]    `json:"attributes,omitempty"`
+	Attributes             Slice[Attribute]         `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (organization Organization) Clean() *Organization {
 	return &Organization{Meta: organization.Meta}
+}
+
+// AsAgent реализует интерфейс AsAgentInterface
+func (organization Organization) AsAgent() *Agent {
+	return &Agent{Meta: organization.Meta}
 }
 
 func (organization Organization) GetUpdated() Timestamp {
@@ -86,7 +92,7 @@ func (organization Organization) GetBonusPoints() int {
 }
 
 func (organization Organization) GetBonusProgram() BonusProgram {
-	return Deref(organization.BonusProgram)
+	return organization.BonusProgram.Get()
 }
 
 func (organization Organization) GetActualAddress() string {
@@ -257,7 +263,7 @@ func (organization Organization) GetCompanyType() CompanyType {
 	return organization.CompanyType
 }
 
-func (organization Organization) GetAttributes() Slice[AttributeValue] {
+func (organization Organization) GetAttributes() Slice[Attribute] {
 	return organization.Attributes
 }
 
@@ -277,7 +283,12 @@ func (organization *Organization) SetArchived(archived bool) *Organization {
 }
 
 func (organization *Organization) SetBonusProgram(bonusProgram *BonusProgram) *Organization {
-	organization.BonusProgram = bonusProgram.Clean()
+	organization.BonusProgram = NewNullValueFrom(bonusProgram.Clean())
+	return organization
+}
+
+func (organization *Organization) SetNullBonusProgram() *Organization {
+	organization.BonusProgram = NewNullValue[BonusProgram]()
 	return organization
 }
 
@@ -346,8 +357,8 @@ func (organization *Organization) SetCertificateNumber(certificateNumber string)
 	return organization
 }
 
-func (organization *Organization) SetAccounts(accounts Slice[AgentAccount]) *Organization {
-	organization.Accounts = NewMetaArrayRows(accounts)
+func (organization *Organization) SetAccounts(accounts ...*AgentAccount) *Organization {
+	organization.Accounts = NewMetaArrayFrom(accounts)
 	return organization
 }
 
@@ -476,7 +487,7 @@ func (organization *Organization) SetCompanyType(companyType CompanyType) *Organ
 	return organization
 }
 
-func (organization *Organization) SetAttributes(attributes Slice[AttributeValue]) *Organization {
+func (organization *Organization) SetAttributes(attributes ...*Attribute) *Organization {
 	organization.Attributes = attributes
 	return organization
 }
@@ -485,8 +496,24 @@ func (organization Organization) String() string {
 	return Stringify(organization)
 }
 
-func (organization Organization) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Organization) MetaType() MetaType {
 	return MetaTypeOrganization
+}
+
+// Update shortcut
+func (organization Organization) Update(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+	return client.Entity().Organization().Update(ctx, organization.GetID(), &organization, params...)
+}
+
+// Create shortcut
+func (organization Organization) Create(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+	return client.Entity().Organization().Create(ctx, &organization, params...)
+}
+
+// Delete shortcut
+func (organization Organization) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Organization().Delete(ctx, organization.GetID())
 }
 
 // OrganizationService
@@ -495,7 +522,7 @@ type OrganizationService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Organization], *resty.Response, error)
 	Create(ctx context.Context, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params ...*Params) (*Slice[Organization], *resty.Response, error)
-	DeleteMany(ctx context.Context, organizationList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Organization) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Organization, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
@@ -503,13 +530,13 @@ type OrganizationService interface {
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
 	GetAccountByID(ctx context.Context, id uuid.UUID, accountID uuid.UUID) (*AgentAccount, *resty.Response, error)
-	UpdateAccounts(ctx context.Context, id uuid.UUID, accounts Slice[AgentAccount]) (*MetaArray[AgentAccount], *resty.Response, error)
+	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Organization, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }

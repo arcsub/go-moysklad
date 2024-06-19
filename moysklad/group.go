@@ -17,6 +17,7 @@ type Group struct {
 	Name      *string    `json:"name,omitempty"`      // Наименование Отдела
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (group Group) Clean() *Group {
 	return &Group{Meta: group.Meta}
 }
@@ -60,8 +61,24 @@ func (group Group) String() string {
 	return Stringify(group)
 }
 
-func (group Group) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Group) MetaType() MetaType {
 	return MetaTypeGroup
+}
+
+// Update shortcut
+func (group Group) Update(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
+	return client.Entity().Group().Update(ctx, group.GetID(), &group, params...)
+}
+
+// Create shortcut
+func (group Group) Create(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
+	return client.Entity().Group().Create(ctx, &group, params...)
+}
+
+// Delete shortcut
+func (group Group) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Group().Delete(ctx, group.GetID())
 }
 
 // GroupService

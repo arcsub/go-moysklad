@@ -21,6 +21,7 @@ type ContactPerson struct {
 	Updated      *Timestamp    `json:"updated,omitempty"`      // Момент последнего обновления
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (contactPerson ContactPerson) Clean() *ContactPerson {
 	return &ContactPerson{Meta: contactPerson.Meta}
 }
@@ -113,6 +114,7 @@ func (contactPerson ContactPerson) String() string {
 	return Stringify(contactPerson)
 }
 
-func (contactPerson ContactPerson) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ContactPerson) MetaType() MetaType {
 	return MetaTypeContactPerson
 }

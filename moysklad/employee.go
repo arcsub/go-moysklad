@@ -12,35 +12,36 @@ import (
 // Ключевое слово: employee
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik
 type Employee struct {
-	ID           *uuid.UUID            `json:"id,omitempty"`
-	Owner        *Employee             `json:"owner,omitempty"`
-	Image        *Image                `json:"image,omitempty"`
-	INN          *string               `json:"inn,omitempty"`
-	Code         *string               `json:"code,omitempty"`
-	Created      *Timestamp            `json:"created,omitempty"`
-	Description  *string               `json:"description,omitempty"`
-	Email        *string               `json:"email,omitempty"`
-	ExternalCode *string               `json:"externalCode,omitempty"`
-	FirstName    *string               `json:"firstName,omitempty"`
-	FullName     *string               `json:"fullName,omitempty"`
-	Group        *Group                `json:"group,omitempty"`
-	Updated      *Timestamp            `json:"updated,omitempty"`
-	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
-	Cashiers     *MetaArray[Cashier]   `json:"cashiers,omitempty"`
-	LastName     *string               `json:"lastName,omitempty"`
-	Meta         *Meta                 `json:"meta,omitempty"`
-	MiddleName   *string               `json:"middleName,omitempty"`
-	Name         *string               `json:"name,omitempty"`
-	Archived     *bool                 `json:"archived,omitempty"`
-	Phone        *string               `json:"phone,omitempty"`
-	Position     *string               `json:"position,omitempty"`
-	Salary       *Salary               `json:"salary,omitempty"`
-	Shared       *bool                 `json:"shared,omitempty"`
-	ShortFio     *string               `json:"shortFio,omitempty"`
-	UID          *string               `json:"uid,omitempty"`
-	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	ID           *uuid.UUID          `json:"id,omitempty"`
+	Owner        *Employee           `json:"owner,omitempty"`
+	Image        *NullValue[Image]   `json:"image,omitempty"`
+	INN          *string             `json:"inn,omitempty"`
+	Code         *string             `json:"code,omitempty"`
+	Created      *Timestamp          `json:"created,omitempty"`
+	Description  *string             `json:"description,omitempty"`
+	Email        *string             `json:"email,omitempty"`
+	ExternalCode *string             `json:"externalCode,omitempty"`
+	FirstName    *string             `json:"firstName,omitempty"`
+	FullName     *string             `json:"fullName,omitempty"`
+	Group        *Group              `json:"group,omitempty"`
+	Updated      *Timestamp          `json:"updated,omitempty"`
+	AccountID    *uuid.UUID          `json:"accountId,omitempty"`
+	Cashiers     *MetaArray[Cashier] `json:"cashiers,omitempty"`
+	LastName     *string             `json:"lastName,omitempty"`
+	Meta         *Meta               `json:"meta,omitempty"`
+	MiddleName   *string             `json:"middleName,omitempty"`
+	Name         *string             `json:"name,omitempty"`
+	Archived     *bool               `json:"archived,omitempty"`
+	Phone        *string             `json:"phone,omitempty"`
+	Position     *string             `json:"position,omitempty"`
+	Salary       *Salary             `json:"salary,omitempty"`
+	Shared       *bool               `json:"shared,omitempty"`
+	ShortFio     *string             `json:"shortFio,omitempty"`
+	UID          *string             `json:"uid,omitempty"`
+	Attributes   Slice[Attribute]    `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (employee Employee) Clean() *Employee {
 	return &Employee{Meta: employee.Meta}
 }
@@ -54,7 +55,7 @@ func (employee Employee) GetOwner() Employee {
 }
 
 func (employee Employee) GetImage() Image {
-	return Deref(employee.Image)
+	return employee.Image.Get()
 }
 
 func (employee Employee) GetINN() string {
@@ -149,7 +150,7 @@ func (employee Employee) GetUID() string {
 	return Deref(employee.UID)
 }
 
-func (employee Employee) GetAttributes() Slice[AttributeValue] {
+func (employee Employee) GetAttributes() Slice[Attribute] {
 	return employee.Attributes
 }
 
@@ -159,7 +160,12 @@ func (employee *Employee) SetOwner(owner *Employee) *Employee {
 }
 
 func (employee *Employee) SetImage(image *Image) *Employee {
-	employee.Image = image
+	employee.Image = NewNullValueFrom(image)
+	return employee
+}
+
+func (employee *Employee) SetNullImage() *Employee {
+	employee.Image = NewNullValue[Image]()
 	return employee
 }
 
@@ -238,7 +244,7 @@ func (employee *Employee) SetShared(shared bool) *Employee {
 	return employee
 }
 
-func (employee *Employee) SetAttributes(attributes Slice[AttributeValue]) *Employee {
+func (employee *Employee) SetAttributes(attributes ...*Attribute) *Employee {
 	employee.Attributes = attributes
 	return employee
 }
@@ -247,8 +253,24 @@ func (employee Employee) String() string {
 	return Stringify(employee)
 }
 
-func (employee Employee) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Employee) MetaType() MetaType {
 	return MetaTypeEmployee
+}
+
+// Update shortcut
+func (employee Employee) Update(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+	return client.Entity().Employee().Update(ctx, employee.GetID(), &employee, params...)
+}
+
+// Create shortcut
+func (employee Employee) Create(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+	return client.Entity().Employee().Create(ctx, &employee, params...)
+}
+
+// Delete shortcut
+func (employee Employee) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Employee().Delete(ctx, employee.GetID())
 }
 
 // Salary Оклад.
@@ -368,16 +390,16 @@ type EmployeeService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Employee], *resty.Response, error)
 	Create(ctx context.Context, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, employeeList Slice[Employee], params ...*Params) (*Slice[Employee], *resty.Response, error)
-	DeleteMany(ctx context.Context, employeeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Employee) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Employee, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
 	GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error)

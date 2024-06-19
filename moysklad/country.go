@@ -23,6 +23,7 @@ type Country struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (country Country) Clean() *Country {
 	return &Country{Meta: country.Meta}
 }
@@ -115,8 +116,24 @@ func (country Country) String() string {
 	return Stringify(country)
 }
 
-func (country Country) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Country) MetaType() MetaType {
 	return MetaTypeCountry
+}
+
+// Update shortcut
+func (country Country) Update(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+	return client.Entity().Country().Update(ctx, country.GetID(), &country, params...)
+}
+
+// Create shortcut
+func (country Country) Create(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+	return client.Entity().Country().Create(ctx, &country, params...)
+}
+
+// Delete shortcut
+func (country Country) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Country().Delete(ctx, country.GetID())
 }
 
 // CountryService
@@ -125,7 +142,7 @@ type CountryService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Country], *resty.Response, error)
 	Create(ctx context.Context, country *Country, params ...*Params) (*Country, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, countryList Slice[Country], params ...*Params) (*Slice[Country], *resty.Response, error)
-	DeleteMany(ctx context.Context, countryList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Country) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Country, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, country *Country, params ...*Params) (*Country, *resty.Response, error)

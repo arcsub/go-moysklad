@@ -65,6 +65,7 @@ func (image Image) String() string {
 	return Stringify(image)
 }
 
-func (image Image) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Image) MetaType() MetaType {
 	return MetaTypeImage
 }

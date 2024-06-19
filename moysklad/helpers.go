@@ -210,16 +210,16 @@ type RawMetaTyper interface {
 func filterType[M MetaTyper, D RawMetaTyper](elements []D) Slice[M] {
 	var slice = Slice[M]{}
 	for _, el := range elements {
-		if e := unmarshalAsType[M](el); e != nil {
+		if e := UnmarshalAsType[M](el); e != nil {
 			slice.Push(e)
 		}
 	}
 	return slice
 }
 
-// unmarshalAsType принимает объект, удовлетворяющий интерфейсу RawMetaTyper
-// и структурирует в тип T
-func unmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
+// UnmarshalAsType принимает объект D, реализующий интерфейс RawMetaTyper и приводит его к типу M
+// Возвращает nil в случае неудачи или при несоответствии типов MetaType
+func UnmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
 	var t = *new(M)
 
 	if t.MetaType() != element.MetaType() {
@@ -237,18 +237,6 @@ func unmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
 
 	return &t
 }
-
-type Interval string
-
-func (i Interval) String() string {
-	return string(i)
-}
-
-const (
-	IntervalHour  Interval = "hour"
-	IntervalDay   Interval = "day"
-	IntervalMonth Interval = "month"
-)
 
 // RGBtoUint64 конвертирует код цвета из формата RRGGBB и RGB в uint64
 // Example
@@ -355,4 +343,134 @@ type Stock struct {
 
 func (stock Stock) String() string {
 	return Stringify(stock)
+}
+
+// NullValue тип для поля, которое может быть указано как null.
+// Имеет обобщённый тип T.
+// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-podderzhka-null
+type NullValue[T any] struct {
+	value T
+	null  bool
+}
+
+// NewNullValue устанавливает значение поля null
+func NewNullValue[T any]() *NullValue[T] {
+	return &NullValue[T]{null: true}
+}
+
+// NewNullValueFrom устанавливает значение поля value
+func NewNullValueFrom[T any](value *T) *NullValue[T] {
+	return &NullValue[T]{value: Deref(value)}
+}
+
+// IsNull возвращает true, если поле null
+func (nullValue NullValue[T]) IsNull() bool {
+	return nullValue.null
+}
+
+// Get возвращает значение поля
+func (nullValue NullValue[T]) Get() T {
+	return nullValue.value
+}
+
+// Set устанавливает значение поля
+func (nullValue *NullValue[T]) Set(value T) *NullValue[T] {
+	nullValue.value = value
+	nullValue.null = false
+	return nullValue
+}
+
+// SetPtr устанавливает значение поля.
+// В качестве аргумента передаётся указатель на тип T.
+func (nullValue *NullValue[T]) SetPtr(value *T) *NullValue[T] {
+	nullValue.value = Deref(value)
+	nullValue.null = false
+	return nullValue
+}
+
+// SetNull устанавливает значение поля null
+func (nullValue *NullValue[T]) SetNull() *NullValue[T] {
+	nullValue.null = true
+	return nullValue
+}
+
+func (nullValue NullValue[T]) String() string {
+	return fmt.Sprintf("%v", nullValue.value)
+}
+
+// MarshalJSON реализует интерфейс json.Marshaler
+func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
+	if nullValue.IsNull() {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(nullValue.Get())
+}
+
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
+func (nullValue *NullValue[T]) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &nullValue.value)
+}
+
+// NullValueAny тип для поля Value структуры Attribute
+type NullValueAny struct {
+	value any
+	null  bool
+}
+
+// NewNullValueAny устанавливает значение поля null
+func NewNullValueAny() *NullValueAny {
+	return &NullValueAny{null: true}
+}
+
+// NewNullValueAnyFrom устанавливает значение value
+func NewNullValueAnyFrom(value any) *NullValueAny {
+	return &NullValueAny{value: value}
+}
+
+// IsNull возвращает true, если поле null
+func (nullValueAny NullValueAny) IsNull() bool {
+	return nullValueAny.null
+}
+
+// Get возвращает значение поля
+func (nullValueAny NullValueAny) Get() any {
+	return nullValueAny.value
+}
+
+// Set устанавливает значение поля
+func (nullValueAny *NullValueAny) Set(value any) *NullValueAny {
+	nullValueAny.value = value
+	return nullValueAny
+}
+
+// SetNull устанавливает значение поля null
+func (nullValueAny *NullValueAny) SetNull() *NullValueAny {
+	nullValueAny.null = true
+	return nullValueAny
+}
+
+func (nullValueAny NullValueAny) String() string {
+	return fmt.Sprintf("%v", nullValueAny.value)
+}
+
+// MarshalJSON реализует интерфейс json.Marshaler
+func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
+	if nullValueAny.IsNull() {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(nullValueAny.Get())
+}
+
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
+func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &nullValueAny.value)
+}
+
+// AsMetaWrapperSlice оборачивает каждый элемент слайса в объект MetaWrapper
+func AsMetaWrapperSlice[T MetaOwner](entities []*T) []MetaWrapper {
+	var o = make([]MetaWrapper, 0, len(entities))
+	for _, entity := range entities {
+		o = append(o, (*entity).GetMeta().Wrap())
+	}
+	return o
 }

@@ -32,16 +32,17 @@ type Variant struct {
 	Packs              Slice[VariantPack]    `json:"packs,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (variant Variant) Clean() *Variant {
 	return &Variant{Meta: variant.Meta}
 }
 
-func NewVariantFromAssortment(assortmentPosition AssortmentPosition) *Variant {
-	return unmarshalAsType[Variant](assortmentPosition)
+func NewVariantFromAssortment(assortmentPosition *AssortmentPosition) *Variant {
+	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
-func (variant Variant) FromAssortment(assortmentPosition AssortmentPosition) *Variant {
-	return unmarshalAsType[Variant](assortmentPosition)
+func (variant Variant) FromAssortment(assortmentPosition *AssortmentPosition) *Variant {
+	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
 func (variant Variant) AsAssortment() *AssortmentPosition {
@@ -154,7 +155,7 @@ func (variant *Variant) SetCode(code string) *Variant {
 	return variant
 }
 
-func (variant *Variant) SetBarcodes(barcodes Slice[Barcode]) *Variant {
+func (variant *Variant) SetBarcodes(barcodes ...*Barcode) *Variant {
 	variant.Barcodes = barcodes
 	return variant
 }
@@ -164,13 +165,13 @@ func (variant *Variant) SetDiscountProhibited(discountProhibited bool) *Variant 
 	return variant
 }
 
-func (variant *Variant) SetCharacteristics(characteristics Slice[Characteristic]) *Variant {
+func (variant *Variant) SetCharacteristics(characteristics ...*Characteristic) *Variant {
 	variant.Characteristics = characteristics
 	return variant
 }
 
-func (variant *Variant) SetImages(images Slice[Image]) *Variant {
-	variant.Images = NewMetaArrayRows(images)
+func (variant *Variant) SetImages(images ...*Image) *Variant {
+	variant.Images = NewMetaArrayFrom(images)
 	return variant
 }
 
@@ -189,12 +190,12 @@ func (variant *Variant) SetProduct(product *Product) *Variant {
 	return variant
 }
 
-func (variant *Variant) SetSalePrices(salePrices Slice[SalePrice]) *Variant {
+func (variant *Variant) SetSalePrices(salePrices ...*SalePrice) *Variant {
 	variant.SalePrices = salePrices
 	return variant
 }
 
-func (variant *Variant) SetPacks(packs Slice[VariantPack]) *Variant {
+func (variant *Variant) SetPacks(packs ...*VariantPack) *Variant {
 	variant.Packs = packs
 	return variant
 }
@@ -203,8 +204,24 @@ func (variant Variant) String() string {
 	return Stringify(variant)
 }
 
-func (variant Variant) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Variant) MetaType() MetaType {
 	return MetaTypeVariant
+}
+
+// Update shortcut
+func (variant Variant) Update(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+	return client.Entity().Variant().Update(ctx, variant.GetID(), &variant, params...)
+}
+
+// Create shortcut
+func (variant Variant) Create(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+	return client.Entity().Variant().Create(ctx, &variant, params...)
+}
+
+// Delete shortcut
+func (variant Variant) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Variant().Delete(ctx, variant.GetID())
 }
 
 // VariantPack Упаковка модификации.
@@ -232,7 +249,7 @@ func (variantPack *VariantPack) SetParentPack(pack *Pack) *VariantPack {
 	return variantPack
 }
 
-func (variantPack *VariantPack) SetBarcodes(barcodes Slice[Barcode]) *VariantPack {
+func (variantPack *VariantPack) SetBarcodes(barcodes ...*Barcode) *VariantPack {
 	variantPack.Barcodes = barcodes
 	return variantPack
 }
@@ -306,7 +323,8 @@ func (characteristic Characteristic) String() string {
 	return Stringify(characteristic)
 }
 
-func (characteristic Characteristic) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Characteristic) MetaType() MetaType {
 	return MetaTypeCharacteristic
 }
 
@@ -316,20 +334,20 @@ type VariantService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Variant], *resty.Response, error)
 	Create(ctx context.Context, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, variantList Slice[Variant], params ...*Params) (*Slice[Variant], *resty.Response, error)
-	DeleteMany(ctx context.Context, variantList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Variant) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Variant, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaCharacteristicsWrapper, *resty.Response, error)
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
-	UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id uuid.UUID, images []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
-	CreateCharacteristics(ctx context.Context, characteristics Slice[Characteristic]) (*Slice[Characteristic], *resty.Response, error)
+	CreateCharacteristicMany(ctx context.Context, characteristics ...*Characteristic) (*Slice[Characteristic], *resty.Response, error)
 	GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error)
 	UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
 	DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
@@ -373,9 +391,9 @@ func (service *variantService) CreateCharacteristic(ctx context.Context, charact
 	return NewRequestBuilder[Characteristic](service.client, path).Post(ctx, characteristic)
 }
 
-// CreateCharacteristics Массовое создание Характеристик.
+// CreateCharacteristicMany Массовое создание Характеристик.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-harakteristiki-modifikacij-massowoe-sozdanie-harakteristik
-func (service *variantService) CreateCharacteristics(ctx context.Context, characteristics Slice[Characteristic]) (*Slice[Characteristic], *resty.Response, error) {
+func (service *variantService) CreateCharacteristicMany(ctx context.Context, characteristics ...*Characteristic) (*Slice[Characteristic], *resty.Response, error) {
 	path := fmt.Sprintf("%s/metadata/characteristics", service.uri)
 	return NewRequestBuilder[Slice[Characteristic]](service.client, path).Post(ctx, characteristics)
 }

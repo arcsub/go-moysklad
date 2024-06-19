@@ -15,7 +15,7 @@ type Demand struct {
 	AgentAccount            *AgentAccount              `json:"agentAccount,omitempty"`
 	Applicable              *bool                      `json:"applicable,omitempty"`
 	Code                    *string                    `json:"code,omitempty"`
-	Contract                *Contract                  `json:"contract,omitempty"`
+	Contract                *NullValue[Contract]       `json:"contract,omitempty"`
 	Created                 *Timestamp                 `json:"created,omitempty"`
 	Deleted                 *Timestamp                 `json:"deleted,omitempty"`
 	Description             *string                    `json:"description,omitempty"`
@@ -33,14 +33,14 @@ type Demand struct {
 	PayedSum                *float64                   `json:"payedSum,omitempty"`
 	Positions               *Positions[DemandPosition] `json:"positions,omitempty"`
 	Printed                 *bool                      `json:"printed,omitempty"`
-	Project                 *Project                   `json:"project,omitempty"`
+	Project                 *NullValue[Project]        `json:"project,omitempty"`
 	Published               *bool                      `json:"published,omitempty"`
-	Rate                    *Rate                      `json:"rate,omitempty"`
-	SalesChannel            *SalesChannel              `json:"salesChannel,omitempty"`
+	Rate                    *NullValue[Rate]           `json:"rate,omitempty"`
+	SalesChannel            *NullValue[SalesChannel]   `json:"salesChannel,omitempty"`
 	Shared                  *bool                      `json:"shared,omitempty"`
 	ShipmentAddress         *string                    `json:"shipmentAddress,omitempty"`
 	ShipmentAddressFull     *Address                   `json:"shipmentAddressFull,omitempty"`
-	State                   *State                     `json:"state,omitempty"`
+	State                   *NullValue[State]          `json:"state,omitempty"`
 	Store                   *Store                     `json:"store,omitempty"`
 	Sum                     *float64                   `json:"sum,omitempty"`
 	SyncID                  *uuid.UUID                 `json:"syncId,omitempty"`
@@ -61,11 +61,22 @@ type Demand struct {
 	StateContractID         *string                    `json:"stateContractId,omitempty"`
 	TransportFacility       *string                    `json:"transportFacility,omitempty"`
 	TransportFacilityNumber *string                    `json:"transportFacilityNumber,omitempty"`
-	Attributes              Slice[AttributeValue]      `json:"attributes,omitempty"`
+	Attributes              Slice[Attribute]           `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (demand Demand) Clean() *Demand {
 	return &Demand{Meta: demand.Meta}
+}
+
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (demand Demand) AsOperation() *Operation {
+	return &Operation{Meta: demand.GetMeta()}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (demand Demand) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: demand.Meta}
 }
 
 func (demand Demand) GetAccountID() uuid.UUID {
@@ -89,7 +100,7 @@ func (demand Demand) GetCode() string {
 }
 
 func (demand Demand) GetContract() Contract {
-	return Deref(demand.Contract)
+	return demand.Contract.Get()
 }
 
 func (demand Demand) GetCreated() Timestamp {
@@ -161,7 +172,7 @@ func (demand Demand) GetPrinted() bool {
 }
 
 func (demand Demand) GetProject() Project {
-	return Deref(demand.Project)
+	return demand.Project.Get()
 }
 
 func (demand Demand) GetPublished() bool {
@@ -169,11 +180,11 @@ func (demand Demand) GetPublished() bool {
 }
 
 func (demand Demand) GetRate() Rate {
-	return Deref(demand.Rate)
+	return demand.Rate.Get()
 }
 
 func (demand Demand) GetSalesChannel() SalesChannel {
-	return Deref(demand.SalesChannel)
+	return demand.SalesChannel.Get()
 }
 
 func (demand Demand) GetShared() bool {
@@ -189,7 +200,7 @@ func (demand Demand) GetShipmentAddressFull() Address {
 }
 
 func (demand Demand) GetState() State {
-	return Deref(demand.State)
+	return demand.State.Get()
 }
 
 func (demand Demand) GetStore() Store {
@@ -272,7 +283,7 @@ func (demand Demand) GetTransportFacilityNumber() string {
 	return Deref(demand.TransportFacilityNumber)
 }
 
-func (demand Demand) GetAttributes() Slice[AttributeValue] {
+func (demand Demand) GetAttributes() Slice[Attribute] {
 	return demand.Attributes
 }
 
@@ -297,7 +308,12 @@ func (demand *Demand) SetCode(code string) *Demand {
 }
 
 func (demand *Demand) SetContract(contract *Contract) *Demand {
-	demand.Contract = contract.Clean()
+	demand.Contract = NewNullValueFrom(contract.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullContract() *Demand {
+	demand.Contract = NewNullValue[Contract]()
 	return demand
 }
 
@@ -311,8 +327,8 @@ func (demand *Demand) SetExternalCode(externalCode string) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetFiles(files Slice[File]) *Demand {
-	demand.Files = NewMetaArrayRows(files)
+func (demand *Demand) SetFiles(files ...*File) *Demand {
+	demand.Files = NewMetaArrayFrom(files)
 	return demand
 }
 
@@ -356,23 +372,38 @@ func (demand *Demand) SetOwner(owner *Employee) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetPositions(positions *Positions[DemandPosition]) *Demand {
-	demand.Positions = positions
+func (demand *Demand) SetPositions(positions ...*DemandPosition) *Demand {
+	demand.Positions = NewPositionsFrom(positions)
 	return demand
 }
 
 func (demand *Demand) SetProject(project *Project) *Demand {
-	demand.Project = project.Clean()
+	demand.Project = NewNullValueFrom(project.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullProject() *Demand {
+	demand.Project = NewNullValue[Project]()
 	return demand
 }
 
 func (demand *Demand) SetRate(rate *Rate) *Demand {
-	demand.Rate = rate
+	demand.Rate = NewNullValueFrom(rate)
+	return demand
+}
+
+func (demand *Demand) SetNullRate() *Demand {
+	demand.Rate = NewNullValue[Rate]()
 	return demand
 }
 
 func (demand *Demand) SetSalesChannel(salesChannel *SalesChannel) *Demand {
-	demand.SalesChannel = salesChannel.Clean()
+	demand.SalesChannel = NewNullValueFrom(salesChannel.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullSalesChannel() *Demand {
+	demand.SalesChannel = NewNullValue[SalesChannel]()
 	return demand
 }
 
@@ -392,7 +423,12 @@ func (demand *Demand) SetShipmentAddressFull(shipmentAddressFull *Address) *Dema
 }
 
 func (demand *Demand) SetState(state *State) *Demand {
-	demand.State = state.Clean()
+	demand.State = NewNullValueFrom(state.Clean())
+	return demand
+}
+
+func (demand *Demand) SetNullState() *Demand {
+	demand.State = NewNullValue[State]()
 	return demand
 }
 
@@ -426,17 +462,17 @@ func (demand *Demand) SetFactureOut(factureOut *FactureOut) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetReturns(returns Slice[SalesReturn]) *Demand {
+func (demand *Demand) SetReturns(returns ...*SalesReturn) *Demand {
 	demand.Returns = returns
 	return demand
 }
 
-func (demand *Demand) SetPayments(payments Slice[Payment]) *Demand {
+func (demand *Demand) SetPayments(payments ...*Payment) *Demand {
 	demand.Payments = payments
 	return demand
 }
 
-func (demand *Demand) SetInvoicesOut(invoicesOut Slice[InvoiceOut]) *Demand {
+func (demand *Demand) SetInvoicesOut(invoicesOut ...*InvoiceOut) *Demand {
 	demand.InvoicesOut = invoicesOut
 	return demand
 }
@@ -481,7 +517,7 @@ func (demand *Demand) SetTransportFacilityNumber(transportFacilityNumber string)
 	return demand
 }
 
-func (demand *Demand) SetAttributes(attributes Slice[AttributeValue]) *Demand {
+func (demand *Demand) SetAttributes(attributes ...*Attribute) *Demand {
 	demand.Attributes = attributes
 	return demand
 }
@@ -490,8 +526,24 @@ func (demand Demand) String() string {
 	return Stringify(demand)
 }
 
-func (demand Demand) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Demand) MetaType() MetaType {
 	return MetaTypeDemand
+}
+
+// Update shortcut
+func (demand Demand) Update(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+	return client.Entity().Demand().Update(ctx, demand.GetID(), &demand, params...)
+}
+
+// Create shortcut
+func (demand Demand) Create(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+	return client.Entity().Demand().Create(ctx, &demand, params...)
+}
+
+// Delete shortcut
+func (demand Demand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Demand().Delete(ctx, demand.GetID())
 }
 
 // DemandPosition Позиция Отгрузки
@@ -615,17 +667,17 @@ func (demandPosition *DemandPosition) SetSlot(slot *Slot) *DemandPosition {
 	return demandPosition
 }
 
-func (demandPosition *DemandPosition) SetThings(things Slice[string]) *DemandPosition {
-	demandPosition.Things = things
+func (demandPosition *DemandPosition) SetThings(things ...string) *DemandPosition {
+	demandPosition.Things = NewSliceFrom(things)
 	return demandPosition
 }
 
-func (demandPosition *DemandPosition) SetTrackingCodes(trackingCodes Slice[TrackingCode]) *DemandPosition {
+func (demandPosition *DemandPosition) SetTrackingCodes(trackingCodes ...*TrackingCode) *DemandPosition {
 	demandPosition.TrackingCodes = trackingCodes
 	return demandPosition
 }
 
-func (demandPosition *DemandPosition) SetTrackingCodes1162(trackingCodes1162 Slice[TrackingCode]) *DemandPosition {
+func (demandPosition *DemandPosition) SetTrackingCodes1162(trackingCodes1162 ...*TrackingCode) *DemandPosition {
 	demandPosition.TrackingCodes1162 = trackingCodes1162
 	return demandPosition
 }
@@ -644,17 +696,10 @@ func (demandPosition DemandPosition) String() string {
 	return Stringify(demandPosition)
 }
 
-func (demandPosition DemandPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (DemandPosition) MetaType() MetaType {
 	return MetaTypeDemandPosition
 }
-
-// DemandTemplateArg
-// Документ: Отгрузка (demand)
-// Основание, на котором он может быть создан:
-// - Заказ покупателя (customerorder)
-//type DemandTemplateArg struct {
-//	CustomerOrder *MetaWrapper `json:"customerOrder,omitempty"`
-//}
 
 // DemandService
 // Сервис для работы с отгрузками.
@@ -662,32 +707,33 @@ type DemandService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Demand], *resty.Response, error)
 	Create(ctx context.Context, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, demandList Slice[Demand], params ...*Params) (*Slice[Demand], *resty.Response, error)
-	DeleteMany(ctx context.Context, demandList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Demand) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Demand, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
-	//endpointTemplate[Demand]
-	//endpointTemplateBasedOn[Demand, DemandTemplateArg]
+	Template(ctx context.Context) (*Demand, *resty.Response, error)
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*Demand, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[DemandPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*DemandPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *DemandPosition, params ...*Params) (*DemandPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *DemandPosition) (*DemandPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[DemandPosition]) (*Slice[DemandPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*DemandPosition) (*Slice[DemandPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*DemandPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Demand, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -702,13 +748,14 @@ type DemandService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *Demand, evaluate ...Evaluate) (*Demand, *resty.Response, error)
 }
 
 func NewDemandService(client *Client) DemandService {

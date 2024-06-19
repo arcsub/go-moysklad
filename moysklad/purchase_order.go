@@ -16,7 +16,7 @@ type PurchaseOrder struct {
 	Owner                 *Employee                         `json:"owner,omitempty"`
 	InternalOrder         *InternalOrder                    `json:"internalOrder,omitempty"`
 	Code                  *string                           `json:"code,omitempty"`
-	Contract              *Contract                         `json:"contract,omitempty"`
+	Contract              *NullValue[Contract]              `json:"contract,omitempty"`
 	Created               *Timestamp                        `json:"created,omitempty"`
 	Deleted               *Timestamp                        `json:"deleted,omitempty"`
 	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"`
@@ -35,12 +35,12 @@ type PurchaseOrder struct {
 	Files                 *MetaArray[File]                  `json:"files,omitempty"`
 	Positions             *Positions[PurchaseOrderPosition] `json:"positions,omitempty"`
 	Printed               *bool                             `json:"printed,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Project               *NullValue[Project]               `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
-	Rate                  *Rate                             `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                  `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
 	ShippedSum            *float64                          `json:"shippedSum,omitempty"`
-	State                 *State                            `json:"state,omitempty"`
+	State                 *NullValue[State]                 `json:"state,omitempty"`
 	Store                 *Store                            `json:"store,omitempty"`
 	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
@@ -53,11 +53,22 @@ type PurchaseOrder struct {
 	InvoicesIn            Slice[InvoiceIn]                  `json:"invoicesIn,omitempty"`
 	Payments              Slice[Payment]                    `json:"payments,omitempty"`
 	Supplies              Slice[Supply]                     `json:"supplies,omitempty"`
-	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                  `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (purchaseOrder PurchaseOrder) Clean() *PurchaseOrder {
 	return &PurchaseOrder{Meta: purchaseOrder.Meta}
+}
+
+// AsOperation возвращает объект Operation c полем Meta сущности
+func (purchaseOrder PurchaseOrder) AsOperation() *Operation {
+	return &Operation{Meta: purchaseOrder.GetMeta()}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (purchaseOrder PurchaseOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: purchaseOrder.Meta}
 }
 
 func (purchaseOrder PurchaseOrder) GetPayedSum() float64 {
@@ -85,7 +96,7 @@ func (purchaseOrder PurchaseOrder) GetCode() string {
 }
 
 func (purchaseOrder PurchaseOrder) GetContract() Contract {
-	return Deref(purchaseOrder.Contract)
+	return purchaseOrder.Contract.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetCreated() Timestamp {
@@ -161,7 +172,7 @@ func (purchaseOrder PurchaseOrder) GetPrinted() bool {
 }
 
 func (purchaseOrder PurchaseOrder) GetProject() Project {
-	return Deref(purchaseOrder.Project)
+	return purchaseOrder.Project.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetPublished() bool {
@@ -169,7 +180,7 @@ func (purchaseOrder PurchaseOrder) GetPublished() bool {
 }
 
 func (purchaseOrder PurchaseOrder) GetRate() Rate {
-	return Deref(purchaseOrder.Rate)
+	return purchaseOrder.Rate.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetShared() bool {
@@ -181,7 +192,7 @@ func (purchaseOrder PurchaseOrder) GetShippedSum() float64 {
 }
 
 func (purchaseOrder PurchaseOrder) GetState() State {
-	return Deref(purchaseOrder.State)
+	return purchaseOrder.State.Get()
 }
 
 func (purchaseOrder PurchaseOrder) GetStore() Store {
@@ -232,7 +243,7 @@ func (purchaseOrder PurchaseOrder) GetSupplies() Slice[Supply] {
 	return purchaseOrder.Supplies
 }
 
-func (purchaseOrder PurchaseOrder) GetAttributes() Slice[AttributeValue] {
+func (purchaseOrder PurchaseOrder) GetAttributes() Slice[Attribute] {
 	return purchaseOrder.Attributes
 }
 
@@ -262,7 +273,7 @@ func (purchaseOrder *PurchaseOrder) SetCode(code string) *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetContract(contract *Contract) *PurchaseOrder {
-	purchaseOrder.Contract = contract.Clean()
+	purchaseOrder.Contract = NewNullValueFrom(contract.Clean())
 	return purchaseOrder
 }
 
@@ -316,23 +327,33 @@ func (purchaseOrder *PurchaseOrder) SetAgent(agent *Counterparty) *PurchaseOrder
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetFiles(files Slice[File]) *PurchaseOrder {
-	purchaseOrder.Files = NewMetaArrayRows(files)
+func (purchaseOrder *PurchaseOrder) SetFiles(files ...*File) *PurchaseOrder {
+	purchaseOrder.Files = NewMetaArrayFrom(files)
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetPositions(positions *Positions[PurchaseOrderPosition]) *PurchaseOrder {
-	purchaseOrder.Positions = positions
+func (purchaseOrder *PurchaseOrder) SetPositions(positions ...*PurchaseOrderPosition) *PurchaseOrder {
+	purchaseOrder.Positions = NewPositionsFrom(positions)
 	return purchaseOrder
 }
 
 func (purchaseOrder *PurchaseOrder) SetProject(project *Project) *PurchaseOrder {
-	purchaseOrder.Project = project.Clean()
+	purchaseOrder.Project = NewNullValueFrom(project.Clean())
+	return purchaseOrder
+}
+
+func (purchaseOrder *PurchaseOrder) SetNullProject() *PurchaseOrder {
+	purchaseOrder.Project = NewNullValue[Project]()
 	return purchaseOrder
 }
 
 func (purchaseOrder *PurchaseOrder) SetRate(rate *Rate) *PurchaseOrder {
-	purchaseOrder.Rate = rate
+	purchaseOrder.Rate = NewNullValueFrom(rate)
+	return purchaseOrder
+}
+
+func (purchaseOrder *PurchaseOrder) SetNullRate() *PurchaseOrder {
+	purchaseOrder.Rate = NewNullValue[Rate]()
 	return purchaseOrder
 }
 
@@ -342,7 +363,12 @@ func (purchaseOrder *PurchaseOrder) SetShared(shared bool) *PurchaseOrder {
 }
 
 func (purchaseOrder *PurchaseOrder) SetState(state *State) *PurchaseOrder {
-	purchaseOrder.State = state.Clean()
+	purchaseOrder.State = NewNullValueFrom(state.Clean())
+	return purchaseOrder
+}
+
+func (purchaseOrder *PurchaseOrder) SetNullState() *PurchaseOrder {
+	purchaseOrder.State = NewNullValue[State]()
 	return purchaseOrder
 }
 
@@ -366,27 +392,27 @@ func (purchaseOrder *PurchaseOrder) SetVatIncluded(vatIncluded bool) *PurchaseOr
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetCustomerOrders(customerOrders Slice[CustomerOrder]) *PurchaseOrder {
+func (purchaseOrder *PurchaseOrder) SetCustomerOrders(customerOrders ...*CustomerOrder) *PurchaseOrder {
 	purchaseOrder.CustomerOrders = customerOrders
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetInvoicesIn(invoicesIn Slice[InvoiceIn]) *PurchaseOrder {
+func (purchaseOrder *PurchaseOrder) SetInvoicesIn(invoicesIn ...*InvoiceIn) *PurchaseOrder {
 	purchaseOrder.InvoicesIn = invoicesIn
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetPayments(payments Slice[Payment]) *PurchaseOrder {
+func (purchaseOrder *PurchaseOrder) SetPayments(payments ...*Payment) *PurchaseOrder {
 	purchaseOrder.Payments = payments
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetSupplies(supplies Slice[Supply]) *PurchaseOrder {
+func (purchaseOrder *PurchaseOrder) SetSupplies(supplies ...*Supply) *PurchaseOrder {
 	purchaseOrder.Supplies = supplies
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetAttributes(attributes Slice[AttributeValue]) *PurchaseOrder {
+func (purchaseOrder *PurchaseOrder) SetAttributes(attributes ...*Attribute) *PurchaseOrder {
 	purchaseOrder.Attributes = attributes
 	return purchaseOrder
 }
@@ -395,8 +421,24 @@ func (purchaseOrder PurchaseOrder) String() string {
 	return Stringify(purchaseOrder)
 }
 
-func (purchaseOrder PurchaseOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PurchaseOrder) MetaType() MetaType {
 	return MetaTypePurchaseOrder
+}
+
+// Update shortcut
+func (purchaseOrder PurchaseOrder) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
+	return client.Entity().PurchaseOrder().Update(ctx, purchaseOrder.GetID(), &purchaseOrder, params...)
+}
+
+// Create shortcut
+func (purchaseOrder PurchaseOrder) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
+	return client.Entity().PurchaseOrder().Create(ctx, &purchaseOrder, params...)
+}
+
+// Delete shortcut
+func (purchaseOrder PurchaseOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().PurchaseOrder().Delete(ctx, purchaseOrder.GetID())
 }
 
 // PurchaseOrderPosition Позиция Заказа поставщику.
@@ -524,17 +566,10 @@ func (purchaseOrderPosition PurchaseOrderPosition) String() string {
 	return Stringify(purchaseOrderPosition)
 }
 
-func (purchaseOrderPosition PurchaseOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PurchaseOrderPosition) MetaType() MetaType {
 	return MetaTypePurchaseOrderPosition
 }
-
-// PurchaseOrderTemplateArg
-// Документ: Заказ поставщику (purchaseorder)
-// Основание, на котором он может быть создан:
-// - Внутренний заказ (internalorder)
-//type PurchaseOrderTemplateArg struct {
-//	InternalOrder *MetaWrapper `json:"internalOrder,omitempty"`
-//}
 
 // PurchaseOrderService
 // Сервис для работы с заказами поставщикам.
@@ -542,32 +577,33 @@ type PurchaseOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[PurchaseOrder], *resty.Response, error)
 	Create(ctx context.Context, purchaseOrder *PurchaseOrder, params ...*Params) (*PurchaseOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, purchaseOrderList Slice[PurchaseOrder], params ...*Params) (*Slice[PurchaseOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, purchaseOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*PurchaseOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, purchaseOrder *PurchaseOrder, params ...*Params) (*PurchaseOrder, *resty.Response, error)
-	//endpointTemplate[PurchaseOrder]
-	//endpointTemplateBasedOn[PurchaseOrder, PurchaseOrderTemplateArg]
+	Template(ctx context.Context) (*PurchaseOrder, *resty.Response, error)
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*PurchaseOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[PurchaseOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PurchaseOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PurchaseOrderPosition, params ...*Params) (*PurchaseOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PurchaseOrderPosition) (*PurchaseOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[PurchaseOrderPosition]) (*Slice[PurchaseOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*PurchaseOrderPosition) (*Slice[PurchaseOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*PurchaseOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PurchaseOrder, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -577,13 +613,14 @@ type PurchaseOrderService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *PurchaseOrder, evaluate ...Evaluate) (*PurchaseOrder, *resty.Response, error)
 }
 
 func NewPurchaseOrderService(client *Client) PurchaseOrderService {

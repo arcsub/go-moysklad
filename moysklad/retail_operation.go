@@ -11,17 +11,17 @@ func (retailOperation RetailOperation) String() string {
 	return Stringify(retailOperation.Meta)
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
+// MetaType возвращает тип сущности.
 func (retailOperation RetailOperation) MetaType() MetaType {
 	return retailOperation.Meta.GetType()
 }
 
-// Raw удовлетворяет интерфейсу RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper
 func (retailOperation RetailOperation) Raw() []byte {
 	return retailOperation.data
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (retailOperation *RetailOperation) UnmarshalJSON(data []byte) error {
 	type alias RetailOperation
 	var t alias
@@ -35,44 +35,44 @@ func (retailOperation *RetailOperation) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// AsRetailDemand десериализует сырые данные в тип *RetailDemand
+// AsRetailDemand десериализует объект в тип *RetailDemand
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (retailOperation *RetailOperation) AsRetailDemand() *RetailDemand {
-	return unmarshalAsType[RetailDemand](retailOperation)
+	return UnmarshalAsType[RetailDemand](retailOperation)
 }
 
-// AsRetailDrawerCashIn десериализует сырые данные в тип *RetailDrawerCashIn
+// AsRetailDrawerCashIn десериализует объект в тип *RetailDrawerCashIn
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (retailOperation *RetailOperation) AsRetailDrawerCashIn() *RetailDrawerCashIn {
-	return unmarshalAsType[RetailDrawerCashIn](retailOperation)
+	return UnmarshalAsType[RetailDrawerCashIn](retailOperation)
 }
 
-// AsRetailDrawerCashOut десериализует сырые данные в тип *RetailDrawerCashOut
+// AsRetailDrawerCashOut десериализует объект в тип *RetailDrawerCashOut
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (retailOperation *RetailOperation) AsRetailDrawerCashOut() *RetailDrawerCashOut {
-	return unmarshalAsType[RetailDrawerCashOut](retailOperation)
+	return UnmarshalAsType[RetailDrawerCashOut](retailOperation)
 }
 
-// AsRetailSalesReturn десериализует сырые данные в тип *RetailSalesReturn
+// AsRetailSalesReturn десериализует объект в тип *RetailSalesReturn
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (retailOperation *RetailOperation) AsRetailSalesReturn() *RetailSalesReturn {
-	return unmarshalAsType[RetailSalesReturn](retailOperation)
+	return UnmarshalAsType[RetailSalesReturn](retailOperation)
 }
 
-// AsPrepayment десериализует сырые данные в тип *Prepayment
+// AsPrepayment десериализует объект в тип *Prepayment
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (retailOperation *RetailOperation) AsPrepayment() *Prepayment {
-	return unmarshalAsType[Prepayment](retailOperation)
+	return UnmarshalAsType[Prepayment](retailOperation)
 }
 
-// AsPrepaymentReturn десериализует сырые данные в тип *PrepaymentReturn
+// AsPrepaymentReturn десериализует объект в тип *PrepaymentReturn
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (retailOperation *RetailOperation) AsPrepaymentReturn() *PrepaymentReturn {
-	return unmarshalAsType[PrepaymentReturn](retailOperation)
+	return UnmarshalAsType[PrepaymentReturn](retailOperation)
 }

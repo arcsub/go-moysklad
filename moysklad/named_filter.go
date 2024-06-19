@@ -15,6 +15,7 @@ type NamedFilter struct {
 	Owner     *Employee  `json:"owner,omitempty"`     // Владелец (Сотрудник)
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (namedFilter NamedFilter) Clean() *NamedFilter {
 	return &NamedFilter{Meta: namedFilter.Meta}
 }
@@ -43,6 +44,7 @@ func (namedFilter NamedFilter) String() string {
 	return Stringify(namedFilter)
 }
 
-func (namedFilter NamedFilter) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NamedFilter) MetaType() MetaType {
 	return MetaTypeNamedFilter
 }

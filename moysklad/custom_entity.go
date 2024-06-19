@@ -16,6 +16,7 @@ type CustomEntity struct {
 	Name *string    `json:"name,omitempty"` // Наименование Пользовательского справочника
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (customEntity CustomEntity) Clean() *CustomEntity {
 	return &CustomEntity{Meta: customEntity.Meta}
 }
@@ -46,8 +47,24 @@ func (customEntity CustomEntity) String() string {
 	return Stringify(customEntity)
 }
 
-func (customEntity CustomEntity) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomEntity) MetaType() MetaType {
 	return MetaTypeCustomEntity
+}
+
+// Update shortcut
+func (customEntity CustomEntity) Update(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+	return client.Entity().CustomEntity().Update(ctx, customEntity.GetID(), &customEntity, params...)
+}
+
+// Create shortcut
+func (customEntity CustomEntity) Create(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+	return client.Entity().CustomEntity().Create(ctx, &customEntity, params...)
+}
+
+// Delete shortcut
+func (customEntity CustomEntity) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().CustomEntity().Delete(ctx, customEntity.GetID())
 }
 
 // CustomEntityElement Элемент Пользовательского справочника.

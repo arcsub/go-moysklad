@@ -25,6 +25,7 @@ type SalesChannel struct {
 	SalesChannelType SalesChannelType `json:"type,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (salesChannel SalesChannel) Clean() *SalesChannel {
 	return &SalesChannel{Meta: salesChannel.Meta}
 }
@@ -135,8 +136,24 @@ func (salesChannel SalesChannel) String() string {
 	return Stringify(salesChannel)
 }
 
-func (salesChannel SalesChannel) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesChannel) MetaType() MetaType {
 	return MetaTypeSalesChannel
+}
+
+// Update shortcut
+func (salesChannel SalesChannel) Update(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+	return client.Entity().SalesChannel().Update(ctx, salesChannel.GetID(), &salesChannel, params...)
+}
+
+// Create shortcut
+func (salesChannel SalesChannel) Create(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+	return client.Entity().SalesChannel().Create(ctx, &salesChannel, params...)
+}
+
+// Delete shortcut
+func (salesChannel SalesChannel) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().SalesChannel().Delete(ctx, salesChannel.GetID())
 }
 
 // SalesChannelType Тип канала продаж.
@@ -159,7 +176,7 @@ type SalesChannelService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[SalesChannel], *resty.Response, error)
 	Create(ctx context.Context, salesChannel *SalesChannel, params ...*Params) (*SalesChannel, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, salesChannelList Slice[SalesChannel], params ...*Params) (*Slice[SalesChannel], *resty.Response, error)
-	DeleteMany(ctx context.Context, salesChannelList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*SalesChannel) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SalesChannel, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, salesChannel *SalesChannel, params ...*Params) (*SalesChannel, *resty.Response, error)

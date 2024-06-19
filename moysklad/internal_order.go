@@ -30,23 +30,28 @@ type InternalOrder struct {
 	Applicable            *bool                             `json:"applicable,omitempty"`
 	Moment                *Timestamp                        `json:"moment,omitempty"`
 	Printed               *bool                             `json:"printed,omitempty"`
-	Project               *Project                          `json:"project,omitempty"`
+	Project               *NullValue[Project]               `json:"project,omitempty"`
 	Published             *bool                             `json:"published,omitempty"`
 	PurchaseOrders        Slice[PurchaseOrder]              `json:"purchaseOrders,omitempty"`
-	Rate                  *Rate                             `json:"rate,omitempty"`
+	Rate                  *NullValue[Rate]                  `json:"rate,omitempty"`
 	Shared                *bool                             `json:"shared,omitempty"`
-	State                 *State                            `json:"state,omitempty"`
-	Store                 *Store                            `json:"store,omitempty"`
+	State                 *NullValue[State]                 `json:"state,omitempty"`
+	Store                 *NullValue[Store]                 `json:"store,omitempty"`
 	Sum                   *float64                          `json:"sum,omitempty"`
 	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`
 	Updated               *Timestamp                        `json:"updated,omitempty"`
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`
-	Attributes            Slice[AttributeValue]             `json:"attributes,omitempty"`
+	Attributes            Slice[Attribute]                  `json:"attributes,omitempty"`
 }
 
 func (internalOrder InternalOrder) Clean() *InternalOrder {
 	return &InternalOrder{Meta: internalOrder.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (internalOrder InternalOrder) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: internalOrder.Meta}
 }
 
 func (internalOrder InternalOrder) GetOrganization() Organization {
@@ -130,7 +135,7 @@ func (internalOrder InternalOrder) GetPrinted() bool {
 }
 
 func (internalOrder InternalOrder) GetProject() Project {
-	return Deref(internalOrder.Project)
+	return internalOrder.Project.Get()
 }
 
 func (internalOrder InternalOrder) GetPublished() bool {
@@ -142,7 +147,7 @@ func (internalOrder InternalOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 }
 
 func (internalOrder InternalOrder) GetRate() Rate {
-	return Deref(internalOrder.Rate)
+	return internalOrder.Rate.Get()
 }
 
 func (internalOrder InternalOrder) GetShared() bool {
@@ -150,11 +155,11 @@ func (internalOrder InternalOrder) GetShared() bool {
 }
 
 func (internalOrder InternalOrder) GetState() State {
-	return Deref(internalOrder.State)
+	return internalOrder.State.Get()
 }
 
 func (internalOrder InternalOrder) GetStore() Store {
-	return Deref(internalOrder.Store)
+	return internalOrder.Store.Get()
 }
 
 func (internalOrder InternalOrder) GetSum() float64 {
@@ -177,7 +182,7 @@ func (internalOrder InternalOrder) GetVatIncluded() bool {
 	return Deref(internalOrder.VatIncluded)
 }
 
-func (internalOrder InternalOrder) GetAttributes() Slice[AttributeValue] {
+func (internalOrder InternalOrder) GetAttributes() Slice[Attribute] {
 	return internalOrder.Attributes
 }
 
@@ -206,8 +211,8 @@ func (internalOrder *InternalOrder) SetExternalCode(externalCode string) *Intern
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetFiles(files Slice[File]) *InternalOrder {
-	internalOrder.Files = NewMetaArrayRows(files)
+func (internalOrder *InternalOrder) SetFiles(files ...*File) *InternalOrder {
+	internalOrder.Files = NewMetaArrayFrom(files)
 	return internalOrder
 }
 
@@ -221,12 +226,12 @@ func (internalOrder *InternalOrder) SetMeta(meta *Meta) *InternalOrder {
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetPositions(positions *Positions[InternalOrderPosition]) *InternalOrder {
-	internalOrder.Positions = positions
+func (internalOrder *InternalOrder) SetPositions(positions ...*InternalOrderPosition) *InternalOrder {
+	internalOrder.Positions = NewPositionsFrom(positions)
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetMoves(moves Slice[Move]) *InternalOrder {
+func (internalOrder *InternalOrder) SetMoves(moves ...*Move) *InternalOrder {
 	internalOrder.Moves = moves
 	return internalOrder
 }
@@ -252,17 +257,27 @@ func (internalOrder *InternalOrder) SetMoment(moment *Timestamp) *InternalOrder 
 }
 
 func (internalOrder *InternalOrder) SetProject(project *Project) *InternalOrder {
-	internalOrder.Project = project.Clean()
+	internalOrder.Project = NewNullValueFrom(project.Clean())
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetPurchaseOrders(purchaseOrders Slice[PurchaseOrder]) *InternalOrder {
+func (internalOrder *InternalOrder) SetNullProject() *InternalOrder {
+	internalOrder.Project = NewNullValue[Project]()
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetPurchaseOrders(purchaseOrders ...*PurchaseOrder) *InternalOrder {
 	internalOrder.PurchaseOrders = purchaseOrders
 	return internalOrder
 }
 
 func (internalOrder *InternalOrder) SetRate(rate *Rate) *InternalOrder {
-	internalOrder.Rate = rate
+	internalOrder.Rate = NewNullValueFrom(rate)
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullRate() *InternalOrder {
+	internalOrder.Rate = NewNullValue[Rate]()
 	return internalOrder
 }
 
@@ -272,12 +287,22 @@ func (internalOrder *InternalOrder) SetShared(shared bool) *InternalOrder {
 }
 
 func (internalOrder *InternalOrder) SetState(state *State) *InternalOrder {
-	internalOrder.State = state.Clean()
+	internalOrder.State = NewNullValueFrom(state.Clean())
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullState() *InternalOrder {
+	internalOrder.State = NewNullValue[State]()
 	return internalOrder
 }
 
 func (internalOrder *InternalOrder) SetStore(store *Store) *InternalOrder {
-	internalOrder.Store = store.Clean()
+	internalOrder.Store = NewNullValueFrom(store.Clean())
+	return internalOrder
+}
+
+func (internalOrder *InternalOrder) SetNullStore() *InternalOrder {
+	internalOrder.Store = NewNullValue[Store]()
 	return internalOrder
 }
 
@@ -296,7 +321,7 @@ func (internalOrder *InternalOrder) SetVatIncluded(vatIncluded bool) *InternalOr
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetAttributes(attributes Slice[AttributeValue]) *InternalOrder {
+func (internalOrder *InternalOrder) SetAttributes(attributes ...*Attribute) *InternalOrder {
 	internalOrder.Attributes = attributes
 	return internalOrder
 }
@@ -305,8 +330,24 @@ func (internalOrder InternalOrder) String() string {
 	return Stringify(internalOrder)
 }
 
-func (internalOrder InternalOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InternalOrder) MetaType() MetaType {
 	return MetaTypeInternalOrder
+}
+
+// Update shortcut
+func (internalOrder InternalOrder) Update(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+	return client.Entity().InternalOrder().Update(ctx, internalOrder.GetID(), &internalOrder, params...)
+}
+
+// Create shortcut
+func (internalOrder InternalOrder) Create(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+	return client.Entity().InternalOrder().Create(ctx, &internalOrder, params...)
+}
+
+// Delete shortcut
+func (internalOrder InternalOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().InternalOrder().Delete(ctx, internalOrder.GetID())
 }
 
 // InternalOrderPosition Позиция Внутреннего заказа.
@@ -389,7 +430,8 @@ func (internalOrderPosition InternalOrderPosition) String() string {
 	return Stringify(internalOrderPosition)
 }
 
-func (internalOrderPosition InternalOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InternalOrderPosition) MetaType() MetaType {
 	return MetaTypeInternalOrderPosition
 }
 
@@ -399,31 +441,32 @@ type InternalOrderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[InternalOrder], *resty.Response, error)
 	Create(ctx context.Context, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params ...*Params) (*Slice[InternalOrder], *resty.Response, error)
-	DeleteMany(ctx context.Context, internalOrderList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*InternalOrder) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InternalOrder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
-	//endpointTemplate[InternalOrder]
+	Template(ctx context.Context) (*InternalOrder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[InternalOrderPosition], *resty.Response, error)
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InternalOrderPosition, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *InternalOrderPosition) (*InternalOrderPosition, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[InternalOrderPosition]) (*Slice[InternalOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*InternalOrderPosition) (*Slice[InternalOrderPosition], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*InternalOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*InternalOrder, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -431,13 +474,14 @@ type InternalOrderService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	Evaluate(ctx context.Context, entity *InternalOrder, evaluate ...Evaluate) (*InternalOrder, *resty.Response, error)
 }
 
 func NewInternalOrderService(client *Client) InternalOrderService {

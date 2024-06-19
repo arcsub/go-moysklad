@@ -34,7 +34,7 @@ type Processing struct {
 	ProcessingSum       *float64                          `json:"processingSum,omitempty"`
 	Updated             *Timestamp                        `json:"updated,omitempty"`
 	ProductsStore       *Store                            `json:"productsStore,omitempty"`
-	Project             *Project                          `json:"project,omitempty"`
+	Project             *NullValue[Project]               `json:"project,omitempty"`
 	Published           *bool                             `json:"published,omitempty"`
 	Quantity            *float64                          `json:"quantity,omitempty"`
 	Shared              *bool                             `json:"shared,omitempty"`
@@ -42,11 +42,17 @@ type Processing struct {
 	Name                *string                           `json:"name,omitempty"`
 	Products            Slice[ProcessingPositionProduct]  `json:"products,omitempty"`
 	Materials           Slice[ProcessingPositionMaterial] `json:"materials,omitempty"`
-	Attributes          Slice[AttributeValue]             `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]                  `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processing Processing) Clean() *Processing {
 	return &Processing{Meta: processing.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (processing Processing) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: processing.Meta}
 }
 
 func (processing Processing) GetOrganization() Organization {
@@ -142,7 +148,7 @@ func (processing Processing) GetProductsStore() Store {
 }
 
 func (processing Processing) GetProject() Project {
-	return Deref(processing.Project)
+	return processing.Project.Get()
 }
 
 func (processing Processing) GetPublished() bool {
@@ -173,7 +179,7 @@ func (processing Processing) GetMaterials() Slice[ProcessingPositionMaterial] {
 	return processing.Materials
 }
 
-func (processing Processing) GetAttributes() Slice[AttributeValue] {
+func (processing Processing) GetAttributes() Slice[Attribute] {
 	return processing.Attributes
 }
 
@@ -197,8 +203,8 @@ func (processing *Processing) SetExternalCode(externalCode string) *Processing {
 	return processing
 }
 
-func (processing *Processing) SetFiles(files Slice[File]) *Processing {
-	processing.Files = NewMetaArrayRows(files)
+func (processing *Processing) SetFiles(files ...*File) *Processing {
+	processing.Files = NewMetaArrayFrom(files)
 	return processing
 }
 
@@ -263,7 +269,12 @@ func (processing *Processing) SetProductsStore(productsStore *Store) *Processing
 }
 
 func (processing *Processing) SetProject(project *Project) *Processing {
-	processing.Project = project.Clean()
+	processing.Project = NewNullValueFrom(project.Clean())
+	return processing
+}
+
+func (processing *Processing) SetNullProject() *Processing {
+	processing.Project = NewNullValue[Project]()
 	return processing
 }
 
@@ -287,17 +298,17 @@ func (processing *Processing) SetName(name string) *Processing {
 	return processing
 }
 
-func (processing *Processing) SetProducts(products Slice[ProcessingPositionProduct]) *Processing {
+func (processing *Processing) SetProducts(products ...*ProcessingPositionProduct) *Processing {
 	processing.Products = products
 	return processing
 }
 
-func (processing *Processing) SetMaterials(materials Slice[ProcessingPositionMaterial]) *Processing {
+func (processing *Processing) SetMaterials(materials ...*ProcessingPositionMaterial) *Processing {
 	processing.Materials = materials
 	return processing
 }
 
-func (processing *Processing) SetAttributes(attributes Slice[AttributeValue]) *Processing {
+func (processing *Processing) SetAttributes(attributes ...*Attribute) *Processing {
 	processing.Attributes = attributes
 	return processing
 }
@@ -306,8 +317,24 @@ func (processing Processing) String() string {
 	return Stringify(processing)
 }
 
-func (processing Processing) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Processing) MetaType() MetaType {
 	return MetaTypeProcessing
+}
+
+// Update shortcut
+func (processing Processing) Update(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+	return client.Entity().Processing().Update(ctx, processing.GetID(), &processing, params...)
+}
+
+// Create shortcut
+func (processing Processing) Create(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+	return client.Entity().Processing().Create(ctx, &processing, params...)
+}
+
+// Delete shortcut
+func (processing Processing) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Processing().Delete(ctx, processing.GetID())
 }
 
 // ProcessingPositionMaterial Материал Техоперации.
@@ -350,7 +377,8 @@ func (processingPositionMaterial ProcessingPositionMaterial) String() string {
 	return Stringify(processingPositionMaterial)
 }
 
-func (processingPositionMaterial ProcessingPositionMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPositionMaterial) MetaType() MetaType {
 	return MetaTypeProcessingPositionMaterial
 }
 
@@ -394,19 +422,10 @@ func (processingPositionProduct ProcessingPositionProduct) String() string {
 	return Stringify(processingPositionProduct)
 }
 
-func (processingPositionProduct ProcessingPositionProduct) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPositionProduct) MetaType() MetaType {
 	return MetaTypeProcessingPositionProduct
 }
-
-// ProcessingTemplateArg
-// Документ: Техоперация (processing)
-// Основание, на котором он может быть создан:
-// - Заказ на производство (processingorder)
-// - Техкарта (processingplan)
-//type ProcessingTemplateArg struct {
-//	ProcessingOrder *MetaWrapper `json:"processingOrder,omitempty"`
-//	ProcessingPlan  *MetaWrapper `json:"processingPlan,omitempty"`
-//}
 
 // ProcessingService
 // Сервис для работы с Техоперациями.
@@ -414,40 +433,40 @@ type ProcessingService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[Processing], *resty.Response, error)
 	Create(ctx context.Context, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingList Slice[Processing], params ...*Params) (*Slice[Processing], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Processing) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Processing, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
-	//endpointTemplate[Processing]
-	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
+	Template(ctx context.Context) (*Processing, *resty.Response, error)
+	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*Processing, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Processing, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
 	CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
-	CreateMaterials(ctx context.Context, id uuid.UUID, materials Slice[ProcessingPlanMaterial]) (*Slice[ProcessingPlanMaterial], *resty.Response, error)
+	CreateMaterialMany(ctx context.Context, id uuid.UUID, materials ...*ProcessingPlanMaterial) (*Slice[ProcessingPlanMaterial], *resty.Response, error)
 	GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error)
 	UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
 	DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error)
 	GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error)
 	CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	CreateProducts(ctx context.Context, id uuid.UUID, products Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+	CreateProductMany(ctx context.Context, id uuid.UUID, products ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 	GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error)
 	UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
 	DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type processingService struct {
@@ -459,8 +478,8 @@ type processingService struct {
 	endpointDelete
 	endpointGetByID[Processing]
 	endpointUpdate[Processing]
-	//endpointTemplate[Processing]
-	//endpointTemplateBasedOn[Processing, ProcessingTemplateArg]
+	endpointTemplate[Processing]
+	endpointTemplateBased[Processing]
 	endpointMetadata[MetaAttributesSharedStatesWrapper]
 	endpointAttributes
 	endpointSyncID[Processing]
@@ -486,6 +505,8 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointTrash:            endpointTrash{e},
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
+		endpointTemplate:         endpointTemplate[Processing]{e},
+		endpointTemplateBased:    endpointTemplateBased[Processing]{e},
 	}
 }
 
@@ -503,8 +524,8 @@ func (service *processingService) CreateMaterial(ctx context.Context, id uuid.UU
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Post(ctx, material)
 }
 
-// CreateMaterials Создать несколько материалов Тех. карты.
-func (service *processingService) CreateMaterials(ctx context.Context, id uuid.UUID, materials Slice[ProcessingPlanMaterial]) (*Slice[ProcessingPlanMaterial], *resty.Response, error) {
+// CreateMaterialMany Создать несколько материалов Тех. карты.
+func (service *processingService) CreateMaterialMany(ctx context.Context, id uuid.UUID, materials ...*ProcessingPlanMaterial) (*Slice[ProcessingPlanMaterial], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
 	return NewRequestBuilder[Slice[ProcessingPlanMaterial]](service.client, path).Post(ctx, materials)
 }
@@ -544,8 +565,8 @@ func (service *processingService) CreateProduct(ctx context.Context, id uuid.UUI
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Post(ctx, product)
 }
 
-// CreateProducts Создать несколько продуктов Тех. карты.
-func (service *processingService) CreateProducts(ctx context.Context, id uuid.UUID, products Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error) {
+// CreateProductMany Создать несколько продуктов Тех. карты.
+func (service *processingService) CreateProductMany(ctx context.Context, id uuid.UUID, products ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/products", service.uri, id)
 	return NewRequestBuilder[Slice[ProcessingPlanProduct]](service.client, path).Post(ctx, products)
 }

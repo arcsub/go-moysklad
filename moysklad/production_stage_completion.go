@@ -11,7 +11,7 @@ import (
 // Ключевое слово: productionstagecompletion
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa
 type ProductionStageCompletion struct {
-	AccountId          *uuid.UUID                                    `json:"accountId,omitempty"`          // ID учетной записи
+	AccountID          *uuid.UUID                                    `json:"accountId,omitempty"`          // ID учетной записи
 	Created            *Timestamp                                    `json:"created,omitempty"`            // Дата создания
 	ExternalCode       *string                                       `json:"externalCode,omitempty"`       // Внешний код Выполнения этапа производства
 	Group              *Group                                        `json:"group,omitempty"`              // Отдел сотрудника
@@ -32,12 +32,13 @@ type ProductionStageCompletion struct {
 	Updated            *Timestamp                                    `json:"updated,omitempty"`            // Момент последнего обновления Выполнения этапа производства
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (productionStageCompletion ProductionStageCompletion) Clean() *ProductionStageCompletion {
 	return &ProductionStageCompletion{Meta: productionStageCompletion.Meta}
 }
 
-func (productionStageCompletion ProductionStageCompletion) GetAccountId() uuid.UUID {
-	return Deref(productionStageCompletion.AccountId)
+func (productionStageCompletion ProductionStageCompletion) GetAccountID() uuid.UUID {
+	return Deref(productionStageCompletion.AccountID)
 }
 
 func (productionStageCompletion ProductionStageCompletion) GetCreated() Timestamp {
@@ -132,8 +133,8 @@ func (productionStageCompletion *ProductionStageCompletion) SetStandardHourUnit(
 	return productionStageCompletion
 }
 
-func (productionStageCompletion *ProductionStageCompletion) SetMaterials(materials *Positions[ProductionStageCompletionMaterial]) *ProductionStageCompletion {
-	productionStageCompletion.Materials = materials
+func (productionStageCompletion *ProductionStageCompletion) SetMaterials(materials ...*ProductionStageCompletionMaterial) *ProductionStageCompletion {
+	productionStageCompletion.Materials = NewPositionsFrom(materials)
 	return productionStageCompletion
 }
 
@@ -177,8 +178,8 @@ func (productionStageCompletion *ProductionStageCompletion) SetProductionVolume(
 	return productionStageCompletion
 }
 
-func (productionStageCompletion *ProductionStageCompletion) SetProducts(products *Positions[ProductionStageCompletionResult]) *ProductionStageCompletion {
-	productionStageCompletion.Products = products
+func (productionStageCompletion *ProductionStageCompletion) SetProducts(products ...*ProductionStageCompletionResult) *ProductionStageCompletion {
+	productionStageCompletion.Products = NewPositionsFrom(products)
 	return productionStageCompletion
 }
 
@@ -191,23 +192,39 @@ func (productionStageCompletion ProductionStageCompletion) String() string {
 	return Stringify(productionStageCompletion)
 }
 
-func (productionStageCompletion ProductionStageCompletion) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStageCompletion) MetaType() MetaType {
 	return MetaTypeProductionStageCompletion
+}
+
+// Update shortcut
+func (productionStageCompletion ProductionStageCompletion) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+	return client.Entity().ProductionStageCompletion().Update(ctx, productionStageCompletion.GetID(), &productionStageCompletion, params...)
+}
+
+// Create shortcut
+func (productionStageCompletion ProductionStageCompletion) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+	return client.Entity().ProductionStageCompletion().Create(ctx, &productionStageCompletion, params...)
+}
+
+// Delete shortcut
+func (productionStageCompletion ProductionStageCompletion) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProductionStageCompletion().Delete(ctx, productionStageCompletion.GetID())
 }
 
 // ProductionStageCompletionMaterial Материалы Выполнения этапа производства
 // Ключевое слово: productionstagecompletionmaterial
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-vypolnenie-atapa-proizwodstwa-materialy-vypolneniq-atapa-proizwodstwa
 type ProductionStageCompletionMaterial struct {
-	AccountId        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
+	AccountID        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
 	Assortment       *AssortmentPosition `json:"assortment,omitempty"`       // Метаданные товара/модификации/серии, которую представляет собой позиция
 	ConsumedQuantity *float64            `json:"consumedQuantity,omitempty"` // Количество товаров/модификаций данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе
 	ID               *uuid.UUID          `json:"id,omitempty"`               // ID позиции
 	Things           Slice[string]       `json:"things,omitempty"`           // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута
 }
 
-func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetAccountId() uuid.UUID {
-	return Deref(productionStageCompletionMaterial.AccountId)
+func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetAccountID() uuid.UUID {
+	return Deref(productionStageCompletionMaterial.AccountID)
 }
 
 func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetAssortment() AssortmentPosition {
@@ -236,8 +253,8 @@ func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetC
 	return productionStageCompletionMaterial
 }
 
-func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetThings(things Slice[string]) *ProductionStageCompletionMaterial {
-	productionStageCompletionMaterial.Things = things
+func (productionStageCompletionMaterial *ProductionStageCompletionMaterial) SetThings(things ...string) *ProductionStageCompletionMaterial {
+	productionStageCompletionMaterial.Things = NewSliceFrom(things)
 	return productionStageCompletionMaterial
 }
 
@@ -245,7 +262,8 @@ func (productionStageCompletionMaterial ProductionStageCompletionMaterial) Strin
 	return Stringify(productionStageCompletionMaterial)
 }
 
-func (productionStageCompletionMaterial ProductionStageCompletionMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStageCompletionMaterial) MetaType() MetaType {
 	return MetaTypeProductionStageCompletionMaterial
 }
 
@@ -253,15 +271,15 @@ func (productionStageCompletionMaterial ProductionStageCompletionMaterial) MetaT
 // Ключевое слово: productionstagecompletionresult
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-vypolnenie-atapa-proizwodstwa-produkty-vypolneniq-atapa-proizwodstwa
 type ProductionStageCompletionResult struct {
-	AccountId        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
+	AccountID        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
 	Assortment       *AssortmentPosition `json:"assortment,omitempty"`       // Метаданные товара/модификации/серии, которую представляет собой позиция
 	ID               *uuid.UUID          `json:"id,omitempty"`               // ID позиции
 	ProducedQuantity *float64            `json:"producedQuantity,omitempty"` // Количество товаров/модификаций данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе
 	Things           Slice[string]       `json:"things,omitempty"`           // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута
 }
 
-func (productionStageCompletionResult ProductionStageCompletionResult) GetAccountId() uuid.UUID {
-	return Deref(productionStageCompletionResult.AccountId)
+func (productionStageCompletionResult ProductionStageCompletionResult) GetAccountID() uuid.UUID {
+	return Deref(productionStageCompletionResult.AccountID)
 }
 
 func (productionStageCompletionResult ProductionStageCompletionResult) GetAssortment() AssortmentPosition {
@@ -290,8 +308,8 @@ func (productionStageCompletionResult *ProductionStageCompletionResult) SetProdu
 	return productionStageCompletionResult
 }
 
-func (productionStageCompletionResult *ProductionStageCompletionResult) SetThings(things Slice[string]) *ProductionStageCompletionResult {
-	productionStageCompletionResult.Things = things
+func (productionStageCompletionResult *ProductionStageCompletionResult) SetThings(things ...string) *ProductionStageCompletionResult {
+	productionStageCompletionResult.Things = NewSliceFrom(things)
 	return productionStageCompletionResult
 }
 
@@ -299,7 +317,8 @@ func (productionStageCompletionResult ProductionStageCompletionResult) String() 
 	return Stringify(productionStageCompletionResult)
 }
 
-func (productionStageCompletionResult ProductionStageCompletionResult) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStageCompletionResult) MetaType() MetaType {
 	return MetaTypeProductionStageCompletionResult
 }
 
@@ -309,7 +328,7 @@ type ProductionStageCompletionService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProductionStageCompletion], *resty.Response, error)
 	Create(ctx context.Context, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productionStageCompletionList Slice[ProductionStageCompletion], params ...*Params) (*Slice[ProductionStageCompletion], *resty.Response, error)
-	DeleteMany(ctx context.Context, productionStageCompletionList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProductionStageCompletion) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)

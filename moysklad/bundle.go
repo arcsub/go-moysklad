@@ -23,41 +23,41 @@ type Bundle struct {
 	Article             *string                     `json:"article,omitempty"`
 	Images              *MetaArray[Image]           `json:"images,omitempty"`
 	Components          *Positions[BundleComponent] `json:"components,omitempty"`
-	Country             *Country                    `json:"country,omitempty"`
+	Country             *NullValue[Country]         `json:"country,omitempty"`
 	DiscountProhibited  *bool                       `json:"discountProhibited"`
 	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`
 	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"`
 	Files               *MetaArray[File]            `json:"files,omitempty"`
 	Group               *Group                      `json:"group,omitempty"`
 	Vat                 *int                        `json:"vat,omitempty"`
-	MinPrice            *MinPrice                   `json:"minPrice,omitempty"`
-	Overhead            *BundleOverhead             `json:"overhead,omitempty"`
+	MinPrice            *NullValue[MinPrice]        `json:"minPrice,omitempty"`
+	Overhead            *NullValue[BundleOverhead]  `json:"overhead,omitempty"`
 	Owner               *Employee                   `json:"owner,omitempty"`
 	PartialDisposal     *bool                       `json:"partialDisposal,omitempty"`
 	PathName            *string                     `json:"pathName,omitempty"`
 	Weight              *float64                    `json:"weight,omitempty"`
-	ProductFolder       *ProductFolder              `json:"productFolder,omitempty"`
+	ProductFolder       *NullValue[ProductFolder]   `json:"productFolder,omitempty"`
 	Shared              *bool                       `json:"shared,omitempty"`
 	Updated             *Timestamp                  `json:"updated,omitempty"`
 	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`
 	Tnved               *string                     `json:"tnved,omitempty"`
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
-	Uom                 *Uom                        `json:"uom,omitempty"`
+	Uom                 *NullValue[Uom]             `json:"uom,omitempty"`
 	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
 	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`
 	Barcodes            Slice[Barcode]              `json:"barcodes,omitempty"`
 	SalePrices          Slice[SalePrice]            `json:"salePrices,omitempty"`
-	Attributes          Slice[AttributeValue]       `json:"attributes,omitempty"`
+	Attributes          Slice[Attribute]            `json:"attributes,omitempty"`
 }
 
-func NewBundleFromAssortment(assortmentPosition AssortmentPosition) *Bundle {
-	return unmarshalAsType[Bundle](assortmentPosition)
+func NewBundleFromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
+	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
-func (bundle Bundle) FromAssortment(assortmentPosition AssortmentPosition) *Bundle {
-	return unmarshalAsType[Bundle](assortmentPosition)
+func (bundle Bundle) FromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
+	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
 func (bundle Bundle) AsAssortment() *AssortmentPosition {
@@ -113,7 +113,7 @@ func (bundle Bundle) GetComponents() Positions[BundleComponent] {
 }
 
 func (bundle Bundle) GetCountry() Country {
-	return Deref(bundle.Country)
+	return bundle.Country.Get()
 }
 
 func (bundle Bundle) GetDiscountProhibited() bool {
@@ -141,11 +141,11 @@ func (bundle Bundle) GetVat() int {
 }
 
 func (bundle Bundle) GetMinPrice() MinPrice {
-	return Deref(bundle.MinPrice)
+	return bundle.MinPrice.Get()
 }
 
 func (bundle Bundle) GetOverhead() BundleOverhead {
-	return Deref(bundle.Overhead)
+	return bundle.Overhead.Get()
 }
 
 func (bundle Bundle) GetOwner() Employee {
@@ -169,7 +169,7 @@ func (bundle Bundle) GetSalePrices() Slice[SalePrice] {
 }
 
 func (bundle Bundle) GetProductFolder() ProductFolder {
-	return Deref(bundle.ProductFolder)
+	return bundle.ProductFolder.Get()
 }
 
 func (bundle Bundle) GetShared() bool {
@@ -193,7 +193,7 @@ func (bundle Bundle) GetVatEnabled() bool {
 }
 
 func (bundle Bundle) GetUom() Uom {
-	return Deref(bundle.Uom)
+	return bundle.Uom.Get()
 }
 
 func (bundle Bundle) GetBarcodes() Slice[Barcode] {
@@ -216,7 +216,7 @@ func (bundle Bundle) GetPaymentItemType() PaymentItem {
 	return bundle.PaymentItemType
 }
 
-func (bundle Bundle) GetAttributes() Slice[AttributeValue] {
+func (bundle Bundle) GetAttributes() Slice[Attribute] {
 	return bundle.Attributes
 }
 
@@ -265,18 +265,23 @@ func (bundle *Bundle) SetArticle(article string) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetImages(images Slice[Image]) *Bundle {
-	bundle.Images = NewMetaArrayRows(images)
+func (bundle *Bundle) SetImages(images ...*Image) *Bundle {
+	bundle.Images = NewMetaArrayFrom(images)
 	return bundle
 }
 
-func (bundle *Bundle) SetComponents(components *Positions[BundleComponent]) *Bundle {
-	bundle.Components = components
+func (bundle *Bundle) SetComponents(components ...*BundleComponent) *Bundle {
+	bundle.Components = NewPositionsFrom(components)
 	return bundle
 }
 
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
-	bundle.Country = country.Clean()
+	bundle.Country = NewNullValueFrom(country.Clean())
+	return bundle
+}
+
+func (bundle *Bundle) SetNullCountry() *Bundle {
+	bundle.Country = NewNullValue[Country]()
 	return bundle
 }
 
@@ -285,8 +290,8 @@ func (bundle *Bundle) SetDiscountProhibited(discountProhibited bool) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetFiles(files Slice[File]) *Bundle {
-	bundle.Files = NewMetaArrayRows(files)
+func (bundle *Bundle) SetFiles(files ...*File) *Bundle {
+	bundle.Files = NewMetaArrayFrom(files)
 	return bundle
 }
 
@@ -301,12 +306,22 @@ func (bundle *Bundle) SetVat(vat int) *Bundle {
 }
 
 func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
-	bundle.MinPrice = minPrice
+	bundle.MinPrice = NewNullValueFrom(minPrice)
+	return bundle
+}
+
+func (bundle *Bundle) SetNullMinPrice() *Bundle {
+	bundle.MinPrice = NewNullValue[MinPrice]()
 	return bundle
 }
 
 func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
-	bundle.Overhead = overhead
+	bundle.Overhead = NewNullValueFrom(overhead)
+	return bundle
+}
+
+func (bundle *Bundle) SetNullOverhead() *Bundle {
+	bundle.Overhead = NewNullValue[BundleOverhead]()
 	return bundle
 }
 
@@ -325,13 +340,18 @@ func (bundle *Bundle) SetWeight(weight float64) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetSalePrices(salePrices Slice[SalePrice]) *Bundle {
+func (bundle *Bundle) SetSalePrices(salePrices ...*SalePrice) *Bundle {
 	bundle.SalePrices = salePrices
 	return bundle
 }
 
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
-	bundle.ProductFolder = productFolder.Clean()
+	bundle.ProductFolder = NewNullValueFrom(productFolder.Clean())
+	return bundle
+}
+
+func (bundle *Bundle) SetNullProductFolder() *Bundle {
+	bundle.ProductFolder = NewNullValue[ProductFolder]()
 	return bundle
 }
 
@@ -351,11 +371,16 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 }
 
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
-	bundle.Uom = uom.Clean()
+	bundle.Uom = NewNullValueFrom(uom.Clean())
 	return bundle
 }
 
-func (bundle *Bundle) SetBarcodes(barcodes Slice[Barcode]) *Bundle {
+func (bundle *Bundle) SetNullUom() *Bundle {
+	bundle.Uom = NewNullValue[Uom]()
+	return bundle
+}
+
+func (bundle *Bundle) SetBarcodes(barcodes ...*Barcode) *Bundle {
 	bundle.Barcodes = barcodes
 	return bundle
 }
@@ -380,7 +405,7 @@ func (bundle *Bundle) SetPaymentItemType(paymentItemType PaymentItem) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetAttributes(attributes Slice[AttributeValue]) *Bundle {
+func (bundle *Bundle) SetAttributes(attributes ...*Attribute) *Bundle {
 	bundle.Attributes = attributes
 	return bundle
 }
@@ -389,8 +414,24 @@ func (bundle Bundle) String() string {
 	return Stringify(bundle)
 }
 
-func (bundle Bundle) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Bundle) MetaType() MetaType {
 	return MetaTypeBundle
+}
+
+// Update shortcut
+func (bundle Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+	return client.Entity().Bundle().Update(ctx, bundle.GetID(), &bundle, params...)
+}
+
+// Create shortcut
+func (bundle Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+	return client.Entity().Bundle().Create(ctx, &bundle, params...)
+}
+
+// Delete shortcut
+func (bundle Bundle) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().Bundle().Delete(ctx, bundle.GetID())
 }
 
 // BundleOverhead Дополнительные расходы
@@ -448,8 +489,8 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 	return Deref(bundleComponent.Quantity)
 }
 
-func (bundleComponent *BundleComponent) SetAssortment(assortment MetaOwner) *BundleComponent {
-	bundleComponent.Assortment = &AssortmentPosition{Meta: assortment.GetMeta()}
+func (bundleComponent *BundleComponent) SetAssortment(assortment AsAssortment) *BundleComponent {
+	bundleComponent.Assortment = assortment.AsAssortment()
 	return bundleComponent
 }
 
@@ -462,7 +503,8 @@ func (bundleComponent BundleComponent) String() string {
 	return Stringify(bundleComponent)
 }
 
-func (bundleComponent BundleComponent) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (BundleComponent) MetaType() MetaType {
 	return MetaTypeBundleComponent
 }
 
@@ -475,7 +517,7 @@ type BundleService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Bundle, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteMany(ctx context.Context, bundleList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*Bundle) (*DeleteManyResponse, *resty.Response, error)
 	GetComponents(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)
 	CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
@@ -483,14 +525,14 @@ type BundleService interface {
 	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
-	UpdateImages(ctx context.Context, id uuid.UUID, images Slice[Image]) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
-	DeleteImages(ctx context.Context, id uuid.UUID, images []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 }
 
 type bundleService struct {

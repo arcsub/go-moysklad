@@ -32,6 +32,7 @@ type ProcessingPlan struct {
 	CostDistributionType CostDistributionType               `json:"costDistributionType,omitempty"` // Тип распределения себестоимости. Возможные значения: BY_PRICE, BY_PRODUCTION
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (processingPlan ProcessingPlan) Clean() *ProcessingPlan {
 	return &ProcessingPlan{Meta: processingPlan.Meta}
 }
@@ -137,13 +138,13 @@ func (processingPlan *ProcessingPlan) SetGroup(group *Group) *ProcessingPlan {
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetStages(stages Slice[ProcessingPlanStages]) *ProcessingPlan {
-	processingPlan.Stages = NewMetaArrayRows(stages)
+func (processingPlan *ProcessingPlan) SetStages(stages ...*ProcessingPlanStages) *ProcessingPlan {
+	processingPlan.Stages = NewMetaArrayFrom(stages)
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetMaterials(materials *Positions[ProcessingPlanMaterial]) *ProcessingPlan {
-	processingPlan.Materials = materials
+func (processingPlan *ProcessingPlan) SetMaterials(materials ...*ProcessingPlanMaterial) *ProcessingPlan {
+	processingPlan.Materials = NewPositionsFrom(materials)
 	return processingPlan
 }
 
@@ -172,8 +173,8 @@ func (processingPlan *ProcessingPlan) SetProcessingProcess(processingProcess *Pr
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetProducts(products *Positions[ProcessingPlanProduct]) *ProcessingPlan {
-	processingPlan.Products = products
+func (processingPlan *ProcessingPlan) SetProducts(products ...*ProcessingPlanProduct) *ProcessingPlan {
+	processingPlan.Products = NewPositionsFrom(products)
 	return processingPlan
 }
 
@@ -186,8 +187,24 @@ func (processingPlan ProcessingPlan) String() string {
 	return Stringify(processingPlan)
 }
 
-func (processingPlan ProcessingPlan) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlan) MetaType() MetaType {
 	return MetaTypeProcessingPlan
+}
+
+// Update shortcut
+func (processingPlan ProcessingPlan) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+	return client.Entity().ProcessingPlan().Update(ctx, processingPlan.GetID(), &processingPlan, params...)
+}
+
+// Create shortcut
+func (processingPlan ProcessingPlan) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+	return client.Entity().ProcessingPlan().Create(ctx, &processingPlan, params...)
+}
+
+// Delete shortcut
+func (processingPlan ProcessingPlan) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ProcessingPlan().Delete(ctx, processingPlan.GetID())
 }
 
 // ProcessingPlanStages Этапы Техкарты.
@@ -241,6 +258,15 @@ func (processingPlanStages *ProcessingPlanStages) SetStandardHour(standardHour f
 	return processingPlanStages
 }
 
+func (processingPlanStages ProcessingPlanStages) String() string {
+	return Stringify(processingPlanStages)
+}
+
+// MetaType возвращает тип сущности.
+func (ProcessingPlanStages) MetaType() MetaType {
+	return MetaTypeProcessingPlanStages
+}
+
 // ProcessingPlanProduct Продукт Тех. карты.
 // Ключевое слово: processingplanresult
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-produkty-tehkarty
@@ -291,7 +317,8 @@ func (processingPlanProduct ProcessingPlanProduct) String() string {
 	return Stringify(processingPlanProduct)
 }
 
-func (processingPlanProduct ProcessingPlanProduct) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlanProduct) MetaType() MetaType {
 	return MetaTypeProcessingPlanProduct
 }
 
@@ -360,7 +387,8 @@ func (processingPlanMaterial ProcessingPlanMaterial) String() string {
 	return Stringify(processingPlanMaterial)
 }
 
-func (processingPlanMaterial ProcessingPlanMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlanMaterial) MetaType() MetaType {
 	return MetaTypeProcessingPlanMaterial
 }
 
@@ -377,7 +405,7 @@ type ProcessingPlanService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlan], *resty.Response, error)
 	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
-	DeleteMany(ctx context.Context, processingPlanList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
@@ -385,11 +413,12 @@ type ProcessingPlanService interface {
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	CreatePositions(ctx context.Context, id uuid.UUID, positions Slice[ProcessingPlanProduct]) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*ProcessingPlanProduct) (*DeleteManyResponse, *resty.Response, error)
 	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*MetaArray[TrackingCode], *resty.Response, error)
-	CreateOrUpdatePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*Slice[TrackingCode], *resty.Response, error)
-	DeletePositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes Slice[TrackingCode]) (*DeleteManyResponse, *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetStages(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error)
 	GetStageByID(ctx context.Context, id, stageID uuid.UUID) (*ProcessingStage, *resty.Response, error)

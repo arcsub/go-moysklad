@@ -91,7 +91,8 @@ type StatesElement struct {
 	Color      int    `json:"color"`
 }
 
-func (metadata Metadata) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Metadata) MetaType() MetaType {
 	return MetaTypeMetadata
 }
 
@@ -118,13 +119,6 @@ type MetaTagsWrapper struct {
 	Tags Slice[string] `json:"tags"`
 }
 
-//type MetadataAttributeSharedPriceTypes struct {
-//	PriceTypes []struct {
-//		Name string `json:"name,omitempty"`
-//	} `json:"priceTypes"`
-//	MetaAttributesSharedWrapper // Наименование
-//}
-
 type MetaNameShared struct {
 	Meta         Meta   `json:"meta,omitempty"`
 	Name         string `json:"name,omitempty"`
@@ -136,13 +130,20 @@ type MetadataCompanySettings struct {
 	CustomEntities Slice[MetaNameShared] `json:"customEntities"`
 }
 
-// MetadataService
-// Сервис для работы с метаданными.
+type metadataService struct {
+	Endpoint
+}
+
+func (service *metadataService) Get(ctx context.Context) (*Metadata, *resty.Response, error) {
+	return NewRequestBuilder[Metadata](service.client, service.uri).Get(ctx)
+}
+
+// MetadataService Сервис для работы с метаданными.
 type MetadataService interface {
-	Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error)
+	Get(ctx context.Context) (*Metadata, *resty.Response, error)
 }
 
 func NewMetadataService(client *Client) MetadataService {
 	e := NewEndpoint(client, "entity/metadata")
-	return newMainService[Metadata, any, any, any](e)
+	return &metadataService{e}
 }

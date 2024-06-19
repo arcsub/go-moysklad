@@ -37,6 +37,7 @@ type Discount struct {
 	data      []byte        // сырые данные для последующей десериализации в нужный тип
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (discount Discount) Clean() *Discount {
 	return &Discount{Meta: discount.Meta}
 }
@@ -89,8 +90,8 @@ func (discount *Discount) SetAllAgents(allAgents bool) *Discount {
 	return discount
 }
 
-func (discount *Discount) SetAgentTags(agentTags Slice[string]) *Discount {
-	discount.AgentTags = agentTags
+func (discount *Discount) SetAgentTags(agentTags ...string) *Discount {
+	discount.AgentTags = NewSliceFrom(agentTags)
 	return discount
 }
 
@@ -98,17 +99,17 @@ func (discount Discount) String() string {
 	return Stringify(discount.Meta)
 }
 
-// MetaType удовлетворяет интерфейсу MetaTyper
-func (discount *Discount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (discount Discount) MetaType() MetaType {
 	return discount.Meta.GetType()
 }
 
-// Raw удовлетворяет интерфейсу RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper
 func (discount *Discount) Raw() []byte {
 	return discount.data
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface.
+// UnmarshalJSON реализует интерфейс json.Unmarshaler
 func (discount *Discount) UnmarshalJSON(data []byte) error {
 	type alias Discount
 	var t alias
@@ -120,32 +121,32 @@ func (discount *Discount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// AsBonusProgram десериализует сырые данные в тип *BonusProgram
+// AsBonusProgram десериализует объект в тип *BonusProgram
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsBonusProgram() *BonusProgram {
-	return unmarshalAsType[BonusProgram](discount)
+	return UnmarshalAsType[BonusProgram](discount)
 }
 
-// AsAccumulationDiscount десериализует сырые данные в тип *AccumulationDiscount
+// AsAccumulationDiscount десериализует объект в тип *AccumulationDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsAccumulationDiscount() *AccumulationDiscount {
-	return unmarshalAsType[AccumulationDiscount](discount)
+	return UnmarshalAsType[AccumulationDiscount](discount)
 }
 
-// AsPersonalDiscount десериализует сырые данные в тип *PersonalDiscount
+// AsPersonalDiscount десериализует объект в тип *PersonalDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsPersonalDiscount() *PersonalDiscount {
-	return unmarshalAsType[PersonalDiscount](discount)
+	return UnmarshalAsType[PersonalDiscount](discount)
 }
 
-// AsSpecialPriceDiscount десериализует сырые данные в тип *SpecialPriceDiscount
+// AsSpecialPriceDiscount десериализует объект в тип *SpecialPriceDiscount
 // Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
 // Возвращает nil в случае неудачи.
 func (discount *Discount) AsSpecialPriceDiscount() *SpecialPriceDiscount {
-	return unmarshalAsType[SpecialPriceDiscount](discount)
+	return UnmarshalAsType[SpecialPriceDiscount](discount)
 }
 
 // AccumulationDiscount Накопительная скидка.
@@ -228,8 +229,8 @@ func (accumulationDiscount *AccumulationDiscount) SetActive(active bool) *Accumu
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags Slice[string]) *AccumulationDiscount {
-	accumulationDiscount.AgentTags = agentTags
+func (accumulationDiscount *AccumulationDiscount) SetAgentTags(agentTags ...string) *AccumulationDiscount {
+	accumulationDiscount.AgentTags = NewSliceFrom(agentTags)
 	return accumulationDiscount
 }
 
@@ -248,12 +249,12 @@ func (accumulationDiscount *AccumulationDiscount) SetAssortment(assortment Assor
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *AccumulationDiscount {
-	accumulationDiscount.ProductFolders = NewMetaArrayRows(productFolders)
+func (accumulationDiscount *AccumulationDiscount) SetProductFolders(productFolders ...*ProductFolder) *AccumulationDiscount {
+	accumulationDiscount.ProductFolders = NewMetaArrayFrom(productFolders)
 	return accumulationDiscount
 }
 
-func (accumulationDiscount *AccumulationDiscount) SetLevels(levels Slice[AccumulationLevel]) *AccumulationDiscount {
+func (accumulationDiscount *AccumulationDiscount) SetLevels(levels ...*AccumulationLevel) *AccumulationDiscount {
 	accumulationDiscount.Levels = levels
 	return accumulationDiscount
 }
@@ -262,7 +263,8 @@ func (accumulationDiscount AccumulationDiscount) String() string {
 	return Stringify(accumulationDiscount)
 }
 
-func (accumulationDiscount AccumulationDiscount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (AccumulationDiscount) MetaType() MetaType {
 	return MetaTypeAccumulationDiscount
 }
 
@@ -306,6 +308,7 @@ type PersonalDiscount struct {
 	Assortment     Assortment                `json:"assortment,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (personalDiscount PersonalDiscount) Clean() *PersonalDiscount {
 	return &PersonalDiscount{Meta: personalDiscount.Meta}
 }
@@ -365,8 +368,8 @@ func (personalDiscount *PersonalDiscount) SetActive(active bool) *PersonalDiscou
 	return personalDiscount
 }
 
-func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags Slice[string]) *PersonalDiscount {
-	personalDiscount.AgentTags = agentTags
+func (personalDiscount *PersonalDiscount) SetAgentTags(agentTags ...string) *PersonalDiscount {
+	personalDiscount.AgentTags = NewSliceFrom(agentTags)
 	return personalDiscount
 }
 
@@ -385,8 +388,8 @@ func (personalDiscount *PersonalDiscount) SetAssortment(assortment Assortment) *
 	return personalDiscount
 }
 
-func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *PersonalDiscount {
-	personalDiscount.ProductFolders = NewMetaArrayRows(productFolders)
+func (personalDiscount *PersonalDiscount) SetProductFolders(productFolders ...*ProductFolder) *PersonalDiscount {
+	personalDiscount.ProductFolders = NewMetaArrayFrom(productFolders)
 	return personalDiscount
 }
 
@@ -394,7 +397,8 @@ func (personalDiscount PersonalDiscount) String() string {
 	return Stringify(personalDiscount)
 }
 
-func (personalDiscount PersonalDiscount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PersonalDiscount) MetaType() MetaType {
 	return MetaTypePersonalDiscount
 }
 
@@ -417,6 +421,7 @@ type SpecialPriceDiscount struct {
 	AgentTags      Slice[string]             `json:"agentTags,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (specialPriceDiscount SpecialPriceDiscount) Clean() *SpecialPriceDiscount {
 	return &SpecialPriceDiscount{Meta: specialPriceDiscount.Meta}
 }
@@ -488,8 +493,8 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetActive(active bool) *Specia
 	return specialPriceDiscount
 }
 
-func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags Slice[string]) *SpecialPriceDiscount {
-	specialPriceDiscount.AgentTags = agentTags
+func (specialPriceDiscount *SpecialPriceDiscount) SetAgentTags(agentTags ...string) *SpecialPriceDiscount {
+	specialPriceDiscount.AgentTags = NewSliceFrom(agentTags)
 	return specialPriceDiscount
 }
 
@@ -513,8 +518,8 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetAssortment(assortment Assor
 	return specialPriceDiscount
 }
 
-func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders Slice[ProductFolder]) *SpecialPriceDiscount {
-	specialPriceDiscount.ProductFolders = NewMetaArrayRows(productFolders)
+func (specialPriceDiscount *SpecialPriceDiscount) SetProductFolders(productFolders ...*ProductFolder) *SpecialPriceDiscount {
+	specialPriceDiscount.ProductFolders = NewMetaArrayFrom(productFolders)
 	return specialPriceDiscount
 }
 
@@ -532,7 +537,8 @@ func (specialPriceDiscount SpecialPriceDiscount) String() string {
 	return Stringify(specialPriceDiscount)
 }
 
-func (specialPriceDiscount SpecialPriceDiscount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SpecialPriceDiscount) MetaType() MetaType {
 	return MetaTypeSpecialPriceDiscount
 }
 

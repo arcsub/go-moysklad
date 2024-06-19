@@ -14,6 +14,7 @@ type PriceType struct {
 	Name         *string    `json:"name,omitempty"`         // Наименование Типа цены
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (priceType PriceType) Clean() *PriceType {
 	return &PriceType{Meta: priceType.Meta}
 }
@@ -53,6 +54,7 @@ func (priceType PriceType) String() string {
 	return Stringify(priceType)
 }
 
-func (priceType PriceType) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PriceType) MetaType() MetaType {
 	return MetaTypePriceType
 }

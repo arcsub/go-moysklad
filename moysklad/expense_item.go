@@ -20,6 +20,7 @@ type ExpenseItem struct {
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (expenseItem ExpenseItem) Clean() *ExpenseItem {
 	return &ExpenseItem{Meta: expenseItem.Meta}
 }
@@ -85,8 +86,24 @@ func (expenseItem ExpenseItem) String() string {
 	return Stringify(expenseItem)
 }
 
-func (expenseItem ExpenseItem) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ExpenseItem) MetaType() MetaType {
 	return MetaTypeExpenseItem
+}
+
+// Update shortcut
+func (expenseItem ExpenseItem) Update(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+	return client.Entity().ExpenseItem().Update(ctx, expenseItem.GetID(), &expenseItem, params...)
+}
+
+// Create shortcut
+func (expenseItem ExpenseItem) Create(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+	return client.Entity().ExpenseItem().Create(ctx, &expenseItem, params...)
+}
+
+// Delete shortcut
+func (expenseItem ExpenseItem) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().ExpenseItem().Delete(ctx, expenseItem.GetID())
 }
 
 // ExpenseItemService
@@ -95,7 +112,7 @@ type ExpenseItemService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ExpenseItem], *resty.Response, error)
 	Create(ctx context.Context, expenseItem *ExpenseItem, params ...*Params) (*ExpenseItem, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, expenseItemList Slice[ExpenseItem], params ...*Params) (*Slice[ExpenseItem], *resty.Response, error)
-	DeleteMany(ctx context.Context, expenseItemList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*ExpenseItem) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ExpenseItem, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, expenseItem *ExpenseItem, params ...*Params) (*ExpenseItem, *resty.Response, error)

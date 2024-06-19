@@ -10,36 +10,42 @@ import (
 // Ключевое слово: retaildrawercashout
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vyplata-deneg
 type RetailDrawerCashOut struct {
-	Meta         *Meta                 `json:"meta,omitempty"`
-	Applicable   *bool                 `json:"applicable,omitempty"`
-	Moment       *Timestamp            `json:"moment,omitempty"`
-	Name         *string               `json:"name,omitempty"`
-	Code         *string               `json:"code,omitempty"`
-	Created      *Timestamp            `json:"created,omitempty"`
-	Deleted      *Timestamp            `json:"deleted,omitempty"`
-	Description  *string               `json:"description,omitempty"`
-	ExternalCode *string               `json:"externalCode,omitempty"`
-	Files        *MetaArray[File]      `json:"files,omitempty"`
-	Group        *Group                `json:"group,omitempty"`
-	ID           *uuid.UUID            `json:"id,omitempty"`
-	RetailShift  *RetailShift          `json:"retailShift,omitempty"`
-	Agent        *Counterparty         `json:"agent,omitempty"`
-	AccountID    *uuid.UUID            `json:"accountId,omitempty"`
-	Organization *Organization         `json:"organization,omitempty"`
-	Owner        *Employee             `json:"owner,omitempty"`
-	Printed      *bool                 `json:"printed,omitempty"`
-	Published    *bool                 `json:"published,omitempty"`
-	Rate         *Rate                 `json:"rate,omitempty"`
-	Shared       *bool                 `json:"shared,omitempty"`
-	State        *State                `json:"state,omitempty"`
-	Sum          *float64              `json:"sum,omitempty"`
-	SyncID       *uuid.UUID            `json:"syncId,omitempty"`
-	Updated      *Timestamp            `json:"updated,omitempty"`
-	Attributes   Slice[AttributeValue] `json:"attributes,omitempty"`
+	Meta         *Meta             `json:"meta,omitempty"`
+	Applicable   *bool             `json:"applicable,omitempty"`
+	Moment       *Timestamp        `json:"moment,omitempty"`
+	Name         *string           `json:"name,omitempty"`
+	Code         *string           `json:"code,omitempty"`
+	Created      *Timestamp        `json:"created,omitempty"`
+	Deleted      *Timestamp        `json:"deleted,omitempty"`
+	Description  *string           `json:"description,omitempty"`
+	ExternalCode *string           `json:"externalCode,omitempty"`
+	Files        *MetaArray[File]  `json:"files,omitempty"`
+	Group        *Group            `json:"group,omitempty"`
+	ID           *uuid.UUID        `json:"id,omitempty"`
+	RetailShift  *RetailShift      `json:"retailShift,omitempty"`
+	Agent        *Counterparty     `json:"agent,omitempty"`
+	AccountID    *uuid.UUID        `json:"accountId,omitempty"`
+	Organization *Organization     `json:"organization,omitempty"`
+	Owner        *Employee         `json:"owner,omitempty"`
+	Printed      *bool             `json:"printed,omitempty"`
+	Published    *bool             `json:"published,omitempty"`
+	Rate         *NullValue[Rate]  `json:"rate,omitempty"`
+	Shared       *bool             `json:"shared,omitempty"`
+	State        *NullValue[State] `json:"state,omitempty"`
+	Sum          *float64          `json:"sum,omitempty"`
+	SyncID       *uuid.UUID        `json:"syncId,omitempty"`
+	Updated      *Timestamp        `json:"updated,omitempty"`
+	Attributes   Slice[Attribute]  `json:"attributes,omitempty"`
 }
 
+// Clean возвращает сущность с единственным заполненным полем Meta
 func (retailDrawerCashOut RetailDrawerCashOut) Clean() *RetailDrawerCashOut {
 	return &RetailDrawerCashOut{Meta: retailDrawerCashOut.Meta}
+}
+
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+func (retailDrawerCashOut RetailDrawerCashOut) AsTaskOperation() *TaskOperation {
+	return &TaskOperation{Meta: retailDrawerCashOut.Meta}
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetMeta() Meta {
@@ -119,7 +125,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetPublished() bool {
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetRate() Rate {
-	return Deref(retailDrawerCashOut.Rate)
+	return retailDrawerCashOut.Rate.Get()
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetShared() bool {
@@ -127,7 +133,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetShared() bool {
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetState() State {
-	return Deref(retailDrawerCashOut.State)
+	return retailDrawerCashOut.State.Get()
 }
 
 func (retailDrawerCashOut RetailDrawerCashOut) GetSum() float64 {
@@ -142,7 +148,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetUpdated() Timestamp {
 	return Deref(retailDrawerCashOut.Updated)
 }
 
-func (retailDrawerCashOut RetailDrawerCashOut) GetAttributes() Slice[AttributeValue] {
+func (retailDrawerCashOut RetailDrawerCashOut) GetAttributes() Slice[Attribute] {
 	return retailDrawerCashOut.Attributes
 }
 
@@ -181,8 +187,8 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetExternalCode(externalCode str
 	return retailDrawerCashOut
 }
 
-func (retailDrawerCashOut *RetailDrawerCashOut) SetFiles(files Slice[File]) *RetailDrawerCashOut {
-	retailDrawerCashOut.Files = NewMetaArrayRows(files)
+func (retailDrawerCashOut *RetailDrawerCashOut) SetFiles(files ...*File) *RetailDrawerCashOut {
+	retailDrawerCashOut.Files = NewMetaArrayFrom(files)
 	return retailDrawerCashOut
 }
 
@@ -212,7 +218,12 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetOwner(owner *Employee) *Retai
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetRate(rate *Rate) *RetailDrawerCashOut {
-	retailDrawerCashOut.Rate = rate
+	retailDrawerCashOut.Rate = NewNullValueFrom(rate)
+	return retailDrawerCashOut
+}
+
+func (retailDrawerCashOut *RetailDrawerCashOut) SetNullRate() *RetailDrawerCashOut {
+	retailDrawerCashOut.Rate = NewNullValue[Rate]()
 	return retailDrawerCashOut
 }
 
@@ -222,7 +233,12 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetShared(shared bool) *RetailDr
 }
 
 func (retailDrawerCashOut *RetailDrawerCashOut) SetState(state *State) *RetailDrawerCashOut {
-	retailDrawerCashOut.State = state.Clean()
+	retailDrawerCashOut.State = NewNullValueFrom(state.Clean())
+	return retailDrawerCashOut
+}
+
+func (retailDrawerCashOut *RetailDrawerCashOut) SetNullState() *RetailDrawerCashOut {
+	retailDrawerCashOut.State = NewNullValue[State]()
 	return retailDrawerCashOut
 }
 
@@ -231,7 +247,7 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetSyncID(syncID uuid.UUID) *Ret
 	return retailDrawerCashOut
 }
 
-func (retailDrawerCashOut *RetailDrawerCashOut) SetAttributes(attributes Slice[AttributeValue]) *RetailDrawerCashOut {
+func (retailDrawerCashOut *RetailDrawerCashOut) SetAttributes(attributes ...*Attribute) *RetailDrawerCashOut {
 	retailDrawerCashOut.Attributes = attributes
 	return retailDrawerCashOut
 }
@@ -240,8 +256,24 @@ func (retailDrawerCashOut RetailDrawerCashOut) String() string {
 	return Stringify(retailDrawerCashOut)
 }
 
-func (retailDrawerCashOut RetailDrawerCashOut) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailDrawerCashOut) MetaType() MetaType {
 	return MetaTypeRetailDrawerCashOut
+}
+
+// Update shortcut
+func (retailDrawerCashOut RetailDrawerCashOut) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error) {
+	return client.Entity().RetailDrawerCashOut().Update(ctx, retailDrawerCashOut.GetID(), &retailDrawerCashOut, params...)
+}
+
+// Create shortcut
+func (retailDrawerCashOut RetailDrawerCashOut) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error) {
+	return client.Entity().RetailDrawerCashOut().Create(ctx, &retailDrawerCashOut, params...)
+}
+
+// Delete shortcut
+func (retailDrawerCashOut RetailDrawerCashOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return client.Entity().RetailDrawerCashOut().Delete(ctx, retailDrawerCashOut.GetID())
 }
 
 // RetailDrawerCashOutService
@@ -250,22 +282,22 @@ type RetailDrawerCashOutService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[RetailDrawerCashOut], *resty.Response, error)
 	Create(ctx context.Context, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, retailDrawerCashOutList Slice[RetailDrawerCashOut], params ...*Params) (*Slice[RetailDrawerCashOut], *resty.Response, error)
-	DeleteMany(ctx context.Context, retailDrawerCashOutList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...*RetailDrawerCashOut) (*DeleteManyResponse, *resty.Response, error)
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	//endpointTemplate[RetailDrawerCashOut]
+	Template(ctx context.Context) (*RetailDrawerCashOut, *resty.Response, error)
 	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
 	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
-	CreateAttributes(ctx context.Context, attributeList Slice[Attribute]) (*Slice[Attribute], *resty.Response, error)
+	CreateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	DeleteAttributes(ctx context.Context, attributeList []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
-	Publish(ctx context.Context, id uuid.UUID, template Templater) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailDrawerCashOut, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -275,13 +307,13 @@ type RetailDrawerCashOutService interface {
 	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
 	CreateState(ctx context.Context, state *State) (*State, *resty.Response, error)
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
-	CreateOrUpdateStates(ctx context.Context, states Slice[State]) (*Slice[State], *resty.Response, error)
+	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
-	UpdateFiles(ctx context.Context, id uuid.UUID, files Slice[File]) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
-	DeleteFiles(ctx context.Context, id uuid.UUID, files []MetaWrapper) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 func NewRetailDrawerCashOutService(client *Client) RetailDrawerCashOutService {
