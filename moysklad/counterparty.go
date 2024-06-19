@@ -625,7 +625,7 @@ type CounterpartyService interface {
 	GetSettings(ctx context.Context) (*CounterpartySettings, *resty.Response, error)
 	UpdateSettings(ctx context.Context, settings *CounterpartySettings) (*CounterpartySettings, *resty.Response, error)
 	GetAccounts(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
-	GetAccountByID(ctx context.Context, id uuid.UUID, accountId uuid.UUID) (*AgentAccount, *resty.Response, error)
+	GetAccountByID(ctx context.Context, id uuid.UUID, accountID uuid.UUID) (*AgentAccount, *resty.Response, error)
 	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Counterparty, *resty.Response, error)
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
@@ -633,7 +633,7 @@ type CounterpartyService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 	GetAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
 	GetContactPersons(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error)
-	GetContactPersonById(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error)
+	GetContactPersonByID(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error)
 	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error)
 	UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
 	GetNotes(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error)
@@ -702,9 +702,9 @@ func (service *counterpartyService) GetContactPersons(ctx context.Context, id uu
 	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params...).Get(ctx)
 }
 
-// GetContactPersonById Получить контактное лицо.
+// GetContactPersonByID Получить контактное лицо.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-poluchit-kontaktnoe-lico
-func (service *counterpartyService) GetContactPersonById(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error) {
+func (service *counterpartyService) GetContactPersonByID(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonID)
 	return NewRequestBuilder[ContactPerson](service.client, path).Get(ctx)
 }

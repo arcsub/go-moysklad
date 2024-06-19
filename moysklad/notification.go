@@ -135,7 +135,7 @@ type NotificationExportCompleted struct {
 	TaskState           NotificationTaskState `json:"taskState"`
 	TaskType            NotificationTaskType  `json:"taskType"`
 	Title               string                `json:"title"`
-	AccountId           uuid.UUID             `json:"accountId"`
+	AccountID           uuid.UUID             `json:"accountId"`
 	ID                  uuid.UUID             `json:"id"`
 	Read                bool                  `json:"read"`
 }

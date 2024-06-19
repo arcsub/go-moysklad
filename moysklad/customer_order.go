@@ -639,7 +639,7 @@ type EventNote struct {
 	Description string    `json:"description,omitempty"`
 	Author      Employee  `json:"author,omitempty"`
 	ID          uuid.UUID `json:"id,omitempty"`
-	AccountId   uuid.UUID `json:"accountId,omitempty"`
+	AccountID   uuid.UUID `json:"accountId,omitempty"`
 }
 
 type customerOrderService struct {

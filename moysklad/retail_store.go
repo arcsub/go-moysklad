@@ -64,7 +64,7 @@ type RetailStore struct {
 	QRAcquire                           *Counterparty             `json:"qrAcquire,omitempty"`
 	QRBankPercent                       *float64                  `json:"qrBankPercent,omitempty"`
 	QRPayEnabled                        *bool                     `json:"qrPayEnabled,omitempty"`
-	QRTerminalId                        *string                   `json:"qrTerminalId,omitempty"`
+	QRTerminalID                        *string                   `json:"qrTerminalId,omitempty"`
 	ReceiptTemplate                     *Meta                     `json:"receiptTemplate,omitempty"`
 	RequiredFio                         *bool                     `json:"requiredFio,omitempty"`
 	RequiredPhone                       *bool                     `json:"requiredPhone,omitempty"`
@@ -203,7 +203,7 @@ func (retailStore RetailStore) GetStore() Store {
 	return Deref(retailStore.Store)
 }
 
-func (retailStore RetailStore) GetIdQR() string {
+func (retailStore RetailStore) GetIDQR() string {
 	return Deref(retailStore.IDQR)
 }
 
@@ -303,8 +303,8 @@ func (retailStore RetailStore) GetQRPayEnabled() bool {
 	return Deref(retailStore.QRPayEnabled)
 }
 
-func (retailStore RetailStore) GetQRTerminalId() string {
-	return Deref(retailStore.QRTerminalId)
+func (retailStore RetailStore) GetQRTerminalID() string {
+	return Deref(retailStore.QRTerminalID)
 }
 
 func (retailStore RetailStore) GetReceiptTemplate() Meta {
@@ -603,8 +603,8 @@ func (retailStore *RetailStore) SetQRPayEnabled(qrPayEnabled bool) *RetailStore 
 	return retailStore
 }
 
-func (retailStore *RetailStore) SetQRTerminalId(qrTerminalId string) *RetailStore {
-	retailStore.QRTerminalId = &qrTerminalId
+func (retailStore *RetailStore) SetQRTerminalID(qrTerminalID string) *RetailStore {
+	retailStore.QRTerminalID = &qrTerminalID
 	return retailStore
 }
 

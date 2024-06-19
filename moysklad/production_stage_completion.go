@@ -11,7 +11,7 @@ import (
 // Ключевое слово: productionstagecompletion
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa
 type ProductionStageCompletion struct {
-	AccountId          *uuid.UUID                                    `json:"accountId,omitempty"`          // ID учетной записи
+	AccountID          *uuid.UUID                                    `json:"accountId,omitempty"`          // ID учетной записи
 	Created            *Timestamp                                    `json:"created,omitempty"`            // Дата создания
 	ExternalCode       *string                                       `json:"externalCode,omitempty"`       // Внешний код Выполнения этапа производства
 	Group              *Group                                        `json:"group,omitempty"`              // Отдел сотрудника
@@ -37,8 +37,8 @@ func (productionStageCompletion ProductionStageCompletion) Clean() *ProductionSt
 	return &ProductionStageCompletion{Meta: productionStageCompletion.Meta}
 }
 
-func (productionStageCompletion ProductionStageCompletion) GetAccountId() uuid.UUID {
-	return Deref(productionStageCompletion.AccountId)
+func (productionStageCompletion ProductionStageCompletion) GetAccountID() uuid.UUID {
+	return Deref(productionStageCompletion.AccountID)
 }
 
 func (productionStageCompletion ProductionStageCompletion) GetCreated() Timestamp {
@@ -215,15 +215,15 @@ func (productionStageCompletion ProductionStageCompletion) Delete(ctx context.Co
 // Ключевое слово: productionstagecompletionmaterial
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-vypolnenie-atapa-proizwodstwa-materialy-vypolneniq-atapa-proizwodstwa
 type ProductionStageCompletionMaterial struct {
-	AccountId        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
+	AccountID        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
 	Assortment       *AssortmentPosition `json:"assortment,omitempty"`       // Метаданные товара/модификации/серии, которую представляет собой позиция
 	ConsumedQuantity *float64            `json:"consumedQuantity,omitempty"` // Количество товаров/модификаций данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе
 	ID               *uuid.UUID          `json:"id,omitempty"`               // ID позиции
 	Things           Slice[string]       `json:"things,omitempty"`           // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута
 }
 
-func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetAccountId() uuid.UUID {
-	return Deref(productionStageCompletionMaterial.AccountId)
+func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetAccountID() uuid.UUID {
+	return Deref(productionStageCompletionMaterial.AccountID)
 }
 
 func (productionStageCompletionMaterial ProductionStageCompletionMaterial) GetAssortment() AssortmentPosition {
@@ -269,15 +269,15 @@ func (productionStageCompletionMaterial ProductionStageCompletionMaterial) MetaT
 // Ключевое слово: productionstagecompletionresult
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-vypolnenie-atapa-proizwodstwa-produkty-vypolneniq-atapa-proizwodstwa
 type ProductionStageCompletionResult struct {
-	AccountId        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
+	AccountID        *uuid.UUID          `json:"accountId,omitempty"`        // ID учетной записи
 	Assortment       *AssortmentPosition `json:"assortment,omitempty"`       // Метаданные товара/модификации/серии, которую представляет собой позиция
 	ID               *uuid.UUID          `json:"id,omitempty"`               // ID позиции
 	ProducedQuantity *float64            `json:"producedQuantity,omitempty"` // Количество товаров/модификаций данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе
 	Things           Slice[string]       `json:"things,omitempty"`           // Серийные номера. Значение данного атрибута игнорируется, если товар позиции не находится на серийном учете. В ином случае количество товаров в позиции будет равно количеству серийных номеров, переданных в значении атрибута
 }
 
-func (productionStageCompletionResult ProductionStageCompletionResult) GetAccountId() uuid.UUID {
-	return Deref(productionStageCompletionResult.AccountId)
+func (productionStageCompletionResult ProductionStageCompletionResult) GetAccountID() uuid.UUID {
+	return Deref(productionStageCompletionResult.AccountID)
 }
 
 func (productionStageCompletionResult ProductionStageCompletionResult) GetAssortment() AssortmentPosition {

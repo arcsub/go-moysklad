@@ -152,7 +152,7 @@ type ContextCompanySettingsService interface {
 	GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error)
 	CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error)
 	UpdatePriceTypeMany(ctx context.Context, priceTypes ...*PriceType) (*Slice[PriceType], *resty.Response, error)
-	GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
+	GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
 	GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error)
 }
 
@@ -200,9 +200,9 @@ func (service *contextCompanySettingsService) UpdatePriceTypeMany(ctx context.Co
 	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
 }
 
-// GetPriceTypeById Получить тип цены по ID.
+// GetPriceTypeByID Получить тип цены по ID.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-poluchit-tip-ceny-po-id
-func (service *contextCompanySettingsService) GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
 	path := fmt.Sprintf("context/companysettings/pricetype/%s", id)
 	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
 }

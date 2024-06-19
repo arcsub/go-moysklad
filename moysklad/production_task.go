@@ -13,7 +13,7 @@ import (
 type ProductionTask struct {
 	Moment                *Timestamp                       `json:"moment,omitempty"`
 	Created               *Timestamp                       `json:"created,omitempty"`
-	AccountId             *uuid.UUID                       `json:"accountId,omitempty"`
+	AccountID             *uuid.UUID                       `json:"accountId,omitempty"`
 	Code                  *string                          `json:"code,omitempty"`
 	Name                  *string                          `json:"name,omitempty"`
 	Deleted               *Timestamp                       `json:"deleted,omitempty"`
@@ -60,8 +60,8 @@ func (productionTask ProductionTask) GetCreated() Timestamp {
 	return Deref(productionTask.Created)
 }
 
-func (productionTask ProductionTask) GetAccountId() uuid.UUID {
-	return Deref(productionTask.AccountId)
+func (productionTask ProductionTask) GetAccountID() uuid.UUID {
+	return Deref(productionTask.AccountID)
 }
 
 func (productionTask ProductionTask) GetCode() string {
@@ -305,7 +305,7 @@ func (productionTask ProductionTask) Delete(ctx context.Context, client *Client)
 // Ключевое слово: productionrow
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-zadaniq-pozicii-proizwodstwennogo-zadaniq
 type ProductionRow struct {
-	AccountId        *uuid.UUID      `json:"accountId,omitempty"`        // ID учетной записи
+	AccountID        *uuid.UUID      `json:"accountId,omitempty"`        // ID учетной записи
 	ExternalCode     *string         `json:"externalCode,omitempty"`     // Внешний код
 	ID               *uuid.UUID      `json:"id,omitempty"`               // ID позиции
 	Name             *string         `json:"name,omitempty"`             // Наименование
@@ -314,8 +314,8 @@ type ProductionRow struct {
 	Updated          *Timestamp      `json:"updated,omitempty"`          // Момент последнего обновления Производственного задания
 }
 
-func (productionRow ProductionRow) GetAccountId() uuid.UUID {
-	return Deref(productionRow.AccountId)
+func (productionRow ProductionRow) GetAccountID() uuid.UUID {
+	return Deref(productionRow.AccountID)
 }
 
 func (productionRow ProductionRow) GetExternalCode() string {
@@ -374,15 +374,15 @@ func (productionRow ProductionRow) MetaType() MetaType {
 // Ключевое слово: productiontaskresult
 // https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-zadaniq-produkty-proizwodstwennogo-zadaniq
 type ProductionTaskResult struct {
-	AccountId     *uuid.UUID          `json:"accountId,omitempty"`     // ID учетной записи
+	AccountID     *uuid.UUID          `json:"accountId,omitempty"`     // ID учетной записи
 	Assortment    *AssortmentPosition `json:"assortment,omitempty"`    // Ссылка на товар/серию/модификацию, которую представляет собой позиция.
 	ID            *uuid.UUID          `json:"id,omitempty"`            // ID позиции
 	PlanQuantity  *float64            `json:"planQuantity,omitempty"`  // Запланированное для производства количество продукта
 	ProductionRow *ProductionRow      `json:"productionRow,omitempty"` // Метаданные Позиции производственного задания
 }
 
-func (productionTaskResult ProductionTaskResult) GetAccountId() uuid.UUID {
-	return Deref(productionTaskResult.AccountId)
+func (productionTaskResult ProductionTaskResult) GetAccountID() uuid.UUID {
+	return Deref(productionTaskResult.AccountID)
 }
 
 func (productionTaskResult ProductionTaskResult) GetAssortment() AssortmentPosition {
