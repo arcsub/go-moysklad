@@ -1,5 +1,16 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
+![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad)
+![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad)
+![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad)
+
+<a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">
+<p align="center">
+  <img src="https://github.com/arcsub/go-moysklad/assets/47686389/4565b816-dfcc-4393-b8ea-12a5cba51485" width="130px">
+</p>
+</a>
+
 # go-moysklad (МойСклад)
 
 SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api)
@@ -10,7 +21,7 @@ SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.
 
 ## Установка
 
-> Требуемая версия go >= 1.9
+> Требуемая версия go >= 1.21
 > 
 ```
 go get -u github.com/arcsub/go-moysklad
@@ -385,7 +396,7 @@ func main() {
   product.SetName("Created Product")
 
   // отправим запрос на создание товара
-  // в качестве аргументов передадим контекст, указатель на товар
+  // в качестве аргументов передадим контекст и товар
   productCreated, _, err := productService.Create(context.Background(), product)
   if err != nil {
     panic(err)
@@ -398,7 +409,7 @@ func main() {
   productCreated.SetName("Updated Product")
 
   // отправим запрос на изменение товара
-  // в качестве аргументов передадим контекст, указатель на ID изменяемой сущности, указатель на изменённый товар
+  // в качестве аргументов передадим контекст, ID изменяемой сущности и изменённый товар
   productUpdated, _, err := productService.Update(context.Background(), productCreated.GetID(), productCreated)
   if err != nil {
     panic(err)
@@ -408,7 +419,7 @@ func main() {
   fmt.Println(productUpdated.GetName())
 
   // отправим запрос на удаление товара
-  // в качестве аргументов передадим контекст и указатель на ID удаляемой сущности
+  // в качестве аргументов передадим контекст и ID удаляемой сущности
   success, _, err := productService.Delete(context.Background(), productUpdated.GetID())
   if err != nil {
     panic(err)
