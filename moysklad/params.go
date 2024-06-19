@@ -117,7 +117,7 @@ const (
 	FilterEquals           FilterType = "="  // Фильтрация по значению
 	FilterGreater          FilterType = ">"  // Больше
 	FilterLesser           FilterType = "<"  // Меньше
-	FilterGreaterOrEquals  FilterType = "=>" // Больше или равно
+	FilterGreaterOrEquals  FilterType = ">=" // Больше или равно
 	FilterLesserOrEquals   FilterType = "<=" // Меньше или равно
 	FilterNotEquals        FilterType = "!=" // Не равно
 	FilterEquivalence      FilterType = "~"  // Подобие
@@ -152,7 +152,7 @@ func (params *Params) WithFilterLesser(key, value string) *Params {
 }
 
 // WithFilterGreaterOrEquals Больше или равно.
-// key=>value
+// key>=value
 func (params *Params) WithFilterGreaterOrEquals(key, value string) *Params {
 	params.Filter = append(params.Filter, newFilterParam(key, value, FilterGreaterOrEquals))
 	return params
