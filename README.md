@@ -1,15 +1,10 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
+[![](https://godoc.org/github.com/arcsub/go-moysklad?status.svg)](http://godoc.org/github.com/arcsub/go-moysklad)
 ![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad)
 ![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad)
 ![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad)
-
-<a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">
-<p align="center">
-  <img src="https://github.com/arcsub/go-moysklad/assets/47686389/4565b816-dfcc-4393-b8ea-12a5cba51485" width="130px">
-</p>
-</a>
 
 # go-moysklad (МойСклад)
 
@@ -431,3 +426,12 @@ func main() {
   fmt.Println("Deleted", success)
 }
 ```
+
+
+<div align="center">
+  <a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">
+  <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6431baa5-28e4-48b6-8d97-0e50bb6646d2" width="150px">
+<div align="center">Поддержать проект</div>
+</a>
+</div>
+<br/>
