@@ -1,5 +1,6 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
+[![](https://godoc.org/github.com/arcsub/go-moysklad?status.svg)](http://godoc.org/github.com/arcsub/go-moysklad)
 ![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad)
 ![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad)
