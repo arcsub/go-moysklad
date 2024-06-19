@@ -171,7 +171,7 @@ params.WithFilterGreater("sum", "100")
 params.WithFilterLesser("sum", "1000")
 ```
 
-#### Больше или равно `key>=value`
+#### Больше или равно `key=>value`
 Пример:
 ```go
 params.WithFilterGreaterOrEquals("moment", "2023-06-01")
