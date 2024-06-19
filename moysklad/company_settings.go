@@ -151,7 +151,7 @@ type ContextCompanySettingsService interface {
 	GetMetadata(ctx context.Context) (*MetadataCompanySettings, *resty.Response, error)
 	GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error)
 	CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error)
-	UpdatePriceTypes(ctx context.Context, priceTypeList Slice[PriceType]) (*Slice[PriceType], *resty.Response, error)
+	UpdatePriceTypeMany(ctx context.Context, priceTypes ...*PriceType) (*Slice[PriceType], *resty.Response, error)
 	GetPriceTypeById(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
 	GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error)
 }
@@ -193,11 +193,11 @@ func (service *contextCompanySettingsService) CreatePriceType(ctx context.Contex
 	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
 }
 
-// UpdatePriceTypes Редактирование списка типов цен.
+// UpdatePriceTypeMany Редактирование списка типов цен.
 // Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen-redaktirowanie-spiska-tipow-cen
-func (service *contextCompanySettingsService) UpdatePriceTypes(ctx context.Context, priceTypeList Slice[PriceType]) (*Slice[PriceType], *resty.Response, error) {
+func (service *contextCompanySettingsService) UpdatePriceTypeMany(ctx context.Context, priceTypes ...*PriceType) (*Slice[PriceType], *resty.Response, error) {
 	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypeList)
+	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
 }
 
 // GetPriceTypeById Получить тип цены по ID.
