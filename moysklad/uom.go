@@ -116,7 +116,8 @@ func (uom Uom) String() string {
 	return Stringify(uom)
 }
 
-func (uom Uom) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Uom) MetaType() MetaType {
 	return MetaTypeUom
 }
 

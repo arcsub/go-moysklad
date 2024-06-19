@@ -136,7 +136,8 @@ func (processingStage ProcessingStage) String() string {
 	return Stringify(processingStage)
 }
 
-func (processingStage ProcessingStage) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingStage) MetaType() MetaType {
 	return MetaTypeProcessingStage
 }
 

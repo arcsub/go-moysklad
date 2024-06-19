@@ -161,7 +161,8 @@ func (currency Currency) String() string {
 	return Stringify(currency)
 }
 
-func (currency Currency) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Currency) MetaType() MetaType {
 	return MetaTypeCurrency
 }
 

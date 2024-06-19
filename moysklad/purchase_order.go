@@ -332,8 +332,8 @@ func (purchaseOrder *PurchaseOrder) SetFiles(files ...*File) *PurchaseOrder {
 	return purchaseOrder
 }
 
-func (purchaseOrder *PurchaseOrder) SetPositions(positions *Positions[PurchaseOrderPosition]) *PurchaseOrder {
-	purchaseOrder.Positions = positions
+func (purchaseOrder *PurchaseOrder) SetPositions(positions ...*PurchaseOrderPosition) *PurchaseOrder {
+	purchaseOrder.Positions = NewPositionsFrom(positions)
 	return purchaseOrder
 }
 
@@ -421,7 +421,8 @@ func (purchaseOrder PurchaseOrder) String() string {
 	return Stringify(purchaseOrder)
 }
 
-func (purchaseOrder PurchaseOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PurchaseOrder) MetaType() MetaType {
 	return MetaTypePurchaseOrder
 }
 
@@ -565,7 +566,8 @@ func (purchaseOrderPosition PurchaseOrderPosition) String() string {
 	return Stringify(purchaseOrderPosition)
 }
 
-func (purchaseOrderPosition PurchaseOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PurchaseOrderPosition) MetaType() MetaType {
 	return MetaTypePurchaseOrderPosition
 }
 

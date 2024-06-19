@@ -393,8 +393,8 @@ func (counterparty *Counterparty) SetSyncID(syncID uuid.UUID) *Counterparty {
 	return counterparty
 }
 
-func (counterparty *Counterparty) SetTags(tags Slice[string]) *Counterparty {
-	counterparty.Tags = tags
+func (counterparty *Counterparty) SetTags(tags ...string) *Counterparty {
+	counterparty.Tags = NewSliceFrom(tags)
 	return counterparty
 }
 
@@ -462,7 +462,8 @@ func (counterparty Counterparty) String() string {
 	return Stringify(counterparty)
 }
 
-func (counterparty Counterparty) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Counterparty) MetaType() MetaType {
 	return MetaTypeCounterparty
 }
 
@@ -527,7 +528,8 @@ func (counterpartySettings CounterpartySettings) String() string {
 	return Stringify(counterpartySettings)
 }
 
-func (counterpartySettings CounterpartySettings) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CounterpartySettings) MetaType() MetaType {
 	return MetaTypeCounterpartySettings
 }
 
@@ -591,7 +593,8 @@ func (note Note) String() string {
 	return Stringify(note)
 }
 
-func (note Note) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Note) MetaType() MetaType {
 	return MetaTypeNote
 }
 

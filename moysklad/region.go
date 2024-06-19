@@ -81,7 +81,8 @@ func (region Region) String() string {
 	return Stringify(region)
 }
 
-func (region Region) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Region) MetaType() MetaType {
 	return MetaTypeRegion
 }
 

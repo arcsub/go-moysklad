@@ -15,6 +15,16 @@ type PositionType interface {
 
 type Positions[T PositionType] MetaArray[T]
 
+// Len возвращает количество элементов Rows
+func (positions Positions[T]) Len() int {
+	return len(positions.Rows)
+}
+
+// Size возвращает размер выданного списка
+func (positions Positions[T]) Size() int {
+	return positions.Meta.Size
+}
+
 // MarshalJSON реализует интерфейс json.Marshaler
 func (positions Positions[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(positions.Rows)
@@ -26,6 +36,12 @@ func (positions *Positions[T]) Push(elements ...*T) {
 
 func newPositions[T PositionType]() *Positions[T] {
 	return &Positions[T]{Rows: make(Slice[T], 0, 1000)}
+}
+
+func NewPositionsFrom[T PositionType](positions []*T) *Positions[T] {
+	rows := make(Slice[T], 0, len(positions))
+	rows.Push(positions...)
+	return &Positions[T]{Rows: rows}
 }
 
 func NewBundleComponents() *Positions[BundleComponent] {

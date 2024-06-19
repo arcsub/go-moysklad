@@ -276,7 +276,8 @@ func (contract Contract) String() string {
 	return Stringify(contract)
 }
 
-func (contract Contract) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Contract) MetaType() MetaType {
 	return MetaTypeContract
 }
 

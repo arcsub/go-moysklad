@@ -112,8 +112,8 @@ func (processingProcess *ProcessingProcess) SetOwner(owner *Employee) *Processin
 	return processingProcess
 }
 
-func (processingProcess *ProcessingProcess) SetPositions(positions *Positions[ProcessingProcessPosition]) *ProcessingProcess {
-	processingProcess.Positions = positions
+func (processingProcess *ProcessingProcess) SetPositions(positions ...*ProcessingProcessPosition) *ProcessingProcess {
+	processingProcess.Positions = NewPositionsFrom(positions)
 	return processingProcess
 }
 
@@ -126,7 +126,8 @@ func (processingProcess ProcessingProcess) String() string {
 	return Stringify(processingProcess)
 }
 
-func (processingProcess ProcessingProcess) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingProcess) MetaType() MetaType {
 	return MetaTypeProcessingProcess
 }
 
@@ -195,7 +196,8 @@ func (processingProcessPosition ProcessingProcessPosition) String() string {
 	return Stringify(processingProcessPosition)
 }
 
-func (processingProcessPosition ProcessingProcessPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingProcessPosition) MetaType() MetaType {
 	return MetaTypeProcessingProcessPosition
 }
 

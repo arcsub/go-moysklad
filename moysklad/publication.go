@@ -31,6 +31,7 @@ func (publication Publication) String() string {
 	return Stringify(publication)
 }
 
-func (publication Publication) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Publication) MetaType() MetaType {
 	return MetaTypePublication
 }

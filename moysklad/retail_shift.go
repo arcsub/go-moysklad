@@ -336,7 +336,8 @@ func (retailShift RetailShift) String() string {
 	return Stringify(retailShift)
 }
 
-func (retailShift RetailShift) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailShift) MetaType() MetaType {
 	return MetaTypeRetailShift
 }
 

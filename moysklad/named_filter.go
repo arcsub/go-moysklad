@@ -44,6 +44,7 @@ func (namedFilter NamedFilter) String() string {
 	return Stringify(namedFilter)
 }
 
-func (namedFilter NamedFilter) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NamedFilter) MetaType() MetaType {
 	return MetaTypeNamedFilter
 }

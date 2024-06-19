@@ -207,8 +207,8 @@ func (priceList *PriceList) SetOwner(owner *Employee) *PriceList {
 	return priceList
 }
 
-func (priceList *PriceList) SetPositions(positions *Positions[PriceListPosition]) *PriceList {
-	priceList.Positions = positions
+func (priceList *PriceList) SetPositions(positions ...*PriceListPosition) *PriceList {
+	priceList.Positions = NewPositionsFrom(positions)
 	return priceList
 }
 
@@ -241,7 +241,8 @@ func (priceList PriceList) String() string {
 	return Stringify(priceList)
 }
 
-func (priceList PriceList) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PriceList) MetaType() MetaType {
 	return MetaTypePriceList
 }
 
@@ -368,7 +369,8 @@ func (priceListPosition PriceListPosition) String() string {
 	return Stringify(priceListPosition)
 }
 
-func (priceListPosition PriceListPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PriceListPosition) MetaType() MetaType {
 	return MetaTypePriceListPosition
 }
 

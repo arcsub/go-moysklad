@@ -37,11 +37,11 @@ func (variant Variant) Clean() *Variant {
 	return &Variant{Meta: variant.Meta}
 }
 
-func NewVariantFromAssortment(assortmentPosition AssortmentPosition) *Variant {
+func NewVariantFromAssortment(assortmentPosition *AssortmentPosition) *Variant {
 	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
-func (variant Variant) FromAssortment(assortmentPosition AssortmentPosition) *Variant {
+func (variant Variant) FromAssortment(assortmentPosition *AssortmentPosition) *Variant {
 	return UnmarshalAsType[Variant](assortmentPosition)
 }
 
@@ -204,7 +204,8 @@ func (variant Variant) String() string {
 	return Stringify(variant)
 }
 
-func (variant Variant) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Variant) MetaType() MetaType {
 	return MetaTypeVariant
 }
 
@@ -322,7 +323,8 @@ func (characteristic Characteristic) String() string {
 	return Stringify(characteristic)
 }
 
-func (characteristic Characteristic) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Characteristic) MetaType() MetaType {
 	return MetaTypeCharacteristic
 }
 

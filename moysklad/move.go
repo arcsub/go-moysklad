@@ -267,8 +267,8 @@ func (move *Move) SetOwner(owner *Employee) *Move {
 	return move
 }
 
-func (move *Move) SetPositions(positions *Positions[MovePosition]) *Move {
-	move.Positions = positions
+func (move *Move) SetPositions(positions ...*MovePosition) *Move {
+	move.Positions = NewPositionsFrom(positions)
 	return move
 }
 
@@ -331,7 +331,8 @@ func (move Move) String() string {
 	return Stringify(move)
 }
 
-func (move Move) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Move) MetaType() MetaType {
 	return MetaTypeMove
 }
 
@@ -445,7 +446,8 @@ func (movePosition MovePosition) String() string {
 	return Stringify(movePosition)
 }
 
-func (movePosition MovePosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (MovePosition) MetaType() MetaType {
 	return MetaTypeMovePosition
 }
 

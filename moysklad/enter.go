@@ -217,8 +217,8 @@ func (enter *Enter) SetOwner(owner *Employee) *Enter {
 	return enter
 }
 
-func (enter *Enter) SetPositions(positions *Positions[EnterPosition]) *Enter {
-	enter.Positions = positions
+func (enter *Enter) SetPositions(positions ...*EnterPosition) *Enter {
+	enter.Positions = NewPositionsFrom(positions)
 	return enter
 }
 
@@ -281,7 +281,8 @@ func (enter Enter) String() string {
 	return Stringify(enter)
 }
 
-func (enter Enter) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Enter) MetaType() MetaType {
 	return MetaTypeEnter
 }
 
@@ -415,7 +416,8 @@ func (enterPosition EnterPosition) String() string {
 	return Stringify(enterPosition)
 }
 
-func (enterPosition EnterPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (EnterPosition) MetaType() MetaType {
 	return MetaTypeEnterPosition
 }
 

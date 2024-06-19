@@ -232,8 +232,8 @@ func (loss *Loss) SetOwner(owner *Employee) *Loss {
 	return loss
 }
 
-func (loss *Loss) SetPositions(positions *Positions[LossPosition]) *Loss {
-	loss.Positions = positions
+func (loss *Loss) SetPositions(positions ...*LossPosition) *Loss {
+	loss.Positions = NewPositionsFrom(positions)
 	return loss
 }
 
@@ -281,7 +281,8 @@ func (loss Loss) String() string {
 	return Stringify(loss)
 }
 
-func (loss Loss) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Loss) MetaType() MetaType {
 	return MetaTypeLoss
 }
 
@@ -390,7 +391,8 @@ func (lossPosition LossPosition) String() string {
 	return Stringify(lossPosition)
 }
 
-func (lossPosition LossPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (LossPosition) MetaType() MetaType {
 	return MetaTypeLossPosition
 }
 

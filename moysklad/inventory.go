@@ -189,8 +189,8 @@ func (inventory *Inventory) SetOrganization(organization *Organization) *Invento
 	return inventory
 }
 
-func (inventory *Inventory) SetPositions(positions *Positions[InventoryPosition]) *Inventory {
-	inventory.Positions = positions
+func (inventory *Inventory) SetPositions(positions ...*InventoryPosition) *Inventory {
+	inventory.Positions = NewPositionsFrom(positions)
 	return inventory
 }
 
@@ -233,7 +233,8 @@ func (inventory Inventory) String() string {
 	return Stringify(inventory)
 }
 
-func (inventory Inventory) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Inventory) MetaType() MetaType {
 	return MetaTypeInventory
 }
 
@@ -332,7 +333,8 @@ func (inventoryPosition InventoryPosition) String() string {
 	return Stringify(inventoryPosition)
 }
 
-func (inventoryPosition InventoryPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InventoryPosition) MetaType() MetaType {
 	return MetaTypeInventoryPosition
 }
 

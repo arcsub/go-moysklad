@@ -52,11 +52,11 @@ type Bundle struct {
 	Attributes          Slice[Attribute]            `json:"attributes,omitempty"`
 }
 
-func NewBundleFromAssortment(assortmentPosition AssortmentPosition) *Bundle {
+func NewBundleFromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
-func (bundle Bundle) FromAssortment(assortmentPosition AssortmentPosition) *Bundle {
+func (bundle Bundle) FromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
@@ -270,8 +270,8 @@ func (bundle *Bundle) SetImages(images ...*Image) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetComponents(components *Positions[BundleComponent]) *Bundle {
-	bundle.Components = components
+func (bundle *Bundle) SetComponents(components ...*BundleComponent) *Bundle {
+	bundle.Components = NewPositionsFrom(components)
 	return bundle
 }
 
@@ -414,7 +414,8 @@ func (bundle Bundle) String() string {
 	return Stringify(bundle)
 }
 
-func (bundle Bundle) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Bundle) MetaType() MetaType {
 	return MetaTypeBundle
 }
 
@@ -502,7 +503,8 @@ func (bundleComponent BundleComponent) String() string {
 	return Stringify(bundleComponent)
 }
 
-func (bundleComponent BundleComponent) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (BundleComponent) MetaType() MetaType {
 	return MetaTypeBundleComponent
 }
 

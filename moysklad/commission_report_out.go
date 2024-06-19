@@ -317,8 +317,8 @@ func (commissionReportOut *CommissionReportOut) SetOwner(owner *Employee) *Commi
 	return commissionReportOut
 }
 
-func (commissionReportOut *CommissionReportOut) SetPositions(positions *Positions[CommissionReportOutPosition]) *CommissionReportOut {
-	commissionReportOut.Positions = positions
+func (commissionReportOut *CommissionReportOut) SetPositions(positions ...*CommissionReportOutPosition) *CommissionReportOut {
+	commissionReportOut.Positions = NewPositionsFrom(positions)
 	return commissionReportOut
 }
 
@@ -406,7 +406,8 @@ func (commissionReportOut CommissionReportOut) String() string {
 	return Stringify(commissionReportOut)
 }
 
-func (commissionReportOut CommissionReportOut) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportOut) MetaType() MetaType {
 	return MetaTypeCommissionReportOut
 }
 
@@ -525,7 +526,8 @@ func (commissionReportOutPosition CommissionReportOutPosition) String() string {
 	return Stringify(commissionReportOutPosition)
 }
 
-func (commissionReportOutPosition CommissionReportOutPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportOutPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportOutPosition
 }
 

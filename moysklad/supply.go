@@ -342,8 +342,8 @@ func (supply *Supply) SetIncomingNumber(incomingNumber string) *Supply {
 	return supply
 }
 
-func (supply *Supply) SetPositions(positions *Positions[SupplyPosition]) *Supply {
-	supply.Positions = positions
+func (supply *Supply) SetPositions(positions ...*SupplyPosition) *Supply {
+	supply.Positions = NewPositionsFrom(positions)
 	return supply
 }
 
@@ -421,7 +421,8 @@ func (supply Supply) String() string {
 	return Stringify(supply)
 }
 
-func (supply Supply) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Supply) MetaType() MetaType {
 	return MetaTypeSupply
 }
 
@@ -590,7 +591,8 @@ func (supplyPosition SupplyPosition) String() string {
 	return Stringify(supplyPosition)
 }
 
-func (supplyPosition SupplyPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SupplyPosition) MetaType() MetaType {
 	return MetaTypeSupplyPosition
 }
 

@@ -253,7 +253,8 @@ func (employee Employee) String() string {
 	return Stringify(employee)
 }
 
-func (employee Employee) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Employee) MetaType() MetaType {
 	return MetaTypeEmployee
 }
 

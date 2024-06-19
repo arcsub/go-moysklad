@@ -39,7 +39,8 @@ type CounterpartyData struct {
 	Name         string      `json:"name"`         // Наименование Контрагента
 }
 
-func (reportCounterparty ReportCounterparty) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ReportCounterparty) MetaType() MetaType {
 	return MetaTypeReportCounterparty
 }
 

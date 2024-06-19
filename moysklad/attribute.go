@@ -98,7 +98,8 @@ func (attribute Attribute) String() string {
 	return Stringify(attribute)
 }
 
-func (attribute Attribute) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Attribute) MetaType() MetaType {
 	return MetaTypeAttribute
 }
 

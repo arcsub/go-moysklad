@@ -30,11 +30,11 @@ func (consignment Consignment) Clean() *Consignment {
 	return &Consignment{Meta: consignment.Meta}
 }
 
-func NewConsignmentFromAssortment(assortmentPosition AssortmentPosition) *Consignment {
+func NewConsignmentFromAssortment(assortmentPosition *AssortmentPosition) *Consignment {
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
-func (consignment Consignment) FromAssortment(assortmentPosition AssortmentPosition) *Consignment {
+func (consignment Consignment) FromAssortment(assortmentPosition *AssortmentPosition) *Consignment {
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
@@ -148,7 +148,8 @@ func (consignment Consignment) String() string {
 	return Stringify(consignment)
 }
 
-func (consignment Consignment) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Consignment) MetaType() MetaType {
 	return MetaTypeConsignment
 }
 

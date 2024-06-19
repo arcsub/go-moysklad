@@ -55,7 +55,8 @@ type ProfitByCounterparty struct {
 	Profit
 }
 
-func (profitByCounterparty ProfitByCounterparty) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProfitByCounterparty) MetaType() MetaType {
 	return MetaTypeReportProfitByCounterparty
 }
 
@@ -67,7 +68,8 @@ type ProfitByEmployee struct {
 	Profit
 }
 
-func (profitByEmployee ProfitByEmployee) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProfitByEmployee) MetaType() MetaType {
 	return MetaTypeReportProfitByEmployee
 }
 
@@ -78,7 +80,8 @@ type ProfitByProduct struct {
 	ProfitByAssortment
 }
 
-func (profitByProduct ProfitByProduct) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProfitByProduct) MetaType() MetaType {
 	return MetaTypeReportProfitByProduct
 }
 
@@ -94,7 +97,8 @@ type ProfitBySalesChannel struct {
 	Profit
 }
 
-func (profitBySalesChannel ProfitBySalesChannel) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProfitBySalesChannel) MetaType() MetaType {
 	return MetaTypeReportProfitBySalesChannel
 }
 
@@ -105,7 +109,8 @@ type ProfitByVariant struct {
 	ProfitByAssortment
 }
 
-func (profitByVariant ProfitByVariant) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProfitByVariant) MetaType() MetaType {
 	return MetaTypeReportProfitByVariant
 }
 

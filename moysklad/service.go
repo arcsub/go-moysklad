@@ -47,11 +47,11 @@ func (service Service) Clean() *Service {
 	return &Service{Meta: service.Meta}
 }
 
-func NewServiceFromAssortment(assortmentPosition AssortmentPosition) *Service {
+func NewServiceFromAssortment(assortmentPosition *AssortmentPosition) *Service {
 	return UnmarshalAsType[Service](assortmentPosition)
 }
 
-func (service Service) FromAssortment(assortmentPosition AssortmentPosition) *Service {
+func (service Service) FromAssortment(assortmentPosition *AssortmentPosition) *Service {
 	return UnmarshalAsType[Service](assortmentPosition)
 }
 
@@ -303,7 +303,8 @@ func (service Service) String() string {
 	return Stringify(service)
 }
 
-func (service Service) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Service) MetaType() MetaType {
 	return MetaTypeService
 }
 

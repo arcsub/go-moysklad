@@ -702,7 +702,8 @@ func (retailStore RetailStore) String() string {
 	return Stringify(retailStore)
 }
 
-func (retailStore RetailStore) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailStore) MetaType() MetaType {
 	return MetaTypeRetailStore
 }
 
@@ -776,7 +777,8 @@ func (cashier Cashier) String() string {
 	return Stringify(cashier)
 }
 
-func (cashier Cashier) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Cashier) MetaType() MetaType {
 	return MetaTypeCashier
 }
 

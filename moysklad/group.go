@@ -61,7 +61,8 @@ func (group Group) String() string {
 	return Stringify(group)
 }
 
-func (group Group) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Group) MetaType() MetaType {
 	return MetaTypeGroup
 }
 

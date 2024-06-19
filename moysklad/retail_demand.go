@@ -387,8 +387,8 @@ func (retailDemand *RetailDemand) SetOwner(owner *Employee) *RetailDemand {
 	return retailDemand
 }
 
-func (retailDemand *RetailDemand) SetPositions(positions *Positions[RetailDemandPosition]) *RetailDemand {
-	retailDemand.Positions = positions
+func (retailDemand *RetailDemand) SetPositions(positions ...*RetailDemandPosition) *RetailDemand {
+	retailDemand.Positions = NewPositionsFrom(positions)
 	return retailDemand
 }
 
@@ -496,7 +496,8 @@ func (retailDemand RetailDemand) String() string {
 	return Stringify(retailDemand)
 }
 
-func (retailDemand RetailDemand) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailDemand) MetaType() MetaType {
 	return MetaTypeRetailDemand
 }
 
@@ -630,7 +631,8 @@ func (retailDemandPosition RetailDemandPosition) String() string {
 	return Stringify(retailDemandPosition)
 }
 
-func (retailDemandPosition RetailDemandPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailDemandPosition) MetaType() MetaType {
 	return MetaTypeRetailDemandPosition
 }
 

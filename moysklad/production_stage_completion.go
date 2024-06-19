@@ -133,8 +133,8 @@ func (productionStageCompletion *ProductionStageCompletion) SetStandardHourUnit(
 	return productionStageCompletion
 }
 
-func (productionStageCompletion *ProductionStageCompletion) SetMaterials(materials *Positions[ProductionStageCompletionMaterial]) *ProductionStageCompletion {
-	productionStageCompletion.Materials = materials
+func (productionStageCompletion *ProductionStageCompletion) SetMaterials(materials ...*ProductionStageCompletionMaterial) *ProductionStageCompletion {
+	productionStageCompletion.Materials = NewPositionsFrom(materials)
 	return productionStageCompletion
 }
 
@@ -178,8 +178,8 @@ func (productionStageCompletion *ProductionStageCompletion) SetProductionVolume(
 	return productionStageCompletion
 }
 
-func (productionStageCompletion *ProductionStageCompletion) SetProducts(products *Positions[ProductionStageCompletionResult]) *ProductionStageCompletion {
-	productionStageCompletion.Products = products
+func (productionStageCompletion *ProductionStageCompletion) SetProducts(products ...*ProductionStageCompletionResult) *ProductionStageCompletion {
+	productionStageCompletion.Products = NewPositionsFrom(products)
 	return productionStageCompletion
 }
 
@@ -192,7 +192,8 @@ func (productionStageCompletion ProductionStageCompletion) String() string {
 	return Stringify(productionStageCompletion)
 }
 
-func (productionStageCompletion ProductionStageCompletion) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStageCompletion) MetaType() MetaType {
 	return MetaTypeProductionStageCompletion
 }
 
@@ -261,7 +262,8 @@ func (productionStageCompletionMaterial ProductionStageCompletionMaterial) Strin
 	return Stringify(productionStageCompletionMaterial)
 }
 
-func (productionStageCompletionMaterial ProductionStageCompletionMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStageCompletionMaterial) MetaType() MetaType {
 	return MetaTypeProductionStageCompletionMaterial
 }
 
@@ -315,7 +317,8 @@ func (productionStageCompletionResult ProductionStageCompletionResult) String() 
 	return Stringify(productionStageCompletionResult)
 }
 
-func (productionStageCompletionResult ProductionStageCompletionResult) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStageCompletionResult) MetaType() MetaType {
 	return MetaTypeProductionStageCompletionResult
 }
 

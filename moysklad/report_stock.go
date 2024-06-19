@@ -28,7 +28,8 @@ type StockAll struct {
 	StockDays    float64         `json:"stockDays"`
 }
 
-func (stockAll StockAll) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (StockAll) MetaType() MetaType {
 	return MetaTypeReportStock
 }
 
@@ -40,7 +41,8 @@ type StockByOperation struct {
 	Positions []StockByOperationPosition `json:"positions"` // Массив объектов, представляющий собой Остаток по каждой из позиций
 }
 
-func (stockByOperation StockByOperation) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (StockByOperation) MetaType() MetaType {
 	return MetaTypeReportStockByOperation
 }
 
@@ -64,7 +66,8 @@ type StockByStore struct {
 	StockByStore []StockByStorePosition `json:"stockByStore"` // Остатки по складам
 }
 
-func (stockByStore StockByStore) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (StockByStore) MetaType() MetaType {
 	return MetaTypeReportStockByStore
 }
 

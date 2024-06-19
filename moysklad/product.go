@@ -64,11 +64,11 @@ func (product Product) Clean() *Product {
 	return &Product{Meta: product.Meta}
 }
 
-func NewProductFromAssortment(assortmentPosition AssortmentPosition) *Product {
+func NewProductFromAssortment(assortmentPosition *AssortmentPosition) *Product {
 	return UnmarshalAsType[Product](assortmentPosition)
 }
 
-func (product Product) FromAssortment(assortmentPosition AssortmentPosition) *Product {
+func (product Product) FromAssortment(assortmentPosition *AssortmentPosition) *Product {
 	return UnmarshalAsType[Product](assortmentPosition)
 }
 
@@ -468,7 +468,8 @@ func (product Product) String() string {
 	return Stringify(product)
 }
 
-func (product Product) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Product) MetaType() MetaType {
 	return MetaTypeProduct
 }
 

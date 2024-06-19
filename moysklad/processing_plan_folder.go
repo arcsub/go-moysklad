@@ -131,7 +131,8 @@ func (processingPlanFolder ProcessingPlanFolder) String() string {
 	return Stringify(processingPlanFolder)
 }
 
-func (processingPlanFolder ProcessingPlanFolder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlanFolder) MetaType() MetaType {
 	return MetaTypeProcessingPlanFolder
 }
 

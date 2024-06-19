@@ -168,7 +168,8 @@ func (task Task) String() string {
 	return Stringify(task)
 }
 
-func (task Task) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Task) MetaType() MetaType {
 	return MetaTypeTask
 }
 
@@ -222,7 +223,8 @@ func (taskNote TaskNote) String() string {
 	return Stringify(taskNote)
 }
 
-func (taskNote TaskNote) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (TaskNote) MetaType() MetaType {
 	return MetaTypeTaskNote
 }
 
@@ -234,7 +236,7 @@ type TaskOperation struct {
 	ID   uuid.UUID `json:"id"`
 }
 
-// MetaType реализует интерфейс MetaTyper
+// MetaType возвращает тип сущности.
 func (taskOperation TaskOperation) MetaType() MetaType {
 	return taskOperation.Meta.GetType()
 }

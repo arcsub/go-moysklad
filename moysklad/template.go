@@ -74,7 +74,8 @@ func (customTemplate CustomTemplate) String() string {
 	return Stringify(customTemplate)
 }
 
-func (customTemplate CustomTemplate) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomTemplate) MetaType() MetaType {
 	return MetaTypeCustomTemplate
 }
 
@@ -89,7 +90,8 @@ func (embeddedTemplate EmbeddedTemplate) String() string {
 	return Stringify(embeddedTemplate)
 }
 
-func (embeddedTemplate EmbeddedTemplate) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (EmbeddedTemplate) MetaType() MetaType {
 	return MetaTypeEmbeddedTemplate
 }
 

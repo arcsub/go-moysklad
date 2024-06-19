@@ -132,7 +132,8 @@ func (userSettings UserSettings) String() string {
 	return Stringify(userSettings)
 }
 
-func (userSettings UserSettings) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (UserSettings) MetaType() MetaType {
 	return MetaTypeUserSettings
 }
 

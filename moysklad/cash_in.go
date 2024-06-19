@@ -336,7 +336,8 @@ func (cashIn CashIn) String() string {
 	return Stringify(cashIn)
 }
 
-func (cashIn CashIn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
 }
 

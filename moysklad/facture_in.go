@@ -306,7 +306,8 @@ func (factureIn FactureIn) String() string {
 	return Stringify(factureIn)
 }
 
-func (factureIn FactureIn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (FactureIn) MetaType() MetaType {
 	return MetaTypeFactureIn
 }
 

@@ -103,8 +103,8 @@ func (productionStage *ProductionStage) SetLabourUnitCost(labourUnitCost float64
 	return productionStage
 }
 
-func (productionStage *ProductionStage) SetMaterials(materials *Positions[ProductionTaskMaterial]) *ProductionStage {
-	productionStage.Materials = materials
+func (productionStage *ProductionStage) SetMaterials(materials ...*ProductionTaskMaterial) *ProductionStage {
+	productionStage.Materials = NewPositionsFrom(materials)
 	return productionStage
 }
 
@@ -122,7 +122,8 @@ func (productionStage ProductionStage) String() string {
 	return Stringify(productionStage)
 }
 
-func (productionStage ProductionStage) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionStage) MetaType() MetaType {
 	return MetaTypeProductionStage
 }
 
@@ -166,7 +167,8 @@ func (productionTaskMaterial ProductionTaskMaterial) String() string {
 	return Stringify(productionTaskMaterial)
 }
 
-func (productionTaskMaterial ProductionTaskMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionTaskMaterial) MetaType() MetaType {
 	return MetaTypeProductionTaskMaterial
 }
 

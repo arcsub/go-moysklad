@@ -50,7 +50,7 @@ func (operation Operation) String() string {
 	return Stringify(operation.Meta)
 }
 
-// MetaType реализует интерфейс MetaTyper
+// MetaType возвращает тип сущности.
 func (operation Operation) MetaType() MetaType {
 	return operation.Meta.GetType()
 }

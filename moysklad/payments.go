@@ -169,7 +169,7 @@ func (payment Payment) GetOperations() Operations {
 	return payment.Operations
 }
 
-// MetaType реализует интерфейс MetaTyper
+// MetaType возвращает тип сущности.
 func (payment Payment) MetaType() MetaType {
 	return payment.Meta.GetType()
 }

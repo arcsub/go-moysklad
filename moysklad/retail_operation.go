@@ -11,7 +11,7 @@ func (retailOperation RetailOperation) String() string {
 	return Stringify(retailOperation.Meta)
 }
 
-// MetaType реализует интерфейс MetaTyper
+// MetaType возвращает тип сущности.
 func (retailOperation RetailOperation) MetaType() MetaType {
 	return retailOperation.Meta.GetType()
 }

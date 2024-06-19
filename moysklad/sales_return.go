@@ -227,8 +227,8 @@ func (salesReturn SalesReturn) GetAttributes() Slice[Attribute] {
 	return salesReturn.Attributes
 }
 
-func (salesReturn *SalesReturn) SetPositions(positions *Positions[SalesReturnPosition]) *SalesReturn {
-	salesReturn.Positions = positions
+func (salesReturn *SalesReturn) SetPositions(positions ...*SalesReturnPosition) *SalesReturn {
+	salesReturn.Positions = NewPositionsFrom(positions)
 	return salesReturn
 }
 
@@ -401,7 +401,8 @@ func (salesReturn SalesReturn) String() string {
 	return Stringify(salesReturn)
 }
 
-func (salesReturn SalesReturn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesReturn) MetaType() MetaType {
 	return MetaTypeSalesReturn
 }
 
@@ -565,7 +566,8 @@ func (salesReturnPosition SalesReturnPosition) String() string {
 	return Stringify(salesReturnPosition)
 }
 
-func (salesReturnPosition SalesReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesReturnPosition) MetaType() MetaType {
 	return MetaTypeSalesReturnPosition
 }
 

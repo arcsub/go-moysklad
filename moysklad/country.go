@@ -116,7 +116,8 @@ func (country Country) String() string {
 	return Stringify(country)
 }
 
-func (country Country) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Country) MetaType() MetaType {
 	return MetaTypeCountry
 }
 

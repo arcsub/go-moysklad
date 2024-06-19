@@ -277,8 +277,8 @@ func (prepaymentReturn *PrepaymentReturn) SetVatIncluded(vatIncluded bool) *Prep
 	return prepaymentReturn
 }
 
-func (prepaymentReturn *PrepaymentReturn) SetPositions(positions *Positions[PrepaymentReturnPosition]) *PrepaymentReturn {
-	prepaymentReturn.Positions = positions
+func (prepaymentReturn *PrepaymentReturn) SetPositions(positions ...*PrepaymentReturnPosition) *PrepaymentReturn {
+	prepaymentReturn.Positions = NewPositionsFrom(positions)
 	return prepaymentReturn
 }
 
@@ -351,7 +351,8 @@ func (prepaymentReturn PrepaymentReturn) String() string {
 	return Stringify(prepaymentReturn)
 }
 
-func (prepaymentReturn PrepaymentReturn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PrepaymentReturn) MetaType() MetaType {
 	return MetaTypePrepaymentReturn
 }
 
@@ -445,7 +446,8 @@ func (prepaymentReturnPosition PrepaymentReturnPosition) String() string {
 	return Stringify(prepaymentReturnPosition)
 }
 
-func (prepaymentReturnPosition PrepaymentReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PrepaymentReturnPosition) MetaType() MetaType {
 	return MetaTypePrepaymentReturnPosition
 }
 

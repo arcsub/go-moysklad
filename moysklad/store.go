@@ -187,7 +187,8 @@ func (store Store) String() string {
 	return Stringify(store)
 }
 
-func (store Store) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Store) MetaType() MetaType {
 	return MetaTypeStore
 }
 
@@ -281,7 +282,8 @@ func (slot Slot) String() string {
 	return Stringify(slot)
 }
 
-func (slot Slot) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Slot) MetaType() MetaType {
 	return MetaTypeSlot
 }
 
@@ -340,7 +342,8 @@ func (zone Zone) String() string {
 	return Stringify(zone)
 }
 
-func (zone Zone) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Zone) MetaType() MetaType {
 	return MetaTypeStoreZone
 }
 

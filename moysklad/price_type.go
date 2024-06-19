@@ -54,6 +54,7 @@ func (priceType PriceType) String() string {
 	return Stringify(priceType)
 }
 
-func (priceType PriceType) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PriceType) MetaType() MetaType {
 	return MetaTypePriceType
 }

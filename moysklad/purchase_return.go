@@ -362,8 +362,8 @@ func (purchaseReturn *PurchaseReturn) SetVatSum(vatSum float64) *PurchaseReturn 
 	return purchaseReturn
 }
 
-func (purchaseReturn *PurchaseReturn) SetPositions(positions *Positions[PurchaseReturnPosition]) *PurchaseReturn {
-	purchaseReturn.Positions = positions
+func (purchaseReturn *PurchaseReturn) SetPositions(positions ...*PurchaseReturnPosition) *PurchaseReturn {
+	purchaseReturn.Positions = NewPositionsFrom(positions)
 	return purchaseReturn
 }
 
@@ -401,7 +401,8 @@ func (purchaseReturn PurchaseReturn) String() string {
 	return Stringify(purchaseReturn)
 }
 
-func (purchaseReturn PurchaseReturn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PurchaseReturn) MetaType() MetaType {
 	return MetaTypePurchaseReturn
 }
 
@@ -535,7 +536,8 @@ func (purchaseReturnPosition PurchaseReturnPosition) String() string {
 	return Stringify(purchaseReturnPosition)
 }
 
-func (purchaseReturnPosition PurchaseReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PurchaseReturnPosition) MetaType() MetaType {
 	return MetaTypePurchaseReturnPosition
 }
 

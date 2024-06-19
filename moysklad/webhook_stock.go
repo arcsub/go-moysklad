@@ -91,7 +91,8 @@ func (webhookStock WebhookStock) String() string {
 	return Stringify(webhookStock)
 }
 
-func (webhookStock WebhookStock) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (WebhookStock) MetaType() MetaType {
 	return MetaTypeWebhookStock
 }
 

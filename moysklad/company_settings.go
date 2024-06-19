@@ -98,7 +98,7 @@ func (companySettings *CompanySettings) SetGlobalOperationNumbering(globalOperat
 	return companySettings
 }
 
-func (companySettings *CompanySettings) SetPriceTypes(priceTypes Slice[PriceType]) *CompanySettings {
+func (companySettings *CompanySettings) SetPriceTypes(priceTypes ...*PriceType) *CompanySettings {
 	companySettings.PriceTypes = priceTypes
 	return companySettings
 }
@@ -122,7 +122,8 @@ func (companySettings CompanySettings) String() string {
 	return Stringify(companySettings)
 }
 
-func (companySettings CompanySettings) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CompanySettings) MetaType() MetaType {
 	return MetaTypeCompanySettings
 }
 

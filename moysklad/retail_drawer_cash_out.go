@@ -256,7 +256,8 @@ func (retailDrawerCashOut RetailDrawerCashOut) String() string {
 	return Stringify(retailDrawerCashOut)
 }
 
-func (retailDrawerCashOut RetailDrawerCashOut) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailDrawerCashOut) MetaType() MetaType {
 	return MetaTypeRetailDrawerCashOut
 }
 

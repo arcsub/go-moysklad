@@ -191,7 +191,8 @@ func (productFolder ProductFolder) String() string {
 	return Stringify(productFolder)
 }
 
-func (productFolder ProductFolder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductFolder) MetaType() MetaType {
 	return MetaTypeProductFolder
 }
 

@@ -101,7 +101,8 @@ func (taxRate TaxRate) String() string {
 	return Stringify(taxRate)
 }
 
-func (taxRate TaxRate) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (TaxRate) MetaType() MetaType {
 	return MetaTypeTaxRate
 }
 

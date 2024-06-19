@@ -366,7 +366,8 @@ func (paymentOut PaymentOut) String() string {
 	return Stringify(paymentOut)
 }
 
-func (paymentOut PaymentOut) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PaymentOut) MetaType() MetaType {
 	return MetaTypePaymentOut
 }
 

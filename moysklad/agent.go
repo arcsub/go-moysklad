@@ -189,7 +189,7 @@ func (agent *Agent) String() string {
 	return Stringify(agent.Meta)
 }
 
-// MetaType реализует интерфейс MetaTyper
+// MetaType возвращает тип сущности.
 func (agent Agent) MetaType() MetaType {
 	return agent.Meta.GetType()
 }

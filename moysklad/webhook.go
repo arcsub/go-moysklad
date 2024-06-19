@@ -106,7 +106,8 @@ func (webhook Webhook) String() string {
 	return Stringify(webhook)
 }
 
-func (webhook Webhook) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Webhook) MetaType() MetaType {
 	return MetaTypeWebhook
 }
 

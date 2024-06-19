@@ -535,7 +535,8 @@ func (retailSalesReturnPosition RetailSalesReturnPosition) String() string {
 	return Stringify(retailSalesReturnPosition)
 }
 
-func (retailSalesReturnPosition RetailSalesReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (RetailSalesReturnPosition) MetaType() MetaType {
 	return MetaTypeRetailSalesReturnPosition
 }
 

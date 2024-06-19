@@ -363,8 +363,8 @@ func (customerOrder *CustomerOrder) SetOwner(owner *Employee) *CustomerOrder {
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetPositions(positions *Positions[CustomerOrderPosition]) *CustomerOrder {
-	customerOrder.Positions = positions
+func (customerOrder *CustomerOrder) SetPositions(positions ...*CustomerOrderPosition) *CustomerOrder {
+	customerOrder.Positions = NewPositionsFrom(positions)
 	return customerOrder
 }
 
@@ -408,8 +408,8 @@ func (customerOrder *CustomerOrder) SetShipmentAddress(shipmentAddress string) *
 	return customerOrder
 }
 
-func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull Address) *CustomerOrder {
-	customerOrder.ShipmentAddressFull = &shipmentAddressFull
+func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull *Address) *CustomerOrder {
+	customerOrder.ShipmentAddressFull = shipmentAddressFull
 	return customerOrder
 }
 
@@ -487,7 +487,8 @@ func (customerOrder CustomerOrder) String() string {
 	return Stringify(customerOrder)
 }
 
-func (customerOrder CustomerOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomerOrder) MetaType() MetaType {
 	return MetaTypeCustomerOrder
 }
 
@@ -626,7 +627,8 @@ func (customerOrderPosition CustomerOrderPosition) String() string {
 	return Stringify(customerOrderPosition)
 }
 
-func (customerOrderPosition CustomerOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomerOrderPosition) MetaType() MetaType {
 	return MetaTypeCustomerOrderPosition
 }
 

@@ -47,7 +47,8 @@ func (customEntity CustomEntity) String() string {
 	return Stringify(customEntity)
 }
 
-func (customEntity CustomEntity) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CustomEntity) MetaType() MetaType {
 	return MetaTypeCustomEntity
 }
 

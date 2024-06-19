@@ -31,7 +31,8 @@ func (audit Audit) String() string {
 	return Stringify(audit)
 }
 
-func (audit Audit) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Audit) MetaType() MetaType {
 	return MetaTypeAudit
 }
 
@@ -62,7 +63,8 @@ func (auditEvent AuditEvent) String() string {
 	return Stringify(auditEvent)
 }
 
-func (auditEvent AuditEvent) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (AuditEvent) MetaType() MetaType {
 	return MetaTypeAuditEvent
 }
 
@@ -139,7 +141,7 @@ func getUnmarshall[T any](diff Diff, field string) (bool, T) {
 	return false, *new(T)
 }
 
-// GetPositions возвращает объект SalePriceElem
+// GetPositions возвращает позиции
 func (diff Diff) GetPositions() (bool, []OldNew[AuditPosition]) {
 	return getUnmarshall[[]OldNew[AuditPosition]](diff, "positions")
 }

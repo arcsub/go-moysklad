@@ -19,7 +19,8 @@ func (subscription Subscription) String() string {
 	return Stringify(subscription)
 }
 
-func (subscription Subscription) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Subscription) MetaType() MetaType {
 	return MetaTypeSubscription
 }
 

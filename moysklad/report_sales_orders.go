@@ -22,7 +22,8 @@ type SalesPlotSeries struct {
 	Series  []SeriesElement `json:"series"` // Массив показателей
 }
 
-func (salesPlotSeries SalesPlotSeries) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesPlotSeries) MetaType() MetaType {
 	return MetaTypeReportSales
 }
 
@@ -35,7 +36,8 @@ type OrdersPlotSeries struct {
 	Series  []SeriesElement `json:"series"` // Массив показателей
 }
 
-func (ordersPlotSeries OrdersPlotSeries) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (OrdersPlotSeries) MetaType() MetaType {
 	return MetaTypeReportOrders
 }
 

@@ -56,7 +56,8 @@ func (role Role) String() string {
 	return Stringify(role)
 }
 
-func (role Role) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Role) MetaType() MetaType {
 	return MetaTypeRole
 }
 
@@ -84,7 +85,8 @@ func (adminRole AdminRole) String() string {
 	return Stringify(adminRole)
 }
 
-func (adminRole AdminRole) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (AdminRole) MetaType() MetaType {
 	return MetaTypeSystemRole
 }
 
@@ -97,7 +99,8 @@ func (individualRole IndividualRole) String() string {
 	return Stringify(individualRole)
 }
 
-func (individualRole IndividualRole) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (IndividualRole) MetaType() MetaType {
 	return MetaTypeIndividualRole
 }
 
@@ -110,7 +113,8 @@ func (cashierRole CashierRole) String() string {
 	return Stringify(cashierRole)
 }
 
-func (cashierRole CashierRole) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CashierRole) MetaType() MetaType {
 	return MetaTypeSystemRole
 }
 
@@ -123,7 +127,8 @@ func (workerRole WorkerRole) String() string {
 	return Stringify(workerRole)
 }
 
-func (workerRole WorkerRole) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (WorkerRole) MetaType() MetaType {
 	return MetaTypeSystemRole
 }
 

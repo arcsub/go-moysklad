@@ -196,7 +196,8 @@ func (counterPartyAdjustment CounterpartyAdjustment) String() string {
 	return Stringify(counterPartyAdjustment)
 }
 
-func (counterPartyAdjustment CounterpartyAdjustment) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CounterpartyAdjustment) MetaType() MetaType {
 	return MetaTypeCounterPartyAdjustment
 }
 

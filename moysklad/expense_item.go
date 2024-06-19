@@ -86,7 +86,8 @@ func (expenseItem ExpenseItem) String() string {
 	return Stringify(expenseItem)
 }
 
-func (expenseItem ExpenseItem) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ExpenseItem) MetaType() MetaType {
 	return MetaTypeExpenseItem
 }
 

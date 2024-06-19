@@ -496,7 +496,8 @@ func (organization Organization) String() string {
 	return Stringify(organization)
 }
 
-func (organization Organization) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Organization) MetaType() MetaType {
 	return MetaTypeOrganization
 }
 

@@ -226,8 +226,8 @@ func (internalOrder *InternalOrder) SetMeta(meta *Meta) *InternalOrder {
 	return internalOrder
 }
 
-func (internalOrder *InternalOrder) SetPositions(positions *Positions[InternalOrderPosition]) *InternalOrder {
-	internalOrder.Positions = positions
+func (internalOrder *InternalOrder) SetPositions(positions ...*InternalOrderPosition) *InternalOrder {
+	internalOrder.Positions = NewPositionsFrom(positions)
 	return internalOrder
 }
 
@@ -330,7 +330,8 @@ func (internalOrder InternalOrder) String() string {
 	return Stringify(internalOrder)
 }
 
-func (internalOrder InternalOrder) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InternalOrder) MetaType() MetaType {
 	return MetaTypeInternalOrder
 }
 
@@ -429,7 +430,8 @@ func (internalOrderPosition InternalOrderPosition) String() string {
 	return Stringify(internalOrderPosition)
 }
 
-func (internalOrderPosition InternalOrderPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InternalOrderPosition) MetaType() MetaType {
 	return MetaTypeInternalOrderPosition
 }
 

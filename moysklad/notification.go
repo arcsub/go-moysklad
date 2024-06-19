@@ -144,7 +144,8 @@ func (notificationExportCompleted NotificationExportCompleted) String() string {
 	return Stringify(notificationExportCompleted)
 }
 
-func (notificationExportCompleted NotificationExportCompleted) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationExportCompleted) MetaType() MetaType {
 	return MetaTypeNotificationExportCompleted
 }
 
@@ -169,7 +170,8 @@ func (notificationImportCompleted NotificationImportCompleted) String() string {
 	return Stringify(notificationImportCompleted)
 }
 
-func (notificationImportCompleted NotificationImportCompleted) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationImportCompleted) MetaType() MetaType {
 	return MetaTypeNotificationImportCompleted
 }
 
@@ -192,7 +194,8 @@ func (notificationGoodCountTooLow NotificationGoodCountTooLow) String() string {
 	return Stringify(notificationGoodCountTooLow)
 }
 
-func (notificationGoodCountTooLow NotificationGoodCountTooLow) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationGoodCountTooLow) MetaType() MetaType {
 	return MetaTypeNotificationGoodCountTooLow
 }
 
@@ -215,7 +218,8 @@ func (notificationInvoiceOutOverdue NotificationInvoiceOutOverdue) String() stri
 	return Stringify(notificationInvoiceOutOverdue)
 }
 
-func (notificationInvoiceOutOverdue NotificationInvoiceOutOverdue) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationInvoiceOutOverdue) MetaType() MetaType {
 	return MetaTypeNotificationInvoiceOutOverdue
 }
 
@@ -239,7 +243,8 @@ func (notificationOrderNew NotificationOrderNew) String() string {
 	return Stringify(notificationOrderNew)
 }
 
-func (notificationOrderNew NotificationOrderNew) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationOrderNew) MetaType() MetaType {
 	return MetaTypeNotificationOrderNew
 }
 
@@ -263,7 +268,8 @@ func (notificationOrderOverdue NotificationOrderOverdue) String() string {
 	return Stringify(notificationOrderOverdue)
 }
 
-func (notificationOrderOverdue NotificationOrderOverdue) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationOrderOverdue) MetaType() MetaType {
 	return MetaTypeNotificationOrderOverdue
 }
 
@@ -283,7 +289,8 @@ func (notificationSubscribeExpired NotificationSubscribeExpired) String() string
 	return Stringify(notificationSubscribeExpired)
 }
 
-func (notificationSubscribeExpired NotificationSubscribeExpired) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationSubscribeExpired) MetaType() MetaType {
 	return MetaTypeNotificationSubscribeExpired
 }
 
@@ -304,7 +311,8 @@ func (notificationSubscribeTermsExpired NotificationSubscribeTermsExpired) Strin
 	return Stringify(notificationSubscribeTermsExpired)
 }
 
-func (notificationSubscribeTermsExpired NotificationSubscribeTermsExpired) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationSubscribeTermsExpired) MetaType() MetaType {
 	return MetaTypeNotificationSubscribeTermsExpired
 }
 
@@ -326,7 +334,8 @@ func (notificationTaskAssigned NotificationTaskAssigned) String() string {
 	return Stringify(notificationTaskAssigned)
 }
 
-func (notificationTaskAssigned NotificationTaskAssigned) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskAssigned) MetaType() MetaType {
 	return MetaTypeNotificationTaskAssigned
 }
 
@@ -348,7 +357,8 @@ func (notificationTaskUnassigned NotificationTaskUnassigned) String() string {
 	return Stringify(notificationTaskUnassigned)
 }
 
-func (notificationTaskUnassigned NotificationTaskUnassigned) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskUnassigned) MetaType() MetaType {
 	return MetaTypeNotificationTaskUnassigned
 }
 
@@ -380,7 +390,8 @@ func (notificationTaskChanged NotificationTaskChanged) String() string {
 	return Stringify(notificationTaskChanged)
 }
 
-func (notificationTaskChanged NotificationTaskChanged) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskChanged) MetaType() MetaType {
 	return MetaTypeNotificationTaskChanged
 }
 
@@ -412,7 +423,8 @@ func (notificationTaskCompleted NotificationTaskCompleted) String() string {
 	return Stringify(notificationTaskCompleted)
 }
 
-func (notificationTaskCompleted NotificationTaskCompleted) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskCompleted) MetaType() MetaType {
 	return MetaTypeNotificationTaskCompleted
 }
 
@@ -434,7 +446,8 @@ func (notificationTaskDeleted NotificationTaskDeleted) String() string {
 	return Stringify(notificationTaskDeleted)
 }
 
-func (notificationTaskDeleted NotificationTaskDeleted) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskDeleted) MetaType() MetaType {
 	return MetaTypeNotificationTaskDeleted
 }
 
@@ -455,7 +468,8 @@ func (notificationTaskOverdue NotificationTaskOverdue) String() string {
 	return Stringify(notificationTaskOverdue)
 }
 
-func (notificationTaskOverdue NotificationTaskOverdue) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskOverdue) MetaType() MetaType {
 	return MetaTypeNotificationTaskOverdue
 }
 
@@ -477,7 +491,8 @@ func (notificationTaskReopened NotificationTaskReopened) String() string {
 	return Stringify(notificationTaskReopened)
 }
 
-func (notificationTaskReopened NotificationTaskReopened) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskReopened) MetaType() MetaType {
 	return MetaTypeNotificationTaskReopened
 }
 
@@ -500,7 +515,8 @@ func (notificationTaskNewComment NotificationTaskNewComment) String() string {
 	return Stringify(notificationTaskNewComment)
 }
 
-func (notificationTaskNewComment NotificationTaskNewComment) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskNewComment) MetaType() MetaType {
 	return MetaTypeNotificationTaskNewComment
 }
 
@@ -524,7 +540,8 @@ func (notificationTaskCommentChanged NotificationTaskCommentChanged) String() st
 	return Stringify(notificationTaskCommentChanged)
 }
 
-func (notificationTaskCommentChanged NotificationTaskCommentChanged) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskCommentChanged) MetaType() MetaType {
 	return MetaTypeNotificationTaskCommentChanged
 }
 
@@ -547,7 +564,8 @@ func (notificationTaskCommentDeleted NotificationTaskCommentDeleted) String() st
 	return Stringify(notificationTaskCommentDeleted)
 }
 
-func (notificationTaskCommentDeleted NotificationTaskCommentDeleted) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationTaskCommentDeleted) MetaType() MetaType {
 	return MetaTypeNotificationTaskCommentDeleted
 }
 
@@ -578,7 +596,8 @@ func (notificationRetailShiftOpened NotificationRetailShiftOpened) String() stri
 	return Stringify(notificationRetailShiftOpened)
 }
 
-func (notificationRetailShiftOpened NotificationRetailShiftOpened) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationRetailShiftOpened) MetaType() MetaType {
 	return MetaTypeNotificationRetailShiftOpened
 }
 
@@ -603,7 +622,8 @@ func (notificationRetailShiftClosed NotificationRetailShiftClosed) String() stri
 	return Stringify(notificationRetailShiftClosed)
 }
 
-func (notificationRetailShiftClosed NotificationRetailShiftClosed) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationRetailShiftClosed) MetaType() MetaType {
 	return MetaTypeNotificationRetailShiftClosed
 }
 
@@ -625,7 +645,8 @@ func (notificationScript NotificationScript) String() string {
 	return Stringify(notificationScript)
 }
 
-func (notificationScript NotificationScript) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationScript) MetaType() MetaType {
 	return MetaTypeNotificationScript
 }
 
@@ -661,7 +682,8 @@ func (facebookTokenExpirationNotification FacebookTokenExpirationNotification) S
 	return Stringify(facebookTokenExpirationNotification)
 }
 
-func (facebookTokenExpirationNotification FacebookTokenExpirationNotification) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (FacebookTokenExpirationNotification) MetaType() MetaType {
 	return MetaTypeFacebookTokenExpirationNotification
 }
 
@@ -681,7 +703,8 @@ func (notificationBonusMoney NotificationBonusMoney) String() string {
 	return Stringify(notificationBonusMoney)
 }
 
-func (notificationBonusMoney NotificationBonusMoney) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NotificationBonusMoney) MetaType() MetaType {
 	return MetaTypeNotificationBonusMoney
 }
 
@@ -702,7 +725,8 @@ func (newMentionInEvent NewMentionInEvent) String() string {
 	return Stringify(newMentionInEvent)
 }
 
-func (newMentionInEvent NewMentionInEvent) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (NewMentionInEvent) MetaType() MetaType {
 	return MetaTypeNewMentionInEvent
 }
 
@@ -762,6 +786,7 @@ func (notification Notification) String() string {
 	return Stringify(notification)
 }
 
+// MetaType возвращает тип сущности.
 func (notification Notification) MetaType() MetaType {
 	return notification.Meta.GetType()
 }

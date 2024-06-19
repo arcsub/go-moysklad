@@ -136,7 +136,8 @@ func (project Project) String() string {
 	return Stringify(project)
 }
 
-func (project Project) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Project) MetaType() MetaType {
 	return MetaTypeProject
 }
 

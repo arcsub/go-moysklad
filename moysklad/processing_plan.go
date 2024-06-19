@@ -143,8 +143,8 @@ func (processingPlan *ProcessingPlan) SetStages(stages ...*ProcessingPlanStages)
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetMaterials(materials *Positions[ProcessingPlanMaterial]) *ProcessingPlan {
-	processingPlan.Materials = materials
+func (processingPlan *ProcessingPlan) SetMaterials(materials ...*ProcessingPlanMaterial) *ProcessingPlan {
+	processingPlan.Materials = NewPositionsFrom(materials)
 	return processingPlan
 }
 
@@ -173,8 +173,8 @@ func (processingPlan *ProcessingPlan) SetProcessingProcess(processingProcess *Pr
 	return processingPlan
 }
 
-func (processingPlan *ProcessingPlan) SetProducts(products *Positions[ProcessingPlanProduct]) *ProcessingPlan {
-	processingPlan.Products = products
+func (processingPlan *ProcessingPlan) SetProducts(products ...*ProcessingPlanProduct) *ProcessingPlan {
+	processingPlan.Products = NewPositionsFrom(products)
 	return processingPlan
 }
 
@@ -187,7 +187,8 @@ func (processingPlan ProcessingPlan) String() string {
 	return Stringify(processingPlan)
 }
 
-func (processingPlan ProcessingPlan) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlan) MetaType() MetaType {
 	return MetaTypeProcessingPlan
 }
 
@@ -261,7 +262,8 @@ func (processingPlanStages ProcessingPlanStages) String() string {
 	return Stringify(processingPlanStages)
 }
 
-func (processingPlanStages ProcessingPlanStages) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlanStages) MetaType() MetaType {
 	return MetaTypeProcessingPlanStages
 }
 
@@ -315,7 +317,8 @@ func (processingPlanProduct ProcessingPlanProduct) String() string {
 	return Stringify(processingPlanProduct)
 }
 
-func (processingPlanProduct ProcessingPlanProduct) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlanProduct) MetaType() MetaType {
 	return MetaTypeProcessingPlanProduct
 }
 
@@ -384,7 +387,8 @@ func (processingPlanMaterial ProcessingPlanMaterial) String() string {
 	return Stringify(processingPlanMaterial)
 }
 
-func (processingPlanMaterial ProcessingPlanMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPlanMaterial) MetaType() MetaType {
 	return MetaTypeProcessingPlanMaterial
 }
 

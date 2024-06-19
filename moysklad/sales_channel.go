@@ -136,7 +136,8 @@ func (salesChannel SalesChannel) String() string {
 	return Stringify(salesChannel)
 }
 
-func (salesChannel SalesChannel) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SalesChannel) MetaType() MetaType {
 	return MetaTypeSalesChannel
 }
 

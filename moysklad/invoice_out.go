@@ -317,8 +317,8 @@ func (invoiceOut *InvoiceOut) SetPaymentPlannedMoment(paymentPlannedMoment *Time
 	return invoiceOut
 }
 
-func (invoiceOut *InvoiceOut) SetPositions(positions *Positions[InvoiceOutPosition]) *InvoiceOut {
-	invoiceOut.Positions = positions
+func (invoiceOut *InvoiceOut) SetPositions(positions ...*InvoiceOutPosition) *InvoiceOut {
+	invoiceOut.Positions = NewPositionsFrom(positions)
 	return invoiceOut
 }
 
@@ -401,7 +401,8 @@ func (invoiceOut InvoiceOut) String() string {
 	return Stringify(invoiceOut)
 }
 
-func (invoiceOut InvoiceOut) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InvoiceOut) MetaType() MetaType {
 	return MetaTypeInvoiceOut
 }
 
@@ -525,7 +526,8 @@ func (invoiceOutPosition InvoiceOutPosition) String() string {
 	return Stringify(invoiceOutPosition)
 }
 
-func (invoiceOutPosition InvoiceOutPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (InvoiceOutPosition) MetaType() MetaType {
 	return MetaTypeInvoicePosition
 }
 

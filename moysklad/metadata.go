@@ -91,7 +91,8 @@ type StatesElement struct {
 	Color      int    `json:"color"`
 }
 
-func (metadata Metadata) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Metadata) MetaType() MetaType {
 	return MetaTypeMetadata
 }
 

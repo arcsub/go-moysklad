@@ -233,8 +233,8 @@ func (productionTask *ProductionTask) SetOwner(owner *Employee) *ProductionTask 
 	return productionTask
 }
 
-func (productionTask *ProductionTask) SetProductionRows(productionRows *Positions[ProductionRow]) *ProductionTask {
-	productionTask.ProductionRows = productionRows
+func (productionTask *ProductionTask) SetProductionRows(productionRows ...*ProductionRow) *ProductionTask {
+	productionTask.ProductionRows = NewPositionsFrom(productionRows)
 	return productionTask
 }
 
@@ -243,8 +243,8 @@ func (productionTask *ProductionTask) SetProductionStart(productionStart *Timest
 	return productionTask
 }
 
-func (productionTask *ProductionTask) SetProducts(products *Positions[ProductionTaskResult]) *ProductionTask {
-	productionTask.Products = products
+func (productionTask *ProductionTask) SetProducts(products ...*ProductionTaskResult) *ProductionTask {
+	productionTask.Products = NewPositionsFrom(products)
 	return productionTask
 }
 
@@ -282,7 +282,8 @@ func (productionTask ProductionTask) String() string {
 	return Stringify(productionTask)
 }
 
-func (productionTask ProductionTask) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionTask) MetaType() MetaType {
 	return MetaTypeProductionTask
 }
 
@@ -366,7 +367,8 @@ func (productionRow ProductionRow) String() string {
 	return Stringify(productionRow)
 }
 
-func (productionRow ProductionRow) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionRow) MetaType() MetaType {
 	return MetaTypeProductionRow
 }
 
@@ -415,7 +417,8 @@ func (productionTaskResult ProductionTaskResult) String() string {
 	return Stringify(productionTaskResult)
 }
 
-func (productionTaskResult ProductionTaskResult) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProductionTaskResult) MetaType() MetaType {
 	return MetaTypeProductionTaskResult
 }
 

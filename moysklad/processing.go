@@ -317,7 +317,8 @@ func (processing Processing) String() string {
 	return Stringify(processing)
 }
 
-func (processing Processing) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Processing) MetaType() MetaType {
 	return MetaTypeProcessing
 }
 
@@ -376,7 +377,8 @@ func (processingPositionMaterial ProcessingPositionMaterial) String() string {
 	return Stringify(processingPositionMaterial)
 }
 
-func (processingPositionMaterial ProcessingPositionMaterial) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPositionMaterial) MetaType() MetaType {
 	return MetaTypeProcessingPositionMaterial
 }
 
@@ -420,7 +422,8 @@ func (processingPositionProduct ProcessingPositionProduct) String() string {
 	return Stringify(processingPositionProduct)
 }
 
-func (processingPositionProduct ProcessingPositionProduct) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ProcessingPositionProduct) MetaType() MetaType {
 	return MetaTypeProcessingPositionProduct
 }
 

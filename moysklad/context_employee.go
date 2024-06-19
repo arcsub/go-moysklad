@@ -508,7 +508,7 @@ type ContextEmployee struct {
 	ExternalCode string             `json:"externalCode"`
 	ID           string             `json:"id"`
 	Position     string             `json:"position"`
-	Uid          string             `json:"uid"`
+	UID          string             `json:"uid"`
 	Email        string             `json:"email"`
 	Phone        string             `json:"phone"`
 	FirstName    string             `json:"firstName"`
@@ -530,7 +530,8 @@ func (contextEmployee ContextEmployee) String() string {
 	return Stringify(contextEmployee)
 }
 
-func (contextEmployee ContextEmployee) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (ContextEmployee) MetaType() MetaType {
 	return MetaTypeEmployeeContext
 }
 

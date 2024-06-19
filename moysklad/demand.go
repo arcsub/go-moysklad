@@ -372,8 +372,8 @@ func (demand *Demand) SetOwner(owner *Employee) *Demand {
 	return demand
 }
 
-func (demand *Demand) SetPositions(positions *Positions[DemandPosition]) *Demand {
-	demand.Positions = positions
+func (demand *Demand) SetPositions(positions ...*DemandPosition) *Demand {
+	demand.Positions = NewPositionsFrom(positions)
 	return demand
 }
 
@@ -526,7 +526,8 @@ func (demand Demand) String() string {
 	return Stringify(demand)
 }
 
-func (demand Demand) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Demand) MetaType() MetaType {
 	return MetaTypeDemand
 }
 
@@ -695,7 +696,8 @@ func (demandPosition DemandPosition) String() string {
 	return Stringify(demandPosition)
 }
 
-func (demandPosition DemandPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (DemandPosition) MetaType() MetaType {
 	return MetaTypeDemandPosition
 }
 

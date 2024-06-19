@@ -336,7 +336,8 @@ func (factureOut FactureOut) String() string {
 	return Stringify(factureOut)
 }
 
-func (factureOut FactureOut) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (FactureOut) MetaType() MetaType {
 	return MetaTypeFactureOut
 }
 

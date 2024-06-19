@@ -333,8 +333,8 @@ func (commissionReportIn *CommissionReportIn) SetOwner(owner *Employee) *Commiss
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetPositions(positions *Positions[CommissionReportInPosition]) *CommissionReportIn {
-	commissionReportIn.Positions = positions
+func (commissionReportIn *CommissionReportIn) SetPositions(positions ...*CommissionReportInPosition) *CommissionReportIn {
+	commissionReportIn.Positions = NewPositionsFrom(positions)
 	return commissionReportIn
 }
 
@@ -358,8 +358,8 @@ func (commissionReportIn *CommissionReportIn) SetNullRate() *CommissionReportIn 
 	return commissionReportIn
 }
 
-func (commissionReportIn *CommissionReportIn) SetReturnToCommissionerPositions(returnToCommissionerPositions *Positions[CommissionReportInReturnPosition]) *CommissionReportIn {
-	commissionReportIn.ReturnToCommissionerPositions = returnToCommissionerPositions
+func (commissionReportIn *CommissionReportIn) SetReturnToCommissionerPositions(returnToCommissionerPositions ...*CommissionReportInReturnPosition) *CommissionReportIn {
+	commissionReportIn.ReturnToCommissionerPositions = NewPositionsFrom(returnToCommissionerPositions)
 	return commissionReportIn
 }
 
@@ -427,7 +427,8 @@ func (commissionReportIn CommissionReportIn) String() string {
 	return Stringify(commissionReportIn)
 }
 
-func (commissionReportIn CommissionReportIn) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportIn) MetaType() MetaType {
 	return MetaTypeCommissionReportIn
 }
 
@@ -565,7 +566,8 @@ func (commissionReportInPosition CommissionReportInPosition) String() string {
 	return Stringify(commissionReportInPosition)
 }
 
-func (commissionReportInPosition CommissionReportInPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportInPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportInPosition
 }
 
@@ -659,7 +661,8 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) String(
 	return Stringify(commissionReportInReturnPosition)
 }
 
-func (commissionReportInReturnPosition CommissionReportInReturnPosition) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (CommissionReportInReturnPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportInReturnPosition
 }
 

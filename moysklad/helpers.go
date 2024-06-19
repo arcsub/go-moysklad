@@ -466,8 +466,9 @@ func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValueAny.value)
 }
 
+// AsMetaWrapperSlice оборачивает каждый элемент слайса в объект MetaWrapper
 func AsMetaWrapperSlice[T MetaOwner](entities []*T) []MetaWrapper {
-	var o []MetaWrapper
+	var o = make([]MetaWrapper, 0, len(entities))
 	for _, entity := range entities {
 		o = append(o, (*entity).GetMeta().Wrap())
 	}

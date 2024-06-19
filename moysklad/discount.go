@@ -99,8 +99,8 @@ func (discount Discount) String() string {
 	return Stringify(discount.Meta)
 }
 
-// MetaType реализует интерфейс MetaTyper
-func (discount *Discount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (discount Discount) MetaType() MetaType {
 	return discount.Meta.GetType()
 }
 
@@ -263,7 +263,8 @@ func (accumulationDiscount AccumulationDiscount) String() string {
 	return Stringify(accumulationDiscount)
 }
 
-func (accumulationDiscount AccumulationDiscount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (AccumulationDiscount) MetaType() MetaType {
 	return MetaTypeAccumulationDiscount
 }
 
@@ -396,7 +397,8 @@ func (personalDiscount PersonalDiscount) String() string {
 	return Stringify(personalDiscount)
 }
 
-func (personalDiscount PersonalDiscount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (PersonalDiscount) MetaType() MetaType {
 	return MetaTypePersonalDiscount
 }
 
@@ -535,7 +537,8 @@ func (specialPriceDiscount SpecialPriceDiscount) String() string {
 	return Stringify(specialPriceDiscount)
 }
 
-func (specialPriceDiscount SpecialPriceDiscount) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (SpecialPriceDiscount) MetaType() MetaType {
 	return MetaTypeSpecialPriceDiscount
 }
 

@@ -55,7 +55,8 @@ func (thing Thing) String() string {
 	return Stringify(thing)
 }
 
-func (thing Thing) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Thing) MetaType() MetaType {
 	return MetaTypeThing
 }
 

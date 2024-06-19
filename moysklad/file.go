@@ -70,6 +70,7 @@ func (file File) String() string {
 	return Stringify(file)
 }
 
-func (file File) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (File) MetaType() MetaType {
 	return MetaTypeFiles
 }

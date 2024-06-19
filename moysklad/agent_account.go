@@ -23,6 +23,7 @@ type AgentAccount struct {
 func (agentAccount AgentAccount) Clean() *AgentAccount {
 	return &AgentAccount{Meta: agentAccount.Meta}
 }
+
 func (agentAccount AgentAccount) GetAccountID() uuid.UUID {
 	return Deref(agentAccount.AccountID)
 }

@@ -106,6 +106,7 @@ func (payroll Payroll) String() string {
 	return Stringify(payroll)
 }
 
-func (payroll Payroll) MetaType() MetaType {
+// MetaType возвращает тип сущности.
+func (Payroll) MetaType() MetaType {
 	return MetaTypePayroll
 }
