@@ -5,7 +5,11 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad)
 ![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad)
 
-<a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank"><img src="https://github.com/arcsub/go-moysklad/assets/47686389/4565b816-dfcc-4393-b8ea-12a5cba51485" width="130px"></a>
+<a href="https://pay.cloudtips.ru/p/eac3797c">
+<p align="center">
+  <img src="https://github.com/arcsub/go-moysklad/assets/47686389/4565b816-dfcc-4393-b8ea-12a5cba51485" width="130px">
+</p>
+</a>
 
 # go-moysklad (МойСклад)
 
