@@ -29,7 +29,7 @@ type ProductFolder struct {
 	Updated             *Timestamp     `json:"updated,omitempty"`
 	Meta                *Meta          `json:"meta,omitempty"`
 	Vat                 *int           `json:"vat,omitempty"`
-	TaxSystem           GoodTaxSystem  `json:"taxSystem,omitempty"`
+	TaxSystem           TaxSystem      `json:"taxSystem,omitempty"`
 }
 
 // Clean возвращает сущность с единственным заполненным полем Meta
@@ -113,7 +113,7 @@ func (productFolder ProductFolder) GetVat() int {
 	return Deref(productFolder.Vat)
 }
 
-func (productFolder ProductFolder) GetTaxSystem() GoodTaxSystem {
+func (productFolder ProductFolder) GetTaxSystem() TaxSystem {
 	return productFolder.TaxSystem
 }
 
@@ -182,7 +182,7 @@ func (productFolder *ProductFolder) SetVat(vat int) *ProductFolder {
 	return productFolder
 }
 
-func (productFolder *ProductFolder) SetTaxSystem(taxSystem GoodTaxSystem) *ProductFolder {
+func (productFolder *ProductFolder) SetTaxSystem(taxSystem TaxSystem) *ProductFolder {
 	productFolder.TaxSystem = taxSystem
 	return productFolder
 }

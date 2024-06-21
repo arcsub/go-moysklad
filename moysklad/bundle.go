@@ -44,7 +44,7 @@ type Bundle struct {
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`
 	Uom                 *NullValue[Uom]             `json:"uom,omitempty"`
 	UseParentVat        *bool                       `json:"useParentVat,omitempty"`
-	TaxSystem           GoodTaxSystem               `json:"taxSystem,omitempty"`
+	TaxSystem           TaxSystem                   `json:"taxSystem,omitempty"`
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`
 	Barcodes            Slice[Barcode]              `json:"barcodes,omitempty"`
@@ -204,7 +204,7 @@ func (bundle Bundle) GetUseParentVat() bool {
 	return Deref(bundle.UseParentVat)
 }
 
-func (bundle Bundle) GetTaxSystem() GoodTaxSystem {
+func (bundle Bundle) GetTaxSystem() TaxSystem {
 	return bundle.TaxSystem
 }
 
@@ -390,7 +390,7 @@ func (bundle *Bundle) SetUseParentVat(useParentVat bool) *Bundle {
 	return bundle
 }
 
-func (bundle *Bundle) SetTaxSystem(taxSystem GoodTaxSystem) *Bundle {
+func (bundle *Bundle) SetTaxSystem(taxSystem TaxSystem) *Bundle {
 	bundle.TaxSystem = taxSystem
 	return bundle
 }
