@@ -241,7 +241,16 @@ func (assortmentResponse AssortmentResponse) String() string {
 }
 
 // PaymentItem Признак предмета расчета.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-priznak-predmeta-rascheta
+//
+// Возможные варианты:
+//   - PaymentItemGood                – Товар
+//   - PaymentItemExcisableGood       – Подакцизный товар
+//   - PaymentItemCompoundPaymentItem – Составной предмет расчета
+//   - PaymentItemAnotherPaymentItem  – Иной предмет расчета
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-priznak-predmeta-rascheta
 type PaymentItem string
 
 const (
@@ -252,7 +261,28 @@ const (
 )
 
 // TrackingType Тип маркируемой продукции.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-tip-markiruemoj-produkcii
+//
+// Возможные варианты:
+//   - TrackingTypeBeerAlcohol 		– Пиво и слабоалкогольная продукция
+//   - TrackingTypeElectronics 		– Фотокамеры и лампы-вспышки
+//   - TrackingTypeFoodSupplement 	– Биологически активные добавки к пище
+//   - TrackingTypeClothes 			– Тип маркировки "Одежда"
+//   - TrackingTypeLinens 			– Тип маркировки "Постельное белье"
+//   - TrackingTypeMedicalDevices 	– Медизделия и кресла-коляски
+//   - TrackingTypeMilk 			– Молочная продукция
+//   - TrackingTypeNcp 				– Никотиносодержащая продукция
+//   - TrackingTypeNotTracked 		– Без маркировки
+//   - TrackingTypeOtp 				– Альтернативная табачная продукция
+//   - TrackingTypePerfumery 		– Духи и туалетная вода
+//   - TrackingTypeSanitizer 		– Антисептики
+//   - TrackingTypeShoes 			– Тип маркировки "Обувь"
+//   - TrackingTypeTires 			– Шины и покрышки
+//   - TrackingTypeTobacco 			– Тип маркировки "Табак"
+//   - TrackingTypeWater 			– Упакованная вода
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-suschnosti-tip-markiruemoj-produkcii
 type TrackingType string
 
 const (
