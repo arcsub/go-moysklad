@@ -10,10 +10,10 @@ type Address struct {
 	Apartment  *string      `json:"apartment,omitempty"`  // Квартира
 	City       *string      `json:"city,omitempty"`       // Город
 	Comment    *string      `json:"comment,omitempty"`    // Комментарий
-	Country    *MetaWrapper `json:"country,omitempty"`    // Метаданные страны
+	Country    *MetaWrapper `json:"country,omitempty"`    // Метаданные Страны. Подробнее: [Country]
 	House      *string      `json:"house,omitempty"`      // Дом
 	PostalCode *string      `json:"postalCode,omitempty"` // Почтовый индекс
-	Region     *MetaWrapper `json:"region,omitempty"`     // Метаданные региона
+	Region     *MetaWrapper `json:"region,omitempty"`     // Метаданные региона. Подробнее: [Region]
 	Street     *string      `json:"street,omitempty"`     // Улица
 }
 
@@ -74,45 +74,45 @@ func (address *Address) SetApartment(apartment string) *Address {
 	return address
 }
 
-// SetCity устанавливает значение поля City (Город) и возвращает указатель на [Address].
+// SetCity устанавливает Город.
 func (address *Address) SetCity(city string) *Address {
 	address.City = &city
 	return address
 }
 
-// SetComment устанавливает значение поля Comment (Комментарий) и возвращает указатель на [Address].
+// SetComment устанавливает Комментарий.
 func (address *Address) SetComment(comment string) *Address {
 	address.Comment = &comment
 	return address
 }
 
-// SetCountry устанавливает значение поля Country (Метаданные страны) и возвращает указатель на [Address].
+// SetCountry устанавливает Метаданные страны.
 func (address *Address) SetCountry(country *Country) *Address {
 	mw := country.GetMeta().Wrap()
 	address.Country = &mw
 	return address
 }
 
-// SetHouse устанавливает значение поля House (Дом) и возвращает указатель на [Address].
+// SetHouse устанавливает Дом.
 func (address *Address) SetHouse(house string) *Address {
 	address.House = &house
 	return address
 }
 
-// SetPostalCode устанавливает значение поля PostalCode (Почтовый индекс) и возвращает указатель на [Address].
+// SetPostalCode устанавливает Почтовый индекс.
 func (address *Address) SetPostalCode(postalCode string) *Address {
 	address.PostalCode = &postalCode
 	return address
 }
 
-// SetRegion устанавливает значение поля Region (Метаданные региона) и возвращает указатель на [Address].
+// SetRegion устанавливает Метаданные региона.
 func (address *Address) SetRegion(region *Region) *Address {
 	mw := region.GetMeta().Wrap()
 	address.Region = &mw
 	return address
 }
 
-// SetStreet устанавливает значение поля Street (Улица) и возвращает указатель на [Address].
+// SetStreet устанавливает Улицу.
 func (address *Address) SetStreet(street string) *Address {
 	address.Street = &street
 	return address
