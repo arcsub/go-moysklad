@@ -13,7 +13,7 @@ type Agent struct {
 	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ [Обязательное при ответе]
 	Name              *string                  `json:"name,omitempty"`              // Наименование Контрагента/Юрлица
 	Meta              *Meta                    `json:"meta,omitempty"`              // Метаданные Контрагента/Юрлица
-	ActualAddressFull *Address                 `json:"actualAddressFull,omitempty"` // Фактический адрес Контрагента с детализацией по отдельным полям. Подробнее: [Address].
+	ActualAddressFull *Address                 `json:"actualAddressFull,omitempty"` // Фактический адрес Контрагента с детализацией по отдельным полям
 	LegalAddress      *string                  `json:"legalAddress,omitempty"`      // Юридический адрес Контрагента/Юрлица
 	CertificateDate   *Timestamp               `json:"certificateDate,omitempty"`   // Дата свидетельства
 	ID                *uuid.UUID               `json:"id,omitempty"`                // ID Контрагента/Юрлица
@@ -21,26 +21,26 @@ type Agent struct {
 	OKPO              *string                  `json:"okpo,omitempty"`              // ОКПО
 	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Контрагента/Юрлица
 	LegalTitle        *string                  `json:"legalTitle,omitempty"`        // Полное наименование для Контрагента типа [Юридическое лицо]. Игнорируется для Контрагентов типа [Индивидуальный предприниматель, Физическое лицо], если передано одно из значений для ФИО и формируется автоматически на основе получаемых ФИО Контрагента
-	LegalAddressFull  *Address                 `json:"legalAddressFull,omitempty"`  // Юридический адрес Контрагента/Юрлица с детализацией по отдельным полям. Подробнее: [Address].
+	LegalAddressFull  *Address                 `json:"legalAddressFull,omitempty"`  // Юридический адрес Контрагента/Юрлица с детализацией по отдельным полям
 	INN               *string                  `json:"inn,omitempty"`               // ИНН
 	Phone             *string                  `json:"phone,omitempty"`             // Номер городского телефона
 	SyncID            *uuid.UUID               `json:"syncId,omitempty"`            // ID синхронизации
 	CertificateNumber *string                  `json:"certificateNumber,omitempty"` // Номер свидетельства
-	Accounts          *MetaArray[AgentAccount] `json:"accounts,omitempty"`          // Массив счетов Контрагента/Юрлица. Подробнее: [AgentAccount]
+	Accounts          *MetaArray[AgentAccount] `json:"accounts,omitempty"`          // Массив счетов Контрагента/Юрлица
 	Created           *Timestamp               `json:"created,omitempty"`           // Момент создания
 	Archived          *bool                    `json:"archived,omitempty"`          // Добавлен ли Контрагент/Юрлицо в архив
 	Description       *string                  `json:"description,omitempty"`       // Комментарий к Контрагенту/Юрлицу
 	Group             *Group                   `json:"group,omitempty"`             // Отдел сотрудника
 	OGRNIP            *string                  `json:"ogrnip,omitempty"`            // ОГРНИП
-	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные активной Бонусной программы. Подробнее: [BonusProgram]
+	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные активной Бонусной программы
 	Code              *string                  `json:"code,omitempty"`              // Код Контрагента/Юрлица
 	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учетной записи
 	ActualAddress     *string                  `json:"actualAddress,omitempty"`     // Фактический адрес Контрагента/Юрлица
 	BonusPoints       *int                     `json:"bonusPoints,omitempty"`       // Бонусные баллы по активной бонусной программе
-	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника). Подробнее: [Employee]
+	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
 	Email             *string                  `json:"email,omitempty"`             // Адрес электронной почты
 	CompanyType       CompanyType              `json:"companyType,omitempty"`       // Тип Контрагента/Юрлица. В зависимости от значения данного поля набор выводимых реквизитов контрагента может меняться.
-	Attributes        Slice[Attribute]         `json:"attributes,omitempty"`        // Массив метаданных доп. полей. Подробнее: [Attribute]
+	Attributes        Slice[Attribute]         `json:"attributes,omitempty"`        // Массив метаданных доп. полей
 	raw               []byte
 }
 

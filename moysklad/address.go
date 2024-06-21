@@ -10,10 +10,10 @@ type Address struct {
 	Apartment  *string      `json:"apartment,omitempty"`  // Квартира
 	City       *string      `json:"city,omitempty"`       // Город
 	Comment    *string      `json:"comment,omitempty"`    // Комментарий
-	Country    *MetaWrapper `json:"country,omitempty"`    // Метаданные Страны. Подробнее: [Country]
+	Country    *MetaWrapper `json:"country,omitempty"`    // Метаданные Страны
 	House      *string      `json:"house,omitempty"`      // Дом
 	PostalCode *string      `json:"postalCode,omitempty"` // Почтовый индекс
-	Region     *MetaWrapper `json:"region,omitempty"`     // Метаданные региона. Подробнее: [Region]
+	Region     *MetaWrapper `json:"region,omitempty"`     // Метаданные региона
 	Street     *string      `json:"street,omitempty"`     // Улица
 }
 
