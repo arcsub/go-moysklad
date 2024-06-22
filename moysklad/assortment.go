@@ -460,6 +460,5 @@ type AssortmentService interface {
 
 // NewAssortmentService возвращает сервис для работы с ассортиментом.
 func NewAssortmentService(client *Client) AssortmentService {
-	e := NewEndpoint(client, "entity/assortment")
-	return &assortmentService{e}
+	return &assortmentService{NewEndpoint(client, "entity/assortment")}
 }

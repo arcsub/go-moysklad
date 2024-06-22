@@ -10,23 +10,28 @@ import (
 )
 
 // Audit Контексты Аудита.
+//
 // Ключевое слово: audit
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-kontexty
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-kontexty
 type Audit struct {
-	Events        MetaWrapper      `json:"events"`
-	Meta          Meta             `json:"meta"`
-	Moment        Timestamp        `json:"moment"`
-	EntityType    string           `json:"entityType"`
-	EventType     AuditEventType   `json:"eventType"`
-	Info          AuditContextInfo `json:"info"`
-	ObjectType    string           `json:"objectType"`
-	Source        string           `json:"source"`
-	UID           string           `json:"uid"`
-	ObjectCount   int              `json:"objectCount"`
-	ID            uuid.UUID        `json:"id"`
-	SupportAccess bool             `json:"supportAccess"`
+	Events        MetaWrapper    `json:"events"`        // Список метаданных Событий аудита
+	Meta          Meta           `json:"meta"`          // Метаданные сущности Контекста
+	Moment        Timestamp      `json:"moment"`        // Дата изменения
+	EntityType    MetaType       `json:"entityType"`    // Название сущности (поле присутствует, только если оно одинаково у всех Событий в рамках данного Контекста)
+	EventType     AuditEventType `json:"eventType"`     // Действие Событий (поле присутствует, только если оно одинаково у всех Событий в рамках данного Контекста)
+	Info          AuditInfo      `json:"info"`          // Краткое описание
+	ObjectType    MetaType       `json:"objectType"`    // Тип сущностей, с которыми связанно данное изменение. Поле присутствует только для entityType = entitysettings или statesettings или templatesettings
+	Source        string         `json:"source"`        // Тип изменения
+	UID           string         `json:"uid"`           // Логин Сотрудника
+	ObjectCount   int            `json:"objectCount"`   // количество измененных объектов
+	ID            uuid.UUID      `json:"id"`            // ID Контекста
+	SupportAccess bool           `json:"supportAccess"` // Был ли доступ произведен поддержкой от имени пользователя. Флаг отсутствует, если значение false
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (audit Audit) String() string {
 	return Stringify(audit)
 }
@@ -36,29 +41,35 @@ func (Audit) MetaType() MetaType {
 	return MetaTypeAudit
 }
 
-type AuditContextInfo struct {
-	AdditionalInfo string `json:"additionalInfo"`
+// AuditInfo Краткое описание.
+type AuditInfo struct {
+	AdditionalInfo string `json:"additionalInfo"` // Содержание краткого описания
 }
 
 // AuditEvent Событие аудита.
+//
 // Ключевое слово: auditevent
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-sobytiq
 type AuditEvent struct {
-	Entity         MetaWrapper    `json:"entity"`
-	Audit          MetaWrapper    `json:"audit"`
-	Moment         Timestamp      `json:"moment"`
-	Diff           Diff           `json:"diff"`
-	AdditionalInfo string         `json:"additionalInfo"`
-	EventType      AuditEventType `json:"eventType"`
-	EntityType     string         `json:"entityType"`
-	Name           string         `json:"name"`
-	ObjectType     string         `json:"objectType"`
-	UID            string         `json:"uid"`
-	Source         string         `json:"source"`
-	ObjectCount    int            `json:"objectCount"`
-	SupportAccess  bool           `json:"supportAccess"`
+	Entity         MetaWrapper    `json:"entity"`         // Метаданные сущности. Не будет выводиться только для товаров, услуг, модификаций, комплектов удаленных до 20.08.2017
+	Audit          MetaWrapper    `json:"audit"`          // Метаданные контекста
+	Moment         Timestamp      `json:"moment"`         // Время создания события
+	Diff           Diff           `json:"diff"`           // Изменения, произошедшие в Событии
+	AdditionalInfo string         `json:"additionalInfo"` // Дополнительная информация о Событии
+	EventType      AuditEventType `json:"eventType"`      // Действие События
+	EntityType     MetaType       `json:"entityType"`     // Название сущности
+	Name           string         `json:"name"`           // Имя сущности
+	ObjectType     MetaType       `json:"objectType"`     // Тип сущностей, с которыми связанно данное изменение. Поле присутствует только для entityType = entitysettings или statesettings или templatesettings
+	UID            string         `json:"uid"`            // Логин Сотрудника
+	Source         string         `json:"source"`         // Тип изменения
+	ObjectCount    int            `json:"objectCount"`    // количество измененных объектов
+	SupportAccess  bool           `json:"supportAccess"`  // Был ли доступ произведен поддержкой от имени пользователя. Флаг отсутствует, если значение false
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (auditEvent AuditEvent) String() string {
 	return Stringify(auditEvent)
 }
@@ -68,10 +79,10 @@ func (AuditEvent) MetaType() MetaType {
 	return MetaTypeAuditEvent
 }
 
-// Diff тип поля diff
+// Diff формат поля diff.
 type Diff map[string]any
 
-// Keys возвращает все ключи (поля) объекта Diff
+// Keys возвращает все ключи объекта Diff, по которым можно получить данные.
 func (diff Diff) Keys() []string {
 	r := make([]string, 0, len(diff))
 	for k := range diff {
@@ -80,7 +91,7 @@ func (diff Diff) Keys() []string {
 	return r
 }
 
-// IsExist возвращает true, если fieldName присутствует в объекте Diff
+// IsExist возвращает true, если fieldName (ключ) присутствует в объекте Diff
 func (diff Diff) IsExist(fieldName string) bool {
 	if _, ok := diff[fieldName]; ok {
 		return true
@@ -88,65 +99,59 @@ func (diff Diff) IsExist(fieldName string) bool {
 	return false
 }
 
+// OldNew представляет значения до изменения и после изменения.
+//
+// T может быть любым, ориентируясь на тип сущности EntityType события аудита.
+//
+// Поля типа T должны иметь тег json с названием соответствующего поля.
 type OldNew[T any] struct {
-	OldValue T `json:"oldValue"`
-	NewValue T `json:"newValue"`
+	OldValue T `json:"oldValue"` // Значение до изменения
+	NewValue T `json:"newValue"` // Значение после изменения
 }
 
+// SalePriceElem представляет объект для отображения изменений цен продажи.
 type SalePriceElem struct {
 	OldValue struct {
 		Uom   string
 		Value float64
-	} `json:"oldValue"`
+	} `json:"oldValue"` // Значение до изменения
 	NewValue struct {
 		Uom   string
 		Value float64
-	} `json:"newValue"`
+	} `json:"newValue"` // Значение после изменения
 }
 
+// AuditPosition представляет объект для отображения изменений позиций документов.
 type AuditPosition struct {
 	Assortment struct {
 		Meta Meta   `json:"meta"`
 		Name string `json:"name"`
-	} `json:"assortment"`
-	Uom      string  `json:"uom"`
-	Quantity float64 `json:"quantity"`
-	Reserve  float64 `json:"reserve"`
-	Price    float64 `json:"price"`
-	Discount float64 `json:"discount"`
+	} `json:"assortment"` // Метаданные позиции
+	Uom      string  `json:"uom"`      // Единица измерения
+	Quantity float64 `json:"quantity"` // Количество
+	Reserve  float64 `json:"reserve"`  // Резерв
+	Price    float64 `json:"price"`    // Стоимость позиции в документе
+	Discount float64 `json:"discount"` // Скидка позиции в документе
 }
 
-func unmarshallAny[T any](data any) (T, error) {
-	var t T
-	b, err := json.Marshal(data)
-	if err != nil {
-		log.Println(err)
-		return t, err
-	}
-
-	if err = json.Unmarshal(b, &t); err != nil {
-		log.Println(err)
-		return t, err
-	}
-
-	return t, nil
-}
-
-func getUnmarshall[T any](diff Diff, field string) (bool, T) {
+// getFieldAndUnmarshall достаёт значение из поля field объекта Diff и пытается привести к типу T.
+//
+// Возвращает true и T в случае успеха.
+func getFieldAndUnmarshall[T any](diff Diff, field string) (bool, T) {
 	if positions, ok := diff[field]; ok {
-		if p, err := unmarshallAny[T](positions); err == nil {
+		if p, err := UnmarshallAny[T](positions); err == nil {
 			return true, p
 		}
 	}
 	return false, *new(T)
 }
 
-// GetPositions возвращает позиции
+// GetPositions возвращает true и позиции изменённого документа, если такие присутствуют в объекте Diff.
 func (diff Diff) GetPositions() (bool, []OldNew[AuditPosition]) {
-	return getUnmarshall[[]OldNew[AuditPosition]](diff, "positions")
+	return getFieldAndUnmarshall[[]OldNew[AuditPosition]](diff, "positions")
 }
 
-// GetSalesPrices возвращает объект SalePriceElem
+// GetSalesPrices возвращает true и объект SalePriceElem, если в объекте Diff присутствует поле salePrices.
 func (diff Diff) GetSalesPrices() (bool, SalePriceElem) {
 	var o SalePriceElem
 	if salePrices, ok := diff["salePrices"]; ok {
@@ -172,68 +177,93 @@ func (diff Diff) GetSalesPrices() (bool, SalePriceElem) {
 	return false, o
 }
 
-// GetFieldString возвращает объект OldNew со значениями типа string
+// GetFieldString возвращает true и объект OldNew со значениями типа string, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldString(fieldName string) (bool, OldNew[string]) {
-	return getUnmarshall[OldNew[string]](diff, fieldName)
+	return getFieldAndUnmarshall[OldNew[string]](diff, fieldName)
 }
 
-// GetFieldBool возвращает объект OldNew со значениями типа bool
+// GetFieldBool возвращает true и объект OldNew со значениями типа bool, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldBool(fieldName string) (bool, OldNew[bool]) {
-	return getUnmarshall[OldNew[bool]](diff, fieldName)
+	return getFieldAndUnmarshall[OldNew[bool]](diff, fieldName)
 }
 
-// GetFieldFloat возвращает объект OldNew со значениями типа float64
+// GetFieldFloat возвращает true и объект OldNew со значениями типа float64, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldFloat(fieldName string) (bool, OldNew[float64]) {
-	return getUnmarshall[OldNew[float64]](diff, fieldName)
+	return getFieldAndUnmarshall[OldNew[float64]](diff, fieldName)
 }
 
-// GetFieldInt возвращает объект OldNew со значениями типа int
+// GetFieldInt возвращает true и объект OldNew со значениями типа int, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldInt(fieldName string) (bool, OldNew[int]) {
-	return getUnmarshall[OldNew[int]](diff, fieldName)
+	return getFieldAndUnmarshall[OldNew[int]](diff, fieldName)
 }
 
-// AuditEventType Действие События
+// AuditEventType Действие События.
+//
+// Возможные значения:
+//   - AuditEventRegistration          – Регистрация
+//   - AuditEventBulkOperation         – Массовая операция
+//   - AuditEventClosePublication      – Удаление публикации
+//   - AuditEventCreate                – Создание сущностей
+//   - AuditEventDelete                – Удаление сущностей
+//   - AuditEventOpenPublication       – Создание публикации
+//   - AuditEventPrint                 – Печать документа
+//   - AuditEventPutToArchive          – Помещение в архив
+//   - AuditEventPutToRecycleBin       – Помещение в корзину
+//   - AuditEventReplaceToken          – Смена токена для Точки продаж
+//   - AuditEventRestoreFromArchive    – Извлечение из архива
+//   - AuditEventRestoreFromRecycleBin – Извлечение из корзины
+//   - AuditEventSendEmailFromEntity   – Отправка письма
+//   - AuditEventUpdate                – Изменение сущностей
 type AuditEventType string
 
 const (
-	AuditEventTypeRegistration          AuditEventType = "registration"          // Регистрация
-	AuditEventTypeBulkOperation         AuditEventType = "bulkoperation"         // Массовая операция
-	AuditEventTypeClosePublication      AuditEventType = "closepublication"      // Удаление публикации
-	AuditEventTypeCreate                AuditEventType = "create"                // Создание сущностей
-	AuditEventTypeDelete                AuditEventType = "delete"                // Удаление сущностей
-	AuditEventTypeOpenPublication       AuditEventType = "openpublication"       // Создание публикации
-	AuditEventTypePrint                 AuditEventType = "print"                 // Печать документа
-	AuditEventTypePutToArchive          AuditEventType = "puttoarchive"          // Помещение в архив
-	AuditEventTypePutToRecycleBin       AuditEventType = "puttorecyclebin"       // Помещение в корзину
-	AuditEventTypeReplaceToken          AuditEventType = "replacetoken"          // Смена токена для Точки продаж
-	AuditEventTypeRestoreFromArchive    AuditEventType = "restorefromarchive"    // Извлечение из архива
-	AuditEventTypeRestoreFromRecycleBin AuditEventType = "restorefromrecyclebin" // Извлечение из корзины
-	AuditEventTypeSendEmailFromEntity   AuditEventType = "sendemailfromentity"   // Отправка письма
-	AuditEventTypeUpdate                AuditEventType = "update"                // Изменение сущностей
+	AuditEventRegistration          AuditEventType = "registration"          // Регистрация
+	AuditEventBulkOperation         AuditEventType = "bulkoperation"         // Массовая операция
+	AuditEventClosePublication      AuditEventType = "closepublication"      // Удаление публикации
+	AuditEventCreate                AuditEventType = "create"                // Создание сущностей
+	AuditEventDelete                AuditEventType = "delete"                // Удаление сущностей
+	AuditEventOpenPublication       AuditEventType = "openpublication"       // Создание публикации
+	AuditEventPrint                 AuditEventType = "print"                 // Печать документа
+	AuditEventPutToArchive          AuditEventType = "puttoarchive"          // Помещение в архив
+	AuditEventPutToRecycleBin       AuditEventType = "puttorecyclebin"       // Помещение в корзину
+	AuditEventReplaceToken          AuditEventType = "replacetoken"          // Смена токена для Точки продаж
+	AuditEventRestoreFromArchive    AuditEventType = "restorefromarchive"    // Извлечение из архива
+	AuditEventRestoreFromRecycleBin AuditEventType = "restorefromrecyclebin" // Извлечение из корзины
+	AuditEventSendEmailFromEntity   AuditEventType = "sendemailfromentity"   // Отправка письма
+	AuditEventUpdate                AuditEventType = "update"                // Изменение сущностей
 )
 
-// AuditFilters Фильтры
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-fil-try
+// AuditFilters Фильтры аудита.
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-fil-try
 type AuditFilters struct {
 	EventType  Slice[string] `json:"eventType"`  // Действия, по которым могут быть отфильтрованы сущности аудита
 	Source     Slice[string] `json:"source"`     // Типы действий, по которым могут быть отфильтрованы сущности аудита
 	EntityType Slice[string] `json:"entityType"` // Названия сущностей, по которым могут быть отфильтрованы сущности аудита
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (auditFilters AuditFilters) String() string {
 	return Stringify(auditFilters)
 }
 
-// AuditService
-// Сервис для работы с аудитом.
+// AuditService Сервис для работы с аудитом.
 type AuditService interface {
-	// GetContexts выполняет запрос на получение Контекстов Audit.
+	// GetContexts выполняет запрос на получение Контекстов Аудита.
+	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Возвращает объект List.
 	GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error)
 
 	// GetEvents выполняет запрос на получение Событий по Контексту AuditEvent.
+	// Принимает контекст context.Context и ID контекста Аудита.
+	// Возвращает объект List.
 	GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error)
 
-	// GetFilters выполняет запрос на получение Фильтров AuditFilters.
+	// GetFilters выполняет запрос на получение Фильтров Аудита.
+	// Принимает контекст context.Context.
+	// Возвращает объект Фильтры аудита.
 	GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error)
 }
 
@@ -241,6 +271,7 @@ type auditService struct {
 	Endpoint
 }
 
+// NewAuditService возвращает сервис для работы с аудитом.
 func NewAuditService(client *Client) AuditService {
 	return &auditService{NewEndpoint(client, "audit")}
 }
@@ -255,6 +286,5 @@ func (service *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List
 }
 
 func (service *auditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
-	path := "audit/metadata/filters"
-	return NewRequestBuilder[AuditFilters](service.client, path).Get(ctx)
+	return NewRequestBuilder[AuditFilters](service.client, "audit/metadata/filters").Get(ctx)
 }
