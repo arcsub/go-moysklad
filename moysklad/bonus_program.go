@@ -38,12 +38,12 @@ func (bonusProgram BonusProgram) Clean() *BonusProgram {
 	return &BonusProgram{Meta: bonusProgram.Meta}
 }
 
-// GetAllProducts возвращает true, если бонусная программа действует на все товары.
+// GetAllProducts возвращает флаг действия бонусной программы на все товары.
 func (bonusProgram BonusProgram) GetAllProducts() bool {
 	return Deref(bonusProgram.AllProducts)
 }
 
-// GetActive возвращает true, если бонусная программа является активной на данный момент.
+// GetActive возвращает флаг активной бонусной программы.
 func (bonusProgram BonusProgram) GetActive() bool {
 	return Deref(bonusProgram.Active)
 }
@@ -53,7 +53,7 @@ func (bonusProgram BonusProgram) GetWelcomeBonusesValue() uint {
 	return Deref(bonusProgram.WelcomeBonusesValue)
 }
 
-// GetAllAgents возвращает true, если бонусная программа действует на всех контрагентов.
+// GetAllAgents возвращает флаг действия бонусной программы на всех контрагентов.
 func (bonusProgram BonusProgram) GetAllAgents() bool {
 	return Deref(bonusProgram.AllAgents)
 }
@@ -68,7 +68,7 @@ func (bonusProgram BonusProgram) GetEarnRateRoublesToPoint() int {
 	return Deref(bonusProgram.EarnRateRoublesToPoint)
 }
 
-// GetEarnWhileRedeeming возвращает true, если разрешено одновременное начисление и списание бонусов.
+// GetEarnWhileRedeeming возвращает флаг одновременного начисления и списания бонусов.
 func (bonusProgram BonusProgram) GetEarnWhileRedeeming() bool {
 	return Deref(bonusProgram.EarnWhileRedeeming)
 }
@@ -124,7 +124,7 @@ func (bonusProgram *BonusProgram) SetAllProducts(allProducts bool) *BonusProgram
 	return bonusProgram
 }
 
-// SetActive устанавливает Индикатор активности бонусной программы.
+// SetActive устанавливает флаг активности бонусной программы.
 func (bonusProgram *BonusProgram) SetActive(active bool) *BonusProgram {
 	bonusProgram.Active = &active
 	return bonusProgram
@@ -136,7 +136,7 @@ func (bonusProgram *BonusProgram) SetWelcomeBonusesValue(welcomeBonusesValue uin
 	return bonusProgram
 }
 
-// SetAllAgents устанавливает возможность действия бонусной программы на всех контрагентов.
+// SetAllAgents устанавливает флаг действия бонусной программы на всех контрагентов.
 func (bonusProgram *BonusProgram) SetAllAgents(allAgents bool) *BonusProgram {
 	bonusProgram.AllAgents = &allAgents
 	return bonusProgram
@@ -154,7 +154,7 @@ func (bonusProgram *BonusProgram) SetEarnRateRoublesToPoint(earnRateRoublesToPoi
 	return bonusProgram
 }
 
-// SetEarnWhileRedeeming устанавливает возможность одновременного начисления и списания бонусов.
+// SetEarnWhileRedeeming устанавливает флаг одновременного начисления и списания бонусов.
 func (bonusProgram *BonusProgram) SetEarnWhileRedeeming(earnWhileRedeeming bool) *BonusProgram {
 	bonusProgram.EarnWhileRedeeming = &earnWhileRedeeming
 	return bonusProgram
@@ -184,7 +184,7 @@ func (bonusProgram *BonusProgram) SetSpendRatePointsToRouble(spendRatePointsToRo
 	return bonusProgram
 }
 
-// SetWelcomeBonusesEnabled устанавливает Возможность начисления приветственных баллов.
+// SetWelcomeBonusesEnabled устанавливает флаг начисления приветственных баллов.
 func (bonusProgram *BonusProgram) SetWelcomeBonusesEnabled(welcomeBonusesEnabled bool) *BonusProgram {
 	bonusProgram.WelcomeBonusesEnabled = &welcomeBonusesEnabled
 	return bonusProgram
@@ -226,17 +226,17 @@ func (BonusProgram) MetaType() MetaType {
 
 // Update shortcut
 func (bonusProgram BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
-	return client.Entity().BonusProgram().Update(ctx, bonusProgram.GetID(), &bonusProgram, params...)
+	return NewBonusProgramService(client).Update(ctx, bonusProgram.GetID(), &bonusProgram, params...)
 }
 
 // Create shortcut
 func (bonusProgram BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
-	return client.Entity().BonusProgram().Create(ctx, &bonusProgram, params...)
+	return NewBonusProgramService(client).Create(ctx, &bonusProgram, params...)
 }
 
 // Delete shortcut
 func (bonusProgram BonusProgram) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().BonusProgram().Delete(ctx, bonusProgram.GetID())
+	return NewBonusProgramService(client).Delete(ctx, bonusProgram.GetID())
 }
 
 // WelcomeBonusesMode Условия бонусных баллов.
@@ -264,13 +264,13 @@ type BonusProgramService interface {
 
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
-	//	name (имя скидки)
-	//	active (активна ли скидка)
-	//	allProducts (действует ли скидка на все товары)
-	//	allAgents (действует ли скидка на всех контрагентов)
-	//	earnRateRoublesToPoint (курс начисления)
-	//	spendRatePointsToRouble (курс списания)
-	//	maxPaidRatePercents (максимальный процент оплаты баллами)
+	//	- name (имя скидки)
+	//	- active (активна ли скидка)
+	//	- allProducts (действует ли скидка на все товары)
+	//	- allAgents (действует ли скидка на всех контрагентов)
+	//	- earnRateRoublesToPoint (курс начисления)
+	//	- spendRatePointsToRouble (курс списания)
+	//	- maxPaidRatePercents (максимальный процент оплаты баллами)
 	// Принимает контекст context.Context, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную программу.
 	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
@@ -291,7 +291,7 @@ type BonusProgramService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных программ.
-	// Принимает контекст context.Context и множество объектов BonusProgram.
+	// Принимает контекст context.Context и множество бонусных программ.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
 }
