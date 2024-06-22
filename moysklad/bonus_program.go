@@ -196,6 +196,18 @@ func (bonusProgram *BonusProgram) SetWelcomeBonusesMode(welcomeBonusesMode Welco
 	return bonusProgram
 }
 
+// SetWelcomeBonusesModeRegistration устанавливает Условие начисления баллов участникам после регистрации в бонусной программе. Не может быть пустым, если welcomeBonusesEnabled = true.
+func (bonusProgram *BonusProgram) SetWelcomeBonusesModeRegistration() *BonusProgram {
+	bonusProgram.WelcomeBonusesMode = WelcomeBonusesRegistration
+	return bonusProgram
+}
+
+// SetWelcomeBonusesModeFirstPurchase устанавливает Условие начисления баллов участникам бонусной программы после совершения первой покупки. Не может быть пустым, если welcomeBonusesEnabled = true.
+func (bonusProgram *BonusProgram) SetWelcomeBonusesModeFirstPurchase() *BonusProgram {
+	bonusProgram.WelcomeBonusesMode = WelcomeBonusesFirstPurchase
+	return bonusProgram
+}
+
 // SetAgentTags устанавливает Теги контрагентов, к которым применяется бонусная программа.
 func (bonusProgram *BonusProgram) SetAgentTags(agentTags ...string) *BonusProgram {
 	bonusProgram.AgentTags = NewSliceFrom(agentTags)
@@ -251,6 +263,14 @@ type BonusProgramService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[BonusProgram], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной программы.
+	// Обязательные поля для заполнения:
+	//	name (имя скидки)
+	//	active (активна ли скидка)
+	//	allProducts (действует ли скидка на все товары)
+	//	allAgents (действует ли скидка на всех контрагентов)
+	//	earnRateRoublesToPoint (курс начисления)
+	//	spendRatePointsToRouble (курс списания)
+	//	maxPaidRatePercents (максимальный процент оплаты баллами)
 	// Принимает контекст context.Context, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную программу.
 	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)

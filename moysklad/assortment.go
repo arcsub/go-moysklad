@@ -414,7 +414,7 @@ func (service *assortmentService) GetAsync(ctx context.Context, params ...*Param
 func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AsAssortmentInterface) (*DeleteManyResponse, *resty.Response, error) {
 	var mw = make([]MetaWrapper, 0, len(entities))
 	for _, entity := range entities {
-		mw = append(mw, (entity).AsAssortment().GetMeta().Wrap())
+		mw = append(mw, entity.AsAssortment().GetMeta().Wrap())
 	}
 	return NewRequestBuilder[DeleteManyResponse](service.client, service.uri).Post(ctx, mw)
 }
