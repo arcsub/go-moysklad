@@ -84,7 +84,7 @@ func (assortmentPosition AssortmentPosition) Raw() []byte {
 	return assortmentPosition.raw
 }
 
-// UnmarshalJSON реализует интерфейс json.Unmarshaler
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
 func (assortmentPosition *AssortmentPosition) UnmarshalJSON(data []byte) error {
 	type alias AssortmentPosition
 	var t alias
