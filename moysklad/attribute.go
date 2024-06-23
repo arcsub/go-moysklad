@@ -6,7 +6,7 @@ import (
 
 // Attribute Дополнительное поле.
 //
-// Ключевое слово: attributemetadata
+// Код сущности: attributemetadata
 //
 // [Документация МойСклад]
 //
@@ -99,14 +99,26 @@ func (attribute *Attribute) SetType(attributeType AttributeType) *Attribute {
 }
 
 // SetValue устанавливает Значение доп. поля.
+//
+// Передача nil устанавливает необходимость сброса значения (null)
 func (attribute *Attribute) SetValue(value any) *Attribute {
-	attribute.Value = NewNullValueAnyFrom(value)
+	if value == nil {
+		attribute.Value = NewNullValueAny()
+	} else {
+		attribute.Value = NewNullValueAnyFrom(value)
+	}
 	return attribute
 }
 
 // SetFile устанавливает Описание файла и контент.
+//
+// Передача nil устанавливает необходимость сброса значения (null)
 func (attribute *Attribute) SetFile(file *AttributeFile) *Attribute {
-	attribute.File = NewNullValueFrom(file)
+	if file == nil {
+		attribute.File = NewNullValue[AttributeFile]()
+	} else {
+		attribute.File = NewNullValueFrom(file)
+	}
 	return attribute
 }
 
@@ -123,30 +135,6 @@ func (attribute *Attribute) SetFileFromPath(filePath string) (*Attribute, error)
 	file := &AttributeFile{fileName, content}
 	attribute.File = NewNullValueFrom(file)
 	return attribute, nil
-}
-
-// SetNullValue устанавливает null Значение доп. поля.
-//
-// Необходимо для сброса значения.
-//
-// [Документация МойСклад]
-//
-// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-rabota-s-dopolnitel-nymi-polqmi-sbros-znacheniq-w-dop-pole
-func (attribute *Attribute) SetNullValue() *Attribute {
-	attribute.Value = NewNullValueAny()
-	return attribute
-}
-
-// SetNullFile устанавливает null значение для файла.
-//
-// Необходимо для сброса значения (удаления файла).
-//
-// [Документация МойСклад]
-//
-// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-rabota-s-dopolnitel-nymi-polqmi-cherez-json-api-dopolnitel-noe-pole-tipa-fajl
-func (attribute *Attribute) SetNullFile() *Attribute {
-	attribute.File = NewNullValue[AttributeFile]()
-	return attribute
 }
 
 // String реализует интерфейс [fmt.Stringer].

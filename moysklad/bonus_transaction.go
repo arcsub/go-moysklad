@@ -8,7 +8,7 @@ import (
 
 // BonusTransaction Бонусная операция.
 //
-// Ключевое слово: bonustransaction
+// Код сущности: bonustransaction
 //
 // [Документация МойСклад]
 //

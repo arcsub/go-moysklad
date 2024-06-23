@@ -10,7 +10,7 @@ import (
 
 // Assortment Ассортимент.
 //
-// Ключевое слово: assortment
+// Код сущности: assortment
 //
 // [Документация МойСклад]
 //
@@ -178,7 +178,7 @@ func (assortment Assortment) FilterService() Slice[Service] {
 
 // AssortmentSettings Настройки справочника.
 //
-// Ключевое слово: assortmentsettings
+// Код сущности: assortmentsettings
 //
 // [Документация МойСклад]
 //
