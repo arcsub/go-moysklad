@@ -40,7 +40,7 @@ type Agent struct {
 	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
 	Email             *string                  `json:"email,omitempty"`             // Адрес электронной почты
 	CompanyType       CompanyType              `json:"companyType,omitempty"`       // Тип Контрагента/Юрлица. В зависимости от значения данного поля набор выводимых реквизитов контрагента может меняться.
-	Attributes        Slice[Attribute]         `json:"attributes,omitempty"`        // Массив метаданных доп. полей
+	Attributes        Slice[Attribute]         `json:"attributes,omitempty"`        // Список метаданных доп. полей
 	raw               []byte
 }
 
@@ -215,7 +215,7 @@ func (agent Agent) GetCompanyType() CompanyType {
 	return agent.CompanyType
 }
 
-// GetAttributes возвращает Массив метаданных доп. полей.
+// GetAttributes возвращает Список метаданных доп. полей.
 func (agent Agent) GetAttributes() Slice[Attribute] {
 	return agent.Attributes
 }

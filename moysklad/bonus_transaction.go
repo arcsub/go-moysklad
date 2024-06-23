@@ -44,7 +44,7 @@ func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+// AsTaskOperation реализует интерфейс AsTaskOperationInterface.
 func (bonusTransaction BonusTransaction) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: bonusTransaction.Meta}
 }
@@ -327,7 +327,7 @@ const (
 // BonusTransactionService Сервис для работы с бонусными операциями.
 type BonusTransactionService interface {
 	// GetList выполняет запрос на получение списка бонусных операций.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[BonusTransaction], *resty.Response, error)
 
@@ -336,38 +336,38 @@ type BonusTransactionService interface {
 	//	- agent (Метаданные Контрагента, связанного с бонусной операцией)
 	//	- bonusProgram (Метаданные Бонусной программы)
 	//	- transactionType (Тип бонусной операции)
-	// Принимает контекст context.Context, бонусную операцию и опционально объект параметров запроса Params.
+	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную операцию.
 	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и обновление бонусных операций.
 	// Обновляемые Бонусные операции должны содержать идентификатор в виде метаданных.
-	// Принимает контекст context.Context, множество бонусных операций и опционально объект параметров запроса Params.
-	// Возвращает множество созданных и/или обновлённых бонусных операций.
+	// Принимает контекст, множество бонусных операций и опционально объект параметров запроса Params.
+	// Возвращает список созданных и/или обновлённых бонусных операций.
 	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных операций.
-	// Принимает контекст context.Context и множество бонусных операций.
+	// Принимает контекст и множество бонусных операций.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*BonusTransaction) (*DeleteManyResponse, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление бонусной операции.
-	// Принимает контекст context.Context и ID бонусной операции.
+	// Принимает контекст и ID бонусной операции.
 	// Возвращает true в случае успешного удаления бонусной операции.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной операции.
-	// Принимает контекст context.Context, ID бонусной операции и опционально объект параметров запроса Params.
+	// Принимает контекст, ID бонусной операции и опционально объект параметров запроса Params.
 	// Возвращает бонусную операцию.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusTransaction, *resty.Response, error)
 
 	// Update выполняет запрос на обновление бонусной операции.
-	// Принимает контекст context.Context, бонусную операцию и опционально объект параметров запроса Params.
+	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает обновлённую бонусную операцию.
 	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 }
 
-// NewBonusTransactionService возвращает сервис для работы с бонусными операциями.
+// NewBonusTransactionService принимает [Client] и возвращает сервис для работы с бонусными операциями.
 func NewBonusTransactionService(client *Client) BonusTransactionService {
 	return newMainService[BonusTransaction, any, any, any](NewEndpoint(client, "entity/bonustransaction"))
 }

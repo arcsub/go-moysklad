@@ -59,14 +59,14 @@ const (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen
 type AsyncService interface {
 	// GetStatuses выполняет запрос на получение списка статусов выполнения Асинхронных задач.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Доступна фильтрация по полям state, request, deletionDate.
 	// Результат содержит статусы Асинхронных задач за последнюю неделю.
 	// Возвращает объект List.
 	GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error)
 
 	// GetStatusByID выполняет запрос на получение статуса Асинхронной задачи.
-	// Принимает контекст context.Context и ID асинхронной задачи.
+	// Принимает контекст и ID асинхронной задачи.
 	// Возвращает объект Async.
 	GetStatusByID(ctx context.Context, id uuid.UUID) (*Async, *resty.Response, error)
 }
@@ -75,10 +75,9 @@ type asyncService struct {
 	Endpoint
 }
 
-// NewAsyncService возвращает сервис для работы с асинхронными задачами.
+// NewAsyncService принимает [Client] и возвращает сервис для работы с асинхронными задачами.
 func NewAsyncService(client *Client) AsyncService {
-	e := NewEndpoint(client, "async")
-	return &asyncService{e}
+	return &asyncService{NewEndpoint(client, "async")}
 }
 
 func (service *asyncService) GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error) {
@@ -117,7 +116,7 @@ type asyncResultService[T any] struct {
 	resultURL string  // URL результата выполнения Асинхронной задачи.
 }
 
-// NewAsyncResultService возвращает сервис для работы с асинхронной задачей.
+// NewAsyncResultService принимает [Client] и возвращает сервис для работы с асинхронной задачей.
 func NewAsyncResultService[T any](client *Client, resp *resty.Response) AsyncResultService[T] {
 	return &asyncResultService[T]{
 		client:    client,

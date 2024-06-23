@@ -470,32 +470,32 @@ func (service *assortmentService) UpdateSettings(ctx context.Context, settings *
 // Сервис для работы с ассортиментом.
 type AssortmentService interface {
 	// Get выполняет запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект AssortmentResponse.
 	Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
 
 	// GetAsync выполняет асинхронный запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает готовый сервис AsyncResultService для обработки данного запроса.
 	GetAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление позиций в Ассортименте.
-	// Принимает контекст context.Context и множество объектов, реализующих интерфейс AsAssortmentInterface.
+	// Принимает контекст и множество объектов, реализующих интерфейс AsAssortmentInterface.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...AsAssortmentInterface) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetSettings выполняет запрос на получение настроек справочника ассортимента.
-	// Принимает контекст context.Context.
+	// Принимает контекст.
 	// Возвращает объект AssortmentSettings.
 	GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error)
 
 	// UpdateSettings выполняет запрос на изменение метаданных справочника ассортимента.
-	// Принимает контекст context.Context и объект AssortmentSettings.
+	// Принимает контекст и объект AssortmentSettings.
 	// Возвращает обновлённый объект AssortmentSettings.
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
 }
 
-// NewAssortmentService возвращает сервис для работы с ассортиментом.
+// NewAssortmentService принимает [Client] и возвращает сервис для работы с ассортиментом.
 func NewAssortmentService(client *Client) AssortmentService {
 	return &assortmentService{NewEndpoint(client, "entity/assortment")}
 }

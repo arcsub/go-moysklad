@@ -252,17 +252,17 @@ func (auditFilters AuditFilters) String() string {
 // AuditService Сервис для работы с аудитом.
 type AuditService interface {
 	// GetContexts выполняет запрос на получение Контекстов Аудита.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error)
 
 	// GetEvents выполняет запрос на получение Событий по Контексту AuditEvent.
-	// Принимает контекст context.Context и ID контекста Аудита.
+	// Принимает контекст и ID контекста Аудита.
 	// Возвращает объект List.
 	GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error)
 
 	// GetFilters выполняет запрос на получение Фильтров Аудита.
-	// Принимает контекст context.Context.
+	// Принимает контекст.
 	// Возвращает объект Фильтры аудита.
 	GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error)
 }
@@ -271,7 +271,7 @@ type auditService struct {
 	Endpoint
 }
 
-// NewAuditService возвращает сервис для работы с аудитом.
+// NewAuditService принимает [Client] и возвращает сервис для работы с аудитом.
 func NewAuditService(client *Client) AuditService {
 	return &auditService{NewEndpoint(client, "audit")}
 }

@@ -258,7 +258,7 @@ const (
 // BonusProgramService Сервис для работы с бонусными программами.
 type BonusProgramService interface {
 	// GetList выполняет запрос на получение списка бонусных программ.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[BonusProgram], *resty.Response, error)
 
@@ -271,32 +271,32 @@ type BonusProgramService interface {
 	//	- earnRateRoublesToPoint (курс начисления)
 	//	- spendRatePointsToRouble (курс списания)
 	//	- maxPaidRatePercents (максимальный процент оплаты баллами)
-	// Принимает контекст context.Context, бонусную программу и опционально объект параметров запроса Params.
+	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную программу.
 	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
 
 	// Update выполняет запрос на обновление бонусной программы.
-	// Принимает контекст context.Context, бонусную программу и опционально объект параметров запроса Params.
+	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает обновлённую бонусную программу.
 	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной программы.
-	// Принимает контекст context.Context, ID бонусной программы и опционально объект параметров запроса Params.
+	// Принимает контекст, ID бонусной программы и опционально объект параметров запроса Params.
 	// Возвращает бонусную программу.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusProgram, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление бонусной программы.
-	// Принимает контекст context.Context и ID бонусной программы.
+	// Принимает контекст и ID бонусной программы.
 	// Возвращает true в случае успешного удаления бонусной программы.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных программ.
-	// Принимает контекст context.Context и множество бонусных программ.
+	// Принимает контекст и множество бонусных программ.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
 }
 
-// NewBonusProgramService возвращает сервис для работы с бонусными программами.
+// NewBonusProgramService принимает [Client] и возвращает сервис для работы с бонусными программами.
 func NewBonusProgramService(client *Client) BonusProgramService {
 	return newMainService[BonusProgram, any, any, any](NewEndpoint(client, "entity/bonusprogram"))
 }

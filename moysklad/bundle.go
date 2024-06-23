@@ -53,7 +53,7 @@ type Bundle struct {
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`     // Признак предмета расчета
 	Barcodes            Slice[Barcode]              `json:"barcodes,omitempty"`            // Штрихкоды
 	SalePrices          Slice[SalePrice]            `json:"salePrices,omitempty"`          // Цены продажи
-	Attributes          Slice[Attribute]            `json:"attributes,omitempty"`          // Массив метаданных доп. полей
+	Attributes          Slice[Attribute]            `json:"attributes,omitempty"`          // Список метаданных доп. полей
 }
 
 // NewBundleFromAssortment пытается привести переданный в качестве аргумента [AssortmentPosition] к типу [Bundle].
@@ -273,7 +273,7 @@ func (bundle Bundle) GetPaymentItemType() PaymentItem {
 	return bundle.PaymentItemType
 }
 
-// GetAttributes возвращает Массив метаданных доп. полей.
+// GetAttributes возвращает Список метаданных доп. полей.
 func (bundle Bundle) GetAttributes() Slice[Attribute] {
 	return bundle.Attributes
 }
@@ -518,7 +518,7 @@ func (bundle *Bundle) SetPaymentItemType(paymentItemType PaymentItem) *Bundle {
 	return bundle
 }
 
-// SetAttributes устанавливает Массив метаданных доп. полей.
+// SetAttributes устанавливает Список метаданных доп. полей.
 //
 // Принимает множество объектов [Attribute].
 func (bundle *Bundle) SetAttributes(attributes ...*Attribute) *Bundle {
@@ -654,7 +654,7 @@ func (BundleComponent) MetaType() MetaType {
 // BundleService Сервис для работы с комплектами.
 type BundleService interface {
 	// GetList выполняет запрос на получение списка комплектов.
-	// Принимает контекст context.Context и опционально объект параметров запроса Params.
+	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Bundle], *resty.Response, error)
 
@@ -662,110 +662,156 @@ type BundleService interface {
 	// Обязательные поля для заполнения:
 	//	- name (Наименование комплекта)
 	//	- components (Компоненты комплекта)
-	// Принимает контекст context.Context, комплект и опционально объект параметров запроса Params.
+	// Принимает контекст, комплект и опционально объект параметров запроса Params.
 	// Возвращает созданный комплект.
 	Create(ctx context.Context, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и обновление комплектов.
 	// Обновляемые комплекты должны содержать идентификатор в виде метаданных.
-	// Принимает контекст context.Context, множество комплектов и опционально объект параметров запроса Params.
-	// Возвращает множество созданных и/или обновлённых комплектов.
+	// Принимает контекст, множество комплектов и опционально объект параметров запроса Params.
+	// Возвращает список созданных и/или обновлённых комплектов.
 	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение комплекта по ID.
-	// Принимает контекст context.Context, ID комплекта и опционально объект параметров запроса Params.
+	// Принимает контекст, ID комплекта и опционально объект параметров запроса Params.
 	// Возвращает комплект.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Bundle, *resty.Response, error)
 
 	// Update выполняет запрос на обновление комплекта.
-	// Принимает контекст context.Context, комплект и опционально объект параметров запроса Params.
+	// Принимает контекст, комплект и опционально объект параметров запроса Params.
 	// Возвращает обновлённый комплект.
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление комплекта.
-	// Принимает контекст context.Context и ID комплекта.
+	// Принимает контекст и ID комплекта.
 	// Возвращает true в случае успешного удаления комплекта.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление комплектов.
-	// Принимает контекст context.Context и множество комплектов.
+	// Принимает контекст и множество комплектов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Bundle) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetComponentList выполняет запрос на получение компонентов комплекта в виде списка.
-	// Принимает контекст context.Context и ID комплекта.
+	// Принимает контекст и ID комплекта.
 	// Возвращает объект List.
 	GetComponentList(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)
 
 	// CreateComponent выполняет запрос на добавление компонента комплекта.
-	// Принимает контекст context.Context, ID комплекта и компонент комплекта.
+	// Принимает контекст, ID комплекта и компонент комплекта.
 	// Возвращает добавленный компонент комплекта.
 	CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 
 	// GetComponentByID выполняет запрос на получение компонента комплекта по ID.
-	// Принимает контекст context.Context, ID комплекта и ID компонента комплекта.
+	// Принимает контекст, ID комплекта и ID компонента комплекта.
 	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
 
 	// UpdateComponent выполняет запрос на изменение компонента комплекта.
-	// Принимает контекст context.Context, ID комплекта, ID компонента комплекта и компонент комплекта.
+	// Принимает контекст, ID комплекта, ID компонента комплекта и компонент комплекта.
 	// Возвращает изменённый компонент комплекта.
 	UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 
 	// DeleteComponent выполняет запрос на удаление компонента комплекта по ID.
-	// Принимает контекст context.Context, ID комплекта и ID компонента комплекта.
+	// Принимает контекст, ID комплекта и ID компонента комплекта.
 	// Возвращает true в случае успешного удаления компонента комплекта.
 	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
 
-	// GetFiles выполняет запрос на получение файлов комплекта в виде списка.
-	// Принимает контекст context.Context и ID комплекта.
+	// GetFiles выполняет запрос на получение файлов в виде списка.
+	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект MetaArray.
 	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
-	// Принимает контекст context.Context, ID комплекта и файл.
-	// Возвращает множество файлов.
+	// Принимает контекст, ID сущности/документа и файл.
+	// Возвращает список файлов.
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 
-	// UpdateFileMany выполняет запрос на массовое создание и обновление файлов комплекта.
-	// Принимает контекст context.Context, ID комплекта и множество файлов.
+	// UpdateFileMany выполняет запрос на массовое создание и обновление файлов сущности/документа.
+	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или обновлённых файлов.
 	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 
-	// DeleteFile выполняет запрос на удаление файла комплекта.
-	// Принимает контекст context.Context, ID комплекта и ID файла.
-	// Возвращает true в случае успешного удаления файла комплекта.
+	// DeleteFile выполняет запрос на удаление файла сущности/документа.
+	// Принимает контекст, ID сущности/документа и ID файла.
+	// Возвращает true в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
-	// DeleteFileMany выполняет запрос на массовое удаление файлов комплекта.
-	// Принимает контекст context.Context, ID комплекта и множество файлов.
+	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
+	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetImages выполняет запрос на получение изображений комплекта в виде списка.
-	// Принимает контекст context.Context и ID комплекта.
+	// Принимает контекст и ID комплекта.
 	// Возвращает объект MetaArray.
 	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 
 	// CreateImage выполняет запрос на добавление изображения.
-	// Принимает контекст context.Context, ID комплекта и изображение.
-	// Возвращает множество изображений.
+	// Принимает контекст, ID комплекта и изображение.
+	// Возвращает список изображений.
 	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
 
 	// UpdateImageMany выполняет запрос на обновления изображений.
-	// Принимает контекст context.Context, ID комплекта и изображение.
+	// Принимает контекст, ID комплекта и изображение.
 	// Если необходимо оставить некоторые Изображения, то необходимо передать эти изображения.
-	// Возвращает множество изображений.
+	// Возвращает список изображений.
 	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
 
 	// DeleteImage выполняет запрос на удаление изображения комплекта.
-	// Принимает контекст context.Context, ID комплекта и ID изображения.
+	// Принимает контекст, ID комплекта и ID изображения.
 	// Возвращает true в случае успешного удаления изображения комплекта.
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteImageMany выполняет запрос на массовое удаление изображений комплекта.
-	// Принимает контекст context.Context, ID комплекта и множество файлов.
+	// Принимает контекст, ID комплекта и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
+
+	// GetAttributes выполняет запрос на получение списка доп полей.
+	// Принимает контекст.
+	// Возвращает объект MetaArray.
+	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+
+	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
+	// Принимает контекст и ID доп поля.
+	// Возвращает найденное доп поле.
+	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+
+	// CreateAttribute выполняет запрос на создание доп поля.
+	// Принимает контекст и доп поле.
+	// Возвращает созданное доп поле.
+	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
+
+	// CreateUpdateAttributeMany выполняет запрос на массовое создание и обновление доп полей.
+	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Принимает контекст и множество доп полей.
+	// Возвращает список созданных и/или обновлённых доп полей.
+	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
+
+	// UpdateAttribute выполняет запрос на изменения доп поля.
+	// Принимает контекст, ID доп поля и доп поле.
+	// Возвращает изменённое доп поле.
+	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+
+	// DeleteAttribute выполняет запрос на удаление доп поля.
+	// Принимает контекст и ID доп поля.
+	// Возвращает true в случае успешного удаления доп поля.
+	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
+	// Принимает контекст и множество доп полей.
+	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
+	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
+
+	// GetBySyncID выполняет запрос на получение документа по syncID.
+	// Принимает контекст и syncID документа.
+	// Возвращает найденный документ.
+	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Bundle, *resty.Response, error)
+
+	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
+	// Принимает контекст и syncID документа.
+	// Возвращает true в случае успешного удаления документа.
+	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }
 
 type bundleService struct {
@@ -779,9 +825,11 @@ type bundleService struct {
 	endpointDeleteMany[Bundle]
 	endpointFiles
 	endpointImages
+	endpointAttributes
+	endpointSyncID[Bundle]
 }
 
-// NewBundleService возвращает сервис для работы с комплектами.
+// NewBundleService принимает [Client] и возвращает сервис для работы с комплектами.
 func NewBundleService(client *Client) BundleService {
 	e := NewEndpoint(client, "entity/bundle")
 	return &bundleService{
@@ -795,6 +843,8 @@ func NewBundleService(client *Client) BundleService {
 		endpointDeleteMany:       endpointDeleteMany[Bundle]{e},
 		endpointFiles:            endpointFiles{e},
 		endpointImages:           endpointImages{e},
+		endpointAttributes:       endpointAttributes{e},
+		endpointSyncID:           endpointSyncID[Bundle]{e},
 	}
 }
 
