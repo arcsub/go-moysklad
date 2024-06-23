@@ -299,6 +299,43 @@ func (assortmentResponse AssortmentResponse) String() string {
 	return Stringify(assortmentResponse)
 }
 
+// BuyPrice Закупочная цена.
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-zakupochnaq-cena
+type BuyPrice struct {
+	Value    *float64  `json:"value,omitempty"`    // Значение цены
+	Currency *Currency `json:"currency,omitempty"` // Метаданные валюты
+}
+
+// GetValue возвращает Значение цены.
+func (buyPrice BuyPrice) GetValue() float64 {
+	return Deref(buyPrice.Value)
+}
+
+// GetCurrency возвращает Метаданные валюты.
+func (buyPrice BuyPrice) GetCurrency() Currency {
+	return Deref(buyPrice.Currency)
+}
+
+// SetValue устанавливает Значение цены.
+func (buyPrice *BuyPrice) SetValue(value *float64) *BuyPrice {
+	buyPrice.Value = value
+	return buyPrice
+}
+
+// SetCurrency устанавливает Метаданные валюты.
+func (buyPrice *BuyPrice) SetCurrency(currency *Currency) *BuyPrice {
+	buyPrice.Currency = currency
+	return buyPrice
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (buyPrice BuyPrice) String() string {
+	return Stringify(buyPrice)
+}
+
 // PaymentItem Признак предмета расчета.
 //
 // Возможные варианты:
