@@ -255,7 +255,7 @@ const (
 	WelcomeBonusesFirstPurchase WelcomeBonusesMode = "FIRST_PURCHASE" // Приветственные баллы начисляются участникам бонусной программы после совершения первой покупки.
 )
 
-// BonusProgramService Сервис для работы с бонусными программами.
+// BonusProgramService методы сервиса для работы с бонусными программами.
 type BonusProgramService interface {
 	// GetList выполняет запрос на получение списка бонусных программ.
 	// Принимает контекст и опционально объект параметров запроса Params.

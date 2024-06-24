@@ -56,7 +56,7 @@ func (Application) MetaType() MetaType {
 	return MetaTypeApplication
 }
 
-// ApplicationService сервис для работы с серверными приложениями.
+// ApplicationService методы сервиса для работы с серверными приложениями.
 type ApplicationService interface {
 	// GetList выполняет запрос на получение списка сущностей установленных приложений.
 	// Принимает контекст и опционально объект параметров запроса Params.

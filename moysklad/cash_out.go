@@ -442,7 +442,7 @@ func (cashOut CashOut) Delete(ctx context.Context, client *Client) (bool, *resty
 	return client.Entity().CashOut().Delete(ctx, cashOut.GetID())
 }
 
-// CashOutService Сервис для работы с расходными ордерами.
+// CashOutService методы сервиса для работы с расходными ордерами.
 type CashOutService interface {
 	// GetList выполняет запрос на получение списка расходных ордеров.
 	// Принимает контекст и опционально объект параметров запроса Params.

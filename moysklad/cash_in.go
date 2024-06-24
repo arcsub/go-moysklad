@@ -432,7 +432,7 @@ func (cashIn CashIn) Delete(ctx context.Context, client *Client) (bool, *resty.R
 	return client.Entity().CashIn().Delete(ctx, cashIn.GetID())
 }
 
-// CashInService Сервис для работы с приходными ордерами.
+// CashInService методы сервиса для работы с приходными ордерами.
 type CashInService interface {
 	// GetList выполняет запрос на получение списка приходных ордеров.
 	// Принимает контекст и опционально объект параметров запроса Params.

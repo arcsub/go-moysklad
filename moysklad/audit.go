@@ -249,7 +249,7 @@ func (auditFilters AuditFilters) String() string {
 	return Stringify(auditFilters)
 }
 
-// AuditService Сервис для работы с аудитом.
+// AuditService методы сервиса для работы с аудитом.
 type AuditService interface {
 	// GetContexts выполняет запрос на получение Контекстов Аудита.
 	// Принимает контекст и опционально объект параметров запроса Params.

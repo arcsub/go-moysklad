@@ -52,7 +52,7 @@ const (
 	AsyncStateApiError   AsyncState = "API_ERROR"  // Задача была завершена с ошибкой апи
 )
 
-// AsyncService Сервис для работы с асинхронными задачами.
+// AsyncService методы сервиса для работы с асинхронными задачами.
 //
 // [Документация МойСклад]
 //
@@ -89,7 +89,7 @@ func (service *asyncService) GetStatusByID(ctx context.Context, id uuid.UUID) (*
 	return NewRequestBuilder[Async](service.client, path).Get(ctx)
 }
 
-// AsyncResultService сервис для обработки асинхронного запроса.
+// AsyncResultService методы сервиса для обработки асинхронного запроса.
 type AsyncResultService[T any] interface {
 	// StatusURL возвращает URL проверки статуса асинхронной задачи.
 	StatusURL() string

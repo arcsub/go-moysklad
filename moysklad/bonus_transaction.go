@@ -324,7 +324,7 @@ const (
 	Spending BonusTransactionType = "SPENDING" // Списание баллов
 )
 
-// BonusTransactionService Сервис для работы с бонусными операциями.
+// BonusTransactionService методы сервиса для работы с бонусными операциями.
 type BonusTransactionService interface {
 	// GetList выполняет запрос на получение списка бонусных операций.
 	// Принимает контекст и опционально объект параметров запроса Params.

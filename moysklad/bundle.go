@@ -651,7 +651,7 @@ func (BundleComponent) MetaType() MetaType {
 	return MetaTypeBundleComponent
 }
 
-// BundleService Сервис для работы с комплектами.
+// BundleService методы сервиса для работы с комплектами.
 type BundleService interface {
 	// GetList выполняет запрос на получение списка комплектов.
 	// Принимает контекст и опционально объект параметров запроса Params.

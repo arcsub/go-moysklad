@@ -466,8 +466,7 @@ func (service *assortmentService) UpdateSettings(ctx context.Context, settings *
 	return NewRequestBuilder[AssortmentSettings](service.client, path).Put(ctx, settings)
 }
 
-// AssortmentService
-// Сервис для работы с ассортиментом.
+// AssortmentService методы сервиса для работы с ассортиментом.
 type AssortmentService interface {
 	// Get выполняет запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
