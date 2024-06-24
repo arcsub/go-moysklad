@@ -251,7 +251,7 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 
 // SetContract устанавливает Метаданные договора.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
 	if contract == nil {
 		cashIn.Contract = NewNullValue[Contract]()
@@ -319,7 +319,7 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
 	if project == nil {
 		cashIn.Project = NewNullValue[Project]()
@@ -331,7 +331,7 @@ func (cashIn *CashIn) SetProject(project *Project) *CashIn {
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 	if rate == nil {
 		cashIn.Rate = NewNullValue[Rate]()
@@ -343,7 +343,7 @@ func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
 	if salesChannel == nil {
 		cashIn.SalesChannel = NewNullValue[SalesChannel]()
@@ -361,7 +361,7 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 
 // SetState устанавливает Метаданные статуса Приходного ордера.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetState(state *State) *CashIn {
 	if state == nil {
 		cashIn.State = NewNullValue[State]()
@@ -371,7 +371,7 @@ func (cashIn *CashIn) SetState(state *State) *CashIn {
 	return cashIn
 }
 
-// SetSum устанавливает Сумма Приходного ордера в установленной валюте.
+// SetSum устанавливает Сумму Приходного ордера в установленной валюте.
 func (cashIn *CashIn) SetSum(sum *float64) *CashIn {
 	cashIn.Sum = sum
 	return cashIn
@@ -412,6 +412,7 @@ func (CashIn) MetaType() MetaType {
 }
 
 // AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// Значение поля linkedSum заполняется из поля sum.
 func (cashIn CashIn) AsOperation() *Operation {
 	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
 }

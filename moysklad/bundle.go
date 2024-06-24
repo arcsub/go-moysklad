@@ -32,7 +32,7 @@ type Bundle struct {
 	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`        // Реальный НДС %
 	EffectiveVatEnabled *bool                       `json:"effectiveVatEnabled,omitempty"` // Дополнительный признак для определения разграничения реального НДС = 0 или "без НДС". (effectiveVat = 0, effectiveVatEnabled = false) -> "без НДС", (effectiveVat = 0, effectiveVatEnabled = true) -> 0%.
 	Files               *MetaArray[File]            `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	Group               *Group                      `json:"group,omitempty"`               // Метаданные отдела сотрудника
+	Group               *Group                      `json:"group,omitempty"`               // Отдел сотрудника
 	Vat                 *int                        `json:"vat,omitempty"`                 // НДС %
 	MinPrice            *NullValue[MinPrice]        `json:"minPrice,omitempty"`            // Минимальная цена
 	Overhead            *NullValue[BundleOverhead]  `json:"overhead,omitempty"`            // Дополнительные расходы
@@ -350,7 +350,7 @@ func (bundle *Bundle) SetComponents(components ...*BundleComponent) *Bundle {
 
 // SetCountry устанавливает Метаданные Страны.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
 	if country == nil {
 		bundle.Country = NewNullValue[Country]()
@@ -388,7 +388,7 @@ func (bundle *Bundle) SetVat(vat int) *Bundle {
 
 // SetMinPrice устанавливает Минимальную цену.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
 	if minPrice == nil {
 		bundle.MinPrice = NewNullValue[MinPrice]()
@@ -400,7 +400,7 @@ func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
 
 // SetOverhead устанавливает Дополнительные расходы.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
 	if overhead == nil {
 		bundle.Overhead = NewNullValue[BundleOverhead]()
@@ -438,7 +438,7 @@ func (bundle *Bundle) SetSalePrices(salePrices ...*SalePrice) *Bundle {
 
 // SetProductFolder устанавливает Метаданные группы Комплекта.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
 	if productFolder == nil {
 		bundle.ProductFolder = NewNullValue[ProductFolder]()
@@ -468,7 +468,7 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 
 // SetUom устанавливает Единицу измерения.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
 	if uom == nil {
 		bundle.Uom = NewNullValue[Uom]()

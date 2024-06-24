@@ -100,7 +100,7 @@ func (attribute *Attribute) SetType(attributeType AttributeType) *Attribute {
 
 // SetValue устанавливает Значение доп. поля.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (attribute *Attribute) SetValue(value any) *Attribute {
 	if value == nil {
 		attribute.Value = NewNullValueAny()
@@ -112,7 +112,7 @@ func (attribute *Attribute) SetValue(value any) *Attribute {
 
 // SetFile устанавливает Описание файла и контент.
 //
-// Передача nil устанавливает необходимость сброса значения (null)
+// Передача nil устанавливает необходимость сброса значения (передача null).
 func (attribute *Attribute) SetFile(file *AttributeFile) *Attribute {
 	if file == nil {
 		attribute.File = NewNullValue[AttributeFile]()

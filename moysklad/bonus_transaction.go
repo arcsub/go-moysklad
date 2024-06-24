@@ -15,7 +15,7 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-bonusnaq-operaciq
 type BonusTransaction struct {
 	Organization      *Organization            `json:"organization,omitempty"`      // Метаданные юрлица
-	Group             *Group                   `json:"group,omitempty"`             // Метаданные Отдела сотрудника
+	Group             *Group                   `json:"group,omitempty"`             // Отдел сотрудника
 	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные бонусной программы
 	BonusValue        *int                     `json:"bonusValue,omitempty"`        // Количество бонусных баллов
 	ID                *uuid.UUID               `json:"id,omitempty"`                // ID Бонусной операции
@@ -165,7 +165,7 @@ func (bonusTransaction *BonusTransaction) SetOrganization(organization *Organiza
 	return bonusTransaction
 }
 
-// SetGroup устанавливает Метаданные Отдела сотрудника.
+// SetGroup устанавливает Метаданные отдела сотрудника.
 func (bonusTransaction *BonusTransaction) SetGroup(group *Group) *BonusTransaction {
 	bonusTransaction.Group = group.Clean()
 	return bonusTransaction
@@ -195,7 +195,7 @@ func (bonusTransaction *BonusTransaction) SetMeta(meta *Meta) *BonusTransaction 
 	return bonusTransaction
 }
 
-// SetApplicable устанавливает флаг о проведении.
+// SetApplicable устанавливает Отметку о проведении.
 func (bonusTransaction *BonusTransaction) SetApplicable(applicable bool) *BonusTransaction {
 	bonusTransaction.Applicable = &applicable
 	return bonusTransaction

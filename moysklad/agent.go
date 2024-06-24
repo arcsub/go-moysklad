@@ -10,7 +10,7 @@ type Agent struct {
 	KPP               *string                  `json:"kpp,omitempty"`               // КПП
 	Fax               *string                  `json:"fax,omitempty"`               // Номер факса
 	Updated           *Timestamp               `json:"updated,omitempty"`           // Момент последнего обновления Контрагента/Юрлица
-	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ [Обязательное при ответе]
+	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ
 	Name              *string                  `json:"name,omitempty"`              // Наименование Контрагента/Юрлица
 	Meta              *Meta                    `json:"meta,omitempty"`              // Метаданные Контрагента/Юрлица
 	ActualAddressFull *Address                 `json:"actualAddressFull,omitempty"` // Фактический адрес Контрагента с детализацией по отдельным полям
