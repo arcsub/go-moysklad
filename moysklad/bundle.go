@@ -673,7 +673,7 @@ type BundleService interface {
 
 	// CreateUpdateMany выполняет запрос на массовое создание и обновление комплектов.
 	// Обновляемые комплекты должны содержать идентификатор в виде метаданных.
-	// Принимает контекст, множество комплектов и опционально объект параметров запроса Params.
+	// Принимает контекст, список комплектов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или обновлённых комплектов.
 	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
 
@@ -682,9 +682,9 @@ type BundleService interface {
 	// Возвращает комплект.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Bundle, *resty.Response, error)
 
-	// Update выполняет запрос на обновление комплекта.
+	// Update выполняет запрос на изменение комплекта.
 	// Принимает контекст, комплект и опционально объект параметров запроса Params.
-	// Возвращает обновлённый комплект.
+	// Возвращает изменённый комплект.
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление комплекта.

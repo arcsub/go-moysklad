@@ -195,7 +195,7 @@ func (cashIn CashIn) GetState() State {
 	return cashIn.State.Get()
 }
 
-// GetSum возвращает Сумма Приходного ордера в установленной валюте.
+// GetSum возвращает Сумму Приходного ордера в установленной валюте.
 func (cashIn CashIn) GetSum() float64 {
 	return Deref(cashIn.Sum)
 }
@@ -467,7 +467,7 @@ type CashInService interface {
 
 	// CreateUpdateMany выполняет запрос на массовое создание и приходных ордеров.
 	// Обновляемые приходные ордеры должны содержать идентификатор в виде метаданных.
-	// Принимает контекст, множество приходных ордеров и опционально объект параметров запроса Params.
+	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или обновлённых приходных ордеров.
 	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
 
@@ -544,9 +544,9 @@ type CashInService interface {
 	// Возвращает найденный приходный ордер.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashIn, *resty.Response, error)
 
-	// Update выполняет запрос на обновление приходного ордера.
+	// Update выполняет запрос на изменение приходного ордера.
 	// Принимает контекст, приходный ордер и опционально объект параметров запроса Params.
-	// Возвращает обновлённый приходный ордер.
+	// Возвращает изменённый приходный ордер.
 	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 
 	// GetPublications выполняет запрос на получение списка публикаций.

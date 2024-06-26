@@ -671,7 +671,7 @@ type CommissionReportOutService interface {
 
 	// CreateUpdateMany выполняет запрос на массовое создание и обновление выданных отчётов комиссионера.
 	// Обновляемые выданные отчёты комиссионера должны содержать идентификатор в виде метаданных.
-	// Принимает контекст, множество выданных отчётов комиссионера и опционально объект параметров запроса Params.
+	// Принимает контекст, список выданных отчётов комиссионера и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или обновлённых выданных отчётов комиссионера.
 	CreateUpdateMany(ctx context.Context, commissionReportOutList Slice[CommissionReportOut], params ...*Params) (*Slice[CommissionReportOut], *resty.Response, error)
 
@@ -690,9 +690,9 @@ type CommissionReportOutService interface {
 	// Возвращает найденный выданный отчёт комиссионера.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportOut, *resty.Response, error)
 
-	// Update выполняет запрос на обновление выданного отчёта комиссионера.
+	// Update выполняет запрос на изменение выданного отчёта комиссионера.
 	// Принимает контекст, выданный отчёт комиссионера и опционально объект параметров запроса Params.
-	// Возвращает обновлённый выданный отчёт комиссионера.
+	// Возвращает изменённый выданный отчёт комиссионера.
 	Update(ctx context.Context, id uuid.UUID, commissionReportOut *CommissionReportOut, params ...*Params) (*CommissionReportOut, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных выданных отчётов комиссионера.

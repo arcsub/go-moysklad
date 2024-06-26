@@ -251,9 +251,9 @@ type ConsignmentService interface {
 	// Возвращает найденную серию.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Consignment, *resty.Response, error)
 
-	// Update выполняет запрос на обновление серии.
+	// Update выполняет запрос на изменение серии.
 	// Принимает контекст, серию и опционально объект параметров запроса Params.
-	// Возвращает обновлённую серию.
+	// Возвращает изменённую серию.
 	Update(ctx context.Context, id uuid.UUID, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных серий.

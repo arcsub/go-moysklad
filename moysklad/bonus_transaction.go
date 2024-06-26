@@ -355,7 +355,7 @@ type BonusTransactionService interface {
 
 	// CreateUpdateMany выполняет запрос на массовое создание и обновление бонусных операций.
 	// Обновляемые Бонусные операции должны содержать идентификатор в виде метаданных.
-	// Принимает контекст, множество бонусных операций и опционально объект параметров запроса Params.
+	// Принимает контекст, список бонусных операций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или обновлённых бонусных операций.
 	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
 
@@ -374,9 +374,9 @@ type BonusTransactionService interface {
 	// Возвращает бонусную операцию.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusTransaction, *resty.Response, error)
 
-	// Update выполняет запрос на обновление бонусной операции.
+	// Update выполняет запрос на изменение бонусной операции.
 	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
-	// Возвращает обновлённую бонусную операцию.
+	// Возвращает изменённую бонусную операцию.
 	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 }
 

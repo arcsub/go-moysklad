@@ -276,9 +276,9 @@ type BonusProgramService interface {
 	// Возвращает созданную бонусную программу.
 	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
 
-	// Update выполняет запрос на обновление бонусной программы.
+	// Update выполняет запрос на изменение бонусной программы.
 	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
-	// Возвращает обновлённую бонусную программу.
+	// Возвращает изменённую бонусную программу.
 	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной программы.

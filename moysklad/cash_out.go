@@ -201,7 +201,7 @@ func (cashOut CashOut) GetState() State {
 	return cashOut.State.Get()
 }
 
-// GetSum возвращает Сумма Расходного ордера в установленной валюте.
+// GetSum возвращает Сумму Расходного ордера в установленной валюте.
 func (cashOut CashOut) GetSum() float64 {
 	return Deref(cashOut.Sum)
 }
@@ -480,7 +480,7 @@ type CashOutService interface {
 
 	// CreateUpdateMany выполняет запрос на массовое создание и обновление расходных ордеров.
 	// Обновляемые приходные ордеры должны содержать идентификатор в виде метаданных.
-	// Принимает контекст, множество приходных ордеров и опционально объект параметров запроса Params.
+	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или расходных приходных ордеров.
 	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params ...*Params) (*Slice[CashOut], *resty.Response, error)
 
@@ -557,9 +557,9 @@ type CashOutService interface {
 	// Возвращает найденный расходный ордер.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CashOut, *resty.Response, error)
 
-	// Update выполняет запрос на обновление расходного ордера.
+	// Update выполняет запрос на изменение расходного ордера.
 	// Принимает контекст, расходный ордер и опционально объект параметров запроса Params.
-	// Возвращает обновлённый расходный ордер.
+	// Возвращает изменённый расходный ордер.
 	Update(ctx context.Context, id uuid.UUID, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
 
 	// GetPublications выполняет запрос на получение списка публикаций.

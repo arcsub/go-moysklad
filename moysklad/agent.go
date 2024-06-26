@@ -14,7 +14,7 @@ type Agent struct {
 	Name              *string                  `json:"name,omitempty"`              // Наименование Контрагента/Юрлица
 	Meta              *Meta                    `json:"meta,omitempty"`              // Метаданные Контрагента/Юрлица
 	ActualAddressFull *Address                 `json:"actualAddressFull,omitempty"` // Фактический адрес Контрагента с детализацией по отдельным полям
-	LegalAddress      *string                  `json:"legalAddress,omitempty"`      // Юридический адрес Контрагента/Юрлица
+	LegalAddress      *string                  `json:"legalAddress"`                // Юридический адрес Контрагента/Юрлица
 	CertificateDate   *Timestamp               `json:"certificateDate,omitempty"`   // Дата свидетельства
 	ID                *uuid.UUID               `json:"id,omitempty"`                // ID Контрагента/Юрлица
 	OGRN              *string                  `json:"ogrn,omitempty"`              // ОГРН
@@ -35,7 +35,7 @@ type Agent struct {
 	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные активной Бонусной программы
 	Code              *string                  `json:"code,omitempty"`              // Код Контрагента/Юрлица
 	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учётной записи
-	ActualAddress     *string                  `json:"actualAddress,omitempty"`     // Фактический адрес Контрагента/Юрлица
+	ActualAddress     *string                  `json:"actualAddress"`               // Фактический адрес Контрагента/Юрлица
 	BonusPoints       *int                     `json:"bonusPoints,omitempty"`       // Бонусные баллы по активной бонусной программе
 	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
 	Email             *string                  `json:"email,omitempty"`             // Адрес электронной почты
@@ -66,7 +66,7 @@ func (agent Agent) GetUpdated() Timestamp {
 	return Deref(agent.Updated)
 }
 
-// GetShared возвращает Общий доступ.
+// GetShared возвращает флаг Общего доступа.
 func (agent Agent) GetShared() bool {
 	return Deref(agent.Shared)
 }

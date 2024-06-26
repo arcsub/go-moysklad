@@ -490,7 +490,7 @@ type AssortmentService interface {
 
 	// UpdateSettings выполняет запрос на изменение метаданных справочника ассортимента.
 	// Принимает контекст и объект AssortmentSettings.
-	// Возвращает обновлённый объект AssortmentSettings.
+	// Возвращает изменённый объект AssortmentSettings.
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
 }
 
