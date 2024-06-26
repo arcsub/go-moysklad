@@ -23,10 +23,10 @@ type EntityService interface {
 	// CashOut возвращает сервис для работы с расходными ордерами.
 	CashOut() CashOutService
 
-	// CommissionReportIn возвращает сервис для работы с полученными отчетами комиссионера.
+	// CommissionReportIn возвращает сервис для работы с полученными отчётами комиссионера.
 	CommissionReportIn() CommissionReportInService
 
-	// CommissionReportOut возвращает сервис для работы с выданными отчетами комиссионера.
+	// CommissionReportOut возвращает сервис для работы с выданными отчётами комиссионера.
 	CommissionReportOut() CommissionReportOutService
 
 	// Consignment возвращает сервис для работы с сериями.

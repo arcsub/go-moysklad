@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// CommissionReportIn Полученный отчет комиссионера.
+// CommissionReportIn Полученный отчёт комиссионера.
 //
 // Код сущности: commissionreportin
 //
@@ -19,41 +19,41 @@ type CommissionReportIn struct {
 	Organization                  *Organization                                `json:"organization,omitempty"`                  // Метаданные юрлица
 	AgentAccount                  *AgentAccount                                `json:"agentAccount,omitempty"`                  // Метаданные счета контрагента
 	Agent                         *Counterparty                                `json:"agent,omitempty"`                         // Метаданные контрагента
-	Name                          *string                                      `json:"name,omitempty"`                          // Наименование Полученного отчета комиссионера
-	Code                          *string                                      `json:"code,omitempty"`                          // Код Полученного отчета комиссионера
-	CommissionOverhead            *CommissionOverhead                          `json:"commissionOverhead,omitempty"`            // Прочие расходы. Если Позиции Отчета комиссионера не заданы, то расходы нельзя задать
+	Name                          *string                                      `json:"name,omitempty"`                          // Наименование Полученного отчёта комиссионера
+	Code                          *string                                      `json:"code,omitempty"`                          // Код Полученного отчёта комиссионера
+	CommissionOverhead            *CommissionOverhead                          `json:"commissionOverhead,omitempty"`            // Прочие расходы. Если Позиции отчёта комиссионера не заданы, то расходы нельзя задать
 	CommissionPeriodEnd           *Timestamp                                   `json:"commissionPeriodEnd,omitempty"`           // Конец периода
 	CommissionPeriodStart         *Timestamp                                   `json:"commissionPeriodStart,omitempty"`         // Начало периода
 	CommitentSum                  *float64                                     `json:"commitentSum,omitempty"`                  // Сумма комитента в установленной валюте
 	Contract                      *Contract                                    `json:"contract,omitempty"`                      // Метаданные договора
 	Created                       *Timestamp                                   `json:"created,omitempty"`                       // Дата создания
-	Deleted                       *Timestamp                                   `json:"deleted,omitempty"`                       // Момент последнего удаления Полученного отчета комиссионера
-	Description                   *string                                      `json:"description,omitempty"`                   // Комментарий Полученного отчета комиссионера
-	ExternalCode                  *string                                      `json:"externalCode,omitempty"`                  // Внешний код Полученного отчета комиссионера
+	Deleted                       *Timestamp                                   `json:"deleted,omitempty"`                       // Момент последнего удаления Полученного отчёта комиссионера
+	Description                   *string                                      `json:"description,omitempty"`                   // Комментарий Полученного отчёта комиссионера
+	ExternalCode                  *string                                      `json:"externalCode,omitempty"`                  // Внешний код Полученного отчёта комиссионера
 	Files                         *MetaArray[File]                             `json:"files,omitempty"`                         // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                         *Group                                       `json:"group,omitempty"`                         // Отдел сотрудника
-	ID                            *uuid.UUID                                   `json:"id,omitempty"`                            // ID Полученного отчета комиссионера
-	Meta                          *Meta                                        `json:"meta,omitempty"`                          // Метаданные Полученного отчета комиссионера
+	ID                            *uuid.UUID                                   `json:"id,omitempty"`                            // ID Полученного отчёта комиссионера
+	Meta                          *Meta                                        `json:"meta,omitempty"`                          // Метаданные Полученного отчёта комиссионера
 	Moment                        *Timestamp                                   `json:"moment,omitempty"`                        // Дата документа
 	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`                     // ID учетной записи
 	Applicable                    *bool                                        `json:"applicable,omitempty"`                    // Отметка о проведении
 	OrganizationAccount           *AgentAccount                                `json:"organizationAccount,omitempty"`           // Метаданные счета юрлица
 	Owner                         *Employee                                    `json:"owner,omitempty"`                         // Метаданные владельца (Сотрудника)
 	PayedSum                      *float64                                     `json:"payedSum,omitempty"`                      // Оплаченная сумма
-	Positions                     *Positions[CommissionReportInPosition]       `json:"positions,omitempty"`                     // Метаданные позиций реализовано комиссионером Полученного отчета комиссионера
+	Positions                     *Positions[CommissionReportInPosition]       `json:"positions,omitempty"`                     // Метаданные позиций реализовано комиссионером Полученного отчёта комиссионера
 	Printed                       *bool                                        `json:"printed,omitempty"`                       // Напечатан ли документ
 	Project                       *NullValue[Project]                          `json:"project,omitempty"`                       // Метаданные проекта
 	Published                     *bool                                        `json:"published,omitempty"`                     // Опубликован ли документ
 	Rate                          *NullValue[Rate]                             `json:"rate,omitempty"`                          // Валюта
-	ReturnToCommissionerPositions *Positions[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"` // Метаданные позиций возврата на склад комиссионера Полученного отчета комиссионера
+	ReturnToCommissionerPositions *Positions[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"` // Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера
 	RewardPercent                 *float64                                     `json:"rewardPercent,omitempty"`                 // Процент вознаграждения (всегда 0 если вознаграждение не рассчитывается)
 	Payments                      Slice[Payment]                               `json:"payments,omitempty"`                      // Массив ссылок на связанные платежи
 	SalesChannel                  *NullValue[SalesChannel]                     `json:"salesChannel,omitempty"`                  // Метаданные канала продаж
 	Shared                        *bool                                        `json:"shared,omitempty"`                        // Общий доступ
-	State                         *NullValue[State]                            `json:"state,omitempty"`                         // Метаданные статуса Полученного отчета комиссионера
-	Sum                           *float64                                     `json:"sum,omitempty"`                           // Сумма Полученного отчета комиссионера в копейках
+	State                         *NullValue[State]                            `json:"state,omitempty"`                         // Метаданные статуса Полученного отчёта комиссионера
+	Sum                           *float64                                     `json:"sum,omitempty"`                           // Сумма Полученного отчёта комиссионера в копейках
 	SyncID                        *uuid.UUID                                   `json:"syncId,omitempty"`                        // ID синхронизации
-	Updated                       *Timestamp                                   `json:"updated,omitempty"`                       // Момент последнего обновления Полученного отчета комиссионера
+	Updated                       *Timestamp                                   `json:"updated,omitempty"`                       // Момент последнего обновления Полученного отчёта комиссионера
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`                    // Учитывается ли НДС
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`                   // Включен ли НДС в цену
 	RewardType                    RewardType                                   `json:"rewardType,omitempty"`                    // Тип вознаграждения
@@ -97,12 +97,12 @@ func (commissionReportIn CommissionReportIn) GetAgent() Counterparty {
 	return Deref(commissionReportIn.Agent)
 }
 
-// GetName возвращает Наименование Полученного отчета комиссионера.
+// GetName возвращает Наименование Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetName() string {
 	return Deref(commissionReportIn.Name)
 }
 
-// GetCode возвращает Код Полученного отчета комиссионера.
+// GetCode возвращает Код Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetCode() string {
 	return Deref(commissionReportIn.Code)
 }
@@ -137,17 +137,17 @@ func (commissionReportIn CommissionReportIn) GetCreated() Timestamp {
 	return Deref(commissionReportIn.Created)
 }
 
-// GetDeleted возвращает Момент последнего удаления Полученного отчета комиссионера.
+// GetDeleted возвращает Момент последнего удаления Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetDeleted() Timestamp {
 	return Deref(commissionReportIn.Deleted)
 }
 
-// GetDescription возвращает Комментарий Полученного отчета комиссионера.
+// GetDescription возвращает Комментарий Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetDescription() string {
 	return Deref(commissionReportIn.Description)
 }
 
-// GetExternalCode возвращает Внешний код Полученного отчета комиссионера.
+// GetExternalCode возвращает Внешний код Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetExternalCode() string {
 	return Deref(commissionReportIn.ExternalCode)
 }
@@ -162,12 +162,12 @@ func (commissionReportIn CommissionReportIn) GetGroup() Group {
 	return Deref(commissionReportIn.Group)
 }
 
-// GetID возвращает ID Полученного отчета комиссионера.
+// GetID возвращает ID Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetID() uuid.UUID {
 	return Deref(commissionReportIn.ID)
 }
 
-// GetMeta возвращает Метаданные Полученного отчета комиссионера.
+// GetMeta возвращает Метаданные Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetMeta() Meta {
 	return Deref(commissionReportIn.Meta)
 }
@@ -202,7 +202,7 @@ func (commissionReportIn CommissionReportIn) GetPayedSum() float64 {
 	return Deref(commissionReportIn.PayedSum)
 }
 
-// GetPositions возвращает Метаданные позиций реализовано комиссионером Полученного отчета комиссионера.
+// GetPositions возвращает Метаданные позиций реализовано комиссионером Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetPositions() Positions[CommissionReportInPosition] {
 	return Deref(commissionReportIn.Positions)
 }
@@ -227,7 +227,7 @@ func (commissionReportIn CommissionReportIn) GetRate() Rate {
 	return commissionReportIn.Rate.Get()
 }
 
-// GetReturnToCommissionerPositions возвращает Метаданные позиций возврата на склад комиссионера Полученного отчета комиссионера.
+// GetReturnToCommissionerPositions возвращает Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetReturnToCommissionerPositions() Positions[CommissionReportInReturnPosition] {
 	return Deref(commissionReportIn.ReturnToCommissionerPositions)
 }
@@ -252,12 +252,12 @@ func (commissionReportIn CommissionReportIn) GetShared() bool {
 	return Deref(commissionReportIn.Shared)
 }
 
-// GetState возвращает Метаданные статуса Полученного отчета комиссионера.
+// GetState возвращает Метаданные статуса Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetState() State {
 	return commissionReportIn.State.Get()
 }
 
-// GetSum возвращает Сумму Полученного отчета комиссионера в копейках.
+// GetSum возвращает Сумму Полученного отчёта комиссионера в копейках.
 func (commissionReportIn CommissionReportIn) GetSum() float64 {
 	return Deref(commissionReportIn.Sum)
 }
@@ -267,7 +267,7 @@ func (commissionReportIn CommissionReportIn) GetSyncID() uuid.UUID {
 	return Deref(commissionReportIn.SyncID)
 }
 
-// GetUpdated возвращает Момент последнего обновления Полученного отчета комиссионера.
+// GetUpdated возвращает Момент последнего обновления Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetUpdated() Timestamp {
 	return Deref(commissionReportIn.Updated)
 }
@@ -310,19 +310,19 @@ func (commissionReportIn *CommissionReportIn) SetAgent(agent *Counterparty) *Com
 	return commissionReportIn
 }
 
-// SetName устанавливает Наименование Полученного отчета комиссионера.
+// SetName устанавливает Наименование Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetName(name string) *CommissionReportIn {
 	commissionReportIn.Name = &name
 	return commissionReportIn
 }
 
-// SetCode устанавливает Код Полученного отчета комиссионера.
+// SetCode устанавливает Код Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetCode(code string) *CommissionReportIn {
 	commissionReportIn.Code = &code
 	return commissionReportIn
 }
 
-// SetCommissionOverhead устанавливает Прочие расходы. Если Позиции Отчета комиссионера не заданы, то расходы нельзя задать.
+// SetCommissionOverhead устанавливает Прочие расходы. Если Позиции отчёта комиссионера не заданы, то расходы нельзя задать.
 func (commissionReportIn *CommissionReportIn) SetCommissionOverhead(sum float64) *CommissionReportIn {
 	commissionReportIn.CommissionOverhead = &CommissionOverhead{&sum}
 	return commissionReportIn
@@ -346,13 +346,13 @@ func (commissionReportIn *CommissionReportIn) SetContract(contract *Contract) *C
 	return commissionReportIn
 }
 
-// SetDescription устанавливает Комментарий Полученного отчета комиссионера.
+// SetDescription устанавливает Комментарий Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetDescription(description string) *CommissionReportIn {
 	commissionReportIn.Description = &description
 	return commissionReportIn
 }
 
-// SetExternalCode устанавливает Внешний код Полученного отчета комиссионера.
+// SetExternalCode устанавливает Внешний код Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetExternalCode(externalCode string) *CommissionReportIn {
 	commissionReportIn.ExternalCode = &externalCode
 	return commissionReportIn
@@ -372,7 +372,7 @@ func (commissionReportIn *CommissionReportIn) SetGroup(group *Group) *Commission
 	return commissionReportIn
 }
 
-// SetMeta устанавливает Метаданные Полученного отчета комиссионера.
+// SetMeta устанавливает Метаданные Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetMeta(meta *Meta) *CommissionReportIn {
 	commissionReportIn.Meta = meta
 	return commissionReportIn
@@ -402,7 +402,7 @@ func (commissionReportIn *CommissionReportIn) SetOwner(owner *Employee) *Commiss
 	return commissionReportIn
 }
 
-// SetPositions устанавливает Метаданные позиций реализовано комиссионером Полученного отчета комиссионера.
+// SetPositions устанавливает Метаданные позиций реализовано комиссионером Полученного отчёта комиссионера.
 //
 // Принимает множество объектов [CommissionReportInPosition].
 func (commissionReportIn *CommissionReportIn) SetPositions(positions ...*CommissionReportInPosition) *CommissionReportIn {
@@ -434,7 +434,7 @@ func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionRep
 	return commissionReportIn
 }
 
-// SetReturnToCommissionerPositions устанавливает Метаданные позиций возврата на склад комиссионера Полученного отчета комиссионера.
+// SetReturnToCommissionerPositions устанавливает Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера.
 //
 // Принимает множество объектов [CommissionReportInReturnPosition].
 func (commissionReportIn *CommissionReportIn) SetReturnToCommissionerPositions(returnToCommissionerPositions ...*CommissionReportInReturnPosition) *CommissionReportIn {
@@ -492,7 +492,7 @@ func (commissionReportIn *CommissionReportIn) SetSyncID(syncID uuid.UUID) *Commi
 	return commissionReportIn
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для Полученного отчета комиссионера.
+// SetVatEnabled устанавливает флаг включения НДС для Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetVatEnabled(vatEnabled bool) *CommissionReportIn {
 	commissionReportIn.VatEnabled = &vatEnabled
 	return commissionReportIn
@@ -568,7 +568,7 @@ func (commissionOverhead CommissionOverhead) String() string {
 	return Stringify(commissionOverhead)
 }
 
-// CommissionReportInPosition Позиция Полученного отчета комиссионера.
+// CommissionReportInPosition Позиция Полученного отчёта комиссионера.
 //
 // Код сущности: commissionreportinposition
 //
@@ -597,7 +597,7 @@ func (commissionReportInPosition CommissionReportInPosition) GetAssortment() Ass
 	return Deref(commissionReportInPosition.Assortment)
 }
 
-// GetID возвращает ID Позиции Полученного отчета комиссионера.
+// GetID возвращает ID Позиции Полученного отчёта комиссионера.
 func (commissionReportInPosition CommissionReportInPosition) GetID() uuid.UUID {
 	return Deref(commissionReportInPosition.ID)
 }
@@ -790,12 +790,12 @@ func (CommissionReportInReturnPosition) MetaType() MetaType {
 
 // CommissionReportInService методы сервиса для работы с полученными отчётами комиссионера.
 type CommissionReportInService interface {
-	// GetList выполняет запрос на получение списка полученных отчетов комиссионера.
+	// GetList выполняет запрос на получение списка полученных отчётов комиссионера.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportIn], *resty.Response, error)
 
-	// Create выполняет запрос на создание полученного отчета комиссионера.
+	// Create выполняет запрос на создание полученного отчёта комиссионера.
 	// Обязательные поля для заполнения:
 	//	- agent (Контрагент)
 	//	- contract (Договор)
@@ -808,33 +808,33 @@ type CommissionReportInService interface {
 	// Возвращает созданный расходный ордер.
 	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и обновление полученных отчетов комиссионера.
-	// Обновляемые полученные отчеты комиссионера должны содержать идентификатор в виде метаданных.
-	// Принимает контекст, множество полученных отчетов комиссионера и опционально объект параметров запроса Params.
-	// Возвращает список созданных и/или обновлённых полученных отчетов комиссионера.
+	// CreateUpdateMany выполняет запрос на массовое создание и обновление полученных отчётов комиссионера.
+	// Обновляемые полученные отчёты комиссионера должны содержать идентификатор в виде метаданных.
+	// Принимает контекст, множество полученных отчётов комиссионера и опционально объект параметров запроса Params.
+	// Возвращает список созданных и/или обновлённых полученных отчётов комиссионера.
 	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
 
-	// DeleteMany выполняет запрос на массовое удаление полученных отчетов комиссионера.
-	// Принимает контекст и множество полученных отчетов комиссионера.
+	// DeleteMany выполняет запрос на массовое удаление полученных отчётов комиссионера.
+	// Принимает контекст и множество полученных отчётов комиссионера.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CommissionReportIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление полученного отчета комиссионера.
-	// Принимает контекст и ID полученного отчета комиссионера.
-	// Возвращает true в случае успешного удаления полученного отчета комиссионера.
+	// Delete выполняет запрос на удаление полученного отчёта комиссионера.
+	// Принимает контекст и ID полученного отчёта комиссионера.
+	// Возвращает true в случае успешного удаления полученного отчёта комиссионера.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
-	// GetByID выполняет запрос на получение отдельного полученного отчета комиссионера по ID.
-	// Принимает контекст, ID полученного отчета комиссионера и опционально объект параметров запроса Params.
-	// Возвращает найденный полученный отчет комиссионера.
+	// GetByID выполняет запрос на получение отдельного полученного отчёта комиссионера по ID.
+	// Принимает контекст, ID полученного отчёта комиссионера и опционально объект параметров запроса Params.
+	// Возвращает найденный полученный отчёт комиссионера.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 
-	// Update выполняет запрос на обновление полученного отчета комиссионера.
-	// Принимает контекст, полученный отчет комиссионера и опционально объект параметров запроса Params.
-	// Возвращает обновлённый полученный отчет комиссионера.
+	// Update выполняет запрос на обновление полученного отчёта комиссионера.
+	// Принимает контекст, полученный отчёт комиссионера и опционально объект параметров запроса Params.
+	// Возвращает обновлённый полученный отчёт комиссионера.
 	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 
-	// GetMetadata выполняет запрос на получение метаданных полученных отчетов комиссионера.
+	// GetMetadata выполняет запрос на получение метаданных полученных отчётов комиссионера.
 	// Принимает контекст.
 	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)

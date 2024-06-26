@@ -534,7 +534,7 @@ type CashOutService interface {
 	//	- Приемка (Supply)
 	//	- Счет поставщика (InvoiceIn)
 	//	- Заказ поставщику (PurchaseOrder)
-	//	- Выданный отчет комиссионера (CommissionReportOut)
+	//	- Выданный отчёт комиссионера (CommissionReportOut)
 	// Принимает контекст и множество документов из списка выше.
 	// Возвращает предзаполненный расходный ордер на основании переданных документов.
 	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*CashOut, *resty.Response, error)

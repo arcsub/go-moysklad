@@ -286,7 +286,7 @@ func (cashIn *CashIn) SetFiles(files ...*File) *CashIn {
 	return cashIn
 }
 
-// SetGroup устанавливает Отдел сотрудника.
+// SetGroup устанавливает Метаданные отдела сотрудника.
 func (cashIn *CashIn) SetGroup(group *Group) *CashIn {
 	cashIn.Group = group.Clean()
 	return cashIn
@@ -523,7 +523,7 @@ type CashInService interface {
 	//	- Возврат поставщику (PurchaseReturn)
 	//	- Отгрузка (Demand)
 	//	- Счет покупателю (InvoiceOut)
-	//	- Полученный отчет комиссионера (CommissionReportIn)
+	//	- Полученный отчёт комиссионера (CommissionReportIn)
 	// Принимает контекст и множество документов из списка выше.
 	// Возвращает предзаполненный приходный ордер на основании переданных документов.
 	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*CashIn, *resty.Response, error)
