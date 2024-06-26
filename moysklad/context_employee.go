@@ -3,552 +3,157 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
+	"github.com/google/uuid"
 )
 
-// ContextEmployee Контекст сотрудника.
-// Ключевое слово: employee
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-kontext-zaprosa-sotrudnika-poluchit-kontext-sotrudnika
+// ContextEmployee Контекст запроса сотрудника.
+//
+// Код сущности: employee
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-kontext-zaprosa-sotrudnika-poluchit-kontext-sotrudnika
 type ContextEmployee struct {
-	Owner       Employee  `json:"owner"`
-	Image       Image     `json:"image"`
-	Meta        Meta      `json:"meta"`
-	Group       Group     `json:"group"`
-	Updated     Timestamp `json:"updated"`
-	Permissions struct {
-		Currency struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"currency"`
-		Uom struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"uom"`
-		Productfolder struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"productfolder"`
-		Product struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"product"`
-		Bundle struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"bundle"`
-		Service struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"service"`
-		Consignment struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"consignment"`
-		Variant struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"variant"`
-		Store struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"store"`
-		Counterparty struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"counterparty"`
-		Organization struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"organization"`
-		Employee struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"employee"`
-		Settings struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"settings"`
-		Contract struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"contract"`
-		Project struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"project"`
-		Saleschannel struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"saleschannel"`
-		Country struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"country"`
-		Customentity struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"customentity"`
-		Demand struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"demand"`
-		Customerorder struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"customerorder"`
-		Internalorder struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"internalorder"`
-		Invoiceout struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"invoiceout"`
-		Invoicein struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"invoicein"`
-		Paymentin struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"paymentin"`
-		Paymentout struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"paymentout"`
-		Cashin struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"cashin"`
-		Cashout struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"cashout"`
-		Supply struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"supply"`
-		Salesreturn struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"salesreturn"`
-		Purchasereturn struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"purchasereturn"`
-		Retailstore struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"retailstore"`
-		Receipttemplate struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"receipttemplate"`
-		Retailstorestatus struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"retailstorestatus"`
-		Retailshift struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"retailshift"`
-		Retaildemand struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"retaildemand"`
-		Retailsalesreturn struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"retailsalesreturn"`
-		Retaildrawercashin struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"retaildrawercashin"`
-		Retaildrawercashout struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"retaildrawercashout"`
-		Prepayment struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"prepayment"`
-		Prepaymentreturn struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"prepaymentreturn"`
-		Purchaseorder struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"purchaseorder"`
-		Move struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"move"`
-		Enter struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"enter"`
-		Loss struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"loss"`
-		Facturein struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"facturein"`
-		Factureout struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"factureout"`
-		Commissionreportin struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"commissionreportin"`
-		Commissionreportout struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"commissionreportout"`
-		Pricelist struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"pricelist"`
-		Processingplanfolder struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"processingplanfolder"`
-		Processingplan struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"processingplan"`
-		Processing struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"processing"`
-		Processingorder struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"processingorder"`
-		Counterpartyadjustment struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"counterpartyadjustment"`
-		Assortment struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"assortment"`
-		Inventory struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"inventory"`
-		Bonustransaction struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"bonustransaction"`
-		Crptorder struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"crptorder"`
-		Productiontask struct {
-			View    string `json:"view"`
-			Create  string `json:"create"`
-			Update  string `json:"update"`
-			Delete  string `json:"delete"`
-			Approve string `json:"approve"`
-			Print   string `json:"print"`
-		} `json:"productiontask"`
-		Productionstagecompletion struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Print  string `json:"print"`
-		} `json:"productionstagecompletion"`
-		Taxrate struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"taxrate"`
-		Webhook struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-		} `json:"webhook"`
-		Task struct {
-			View   string `json:"view"`
-			Create string `json:"create"`
-			Update string `json:"update"`
-			Delete string `json:"delete"`
-			Done   string `json:"done"`
-		} `json:"task"`
-		Dashboard struct {
-			View string `json:"view"`
-		} `json:"dashboard"`
-		Stock struct {
-			View string `json:"view"`
-		} `json:"stock"`
-		CustomAttributes struct {
-			View string `json:"view"`
-		} `json:"customAttributes"`
-		Pnl struct {
-			View string `json:"view"`
-		} `json:"pnl"`
-		CompanyCrm struct {
-			View string `json:"view"`
-		} `json:"company_crm"`
-		TariffCrm struct {
-			View string `json:"view"`
-		} `json:"tariff_crm"`
-		AuditDashboard struct {
-			View string `json:"view"`
-		} `json:"audit_dashboard"`
-		Admin struct {
-			View string `json:"view"`
-		} `json:"admin"`
-		DashboardMoney struct {
-			View string `json:"view"`
-		} `json:"dashboardMoney"`
-		ViewCashFlow struct {
-			View string `json:"view"`
-		} `json:"viewCashFlow"`
-	} `json:"permissions,omitempty"`
-	Created      string             `json:"created"`
-	MiddleName   string             `json:"middleName"`
-	ExternalCode string             `json:"externalCode"`
-	ID           string             `json:"id"`
-	Position     string             `json:"position"`
-	UID          string             `json:"uid"`
-	Email        string             `json:"email"`
-	Phone        string             `json:"phone"`
-	FirstName    string             `json:"firstName"`
-	Name         string             `json:"name"`
-	LastName     string             `json:"lastName"`
-	FullName     string             `json:"fullName"`
-	ShortFio     string             `json:"shortFio"`
-	AccountID    string             `json:"accountId"`
-	Cashiers     MetaArray[Cashier] `json:"cashiers"`
-	Shared       bool               `json:"shared"`
-	Archived     bool               `json:"archived"`
+	ID           uuid.UUID          `json:"id,omitempty"`           // ID Сотрудника
+	Owner        Employee           `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
+	Image        Image              `json:"image,omitempty"`        // Фотография сотрудника
+	INN          string             `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
+	Code         string             `json:"code,omitempty"`         // Код Сотрудника
+	Created      Timestamp          `json:"created,omitempty"`      // Момент создания Сотрудника
+	Description  string             `json:"description,omitempty"`  // Комментарий к Сотруднику
+	Email        string             `json:"email,omitempty"`        // Электронная почта сотрудника
+	ExternalCode string             `json:"externalCode,omitempty"` // Внешний код Сотрудника
+	FirstName    string             `json:"firstName,omitempty"`    // Имя
+	FullName     string             `json:"fullName,omitempty"`     // Имя Отчество Фамилия
+	Group        Group              `json:"group,omitempty"`        // Отдел сотрудника
+	Updated      Timestamp          `json:"updated,omitempty"`      // Момент последнего обновления Сотрудника
+	AccountID    uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
+	Cashiers     MetaArray[Cashier] `json:"cashiers,omitempty"`     // Массив кассиров
+	LastName     string             `json:"lastName,omitempty"`     // Фамилия
+	Meta         Meta               `json:"meta,omitempty"`         // Метаданные Сотрудника
+	MiddleName   string             `json:"middleName,omitempty"`   // Отчество
+	Name         string             `json:"name,omitempty"`         // Наименование Сотрудника
+	Archived     bool               `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
+	Phone        string             `json:"phone,omitempty"`        // Телефон сотрудника
+	Position     string             `json:"position,omitempty"`     // Должность сотрудника
+	Salary       Salary             `json:"salary,omitempty"`       // Оклад сотрудника
+	Shared       bool               `json:"shared,omitempty"`       // Общий доступ
+	ShortFio     string             `json:"shortFio,omitempty"`     // Краткое ФИО
+	UID          string             `json:"uid,omitempty"`          // Логин Сотрудника
+	Attributes   Slice[Attribute]   `json:"attributes,omitempty"`   // Дополнительные поля Сотрудника
+	Permissions  Permissions        `json:"permissions,omitempty"`  // Перечисление пермиссий сотрудника
 }
 
+// GetMeta возвращает Метаданные Сотрудника.
 func (contextEmployee ContextEmployee) GetMeta() Meta {
 	return contextEmployee.Meta
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (contextEmployee ContextEmployee) String() string {
 	return Stringify(contextEmployee)
 }
 
 // MetaType возвращает тип сущности.
-func (ContextEmployee) MetaType() MetaType {
-	return MetaTypeEmployeeContext
+func (ContextEmployee) MetaType() MetaType { return MetaTypeEmployeeContext }
+
+// Permissions пермиссии сотрудника.
+type Permissions struct {
+	Currency                  BasePermission       `json:"currency"`                  // Валюты
+	Uom                       BasePermission       `json:"uom"`                       // Единицы измерения
+	ProductFolder             DictionaryPermission `json:"productfolder"`             // Группы товаров
+	Product                   DictionaryPermission `json:"product"`                   // Товары
+	Bundle                    DictionaryPermission `json:"bundle"`                    // Комплекты
+	Service                   DictionaryPermission `json:"service"`                   // Услуги
+	Consignment               DictionaryPermission `json:"consignment"`               // Серии
+	Variant                   DictionaryPermission `json:"variant"`                   // Модификации
+	Store                     BasePermission       `json:"store"`                     // Склады
+	Counterparty              DictionaryPermission `json:"counterparty"`              // Контрагенты
+	Organization              BasePermission       `json:"organization"`              // Юрлица
+	Employee                  BasePermission       `json:"employee"`                  // Сотрудники
+	Settings                  DictionaryPermission `json:"settings"`                  // Настройки
+	Contract                  DictionaryPermission `json:"contract"`                  // Договоры
+	Project                   BasePermission       `json:"project"`                   // Проекты
+	SalesChannel              DictionaryPermission `json:"saleschannel"`              // Каналы продаж
+	Country                   BasePermission       `json:"country"`                   // Страны
+	CustomEntity              BasePermission       `json:"customentity"`              // Элементы пользовательских справочников
+	Demand                    OperationPermission  `json:"demand"`                    // Отгрузки
+	CustomerOrder             OperationPermission  `json:"customerorder"`             // Заказы покупателей
+	InternalOrder             OperationPermission  `json:"internalorder"`             // Внутренние заказы
+	InvoiceOut                OperationPermission  `json:"invoiceout"`                // Счет покупателям
+	InvoiceIn                 OperationPermission  `json:"invoicein"`                 // Счета поставщиков
+	PaymentIn                 OperationPermission  `json:"paymentin"`                 // Входящие платежи
+	PaymentOut                OperationPermission  `json:"paymentout"`                // Исходящие платежи
+	CashIn                    OperationPermission  `json:"cashin"`                    // Приходной ордер
+	CashOut                   OperationPermission  `json:"cashout"`                   // Расходной ордер
+	Supply                    OperationPermission  `json:"supply"`                    // Приемки
+	SalesReturn               OperationPermission  `json:"salesreturn"`               // Возвраты покупателей
+	PurchaseReturn            OperationPermission  `json:"purchasereturn"`            // Возвраты поставщикам
+	RetailStore               BasePermission       `json:"retailstore"`               // Точки продаж
+	ReceiptTemplate           BasePermission       `json:"receipttemplate"`           // Шаблоны
+	RetailStoreStatus         BasePermission       `json:"retailstorestatus"`         // Статусы точек продаж
+	RetailShift               DictionaryPermission `json:"retailshift"`               // Смены
+	RetailDemand              OperationPermission  `json:"retaildemand"`              // Продажи
+	RetailSalesReturn         OperationPermission  `json:"retailsalesreturn"`         // Возвраты
+	RetailDrawerCashIn        OperationPermission  `json:"retaildrawercashin"`        // Внесения
+	RetailDrawerCashOut       OperationPermission  `json:"retaildrawercashout"`       // Выплаты
+	Prepayment                OperationPermission  `json:"prepayment"`                // Предоплаты
+	PrepaymentReturn          OperationPermission  `json:"prepaymentreturn"`          // Возвраты предоплат
+	PurchaseOrder             OperationPermission  `json:"purchaseorder"`             // Заказы поставщикам
+	Move                      OperationPermission  `json:"move"`                      // Перемещения
+	Enter                     OperationPermission  `json:"enter"`                     // Оприходования
+	Loss                      OperationPermission  `json:"loss"`                      // Списания
+	FactureIn                 OperationPermission  `json:"facturein"`                 // Счета-фактуры полученные
+	FactureOut                OperationPermission  `json:"factureout"`                // Счета-фактуры выданные
+	CommissionReportIn        OperationPermission  `json:"commissionreportin"`        // Полученный отчет комиссионера
+	CommissionReportOut       OperationPermission  `json:"commissionreportout"`       // Выданный отчет комиссионер
+	PriceList                 OperationPermission  `json:"pricelist"`                 // Прайс-листы
+	ProcessingPlanFolder      BasePermission       `json:"processingplanfolder"`      // Группы техкарт
+	ProcessingPlan            BasePermission       `json:"processingplan"`            // Техкарты
+	ProcessingStage           BasePermission       `json:"processingstage"`           // Этапы производства
+	Processing                OperationPermission  `json:"processing"`                // Техоперации
+	ProcessingOrder           OperationPermission  `json:"processingorder"`           // Заказы на производство
+	ProcessingProcess         OperationPermission  `json:"processingprocess"`         // Техпроцессы
+	CounterpartyAdjustment    DictionaryPermission `json:"counterpartyadjustment"`    // Корректировка взаиморасчетов
+	Assortment                DictionaryPermission `json:"assortment"`                // Товары и Услуги
+	Inventory                 DictionaryPermission `json:"inventory"`                 // Инвентаризации
+	BonusTransaction          OperationPermission  `json:"bonustransaction"`          // Бонусные баллы
+	CRPTOrder                 DictionaryPermission `json:"crptorder"`                 // Заказ маркировок
+	ProductionTask            OperationPermission  `json:"productiontask"`            // Производственные задания
+	ProductionStageCompletion DictionaryPermission `json:"productionstagecompletion"` // Выполнения этапов производства
+	Payroll                   OperationPermission  `json:"payroll"`                   // Зарплата
+	TaxRate                   BasePermission       `json:"taxrate"`                   // Ставки НДС
+	Webhook                   BasePermission       `json:"webhook"`                   // Вебхуки
+	Task                      ScriptPermission     `json:"task"`                      // Задачи
+	Dashboard                 ViewPermission       `json:"dashboard"`                 // Просматривать показатели
+	Stock                     ViewPermission       `json:"stock"`                     // Просматривать остатки по товарам
+	CustomAttributes          ViewPermission       `json:"customAttributes"`          // Работа с доп. полями
+	Profit                    ViewPermission       `json:"pnl"`                       // Просматривать прибыльность
+	CompanyCrm                ViewPermission       `json:"company_crm"`               // Просматривать показатели
+	TariffCrm                 ViewPermission       `json:"tariff_crm"`                // Присутствует ли опция CRM на аккаунте
+	AuditDashboard            ViewPermission       `json:"audit_dashboard"`           // Просматривать аудит
+	Admin                     ViewPermission       `json:"admin"`                     // Является ли сотрудник админом
+	DashboardMoney            ViewPermission       `json:"dashboardMoney"`            // Видеть остатки денег
+	ViewCashFlow              ViewPermission       `json:"viewCashFlow"`              // Видеть движение денежных средств
+}
+
+// ContextEmployeeService описывает методы сервиса для работы с контекстом сотрудника.
+type ContextEmployeeService interface {
+	// Get выполняет запрос на получение контекста запроса сотрудника.
+	// Принимает контекст.
+	// Возвращает контекст запроса сотрудника.
+	Get(ctx context.Context) (*ContextEmployee, *resty.Response, error)
 }
 
 type contextEmployeeService struct {
 	Endpoint
 }
 
+// NewContextEmployeeService возвращает сервис для работы с контекстом сотрудника.
+func NewContextEmployeeService(client *Client) ContextEmployeeService {
+	return &contextEmployeeService{NewEndpoint(client, "context/employee")}
+}
+
 func (service *contextEmployeeService) Get(ctx context.Context) (*ContextEmployee, *resty.Response, error) {
 	return NewRequestBuilder[ContextEmployee](service.client, service.uri).Get(ctx)
-}
-
-// ContextEmployeeService Сервис для работы с контекстом сотрудника.
-type ContextEmployeeService interface {
-	Get(ctx context.Context) (*ContextEmployee, *resty.Response, error)
-}
-
-func NewContextEmployeeService(client *Client) ContextEmployeeService {
-	e := NewEndpoint(client, "context/employee")
-	return &contextEmployeeService{e}
 }
