@@ -58,6 +58,7 @@ type CommissionReportOut struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (commissionReportOut CommissionReportOut) Clean() *CommissionReportOut {
 	return &CommissionReportOut{Meta: commissionReportOut.Meta}
@@ -287,19 +288,25 @@ func (commissionReportOut *CommissionReportOut) SetApplicable(applicable bool) *
 
 // SetOrganizationAccount устанавливает Метаданные счета юрлица.
 func (commissionReportOut *CommissionReportOut) SetOrganizationAccount(organizationAccount *AgentAccount) *CommissionReportOut {
-	commissionReportOut.OrganizationAccount = organizationAccount.Clean()
+	if organizationAccount != nil {
+		commissionReportOut.OrganizationAccount = organizationAccount.Clean()
+	}
 	return commissionReportOut
 }
 
 // SetAgentAccount устанавливает Метаданные счета контрагента.
 func (commissionReportOut *CommissionReportOut) SetAgentAccount(agentAccount *AgentAccount) *CommissionReportOut {
-	commissionReportOut.AgentAccount = agentAccount.Clean()
+	if agentAccount != nil {
+		commissionReportOut.AgentAccount = agentAccount.Clean()
+	}
 	return commissionReportOut
 }
 
 // SetOrganization устанавливает Метаданные юрлица.
 func (commissionReportOut *CommissionReportOut) SetOrganization(organization *Organization) *CommissionReportOut {
-	commissionReportOut.Organization = organization.Clean()
+	if organization != nil {
+		commissionReportOut.Organization = organization.Clean()
+	}
 	return commissionReportOut
 }
 
@@ -317,13 +324,17 @@ func (commissionReportOut *CommissionReportOut) SetCommissionPeriodEnd(commissio
 
 // SetAgent устанавливает Метаданные контрагента.
 func (commissionReportOut *CommissionReportOut) SetAgent(agent *Counterparty) *CommissionReportOut {
-	commissionReportOut.Agent = agent.Clean()
+	if agent != nil {
+		commissionReportOut.Agent = agent.Clean()
+	}
 	return commissionReportOut
 }
 
 // SetContract устанавливает Метаданные договора.
 func (commissionReportOut *CommissionReportOut) SetContract(contract *Contract) *CommissionReportOut {
-	commissionReportOut.Contract = contract.Clean()
+	if contract != nil {
+		commissionReportOut.Contract = contract.Clean()
+	}
 	return commissionReportOut
 }
 
@@ -349,7 +360,9 @@ func (commissionReportOut *CommissionReportOut) SetFiles(files ...*File) *Commis
 
 // SetGroup устанавливает Метаданные отдела сотрудника.
 func (commissionReportOut *CommissionReportOut) SetGroup(group *Group) *CommissionReportOut {
-	commissionReportOut.Group = group.Clean()
+	if group != nil {
+		commissionReportOut.Group = group.Clean()
+	}
 	return commissionReportOut
 }
 
@@ -379,7 +392,9 @@ func (commissionReportOut *CommissionReportOut) SetCommissionPeriodStart(commiss
 
 // SetOwner устанавливает Метаданные владельца (Сотрудника).
 func (commissionReportOut *CommissionReportOut) SetOwner(owner *Employee) *CommissionReportOut {
-	commissionReportOut.Owner = owner.Clean()
+	if owner != nil {
+		commissionReportOut.Owner = owner.Clean()
+	}
 	return commissionReportOut
 }
 

@@ -7,7 +7,7 @@ import (
 // ReceiptTemplate Шаблон печати кассовых чеков
 // TODO: сервис не распознает тип сущности 'receipttemplate'
 type ReceiptTemplate struct {
-	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учетной записи // ID учетной записи
+	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учётной записи // ID учётной записи
 	ID        *uuid.UUID `json:"id,omitempty"`        // ID сущности
 	Name      *string    `json:"name,omitempty"`      // Наименование
 	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные

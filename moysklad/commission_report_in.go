@@ -61,6 +61,7 @@ type CommissionReportIn struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
 	return &CommissionReportIn{Meta: commissionReportIn.Meta}
@@ -294,19 +295,25 @@ func (commissionReportIn CommissionReportIn) GetAttributes() Slice[Attribute] {
 
 // SetOrganization устанавливает Метаданные юрлица.
 func (commissionReportIn *CommissionReportIn) SetOrganization(organization *Organization) *CommissionReportIn {
-	commissionReportIn.Organization = organization.Clean()
+	if organization != nil {
+		commissionReportIn.Organization = organization.Clean()
+	}
 	return commissionReportIn
 }
 
 // SetAgentAccount устанавливает Метаданные счета контрагента.
 func (commissionReportIn *CommissionReportIn) SetAgentAccount(agentAccount *AgentAccount) *CommissionReportIn {
-	commissionReportIn.AgentAccount = agentAccount.Clean()
+	if agentAccount != nil {
+		commissionReportIn.AgentAccount = agentAccount.Clean()
+	}
 	return commissionReportIn
 }
 
 // SetAgent устанавливает Метаданные контрагента.
 func (commissionReportIn *CommissionReportIn) SetAgent(agent *Counterparty) *CommissionReportIn {
-	commissionReportIn.Agent = agent.Clean()
+	if agent != nil {
+		commissionReportIn.Agent = agent.Clean()
+	}
 	return commissionReportIn
 }
 
@@ -342,7 +349,9 @@ func (commissionReportIn *CommissionReportIn) SetCommissionPeriodStart(commissio
 
 // SetContract устанавливает Метаданные договора.
 func (commissionReportIn *CommissionReportIn) SetContract(contract *Contract) *CommissionReportIn {
-	commissionReportIn.Contract = contract.Clean()
+	if contract != nil {
+		commissionReportIn.Contract = contract.Clean()
+	}
 	return commissionReportIn
 }
 
@@ -368,7 +377,9 @@ func (commissionReportIn *CommissionReportIn) SetFiles(files ...*File) *Commissi
 
 // SetGroup устанавливает Метаданные отдела сотрудника.
 func (commissionReportIn *CommissionReportIn) SetGroup(group *Group) *CommissionReportIn {
-	commissionReportIn.Group = group.Clean()
+	if group != nil {
+		commissionReportIn.Group = group.Clean()
+	}
 	return commissionReportIn
 }
 
@@ -392,13 +403,17 @@ func (commissionReportIn *CommissionReportIn) SetApplicable(applicable bool) *Co
 
 // SetOrganizationAccount устанавливает Метаданные счета юрлица.
 func (commissionReportIn *CommissionReportIn) SetOrganizationAccount(organizationAccount *AgentAccount) *CommissionReportIn {
-	commissionReportIn.OrganizationAccount = organizationAccount.Clean()
+	if organizationAccount != nil {
+		commissionReportIn.OrganizationAccount = organizationAccount.Clean()
+	}
 	return commissionReportIn
 }
 
 // SetOwner устанавливает Метаданные владельца (Сотрудника).
 func (commissionReportIn *CommissionReportIn) SetOwner(owner *Employee) *CommissionReportIn {
-	commissionReportIn.Owner = owner.Clean()
+	if owner != nil {
+		commissionReportIn.Owner = owner.Clean()
+	}
 	return commissionReportIn
 }
 

@@ -33,6 +33,7 @@ type BonusProgram struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (bonusProgram BonusProgram) Clean() *BonusProgram {
 	return &BonusProgram{Meta: bonusProgram.Meta}

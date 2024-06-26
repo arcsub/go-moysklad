@@ -50,6 +50,7 @@ type CashOut struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
@@ -262,7 +263,9 @@ func (cashOut *CashOut) SetContract(contract *Contract) *CashOut {
 
 // SetOrganization устанавливает Метаданные юрлица.
 func (cashOut *CashOut) SetOrganization(organization *Organization) *CashOut {
-	cashOut.Organization = organization.Clean()
+	if organization != nil {
+		cashOut.Organization = organization.Clean()
+	}
 	return cashOut
 }
 
@@ -274,7 +277,9 @@ func (cashOut *CashOut) SetDescription(description string) *CashOut {
 
 // SetExpenseItem устанавливает Метаданные Статьи расходов.
 func (cashOut *CashOut) SetExpenseItem(expenseItem *ExpenseItem) *CashOut {
-	cashOut.ExpenseItem = expenseItem.Clean()
+	if expenseItem != nil {
+		cashOut.ExpenseItem = expenseItem.Clean()
+	}
 	return cashOut
 }
 
@@ -292,13 +297,17 @@ func (cashOut *CashOut) SetFiles(files ...*File) *CashOut {
 
 // SetGroup устанавливает Метаданные отдела сотрудника.
 func (cashOut *CashOut) SetGroup(group *Group) *CashOut {
-	cashOut.Group = group.Clean()
+	if group != nil {
+		cashOut.Group = group.Clean()
+	}
 	return cashOut
 }
 
 // SetOwner устанавливает Метаданные владельца (Сотрудника).
 func (cashOut *CashOut) SetOwner(owner *Employee) *CashOut {
-	cashOut.Owner = owner.Clean()
+	if owner != nil {
+		cashOut.Owner = owner.Clean()
+	}
 	return cashOut
 }
 
@@ -322,7 +331,9 @@ func (cashOut *CashOut) SetOperations(operations ...AsOperationInterface) *CashO
 
 // SetAgent устанавливает Метаданные контрагента.
 func (cashOut *CashOut) SetAgent(agent *Counterparty) *CashOut {
-	cashOut.Agent = agent.Clean()
+	if agent != nil {
+		cashOut.Agent = agent.Clean()
+	}
 	return cashOut
 }
 
@@ -406,7 +417,9 @@ func (cashOut *CashOut) SetVatSum(vatSum float64) *CashOut {
 
 // SetFactureOut устанавливает Метаданные Счет-фактуры выданного.
 func (cashOut *CashOut) SetFactureOut(factureOut *FactureOut) *CashOut {
-	cashOut.FactureOut = factureOut.Clean()
+	if factureOut != nil {
+		cashOut.FactureOut = factureOut.Clean()
+	}
 	return cashOut
 }
 

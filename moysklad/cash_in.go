@@ -49,6 +49,7 @@ type CashIn struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
@@ -226,7 +227,9 @@ func (cashIn CashIn) GetAttributes() Slice[Attribute] {
 
 // SetOrganization устанавливает Метаданные юрлица.
 func (cashIn *CashIn) SetOrganization(organization *Organization) *CashIn {
-	cashIn.Organization = organization.Clean()
+	if organization != nil {
+		cashIn.Organization = organization.Clean()
+	}
 	return cashIn
 }
 
@@ -288,7 +291,9 @@ func (cashIn *CashIn) SetFiles(files ...*File) *CashIn {
 
 // SetGroup устанавливает Метаданные отдела сотрудника.
 func (cashIn *CashIn) SetGroup(group *Group) *CashIn {
-	cashIn.Group = group.Clean()
+	if group != nil {
+		cashIn.Group = group.Clean()
+	}
 	return cashIn
 }
 
@@ -306,13 +311,17 @@ func (cashIn *CashIn) SetOperations(operations ...AsOperationInterface) *CashIn 
 
 // SetAgent устанавливает Метаданные контрагента.
 func (cashIn *CashIn) SetAgent(agent *Counterparty) *CashIn {
-	cashIn.Agent = agent.Clean()
+	if agent != nil {
+		cashIn.Agent = agent.Clean()
+	}
 	return cashIn
 }
 
 // SetOwner устанавливает Метаданные владельца (Сотрудника).
 func (cashIn *CashIn) SetOwner(owner *Employee) *CashIn {
-	cashIn.Owner = owner.Clean()
+	if owner != nil {
+		cashIn.Owner = owner.Clean()
+	}
 	return cashIn
 }
 
@@ -396,7 +405,9 @@ func (cashIn *CashIn) SetName(name string) *CashIn {
 
 // SetFactureIn устанавливает Метаданные Счет-фактуры полученного.
 func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
-	cashIn.FactureIn = factureIn.Clean()
+	if factureIn != nil {
+		cashIn.FactureIn = factureIn.Clean()
+	}
 	return cashIn
 }
 

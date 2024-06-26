@@ -376,7 +376,9 @@ func (bundle *Bundle) SetFiles(files ...*File) *Bundle {
 
 // SetGroup устанавливает Метаданные отдела сотрудника.
 func (bundle *Bundle) SetGroup(group *Group) *Bundle {
-	bundle.Group = group.Clean()
+	if group != nil {
+		bundle.Group = group.Clean()
+	}
 	return bundle
 }
 
@@ -412,7 +414,9 @@ func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
 
 // SetOwner устанавливает Метаданные владельца (Сотрудника).
 func (bundle *Bundle) SetOwner(owner *Employee) *Bundle {
-	bundle.Owner = owner.Clean()
+	if owner != nil {
+		bundle.Owner = owner.Clean()
+	}
 	return bundle
 }
 

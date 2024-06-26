@@ -88,8 +88,10 @@ func (address *Address) SetComment(comment string) *Address {
 
 // SetCountry устанавливает Метаданные страны.
 func (address *Address) SetCountry(country *Country) *Address {
-	mw := country.GetMeta().Wrap()
-	address.Country = &mw
+	if country != nil {
+		mw := country.GetMeta().Wrap()
+		address.Country = &mw
+	}
 	return address
 }
 
@@ -107,8 +109,10 @@ func (address *Address) SetPostalCode(postalCode string) *Address {
 
 // SetRegion устанавливает Метаданные региона.
 func (address *Address) SetRegion(region *Region) *Address {
-	mw := region.GetMeta().Wrap()
-	address.Region = &mw
+	if region != nil {
+		mw := region.GetMeta().Wrap()
+		address.Region = &mw
+	}
 	return address
 }
 

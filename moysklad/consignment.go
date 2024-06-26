@@ -30,6 +30,7 @@ type Consignment struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (consignment Consignment) Clean() *Consignment {
 	return &Consignment{Meta: consignment.Meta}

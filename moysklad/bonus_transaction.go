@@ -39,6 +39,7 @@ type BonusTransaction struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
@@ -161,19 +162,25 @@ func (bonusTransaction BonusTransaction) GetCategoryType() BonusTransactionCateg
 
 // SetOrganization устанавливает Метаданные юрлица.
 func (bonusTransaction *BonusTransaction) SetOrganization(organization *Organization) *BonusTransaction {
-	bonusTransaction.Organization = organization.Clean()
+	if organization != nil {
+		bonusTransaction.Organization = organization.Clean()
+	}
 	return bonusTransaction
 }
 
 // SetGroup устанавливает Метаданные отдела сотрудника.
 func (bonusTransaction *BonusTransaction) SetGroup(group *Group) *BonusTransaction {
-	bonusTransaction.Group = group.Clean()
+	if group != nil {
+		bonusTransaction.Group = group.Clean()
+	}
 	return bonusTransaction
 }
 
 // SetBonusProgram устанавливает Метаданные бонусной программы.
 func (bonusTransaction *BonusTransaction) SetBonusProgram(bonusProgram *BonusProgram) *BonusTransaction {
-	bonusTransaction.BonusProgram = bonusProgram.Clean()
+	if bonusProgram != nil {
+		bonusTransaction.BonusProgram = bonusProgram.Clean()
+	}
 	return bonusTransaction
 }
 
@@ -203,7 +210,9 @@ func (bonusTransaction *BonusTransaction) SetApplicable(applicable bool) *BonusT
 
 // SetAgent устанавливает Метаданные Контрагента, связанного с бонусной операцией.
 func (bonusTransaction *BonusTransaction) SetAgent(agent *Counterparty) *BonusTransaction {
-	bonusTransaction.Agent = agent.Clean()
+	if agent != nil {
+		bonusTransaction.Agent = agent.Clean()
+	}
 	return bonusTransaction
 }
 
@@ -227,13 +236,17 @@ func (bonusTransaction *BonusTransaction) SetName(name string) *BonusTransaction
 
 // SetOwner устанавливает Метаданные владельца (Сотрудника).
 func (bonusTransaction *BonusTransaction) SetOwner(owner *Employee) *BonusTransaction {
-	bonusTransaction.Owner = owner.Clean()
+	if owner != nil {
+		bonusTransaction.Owner = owner.Clean()
+	}
 	return bonusTransaction
 }
 
 // SetParentDocument устанавливает Метаданные связанного документа бонусной операции.
 func (bonusTransaction *BonusTransaction) SetParentDocument(parentDocument *BonusTransaction) *BonusTransaction {
-	bonusTransaction.ParentDocument = parentDocument.Clean()
+	if parentDocument != nil {
+		bonusTransaction.ParentDocument = parentDocument.Clean()
+	}
 	return bonusTransaction
 }
 

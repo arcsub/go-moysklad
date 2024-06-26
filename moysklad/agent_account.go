@@ -23,6 +23,7 @@ type AgentAccount struct {
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (agentAccount AgentAccount) Clean() *AgentAccount {
 	return &AgentAccount{Meta: agentAccount.Meta}
