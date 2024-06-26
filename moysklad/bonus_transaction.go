@@ -54,7 +54,7 @@ func (bonusTransaction BonusTransaction) GetOrganization() Organization {
 	return Deref(bonusTransaction.Organization)
 }
 
-// GetGroup возвращает Метаданные Отдела сотрудника.
+// GetGroup возвращает Отдел сотрудника.
 func (bonusTransaction BonusTransaction) GetGroup() Group {
 	return Deref(bonusTransaction.Group)
 }
@@ -79,7 +79,7 @@ func (bonusTransaction BonusTransaction) GetCode() string {
 	return Deref(bonusTransaction.Code)
 }
 
-// GetCreated возвращает Момент создания Бонусной операции.
+// GetCreated возвращает Дату создания.
 func (bonusTransaction BonusTransaction) GetCreated() Timestamp {
 	return Deref(bonusTransaction.Created)
 }

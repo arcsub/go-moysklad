@@ -60,6 +60,11 @@ func (cashOut CashOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
 }
 
+// AsPayment реализует интерфейс AsPaymentInterface.
+func (cashOut CashOut) AsPayment() *Payment {
+	return &Payment{Meta: cashOut.GetMeta()}
+}
+
 // GetName возвращает Наименование Расходного ордера.
 func (cashOut CashOut) GetName() string {
 	return Deref(cashOut.Name)
@@ -406,6 +411,8 @@ func (cashOut *CashOut) SetFactureOut(factureOut *FactureOut) *CashOut {
 }
 
 // SetAttributes устанавливает Список метаданных доп. полей.
+//
+// Принимает множество объектов [Attribute].
 func (cashOut *CashOut) SetAttributes(attributes ...*Attribute) *CashOut {
 	cashOut.Attributes = attributes
 	return cashOut
@@ -458,7 +465,7 @@ type CashOutService interface {
 	// Возвращает созданный расходный ордер.
 	Create(ctx context.Context, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и расходных ордеров.
+	// CreateUpdateMany выполняет запрос на массовое создание и обновление расходных ордеров.
 	// Обновляемые приходные ордеры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, множество приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или расходных приходных ордеров.
@@ -474,7 +481,7 @@ type CashOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CashOut) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetMetadata выполняет запрос на получение метаданных расходных ордеров
+	// GetMetadata выполняет запрос на получение метаданных расходных ордеров.
 	// Принимает контекст.
 	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)

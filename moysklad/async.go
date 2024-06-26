@@ -17,14 +17,14 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
 type Async struct {
 	DeletionDate Timestamp   `json:"deletionDate,omitempty"` // Дата, после которой результат выполнения задачи станет недоступен. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
-	Meta         Meta        `json:"meta,omitempty"`         // Метаданные Асинхронной задачи [Обязательное при ответе]
-	Owner        MetaWrapper `json:"owner,omitempty"`        // Пользователь или приложение, которые создали Асинхронную задачу [Обязательное при ответе]
-	RequestURL   string      `json:"request,omitempty"`      // URL запроса, по которому создана Асинхронная задача [Обязательное при ответе]
+	Meta         Meta        `json:"meta,omitempty"`         // Метаданные Асинхронной задачи
+	Owner        MetaWrapper `json:"owner,omitempty"`        // Пользователь или приложение, которые создали Асинхронную задачу
+	RequestURL   string      `json:"request,omitempty"`      // URL запроса, по которому создана Асинхронная задача
 	ResultURL    string      `json:"resultUrl,omitempty"`    // Ссылка на результат выполнения задачи. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
-	State        AsyncState  `json:"state,omitempty"`        // Статус выполнения Асинхронной задачи. [Обязательное при ответе]
+	State        AsyncState  `json:"state,omitempty"`        // Статус выполнения Асинхронной задачи.
 	Errors       ApiErrors   `json:"errors,omitempty"`       // Ошибки апи, если поле state имеет значение AsyncStateApiError (API_ERROR)
-	AccountID    uuid.UUID   `json:"accountId,omitempty"`    // ID учетной записи [Обязательное при ответе]
-	ID           uuid.UUID   `json:"id,omitempty"`           // ID Асинхронной задачи [Обязательное при ответе]
+	AccountID    uuid.UUID   `json:"accountId,omitempty"`    // ID учетной записи
+	ID           uuid.UUID   `json:"id,omitempty"`           // ID Асинхронной задачи
 }
 
 // String реализует интерфейс [fmt.Stringer].

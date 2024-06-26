@@ -10,16 +10,16 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-kontragenty-attributy-suschnosti-adres-scheta-kontragentow
 type AgentAccount struct {
-	AccountID            *uuid.UUID `json:"accountId,omitempty"`            // ID учетной записи [Обязательное при ответе] [Только для чтения]
-	AccountNumber        *string    `json:"accountNumber,omitempty"`        // Номер счета [Обязательное при ответе] [Необходимо при создании]
+	AccountID            *uuid.UUID `json:"accountId,omitempty"`            // ID учетной записи
+	AccountNumber        *string    `json:"accountNumber,omitempty"`        // Номер счета
 	BankLocation         *string    `json:"bankLocation,omitempty"`         // Адрес банка
 	BankName             *string    `json:"bankName,omitempty"`             // Наименование банка
 	BIC                  *string    `json:"bic,omitempty"`                  // БИК
 	CorrespondentAccount *string    `json:"correspondentAccount,omitempty"` // Корр счет
-	ID                   *uuid.UUID `json:"id,omitempty"`                   // ID счета [Обязательное при ответе] [Только для чтения]
-	IsDefault            *bool      `json:"isDefault,omitempty"`            // Является ли счет основным счетом Контрагента [Обязательное при ответе]
-	Meta                 *Meta      `json:"meta,omitempty"`                 // Метаданные Счета Контрагента [Обязательное при ответе]
-	Updated              *Timestamp `json:"updated,omitempty"`              // Момент последнего обновления [Обязательное при ответе] [Только для чтения]
+	ID                   *uuid.UUID `json:"id,omitempty"`                   // ID счета
+	IsDefault            *bool      `json:"isDefault,omitempty"`            // Является ли счет основным счетом Контрагента
+	Meta                 *Meta      `json:"meta,omitempty"`                 // Метаданные Счета Контрагента
+	Updated              *Timestamp `json:"updated,omitempty"`              // Момент последнего обновления
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].

@@ -20,7 +20,7 @@ type CashIn struct {
 	Moment         *Timestamp               `json:"moment,omitempty"`         // Дата документа
 	Code           *string                  `json:"code,omitempty"`           // Код Приходного ордера
 	Contract       *NullValue[Contract]     `json:"contract,omitempty"`       // Метаданные договора
-	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учетной записи
+	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учетной записи      // ID учетной записи
 	Deleted        *Timestamp               `json:"deleted,omitempty"`        // Момент последнего удаления Приходного ордера
 	Description    *string                  `json:"description,omitempty"`    // Комментарий Приходного ордера
 	ExternalCode   *string                  `json:"externalCode,omitempty"`   // Внешний код Приходного ордера
@@ -57,6 +57,11 @@ func (cashIn CashIn) Clean() *CashIn {
 // AsTaskOperation реализует интерфейс AsTaskOperationInterface.
 func (cashIn CashIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
+}
+
+// AsPayment реализует интерфейс AsPaymentInterface.
+func (cashIn CashIn) AsPayment() *Payment {
+	return &Payment{Meta: cashIn.GetMeta()}
 }
 
 // GetOrganization возвращает Метаданные юрлица.
@@ -396,6 +401,8 @@ func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
 }
 
 // SetAttributes устанавливает Список метаданных доп. полей.
+//
+// Принимает множество объектов [Attribute].
 func (cashIn *CashIn) SetAttributes(attributes ...*Attribute) *CashIn {
 	cashIn.Attributes = attributes
 	return cashIn
@@ -463,7 +470,7 @@ type CashInService interface {
 	// Возвращает true в случае успешного удаления приходного ордера.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
-	// GetMetadata выполняет запрос на получение метаданных приходных ордеров
+	// GetMetadata выполняет запрос на получение метаданных приходных ордеров.
 	// Принимает контекст.
 	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)

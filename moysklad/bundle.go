@@ -168,7 +168,7 @@ func (bundle Bundle) GetFiles() MetaArray[File] {
 	return Deref(bundle.Files)
 }
 
-// GetGroup возвращает Метаданные отдела сотрудника.
+// GetGroup возвращает Отдел сотрудника.
 func (bundle Bundle) GetGroup() Group {
 	return Deref(bundle.Group)
 }
@@ -238,7 +238,7 @@ func (bundle Bundle) GetTNVED() string {
 	return Deref(bundle.TNVED)
 }
 
-// GetVatEnabled возвращает флаг включения НДС для комплекта.
+// GetVatEnabled возвращает true, если учитывается НДС.
 func (bundle Bundle) GetVatEnabled() bool {
 	return Deref(bundle.VatEnabled)
 }

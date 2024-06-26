@@ -150,7 +150,7 @@ func (agent Agent) GetAccounts() MetaArray[AgentAccount] {
 	return Deref(agent.Accounts)
 }
 
-// GetCreated возвращает Момент создания.
+// GetCreated возвращает Дату создания.
 func (agent Agent) GetCreated() Timestamp {
 	return Deref(agent.Created)
 }
