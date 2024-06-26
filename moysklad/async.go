@@ -23,7 +23,7 @@ type Async struct {
 	ResultURL    string      `json:"resultUrl,omitempty"`    // Ссылка на результат выполнения задачи. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
 	State        AsyncState  `json:"state,omitempty"`        // Статус выполнения Асинхронной задачи.
 	Errors       ApiErrors   `json:"errors,omitempty"`       // Ошибки апи, если поле state имеет значение AsyncStateApiError (API_ERROR)
-	AccountID    uuid.UUID   `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    uuid.UUID   `json:"accountId,omitempty"`    // ID учётной записи
 	ID           uuid.UUID   `json:"id,omitempty"`           // ID Асинхронной задачи
 }
 

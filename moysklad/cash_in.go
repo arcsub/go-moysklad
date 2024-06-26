@@ -20,7 +20,7 @@ type CashIn struct {
 	Moment         *Timestamp               `json:"moment,omitempty"`         // Дата документа
 	Code           *string                  `json:"code,omitempty"`           // Код Приходного ордера
 	Contract       *NullValue[Contract]     `json:"contract,omitempty"`       // Метаданные договора
-	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учетной записи      // ID учетной записи
+	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учётной записи      // ID учётной записи
 	Deleted        *Timestamp               `json:"deleted,omitempty"`        // Момент последнего удаления Приходного ордера
 	Description    *string                  `json:"description,omitempty"`    // Комментарий Приходного ордера
 	ExternalCode   *string                  `json:"externalCode,omitempty"`   // Внешний код Приходного ордера
@@ -94,7 +94,7 @@ func (cashIn CashIn) GetContract() Contract {
 	return cashIn.Contract.Get()
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (cashIn CashIn) GetAccountID() uuid.UUID {
 	return Deref(cashIn.AccountID)
 }
@@ -426,17 +426,17 @@ func (cashIn CashIn) AsOperation() *Operation {
 
 // Update shortcut
 func (cashIn CashIn) Update(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
-	return client.Entity().CashIn().Update(ctx, cashIn.GetID(), &cashIn, params...)
+	return NewCashInService(client).Update(ctx, cashIn.GetID(), &cashIn, params...)
 }
 
 // Create shortcut
 func (cashIn CashIn) Create(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
-	return client.Entity().CashIn().Create(ctx, &cashIn, params...)
+	return NewCashInService(client).Create(ctx, &cashIn, params...)
 }
 
 // Delete shortcut
 func (cashIn CashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CashIn().Delete(ctx, cashIn.GetID())
+	return NewCashInService(client).Delete(ctx, cashIn.GetID())
 }
 
 // CashInService методы сервиса для работы с приходными ордерами.

@@ -14,14 +14,14 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-serwernye-prilozheniq
 type Application struct {
-	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учетной записи
+	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учётной записи
 	ID        *uuid.UUID `json:"id,omitempty"`        // ID Серверного приложения
 	Name      *string    `json:"name,omitempty"`      // Наименование Серверного приложения
 	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные Серверного приложения
 	AppUID    *uuid.UUID `json:"appUid,omitempty"`    // UID Серверного приложения
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (application Application) GetAccountID() uuid.UUID {
 	return Deref(application.AccountID)
 }

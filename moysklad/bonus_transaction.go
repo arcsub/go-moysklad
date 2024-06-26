@@ -28,7 +28,7 @@ type BonusTransaction struct {
 	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Бонусной операции
 	Moment            *Timestamp               `json:"moment,omitempty"`            // Время проведения бонусной операции
 	Name              *string                  `json:"name,omitempty"`              // Наименование Бонусной операции
-	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учетной записи
+	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учётной записи
 	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
 	ParentDocument    *BonusTransaction        `json:"parentDocument,omitempty"`    // Метаданные связанного документа бонусной операции
 	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ
@@ -119,7 +119,7 @@ func (bonusTransaction BonusTransaction) GetName() string {
 	return Deref(bonusTransaction.Name)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (bonusTransaction BonusTransaction) GetAccountID() uuid.UUID {
 	return Deref(bonusTransaction.AccountID)
 }

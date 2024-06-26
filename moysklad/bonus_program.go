@@ -22,7 +22,7 @@ type BonusProgram struct {
 	EarnRateRoublesToPoint    *int               `json:"earnRateRoublesToPoint,omitempty"`    // Курс начисления
 	EarnWhileRedeeming        *bool              `json:"earnWhileRedeeming,omitempty"`        // Разрешить одновременное начисление и списание бонусов. Если true - бонусы будут начислены на денежную часть покупки, даже при частичной оплате покупки баллами.
 	ID                        *uuid.UUID         `json:"id,omitempty"`                        // ID Бонусной программы
-	AccountID                 *uuid.UUID         `json:"accountId,omitempty"`                 // ID учетной записи
+	AccountID                 *uuid.UUID         `json:"accountId,omitempty"`                 // ID учётной записи
 	Meta                      *Meta              `json:"meta,omitempty"`                      // Метаданные Бонусной программы
 	Name                      *string            `json:"name,omitempty"`                      // Наименование Бонусной программы
 	PostponedBonusesDelayDays *int               `json:"postponedBonusesDelayDays,omitempty"` // Баллы начисляются через [N] дней [Тарифная опция «Расширенная бонусная программа»]
@@ -78,7 +78,7 @@ func (bonusProgram BonusProgram) GetID() uuid.UUID {
 	return Deref(bonusProgram.ID)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (bonusProgram BonusProgram) GetAccountID() uuid.UUID {
 	return Deref(bonusProgram.AccountID)
 }

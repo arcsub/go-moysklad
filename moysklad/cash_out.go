@@ -17,7 +17,7 @@ type CashOut struct {
 	Name           *string                  `json:"name,omitempty"`           // Наименование Расходного ордера
 	Deleted        *Timestamp               `json:"deleted,omitempty"`        // Момент последнего удаления Расходного ордера
 	Applicable     *bool                    `json:"applicable,omitempty"`     // Отметка о проведении
-	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учетной записи
+	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учётной записи
 	Code           *string                  `json:"code,omitempty"`           // Код Расходного ордера
 	Contract       *NullValue[Contract]     `json:"contract,omitempty"`       // Метаданные договора
 	Created        *Timestamp               `json:"created,omitempty"`        // Дата создания
@@ -80,7 +80,7 @@ func (cashOut CashOut) GetApplicable() bool {
 	return Deref(cashOut.Applicable)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (cashOut CashOut) GetAccountID() uuid.UUID {
 	return Deref(cashOut.AccountID)
 }
@@ -436,17 +436,17 @@ func (cashOut CashOut) AsOperation() *Operation {
 
 // Update shortcut
 func (cashOut CashOut) Update(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
-	return client.Entity().CashOut().Update(ctx, cashOut.GetID(), &cashOut, params...)
+	return NewCashOutService(client).Update(ctx, cashOut.GetID(), &cashOut, params...)
 }
 
 // Create shortcut
 func (cashOut CashOut) Create(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
-	return client.Entity().CashOut().Create(ctx, &cashOut, params...)
+	return NewCashOutService(client).Create(ctx, &cashOut, params...)
 }
 
 // Delete shortcut
 func (cashOut CashOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CashOut().Delete(ctx, cashOut.GetID())
+	return NewCashOutService(client).Delete(ctx, cashOut.GetID())
 }
 
 // CashOutService методы сервиса для работы с расходными ордерами.

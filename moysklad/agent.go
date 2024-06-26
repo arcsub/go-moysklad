@@ -34,7 +34,7 @@ type Agent struct {
 	OGRNIP            *string                  `json:"ogrnip,omitempty"`            // ОГРНИП
 	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные активной Бонусной программы
 	Code              *string                  `json:"code,omitempty"`              // Код Контрагента/Юрлица
-	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учетной записи
+	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учётной записи
 	ActualAddress     *string                  `json:"actualAddress,omitempty"`     // Фактический адрес Контрагента/Юрлица
 	BonusPoints       *int                     `json:"bonusPoints,omitempty"`       // Бонусные баллы по активной бонусной программе
 	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
@@ -185,7 +185,7 @@ func (agent Agent) GetCode() string {
 	return Deref(agent.Code)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (agent Agent) GetAccountID() uuid.UUID {
 	return Deref(agent.AccountID)
 }

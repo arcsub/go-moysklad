@@ -34,7 +34,7 @@ type CommissionReportOut struct {
 	Meta                  *Meta                                   `json:"meta,omitempty"`                  // Метаданные Выданного отчета комиссионера
 	Moment                *Timestamp                              `json:"moment,omitempty"`                // Дата документа
 	Name                  *string                                 `json:"name,omitempty"`                  // Наименование Выданного отчета комиссионера
-	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`             // ID учетной записи
+	AccountID             *uuid.UUID                              `json:"accountId,omitempty"`             // ID учётной записи
 	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"` // Начало периода
 	Owner                 *Employee                               `json:"owner,omitempty"`                 // Метаданные владельца (Сотрудника)
 	PayedSum              *float64                                `json:"payedSum,omitempty"`              // Оплаченная сумма
@@ -174,7 +174,7 @@ func (commissionReportOut CommissionReportOut) GetName() string {
 	return Deref(commissionReportOut.Name)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (commissionReportOut CommissionReportOut) GetAccountID() uuid.UUID {
 	return Deref(commissionReportOut.AccountID)
 }
@@ -503,17 +503,17 @@ func (CommissionReportOut) MetaType() MetaType {
 
 // Update shortcut
 func (commissionReportOut CommissionReportOut) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
-	return client.Entity().CommissionReportOut().Update(ctx, commissionReportOut.GetID(), &commissionReportOut, params...)
+	return NewCommissionReportOutService(client).Update(ctx, commissionReportOut.GetID(), &commissionReportOut, params...)
 }
 
 // Create shortcut
 func (commissionReportOut CommissionReportOut) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
-	return client.Entity().CommissionReportOut().Create(ctx, &commissionReportOut, params...)
+	return NewCommissionReportOutService(client).Create(ctx, &commissionReportOut, params...)
 }
 
 // Delete shortcut
 func (commissionReportOut CommissionReportOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CommissionReportOut().Delete(ctx, commissionReportOut.GetID())
+	return NewCommissionReportOutService(client).Delete(ctx, commissionReportOut.GetID())
 }
 
 // CommissionReportOutPosition Позиция Выданного отчёта комиссионера.
@@ -524,7 +524,7 @@ func (commissionReportOut CommissionReportOut) Delete(ctx context.Context, clien
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vydannyj-otchet-komissionera-vydannye-otchety-komissionera-pozicii-vydannogo-otcheta-komissionera
 type CommissionReportOutPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
@@ -535,7 +535,7 @@ type CommissionReportOutPosition struct {
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (commissionReportOutPosition CommissionReportOutPosition) GetAccountID() uuid.UUID {
 	return Deref(commissionReportOutPosition.AccountID)
 }
@@ -581,6 +581,8 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() b
 }
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
+//
+// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportOutPosition {
 	commissionReportOutPosition.Assortment = assortment.AsAssortment()
 	return commissionReportOutPosition

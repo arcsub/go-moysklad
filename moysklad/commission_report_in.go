@@ -35,7 +35,7 @@ type CommissionReportIn struct {
 	ID                            *uuid.UUID                                   `json:"id,omitempty"`                            // ID Полученного отчёта комиссионера
 	Meta                          *Meta                                        `json:"meta,omitempty"`                          // Метаданные Полученного отчёта комиссионера
 	Moment                        *Timestamp                                   `json:"moment,omitempty"`                        // Дата документа
-	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`                     // ID учетной записи
+	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`                     // ID учётной записи
 	Applicable                    *bool                                        `json:"applicable,omitempty"`                    // Отметка о проведении
 	OrganizationAccount           *AgentAccount                                `json:"organizationAccount,omitempty"`           // Метаданные счета юрлица
 	Owner                         *Employee                                    `json:"owner,omitempty"`                         // Метаданные владельца (Сотрудника)
@@ -177,7 +177,7 @@ func (commissionReportIn CommissionReportIn) GetMoment() Timestamp {
 	return Deref(commissionReportIn.Moment)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (commissionReportIn CommissionReportIn) GetAccountID() uuid.UUID {
 	return Deref(commissionReportIn.AccountID)
 }
@@ -530,17 +530,17 @@ func (CommissionReportIn) MetaType() MetaType {
 
 // Update shortcut
 func (commissionReportIn CommissionReportIn) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
-	return client.Entity().CommissionReportIn().Update(ctx, commissionReportIn.GetID(), &commissionReportIn, params...)
+	return NewCommissionReportInService(client).Update(ctx, commissionReportIn.GetID(), &commissionReportIn, params...)
 }
 
 // Create shortcut
 func (commissionReportIn CommissionReportIn) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
-	return client.Entity().CommissionReportIn().Create(ctx, &commissionReportIn, params...)
+	return NewCommissionReportInService(client).Create(ctx, &commissionReportIn, params...)
 }
 
 // Delete shortcut
 func (commissionReportIn CommissionReportIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CommissionReportIn().Delete(ctx, commissionReportIn.GetID())
+	return NewCommissionReportInService(client).Delete(ctx, commissionReportIn.GetID())
 }
 
 // CommissionOverhead Прочие расходы.
@@ -576,7 +576,7 @@ func (commissionOverhead CommissionOverhead) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-pozicii-poluchennogo-otcheta-komissionera
 type CommissionReportInPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
@@ -587,7 +587,7 @@ type CommissionReportInPosition struct {
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (commissionReportInPosition CommissionReportInPosition) GetAccountID() uuid.UUID {
 	return Deref(commissionReportInPosition.AccountID)
 }
@@ -633,6 +633,8 @@ func (commissionReportInPosition CommissionReportInPosition) GetVatEnabled() boo
 }
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
+//
+// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportInPosition *CommissionReportInPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportInPosition {
 	commissionReportInPosition.Assortment = assortment.AsAssortment()
 	return commissionReportInPosition
@@ -692,7 +694,7 @@ func (CommissionReportInPosition) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-pozicii-poluchennogo-otcheta-komissionera-ob-ekt-pozicii-wozwrata-na-sklad-komissionera-soderzhit-sleduuschie-polq
 type CommissionReportInReturnPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
@@ -702,7 +704,7 @@ type CommissionReportInReturnPosition struct {
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetAccountID() uuid.UUID {
 	return Deref(commissionReportInReturnPosition.AccountID)
 }
@@ -743,6 +745,8 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetVatE
 }
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
+//
+// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportInReturnPosition {
 	commissionReportInReturnPosition.Assortment = assortment.AsAssortment()
 	return commissionReportInReturnPosition

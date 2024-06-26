@@ -34,7 +34,7 @@ type AssortmentPosition struct {
 	Name         string         `json:"name,omitempty"`         // Наименование сущности
 	Barcodes     Slice[Barcode] `json:"barcodes,omitempty"`     // Штрихкоды
 	raw          []byte         // сырые данные для последующей конвертации в нужный тип
-	AccountID    uuid.UUID      `json:"accountId,omitempty"` // ID учетной записи
+	AccountID    uuid.UUID      `json:"accountId,omitempty"` // ID учётной записи
 	ID           uuid.UUID      `json:"id,omitempty"`        // ID сущности
 }
 

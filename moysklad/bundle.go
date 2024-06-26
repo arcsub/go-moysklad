@@ -43,7 +43,7 @@ type Bundle struct {
 	ProductFolder       *NullValue[ProductFolder]   `json:"productFolder,omitempty"`       // Метаданные группы Комплекта
 	Shared              *bool                       `json:"shared,omitempty"`              // Общий доступ
 	Updated             *Timestamp                  `json:"updated,omitempty"`             // Момент последнего обновления сущности
-	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`           // ID учётной записи
 	TNVED               *string                     `json:"tnved,omitempty"`               // Код ТН ВЭД
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`          // Включен ли НДС для комплекта. С помощью этого флага для комплекта можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Uom                 *NullValue[Uom]             `json:"uom,omitempty"`                 // Единица измерения
@@ -228,7 +228,7 @@ func (bundle Bundle) GetUpdated() Timestamp {
 	return Deref(bundle.Updated)
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (bundle Bundle) GetAccountID() uuid.UUID {
 	return Deref(bundle.AccountID)
 }
@@ -538,17 +538,17 @@ func (Bundle) MetaType() MetaType {
 
 // Update shortcut
 func (bundle Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
-	return client.Entity().Bundle().Update(ctx, bundle.GetID(), &bundle, params...)
+	return NewBundleService(client).Update(ctx, bundle.GetID(), &bundle, params...)
 }
 
 // Create shortcut
 func (bundle Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
-	return client.Entity().Bundle().Create(ctx, &bundle, params...)
+	return NewBundleService(client).Create(ctx, &bundle, params...)
 }
 
 // Delete shortcut
 func (bundle Bundle) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().Bundle().Delete(ctx, bundle.GetID())
+	return NewBundleService(client).Delete(ctx, bundle.GetID())
 }
 
 // BundleOverhead Дополнительные расходы
@@ -596,7 +596,7 @@ func (bundleOverhead BundleOverhead) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-komponenty-komplekta
 type BundleComponent struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги, которую представляет собой компонент
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID компонента
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
@@ -608,7 +608,7 @@ func NewBundleComponent(assortment AsAssortmentInterface, quantity float64) *Bun
 	return &BundleComponent{Assortment: assortment.AsAssortment(), Quantity: &quantity}
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (bundleComponent BundleComponent) GetAccountID() uuid.UUID {
 	return Deref(bundleComponent.AccountID)
 }
@@ -629,6 +629,7 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 }
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
+//
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (bundleComponent *BundleComponent) SetAssortment(assortment AsAssortmentInterface) *BundleComponent {
 	bundleComponent.Assortment = assortment.AsAssortment()

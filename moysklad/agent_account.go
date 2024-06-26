@@ -10,7 +10,7 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-kontragenty-attributy-suschnosti-adres-scheta-kontragentow
 type AgentAccount struct {
-	AccountID            *uuid.UUID `json:"accountId,omitempty"`            // ID учетной записи
+	AccountID            *uuid.UUID `json:"accountId,omitempty"`            // ID учётной записи
 	AccountNumber        *string    `json:"accountNumber,omitempty"`        // Номер счета
 	BankLocation         *string    `json:"bankLocation,omitempty"`         // Адрес банка
 	BankName             *string    `json:"bankName,omitempty"`             // Наименование банка
@@ -28,7 +28,7 @@ func (agentAccount AgentAccount) Clean() *AgentAccount {
 	return &AgentAccount{Meta: agentAccount.Meta}
 }
 
-// GetAccountID возвращает ID учетной записи.
+// GetAccountID возвращает ID учётной записи.
 func (agentAccount AgentAccount) GetAccountID() uuid.UUID {
 	return Deref(agentAccount.AccountID)
 }
