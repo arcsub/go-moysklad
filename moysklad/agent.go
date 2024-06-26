@@ -268,3 +268,17 @@ func (agent *Agent) AsCounterparty() *Counterparty {
 func (agent *Agent) AsOrganization() *Organization {
 	return UnmarshalAsType[Organization](agent)
 }
+
+// CompanyType Тип Контрагента.
+//
+// Возможные значения:
+//   - CompanyLegal        – Юридическое лицо
+//   - CompanyEntrepreneur – Индивидуальный предприниматель
+//   - CompanyIndividual   – Физическое лицо
+type CompanyType string
+
+const (
+	CompanyLegal        CompanyType = "legal"        // Юридическое лицо
+	CompanyEntrepreneur CompanyType = "entrepreneur" // Индивидуальный предприниматель
+	CompanyIndividual   CompanyType = "individual"   // Физическое лицо
+)
