@@ -44,6 +44,16 @@ type Agent struct {
 	raw               []byte
 }
 
+// AsTaskAgentInterface описывает метод, который возвращает *Agent
+type AsTaskAgentInterface interface {
+	asTaskAgent() *Agent
+}
+
+// AsCounterpartyAdjustmentAgentInterface описывает метод, который возвращает *Agent
+type AsCounterpartyAdjustmentAgentInterface interface {
+	asCounterpartyAdjustmentAgent() *Agent
+}
+
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.

@@ -195,12 +195,12 @@ func (counterPartyAdjustment *CounterpartyAdjustment) SetName(name string) *Coun
 	return counterPartyAdjustment
 }
 
-// SetAgent устанавливает Метаданные контрагента или сотрудника.
+// SetAgent устанавливает Метаданные контрагента [Counterparty] или сотрудника [Employee].
 //
-// Принимает объект, реализующий интерфейс [AsAgentInterface].
-func (counterPartyAdjustment *CounterpartyAdjustment) SetAgent(agent AsAgentInterface) *CounterpartyAdjustment {
+// Принимает объект, реализующий интерфейс [AsCounterpartyAdjustmentAgentInterface].
+func (counterPartyAdjustment *CounterpartyAdjustment) SetAgent(agent AsCounterpartyAdjustmentAgentInterface) *CounterpartyAdjustment {
 	if agent != nil {
-		counterPartyAdjustment.Agent = agent.AsAgent()
+		counterPartyAdjustment.Agent = agent.asCounterpartyAdjustmentAgent()
 	}
 	return counterPartyAdjustment
 }
