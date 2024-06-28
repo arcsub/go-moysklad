@@ -29,6 +29,9 @@ type ContactPerson struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (contactPerson ContactPerson) Clean() *ContactPerson {
+	if contactPerson.Meta == nil {
+		return nil
+	}
 	return &ContactPerson{Meta: contactPerson.Meta}
 }
 

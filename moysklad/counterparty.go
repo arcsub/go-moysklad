@@ -17,7 +17,7 @@ import (
 type Counterparty struct {
 	Name               *string                     `json:"name,omitempty"`               // Наименование Контрагента
 	OKPO               *string                     `json:"okpo,omitempty"`               // ОКПО
-	ActualAddress      *string                     `json:"actualAddress"`                // Фактический адрес Контрагента
+	ActualAddress      *string                     `json:"actualAddress,omitempty"`      // Фактический адрес Контрагента
 	AccountID          *uuid.UUID                  `json:"accountId,omitempty"`          // ID учётной записи
 	Archived           *bool                       `json:"archived,omitempty"`           // Добавлен ли Контрагент в архив
 	Notes              *MetaArray[Note]            `json:"notes,omitempty"`              // Массив событий Контрагента
@@ -53,7 +53,7 @@ type Counterparty struct {
 	CertificateNumber  *string                     `json:"certificateNumber,omitempty"`  // Номер свидетельства
 	INN                *string                     `json:"inn,omitempty"`                // ИНН
 	KPP                *string                     `json:"kpp,omitempty"`                // КПП
-	LegalAddress       *string                     `json:"legalAddress"`                 // Юридический адрес Контрагента
+	LegalAddress       *string                     `json:"legalAddress,omitempty"`       // Юридический адрес Контрагента
 	LegalFirstName     *string                     `json:"legalFirstName,omitempty"`     // Имя для Контрагента типа [Индивидуальный предприниматель, Физическое лицо]. Игнорируется для Контрагентов типа [Юридическое лицо]
 	LegalLastName      *string                     `json:"legalLastName,omitempty"`      // Фамилия для Контрагента типа [Индивидуальный предприниматель, Физическое лицо]. Игнорируется для Контрагентов типа [Юридическое лицо]
 	LegalMiddleName    *string                     `json:"legalMiddleName,omitempty"`    // Отчество для Контрагента типа [Индивидуальный предприниматель, Физическое лицо]. Игнорируется для Контрагентов типа [Юридическое лицо]
@@ -69,11 +69,17 @@ type Counterparty struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (counterparty Counterparty) Clean() *Counterparty {
+	if counterparty.Meta == nil {
+		return nil
+	}
 	return &Counterparty{Meta: counterparty.Meta}
 }
 
 // AsAgent реализует интерфейс AsAgentInterface.
 func (counterparty Counterparty) AsAgent() *Agent {
+	if counterparty.Meta == nil {
+		return nil
+	}
 	return &Agent{Meta: counterparty.Meta}
 }
 
@@ -814,8 +820,8 @@ type CounterpartyService interface {
 	// Возвращает созданный контрагент.
 	Create(ctx context.Context, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и контрагентов.
-	// Обновляемые контрагенты должны содержать идентификатор в виде метаданных.
+	// CreateUpdateMany выполняет запрос на массовое создание и/или контрагентов.
+	// Изменяемые контрагенты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список контрагентов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых контрагентов.
 	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...*Params) (*Slice[Counterparty], *resty.Response, error)
@@ -861,7 +867,7 @@ type CounterpartyService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)

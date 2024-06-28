@@ -33,6 +33,9 @@ type Consignment struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (consignment Consignment) Clean() *Consignment {
+	if consignment.Meta == nil {
+		return nil
+	}
 	return &Consignment{Meta: consignment.Meta}
 }
 
@@ -231,7 +234,7 @@ type ConsignmentService interface {
 	Create(ctx context.Context, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение серий.
-	// Обновляемые серии должны содержать идентификатор в виде метаданных.
+	// Изменяемые серии должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список серий и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых серий.
 	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params ...*Params) (*Slice[Consignment], *resty.Response, error)
@@ -277,7 +280,7 @@ type ConsignmentService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)

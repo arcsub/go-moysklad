@@ -36,6 +36,9 @@ type BonusProgram struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (bonusProgram BonusProgram) Clean() *BonusProgram {
+	if bonusProgram.Meta == nil {
+		return nil
+	}
 	return &BonusProgram{Meta: bonusProgram.Meta}
 }
 

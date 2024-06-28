@@ -64,6 +64,9 @@ type CommissionReportIn struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
+	if commissionReportIn.Meta == nil {
+		return nil
+	}
 	return &CommissionReportIn{Meta: commissionReportIn.Meta}
 }
 
@@ -828,7 +831,7 @@ type CommissionReportInService interface {
 	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение полученных отчётов комиссионера.
-	// Обновляемые полученные отчёты комиссионера должны содержать идентификатор в виде метаданных.
+	// Изменяемые полученные отчёты комиссионера должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список полученных отчётов комиссионера и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых полученных отчётов комиссионера.
 	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
@@ -924,7 +927,7 @@ type CommissionReportInService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)

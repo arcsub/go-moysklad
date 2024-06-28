@@ -52,6 +52,9 @@ type CashIn struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (cashIn CashIn) Clean() *CashIn {
+	if cashIn.Meta == nil {
+		return nil
+	}
 	return &CashIn{Meta: cashIn.Meta}
 }
 
@@ -465,8 +468,8 @@ type CashInService interface {
 	// Возвращает созданный приходный ордер.
 	Create(ctx context.Context, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и приходных ордеров.
-	// Обновляемые приходные ордеры должны содержать идентификатор в виде метаданных.
+	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение приходных ордеров.
+	// Изменяемые приходные ордеры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых приходных ордеров.
 	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
@@ -502,7 +505,7 @@ type CashInService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)

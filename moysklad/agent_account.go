@@ -26,6 +26,9 @@ type AgentAccount struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (agentAccount AgentAccount) Clean() *AgentAccount {
+	if agentAccount.Meta == nil {
+		return nil
+	}
 	return &AgentAccount{Meta: agentAccount.Meta}
 }
 

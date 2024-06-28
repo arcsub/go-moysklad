@@ -672,7 +672,7 @@ type BundleService interface {
 	Create(ctx context.Context, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение комплектов.
-	// Обновляемые комплекты должны содержать идентификатор в виде метаданных.
+	// Изменяемые комплекты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список комплектов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых комплектов.
 	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
@@ -788,7 +788,7 @@ type BundleService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)

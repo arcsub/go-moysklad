@@ -53,6 +53,9 @@ type CashOut struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (cashOut CashOut) Clean() *CashOut {
+	if cashOut.Meta == nil {
+		return nil
+	}
 	return &CashOut{Meta: cashOut.Meta}
 }
 
@@ -479,7 +482,7 @@ type CashOutService interface {
 	Create(ctx context.Context, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение расходных ордеров.
-	// Обновляемые приходные ордеры должны содержать идентификатор в виде метаданных.
+	// Изменяемые приходные ордеры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или расходных приходных ордеров.
 	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params ...*Params) (*Slice[CashOut], *resty.Response, error)
@@ -515,7 +518,7 @@ type CashOutService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)

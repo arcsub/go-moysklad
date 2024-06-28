@@ -42,6 +42,9 @@ type BonusTransaction struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
+	if bonusTransaction.Meta == nil {
+		return nil
+	}
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
@@ -354,7 +357,7 @@ type BonusTransactionService interface {
 	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение бонусных операций.
-	// Обновляемые Бонусные операции должны содержать идентификатор в виде метаданных.
+	// Изменяемые Бонусные операции должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список бонусных операций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых бонусных операций.
 	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)

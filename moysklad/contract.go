@@ -47,6 +47,9 @@ type Contract struct {
 //
 // Метод позволяет избавиться от лишних данных при передаче запроса.
 func (contract Contract) Clean() *Contract {
+	if contract.Meta == nil {
+		return nil
+	}
 	return &Contract{Meta: contract.Meta}
 }
 
@@ -417,8 +420,8 @@ type ContractService interface {
 	// Возвращает созданный договор.
 	Create(ctx context.Context, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и договоров.
-	// Обновляемые договоры должны содержать идентификатор в виде метаданных.
+	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение договоров.
+	// Изменяемые договоры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список договоров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых договоров.
 	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...*Params) (*Slice[Contract], *resty.Response, error)
@@ -464,7 +467,7 @@ type ContractService interface {
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
-	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
+	// Изменяемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
 	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
