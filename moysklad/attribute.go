@@ -142,7 +142,7 @@ func (attribute Attribute) String() string {
 	return Stringify(attribute)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Attribute) MetaType() MetaType {
 	return MetaTypeAttribute
 }

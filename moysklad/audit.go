@@ -36,7 +36,7 @@ func (audit Audit) String() string {
 	return Stringify(audit)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Audit) MetaType() MetaType {
 	return MetaTypeAudit
 }
@@ -74,7 +74,7 @@ func (auditEvent AuditEvent) String() string {
 	return Stringify(auditEvent)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (AuditEvent) MetaType() MetaType {
 	return MetaTypeAuditEvent
 }

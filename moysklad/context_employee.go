@@ -54,7 +54,7 @@ func (contextEmployee ContextEmployee) String() string {
 	return Stringify(contextEmployee)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (ContextEmployee) MetaType() MetaType { return MetaTypeEmployeeContext }
 
 // Permissions пермиссии сотрудника.

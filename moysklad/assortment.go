@@ -17,7 +17,7 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-assortiment
 type Assortment Slice[AssortmentPosition]
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Assortment) MetaType() MetaType {
 	return MetaTypeAssortment
 }
@@ -69,7 +69,7 @@ func (assortmentPosition *AssortmentPosition) String() string {
 	return Stringify(assortmentPosition)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (assortmentPosition AssortmentPosition) MetaType() MetaType {
 	return assortmentPosition.Meta.GetType()
 }
@@ -233,7 +233,7 @@ func (assortmentSettings AssortmentSettings) String() string {
 	return Stringify(assortmentSettings)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (AssortmentSettings) MetaType() MetaType {
 	return MetaTypeAssortmentSettings
 }

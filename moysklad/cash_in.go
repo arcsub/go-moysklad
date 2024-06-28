@@ -427,7 +427,7 @@ func (cashIn CashIn) String() string {
 	return Stringify(cashIn)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
 }

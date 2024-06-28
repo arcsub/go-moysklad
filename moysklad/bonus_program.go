@@ -223,7 +223,7 @@ func (bonusProgram BonusProgram) String() string {
 	return Stringify(bonusProgram)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (BonusProgram) MetaType() MetaType {
 	return MetaTypeBonusProgram
 }

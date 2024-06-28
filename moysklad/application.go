@@ -51,7 +51,7 @@ func (application Application) String() string {
 	return Stringify(application)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Application) MetaType() MetaType {
 	return MetaTypeApplication
 }

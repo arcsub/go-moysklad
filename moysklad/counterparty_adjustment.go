@@ -252,7 +252,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) String() string {
 	return Stringify(counterPartyAdjustment)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CounterpartyAdjustment) MetaType() MetaType {
 	return MetaTypeCounterPartyAdjustment
 }

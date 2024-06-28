@@ -632,7 +632,7 @@ func (counterparty Counterparty) String() string {
 	return Stringify(counterparty)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Counterparty) MetaType() MetaType {
 	return MetaTypeCounterparty
 }
@@ -710,7 +710,7 @@ func (counterpartySettings CounterpartySettings) String() string {
 	return Stringify(counterpartySettings)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CounterpartySettings) MetaType() MetaType {
 	return MetaTypeCounterpartySettings
 }
@@ -790,7 +790,7 @@ func (note Note) String() string {
 	return Stringify(note)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Note) MetaType() MetaType {
 	return MetaTypeNote
 }

@@ -282,7 +282,7 @@ func (bonusTransaction BonusTransaction) String() string {
 	return Stringify(bonusTransaction)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (BonusTransaction) MetaType() MetaType {
 	return MetaTypeBonusTransaction
 }

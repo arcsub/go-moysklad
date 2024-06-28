@@ -239,7 +239,7 @@ func (agent *Agent) String() string {
 	return Stringify(agent.Meta)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (agent Agent) MetaType() MetaType {
 	return agent.GetMeta().GetType()
 }

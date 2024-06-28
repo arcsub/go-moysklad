@@ -146,7 +146,7 @@ func (companySettings CompanySettings) String() string {
 	return Stringify(companySettings)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CompanySettings) MetaType() MetaType {
 	return MetaTypeCompanySettings
 }

@@ -145,7 +145,7 @@ func (contactPerson ContactPerson) String() string {
 	return Stringify(contactPerson)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (ContactPerson) MetaType() MetaType {
 	return MetaTypeContactPerson
 }

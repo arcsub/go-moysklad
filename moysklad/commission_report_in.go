@@ -541,7 +541,7 @@ func (commissionReportIn CommissionReportIn) String() string {
 	return Stringify(commissionReportIn)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CommissionReportIn) MetaType() MetaType {
 	return MetaTypeCommissionReportIn
 }
@@ -699,7 +699,7 @@ func (commissionReportInPosition CommissionReportInPosition) String() string {
 	return Stringify(commissionReportInPosition)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CommissionReportInPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportInPosition
 }
@@ -805,7 +805,7 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) String(
 	return Stringify(commissionReportInReturnPosition)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CommissionReportInReturnPosition) MetaType() MetaType {
 	return MetaTypeCommissionReportInReturnPosition
 }

@@ -535,7 +535,7 @@ func (bundle Bundle) String() string {
 	return Stringify(bundle)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Bundle) MetaType() MetaType {
 	return MetaTypeBundle
 }
@@ -651,7 +651,7 @@ func (bundleComponent BundleComponent) String() string {
 	return Stringify(bundleComponent)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (BundleComponent) MetaType() MetaType {
 	return MetaTypeBundleComponent
 }

@@ -198,7 +198,7 @@ func (consignment Consignment) String() string {
 	return Stringify(consignment)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Consignment) MetaType() MetaType {
 	return MetaTypeConsignment
 }
