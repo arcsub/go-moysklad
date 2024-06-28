@@ -259,17 +259,17 @@ func (CounterpartyAdjustment) MetaType() MetaType {
 
 // Update shortcut
 func (counterPartyAdjustment CounterpartyAdjustment) Update(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
-	return client.Entity().CounterPartyAdjustment().Update(ctx, counterPartyAdjustment.GetID(), &counterPartyAdjustment, params...)
+	return NewCounterPartyAdjustmentService(client).Update(ctx, counterPartyAdjustment.GetID(), &counterPartyAdjustment, params...)
 }
 
 // Create shortcut
 func (counterPartyAdjustment CounterpartyAdjustment) Create(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
-	return client.Entity().CounterPartyAdjustment().Create(ctx, &counterPartyAdjustment, params...)
+	return NewCounterPartyAdjustmentService(client).Create(ctx, &counterPartyAdjustment, params...)
 }
 
 // Delete shortcut
 func (counterPartyAdjustment CounterpartyAdjustment) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CounterPartyAdjustment().Delete(ctx, counterPartyAdjustment.GetID())
+	return NewCounterPartyAdjustmentService(client).Delete(ctx, counterPartyAdjustment.GetID())
 }
 
 // CounterPartyAdjustmentService описывает методы сервиса для работы с корректировками баланса контрагента.
