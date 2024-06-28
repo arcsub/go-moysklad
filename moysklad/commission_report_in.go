@@ -827,10 +827,10 @@ type CommissionReportInService interface {
 	// Возвращает созданный расходный ордер.
 	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и обновление полученных отчётов комиссионера.
+	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение полученных отчётов комиссионера.
 	// Обновляемые полученные отчёты комиссионера должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список полученных отчётов комиссионера и опционально объект параметров запроса Params.
-	// Возвращает список созданных и/или обновлённых полученных отчётов комиссионера.
+	// Возвращает список созданных и/или изменённых полученных отчётов комиссионера.
 	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление полученных отчётов комиссионера.
@@ -858,10 +858,10 @@ type CommissionReportInService interface {
 	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 
-	// GetPositions выполняет запрос на получение списка позиций документа.
+	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
@@ -893,14 +893,14 @@ type CommissionReportInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportInPosition) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetPositionTrackingCodes выполняет запрос на получение кодов маркировки позиции документа.
+	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodes(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
-	// Возвращает список созданных и/или обновлённых кодов маркировки позиции документа.
+	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
 	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
@@ -908,10 +908,10 @@ type CommissionReportInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetAttributes выполняет запрос на получение списка доп полей.
+	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
-	// Возвращает объект MetaArray.
-	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+	// Возвращает объект List.
+	GetAttributeList(ctx context.Context) (*List[Attribute], *resty.Response, error)
 
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
@@ -923,10 +923,10 @@ type CommissionReportInService interface {
 	// Возвращает созданное доп поле.
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
-	// CreateUpdateAttributeMany выполняет запрос на массовое создание и обновление доп полей.
+	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
 	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
-	// Возвращает список созданных и/или обновлённых доп полей.
+	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 
 	// UpdateAttribute выполняет запрос на изменения доп поля.
@@ -954,20 +954,20 @@ type CommissionReportInService interface {
 	// Возвращает true в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
-	// GetNamedFilters выполняет запрос на получение списка фильтров.
+	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 
-	// GetPublications выполняет запрос на получение списка публикаций.
+	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
-	// Возвращает список публикаций.
-	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	// Возвращает объект List.
+	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
@@ -989,10 +989,10 @@ type CommissionReportInService interface {
 	// Возвращает true в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
-	// GetReturnPositions выполняет запрос на получение списка позиций документа.
+	// GetReturnPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetReturnPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error)
+	GetReturnPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error)
 
 	// GetReturnPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
@@ -1029,9 +1029,9 @@ type CommissionReportInService interface {
 	// Возвращает изменённый статус.
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
 
-	// CreateUpdateStateMany выполняет запрос на массовое создание и обновление статусов документа.
+	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
-	// Возвращает список созданных и/или обновлённых статусов.
+	// Возвращает список созданных и/или изменённых статусов.
 	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 
 	// DeleteState выполняет запрос на удаление статуса документа.
@@ -1039,19 +1039,19 @@ type CommissionReportInService interface {
 	// Возвращает true в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
-	// GetFiles выполняет запрос на получение файлов в виде списка.
+	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект MetaArray.
-	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 
-	// UpdateFileMany выполняет запрос на массовое создание и обновление файлов сущности/документа.
+	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
-	// Возвращает созданных и/или обновлённых файлов.
+	// Возвращает созданных и/или изменённых файлов.
 	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
@@ -1124,7 +1124,7 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 	}
 }
 
-func (service *commissionReportInService) GetReturnPositions(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error) {
+func (service *commissionReportInService) GetReturnPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error) {
 	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
 	return NewRequestBuilder[List[CommissionReportInReturnPosition]](service.client, path).SetParams(params...).Get(ctx)
 }

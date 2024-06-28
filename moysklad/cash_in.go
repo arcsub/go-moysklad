@@ -468,7 +468,7 @@ type CashInService interface {
 	// CreateUpdateMany выполняет запрос на массовое создание и приходных ордеров.
 	// Обновляемые приходные ордеры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
-	// Возвращает список созданных и/или обновлённых приходных ордеров.
+	// Возвращает список созданных и/или изменённых приходных ордеров.
 	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление приходных ордеров.
@@ -486,10 +486,10 @@ type CashInService interface {
 	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
 
-	// GetAttributes выполняет запрос на получение списка доп полей.
+	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
-	// Возвращает объект MetaArray.
-	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+	// Возвращает объект List.
+	GetAttributeList(ctx context.Context) (*List[Attribute], *resty.Response, error)
 
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
@@ -501,10 +501,10 @@ type CashInService interface {
 	// Возвращает созданное доп поле.
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
-	// CreateUpdateAttributeMany выполняет запрос на массовое создание и обновление доп полей.
+	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
 	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
-	// Возвращает список созданных и/или обновлённых доп полей.
+	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 
 	// UpdateAttribute выполняет запрос на изменения доп поля.
@@ -549,10 +549,10 @@ type CashInService interface {
 	// Возвращает изменённый приходный ордер.
 	Update(ctx context.Context, id uuid.UUID, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
 
-	// GetPublications выполняет запрос на получение списка публикаций.
+	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
-	// Возвращает список публикаций.
-	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	// Возвращает объект List.
+	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
@@ -599,9 +599,9 @@ type CashInService interface {
 	// Возвращает изменённый статус.
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
 
-	// CreateUpdateStateMany выполняет запрос на массовое создание и обновление статусов документа.
+	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
-	// Возвращает список созданных и/или обновлённых статусов.
+	// Возвращает список созданных и/или изменённых статусов.
 	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 
 	// DeleteState выполняет запрос на удаление статуса документа.
@@ -609,19 +609,19 @@ type CashInService interface {
 	// Возвращает true в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
-	// GetFiles выполняет запрос на получение файлов в виде списка.
+	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект MetaArray.
-	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 
-	// UpdateFileMany выполняет запрос на массовое создание и обновление файлов сущности/документа.
+	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
-	// Возвращает созданных и/или обновлённых файлов.
+	// Возвращает созданных и/или изменённых файлов.
 	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.

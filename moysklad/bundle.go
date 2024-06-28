@@ -671,10 +671,10 @@ type BundleService interface {
 	// Возвращает созданный комплект.
 	Create(ctx context.Context, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и обновление комплектов.
+	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение комплектов.
 	// Обновляемые комплекты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список комплектов и опционально объект параметров запроса Params.
-	// Возвращает список созданных и/или обновлённых комплектов.
+	// Возвращает список созданных и/или изменённых комплектов.
 	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение комплекта по ID.
@@ -721,19 +721,19 @@ type BundleService interface {
 	// Возвращает true в случае успешного удаления компонента комплекта.
 	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
 
-	// GetFiles выполняет запрос на получение файлов в виде списка.
+	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект MetaArray.
-	GetFiles(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
 	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
 
-	// UpdateFileMany выполняет запрос на массовое создание и обновление файлов сущности/документа.
+	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
-	// Возвращает созданных и/или обновлённых файлов.
+	// Возвращает созданных и/или изменённых файлов.
 	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
@@ -746,10 +746,10 @@ type BundleService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetImages выполняет запрос на получение изображений комплекта в виде списка.
+	// GetImageList выполняет запрос на получение изображений комплекта в виде списка.
 	// Принимает контекст и ID комплекта.
 	// Возвращает объект MetaArray.
-	GetImages(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
+	GetImageList(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
 
 	// CreateImage выполняет запрос на добавление изображения.
 	// Принимает контекст, ID комплекта и изображение.
@@ -772,10 +772,10 @@ type BundleService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetAttributes выполняет запрос на получение списка доп полей.
+	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
-	// Возвращает объект MetaArray.
-	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+	// Возвращает объект List.
+	GetAttributeList(ctx context.Context) (*List[Attribute], *resty.Response, error)
 
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
@@ -787,10 +787,10 @@ type BundleService interface {
 	// Возвращает созданное доп поле.
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
-	// CreateUpdateAttributeMany выполняет запрос на массовое создание и обновление доп полей.
+	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
 	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
-	// Возвращает список созданных и/или обновлённых доп полей.
+	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 
 	// UpdateAttribute выполняет запрос на изменения доп поля.

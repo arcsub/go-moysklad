@@ -420,7 +420,7 @@ type ContractService interface {
 	// CreateUpdateMany выполняет запрос на массовое создание и договоров.
 	// Обновляемые договоры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список договоров и опционально объект параметров запроса Params.
-	// Возвращает список созданных и/или обновлённых договоров.
+	// Возвращает список созданных и/или изменённых договоров.
 	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...*Params) (*Slice[Contract], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление договоров.
@@ -448,10 +448,10 @@ type ContractService interface {
 	// Возвращает изменённый договор.
 	Update(ctx context.Context, id uuid.UUID, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
 
-	// GetAttributes выполняет запрос на получение списка доп полей.
+	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
-	// Возвращает объект MetaArray.
-	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+	// Возвращает объект List.
+	GetAttributeList(ctx context.Context) (*List[Attribute], *resty.Response, error)
 
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
@@ -463,10 +463,10 @@ type ContractService interface {
 	// Возвращает созданное доп поле.
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
-	// CreateUpdateAttributeMany выполняет запрос на массовое создание и обновление доп полей.
+	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
 	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
-	// Возвращает список созданных и/или обновлённых доп полей.
+	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 
 	// UpdateAttribute выполняет запрос на изменения доп поля.
@@ -484,10 +484,10 @@ type ContractService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetPublications выполняет запрос на получение списка публикаций.
+	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
-	// Возвращает список публикаций.
-	GetPublications(ctx context.Context, id uuid.UUID) (*MetaArray[Publication], *resty.Response, error)
+	// Возвращает объект List.
+	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
@@ -504,10 +504,10 @@ type ContractService interface {
 	// Возвращает true в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
-	// GetNamedFilters выполняет запрос на получение списка фильтров.
+	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
@@ -534,9 +534,9 @@ type ContractService interface {
 	// Возвращает изменённый статус.
 	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
 
-	// CreateUpdateStateMany выполняет запрос на массовое создание и обновление статусов документа.
+	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
-	// Возвращает список созданных и/или обновлённых статусов.
+	// Возвращает список созданных и/или изменённых статусов.
 	CreateUpdateStateMany(ctx context.Context, states ...*State) (*Slice[State], *resty.Response, error)
 
 	// DeleteState выполняет запрос на удаление статуса документа.

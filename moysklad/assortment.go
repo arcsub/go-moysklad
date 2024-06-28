@@ -434,7 +434,7 @@ func (service *assortmentService) Get(ctx context.Context, params ...*Params) (*
 	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
-func (service *assortmentService) GetAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
+func (service *assortmentService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
 	p := new(Params)
 	if len(params) > 0 {
 		p = params[0]
@@ -476,7 +476,7 @@ type AssortmentService interface {
 	// GetAsync выполняет асинхронный запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает готовый сервис AsyncResultService для обработки данного запроса.
-	GetAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error)
+	GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление позиций в Ассортименте.
 	// Принимает контекст и множество объектов, реализующих интерфейс AsAssortmentInterface.

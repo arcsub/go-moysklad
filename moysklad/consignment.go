@@ -230,10 +230,10 @@ type ConsignmentService interface {
 	// Возвращает созданную серию.
 	Create(ctx context.Context, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
 
-	// CreateUpdateMany выполняет запрос на массовое создание и обновление серий.
+	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение серий.
 	// Обновляемые серии должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список серий и опционально объект параметров запроса Params.
-	// Возвращает список созданных и/или обновлённых серий.
+	// Возвращает список созданных и/или изменённых серий.
 	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params ...*Params) (*Slice[Consignment], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление серий.
@@ -261,10 +261,10 @@ type ConsignmentService interface {
 	// Возвращает объект метаданных MetaAttributesWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesWrapper, *resty.Response, error)
 
-	// GetAttributes выполняет запрос на получение списка доп полей.
+	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
-	// Возвращает объект MetaArray.
-	GetAttributes(ctx context.Context) (*MetaArray[Attribute], *resty.Response, error)
+	// Возвращает объект List.
+	GetAttributeList(ctx context.Context) (*List[Attribute], *resty.Response, error)
 
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
@@ -276,10 +276,10 @@ type ConsignmentService interface {
 	// Возвращает созданное доп поле.
 	CreateAttribute(ctx context.Context, attribute *Attribute) (*Attribute, *resty.Response, error)
 
-	// CreateUpdateAttributeMany выполняет запрос на массовое создание и обновление доп полей.
+	// CreateUpdateAttributeMany выполняет запрос на массовое создание и/или изменение доп полей.
 	// Обновляемые доп поля должны содержать идентификатор в виде метаданных.
 	// Принимает контекст и множество доп полей.
-	// Возвращает список созданных и/или обновлённых доп полей.
+	// Возвращает список созданных и/или изменённых доп полей.
 	CreateUpdateAttributeMany(ctx context.Context, attributes ...*Attribute) (*Slice[Attribute], *resty.Response, error)
 
 	// UpdateAttribute выполняет запрос на изменения доп поля.
@@ -297,10 +297,10 @@ type ConsignmentService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetNamedFilters выполняет запрос на получение списка фильтров.
+	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
