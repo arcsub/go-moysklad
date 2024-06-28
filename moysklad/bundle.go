@@ -78,8 +78,8 @@ func (bundle Bundle) FromAssortment(assortmentPosition *AssortmentPosition) *Bun
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
-// AsAssortment возвращает [AssortmentPosition] с единственным заполненным полем [Meta].
-func (bundle Bundle) AsAssortment() *AssortmentPosition {
+// asAssortment возвращает [AssortmentPosition] с единственным заполненным полем [Meta].
+func (bundle Bundle) asAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: bundle.GetMeta()}
 }
 
@@ -609,7 +609,7 @@ type BundleComponent struct {
 // NewBundleComponent принимает объект, реализующий интерфейс [AsAssortmentInterface] и количество.
 // Возвращает новый компонент комплекта.
 func NewBundleComponent(assortment AsAssortmentInterface, quantity float64) *BundleComponent {
-	return &BundleComponent{Assortment: assortment.AsAssortment(), Quantity: &quantity}
+	return &BundleComponent{Assortment: assortment.asAssortment(), Quantity: &quantity}
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -636,7 +636,7 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (bundleComponent *BundleComponent) SetAssortment(assortment AsAssortmentInterface) *BundleComponent {
-	bundleComponent.Assortment = assortment.AsAssortment()
+	bundleComponent.Assortment = assortment.asAssortment()
 	return bundleComponent
 }
 
@@ -723,8 +723,8 @@ type BundleService interface {
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
-	// Возвращает объект MetaArray.
-	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	// Возвращает объект List.
+	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
@@ -748,8 +748,8 @@ type BundleService interface {
 
 	// GetImageList выполняет запрос на получение изображений комплекта в виде списка.
 	// Принимает контекст и ID комплекта.
-	// Возвращает объект MetaArray.
-	GetImageList(ctx context.Context, id uuid.UUID) (*MetaArray[Image], *resty.Response, error)
+	// Возвращает объект List.
+	GetImageList(ctx context.Context, id uuid.UUID) (*List[Image], *resty.Response, error)
 
 	// CreateImage выполняет запрос на добавление изображения.
 	// Принимает контекст, ID комплекта и изображение.
@@ -808,7 +808,7 @@ type BundleService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetBySyncID выполняет запрос на получение документа по syncID.
+	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Bundle, *resty.Response, error)

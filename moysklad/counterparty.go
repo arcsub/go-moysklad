@@ -917,7 +917,7 @@ type CounterpartyService interface {
 	// Возвращает список изменённых счетов контрагента.
 	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 
-	// GetBySyncID выполняет запрос на получение документа по syncID.
+	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Counterparty, *resty.Response, error)
@@ -989,8 +989,8 @@ type CounterpartyService interface {
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
-	// Возвращает объект MetaArray.
-	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	// Возвращает объект List.
+	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.

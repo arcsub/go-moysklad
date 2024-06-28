@@ -47,8 +47,8 @@ func (counterPartyAdjustment CounterpartyAdjustment) Clean() *CounterpartyAdjust
 	return &CounterpartyAdjustment{Meta: counterPartyAdjustment.Meta}
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface.
-func (counterPartyAdjustment CounterpartyAdjustment) AsTaskOperation() *TaskOperation {
+// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+func (counterPartyAdjustment CounterpartyAdjustment) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: counterPartyAdjustment.Meta}
 }
 
@@ -335,8 +335,8 @@ type CounterPartyAdjustmentService interface {
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
-	// Возвращает объект MetaArray.
-	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	// Возвращает объект List.
+	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.

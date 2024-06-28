@@ -61,8 +61,8 @@ func (consignment Consignment) FromAssortment(assortmentPosition *AssortmentPosi
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
-// AsAssortment возвращает [AssortmentPosition] с единственным заполненным полем [Meta].
-func (consignment Consignment) AsAssortment() *AssortmentPosition {
+// asAssortment возвращает [AssortmentPosition] с единственным заполненным полем [Meta].
+func (consignment Consignment) asAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: consignment.GetMeta()}
 }
 
@@ -175,7 +175,7 @@ func (consignment *Consignment) SetExternalCode(externalCode string) *Consignmen
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (consignment *Consignment) SetAssortment(assortment AsAssortmentInterface) *Consignment {
-	consignment.Assortment = assortment.AsAssortment()
+	consignment.Assortment = assortment.asAssortment()
 	return consignment
 }
 

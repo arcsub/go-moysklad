@@ -51,17 +51,17 @@ type AssortmentType interface {
 	MetaOwner
 }
 
-// AsAssortmentInterface описывает необходимый метод AsAssortment
+// AsAssortmentInterface описывает необходимый метод asAssortment
 type AsAssortmentInterface interface {
-	// AsAssortment возвращает указатель на [AssortmentPosition]
-	AsAssortment() *AssortmentPosition
+	// asAssortment возвращает указатель на [AssortmentPosition]
+	asAssortment() *AssortmentPosition
 }
 
 // NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу [AssortmentType].
 //
 // Возвращает [AssortmentPosition] с заполненным полем Meta.
 func NewAssortmentPosition[T AsAssortmentInterface](entity T) *AssortmentPosition {
-	return entity.AsAssortment()
+	return entity.asAssortment()
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -451,7 +451,7 @@ func (service *assortmentService) GetListAsync(ctx context.Context, params ...*P
 func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AsAssortmentInterface) (*DeleteManyResponse, *resty.Response, error) {
 	var mw = make([]MetaWrapper, 0, len(entities))
 	for _, entity := range entities {
-		mw = append(mw, entity.AsAssortment().GetMeta().Wrap())
+		mw = append(mw, entity.asAssortment().GetMeta().Wrap())
 	}
 	return NewRequestBuilder[DeleteManyResponse](service.client, service.uri).Post(ctx, mw)
 }

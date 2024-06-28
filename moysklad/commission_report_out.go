@@ -73,8 +73,8 @@ func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportOut.GetMeta()}
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface.
-func (commissionReportOut CommissionReportOut) AsTaskOperation() *TaskOperation {
+// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+func (commissionReportOut CommissionReportOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportOut.Meta}
 }
 
@@ -602,7 +602,7 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() b
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportOutPosition {
-	commissionReportOutPosition.Assortment = assortment.AsAssortment()
+	commissionReportOutPosition.Assortment = assortment.asAssortment()
 	return commissionReportOutPosition
 }
 
@@ -789,7 +789,7 @@ type CommissionReportOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetBySyncID выполняет запрос на получение документа по syncID.
+	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportOut, *resty.Response, error)
@@ -861,8 +861,8 @@ type CommissionReportOutService interface {
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
-	// Возвращает объект MetaArray.
-	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	// Возвращает объект List.
+	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.

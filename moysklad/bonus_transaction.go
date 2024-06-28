@@ -48,8 +48,8 @@ func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface.
-func (bonusTransaction BonusTransaction) AsTaskOperation() *TaskOperation {
+// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+func (bonusTransaction BonusTransaction) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: bonusTransaction.Meta}
 }
 

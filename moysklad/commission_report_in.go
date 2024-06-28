@@ -76,8 +76,8 @@ func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportIn.GetMeta(), LinkedSum: commissionReportIn.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface.
-func (commissionReportIn CommissionReportIn) AsTaskOperation() *TaskOperation {
+// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+func (commissionReportIn CommissionReportIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportIn.Meta}
 }
 
@@ -654,7 +654,7 @@ func (commissionReportInPosition CommissionReportInPosition) GetVatEnabled() boo
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportInPosition *CommissionReportInPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportInPosition {
-	commissionReportInPosition.Assortment = assortment.AsAssortment()
+	commissionReportInPosition.Assortment = assortment.asAssortment()
 	return commissionReportInPosition
 }
 
@@ -766,7 +766,7 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetVatE
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportInReturnPosition {
-	commissionReportInReturnPosition.Assortment = assortment.AsAssortment()
+	commissionReportInReturnPosition.Assortment = assortment.asAssortment()
 	return commissionReportInReturnPosition
 }
 
@@ -947,7 +947,7 @@ type CommissionReportInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// GetBySyncID выполняет запрос на получение документа по syncID.
+	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportIn, *resty.Response, error)
@@ -1044,8 +1044,8 @@ type CommissionReportInService interface {
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
-	// Возвращает объект MetaArray.
-	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	// Возвращает объект List.
+	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.

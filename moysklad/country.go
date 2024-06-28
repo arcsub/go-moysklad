@@ -171,7 +171,7 @@ func (country Country) Delete(ctx context.Context, client *Client) (bool, *resty
 
 // CountryService описывает методы сервиса для работы со странами.
 type CountryService interface {
-	// GetList выполняет запрос на получение списка стран
+	// GetList выполняет запрос на получение списка стран.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Country], *resty.Response, error)

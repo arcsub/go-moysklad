@@ -58,13 +58,13 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface.
-func (cashIn CashIn) AsTaskOperation() *TaskOperation {
+// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+func (cashIn CashIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
 }
 
-// AsPayment реализует интерфейс AsPaymentInterface.
-func (cashIn CashIn) AsPayment() *Payment {
+// asPayment реализует интерфейс AsPaymentInterface.
+func (cashIn CashIn) asPayment() *Payment {
 	return &Payment{Meta: cashIn.GetMeta()}
 }
 
@@ -572,7 +572,7 @@ type CashInService interface {
 	// Возвращает true в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
-	// GetBySyncID выполняет запрос на получение документа по syncID.
+	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
 	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CashIn, *resty.Response, error)
@@ -614,8 +614,8 @@ type CashInService interface {
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
-	// Возвращает объект MetaArray.
-	GetFileList(ctx context.Context, id uuid.UUID) (*MetaArray[File], *resty.Response, error)
+	// Возвращает объект List.
+	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
