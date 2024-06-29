@@ -72,7 +72,7 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 			}
 
 			if resultType.Kind() != reflect.Struct {
-				log.Printf("[DEBIG] resultType is not a struct: %v", resultType.Kind())
+				log.Printf("[DEBUG] resultType is not a struct: %v", resultType.Kind())
 				return nil, r, nil
 			}
 
@@ -86,7 +86,7 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 			if dataType.Kind() == reflect.Slice {
 				dataType = dataType.Elem()
 			} else {
-				log.Printf("[DEBIG] dataType is %v", dataType.Kind())
+				log.Printf("[DEBUG] dataType is %v", dataType.Kind())
 				return nil, r, nil
 			}
 
