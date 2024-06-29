@@ -352,11 +352,7 @@ func (bundle *Bundle) SetComponents(components ...*BundleComponent) *Bundle {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
-	if country == nil {
-		bundle.Country = NewNullValue[Country]()
-	} else {
-		bundle.Country = NewNullValueFrom(country.Clean())
-	}
+	bundle.Country = NewNullValue(country)
 	return bundle
 }
 
@@ -392,11 +388,7 @@ func (bundle *Bundle) SetVat(vat int) *Bundle {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
-	if minPrice == nil {
-		bundle.MinPrice = NewNullValue[MinPrice]()
-	} else {
-		bundle.MinPrice = NewNullValueFrom(minPrice)
-	}
+	bundle.MinPrice = NewNullValue(minPrice)
 	return bundle
 }
 
@@ -404,11 +396,7 @@ func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
-	if overhead == nil {
-		bundle.Overhead = NewNullValue[BundleOverhead]()
-	} else {
-		bundle.Overhead = NewNullValueFrom(overhead)
-	}
+	bundle.Overhead = NewNullValue(overhead)
 	return bundle
 }
 
@@ -436,7 +424,7 @@ func (bundle *Bundle) SetWeight(weight float64) *Bundle {
 //
 // Принимает множество объектов [SalePrice].
 func (bundle *Bundle) SetSalePrices(salePrices ...*SalePrice) *Bundle {
-	bundle.SalePrices = salePrices
+	bundle.SalePrices.Push(salePrices...)
 	return bundle
 }
 
@@ -444,11 +432,7 @@ func (bundle *Bundle) SetSalePrices(salePrices ...*SalePrice) *Bundle {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
-	if productFolder == nil {
-		bundle.ProductFolder = NewNullValue[ProductFolder]()
-	} else {
-		bundle.ProductFolder = NewNullValueFrom(productFolder.Clean())
-	}
+	bundle.ProductFolder = NewNullValue(productFolder)
 	return bundle
 }
 
@@ -474,11 +458,7 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
-	if uom == nil {
-		bundle.Uom = NewNullValue[Uom]()
-	} else {
-		bundle.Uom = NewNullValueFrom(uom.Clean())
-	}
+	bundle.Uom = NewNullValue(uom)
 	return bundle
 }
 
@@ -526,7 +506,7 @@ func (bundle *Bundle) SetPaymentItemType(paymentItemType PaymentItem) *Bundle {
 //
 // Принимает множество объектов [Attribute].
 func (bundle *Bundle) SetAttributes(attributes ...*Attribute) *Bundle {
-	bundle.Attributes = attributes
+	bundle.Attributes.Push(attributes...)
 	return bundle
 }
 
@@ -583,7 +563,9 @@ func (bundleOverhead *BundleOverhead) SetValue(value *float64) *BundleOverhead {
 
 // SetCurrency устанавливает Метаданные валюты.
 func (bundleOverhead *BundleOverhead) SetCurrency(currency *Currency) *BundleOverhead {
-	bundleOverhead.Currency = currency
+	if currency != nil {
+		bundleOverhead.Currency = currency.Clean()
+	}
 	return bundleOverhead
 }
 
@@ -636,7 +618,9 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (bundleComponent *BundleComponent) SetAssortment(assortment AsAssortmentInterface) *BundleComponent {
-	bundleComponent.Assortment = assortment.asAssortment()
+	if assortment != nil {
+		bundleComponent.Assortment = assortment.asAssortment()
+	}
 	return bundleComponent
 }
 

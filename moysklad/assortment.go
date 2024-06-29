@@ -473,7 +473,7 @@ type AssortmentService interface {
 	// Возвращает объект AssortmentResponse.
 	Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
 
-	// GetAsync выполняет асинхронный запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
+	// GetListAsync выполняет асинхронный запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает готовый сервис AsyncResultService для обработки данного запроса.
 	GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error)

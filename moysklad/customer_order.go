@@ -344,11 +344,7 @@ func (customerOrder *CustomerOrder) SetOrganizationAccount(organizationAccount *
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (customerOrder *CustomerOrder) SetProject(project *Project) *CustomerOrder {
-	if project == nil {
-		customerOrder.Project = NewNullValue[Project]()
-	} else {
-		customerOrder.Project = NewNullValueFrom(project.Clean())
-	}
+	customerOrder.Project = NewNullValue(project)
 	return customerOrder
 }
 
@@ -370,7 +366,7 @@ func (customerOrder *CustomerOrder) SetApplicable(applicable bool) *CustomerOrde
 //
 // Принимает множество объектов [Move].
 func (customerOrder *CustomerOrder) SetMoves(moves ...*Move) *CustomerOrder {
-	customerOrder.Moves = moves
+	customerOrder.Moves.Push(moves...)
 	return customerOrder
 }
 
@@ -468,11 +464,7 @@ func (customerOrder *CustomerOrder) SetPositions(positions ...*CustomerOrderPosi
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrder {
-	if contract == nil {
-		customerOrder.Contract = NewNullValue[Contract]()
-	} else {
-		customerOrder.Contract = NewNullValueFrom(contract.Clean())
-	}
+	customerOrder.Contract = NewNullValue(contract)
 	return customerOrder
 }
 
@@ -480,11 +472,7 @@ func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrd
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
-	if rate == nil {
-		customerOrder.Rate = NewNullValue[Rate]()
-	} else {
-		customerOrder.Rate = NewNullValueFrom(rate)
-	}
+	customerOrder.Rate = NewNullValue(rate)
 	return customerOrder
 }
 
@@ -492,11 +480,7 @@ func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (customerOrder *CustomerOrder) SetSalesChannel(salesChannel *SalesChannel) *CustomerOrder {
-	if customerOrder == nil {
-		customerOrder.SalesChannel = NewNullValue[SalesChannel]()
-	} else {
-		customerOrder.SalesChannel = NewNullValueFrom(salesChannel.Clean())
-	}
+	customerOrder.SalesChannel = NewNullValue(salesChannel)
 	return customerOrder
 }
 
@@ -528,11 +512,7 @@ func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull *
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
-	if state == nil {
-		customerOrder.State = NewNullValue[State]()
-	} else {
-		customerOrder.State = NewNullValueFrom(state.Clean())
-	}
+	customerOrder.State = NewNullValue(state)
 	return customerOrder
 }
 
@@ -540,11 +520,7 @@ func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (customerOrder *CustomerOrder) SetStore(store *Store) *CustomerOrder {
-	if store == nil {
-		customerOrder.Store = NewNullValue[Store]()
-	} else {
-		customerOrder.Store = NewNullValueFrom(store.Clean())
-	}
+	customerOrder.Store = NewNullValue(store)
 	return customerOrder
 }
 
@@ -558,7 +534,7 @@ func (customerOrder *CustomerOrder) SetSyncID(syncID uuid.UUID) *CustomerOrder {
 //
 // Принимает множество объектов [Prepayment].
 func (customerOrder *CustomerOrder) SetPrepayments(prepayments ...*Prepayment) *CustomerOrder {
-	customerOrder.Prepayments = prepayments
+	customerOrder.Prepayments.Push(prepayments...)
 	return customerOrder
 }
 
@@ -578,7 +554,7 @@ func (customerOrder *CustomerOrder) SetVatIncluded(vatIncluded bool) *CustomerOr
 //
 // Принимает множество объектов [PurchaseOrder].
 func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders ...*PurchaseOrder) *CustomerOrder {
-	customerOrder.PurchaseOrders = purchaseOrders
+	customerOrder.PurchaseOrders.Push(purchaseOrders...)
 	return customerOrder
 }
 
@@ -586,7 +562,7 @@ func (customerOrder *CustomerOrder) SetPurchaseOrders(purchaseOrders ...*Purchas
 //
 // Принимает множество объектов [Demand].
 func (customerOrder *CustomerOrder) SetDemands(demands ...*Demand) *CustomerOrder {
-	customerOrder.Demands = demands
+	customerOrder.Demands.Push(demands...)
 	return customerOrder
 }
 
@@ -602,7 +578,7 @@ func (customerOrder *CustomerOrder) SetPayments(payments ...AsPaymentInterface) 
 //
 // Принимает множество объектов [InvoiceOut].
 func (customerOrder *CustomerOrder) SetInvoicesOut(invoicesOut ...*InvoiceOut) *CustomerOrder {
-	customerOrder.InvoicesOut = invoicesOut
+	customerOrder.InvoicesOut.Push(invoicesOut...)
 	return customerOrder
 }
 
@@ -616,7 +592,7 @@ func (customerOrder *CustomerOrder) SetTaxSystem(taxSystem TaxSystem) *CustomerO
 //
 // Принимает множество объектов [Attribute].
 func (customerOrder *CustomerOrder) SetAttributes(attributes ...*Attribute) *CustomerOrder {
-	customerOrder.Attributes = attributes
+	customerOrder.Attributes.Push(attributes...)
 	return customerOrder
 }
 
@@ -1114,7 +1090,7 @@ type CustomerOrderService interface {
 	Evaluate(ctx context.Context, entity *CustomerOrder, evaluate ...Evaluate) (*CustomerOrder, *resty.Response, error)
 }
 
-// NewCustomerOrderService возвращает сервис для работы с заказами покупателя.
+// NewCustomerOrderService принимает [Client] и возвращает сервис для работы с заказами покупателя.
 func NewCustomerOrderService(client *Client) CustomerOrderService {
 	e := NewEndpoint(client, "entity/customerorder")
 	return &customerOrderService{

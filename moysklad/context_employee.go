@@ -149,7 +149,7 @@ type contextEmployeeService struct {
 	Endpoint
 }
 
-// NewContextEmployeeService возвращает сервис для работы с контекстом сотрудника.
+// NewContextEmployeeService принимает [Client] и возвращает сервис для работы с контекстом сотрудника.
 func NewContextEmployeeService(client *Client) ContextEmployeeService {
 	return &contextEmployeeService{NewEndpoint(client, "context/employee")}
 }

@@ -230,7 +230,7 @@ type contextCompanySettingsService struct {
 	endpointMetadata[MetadataCompanySettings]
 }
 
-// NewContextCompanySettingsService возвращает сервис для работы с настройками компании.
+// NewContextCompanySettingsService принимает [Client] и возвращает сервис для работы с настройками компании.
 func NewContextCompanySettingsService(client *Client) ContextCompanySettingsService {
 	e := NewEndpoint(client, "context/companysettings")
 	return &contextCompanySettingsService{

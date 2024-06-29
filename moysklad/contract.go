@@ -288,11 +288,7 @@ func (contract *Contract) SetOwner(owner *Employee) *Contract {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (contract *Contract) SetRate(rate *Rate) *Contract {
-	if rate == nil {
-		contract.Rate = NewNullValue[Rate]()
-	} else {
-		contract.Rate = NewNullValueFrom(rate)
-	}
+	contract.Rate = NewNullValue(rate)
 	return contract
 }
 
@@ -306,11 +302,7 @@ func (contract *Contract) SetShared(shared bool) *Contract {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (contract *Contract) SetState(state *State) *Contract {
-	if state == nil {
-		contract.State = NewNullValue[State]()
-	} else {
-		contract.State = NewNullValueFrom(state.Clean())
-	}
+	contract.State = NewNullValue(state)
 	return contract
 }
 
@@ -366,7 +358,7 @@ func (contract *Contract) SetRewardTypeNone() *Contract {
 //
 // Принимает множество объектов [Attribute].
 func (contract *Contract) SetAttributes(attributes ...*Attribute) *Contract {
-	contract.Attributes = attributes
+	contract.Attributes.Push(attributes...)
 	return contract
 }
 
@@ -548,7 +540,7 @@ type ContractService interface {
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
-// NewContractService возвращает сервис для работы с договорами.
+// NewContractService принимает [Client] и возвращает сервис для работы с договорами.
 func NewContractService(client *Client) ContractService {
 	return newMainService[Contract, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/contract"))
 }

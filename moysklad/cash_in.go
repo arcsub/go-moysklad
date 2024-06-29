@@ -264,11 +264,7 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
-	if contract == nil {
-		cashIn.Contract = NewNullValue[Contract]()
-	} else {
-		cashIn.Contract = NewNullValueFrom(contract.Clean())
-	}
+	cashIn.Contract = NewNullValue(contract)
 	return cashIn
 }
 
@@ -340,11 +336,7 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
-	if project == nil {
-		cashIn.Project = NewNullValue[Project]()
-	} else {
-		cashIn.Project = NewNullValueFrom(project.Clean())
-	}
+	cashIn.Project = NewNullValue(project)
 	return cashIn
 }
 
@@ -352,11 +344,7 @@ func (cashIn *CashIn) SetProject(project *Project) *CashIn {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
-	if rate == nil {
-		cashIn.Rate = NewNullValue[Rate]()
-	} else {
-		cashIn.Rate = NewNullValueFrom(rate)
-	}
+	cashIn.Rate = NewNullValue(rate)
 	return cashIn
 }
 
@@ -364,11 +352,7 @@ func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
-	if salesChannel == nil {
-		cashIn.SalesChannel = NewNullValue[SalesChannel]()
-	} else {
-		cashIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
-	}
+	cashIn.SalesChannel = NewNullValue(salesChannel)
 	return cashIn
 }
 
@@ -382,11 +366,7 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashIn *CashIn) SetState(state *State) *CashIn {
-	if state == nil {
-		cashIn.State = NewNullValue[State]()
-	} else {
-		cashIn.State = NewNullValueFrom(state.Clean())
-	}
+	cashIn.State = NewNullValue(state)
 	return cashIn
 }
 
@@ -420,7 +400,7 @@ func (cashIn *CashIn) SetFactureIn(factureIn *FactureIn) *CashIn {
 //
 // Принимает множество объектов [Attribute].
 func (cashIn *CashIn) SetAttributes(attributes ...*Attribute) *CashIn {
-	cashIn.Attributes = attributes
+	cashIn.Attributes.Push(attributes...)
 	return cashIn
 }
 

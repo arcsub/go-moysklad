@@ -432,11 +432,7 @@ func (commissionReportIn *CommissionReportIn) SetPositions(positions ...*Commiss
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportIn *CommissionReportIn) SetProject(project *Project) *CommissionReportIn {
-	if project == nil {
-		commissionReportIn.Project = NewNullValue[Project]()
-	} else {
-		commissionReportIn.Project = NewNullValueFrom(project.Clean())
-	}
+	commissionReportIn.Project = NewNullValue(project)
 	return commissionReportIn
 }
 
@@ -444,11 +440,7 @@ func (commissionReportIn *CommissionReportIn) SetProject(project *Project) *Comm
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionReportIn {
-	if rate == nil {
-		commissionReportIn.Rate = NewNullValue[Rate]()
-	} else {
-		commissionReportIn.Rate = NewNullValueFrom(rate)
-	}
+	commissionReportIn.Rate = NewNullValue(rate)
 	return commissionReportIn
 }
 
@@ -478,11 +470,7 @@ func (commissionReportIn *CommissionReportIn) SetPayments(payments ...AsPaymentI
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportIn *CommissionReportIn) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportIn {
-	if salesChannel == nil {
-		commissionReportIn.SalesChannel = NewNullValue[SalesChannel]()
-	} else {
-		commissionReportIn.SalesChannel = NewNullValueFrom(salesChannel.Clean())
-	}
+	commissionReportIn.SalesChannel = NewNullValue(salesChannel)
 	return commissionReportIn
 }
 
@@ -496,11 +484,7 @@ func (commissionReportIn *CommissionReportIn) SetShared(shared bool) *Commission
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportIn *CommissionReportIn) SetState(state *State) *CommissionReportIn {
-	if state == nil {
-		commissionReportIn.State = NewNullValue[State]()
-	} else {
-		commissionReportIn.State = NewNullValueFrom(state.Clean())
-	}
+	commissionReportIn.State = NewNullValue(state)
 	return commissionReportIn
 }
 
@@ -532,7 +516,7 @@ func (commissionReportIn *CommissionReportIn) SetRewardType(rewardType RewardTyp
 //
 // Принимает множество объектов [Attribute].
 func (commissionReportIn *CommissionReportIn) SetAttributes(attributes ...*Attribute) *CommissionReportIn {
-	commissionReportIn.Attributes = attributes
+	commissionReportIn.Attributes.Push(attributes...)
 	return commissionReportIn
 }
 
@@ -654,13 +638,17 @@ func (commissionReportInPosition CommissionReportInPosition) GetVatEnabled() boo
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportInPosition *CommissionReportInPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportInPosition {
-	commissionReportInPosition.Assortment = assortment.asAssortment()
+	if assortment != nil {
+		commissionReportInPosition.Assortment = assortment.asAssortment()
+	}
 	return commissionReportInPosition
 }
 
 // SetPack устанавливает Упаковку Товара.
 func (commissionReportInPosition *CommissionReportInPosition) SetPack(pack *Pack) *CommissionReportInPosition {
-	commissionReportInPosition.Pack = pack
+	if pack != nil {
+		commissionReportInPosition.Pack = pack
+	}
 	return commissionReportInPosition
 }
 
@@ -766,7 +754,9 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetVatE
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportInReturnPosition {
-	commissionReportInReturnPosition.Assortment = assortment.asAssortment()
+	if assortment != nil {
+		commissionReportInReturnPosition.Assortment = assortment.asAssortment()
+	}
 	return commissionReportInReturnPosition
 }
 

@@ -256,11 +256,7 @@ func (cashOut *CashOut) SetCode(code string) *CashOut {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashOut *CashOut) SetContract(contract *Contract) *CashOut {
-	if contract == nil {
-		cashOut.Contract = NewNullValue[Contract]()
-	} else {
-		cashOut.Contract = NewNullValueFrom(contract.Clean())
-	}
+	cashOut.Contract = NewNullValue(contract)
 	return cashOut
 }
 
@@ -352,11 +348,7 @@ func (cashOut *CashOut) SetPaymentPurpose(paymentPurpose string) *CashOut {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashOut *CashOut) SetProject(project *Project) *CashOut {
-	if project == nil {
-		cashOut.Project = NewNullValue[Project]()
-	} else {
-		cashOut.Project = NewNullValueFrom(project.Clean())
-	}
+	cashOut.Project = NewNullValue(project)
 	return cashOut
 }
 
@@ -364,11 +356,7 @@ func (cashOut *CashOut) SetProject(project *Project) *CashOut {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashOut *CashOut) SetRate(rate *Rate) *CashOut {
-	if rate == nil {
-		NewNullValue[Rate]()
-	} else {
-		cashOut.Rate = NewNullValueFrom(rate)
-	}
+	cashOut.Rate = NewNullValue(rate)
 	return cashOut
 }
 
@@ -376,11 +364,7 @@ func (cashOut *CashOut) SetRate(rate *Rate) *CashOut {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashOut *CashOut) SetSalesChannel(salesChannel *SalesChannel) *CashOut {
-	if salesChannel == nil {
-		cashOut.SalesChannel = NewNullValue[SalesChannel]()
-	} else {
-		cashOut.SalesChannel = NewNullValueFrom(salesChannel.Clean())
-	}
+	cashOut.SalesChannel = NewNullValue(salesChannel)
 	return cashOut
 }
 
@@ -394,11 +378,7 @@ func (cashOut *CashOut) SetShared(shared bool) *CashOut {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (cashOut *CashOut) SetState(state *State) *CashOut {
-	if state == nil {
-		cashOut.State = NewNullValue[State]()
-	} else {
-		cashOut.State = NewNullValueFrom(state.Clean())
-	}
+	cashOut.State = NewNullValue(state)
 	return cashOut
 }
 
@@ -432,7 +412,7 @@ func (cashOut *CashOut) SetFactureOut(factureOut *FactureOut) *CashOut {
 //
 // Принимает множество объектов [Attribute].
 func (cashOut *CashOut) SetAttributes(attributes ...*Attribute) *CashOut {
-	cashOut.Attributes = attributes
+	cashOut.Attributes.Push(attributes...)
 	return cashOut
 }
 

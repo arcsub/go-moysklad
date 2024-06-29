@@ -243,7 +243,7 @@ func (counterPartyAdjustment *CounterpartyAdjustment) SetShared(shared bool) *Co
 //
 // Принимает множество объектов [Attribute].
 func (counterPartyAdjustment *CounterpartyAdjustment) SetAttributes(attributes ...*Attribute) *CounterpartyAdjustment {
-	counterPartyAdjustment.Attributes = attributes
+	counterPartyAdjustment.Attributes.Push(attributes...)
 	return counterPartyAdjustment
 }
 
@@ -359,7 +359,7 @@ type CounterPartyAdjustmentService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
-// NewCounterPartyAdjustmentService возвращает сервис для работы с корректировками баланса контрагента.
+// NewCounterPartyAdjustmentService принимает [Client] и возвращает сервис для работы с корректировками баланса контрагента.
 func NewCounterPartyAdjustmentService(client *Client) CounterPartyAdjustmentService {
 	return newMainService[CounterpartyAdjustment, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/counterpartyadjustment"))
 }

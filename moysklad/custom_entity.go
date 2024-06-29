@@ -267,7 +267,7 @@ type customEntityService struct {
 	endpointDelete
 }
 
-// NewCustomEntityService возвращает сервис для работы с пользовательскими справочниками.
+// NewCustomEntityService принимает [Client] и возвращает сервис для работы с пользовательскими справочниками.
 func NewCustomEntityService(client *Client) CustomEntityService {
 	e := NewEndpoint(client, "entity/customentity")
 	return &customEntityService{

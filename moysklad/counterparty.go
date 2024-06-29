@@ -384,11 +384,7 @@ func (counterparty *Counterparty) SetNotes(notes ...*Note) *Counterparty {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (counterparty *Counterparty) SetBonusProgram(bonusProgram *BonusProgram) *Counterparty {
-	if bonusProgram == nil {
-		counterparty.BonusProgram = NewNullValue[BonusProgram]()
-	} else {
-		counterparty.BonusProgram = NewNullValueFrom(bonusProgram.Clean())
-	}
+	counterparty.BonusProgram = NewNullValue(bonusProgram)
 	return counterparty
 }
 
@@ -512,11 +508,7 @@ func (counterparty *Counterparty) SetShared(shared bool) *Counterparty {
 
 // SetState устанавливает Метаданные Статуса Контрагента.
 func (counterparty *Counterparty) SetState(state *State) *Counterparty {
-	if state == nil {
-		counterparty.State = NewNullValue[State]()
-	} else {
-		counterparty.State = NewNullValueFrom(state.Clean())
-	}
+	counterparty.State = NewNullValue(state)
 	return counterparty
 }
 
@@ -628,7 +620,7 @@ func (counterparty *Counterparty) SetSex(sex Sex) *Counterparty {
 //
 // Принимает множество объектов [Attribute].
 func (counterparty *Counterparty) SetAttributes(attributes ...*Attribute) *Counterparty {
-	counterparty.Attributes = attributes
+	counterparty.Attributes.Push(attributes...)
 	return counterparty
 }
 
@@ -1037,7 +1029,7 @@ type counterpartyService struct {
 	endpointFiles
 }
 
-// NewCounterpartyService возвращает сервис для работы с контрагентами.
+// NewCounterpartyService принимает [Client] и возвращает сервис для работы с контрагентами.
 func NewCounterpartyService(client *Client) CounterpartyService {
 	e := NewEndpoint(client, "entity/counterparty")
 	return &counterpartyService{

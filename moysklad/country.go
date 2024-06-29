@@ -220,7 +220,7 @@ type CountryService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
-// NewCountryService возвращает сервис для работы со странами.
+// NewCountryService принимает [Client] и возвращает сервис для работы со странами.
 func NewCountryService(client *Client) CountryService {
 	return newMainService[Country, any, any, any](NewEndpoint(client, "entity/country"))
 }

@@ -13,32 +13,31 @@ type DiscountType interface {
 	AccumulationDiscount | PersonalDiscount | SpecialPriceDiscount | BonusProgram
 }
 
-// NewDiscount принимает в качестве аргумента объект, удовлетворяющий интерфейсу DiscountType.
-//
-// Возвращает скидку с общими полями.
-func NewDiscount[T DiscountType](entity T) *Discount {
-	var discount Discount
-	b, _ := json.Marshal(entity)
-	_ = json.Unmarshal(b, &discount)
-	return &discount
-}
-
 // Discount Скидка.
 //
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki
 type Discount struct {
-	Meta      *Meta         `json:"meta,omitempty"`
-	ID        *uuid.UUID    `json:"id,omitempty"`
-	AccountID *uuid.UUID    `json:"accountId,omitempty"`
-	Name      *string       `json:"name,omitempty"`
-	Active    *bool         `json:"active,omitempty"`
-	AllAgents *bool         `json:"allAgents,omitempty"`
-	AgentTags Slice[string] `json:"agentTags,omitempty"`
-	data      []byte        // сырые данные для последующей десериализации в нужный тип
+	Meta        *Meta         `json:"meta,omitempty"`        // Метаданные Скидки
+	ID          *uuid.UUID    `json:"id,omitempty"`          // ID Скидки
+	AccountID   *uuid.UUID    `json:"accountId,omitempty"`   // ID учётной записи
+	Name        *string       `json:"name,omitempty"`        // Наименование Скидки
+	Active      *bool         `json:"active,omitempty"`      // Индикатор, является ли скидка активной на данный момент
+	AllProducts *bool         `json:"allProducts,omitempty"` // Индикатор, действует ли скидка на все товары
+	AllAgents   *bool         `json:"allAgents,omitempty"`   // Индикатор, действует ли скидка на всех контрагентов
+	Assortment  Assortment    `json:"assortment,omitempty"`  // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
+	AgentTags   Slice[string] `json:"agentTags,omitempty"`   // Теги контрагентов, к которым применяется скидка, если применяется не ко всем контрагентам
+	data        []byte        // сырые данные для последующей конвертации в нужный тип
 }
 
-// Clean возвращает сущность с единственным заполненным полем Meta
+// Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
+// Метод позволяет избавиться от лишних данных при передаче запроса.
 func (discount Discount) Clean() *Discount {
+	if discount.Meta == nil {
+		return nil
+	}
 	return &Discount{Meta: discount.Meta}
 }
 
@@ -99,7 +98,7 @@ func (discount Discount) String() string {
 	return Stringify(discount.Meta)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (discount Discount) MetaType() MetaType {
 	return discount.Meta.GetType()
 }
@@ -109,7 +108,7 @@ func (discount *Discount) Raw() []byte {
 	return discount.data
 }
 
-// UnmarshalJSON реализует интерфейс json.Unmarshaler
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
 func (discount *Discount) UnmarshalJSON(data []byte) error {
 	type alias Discount
 	var t alias
@@ -121,39 +120,59 @@ func (discount *Discount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// AsBonusProgram десериализует объект в тип *BonusProgram
-// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
-// Возвращает nil в случае неудачи.
+// AsBonusProgram пытается привести объект к типу BonusProgram
+//
+// Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
+//
+// Возвращает:
+//   - указатель на .
+//   - nil в случае неудачи.
 func (discount *Discount) AsBonusProgram() *BonusProgram {
 	return UnmarshalAsType[BonusProgram](discount)
 }
 
-// AsAccumulationDiscount десериализует объект в тип *AccumulationDiscount
-// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
-// Возвращает nil в случае неудачи.
+// AsAccumulationDiscount пытается привести объект к типу AccumulationDiscount
+//
+// Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
+//
+// Возвращает:
+//   - указатель на .
+//   - nil в случае неудачи.
 func (discount *Discount) AsAccumulationDiscount() *AccumulationDiscount {
 	return UnmarshalAsType[AccumulationDiscount](discount)
 }
 
-// AsPersonalDiscount десериализует объект в тип *PersonalDiscount
-// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
-// Возвращает nil в случае неудачи.
+// AsPersonalDiscount пытается привести объект к типу PersonalDiscount
+//
+// Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
+//
+// Возвращает:
+//   - указатель на .
+//   - nil в случае неудачи.
 func (discount *Discount) AsPersonalDiscount() *PersonalDiscount {
 	return UnmarshalAsType[PersonalDiscount](discount)
 }
 
-// AsSpecialPriceDiscount десериализует объект в тип *SpecialPriceDiscount
-// Метод гарантирует преобразование в необходимый тип только при идентичных MetaType.
-// Возвращает nil в случае неудачи.
+// AsSpecialPriceDiscount пытается привести объект к типу SpecialPriceDiscount
+//
+// Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
+//
+// Возвращает:
+//   - указатель на .
+//   - nil в случае неудачи.
 func (discount *Discount) AsSpecialPriceDiscount() *SpecialPriceDiscount {
 	return UnmarshalAsType[SpecialPriceDiscount](discount)
 }
 
 // AccumulationDiscount Накопительная скидка.
-// Ключевое слово: accumulationdiscount
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-nakopitel-nyh-skidok
+//
+// Код сущности: accumulationdiscount
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-nakopitel-nyh-skidok
 type AccumulationDiscount struct {
-	AccountID      *uuid.UUID                `json:"accountId,omitempty"`      // ID учетной записи
+	AccountID      *uuid.UUID                `json:"accountId,omitempty"`      // ID учётной записи
 	ID             *uuid.UUID                `json:"id,omitempty"`             // ID сущности
 	Name           *string                   `json:"name,omitempty"`           // Наименование Скидки
 	Meta           *Meta                     `json:"meta,omitempty"`           // Метаданные
@@ -167,6 +186,9 @@ type AccumulationDiscount struct {
 }
 
 func (accumulationDiscount AccumulationDiscount) Clean() *AccumulationDiscount {
+	if accumulationDiscount.Meta == nil {
+		return nil
+	}
 	return &AccumulationDiscount{Meta: accumulationDiscount.Meta}
 }
 
@@ -244,6 +266,7 @@ func (accumulationDiscount *AccumulationDiscount) SetAllAgents(allAgents bool) *
 	return accumulationDiscount
 }
 
+// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (accumulationDiscount *AccumulationDiscount) SetAssortment(assortment Assortment) *AccumulationDiscount {
 	accumulationDiscount.Assortment = assortment
 	return accumulationDiscount
@@ -263,13 +286,16 @@ func (accumulationDiscount AccumulationDiscount) String() string {
 	return Stringify(accumulationDiscount)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (AccumulationDiscount) MetaType() MetaType {
 	return MetaTypeAccumulationDiscount
 }
 
 // AccumulationLevel Проценты скидок при определенной сумме продаж.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-levels
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-levels
 type AccumulationLevel struct {
 	Amount   *float64 `json:"amount,omitempty"`   // Сумма накоплений в копейках
 	Discount *float64 `json:"discount,omitempty"` // Процент скидки, соответствующий данной сумме
@@ -294,9 +320,10 @@ func (accumulationLevel *AccumulationLevel) SetDiscount(discount float64) *Accum
 }
 
 // PersonalDiscount Персональная скидка.
-// Ключевое слово: personaldiscount
+//
+// Код сущности: personaldiscount
 type PersonalDiscount struct {
-	AccountID      *uuid.UUID                `json:"accountId,omitempty"`
+	AccountID      *uuid.UUID                `json:"accountId,omitempty"` // ID учётной записи
 	ID             *uuid.UUID                `json:"id,omitempty"`
 	Name           *string                   `json:"name,omitempty"`
 	Meta           *Meta                     `json:"meta,omitempty"`
@@ -308,8 +335,13 @@ type PersonalDiscount struct {
 	Assortment     Assortment                `json:"assortment,omitempty"`
 }
 
-// Clean возвращает сущность с единственным заполненным полем Meta
+// Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
+// Метод позволяет избавиться от лишних данных при передаче запроса.
 func (personalDiscount PersonalDiscount) Clean() *PersonalDiscount {
+	if personalDiscount.Meta == nil {
+		return nil
+	}
 	return &PersonalDiscount{Meta: personalDiscount.Meta}
 }
 
@@ -383,6 +415,7 @@ func (personalDiscount *PersonalDiscount) SetAllAgents(allAgents bool) *Personal
 	return personalDiscount
 }
 
+// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (personalDiscount *PersonalDiscount) SetAssortment(assortment Assortment) *PersonalDiscount {
 	personalDiscount.Assortment = assortment
 	return personalDiscount
@@ -397,21 +430,25 @@ func (personalDiscount PersonalDiscount) String() string {
 	return Stringify(personalDiscount)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (PersonalDiscount) MetaType() MetaType {
 	return MetaTypePersonalDiscount
 }
 
 // SpecialPriceDiscount Специальная цена.
-// Ключевое слово: specialpricediscount
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
+//
+// Код сущности: specialpricediscount
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
 type SpecialPriceDiscount struct {
 	AllProducts    *bool                     `json:"allProducts,omitempty"`
 	ID             *uuid.UUID                `json:"id,omitempty"`
 	Name           *string                   `json:"name,omitempty"`
 	Meta           *Meta                     `json:"meta,omitempty"`
 	Active         *bool                     `json:"active,omitempty"`
-	AccountID      *uuid.UUID                `json:"accountId,omitempty"`
+	AccountID      *uuid.UUID                `json:"accountId,omitempty"` // ID учётной записи
 	AllAgents      *bool                     `json:"allAgents,omitempty"`
 	UsePriceType   *bool                     `json:"usePriceType,omitempty"`
 	Assortment     Assortment                `json:"assortment,omitempty"`
@@ -421,8 +458,13 @@ type SpecialPriceDiscount struct {
 	AgentTags      Slice[string]             `json:"agentTags,omitempty"`
 }
 
-// Clean возвращает сущность с единственным заполненным полем Meta
+// Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
+// Метод позволяет избавиться от лишних данных при передаче запроса.
 func (specialPriceDiscount SpecialPriceDiscount) Clean() *SpecialPriceDiscount {
+	if specialPriceDiscount.Meta == nil {
+		return nil
+	}
 	return &SpecialPriceDiscount{Meta: specialPriceDiscount.Meta}
 }
 
@@ -513,6 +555,7 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetUsePriceType(usePriceType b
 	return specialPriceDiscount
 }
 
+// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (specialPriceDiscount *SpecialPriceDiscount) SetAssortment(assortment Assortment) *SpecialPriceDiscount {
 	specialPriceDiscount.Assortment = assortment
 	return specialPriceDiscount
@@ -537,13 +580,16 @@ func (specialPriceDiscount SpecialPriceDiscount) String() string {
 	return Stringify(specialPriceDiscount)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (SpecialPriceDiscount) MetaType() MetaType {
 	return MetaTypeSpecialPriceDiscount
 }
 
 // SpecialPrice Спец. цена
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-specialprice
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-specialprice
 type SpecialPrice struct {
 	PriceType *PriceType `json:"priceType,omitempty"` // Тип цены
 	Value     *int       `json:"value,omitempty"`     // Значение цены, если выбрано фиксированное значение
@@ -607,7 +653,10 @@ func NewDiscountService(client *Client) DiscountService {
 }
 
 // UpdateRoundOffDiscount Изменить округление копеек.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-okruglenie-kopeek
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-okruglenie-kopeek
 func (service *discountService) UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", service.uri, id)
 	return NewRequestBuilder[Discount](service.client, path).Put(ctx, entity)
@@ -620,28 +669,40 @@ func (service *discountService) GetAccumulationDiscounts(ctx context.Context, pa
 }
 
 // CreateAccumulationDiscount Создать накопительную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-nakopitel-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-nakopitel-nuu-skidku
 func (service *discountService) CreateAccumulationDiscount(ctx context.Context, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	path := "entity/accumulationdiscount"
 	return NewRequestBuilder[AccumulationDiscount](service.client, path).Post(ctx, entity)
 }
 
 // GetAccumulationDiscountByID Получить накопительную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-nakopitel-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-nakopitel-nuu-skidku
 func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
 	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // UpdateAccumulationDiscount Изменить накопительную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-nakopitel-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-nakopitel-nuu-skidku
 func (service *discountService) UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
 	return NewRequestBuilder[AccumulationDiscount](service.client, path).Put(ctx, entity)
 }
 
 // DeleteAccumulationDiscount Удалить накопительную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-nakopitel-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-nakopitel-nuu-skidku
 func (service *discountService) DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/accumulationdiscount/%s", id)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
@@ -654,21 +715,30 @@ func (service *discountService) GetPersonalDiscounts(ctx context.Context, params
 }
 
 // CreatePersonalDiscount Создать персональную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-personal-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-personal-nuu-skidku
 func (service *discountService) CreatePersonalDiscount(ctx context.Context, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	path := "entity/personaldiscount"
 	return NewRequestBuilder[PersonalDiscount](service.client, path).Post(ctx, entity)
 }
 
 // GetPersonalDiscountByID Получить персональную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-personal-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-personal-nuu-skidku
 func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
 	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // UpdatePersonalDiscount Изменить персональную скидку.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-personal-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-personal-nuu-skidku
 func (service *discountService) UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/personaldiscount/%s", id)
 	return NewRequestBuilder[PersonalDiscount](service.client, path).Put(ctx, entity)
@@ -681,35 +751,50 @@ func (service *discountService) DeletePersonalDiscount(ctx context.Context, id u
 }
 
 // GetSpecialPriceDiscounts Получить все специальные цены.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-personal-nuu-skidku
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-personal-nuu-skidku
 func (service *discountService) GetSpecialPriceDiscounts(ctx context.Context, params ...*Params) (*List[SpecialPriceDiscount], *resty.Response, error) {
 	path := "entity/specialpricediscount"
 	return NewRequestBuilder[List[SpecialPriceDiscount]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // CreateSpecialPriceDiscount Создать специальную цену.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-special-nuu-cenu
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-sozdat-special-nuu-cenu
 func (service *discountService) CreateSpecialPriceDiscount(ctx context.Context, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := "entity/specialpricediscount"
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).Post(ctx, entity)
 }
 
 // GetSpecialPriceDiscountByID Получить специальную цену.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-special-nuu-cenu
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-poluchit-special-nuu-cenu
 func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // UpdateSpecialPriceDiscount Изменить специальную цену.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-special-nuu-cenu
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-izmenit-special-nuu-cenu
 func (service *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).Put(ctx, entity)
 }
 
 // DeleteSpecialPriceDiscount Удалить специальную цену.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-special-nuu-cenu
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-udalit-special-nuu-cenu
 func (service *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
 	path := fmt.Sprintf("entity/specialpricediscount/%s", id)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)

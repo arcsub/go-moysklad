@@ -383,11 +383,7 @@ func (demand *Demand) SetCode(code string) *Demand {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (demand *Demand) SetContract(contract *Contract) *Demand {
-	if contract == nil {
-		demand.Contract = NewNullValue[Contract]()
-	} else {
-		demand.Contract = NewNullValueFrom(contract.Clean())
-	}
+	demand.Contract = NewNullValue(contract)
 	return demand
 }
 
@@ -481,11 +477,7 @@ func (demand *Demand) SetPositions(positions ...*DemandPosition) *Demand {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (demand *Demand) SetProject(project *Project) *Demand {
-	if project == nil {
-		demand.Project = NewNullValue[Project]()
-	} else {
-		demand.Project = NewNullValueFrom(project.Clean())
-	}
+	demand.Project = NewNullValue(project)
 	return demand
 }
 
@@ -493,11 +485,7 @@ func (demand *Demand) SetProject(project *Project) *Demand {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (demand *Demand) SetRate(rate *Rate) *Demand {
-	if rate == nil {
-		demand.Rate = NewNullValue[Rate]()
-	} else {
-		demand.Rate = NewNullValueFrom(rate)
-	}
+	demand.Rate = NewNullValue(rate)
 	return demand
 }
 
@@ -505,11 +493,7 @@ func (demand *Demand) SetRate(rate *Rate) *Demand {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (demand *Demand) SetSalesChannel(salesChannel *SalesChannel) *Demand {
-	if salesChannel == nil {
-		demand.SalesChannel = NewNullValue[SalesChannel]()
-	} else {
-		demand.SalesChannel = NewNullValueFrom(salesChannel.Clean())
-	}
+	demand.SalesChannel = NewNullValue(salesChannel)
 	return demand
 }
 
@@ -541,11 +525,7 @@ func (demand *Demand) SetShipmentAddressFull(shipmentAddressFull *Address) *Dema
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (demand *Demand) SetState(state *State) *Demand {
-	if state == nil {
-		demand.State = NewNullValue[State]()
-	} else {
-		demand.State = NewNullValueFrom(state.Clean())
-	}
+	demand.State = NewNullValue(state)
 	return demand
 }
 
@@ -595,7 +575,7 @@ func (demand *Demand) SetFactureOut(factureOut *FactureOut) *Demand {
 //
 // Принимает множество объектов [SalesReturn].
 func (demand *Demand) SetReturns(returns ...*SalesReturn) *Demand {
-	demand.Returns = returns
+	demand.Returns.Push(returns...)
 	return demand
 }
 
@@ -611,7 +591,7 @@ func (demand *Demand) SetPayments(payments ...AsPaymentInterface) *Demand {
 //
 // Принимает множество объектов [InvoiceOut].
 func (demand *Demand) SetInvoicesOut(invoicesOut ...*InvoiceOut) *Demand {
-	demand.InvoicesOut = invoicesOut
+	demand.InvoicesOut.Push(invoicesOut...)
 	return demand
 }
 
@@ -671,7 +651,7 @@ func (demand *Demand) SetTransportFacilityNumber(transportFacilityNumber string)
 //
 // Принимает множество объектов [Attribute].
 func (demand *Demand) SetAttributes(attributes ...*Attribute) *Demand {
-	demand.Attributes = attributes
+	demand.Attributes.Push(attributes...)
 	return demand
 }
 
@@ -1201,7 +1181,7 @@ type DemandService interface {
 	Evaluate(ctx context.Context, entity *Demand, evaluate ...Evaluate) (*Demand, *resty.Response, error)
 }
 
-// NewDemandService возвращает сервис для работы с отгрузками.
+// NewDemandService принимает [Client] и возвращает сервис для работы с отгрузками.
 func NewDemandService(client *Client) DemandService {
 	return newMainService[Demand, DemandPosition, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/demand"))
 }

@@ -149,7 +149,7 @@ func (consignment *Consignment) SetMeta(meta *Meta) *Consignment {
 //
 // Принимает множество объектов [Barcode].
 func (consignment *Consignment) SetBarcodes(barcodes ...*Barcode) *Consignment {
-	consignment.Barcodes = barcodes
+	consignment.Barcodes.Push(barcodes...)
 	return consignment
 }
 
@@ -189,7 +189,7 @@ func (consignment *Consignment) SetLabel(label string) *Consignment {
 //
 // Принимает множество объектов [Attribute].
 func (consignment *Consignment) SetAttributes(attributes ...*Attribute) *Consignment {
-	consignment.Attributes = attributes
+	consignment.Attributes.Push(attributes...)
 	return consignment
 }
 
@@ -311,7 +311,7 @@ type ConsignmentService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
-// NewConsignmentService возвращает сервис для работы с сериями.
+// NewConsignmentService принимает [Client] и возвращает сервис для работы с сериями.
 func NewConsignmentService(client *Client) ConsignmentService {
 	return newMainService[Consignment, any, MetaAttributesWrapper, any](NewEndpoint(client, "entity/consignment"))
 

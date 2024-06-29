@@ -413,11 +413,7 @@ func (commissionReportOut *CommissionReportOut) SetPositions(positions ...*Commi
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *CommissionReportOut {
-	if project == nil {
-		commissionReportOut.Project = NewNullValue[Project]()
-	} else {
-		commissionReportOut.Project = NewNullValueFrom(project.Clean())
-	}
+	commissionReportOut.Project = NewNullValue(project)
 	return commissionReportOut
 }
 
@@ -425,11 +421,7 @@ func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *Co
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportOut *CommissionReportOut) SetRate(rate *Rate) *CommissionReportOut {
-	if rate == nil {
-		commissionReportOut.Rate = NewNullValue[Rate]()
-	} else {
-		commissionReportOut.Rate = NewNullValueFrom(rate)
-	}
+	commissionReportOut.Rate = NewNullValue(rate)
 	return commissionReportOut
 }
 
@@ -451,11 +443,7 @@ func (commissionReportOut *CommissionReportOut) SetPayments(payments ...AsPaymen
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportOut *CommissionReportOut) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportOut {
-	if salesChannel == nil {
-		commissionReportOut.SalesChannel = NewNullValue[SalesChannel]()
-	} else {
-		commissionReportOut.SalesChannel = NewNullValueFrom(salesChannel.Clean())
-	}
+	commissionReportOut.SalesChannel = NewNullValue(salesChannel)
 	return commissionReportOut
 }
 
@@ -469,11 +457,7 @@ func (commissionReportOut *CommissionReportOut) SetShared(shared bool) *Commissi
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (commissionReportOut *CommissionReportOut) SetState(state *State) *CommissionReportOut {
-	if state == nil {
-		commissionReportOut.State = NewNullValue[State]()
-	} else {
-		commissionReportOut.State = NewNullValueFrom(state.Clean())
-	}
+	commissionReportOut.State = NewNullValue(state)
 	return commissionReportOut
 }
 
@@ -505,7 +489,7 @@ func (commissionReportOut *CommissionReportOut) SetRewardType(rewardType RewardT
 //
 // Принимает множество объектов [Attribute].
 func (commissionReportOut *CommissionReportOut) SetAttributes(attributes ...*Attribute) *CommissionReportOut {
-	commissionReportOut.Attributes = attributes
+	commissionReportOut.Attributes.Push(attributes...)
 	return commissionReportOut
 }
 
@@ -602,13 +586,17 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() b
 //
 // Принимает объект, реализующий интерфейс [AsAssortmentInterface].
 func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportOutPosition {
-	commissionReportOutPosition.Assortment = assortment.asAssortment()
+	if assortment != nil {
+		commissionReportOutPosition.Assortment = assortment.asAssortment()
+	}
 	return commissionReportOutPosition
 }
 
 // SetPack устанавливает Упаковку Товара.
 func (commissionReportOutPosition *CommissionReportOutPosition) SetPack(pack *Pack) *CommissionReportOutPosition {
-	commissionReportOutPosition.Pack = pack
+	if pack != nil {
+		commissionReportOutPosition.Pack = pack
+	}
 	return commissionReportOutPosition
 }
 
@@ -896,7 +884,7 @@ type CommissionReportOutService interface {
 	Evaluate(ctx context.Context, entity *CommissionReportOut, evaluate ...Evaluate) (*CommissionReportOut, *resty.Response, error)
 }
 
-// NewCommissionReportOutService возвращает сервис для работы с выданными отчётами комиссионера.
+// NewCommissionReportOutService принимает [Client] и возвращает сервис для работы с выданными отчётами комиссионера.
 func NewCommissionReportOutService(client *Client) CommissionReportOutService {
 	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/commissionreportout"))
 }

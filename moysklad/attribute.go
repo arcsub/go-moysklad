@@ -114,11 +114,7 @@ func (attribute *Attribute) SetValue(value any) *Attribute {
 //
 // Передача nil устанавливает необходимость сброса значения (передача null).
 func (attribute *Attribute) SetFile(file *AttributeFile) *Attribute {
-	if file == nil {
-		attribute.File = NewNullValue[AttributeFile]()
-	} else {
-		attribute.File = NewNullValueFrom(file)
-	}
+	attribute.File = NewNullValue(file)
 	return attribute
 }
 
@@ -133,7 +129,7 @@ func (attribute *Attribute) SetFileFromPath(filePath string) (*Attribute, error)
 		return nil, err
 	}
 	file := &AttributeFile{fileName, content}
-	attribute.File = NewNullValueFrom(file)
+	attribute.File = NewNullValue(file)
 	return attribute, nil
 }
 
