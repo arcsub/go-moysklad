@@ -31,7 +31,7 @@ type CashOut struct {
 	Meta           *Meta                    `json:"meta,omitempty"`           // Метаданные Расходного ордера
 	Moment         *Timestamp               `json:"moment,omitempty"`         // Дата документа
 	Operations     Slice[Operation]         `json:"operations,omitempty"`     // Массив ссылок на связанные операции
-	Agent          *Counterparty            `json:"agent,omitempty"`          // Метаданные контрагента
+	Agent          *Agent                   `json:"agent,omitempty"`          // Метаданные контрагента
 	ID             *uuid.UUID               `json:"id,omitempty"`             // ID Расходного ордера
 	PaymentPurpose *string                  `json:"paymentPurpose,omitempty"` // Основание
 	Printed        *bool                    `json:"printed,omitempty"`        // Напечатан ли документ
@@ -59,7 +59,7 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (cashOut CashOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
 }
@@ -155,7 +155,7 @@ func (cashOut CashOut) GetOperations() Slice[Operation] {
 }
 
 // GetAgent возвращает Метаданные контрагента.
-func (cashOut CashOut) GetAgent() Counterparty {
+func (cashOut CashOut) GetAgent() Agent {
 	return Deref(cashOut.Agent)
 }
 
@@ -333,9 +333,11 @@ func (cashOut *CashOut) SetOperations(operations ...AsOperationInterface) *CashO
 }
 
 // SetAgent устанавливает Метаданные контрагента.
-func (cashOut *CashOut) SetAgent(agent *Counterparty) *CashOut {
+//
+// Принимает [Counterparty], [Organization] или [Employee].
+func (cashOut *CashOut) SetAgent(agent AgentInterface) *CashOut {
 	if agent != nil {
-		cashOut.Agent = agent.Clean()
+		cashOut.Agent = agent.asAgent()
 	}
 	return cashOut
 }

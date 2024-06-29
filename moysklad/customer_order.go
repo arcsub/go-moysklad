@@ -82,7 +82,7 @@ func (customerOrder CustomerOrder) AsOperation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (customerOrder CustomerOrder) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: customerOrder.Meta}
 }
@@ -562,13 +562,13 @@ func (customerOrder *CustomerOrder) SetPrepayments(prepayments ...*Prepayment) *
 	return customerOrder
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для Заказа покупателя.
+// SetVatEnabled устанавливает значение, учитывающее НДС для Заказа покупателя.
 func (customerOrder *CustomerOrder) SetVatEnabled(vatEnabled bool) *CustomerOrder {
 	customerOrder.VatEnabled = &vatEnabled
 	return customerOrder
 }
 
-// SetVatIncluded устанавливает флаг включения НДС.
+// SetVatIncluded устанавливает флаг включения НДС в цену.
 func (customerOrder *CustomerOrder) SetVatIncluded(vatIncluded bool) *CustomerOrder {
 	customerOrder.VatIncluded = &vatIncluded
 	return customerOrder
@@ -784,7 +784,7 @@ func (customerOrderPosition *CustomerOrderPosition) SetVat(vat int) *CustomerOrd
 	return customerOrderPosition
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для текущей позиции.
+// SetVatEnabled устанавливает значение, учитывающее НДС для текущей позиции.
 func (customerOrderPosition *CustomerOrderPosition) SetVatEnabled(vatEnabled bool) *CustomerOrderPosition {
 	customerOrderPosition.VatEnabled = &vatEnabled
 	return customerOrderPosition

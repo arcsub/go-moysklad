@@ -73,7 +73,7 @@ func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportOut.GetMeta()}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (commissionReportOut CommissionReportOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportOut.Meta}
 }
@@ -483,13 +483,13 @@ func (commissionReportOut *CommissionReportOut) SetSyncID(syncID uuid.UUID) *Com
 	return commissionReportOut
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для Выданного отчёта комиссионера.
+// SetVatEnabled устанавливает значение, учитывающее НДС для Выданного отчёта комиссионера.
 func (commissionReportOut *CommissionReportOut) SetVatEnabled(vatEnabled bool) *CommissionReportOut {
 	commissionReportOut.VatEnabled = &vatEnabled
 	return commissionReportOut
 }
 
-// SetVatIncluded устанавливает флаг включения НДС.
+// SetVatIncluded устанавливает флаг включения НДС в цену.
 func (commissionReportOut *CommissionReportOut) SetVatIncluded(vatIncluded bool) *CommissionReportOut {
 	commissionReportOut.VatIncluded = &vatIncluded
 	return commissionReportOut
@@ -636,7 +636,7 @@ func (commissionReportOutPosition *CommissionReportOutPosition) SetVat(vat int) 
 	return commissionReportOutPosition
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для текущей позиции.
+// SetVatEnabled устанавливает значение, учитывающее НДС для текущей позиции.
 func (commissionReportOutPosition *CommissionReportOutPosition) SetVatEnabled(vatEnabled bool) *CommissionReportOutPosition {
 	commissionReportOutPosition.VatEnabled = &vatEnabled
 	return commissionReportOutPosition

@@ -5,53 +5,50 @@ import (
 	"github.com/google/uuid"
 )
 
-// Agent представляет объект с общими полями типов [Counterparty] (Контрагент) и [Organization] (Юрлицо).
+// Agent представляет объект с общими полями объектов:
+//   - [Counterparty] (Контрагент)
+//   - [Organization] (Юрлицо)
+//   - [Employee] (Сотрудник)
 type Agent struct {
-	KPP               *string                  `json:"kpp,omitempty"`               // КПП
-	Fax               *string                  `json:"fax,omitempty"`               // Номер факса
-	Updated           *Timestamp               `json:"updated,omitempty"`           // Момент последнего обновления Контрагента/Юрлица
-	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ
-	Name              *string                  `json:"name,omitempty"`              // Наименование Контрагента/Юрлица
-	Meta              *Meta                    `json:"meta,omitempty"`              // Метаданные Контрагента/Юрлица
-	ActualAddressFull *Address                 `json:"actualAddressFull,omitempty"` // Фактический адрес Контрагента с детализацией по отдельным полям
-	LegalAddress      *string                  `json:"legalAddress,omitempty"`      // Юридический адрес Контрагента/Юрлица
-	CertificateDate   *Timestamp               `json:"certificateDate,omitempty"`   // Дата свидетельства
-	ID                *uuid.UUID               `json:"id,omitempty"`                // ID Контрагента/Юрлица
-	OGRN              *string                  `json:"ogrn,omitempty"`              // ОГРН
-	OKPO              *string                  `json:"okpo,omitempty"`              // ОКПО
-	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Контрагента/Юрлица
-	LegalTitle        *string                  `json:"legalTitle,omitempty"`        // Полное наименование для Контрагента типа [Юридическое лицо]. Игнорируется для Контрагентов типа [Индивидуальный предприниматель, Физическое лицо], если передано одно из значений для ФИО и формируется автоматически на основе получаемых ФИО Контрагента
-	LegalAddressFull  *Address                 `json:"legalAddressFull,omitempty"`  // Юридический адрес Контрагента/Юрлица с детализацией по отдельным полям
-	INN               *string                  `json:"inn,omitempty"`               // ИНН
-	Phone             *string                  `json:"phone,omitempty"`             // Номер городского телефона
-	SyncID            *uuid.UUID               `json:"syncId,omitempty"`            // ID синхронизации
-	CertificateNumber *string                  `json:"certificateNumber,omitempty"` // Номер свидетельства
-	Accounts          *MetaArray[AgentAccount] `json:"accounts,omitempty"`          // Массив счетов Контрагента/Юрлица
-	Created           *Timestamp               `json:"created,omitempty"`           // Момент создания
-	Archived          *bool                    `json:"archived,omitempty"`          // Добавлен ли Контрагент/Юрлицо в архив
-	Description       *string                  `json:"description,omitempty"`       // Комментарий к Контрагенту/Юрлицу
-	Group             *Group                   `json:"group,omitempty"`             // Отдел сотрудника
-	OGRNIP            *string                  `json:"ogrnip,omitempty"`            // ОГРНИП
-	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные активной Бонусной программы
-	Code              *string                  `json:"code,omitempty"`              // Код Контрагента/Юрлица
-	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учётной записи
-	ActualAddress     *string                  `json:"actualAddress,omitempty"`     // Фактический адрес Контрагента/Юрлица
-	BonusPoints       *int                     `json:"bonusPoints,omitempty"`       // Бонусные баллы по активной бонусной программе
-	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
-	Email             *string                  `json:"email,omitempty"`             // Адрес электронной почты
-	CompanyType       CompanyType              `json:"companyType,omitempty"`       // Тип Контрагента/Юрлица. В зависимости от значения данного поля набор выводимых реквизитов контрагента может меняться.
-	Attributes        Slice[Attribute]         `json:"attributes,omitempty"`        // Список метаданных доп. полей
-	raw               []byte
+	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Контрагента/Юрлица/Сотрудника
+	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	Updated      *Timestamp       `json:"updated,omitempty"`      // Момент последнего обновления Контрагента/Юрлица/Сотрудника
+	Archived     *bool            `json:"archived,omitempty"`     // Добавлен ли Контрагент/Юрлицо/Сотрудник в архив
+	Phone        *string          `json:"phone,omitempty"`        // Номер телефона
+	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Контрагента/Юрлица/Сотрудника
+	Attributes   Slice[Attribute] `json:"attributes,omitempty"`   // Список метаданных доп. полей
+	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
+	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
+	Name         *string          `json:"name,omitempty"`         // Наименование Контрагента/Юрлица/Сотрудника
+	Created      *Timestamp       `json:"created,omitempty"`      // Момент создания
+	Code         *string          `json:"code,omitempty"`         // Код Контрагента/Юрлица/Сотрудника
+	Owner        *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
+	Description  *string          `json:"description,omitempty"`  // Комментарий к Контрагенту/Юрлицу/Сотруднику
+	INN          *string          `json:"inn,omitempty"`          // ИНН
+	Email        *string          `json:"email,omitempty"`        // Адрес электронной почты
+	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Контрагента/Юрлица/Сотрудника
+	raw          []byte           // сырые данные для последующей конвертации в нужный тип
 }
 
-// AsTaskAgentInterface описывает метод, который возвращает *Agent
-type AsTaskAgentInterface interface {
-	asTaskAgent() *Agent
+// AgentCounterpartyOrganizationInterface описывает метод, который возвращает *Agent
+//
+// Интерфейс должны реализовывать: [Counterparty] и [Organization].
+type AgentCounterpartyOrganizationInterface interface {
+	asCOAgent() *Agent
 }
 
-// AsCounterpartyAdjustmentAgentInterface описывает метод, который возвращает *Agent
-type AsCounterpartyAdjustmentAgentInterface interface {
-	asCounterpartyAdjustmentAgent() *Agent
+// AgentCounterpartyEmployeeInterface описывает метод, который возвращает *Agent
+//
+// Интерфейс должны реализовывать: [Counterparty] и [Employee].
+type AgentCounterpartyEmployeeInterface interface {
+	asCEAgent() *Agent
+}
+
+// AgentInterface описывает метод, который возвращает *Agent
+//
+// Интерфейс должны реализовывать: [Counterparty], [Organization] и [Employee].
+type AgentInterface interface {
+	asAgent() *Agent
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
@@ -62,16 +59,6 @@ func (agent Agent) Clean() *Agent {
 		return nil
 	}
 	return &Agent{Meta: agent.Meta}
-}
-
-// GetKPP возвращает КПП.
-func (agent Agent) GetKPP() string {
-	return Deref(agent.KPP)
-}
-
-// GetFax возвращает Номер факса.
-func (agent Agent) GetFax() string {
-	return Deref(agent.Fax)
 }
 
 // GetUpdated возвращает Момент последнего обновления Контрагента/Юрлица.
@@ -94,49 +81,14 @@ func (agent Agent) GetMeta() Meta {
 	return Deref(agent.Meta)
 }
 
-// GetActualAddressFull возвращает Фактический адрес Контрагента с детализацией по отдельным полям.
-func (agent Agent) GetActualAddressFull() Address {
-	return Deref(agent.ActualAddressFull)
-}
-
-// GetLegalAddress возвращает Юридический адрес Контрагента/Юрлица.
-func (agent Agent) GetLegalAddress() string {
-	return Deref(agent.LegalAddress)
-}
-
-// GetCertificateDate возвращает Дату свидетельства.
-func (agent Agent) GetCertificateDate() Timestamp {
-	return Deref(agent.CertificateDate)
-}
-
 // GetID возвращает ID Контрагента/Юрлица.
 func (agent Agent) GetID() uuid.UUID {
 	return Deref(agent.ID)
 }
 
-// GetOGRN возвращает ОГРН.
-func (agent Agent) GetOGRN() string {
-	return Deref(agent.OGRN)
-}
-
-// GetOKPO возвращает ОКПО.
-func (agent Agent) GetOKPO() string {
-	return Deref(agent.OKPO)
-}
-
 // GetExternalCode возвращает Внешний код Контрагента/Юрлица.
 func (agent Agent) GetExternalCode() string {
 	return Deref(agent.ExternalCode)
-}
-
-// GetLegalTitle возвращает Полное наименование для Контрагента типа [Юридическое лицо].
-func (agent Agent) GetLegalTitle() string {
-	return Deref(agent.LegalTitle)
-}
-
-// GetLegalAddressFull возвращает Юридический адрес Контрагента/Юрлица с детализацией по отдельным полям.
-func (agent Agent) GetLegalAddressFull() Address {
-	return Deref(agent.LegalAddressFull)
 }
 
 // GetINN возвращает ИНН.
@@ -147,21 +99,6 @@ func (agent Agent) GetINN() string {
 // GetPhone возвращает Номер городского телефона.
 func (agent Agent) GetPhone() string {
 	return Deref(agent.Phone)
-}
-
-// GetSyncID возвращает ID синхронизации.
-func (agent Agent) GetSyncID() uuid.UUID {
-	return Deref(agent.SyncID)
-}
-
-// GetCertificateNumber возвращает Номер свидетельства.
-func (agent Agent) GetCertificateNumber() string {
-	return Deref(agent.CertificateNumber)
-}
-
-// GetAccounts возвращает Массив счетов Контрагента/Юрлица.
-func (agent Agent) GetAccounts() MetaArray[AgentAccount] {
-	return Deref(agent.Accounts)
 }
 
 // GetCreated возвращает Дату создания.
@@ -184,16 +121,6 @@ func (agent Agent) GetGroup() Group {
 	return Deref(agent.Group)
 }
 
-// GetOGRNIP возвращает ОГРНИП.
-func (agent Agent) GetOGRNIP() string {
-	return Deref(agent.OGRNIP)
-}
-
-// GetBonusProgram возвращает Метаданные активной Бонусной программы.
-func (agent Agent) GetBonusProgram() BonusProgram {
-	return Deref(agent.BonusProgram)
-}
-
 // GetCode возвращает Код Контрагента/Юрлица.
 func (agent Agent) GetCode() string {
 	return Deref(agent.Code)
@@ -204,16 +131,6 @@ func (agent Agent) GetAccountID() uuid.UUID {
 	return Deref(agent.AccountID)
 }
 
-// GetActualAddress возвращает Фактический адрес Контрагента/Юрлица.
-func (agent Agent) GetActualAddress() string {
-	return Deref(agent.ActualAddress)
-}
-
-// GetBonusPoints возвращает Бонусные баллы по активной бонусной программе.
-func (agent Agent) GetBonusPoints() int {
-	return Deref(agent.BonusPoints)
-}
-
 // GetOwner возвращает Метаданные владельца (Сотрудника).
 func (agent Agent) GetOwner() Employee {
 	return Deref(agent.Owner)
@@ -222,11 +139,6 @@ func (agent Agent) GetOwner() Employee {
 // GetEmail возвращает Адрес электронной почты.
 func (agent Agent) GetEmail() string {
 	return Deref(agent.Email)
-}
-
-// GetCompanyType возвращает Тип Контрагента/Юрлица.
-func (agent Agent) GetCompanyType() CompanyType {
-	return agent.CompanyType
 }
 
 // GetAttributes возвращает Список метаданных доп. полей.
@@ -265,9 +177,7 @@ func (agent *Agent) UnmarshalJSON(data []byte) error {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Counterparty].
-//   - nil в случае неудачи.
+// Возвращает [Counterparty] или nil в случае неудачи.
 func (agent *Agent) AsCounterparty() *Counterparty {
 	return UnmarshalAsType[Counterparty](agent)
 }
@@ -276,11 +186,18 @@ func (agent *Agent) AsCounterparty() *Counterparty {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Organization].
-//   - nil в случае неудачи.
+// Возвращает [Organization] или nil в случае неудачи.
 func (agent *Agent) AsOrganization() *Organization {
 	return UnmarshalAsType[Organization](agent)
+}
+
+// AsEmployee пытается привести объект к типу [Employee].
+//
+// Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
+//
+// Возвращает [Employee] или nil в случае неудачи.
+func (agent *Agent) AsEmployee() *Employee {
+	return UnmarshalAsType[Employee](agent)
 }
 
 // CompanyType Тип Контрагента.

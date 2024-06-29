@@ -34,7 +34,11 @@ func (slice Slice[E]) Iter() *Iterator[E] {
 
 // Push добавляет элементы в конец среза.
 func (slice *Slice[E]) Push(elements ...*E) *Slice[E] {
-	*slice = append(*slice, elements...)
+	for _, element := range elements {
+		if element != nil {
+			*slice = append(*slice, element)
+		}
+	}
 	return slice
 }
 

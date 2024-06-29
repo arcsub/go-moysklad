@@ -47,7 +47,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) Clean() *CounterpartyAdjust
 	return &CounterpartyAdjustment{Meta: counterPartyAdjustment.Meta}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (counterPartyAdjustment CounterpartyAdjustment) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: counterPartyAdjustment.Meta}
 }
@@ -197,10 +197,10 @@ func (counterPartyAdjustment *CounterpartyAdjustment) SetName(name string) *Coun
 
 // SetAgent устанавливает Метаданные контрагента [Counterparty] или сотрудника [Employee].
 //
-// Принимает объект, реализующий интерфейс [AsCounterpartyAdjustmentAgentInterface].
-func (counterPartyAdjustment *CounterpartyAdjustment) SetAgent(agent AsCounterpartyAdjustmentAgentInterface) *CounterpartyAdjustment {
+// Принимает объект, реализующий интерфейс [AgentCounterpartyEmployeeInterface].
+func (counterPartyAdjustment *CounterpartyAdjustment) SetAgent(agent AgentCounterpartyEmployeeInterface) *CounterpartyAdjustment {
 	if agent != nil {
-		counterPartyAdjustment.Agent = agent.asCounterpartyAdjustmentAgent()
+		counterPartyAdjustment.Agent = agent.asCEAgent()
 	}
 	return counterPartyAdjustment
 }

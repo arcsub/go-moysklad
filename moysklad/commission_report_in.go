@@ -76,7 +76,7 @@ func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportIn.GetMeta(), LinkedSum: commissionReportIn.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (commissionReportIn CommissionReportIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportIn.Meta}
 }
@@ -510,13 +510,13 @@ func (commissionReportIn *CommissionReportIn) SetSyncID(syncID uuid.UUID) *Commi
 	return commissionReportIn
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для Полученного отчёта комиссионера.
+// SetVatEnabled устанавливает значение, учитывающее НДС для Полученного отчёта комиссионера.
 func (commissionReportIn *CommissionReportIn) SetVatEnabled(vatEnabled bool) *CommissionReportIn {
 	commissionReportIn.VatEnabled = &vatEnabled
 	return commissionReportIn
 }
 
-// SetVatIncluded устанавливает флаг включения НДС.
+// SetVatIncluded устанавливает флаг включения НДС в цену.
 func (commissionReportIn *CommissionReportIn) SetVatIncluded(vatIncluded bool) *CommissionReportIn {
 	commissionReportIn.VatIncluded = &vatIncluded
 	return commissionReportIn
@@ -688,7 +688,7 @@ func (commissionReportInPosition *CommissionReportInPosition) SetVat(vat int) *C
 	return commissionReportInPosition
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для текущей позиции.
+// SetVatEnabled устанавливает значение, учитывающее НДС для текущей позиции.
 func (commissionReportInPosition *CommissionReportInPosition) SetVatEnabled(vatEnabled bool) *CommissionReportInPosition {
 	commissionReportInPosition.VatEnabled = &vatEnabled
 	return commissionReportInPosition
@@ -794,7 +794,7 @@ func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetVat
 	return commissionReportInReturnPosition
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для текущей позиции.
+// SetVatEnabled устанавливает значение, учитывающее НДС для текущей позиции.
 func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetVatEnabled(vatEnabled bool) *CommissionReportInReturnPosition {
 	commissionReportInReturnPosition.VatEnabled = &vatEnabled
 	return commissionReportInReturnPosition

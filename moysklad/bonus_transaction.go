@@ -24,7 +24,7 @@ type BonusTransaction struct {
 	ExecutionDate     *Timestamp               `json:"executionDate,omitempty"`     // Дата начисления бонусной операции
 	Meta              *Meta                    `json:"meta,omitempty"`              // Метаданные Бонусной операции
 	Applicable        *bool                    `json:"applicable,omitempty"`        // Отметка о проведении
-	Agent             *Counterparty            `json:"agent,omitempty"`             // Метаданные Контрагента, связанного с бонусной операцией
+	Agent             *Agent                   `json:"agent,omitempty"`             // Метаданные Контрагента, связанного с бонусной операцией
 	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Бонусной операции
 	Moment            *Timestamp               `json:"moment,omitempty"`            // Время проведения бонусной операции
 	Name              *string                  `json:"name,omitempty"`              // Наименование Бонусной операции
@@ -48,7 +48,7 @@ func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (bonusTransaction BonusTransaction) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: bonusTransaction.Meta}
 }
@@ -104,7 +104,7 @@ func (bonusTransaction BonusTransaction) GetApplicable() bool {
 }
 
 // GetAgent возвращает Метаданные Контрагента, связанного с бонусной операцией.
-func (bonusTransaction BonusTransaction) GetAgent() Counterparty {
+func (bonusTransaction BonusTransaction) GetAgent() Agent {
 	return Deref(bonusTransaction.Agent)
 }
 
@@ -212,9 +212,11 @@ func (bonusTransaction *BonusTransaction) SetApplicable(applicable bool) *BonusT
 }
 
 // SetAgent устанавливает Метаданные Контрагента, связанного с бонусной операцией.
-func (bonusTransaction *BonusTransaction) SetAgent(agent *Counterparty) *BonusTransaction {
+//
+// Принимает [Counterparty] или [Organization].
+func (bonusTransaction *BonusTransaction) SetAgent(agent AgentCounterpartyOrganizationInterface) *BonusTransaction {
 	if agent != nil {
-		bonusTransaction.Agent = agent.Clean()
+		bonusTransaction.Agent = agent.asCOAgent()
 	}
 	return bonusTransaction
 }

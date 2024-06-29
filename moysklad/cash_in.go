@@ -29,7 +29,7 @@ type CashIn struct {
 	ID             *uuid.UUID               `json:"id,omitempty"`             // ID Приходного ордера
 	Meta           *Meta                    `json:"meta,omitempty"`           // Метаданные Приходного ордера
 	Operations     Slice[Operation]         `json:"operations,omitempty"`     // Метаданные связанных операций
-	Agent          *Counterparty            `json:"agent,omitempty"`          // Метаданные контрагента
+	Agent          *Agent                   `json:"agent,omitempty"`          // Метаданные контрагента
 	Created        *Timestamp               `json:"created,omitempty"`        // Дата создания
 	Owner          *Employee                `json:"owner,omitempty"`          // Метаданные владельца (Сотрудника)
 	PaymentPurpose *string                  `json:"paymentPurpose,omitempty"` // Основание
@@ -58,7 +58,7 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
-// asTaskOperation реализует интерфейс AsTaskOperationInterface.
+// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
 func (cashIn CashIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
 }
@@ -144,7 +144,7 @@ func (cashIn CashIn) GetOperations() Slice[Operation] {
 }
 
 // GetAgent возвращает Метаданные контрагента.
-func (cashIn CashIn) GetAgent() Counterparty {
+func (cashIn CashIn) GetAgent() Agent {
 	return Deref(cashIn.Agent)
 }
 
@@ -313,9 +313,11 @@ func (cashIn *CashIn) SetOperations(operations ...AsOperationInterface) *CashIn 
 }
 
 // SetAgent устанавливает Метаданные контрагента.
-func (cashIn *CashIn) SetAgent(agent *Counterparty) *CashIn {
+//
+// Принимает [Counterparty], [Organization] или [Employee].
+func (cashIn *CashIn) SetAgent(agent AgentInterface) *CashIn {
 	if agent != nil {
-		cashIn.Agent = agent.Clean()
+		cashIn.Agent = agent.asAgent()
 	}
 	return cashIn
 }

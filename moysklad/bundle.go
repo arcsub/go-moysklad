@@ -464,7 +464,7 @@ func (bundle *Bundle) SetTNVED(tnved string) *Bundle {
 	return bundle
 }
 
-// SetVatEnabled устанавливает флаг включения НДС для комплекта.
+// SetVatEnabled устанавливает значение, учитывающее НДС для комплекта.
 func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 	bundle.VatEnabled = &vatEnabled
 	return bundle
