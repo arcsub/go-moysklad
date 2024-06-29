@@ -56,7 +56,7 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 			}
 
 		case statusCode >= http.StatusBadRequest: // error
-			var rawSlice [][]byte
+			var rawSlice []any
 			if err := json.Unmarshal(bodyBytes, &rawSlice); err != nil {
 				return nil, r, err
 			}
@@ -110,8 +110,12 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 			}
 
 			for _, object := range rawSlice {
+				o, err := json.Marshal(object)
+				if err != nil {
+					return nil, r, err
+				}
 				newElem := reflect.New(elem).Elem()
-				if err := json.Unmarshal(object, newElem.Addr().Interface()); err == nil && !newElem.IsZero() {
+				if err := json.Unmarshal(o, newElem.Addr().Interface()); err == nil && !newElem.IsZero() {
 					if newElem.Kind() == reflect.Ptr {
 						newElem = newElem.Elem()
 					}
@@ -121,7 +125,7 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 				}
 
 				var errs ApiErrors
-				if err := json.Unmarshal(object, &errs); err == nil {
+				if err := json.Unmarshal(o, &errs); err == nil {
 					apiErrors.ApiErrors = append(apiErrors.ApiErrors, errs.ApiErrors...)
 				}
 			}
