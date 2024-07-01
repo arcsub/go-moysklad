@@ -82,7 +82,7 @@ func (customerOrder CustomerOrder) AsOperation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (customerOrder CustomerOrder) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: customerOrder.Meta}
 }
@@ -132,7 +132,7 @@ func (customerOrder CustomerOrder) GetDeleted() Timestamp {
 	return Deref(customerOrder.Deleted)
 }
 
-// GetDeliveryPlannedMoment возвращает Планируемая дата отгрузки.
+// GetDeliveryPlannedMoment возвращает Планируемую дата отгрузки.
 func (customerOrder CustomerOrder) GetDeliveryPlannedMoment() Timestamp {
 	return Deref(customerOrder.DeliveryPlannedMoment)
 }
@@ -720,8 +720,8 @@ func (customerOrderPosition *CustomerOrderPosition) SetQuantity(quantity float64
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
-func (customerOrderPosition *CustomerOrderPosition) SetAssortment(assortment AsAssortmentInterface) *CustomerOrderPosition {
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
+func (customerOrderPosition *CustomerOrderPosition) SetAssortment(assortment AssortmentInterface) *CustomerOrderPosition {
 	if assortment != nil {
 		customerOrderPosition.Assortment = assortment.asAssortment()
 	}

@@ -54,7 +54,7 @@ func (enter Enter) Clean() *Enter {
 	return &Enter{Meta: enter.Meta}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (enter Enter) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: enter.Meta}
 }
@@ -463,8 +463,8 @@ func (enterPosition EnterPosition) GetThings() Slice[string] {
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
-func (enterPosition *EnterPosition) SetAssortment(assortment AsAssortmentInterface) *EnterPosition {
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
+func (enterPosition *EnterPosition) SetAssortment(assortment AssortmentInterface) *EnterPosition {
 	if assortment != nil {
 		enterPosition.Assortment = assortment.asAssortment()
 	}

@@ -47,7 +47,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) Clean() *CounterpartyAdjust
 	return &CounterpartyAdjustment{Meta: counterPartyAdjustment.Meta}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (counterPartyAdjustment CounterpartyAdjustment) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: counterPartyAdjustment.Meta}
 }

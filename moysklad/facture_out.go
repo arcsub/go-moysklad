@@ -65,7 +65,7 @@ func (factureOut FactureOut) AsOperation() *Operation {
 	return &Operation{Meta: factureOut.GetMeta(), LinkedSum: factureOut.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (factureOut FactureOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: factureOut.Meta}
 }
@@ -450,7 +450,7 @@ type FactureOutService interface {
 	// Create выполняет запрос на создание выданного счета-фактуры.
 	// Обязательные поля для заполнения:
 	//	- paymentNumber (Название платежного документа)
-	//	- paymentDate ( Дата платежного документа)
+	//	- paymentDate (Дата платежного документа)
 	// Принимает контекст, выданный счет-фактуру и опционально объект параметров запроса Params.
 	// Возвращает созданную выданный счет-фактуру.
 	Create(ctx context.Context, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)
@@ -532,7 +532,7 @@ type FactureOutService interface {
 	// Возвращает найденную публикацию.
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
-	// Template выполняет запрос на получение предзаполненного выданного счета-фактуры со стандартными полями.
+	// Template выполняет запрос на получение предзаполненного выданного счета-фактуры со стандартными полями
 	// без связи с какими-либо другими документами.
 	// Принимает контекст.
 	// Возвращает предзаполненный выданный счет-фактуру.

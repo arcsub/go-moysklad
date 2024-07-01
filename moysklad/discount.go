@@ -266,7 +266,7 @@ func (accumulationDiscount *AccumulationDiscount) SetAllAgents(allAgents bool) *
 	return accumulationDiscount
 }
 
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (accumulationDiscount *AccumulationDiscount) SetAssortment(assortment Assortment) *AccumulationDiscount {
 	accumulationDiscount.Assortment = assortment
 	return accumulationDiscount
@@ -415,7 +415,7 @@ func (personalDiscount *PersonalDiscount) SetAllAgents(allAgents bool) *Personal
 	return personalDiscount
 }
 
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (personalDiscount *PersonalDiscount) SetAssortment(assortment Assortment) *PersonalDiscount {
 	personalDiscount.Assortment = assortment
 	return personalDiscount
@@ -555,7 +555,7 @@ func (specialPriceDiscount *SpecialPriceDiscount) SetUsePriceType(usePriceType b
 	return specialPriceDiscount
 }
 
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (specialPriceDiscount *SpecialPriceDiscount) SetAssortment(assortment Assortment) *SpecialPriceDiscount {
 	specialPriceDiscount.Assortment = assortment
 	return specialPriceDiscount

@@ -173,8 +173,8 @@ func (consignment *Consignment) SetExternalCode(externalCode string) *Consignmen
 
 // SetAssortment устанавливает Метаданные товара.
 //
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
-func (consignment *Consignment) SetAssortment(assortment AsAssortmentInterface) *Consignment {
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
+func (consignment *Consignment) SetAssortment(assortment AssortmentInterface) *Consignment {
 	consignment.Assortment = assortment.asAssortment()
 	return consignment
 }

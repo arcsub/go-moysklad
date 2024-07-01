@@ -48,7 +48,7 @@ func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (bonusTransaction BonusTransaction) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: bonusTransaction.Meta}
 }

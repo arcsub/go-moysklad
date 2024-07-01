@@ -59,7 +59,7 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (cashOut CashOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
 }

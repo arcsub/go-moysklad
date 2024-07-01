@@ -62,7 +62,7 @@ func (factureIn FactureIn) AsOperation() *Operation {
 	return &Operation{Meta: factureIn.GetMeta()}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (factureIn FactureIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: factureIn.Meta}
 }

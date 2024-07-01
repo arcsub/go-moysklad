@@ -73,7 +73,7 @@ func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportOut.GetMeta()}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (commissionReportOut CommissionReportOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportOut.Meta}
 }
@@ -584,8 +584,8 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() b
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
-func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AsAssortmentInterface) *CommissionReportOutPosition {
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
+func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AssortmentInterface) *CommissionReportOutPosition {
 	if assortment != nil {
 		commissionReportOutPosition.Assortment = assortment.asAssortment()
 	}

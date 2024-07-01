@@ -588,9 +588,9 @@ type BundleComponent struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
 }
 
-// NewBundleComponent принимает объект, реализующий интерфейс [AsAssortmentInterface] и количество.
+// NewBundleComponent принимает объект, реализующий интерфейс [AssortmentInterface] и количество.
 // Возвращает новый компонент комплекта.
-func NewBundleComponent(assortment AsAssortmentInterface, quantity float64) *BundleComponent {
+func NewBundleComponent(assortment AssortmentInterface, quantity float64) *BundleComponent {
 	return &BundleComponent{Assortment: assortment.asAssortment(), Quantity: &quantity}
 }
 
@@ -616,8 +616,8 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
-func (bundleComponent *BundleComponent) SetAssortment(assortment AsAssortmentInterface) *BundleComponent {
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
+func (bundleComponent *BundleComponent) SetAssortment(assortment AssortmentInterface) *BundleComponent {
 	if assortment != nil {
 		bundleComponent.Assortment = assortment.asAssortment()
 	}

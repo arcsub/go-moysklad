@@ -223,3 +223,24 @@ func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResult
 func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...*Params) (*T, *resty.Response, error) {
 	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params...).Get(ctx)
 }
+
+// Context объект, содержащий метаданные о выполнившем запрос сотруднике.
+type Context struct {
+	Employee MetaWrapper `json:"employee,omitempty"`
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (context Context) String() string {
+	return Stringify(context)
+}
+
+// List объект ответа на запрос списка сущностей T.
+type List[T any] struct {
+	Context Context `json:"context"` // метаданные о выполнившем запрос сотруднике
+	MetaArray[T]
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (list List[T]) String() string {
+	return Stringify(list)
+}

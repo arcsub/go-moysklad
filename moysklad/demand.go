@@ -84,7 +84,7 @@ func (demand Demand) AsOperation() *Operation {
 	return &Operation{Meta: demand.GetMeta(), LinkedSum: demand.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [AsTaskOperationInterface].
+// asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (demand Demand) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: demand.Meta}
 }
@@ -800,8 +800,8 @@ func (demandPosition DemandPosition) GetStock() Stock {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AsAssortmentInterface].
-func (demandPosition *DemandPosition) SetAssortment(assortment AsAssortmentInterface) *DemandPosition {
+// Принимает объект, реализующий интерфейс [AssortmentInterface].
+func (demandPosition *DemandPosition) SetAssortment(assortment AssortmentInterface) *DemandPosition {
 	if assortment != nil {
 		demandPosition.Assortment = assortment.asAssortment()
 	}
