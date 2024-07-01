@@ -286,7 +286,7 @@ func (contract *Contract) SetOwner(owner *Employee) *Contract {
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (contract *Contract) SetRate(rate *Rate) *Contract {
 	contract.Rate = NewNullValue(rate)
 	return contract
@@ -300,7 +300,7 @@ func (contract *Contract) SetShared(shared bool) *Contract {
 
 // SetState устанавливает Метаданные статуса Договора.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (contract *Contract) SetState(state *State) *Contract {
 	contract.State = NewNullValue(state)
 	return contract

@@ -112,8 +112,13 @@ func (commissionReportIn CommissionReportIn) GetCode() string {
 }
 
 // GetCommissionOverhead возвращает Прочие расходы.
-func (commissionReportIn CommissionReportIn) GetCommissionOverhead() float64 {
-	return Deref(Deref(commissionReportIn.CommissionOverhead).Sum)
+func (commissionReportIn CommissionReportIn) GetCommissionOverhead() CommissionOverhead {
+	return Deref(commissionReportIn.CommissionOverhead)
+}
+
+// GetCommissionOverheadSum возвращает Сумму в копейках Прочих расходов.
+func (commissionReportIn CommissionReportIn) GetCommissionOverheadSum() float64 {
+	return Deref(commissionReportIn.CommissionOverhead).GetSum()
 }
 
 // GetCommissionPeriodEnd возвращает Конец периода.
@@ -332,8 +337,20 @@ func (commissionReportIn *CommissionReportIn) SetCode(code string) *CommissionRe
 	return commissionReportIn
 }
 
-// SetCommissionOverhead устанавливает Прочие расходы. Если Позиции отчёта комиссионера не заданы, то расходы нельзя задать.
-func (commissionReportIn *CommissionReportIn) SetCommissionOverhead(sum float64) *CommissionReportIn {
+// SetCommissionOverhead устанавливает Прочие расходы.
+//
+// Если Позиции отчёта комиссионера не заданы, то расходы нельзя задать.
+func (commissionReportIn *CommissionReportIn) SetCommissionOverhead(commissionOverhead *CommissionOverhead) *CommissionReportIn {
+	if commissionOverhead != nil {
+		commissionReportIn.CommissionOverhead = commissionOverhead
+	}
+	return commissionReportIn
+}
+
+// SetCommissionOverheadSum устанавливает сумму в копейках Прочих расходов.
+//
+// Если Позиции отчёта комиссионера не заданы, то расходы нельзя задать.
+func (commissionReportIn *CommissionReportIn) SetCommissionOverheadSum(sum float64) *CommissionReportIn {
 	commissionReportIn.CommissionOverhead = &CommissionOverhead{&sum}
 	return commissionReportIn
 }
@@ -430,7 +447,7 @@ func (commissionReportIn *CommissionReportIn) SetPositions(positions ...*Commiss
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportIn *CommissionReportIn) SetProject(project *Project) *CommissionReportIn {
 	commissionReportIn.Project = NewNullValue(project)
 	return commissionReportIn
@@ -438,7 +455,7 @@ func (commissionReportIn *CommissionReportIn) SetProject(project *Project) *Comm
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionReportIn {
 	commissionReportIn.Rate = NewNullValue(rate)
 	return commissionReportIn
@@ -468,7 +485,7 @@ func (commissionReportIn *CommissionReportIn) SetPayments(payments ...AsPaymentI
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportIn *CommissionReportIn) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportIn {
 	commissionReportIn.SalesChannel = NewNullValue(salesChannel)
 	return commissionReportIn
@@ -482,7 +499,7 @@ func (commissionReportIn *CommissionReportIn) SetShared(shared bool) *Commission
 
 // SetState устанавливает Метаданные статуса Приходного ордера.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportIn *CommissionReportIn) SetState(state *State) *CommissionReportIn {
 	commissionReportIn.State = NewNullValue(state)
 	return commissionReportIn

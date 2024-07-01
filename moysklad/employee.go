@@ -213,7 +213,7 @@ func (employee *Employee) SetOwner(owner *Employee) *Employee {
 
 // SetImage устанавливает Фотографию сотрудника.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (employee *Employee) SetImage(image *Image) *Employee {
 	employee.Image = NewNullValue(image)
 	return employee

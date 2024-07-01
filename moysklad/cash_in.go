@@ -262,7 +262,7 @@ func (cashIn *CashIn) SetCode(code string) *CashIn {
 
 // SetContract устанавливает Метаданные договора.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashIn *CashIn) SetContract(contract *Contract) *CashIn {
 	cashIn.Contract = NewNullValue(contract)
 	return cashIn
@@ -334,7 +334,7 @@ func (cashIn *CashIn) SetPaymentPurpose(paymentPurpose string) *CashIn {
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashIn *CashIn) SetProject(project *Project) *CashIn {
 	cashIn.Project = NewNullValue(project)
 	return cashIn
@@ -342,7 +342,7 @@ func (cashIn *CashIn) SetProject(project *Project) *CashIn {
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 	cashIn.Rate = NewNullValue(rate)
 	return cashIn
@@ -350,7 +350,7 @@ func (cashIn *CashIn) SetRate(rate *Rate) *CashIn {
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashIn *CashIn) SetSalesChannel(salesChannel *SalesChannel) *CashIn {
 	cashIn.SalesChannel = NewNullValue(salesChannel)
 	return cashIn
@@ -364,7 +364,7 @@ func (cashIn *CashIn) SetShared(shared bool) *CashIn {
 
 // SetState устанавливает Метаданные статуса Приходного ордера.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashIn *CashIn) SetState(state *State) *CashIn {
 	cashIn.State = NewNullValue(state)
 	return cashIn

@@ -381,7 +381,7 @@ func (demand *Demand) SetCode(code string) *Demand {
 
 // SetContract устанавливает Метаданные договора.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (demand *Demand) SetContract(contract *Contract) *Demand {
 	demand.Contract = NewNullValue(contract)
 	return demand
@@ -475,7 +475,7 @@ func (demand *Demand) SetPositions(positions ...*DemandPosition) *Demand {
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (demand *Demand) SetProject(project *Project) *Demand {
 	demand.Project = NewNullValue(project)
 	return demand
@@ -483,7 +483,7 @@ func (demand *Demand) SetProject(project *Project) *Demand {
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (demand *Demand) SetRate(rate *Rate) *Demand {
 	demand.Rate = NewNullValue(rate)
 	return demand
@@ -491,7 +491,7 @@ func (demand *Demand) SetRate(rate *Rate) *Demand {
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (demand *Demand) SetSalesChannel(salesChannel *SalesChannel) *Demand {
 	demand.SalesChannel = NewNullValue(salesChannel)
 	return demand
@@ -511,7 +511,7 @@ func (demand *Demand) SetShipmentAddress(shipmentAddress string) *Demand {
 
 // SetShipmentAddressFull устанавливает Адрес доставки Отгрузки с детализацией по отдельным полям.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (demand *Demand) SetShipmentAddressFull(shipmentAddressFull *Address) *Demand {
 	if shipmentAddressFull == nil {
 		demand.SetShipmentAddress("")
@@ -523,7 +523,7 @@ func (demand *Demand) SetShipmentAddressFull(shipmentAddressFull *Address) *Dema
 
 // SetState устанавливает Метаданные статуса Отгрузки.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (demand *Demand) SetState(state *State) *Demand {
 	demand.State = NewNullValue(state)
 	return demand

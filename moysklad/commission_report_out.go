@@ -411,7 +411,7 @@ func (commissionReportOut *CommissionReportOut) SetPositions(positions ...*Commi
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *CommissionReportOut {
 	commissionReportOut.Project = NewNullValue(project)
 	return commissionReportOut
@@ -419,7 +419,7 @@ func (commissionReportOut *CommissionReportOut) SetProject(project *Project) *Co
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportOut *CommissionReportOut) SetRate(rate *Rate) *CommissionReportOut {
 	commissionReportOut.Rate = NewNullValue(rate)
 	return commissionReportOut
@@ -441,7 +441,7 @@ func (commissionReportOut *CommissionReportOut) SetPayments(payments ...AsPaymen
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportOut *CommissionReportOut) SetSalesChannel(salesChannel *SalesChannel) *CommissionReportOut {
 	commissionReportOut.SalesChannel = NewNullValue(salesChannel)
 	return commissionReportOut
@@ -455,7 +455,7 @@ func (commissionReportOut *CommissionReportOut) SetShared(shared bool) *Commissi
 
 // SetState устанавливает Метаданные статуса Выданного отчёта комиссионера.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (commissionReportOut *CommissionReportOut) SetState(state *State) *CommissionReportOut {
 	commissionReportOut.State = NewNullValue(state)
 	return commissionReportOut

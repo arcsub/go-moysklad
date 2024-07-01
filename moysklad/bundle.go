@@ -350,7 +350,7 @@ func (bundle *Bundle) SetComponents(components ...*BundleComponent) *Bundle {
 
 // SetCountry устанавливает Метаданные Страны.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (bundle *Bundle) SetCountry(country *Country) *Bundle {
 	bundle.Country = NewNullValue(country)
 	return bundle
@@ -386,7 +386,7 @@ func (bundle *Bundle) SetVat(vat int) *Bundle {
 
 // SetMinPrice устанавливает Минимальную цену.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
 	bundle.MinPrice = NewNullValue(minPrice)
 	return bundle
@@ -394,7 +394,7 @@ func (bundle *Bundle) SetMinPrice(minPrice *MinPrice) *Bundle {
 
 // SetOverhead устанавливает Дополнительные расходы.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (bundle *Bundle) SetOverhead(overhead *BundleOverhead) *Bundle {
 	bundle.Overhead = NewNullValue(overhead)
 	return bundle
@@ -430,7 +430,7 @@ func (bundle *Bundle) SetSalePrices(salePrices ...*SalePrice) *Bundle {
 
 // SetProductFolder устанавливает Метаданные группы Комплекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (bundle *Bundle) SetProductFolder(productFolder *ProductFolder) *Bundle {
 	bundle.ProductFolder = NewNullValue(productFolder)
 	return bundle
@@ -456,7 +456,7 @@ func (bundle *Bundle) SetVatEnabled(vatEnabled bool) *Bundle {
 
 // SetUom устанавливает Единицу измерения.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (bundle *Bundle) SetUom(uom *Uom) *Bundle {
 	bundle.Uom = NewNullValue(uom)
 	return bundle

@@ -103,7 +103,7 @@ type Permissions struct {
 	Move                      OperationPermission  `json:"move"`                      // Перемещения
 	Enter                     OperationPermission  `json:"enter"`                     // Оприходования
 	Loss                      OperationPermission  `json:"loss"`                      // Списания
-	FactureIn                 OperationPermission  `json:"facturein"`                 // Счета-фактуры полученные
+	FactureIn                 OperationPermission  `json:"facturein"`                 // полученные счета-фактуры
 	FactureOut                OperationPermission  `json:"factureout"`                // Счета-фактуры выданные
 	CommissionReportIn        OperationPermission  `json:"commissionreportin"`        // Полученный отчет комиссионера
 	CommissionReportOut       OperationPermission  `json:"commissionreportout"`       // Выданный отчет комиссионер

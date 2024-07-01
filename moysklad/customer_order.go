@@ -342,7 +342,7 @@ func (customerOrder *CustomerOrder) SetOrganizationAccount(organizationAccount *
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetProject(project *Project) *CustomerOrder {
 	customerOrder.Project = NewNullValue(project)
 	return customerOrder
@@ -462,7 +462,7 @@ func (customerOrder *CustomerOrder) SetPositions(positions ...*CustomerOrderPosi
 
 // SetContract устанавливает Метаданные договора.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrder {
 	customerOrder.Contract = NewNullValue(contract)
 	return customerOrder
@@ -470,7 +470,7 @@ func (customerOrder *CustomerOrder) SetContract(contract *Contract) *CustomerOrd
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
 	customerOrder.Rate = NewNullValue(rate)
 	return customerOrder
@@ -478,7 +478,7 @@ func (customerOrder *CustomerOrder) SetRate(rate *Rate) *CustomerOrder {
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetSalesChannel(salesChannel *SalesChannel) *CustomerOrder {
 	customerOrder.SalesChannel = NewNullValue(salesChannel)
 	return customerOrder
@@ -498,7 +498,7 @@ func (customerOrder *CustomerOrder) SetShipmentAddress(shipmentAddress string) *
 
 // SetShipmentAddressFull устанавливает Адрес доставки Заказа покупателя с детализацией по отдельным полям.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull *Address) *CustomerOrder {
 	if shipmentAddressFull == nil {
 		customerOrder.SetShipmentAddress("")
@@ -510,7 +510,7 @@ func (customerOrder *CustomerOrder) SetShipmentAddressFull(shipmentAddressFull *
 
 // SetState устанавливает Метаданные статуса Заказа покупателя.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
 	customerOrder.State = NewNullValue(state)
 	return customerOrder
@@ -518,7 +518,7 @@ func (customerOrder *CustomerOrder) SetState(state *State) *CustomerOrder {
 
 // SetStore устанавливает Метаданные склада.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (customerOrder *CustomerOrder) SetStore(store *Store) *CustomerOrder {
 	customerOrder.Store = NewNullValue(store)
 	return customerOrder

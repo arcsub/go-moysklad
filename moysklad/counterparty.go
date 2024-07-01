@@ -382,7 +382,7 @@ func (counterparty *Counterparty) SetNotes(notes ...*Note) *Counterparty {
 
 // SetBonusProgram устанавливает Метаданные бонусной программы.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (counterparty *Counterparty) SetBonusProgram(bonusProgram *BonusProgram) *Counterparty {
 	counterparty.BonusProgram = NewNullValue(bonusProgram)
 	return counterparty
@@ -464,7 +464,7 @@ func (counterparty *Counterparty) SetMeta(meta *Meta) *Counterparty {
 
 // SetActualAddressFull устанавливает Фактический адрес Контрагента с детализацией по отдельным полям.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (counterparty *Counterparty) SetActualAddressFull(actualAddressFull *Address) *Counterparty {
 	if actualAddressFull == nil {
 		counterparty.SetActualAddress("")
@@ -564,7 +564,7 @@ func (counterparty *Counterparty) SetLegalAddress(legalAddress string) *Counterp
 
 // SetLegalAddressFull устанавливает Юридический адрес Контрагента с детализацией по отдельным полям.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (counterparty *Counterparty) SetLegalAddressFull(legalAddressFull *Address) *Counterparty {
 	if legalAddressFull == nil {
 		counterparty.SetLegalAddress("")

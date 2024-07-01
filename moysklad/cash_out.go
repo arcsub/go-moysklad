@@ -45,7 +45,7 @@ type CashOut struct {
 	SyncID         *uuid.UUID               `json:"syncId,omitempty"`         // ID синхронизации
 	Updated        *Timestamp               `json:"updated,omitempty"`        // Момент последнего обновления Расходного ордера
 	VatSum         *float64                 `json:"vatSum,omitempty"`         // Сумма НДС
-	FactureOut     *FactureOut              `json:"factureOut,omitempty"`     // Ссылка на Счет-фактуру полученный, с которым связан этот платеж
+	FactureOut     *FactureOut              `json:"factureOut,omitempty"`     // Ссылка на полученный счет-фактуру, с которым связан этот платеж
 	Attributes     Slice[Attribute]         `json:"attributes,omitempty"`     // Список метаданных доп. полей
 }
 
@@ -224,7 +224,7 @@ func (cashOut CashOut) GetVatSum() float64 {
 	return Deref(cashOut.VatSum)
 }
 
-// GetFactureOut возвращает Ссылку на Счет-фактуру полученный, с которым связан этот платеж.
+// GetFactureOut возвращает Ссылку на полученный счет-фактуру, с которым связан этот платеж.
 func (cashOut CashOut) GetFactureOut() FactureOut {
 	return Deref(cashOut.FactureOut)
 }
@@ -254,7 +254,7 @@ func (cashOut *CashOut) SetCode(code string) *CashOut {
 
 // SetContract устанавливает Метаданные договора.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashOut *CashOut) SetContract(contract *Contract) *CashOut {
 	cashOut.Contract = NewNullValue(contract)
 	return cashOut
@@ -346,7 +346,7 @@ func (cashOut *CashOut) SetPaymentPurpose(paymentPurpose string) *CashOut {
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashOut *CashOut) SetProject(project *Project) *CashOut {
 	cashOut.Project = NewNullValue(project)
 	return cashOut
@@ -354,7 +354,7 @@ func (cashOut *CashOut) SetProject(project *Project) *CashOut {
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashOut *CashOut) SetRate(rate *Rate) *CashOut {
 	cashOut.Rate = NewNullValue(rate)
 	return cashOut
@@ -362,7 +362,7 @@ func (cashOut *CashOut) SetRate(rate *Rate) *CashOut {
 
 // SetSalesChannel устанавливает Метаданные канала продаж.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashOut *CashOut) SetSalesChannel(salesChannel *SalesChannel) *CashOut {
 	cashOut.SalesChannel = NewNullValue(salesChannel)
 	return cashOut
@@ -376,7 +376,7 @@ func (cashOut *CashOut) SetShared(shared bool) *CashOut {
 
 // SetState устанавливает Метаданные статуса Расходного ордера.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (cashOut *CashOut) SetState(state *State) *CashOut {
 	cashOut.State = NewNullValue(state)
 	return cashOut

@@ -61,7 +61,22 @@ func (agent Agent) Clean() *Agent {
 	return &Agent{Meta: agent.Meta}
 }
 
-// GetUpdated возвращает Момент последнего обновления Контрагента/Юрлица.
+// IsCounterparty возвращает true, если объект является контрагентом [Counterparty].
+func (agent Agent) IsCounterparty() bool {
+	return agent.GetMeta().GetType() == MetaTypeCounterparty
+}
+
+// IsOrganization возвращает true, если объект является юрлицом [Organization].
+func (agent Agent) IsOrganization() bool {
+	return agent.GetMeta().GetType() == MetaTypeOrganization
+}
+
+// IsEmployee возвращает true, если объект является сотрудником [Employee].
+func (agent Agent) IsEmployee() bool {
+	return agent.GetMeta().GetType() == MetaTypeEmployee
+}
+
+// GetUpdated возвращает Момент последнего обновления Контрагента/Юрлица/Сотрудника.
 func (agent Agent) GetUpdated() Timestamp {
 	return Deref(agent.Updated)
 }
@@ -71,22 +86,22 @@ func (agent Agent) GetShared() bool {
 	return Deref(agent.Shared)
 }
 
-// GetName возвращает Наименование Контрагента/Юрлица.
+// GetName возвращает Наименование Контрагента/Юрлица/Сотрудника.
 func (agent Agent) GetName() string {
 	return Deref(agent.Name)
 }
 
-// GetMeta возвращает Метаданные Контрагента/Юрлица.
+// GetMeta возвращает Метаданные Контрагента/Юрлица/Сотрудника.
 func (agent Agent) GetMeta() Meta {
 	return Deref(agent.Meta)
 }
 
-// GetID возвращает ID Контрагента/Юрлица.
+// GetID возвращает ID Контрагента/Юрлица/Сотрудника.
 func (agent Agent) GetID() uuid.UUID {
 	return Deref(agent.ID)
 }
 
-// GetExternalCode возвращает Внешний код Контрагента/Юрлица.
+// GetExternalCode возвращает Внешний код Контрагента/Юрлица/Сотрудника.
 func (agent Agent) GetExternalCode() string {
 	return Deref(agent.ExternalCode)
 }
@@ -106,12 +121,12 @@ func (agent Agent) GetCreated() Timestamp {
 	return Deref(agent.Created)
 }
 
-// GetArchived возвращает true, если Контрагент/Юрлицо добавлен в архив.
+// GetArchived возвращает true, если Контрагент/Юрлицо/Сотрудник добавлен в архив.
 func (agent Agent) GetArchived() bool {
 	return Deref(agent.Archived)
 }
 
-// GetDescription возвращает Комментарий к Контрагенту/Юрлицу.
+// GetDescription возвращает Комментарий к Контрагенту/Юрлицу/Сотруднику.
 func (agent Agent) GetDescription() string {
 	return Deref(agent.Description)
 }
@@ -121,7 +136,7 @@ func (agent Agent) GetGroup() Group {
 	return Deref(agent.Group)
 }
 
-// GetCode возвращает Код Контрагента/Юрлица.
+// GetCode возвращает Код Контрагента/Юрлица/Сотрудника.
 func (agent Agent) GetCode() string {
 	return Deref(agent.Code)
 }

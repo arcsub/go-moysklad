@@ -287,7 +287,7 @@ func (enter *Enter) SetPositions(positions ...*EnterPosition) *Enter {
 
 // SetProject устанавливает Метаданные проекта.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (enter *Enter) SetProject(project *Project) *Enter {
 	enter.Project = NewNullValue(project)
 	return enter
@@ -295,7 +295,7 @@ func (enter *Enter) SetProject(project *Project) *Enter {
 
 // SetRate устанавливает Валюту.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (enter *Enter) SetRate(rate *Rate) *Enter {
 	enter.Rate = NewNullValue(rate)
 	return enter
@@ -309,7 +309,7 @@ func (enter *Enter) SetShared(shared bool) *Enter {
 
 // SetState устанавливает Метаданные статуса Оприходования.
 //
-// Передача nil устанавливает необходимость сброса значения (передача null).
+// Передача nil передаёт сброс значения (null).
 func (enter *Enter) SetState(state *State) *Enter {
 	enter.State = NewNullValue(state)
 	return enter
@@ -408,6 +408,11 @@ func (enterPosition EnterPosition) GetCountry() Country {
 // GetGTD возвращает ГТД.
 func (enterPosition EnterPosition) GetGTD() GTD {
 	return Deref(enterPosition.GTD)
+}
+
+// GetGTDName возвращает Номер ГТД.
+func (enterPosition EnterPosition) GetGTDName() string {
+	return Deref(enterPosition.GTD).GetName()
 }
 
 // GetID возвращает ID позиции.
