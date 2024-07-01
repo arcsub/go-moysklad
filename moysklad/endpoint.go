@@ -1,11 +1,14 @@
 package moysklad
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"io"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -540,6 +543,23 @@ func (endpoint *endpointPositions[T]) DeletePositionTrackingCodeMany(ctx context
 
 type endpointPrintDocument struct{ Endpoint }
 
+var reContentDisposition = regexp.MustCompile(`filename="(.*)"`)
+
+func getFileFromResponse(resp *resty.Response) (*PrintFile, error) {
+	buf := new(bytes.Buffer)
+	if _, err := io.Copy(buf, resp.RawBody()); err != nil {
+		return nil, err
+	}
+
+	var fileName string
+	headerStr := resp.Header().Get(headerContentDisposition)
+	if match := reContentDisposition.FindStringSubmatch(headerStr); len(match) > 1 {
+		fileName = match[1]
+	}
+	file := &PrintFile{buf, fileName}
+	return file, nil
+}
+
 // PrintDocument выполняет запрос на печать документа.
 //
 // [Документация МойСклад]
@@ -552,7 +572,7 @@ func (endpoint *endpointPrintDocument) PrintDocument(ctx context.Context, id uui
 		return nil, resp, err
 	}
 
-	file, err := GetFileFromResponse(resp)
+	file, err := getFileFromResponse(resp)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -577,7 +597,7 @@ func (endpoint *endpointPrintLabel) PrintLabel(ctx context.Context, id uuid.UUID
 		return nil, resp, err
 	}
 
-	file, err := GetFileFromResponse(resp)
+	file, err := getFileFromResponse(resp)
 	if err != nil {
 		return nil, resp, err
 	}

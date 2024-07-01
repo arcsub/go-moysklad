@@ -3,20 +3,15 @@ package moysklad
 import (
 	"bytes"
 	"encoding/base64"
-	"errors"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
+	"log"
 	"net/http"
 	"reflect"
 
-	"image/color"
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
-	"strconv"
-	"strings"
 )
 
 // Bool is a helper routine that allocates a new bool value
@@ -117,7 +112,7 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 	}
 }
 
-// Clamp задаёт значение в диапазоне между указанными нижней и верхней границами
+// Clamp задаёт значение в диапазоне между указанными нижней и верхней границами.
 func Clamp(val, min, max int) int {
 	switch {
 	case val < min:
@@ -150,56 +145,6 @@ func getContentFromURL(url string) (string, error) {
 	return base64.StdEncoding.EncodeToString(bodyBytes), nil
 }
 
-// NewFileFromURL возвращает *File, на основе переданного URL пути.
-func NewFileFromURL(url string) (*File, error) {
-	content, err := getContentFromURL(url)
-	if err != nil {
-		return nil, err
-	}
-	return &File{Content: String(content)}, nil
-}
-
-// NewImageFromURL возвращает *Image, на основе переданного URL пути.
-func NewImageFromURL(url string) (*Image, error) {
-	content, err := getContentFromURL(url)
-	if err != nil {
-		return nil, err
-	}
-	return &Image{Content: String(content)}, nil
-}
-
-// NewFileFromFilepath возвращает *File, на основе переданного пути до файла
-// и ошибку, если файл не удалось найти
-func NewFileFromFilepath(filePath string) (*File, error) {
-	fileName, content, err := getFilenameContent(filePath)
-	if err != nil {
-		return nil, err
-	}
-
-	file := &File{
-		Title:    String(fileName),
-		Filename: String(fileName),
-		Content:  String(content),
-	}
-	return file, nil
-}
-
-// NewImageFromFilepath возвращает *Image, на основе переданного пути до файла
-// и ошибку, если файл не удалось найти
-func NewImageFromFilepath(filePath string) (*Image, error) {
-	fileName, content, err := getFilenameContent(filePath)
-	if err != nil {
-		return nil, err
-	}
-
-	image := &Image{
-		Title:    String(fileName),
-		Filename: String(fileName),
-		Content:  String(content),
-	}
-	return image, nil
-}
-
 // RawMetaTyper описывает методы, необходимые для преобразования одного типа в другой.
 type RawMetaTyper interface {
 	MetaTyper
@@ -217,8 +162,9 @@ func filterType[M MetaTyper, D RawMetaTyper](elements []D) Slice[M] {
 	return slice
 }
 
-// UnmarshalAsType принимает объект D, реализующий интерфейс RawMetaTyper и приводит его к типу M
-// Возвращает nil в случае неудачи или при несоответствии типов MetaType
+// UnmarshalAsType принимает объект D, реализующий интерфейс [RawMetaTyper] и приводит его к типу M.
+//
+// Возвращает nil в случае неудачи или при несоответствии типов [MetaType].
 func UnmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
 	var t = *new(M)
 
@@ -238,76 +184,21 @@ func UnmarshalAsType[M MetaTyper, D RawMetaTyper](element D) *M {
 	return &t
 }
 
-// RGBtoUint64 конвертирует код цвета из формата RRGGBB и RGB в uint64
-// Example
-// RGBtoUint64("#E6E6E6")
-// RGBtoUint64("e3e3e3")
-// RGBtoUint64("FFF")
-func RGBtoUint64(str string) (uint64, error) {
-	var errInvalid = errors.New("invalid format")
-	var err error
-
-	hexToByte := func(b byte) byte {
-		switch {
-		case b >= '0' && b <= '9':
-			return b - '0'
-		case b >= 'a' && b <= 'f':
-			return b - 'a' + 10
-		case b >= 'A' && b <= 'F':
-			return b - 'A' + 10
-		}
-
-		err = errInvalid
-
-		return 0
-	}
-
-	n := strings.Replace(str, "0x", "", -1)
-	n = strings.Replace(n, "0X", "", -1)
-	n = strings.Replace(n, "#", "", -1)
-
-	c := color.RGBA{A: 0xff}
-
-	switch len(n) {
-	case 6: // RRGGBB
-		c.R = hexToByte(n[0])<<4 + hexToByte(n[1])
-		c.G = hexToByte(n[2])<<4 + hexToByte(n[3])
-		c.B = hexToByte(n[4])<<4 + hexToByte(n[5])
-	case 3: // RGB
-		c.R = hexToByte(n[0]) * 17
-		c.G = hexToByte(n[1]) * 17
-		c.B = hexToByte(n[2]) * 17
-	default: // invalid format
-		err = errInvalid
-	}
-
+// UnmarshallAny принимает любой тип data, сериализует и пытается десериализовать в тип T.
+func UnmarshallAny[T any](data any) (T, error) {
+	var t T
+	b, err := json.Marshal(data)
 	if err != nil {
-		return 0, err
+		log.Println(err)
+		return t, err
 	}
 
-	hex := fmt.Sprintf("%02x%02x%02x", c.R, c.G, c.B)
-	output, err := strconv.ParseUint(hex, 16, 64)
-	if err != nil {
-		return 0, err
-	}
-	return output, nil
-}
-
-var reContentDisposition = regexp.MustCompile(`filename="(.*)"`)
-
-func GetFileFromResponse(resp *resty.Response) (*PrintFile, error) {
-	buf := new(bytes.Buffer)
-	if _, err := io.Copy(buf, resp.RawBody()); err != nil {
-		return nil, err
+	if err = json.Unmarshal(b, &t); err != nil {
+		log.Println(err)
+		return t, err
 	}
 
-	var fileName string
-	headerStr := resp.Header().Get(headerContentDisposition)
-	if match := reContentDisposition.FindStringSubmatch(headerStr); len(match) > 1 {
-		fileName = match[1]
-	}
-	file := &PrintFile{buf, fileName}
-	return file, nil
+	return t, nil
 }
 
 // Deref разыменовывает указатель
@@ -331,74 +222,71 @@ func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
 	return l != nil && r != nil && lMeta.IsEqual(&rMeta)
 }
 
-// Stock Остатки и себестоимость в позициях документов
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ostatki-i-sebestoimost-w-poziciqh-dokumentow
-type Stock struct {
-	Cost      float64 `json:"cost"`
-	Quantity  float64 `json:"quantity"`
-	Reserve   float64 `json:"reserve"`
-	InTransit float64 `json:"intransit"`
-	Available float64 `json:"available"`
-}
-
-func (stock Stock) String() string {
-	return Stringify(stock)
-}
-
 // NullValue тип для поля, которое может быть указано как null.
 // Имеет обобщённый тип T.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-podderzhka-null
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-podderzhka-null
 type NullValue[T any] struct {
-	value T
-	null  bool
+	value T    // значение поля
+	null  bool // признак null
 }
 
-// NewNullValue устанавливает значение поля null
-func NewNullValue[T any]() *NullValue[T] {
-	return &NullValue[T]{null: true}
-}
+// NewNullValue устанавливает значение поля value.
+//
+// Устанавливает null при передаче nil в качестве аргумента.
+func NewNullValue[T any](value *T) *NullValue[T] {
+	if value == nil {
+		return &NullValue[T]{null: true}
+	}
 
-// NewNullValueFrom устанавливает значение поля value
-func NewNullValueFrom[T any](value *T) *NullValue[T] {
+	// Проверяем, есть ли у объекта метод .Clean(), и вызываем его
+	if method := reflect.ValueOf(value).MethodByName("Clean"); method.IsValid() {
+		if cleanFn, ok := method.Interface().(func() *T); ok {
+			return &NullValue[T]{value: Deref(cleanFn())}
+		}
+	}
+
 	return &NullValue[T]{value: Deref(value)}
 }
 
-// IsNull возвращает true, если поле null
+// IsNull возвращает true, если поле null.
 func (nullValue NullValue[T]) IsNull() bool {
 	return nullValue.null
 }
 
-// Get возвращает значение поля
+// Get возвращает значение поля.
 func (nullValue NullValue[T]) Get() T {
 	return nullValue.value
 }
 
-// Set устанавливает значение поля
+// Set устанавливает значение поля.
 func (nullValue *NullValue[T]) Set(value T) *NullValue[T] {
 	nullValue.value = value
 	nullValue.null = false
 	return nullValue
 }
 
-// SetPtr устанавливает значение поля.
-// В качестве аргумента передаётся указатель на тип T.
+// SetPtr устанавливает значение поля по указателю.
 func (nullValue *NullValue[T]) SetPtr(value *T) *NullValue[T] {
 	nullValue.value = Deref(value)
 	nullValue.null = false
 	return nullValue
 }
 
-// SetNull устанавливает значение поля null
+// SetNull устанавливает значение поля null.
 func (nullValue *NullValue[T]) SetNull() *NullValue[T] {
 	nullValue.null = true
 	return nullValue
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (nullValue NullValue[T]) String() string {
 	return fmt.Sprintf("%v", nullValue.value)
 }
 
-// MarshalJSON реализует интерфейс json.Marshaler
+// MarshalJSON реализует интерфейс [json.Marshaler]
 func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
 	if nullValue.IsNull() {
 		return json.Marshal(nil)
@@ -406,54 +294,55 @@ func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nullValue.Get())
 }
 
-// UnmarshalJSON реализует интерфейс json.Unmarshaler
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
 func (nullValue *NullValue[T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValue.value)
 }
 
-// NullValueAny тип для поля Value структуры Attribute
+// NullValueAny тип для поля Value структуры [Attribute].
 type NullValueAny struct {
-	value any
-	null  bool
+	value any  // значение поля
+	null  bool // признак null
 }
 
-// NewNullValueAny устанавливает значение поля null
+// NewNullValueAny устанавливает значение поля null.
 func NewNullValueAny() *NullValueAny {
 	return &NullValueAny{null: true}
 }
 
-// NewNullValueAnyFrom устанавливает значение value
+// NewNullValueAnyFrom устанавливает значение value.
 func NewNullValueAnyFrom(value any) *NullValueAny {
 	return &NullValueAny{value: value}
 }
 
-// IsNull возвращает true, если поле null
+// IsNull возвращает true, если поле null.
 func (nullValueAny NullValueAny) IsNull() bool {
 	return nullValueAny.null
 }
 
-// Get возвращает значение поля
+// Get возвращает значение поля.
 func (nullValueAny NullValueAny) Get() any {
 	return nullValueAny.value
 }
 
-// Set устанавливает значение поля
+// Set устанавливает значение поля.
 func (nullValueAny *NullValueAny) Set(value any) *NullValueAny {
 	nullValueAny.value = value
 	return nullValueAny
 }
 
-// SetNull устанавливает значение поля null
+// SetNull устанавливает значение поля null.
 func (nullValueAny *NullValueAny) SetNull() *NullValueAny {
 	nullValueAny.null = true
 	return nullValueAny
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (nullValueAny NullValueAny) String() string {
 	return fmt.Sprintf("%v", nullValueAny.value)
 }
 
-// MarshalJSON реализует интерфейс json.Marshaler
+// MarshalJSON реализует интерфейс [json.Marshaler]
 func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 	if nullValueAny.IsNull() {
 		return json.Marshal(nil)
@@ -461,16 +350,18 @@ func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nullValueAny.Get())
 }
 
-// UnmarshalJSON реализует интерфейс json.Unmarshaler
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
 func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValueAny.value)
 }
 
-// AsMetaWrapperSlice оборачивает каждый элемент слайса в объект MetaWrapper
+// AsMetaWrapperSlice оборачивает каждый элемент среза в объект [MetaWrapper] и возвращает срез объектов [MetaWrapper].
 func AsMetaWrapperSlice[T MetaOwner](entities []*T) []MetaWrapper {
 	var o = make([]MetaWrapper, 0, len(entities))
 	for _, entity := range entities {
-		o = append(o, (*entity).GetMeta().Wrap())
+		if entity != nil {
+			o = append(o, (*entity).GetMeta().Wrap())
+		}
 	}
 	return o
 }
