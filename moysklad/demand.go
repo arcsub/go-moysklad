@@ -738,7 +738,7 @@ func (demandPosition DemandPosition) GetPack() Pack {
 	return Deref(demandPosition.Pack)
 }
 
-// GetPrice возвращает Цена товара/услуги в копейках.
+// GetPrice возвращает Цену товара/услуги в копейках.
 func (demandPosition DemandPosition) GetPrice() float64 {
 	return Deref(demandPosition.Price)
 }

@@ -460,7 +460,7 @@ func (internalOrderPosition InternalOrderPosition) GetPack() Pack {
 	return Deref(internalOrderPosition.Pack)
 }
 
-// GetPrice возвращает Цена товара/услуги в копейках.
+// GetPrice возвращает Цену товара/услуги в копейках.
 func (internalOrderPosition InternalOrderPosition) GetPrice() float64 {
 	return Deref(internalOrderPosition.Price)
 }
@@ -569,11 +569,10 @@ type InternalOrderService interface {
 
 	// Update выполняет запрос на изменение внутреннего заказа.
 	// Принимает контекст, внутренний заказ и опционально объект параметров запроса Params.
-	// Возвращает изменённую внутренний заказ.
+	// Возвращает изменённый внутренний заказ.
 	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
 
-	// Template выполняет запрос на получение предзаполненного внутреннего заказа со стандартными полями
-	// без связи с какими-либо другими документами.
+	// Template выполняет запрос на получение предзаполненного внутреннего заказа со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
 	// Возвращает предзаполненный внутренний заказ.
 	Template(ctx context.Context) (*InternalOrder, *resty.Response, error)

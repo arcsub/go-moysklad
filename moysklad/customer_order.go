@@ -672,7 +672,7 @@ func (customerOrderPosition CustomerOrderPosition) GetPack() Pack {
 	return Deref(customerOrderPosition.Pack)
 }
 
-// GetPrice возвращает Цена товара/услуги в копейках.
+// GetPrice возвращает Цену товара/услуги в копейках.
 func (customerOrderPosition CustomerOrderPosition) GetPrice() float64 {
 	return Deref(customerOrderPosition.Price)
 }

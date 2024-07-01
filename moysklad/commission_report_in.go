@@ -626,7 +626,7 @@ func (commissionReportInPosition CommissionReportInPosition) GetPack() Pack {
 	return Deref(commissionReportInPosition.Pack)
 }
 
-// GetPrice возвращает Цена товара/услуги в копейках.
+// GetPrice возвращает Цену товара/услуги в копейках.
 func (commissionReportInPosition CommissionReportInPosition) GetPrice() float64 {
 	return Deref(commissionReportInPosition.Price)
 }

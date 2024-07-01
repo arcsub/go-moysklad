@@ -520,8 +520,7 @@ type CashOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// Template выполняет запрос на получение предзаполненного расходного ордера со стандартными полями
-	// без связи с какими-либо другими документами.
+	// Template выполняет запрос на получение предзаполненного расходного ордера со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
 	// Возвращает предзаполненный расходный ордер.
 	Template(ctx context.Context) (*CashOut, *resty.Response, error)

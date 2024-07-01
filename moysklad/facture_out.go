@@ -532,8 +532,7 @@ type FactureOutService interface {
 	// Возвращает найденную публикацию.
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
-	// Template выполняет запрос на получение предзаполненного выданного счета-фактуры со стандартными полями
-	// без связи с какими-либо другими документами.
+	// Template выполняет запрос на получение предзаполненного выданного счета-фактуры со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
 	// Возвращает предзаполненный выданный счет-фактуру.
 	Template(ctx context.Context) (*FactureOut, *resty.Response, error)

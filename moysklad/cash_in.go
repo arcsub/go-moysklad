@@ -507,8 +507,7 @@ type CashInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 
-	// Template выполняет запрос на получение предзаполненного приходного ордера со стандартными полями
-	// без связи с какими-либо другими документами.
+	// Template выполняет запрос на получение предзаполненного приходного ордера со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
 	// Возвращает предзаполненный приходный ордер.
 	Template(ctx context.Context) (*CashIn, *resty.Response, error)

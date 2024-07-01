@@ -430,7 +430,7 @@ func (enterPosition EnterPosition) GetPack() Pack {
 	return Deref(enterPosition.Pack)
 }
 
-// GetPrice возвращает Цена товара/услуги в копейках.
+// GetPrice возвращает Цену товара/услуги в копейках.
 func (enterPosition EnterPosition) GetPrice() float64 {
 	return Deref(enterPosition.Price)
 }
