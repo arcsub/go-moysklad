@@ -13,7 +13,9 @@ type File struct {
 	Content   *string    `json:"content,omitempty"`   // Файл, закодированный в формате Base64
 	Filename  *string    `json:"filename,omitempty"`  // Имя Файла
 	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные файла
+	Miniature *Meta      `json:"miniature,omitempty"` // Метаданные миниатюры изображения (поле передается только для Файлов изображений)
 	Size      *int       `json:"size,omitempty"`      // Размер Файла в байтах
+	Tiny      *Meta      `json:"tiny,omitempty"`      // Метаданные уменьшенного изображения (поле передается только для Файлов изображений)
 	Title     *string    `json:"title,omitempty"`     // Название Файла
 }
 
@@ -42,9 +44,19 @@ func (file File) GetMeta() Meta {
 	return Deref(file.Meta)
 }
 
+// GetMiniature возвращает Метаданные миниатюры изображения (поле передается только для Файлов изображений).
+func (file File) GetMiniature() Meta {
+	return Deref(file.Miniature)
+}
+
 // GetSize возвращает Размер Файла в байтах.
 func (file File) GetSize() int {
 	return Deref(file.Size)
+}
+
+// GetTiny возвращает Метаданные уменьшенного изображения (поле передается только для Файлов изображений).
+func (file File) GetTiny() Meta {
+	return Deref(file.Tiny)
 }
 
 // GetTitle возвращает Название Файла.
