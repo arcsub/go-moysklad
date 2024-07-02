@@ -96,7 +96,7 @@ func (cashOut CashOut) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (cashOut CashOut) GetContract() Contract {
-	return cashOut.Contract.Get()
+	return cashOut.Contract.GetValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -176,7 +176,7 @@ func (cashOut CashOut) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (cashOut CashOut) GetProject() Project {
-	return cashOut.Project.Get()
+	return cashOut.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -186,12 +186,12 @@ func (cashOut CashOut) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (cashOut CashOut) GetRate() Rate {
-	return cashOut.Rate.Get()
+	return cashOut.Rate.GetValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (cashOut CashOut) GetSalesChannel() SalesChannel {
-	return cashOut.SalesChannel.Get()
+	return cashOut.SalesChannel.GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -201,7 +201,7 @@ func (cashOut CashOut) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Расходного ордера.
 func (cashOut CashOut) GetState() State {
-	return cashOut.State.Get()
+	return cashOut.State.GetValue()
 }
 
 // GetSum возвращает Сумму Расходного ордера в установленной валюте.

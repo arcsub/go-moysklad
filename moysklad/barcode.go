@@ -63,12 +63,12 @@ const (
 	BarcodeUPC     BarcodeType = "upc"     // штрихкод в формате UPC, если требуется создать штрихкод в формате UPC
 )
 
-// MarshalJSON реализует интерфейс [json.Marshaler]
+// MarshalJSON реализует интерфейс [json.Marshaler].
 func (barcode Barcode) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]string{string(barcode.Type): barcode.Value})
 }
 
-// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler].
 func (barcode *Barcode) UnmarshalJSON(bytes []byte) (err error) {
 	tmp := map[string]string{}
 	if err = json.Unmarshal(bytes, &tmp); err != nil {

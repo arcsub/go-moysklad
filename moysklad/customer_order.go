@@ -38,7 +38,7 @@ type CustomerOrder struct {
 	Printed               *bool                             `json:"printed,omitempty"`               // Напечатан ли документ
 	Owner                 *Employee                         `json:"owner,omitempty"`                 // Метаданные владельца (Сотрудника)
 	PayedSum              *float64                          `json:"payedSum,omitempty"`              // Сумма входящих платежей по Заказу
-	Positions             *Positions[CustomerOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Заказа покупателя
+	Positions             *MetaArray[CustomerOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Заказа покупателя
 	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`             // ID учётной записи
 	Contract              *NullValue[Contract]              `json:"contract,omitempty"`              // Метаданные договора
 	Published             *bool                             `json:"published,omitempty"`             // Опубликован ли документ
@@ -94,7 +94,7 @@ func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
 
 // GetProject возвращает Метаданные проекта.
 func (customerOrder CustomerOrder) GetProject() Project {
-	return customerOrder.Project.Get()
+	return customerOrder.Project.GetValue()
 }
 
 // GetAgentAccount возвращает Метаданные счета контрагента.
@@ -203,7 +203,7 @@ func (customerOrder CustomerOrder) GetPayedSum() float64 {
 }
 
 // GetPositions возвращает Метаданные позиций Заказа покупателя.
-func (customerOrder CustomerOrder) GetPositions() Positions[CustomerOrderPosition] {
+func (customerOrder CustomerOrder) GetPositions() MetaArray[CustomerOrderPosition] {
 	return Deref(customerOrder.Positions)
 }
 
@@ -214,7 +214,7 @@ func (customerOrder CustomerOrder) GetAccountID() uuid.UUID {
 
 // GetContract возвращает Метаданные договора.
 func (customerOrder CustomerOrder) GetContract() Contract {
-	return customerOrder.Contract.Get()
+	return customerOrder.Contract.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -224,7 +224,7 @@ func (customerOrder CustomerOrder) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (customerOrder CustomerOrder) GetRate() Rate {
-	return customerOrder.Rate.Get()
+	return customerOrder.Rate.GetValue()
 }
 
 // GetReservedSum возвращает Сумму товаров в резерве.
@@ -234,7 +234,7 @@ func (customerOrder CustomerOrder) GetReservedSum() float64 {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (customerOrder CustomerOrder) GetSalesChannel() SalesChannel {
-	return customerOrder.SalesChannel.Get()
+	return customerOrder.SalesChannel.GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -259,12 +259,12 @@ func (customerOrder CustomerOrder) GetShippedSum() float64 {
 
 // GetState возвращает Метаданные статуса Заказа покупателя.
 func (customerOrder CustomerOrder) GetState() State {
-	return customerOrder.State.Get()
+	return customerOrder.State.GetValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (customerOrder CustomerOrder) GetStore() Store {
-	return customerOrder.Store.Get()
+	return customerOrder.Store.GetValue()
 }
 
 // GetSum возвращает Сумму Заказа в установленной валюте.
@@ -456,7 +456,7 @@ func (customerOrder *CustomerOrder) SetOwner(owner *Employee) *CustomerOrder {
 //
 // Принимает множество объектов [CustomerOrderPosition].
 func (customerOrder *CustomerOrder) SetPositions(positions ...*CustomerOrderPosition) *CustomerOrder {
-	customerOrder.Positions = NewPositionsFrom(positions)
+	customerOrder.Positions = NewMetaArrayFrom(positions)
 	return customerOrder
 }
 

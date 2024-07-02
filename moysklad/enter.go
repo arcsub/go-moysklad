@@ -31,7 +31,7 @@ type Enter struct {
 	Printed      *bool                     `json:"printed,omitempty"`      // Напечатан ли документ
 	Overhead     *Overhead                 `json:"overhead,omitempty"`     // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
 	Owner        *Employee                 `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
-	Positions    *Positions[EnterPosition] `json:"positions,omitempty"`    // Метаданные позиций Оприходования
+	Positions    *MetaArray[EnterPosition] `json:"positions,omitempty"`    // Метаданные позиций Оприходования
 	AccountID    *uuid.UUID                `json:"accountId,omitempty"`    // ID учётной записи
 	Project      *NullValue[Project]       `json:"project,omitempty"`      // Метаданные проекта
 	Published    *bool                     `json:"published,omitempty"`    // Опубликован ли документ
@@ -145,7 +145,7 @@ func (enter Enter) GetOwner() Employee {
 }
 
 // GetPositions возвращает Метаданные позиций Оприходования.
-func (enter Enter) GetPositions() Positions[EnterPosition] {
+func (enter Enter) GetPositions() MetaArray[EnterPosition] {
 	return Deref(enter.Positions)
 }
 
@@ -156,7 +156,7 @@ func (enter Enter) GetAccountID() uuid.UUID {
 
 // GetProject возвращает Метаданные проекта.
 func (enter Enter) GetProject() Project {
-	return enter.Project.Get()
+	return enter.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -166,7 +166,7 @@ func (enter Enter) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (enter Enter) GetRate() Rate {
-	return enter.Rate.Get()
+	return enter.Rate.GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -176,7 +176,7 @@ func (enter Enter) GetShared() bool {
 
 // GetState возвращает Метаданные статуса оприходования.
 func (enter Enter) GetState() State {
-	return enter.State.Get()
+	return enter.State.GetValue()
 }
 
 // GetStore возвращает Метаданные склада.
@@ -281,7 +281,7 @@ func (enter *Enter) SetOwner(owner *Employee) *Enter {
 //
 // Принимает множество объектов [EnterPosition].
 func (enter *Enter) SetPositions(positions ...*EnterPosition) *Enter {
-	enter.Positions = NewPositionsFrom(positions)
+	enter.Positions = NewMetaArrayFrom(positions)
 	return enter
 }
 

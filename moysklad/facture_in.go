@@ -94,7 +94,7 @@ func (factureIn FactureIn) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (factureIn FactureIn) GetContract() Contract {
-	return factureIn.Contract.Get()
+	return factureIn.Contract.GetValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -169,7 +169,7 @@ func (factureIn FactureIn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (factureIn FactureIn) GetRate() Rate {
-	return factureIn.Rate.Get()
+	return factureIn.Rate.GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -179,7 +179,7 @@ func (factureIn FactureIn) GetShared() bool {
 
 // GetState возвращает Метаданные статуса полученного счета-фактуры.
 func (factureIn FactureIn) GetState() State {
-	return factureIn.State.Get()
+	return factureIn.State.GetValue()
 }
 
 // GetSum возвращает Сумму полученного счета-фактуры в установленной валюте.

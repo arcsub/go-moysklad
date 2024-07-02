@@ -229,7 +229,7 @@ func IsMetaEqual[T MetaOwner](l *T, r *T) bool {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-podderzhka-null
 type NullValue[T any] struct {
-	value T    // значение поля
+	value *T   // значение поля
 	null  bool // признак null
 }
 
@@ -244,39 +244,37 @@ func NewNullValue[T any](value *T) *NullValue[T] {
 	// Проверяем, есть ли у объекта метод .Clean(), и вызываем его
 	if method := reflect.ValueOf(value).MethodByName("Clean"); method.IsValid() {
 		if cleanFn, ok := method.Interface().(func() *T); ok {
-			return &NullValue[T]{value: Deref(cleanFn())}
+			return &NullValue[T]{value: cleanFn()}
 		}
 	}
 
-	return &NullValue[T]{value: Deref(value)}
+	return &NullValue[T]{value: value}
 }
 
 // IsNull возвращает true, если поле null.
 func (nullValue NullValue[T]) IsNull() bool {
-	return nullValue.null
+	return nullValue.null || nullValue.value == nil
 }
 
-// Get возвращает значение поля.
-func (nullValue NullValue[T]) Get() T {
-	return nullValue.value
+// GetValue возвращает значение поля.
+func (nullValue NullValue[T]) GetValue() T {
+	return Deref(nullValue.value)
 }
 
-// Set устанавливает значение поля.
-func (nullValue *NullValue[T]) Set(value T) *NullValue[T] {
-	nullValue.value = value
-	nullValue.null = false
-	return nullValue
-}
-
-// SetPtr устанавливает значение поля по указателю.
-func (nullValue *NullValue[T]) SetPtr(value *T) *NullValue[T] {
-	nullValue.value = Deref(value)
-	nullValue.null = false
+// SetValue устанавливает значение поля.
+func (nullValue *NullValue[T]) SetValue(value *T) *NullValue[T] {
+	if value == nil {
+		nullValue.SetNull()
+	} else {
+		nullValue.value = value
+		nullValue.null = false
+	}
 	return nullValue
 }
 
 // SetNull устанавливает значение поля null.
 func (nullValue *NullValue[T]) SetNull() *NullValue[T] {
+	nullValue.value = nil
 	nullValue.null = true
 	return nullValue
 }
@@ -286,15 +284,15 @@ func (nullValue NullValue[T]) String() string {
 	return fmt.Sprintf("%v", nullValue.value)
 }
 
-// MarshalJSON реализует интерфейс [json.Marshaler]
+// MarshalJSON реализует интерфейс [json.Marshaler].
 func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
 	if nullValue.IsNull() {
 		return json.Marshal(nil)
 	}
-	return json.Marshal(nullValue.Get())
+	return json.Marshal(nullValue.GetValue())
 }
 
-// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler].
 func (nullValue *NullValue[T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValue.value)
 }
@@ -342,7 +340,7 @@ func (nullValueAny NullValueAny) String() string {
 	return fmt.Sprintf("%v", nullValueAny.value)
 }
 
-// MarshalJSON реализует интерфейс [json.Marshaler]
+// MarshalJSON реализует интерфейс [json.Marshaler].
 func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 	if nullValueAny.IsNull() {
 		return json.Marshal(nil)
@@ -350,7 +348,7 @@ func (nullValueAny NullValueAny) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nullValueAny.Get())
 }
 
-// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler].
 func (nullValueAny *NullValueAny) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &nullValueAny.value)
 }

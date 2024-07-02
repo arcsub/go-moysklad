@@ -38,7 +38,7 @@ type CommissionReportOut struct {
 	CommissionPeriodStart *Timestamp                              `json:"commissionPeriodStart,omitempty"` // Начало периода
 	Owner                 *Employee                               `json:"owner,omitempty"`                 // Метаданные владельца (Сотрудника)
 	PayedSum              *float64                                `json:"payedSum,omitempty"`              // Оплаченная сумма
-	Positions             *Positions[CommissionReportOutPosition] `json:"positions,omitempty"`             // Метаданные позиций Выданного отчета
+	Positions             *MetaArray[CommissionReportOutPosition] `json:"positions,omitempty"`             // Метаданные позиций Выданного отчета
 	Printed               *bool                                   `json:"printed,omitempty"`               // Напечатан ли документ
 	Project               *NullValue[Project]                     `json:"project,omitempty"`               // Метаданные проекта
 	Published             *bool                                   `json:"published,omitempty"`             // Опубликован ли документ
@@ -199,7 +199,7 @@ func (commissionReportOut CommissionReportOut) GetPayedSum() float64 {
 }
 
 // GetPositions возвращает Метаданные позиций Выданного отчёта.
-func (commissionReportOut CommissionReportOut) GetPositions() Positions[CommissionReportOutPosition] {
+func (commissionReportOut CommissionReportOut) GetPositions() MetaArray[CommissionReportOutPosition] {
 	return Deref(commissionReportOut.Positions)
 }
 
@@ -210,7 +210,7 @@ func (commissionReportOut CommissionReportOut) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (commissionReportOut CommissionReportOut) GetProject() Project {
-	return commissionReportOut.Project.Get()
+	return commissionReportOut.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -220,7 +220,7 @@ func (commissionReportOut CommissionReportOut) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (commissionReportOut CommissionReportOut) GetRate() Rate {
-	return commissionReportOut.Rate.Get()
+	return commissionReportOut.Rate.GetValue()
 }
 
 // GetRewardPercent возвращает Процент вознаграждения (всегда 0 если вознаграждение не рассчитывается).
@@ -235,7 +235,7 @@ func (commissionReportOut CommissionReportOut) GetPayments() Slice[Payment] {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (commissionReportOut CommissionReportOut) GetSalesChannel() SalesChannel {
-	return commissionReportOut.SalesChannel.Get()
+	return commissionReportOut.SalesChannel.GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -245,7 +245,7 @@ func (commissionReportOut CommissionReportOut) GetShared() bool {
 
 // GetState возвращает Метаданные статуса.
 func (commissionReportOut CommissionReportOut) GetState() State {
-	return commissionReportOut.State.Get()
+	return commissionReportOut.State.GetValue()
 }
 
 // GetSum возвращает Сумму Выданного отчёта комиссионера в копейках.
@@ -405,7 +405,7 @@ func (commissionReportOut *CommissionReportOut) SetOwner(owner *Employee) *Commi
 //
 // Принимает множество объектов [CommissionReportInPosition].
 func (commissionReportOut *CommissionReportOut) SetPositions(positions ...*CommissionReportOutPosition) *CommissionReportOut {
-	commissionReportOut.Positions = NewPositionsFrom(positions)
+	commissionReportOut.Positions = NewMetaArrayFrom(positions)
 	return commissionReportOut
 }
 

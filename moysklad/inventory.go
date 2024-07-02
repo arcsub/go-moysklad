@@ -31,7 +31,7 @@ type Inventory struct {
 	Owner        *Employee                     `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Organization *Organization                 `json:"organization,omitempty"` // Метаданные юрлица
 	AccountID    *uuid.UUID                    `json:"accountId,omitempty"`    // ID учётной записи
-	Positions    *Positions[InventoryPosition] `json:"positions,omitempty"`    // Метаданные позиций Инвентаризации
+	Positions    *MetaArray[InventoryPosition] `json:"positions,omitempty"`    // Метаданные позиций Инвентаризации
 	Printed      *bool                         `json:"printed,omitempty"`      // Напечатан ли документ
 	Published    *bool                         `json:"published,omitempty"`    // Опубликован ли документ
 	Shared       *bool                         `json:"shared,omitempty"`       // Общий доступ
@@ -135,7 +135,7 @@ func (inventory Inventory) GetAccountID() uuid.UUID {
 }
 
 // GetPositions возвращает Метаданные позиций Инвентаризации.
-func (inventory Inventory) GetPositions() Positions[InventoryPosition] {
+func (inventory Inventory) GetPositions() MetaArray[InventoryPosition] {
 	return Deref(inventory.Positions)
 }
 
@@ -156,7 +156,7 @@ func (inventory Inventory) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Инвентаризации.
 func (inventory Inventory) GetState() State {
-	return inventory.State.Get()
+	return inventory.State.GetValue()
 }
 
 // GetStore возвращает Метаданные склада.
@@ -255,7 +255,7 @@ func (inventory *Inventory) SetOrganization(organization *Organization) *Invento
 //
 // Принимает множество объектов [InventoryPosition].
 func (inventory *Inventory) SetPositions(positions ...*InventoryPosition) *Inventory {
-	inventory.Positions = NewPositionsFrom(positions)
+	inventory.Positions = NewMetaArrayFrom(positions)
 	return inventory
 }
 

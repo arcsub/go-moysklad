@@ -84,7 +84,7 @@ func (assortmentPosition AssortmentPosition) Raw() []byte {
 	return assortmentPosition.raw
 }
 
-// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler].
 func (assortmentPosition *AssortmentPosition) UnmarshalJSON(data []byte) error {
 	type alias AssortmentPosition
 	var t alias
@@ -334,6 +334,63 @@ func (buyPrice *BuyPrice) SetCurrency(currency *Currency) *BuyPrice {
 // String реализует интерфейс [fmt.Stringer].
 func (buyPrice BuyPrice) String() string {
 	return Stringify(buyPrice)
+}
+
+// MinPrice Минимальная цена.
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-minimal-naq-cena
+type MinPrice struct {
+	Value    *float64  `json:"value,omitempty"`    // Значение цены
+	Currency *Currency `json:"currency,omitempty"` // Ссылка на валюту в формате Метаданных
+}
+
+// GetValue возвращает Значение цены.
+func (minPrice MinPrice) GetValue() float64 {
+	return Deref(minPrice.Value)
+}
+
+// GetCurrency возвращает Ссылку на валюту в формате Метаданных.
+func (minPrice MinPrice) GetCurrency() Currency {
+	return Deref(minPrice.Currency)
+}
+
+// SetValue устанавливает Значение цены.
+func (minPrice *MinPrice) SetValue(value float64) *MinPrice {
+	minPrice.Value = &value
+	return minPrice
+}
+
+// SetCurrency устанавливает Ссылку на валюту в формате Метаданных.
+func (minPrice *MinPrice) SetCurrency(currency *Currency) *MinPrice {
+	if currency != nil {
+		minPrice.Currency = currency.Clean()
+	}
+	return minPrice
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (minPrice MinPrice) String() string {
+	return Stringify(minPrice)
+}
+
+// Stock Остатки и себестоимость в позициях документов.
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ostatki-i-sebestoimost-w-poziciqh-dokumentow
+type Stock struct {
+	Cost      float64 `json:"cost"`
+	Quantity  float64 `json:"quantity"`
+	Reserve   float64 `json:"reserve"`
+	InTransit float64 `json:"intransit"`
+	Available float64 `json:"available"`
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (stock Stock) String() string {
+	return Stringify(stock)
 }
 
 // PaymentItem Признак предмета расчета.

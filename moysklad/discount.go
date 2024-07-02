@@ -108,7 +108,7 @@ func (discount *Discount) Raw() []byte {
 	return discount.data
 }
 
-// UnmarshalJSON реализует интерфейс [json.Unmarshaler]
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler].
 func (discount *Discount) UnmarshalJSON(data []byte) error {
 	type alias Discount
 	var t alias

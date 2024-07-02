@@ -27,7 +27,7 @@ type InternalOrder struct {
 	Group                 *Group                            `json:"group,omitempty"`                 // Отдел сотрудника
 	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID Внутреннего заказа
 	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные Внутреннего заказа
-	Positions             *Positions[InternalOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Внутреннего заказа
+	Positions             *MetaArray[InternalOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Внутреннего заказа
 	Moves                 Slice[Move]                       `json:"moves,omitempty"`                 // Коллекция метаданных на связанные заказы перемещения
 	Name                  *string                           `json:"name,omitempty"`                  // Наименование Внутреннего заказа
 	Code                  *string                           `json:"code,omitempty"`                  // Код Внутреннего заказа
@@ -130,7 +130,7 @@ func (internalOrder InternalOrder) GetMeta() Meta {
 }
 
 // GetPositions возвращает Метаданные позиций  Внутреннего заказа.
-func (internalOrder InternalOrder) GetPositions() Positions[InternalOrderPosition] {
+func (internalOrder InternalOrder) GetPositions() MetaArray[InternalOrderPosition] {
 	return Deref(internalOrder.Positions)
 }
 
@@ -166,7 +166,7 @@ func (internalOrder InternalOrder) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (internalOrder InternalOrder) GetProject() Project {
-	return internalOrder.Project.Get()
+	return internalOrder.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -181,7 +181,7 @@ func (internalOrder InternalOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 
 // GetRate возвращает Валюту.
 func (internalOrder InternalOrder) GetRate() Rate {
-	return internalOrder.Rate.Get()
+	return internalOrder.Rate.GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -191,12 +191,12 @@ func (internalOrder InternalOrder) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Внутреннего заказа.
 func (internalOrder InternalOrder) GetState() State {
-	return internalOrder.State.Get()
+	return internalOrder.State.GetValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (internalOrder InternalOrder) GetStore() Store {
-	return internalOrder.Store.Get()
+	return internalOrder.Store.GetValue()
 }
 
 // GetSum возвращает Сумму Внутреннего заказа в копейках.
@@ -289,7 +289,7 @@ func (internalOrder *InternalOrder) SetMeta(meta *Meta) *InternalOrder {
 //
 // Принимает множество объектов [InternalOrderPosition].
 func (internalOrder *InternalOrder) SetPositions(positions ...*InternalOrderPosition) *InternalOrder {
-	internalOrder.Positions = NewPositionsFrom(positions)
+	internalOrder.Positions = NewMetaArrayFrom(positions)
 	return internalOrder
 }
 

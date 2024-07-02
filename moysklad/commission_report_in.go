@@ -40,12 +40,12 @@ type CommissionReportIn struct {
 	OrganizationAccount           *AgentAccount                                `json:"organizationAccount,omitempty"`           // Метаданные счета юрлица
 	Owner                         *Employee                                    `json:"owner,omitempty"`                         // Метаданные владельца (Сотрудника)
 	PayedSum                      *float64                                     `json:"payedSum,omitempty"`                      // Оплаченная сумма
-	Positions                     *Positions[CommissionReportInPosition]       `json:"positions,omitempty"`                     // Метаданные позиций реализовано комиссионером Полученного отчёта комиссионера
+	Positions                     *MetaArray[CommissionReportInPosition]       `json:"positions,omitempty"`                     // Метаданные позиций реализовано комиссионером Полученного отчёта комиссионера
 	Printed                       *bool                                        `json:"printed,omitempty"`                       // Напечатан ли документ
 	Project                       *NullValue[Project]                          `json:"project,omitempty"`                       // Метаданные проекта
 	Published                     *bool                                        `json:"published,omitempty"`                     // Опубликован ли документ
 	Rate                          *NullValue[Rate]                             `json:"rate,omitempty"`                          // Валюта
-	ReturnToCommissionerPositions *Positions[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"` // Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера
+	ReturnToCommissionerPositions *MetaArray[CommissionReportInReturnPosition] `json:"returnToCommissionerPositions,omitempty"` // Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера
 	RewardPercent                 *float64                                     `json:"rewardPercent,omitempty"`                 // Процент вознаграждения (всегда 0 если вознаграждение не рассчитывается)
 	Payments                      Slice[Payment]                               `json:"payments,omitempty"`                      // Массив ссылок на связанные платежи
 	SalesChannel                  *NullValue[SalesChannel]                     `json:"salesChannel,omitempty"`                  // Метаданные канала продаж
@@ -212,7 +212,7 @@ func (commissionReportIn CommissionReportIn) GetPayedSum() float64 {
 }
 
 // GetPositions возвращает Метаданные позиций реализовано комиссионером Полученного отчёта комиссионера.
-func (commissionReportIn CommissionReportIn) GetPositions() Positions[CommissionReportInPosition] {
+func (commissionReportIn CommissionReportIn) GetPositions() MetaArray[CommissionReportInPosition] {
 	return Deref(commissionReportIn.Positions)
 }
 
@@ -223,7 +223,7 @@ func (commissionReportIn CommissionReportIn) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (commissionReportIn CommissionReportIn) GetProject() Project {
-	return commissionReportIn.Project.Get()
+	return commissionReportIn.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -233,11 +233,11 @@ func (commissionReportIn CommissionReportIn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (commissionReportIn CommissionReportIn) GetRate() Rate {
-	return commissionReportIn.Rate.Get()
+	return commissionReportIn.Rate.GetValue()
 }
 
 // GetReturnToCommissionerPositions возвращает Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера.
-func (commissionReportIn CommissionReportIn) GetReturnToCommissionerPositions() Positions[CommissionReportInReturnPosition] {
+func (commissionReportIn CommissionReportIn) GetReturnToCommissionerPositions() MetaArray[CommissionReportInReturnPosition] {
 	return Deref(commissionReportIn.ReturnToCommissionerPositions)
 }
 
@@ -253,7 +253,7 @@ func (commissionReportIn CommissionReportIn) GetPayments() Slice[Payment] {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (commissionReportIn CommissionReportIn) GetSalesChannel() SalesChannel {
-	return commissionReportIn.SalesChannel.Get()
+	return commissionReportIn.SalesChannel.GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -263,7 +263,7 @@ func (commissionReportIn CommissionReportIn) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetState() State {
-	return commissionReportIn.State.Get()
+	return commissionReportIn.State.GetValue()
 }
 
 // GetSum возвращает Сумму Полученного отчёта комиссионера в копейках.
@@ -441,7 +441,7 @@ func (commissionReportIn *CommissionReportIn) SetOwner(owner *Employee) *Commiss
 //
 // Принимает множество объектов [CommissionReportInPosition].
 func (commissionReportIn *CommissionReportIn) SetPositions(positions ...*CommissionReportInPosition) *CommissionReportIn {
-	commissionReportIn.Positions = NewPositionsFrom(positions)
+	commissionReportIn.Positions = NewMetaArrayFrom(positions)
 	return commissionReportIn
 }
 
@@ -465,7 +465,7 @@ func (commissionReportIn *CommissionReportIn) SetRate(rate *Rate) *CommissionRep
 //
 // Принимает множество объектов [CommissionReportInReturnPosition].
 func (commissionReportIn *CommissionReportIn) SetReturnToCommissionerPositions(returnToCommissionerPositions ...*CommissionReportInReturnPosition) *CommissionReportIn {
-	commissionReportIn.ReturnToCommissionerPositions = NewPositionsFrom(returnToCommissionerPositions)
+	commissionReportIn.ReturnToCommissionerPositions = NewMetaArrayFrom(returnToCommissionerPositions)
 	return commissionReportIn
 }
 

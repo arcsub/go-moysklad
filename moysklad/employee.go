@@ -80,7 +80,7 @@ func (employee Employee) GetOwner() Employee {
 
 // GetImage возвращает Фотографию сотрудника.
 func (employee Employee) GetImage() Image {
-	return employee.Image.Get()
+	return employee.Image.GetValue()
 }
 
 // GetINN возвращает ИНН.

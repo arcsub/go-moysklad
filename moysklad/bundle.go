@@ -26,7 +26,7 @@ type Bundle struct {
 	Archived            *bool                       `json:"archived,omitempty"`            // Добавлен ли Комплект в архив
 	Article             *string                     `json:"article,omitempty"`             // Артикул
 	Images              *MetaArray[Image]           `json:"images,omitempty"`              // Массив метаданных Изображений (Максимальное количество изображений - 10)
-	Components          *Positions[BundleComponent] `json:"components,omitempty"`          // Массив компонентов Комплекта
+	Components          *MetaArray[BundleComponent] `json:"components,omitempty"`          // Массив компонентов Комплекта
 	Country             *NullValue[Country]         `json:"country,omitempty"`             // Метаданные Страны
 	DiscountProhibited  *bool                       `json:"discountProhibited"`            // Признак запрета скидок
 	EffectiveVat        *int                        `json:"effectiveVat,omitempty"`        // Реальный НДС %
@@ -139,13 +139,13 @@ func (bundle Bundle) GetImages() MetaArray[Image] {
 }
 
 // GetComponents возвращает Массив компонентов Комплекта.
-func (bundle Bundle) GetComponents() Positions[BundleComponent] {
+func (bundle Bundle) GetComponents() MetaArray[BundleComponent] {
 	return Deref(bundle.Components)
 }
 
 // GetCountry возвращает Метаданные Страны.
 func (bundle Bundle) GetCountry() Country {
-	return bundle.Country.Get()
+	return bundle.Country.GetValue()
 }
 
 // GetDiscountProhibited возвращает Признак запрета скидок.
@@ -180,12 +180,12 @@ func (bundle Bundle) GetVat() int {
 
 // GetMinPrice возвращает Минимальную цену.
 func (bundle Bundle) GetMinPrice() MinPrice {
-	return bundle.MinPrice.Get()
+	return bundle.MinPrice.GetValue()
 }
 
 // GetOverhead возвращает Дополнительные расходы.
 func (bundle Bundle) GetOverhead() BundleOverhead {
-	return bundle.Overhead.Get()
+	return bundle.Overhead.GetValue()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -215,7 +215,7 @@ func (bundle Bundle) GetSalePrices() Slice[SalePrice] {
 
 // GetProductFolder возвращает Метаданные группы Комплекта.
 func (bundle Bundle) GetProductFolder() ProductFolder {
-	return bundle.ProductFolder.Get()
+	return bundle.ProductFolder.GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -245,7 +245,7 @@ func (bundle Bundle) GetVatEnabled() bool {
 
 // GetUom возвращает Единицу измерения.
 func (bundle Bundle) GetUom() Uom {
-	return bundle.Uom.Get()
+	return bundle.Uom.GetValue()
 }
 
 // GetBarcodes возвращает Штрихкоды.
@@ -344,7 +344,7 @@ func (bundle *Bundle) SetImages(images ...*Image) *Bundle {
 //
 // Принимает множество объектов [BundleComponent].
 func (bundle *Bundle) SetComponents(components ...*BundleComponent) *Bundle {
-	bundle.Components = NewPositionsFrom(components)
+	bundle.Components = NewMetaArrayFrom(components)
 	return bundle
 }
 

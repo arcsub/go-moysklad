@@ -95,7 +95,7 @@ func (cashIn CashIn) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (cashIn CashIn) GetContract() Contract {
-	return cashIn.Contract.Get()
+	return cashIn.Contract.GetValue()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -170,7 +170,7 @@ func (cashIn CashIn) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (cashIn CashIn) GetProject() Project {
-	return cashIn.Project.Get()
+	return cashIn.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -180,12 +180,12 @@ func (cashIn CashIn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (cashIn CashIn) GetRate() Rate {
-	return cashIn.Rate.Get()
+	return cashIn.Rate.GetValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (cashIn CashIn) GetSalesChannel() SalesChannel {
-	return cashIn.SalesChannel.Get()
+	return cashIn.SalesChannel.GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -195,7 +195,7 @@ func (cashIn CashIn) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Приходного ордера.
 func (cashIn CashIn) GetState() State {
-	return cashIn.State.Get()
+	return cashIn.State.GetValue()
 }
 
 // GetSum возвращает Сумму Приходного ордера в установленной валюте.

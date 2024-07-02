@@ -19,7 +19,8 @@ func main() {
 
 	fmt.Println(demand.Contract) // ptr
 
-	demand.SetContract(nil) // Передаём nil в качестве договора
+	// Чтобы удалить договор документа передаём nil в качестве аргумента
+	demand.SetContract(nil)
 
 	// Обновляем документ
 	// { "contract": null }

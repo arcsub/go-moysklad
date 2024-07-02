@@ -130,7 +130,7 @@ func (counterparty Counterparty) GetBonusPoints() int {
 
 // GetBonusProgram возвращает Метаданные активной бонусной программы.
 func (counterparty Counterparty) GetBonusProgram() BonusProgram {
-	return counterparty.BonusProgram.Get()
+	return counterparty.BonusProgram.GetValue()
 }
 
 // GetCode возвращает Код Контрагента.
@@ -244,7 +244,7 @@ func (counterparty Counterparty) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Контрагента.
 func (counterparty Counterparty) GetState() State {
-	return counterparty.State.Get()
+	return counterparty.State.GetValue()
 }
 
 // GetSyncID возвращает ID синхронизации.

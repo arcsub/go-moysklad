@@ -77,7 +77,7 @@ func (attribute Attribute) GetDownload() Meta {
 
 // GetFile возвращает Описание файла и контент.
 func (attribute Attribute) GetFile() AttributeFile {
-	return attribute.File.Get()
+	return attribute.File.GetValue()
 }
 
 // SetMeta устанавливает Метаданные доп. поля.
@@ -163,7 +163,7 @@ func NewAttributeFromFile(filePath string) (*Attribute, error) {
 		return nil, err
 	}
 	file := AttributeFile{fileName, content}
-	attribute := &Attribute{File: &NullValue[AttributeFile]{value: file}, Type: AttributeTypeFile}
+	attribute := &Attribute{File: &NullValue[AttributeFile]{value: &file}, Type: AttributeTypeFile}
 	return attribute, nil
 
 }

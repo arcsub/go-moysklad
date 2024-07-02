@@ -35,7 +35,7 @@ type Demand struct {
 	Overhead                *Overhead                  `json:"overhead,omitempty"`                // Накладные расходы. Если Позиции Отгрузки не заданы, то накладные расходы нельзя задать
 	Owner                   *Employee                  `json:"owner,omitempty"`                   // Метаданные владельца (Сотрудника)
 	PayedSum                *float64                   `json:"payedSum,omitempty"`                // Сумма входящих платежей по Отгрузке
-	Positions               *Positions[DemandPosition] `json:"positions,omitempty"`               // Метаданные позиций Отгрузки
+	Positions               *MetaArray[DemandPosition] `json:"positions,omitempty"`               // Метаданные позиций Отгрузки
 	Printed                 *bool                      `json:"printed,omitempty"`                 // Напечатан ли документ
 	Project                 *NullValue[Project]        `json:"project,omitempty"`                 // Метаданные проекта
 	Published               *bool                      `json:"published,omitempty"`               // Опубликован ли документ
@@ -116,7 +116,7 @@ func (demand Demand) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (demand Demand) GetContract() Contract {
-	return demand.Contract.Get()
+	return demand.Contract.GetValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -195,7 +195,7 @@ func (demand Demand) GetPayedSum() float64 {
 }
 
 // GetPositions возвращает Метаданные позиций Отгрузки.
-func (demand Demand) GetPositions() Positions[DemandPosition] {
+func (demand Demand) GetPositions() MetaArray[DemandPosition] {
 	return Deref(demand.Positions)
 }
 
@@ -206,7 +206,7 @@ func (demand Demand) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (demand Demand) GetProject() Project {
-	return demand.Project.Get()
+	return demand.Project.GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -216,12 +216,12 @@ func (demand Demand) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (demand Demand) GetRate() Rate {
-	return demand.Rate.Get()
+	return demand.Rate.GetValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (demand Demand) GetSalesChannel() SalesChannel {
-	return demand.SalesChannel.Get()
+	return demand.SalesChannel.GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -241,7 +241,7 @@ func (demand Demand) GetShipmentAddressFull() Address {
 
 // GetState возвращает Метаданные статуса Отгрузки.
 func (demand Demand) GetState() State {
-	return demand.State.Get()
+	return demand.State.GetValue()
 }
 
 // GetStore возвращает Метаданные склада.
@@ -469,7 +469,7 @@ func (demand *Demand) SetOwner(owner *Employee) *Demand {
 //
 // Принимает множество объектов [DemandPosition].
 func (demand *Demand) SetPositions(positions ...*DemandPosition) *Demand {
-	demand.Positions = NewPositionsFrom(positions)
+	demand.Positions = NewMetaArrayFrom(positions)
 	return demand
 }
 
