@@ -79,6 +79,7 @@ func (demand Demand) Clean() *Demand {
 }
 
 // AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+//
 // Значение поля linkedSum заполняется из поля sum.
 func (demand Demand) AsOperation() *Operation {
 	return &Operation{Meta: demand.GetMeta(), LinkedSum: demand.GetSum()}

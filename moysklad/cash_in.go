@@ -58,6 +58,13 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+//
+// Значение поля linkedSum заполняется из поля sum.
+func (cashIn CashIn) AsOperation() *Operation {
+	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
+}
+
 // asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (cashIn CashIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
@@ -412,12 +419,6 @@ func (cashIn CashIn) String() string {
 // MetaType возвращает код сущности.
 func (CashIn) MetaType() MetaType {
 	return MetaTypeCashIn
-}
-
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
-// Значение поля linkedSum заполняется из поля sum.
-func (cashIn CashIn) AsOperation() *Operation {
-	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
 }
 
 // Update shortcut

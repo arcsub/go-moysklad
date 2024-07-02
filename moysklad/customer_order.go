@@ -77,6 +77,7 @@ func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 }
 
 // AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+//
 // Значение поля linkedSum заполняется из поля sum.
 func (customerOrder CustomerOrder) AsOperation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}

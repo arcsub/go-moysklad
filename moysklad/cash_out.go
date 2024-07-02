@@ -59,6 +59,13 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+//
+// Значение поля linkedSum заполняется из поля sum.
+func (cashOut CashOut) AsOperation() *Operation {
+	return &Operation{Meta: cashOut.GetMeta(), LinkedSum: cashOut.GetSum()}
+}
+
 // asTaskOperation реализует интерфейс [TaskOperationInterface].
 func (cashOut CashOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
@@ -424,12 +431,6 @@ func (cashOut CashOut) String() string {
 // MetaType возвращает код сущности.
 func (CashOut) MetaType() MetaType {
 	return MetaTypeCashOut
-}
-
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
-// Значение поля linkedSum заполняется из поля sum.
-func (cashOut CashOut) AsOperation() *Operation {
-	return &Operation{Meta: cashOut.GetMeta(), LinkedSum: cashOut.GetSum()}
 }
 
 // Update shortcut

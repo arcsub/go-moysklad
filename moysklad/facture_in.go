@@ -57,9 +57,10 @@ func (factureIn FactureIn) Clean() *FactureIn {
 }
 
 // AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+//
 // Значение поля linkedSum заполняется из поля sum.
 func (factureIn FactureIn) AsOperation() *Operation {
-	return &Operation{Meta: factureIn.GetMeta()}
+	return &Operation{Meta: factureIn.GetMeta(), LinkedSum: factureIn.GetSum()}
 }
 
 // asTaskOperation реализует интерфейс [TaskOperationInterface].
