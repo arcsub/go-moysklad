@@ -484,8 +484,8 @@ type FactureOutService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных выданных счетов-фактур.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -625,5 +625,5 @@ type FactureOutService interface {
 
 // NewFactureOutService принимает [Client] и возвращает сервис для работы со счетами-фактурами выданными.
 func NewFactureOutService(client *Client) FactureOutService {
-	return newMainService[FactureOut, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/factureout"))
+	return newMainService[FactureOut, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/factureout"))
 }

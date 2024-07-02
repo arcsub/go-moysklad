@@ -506,8 +506,8 @@ type InventoryService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных инвентаризаций.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -662,7 +662,7 @@ type inventoryService struct {
 	endpointGetByID[Inventory]
 	endpointUpdate[Inventory]
 	endpointTemplate[Inventory]
-	endpointMetadata[MetaAttributesSharedStatesWrapper]
+	endpointMetadata[MetaAttributesStatesSharedWrapper]
 	endpointPositions[InventoryPosition]
 	endpointAttributes
 	endpointSyncID[Inventory]
@@ -685,7 +685,7 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointGetByID:          endpointGetByID[Inventory]{e},
 		endpointUpdate:           endpointUpdate[Inventory]{e},
 		endpointTemplate:         endpointTemplate[Inventory]{e},
-		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesStatesSharedWrapper]{e},
 		endpointPositions:        endpointPositions[InventoryPosition]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[Inventory]{e},

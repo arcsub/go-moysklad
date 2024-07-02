@@ -482,8 +482,8 @@ type CashOutService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных расходных ордеров.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -635,5 +635,5 @@ type CashOutService interface {
 
 // NewCashOutService принимает [Client] и возвращает сервис для работы с расходными ордерами.
 func NewCashOutService(client *Client) CashOutService {
-	return newMainService[CashOut, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/cashout"))
+	return newMainService[CashOut, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/cashout"))
 }

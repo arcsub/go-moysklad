@@ -1,86 +1,96 @@
 package moysklad
 
 import (
-	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"reflect"
 	"strings"
 )
 
-type HasMeta interface {
-	MetaTyper
-	MetaOwner
-}
-
+// MetaTyper описывает метод, возвращающий код сущности.
 type MetaTyper interface {
 	MetaType() MetaType
 }
 
+// MetaOwner описывает метод, возвращающий [Meta].
 type MetaOwner interface {
 	GetMeta() Meta
 }
 
 // Meta Метаданные объекта.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-ob-ekta
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-ob-ekta
 type Meta struct {
-	Href         *string   `json:"href,omitempty"`
-	MetadataHref *string   `json:"metadataHref,omitempty"`
-	MediaType    *string   `json:"mediaType,omitempty"`
-	UUIDHref     *string   `json:"uuidHref,omitempty"`
-	DownloadHref *string   `json:"downloadHref,omitempty"`
-	Type         *MetaType `json:"type,omitempty"`
+	Href         *string   `json:"href,omitempty"`         // ссылка на объект
+	MetadataHref *string   `json:"metadataHref,omitempty"` // ссылка на метаданные сущности
+	MediaType    *string   `json:"mediaType,omitempty"`    // тип данных, который приходят в ответ от сервиса, либо отправляется в теле запроса
+	UUIDHref     *string   `json:"uuidHref,omitempty"`     // ссылка на объект в веб-версии МоегоСклада. Присутствует не во всех сущностях
+	DownloadHref *string   `json:"downloadHref,omitempty"` // ссылка на скачивание
+	Type         *MetaType `json:"type,omitempty"`         // тип объекта (код сущности)
 }
 
+// GetHref возвращает ссылку на объект.
 func (meta Meta) GetHref() string {
 	return Deref(meta.Href)
 }
 
+// GetMetadataHref возвращает ссылку на метаданные сущности.
 func (meta Meta) GetMetadataHref() string {
 	return Deref(meta.MetadataHref)
 }
 
+// GetMediaType возвращает тип данных, который приходят в ответ от сервиса, либо отправляется в теле запроса.
 func (meta Meta) GetMediaType() string {
 	return Deref(meta.MediaType)
 }
 
+// GetUUIDHref возвращает ссылка на объект в веб-версии МоегоСклада. Присутствует не во всех сущностях.
 func (meta Meta) GetUUIDHref() string {
 	return Deref(meta.UUIDHref)
 }
 
+// GetDownloadHref возвращает ссылку на скачивание.
 func (meta Meta) GetDownloadHref() string {
 	return Deref(meta.DownloadHref)
 }
 
+// GetType возвращает тип объекта (код сущности).
 func (meta Meta) GetType() MetaType {
 	return Deref(meta.Type)
 }
 
+// SetHref устанавливает ссылку на объект.
 func (meta *Meta) SetHref(href string) *Meta {
 	meta.Href = &href
 	return meta
 }
 
+// SetType устанавливает тип объекта (код сущности).
 func (meta *Meta) SetType(metaType MetaType) *Meta {
 	meta.Type = &metaType
 	return meta
 }
 
-// Wrap оборачивает текущий объект Meta в MetaWrapper
+// Wrap оборачивает текущий объект [Meta] в [MetaWrapper].
 func (meta Meta) Wrap() MetaWrapper {
 	return MetaWrapper{meta}
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (meta Meta) String() string {
 	return Stringify(meta)
 }
 
+// IsEqual сравнивает текущий объект [Meta], с объектом [Meta], переданным в качестве аргумента по полю Href.
 func (meta *Meta) IsEqual(other *Meta) bool {
 	return IsEqualPtr(meta.Href, other.Href)
 }
 
-// GetIDFromHref возвращает UUID из поля Href
-// Возвращает nil, если поле Href пусто или не содержит id
+// GetIDFromHref возвращает UUID из поля Href.
+//
+// Возвращает nil, если поле Href пусто или не содержит идентификатора.
 func (meta Meta) GetIDFromHref() *uuid.UUID {
 	href := Deref(meta.Href)
 	if href == "" {
@@ -98,58 +108,72 @@ func (meta Meta) GetIDFromHref() *uuid.UUID {
 	return nil
 }
 
-// MetaWrapper объект-обёртка для Meta
+// MetaWrapper объект-обёртка для [Meta]
 type MetaWrapper struct {
-	Meta Meta `json:"meta"`
+	Meta Meta `json:"meta"` // метаданные
 }
 
+// GetMeta возвращает метаданные.
+func (metaWrapper MetaWrapper) GetMeta() Meta {
+	return metaWrapper.Meta
+}
+
+// String реализует интерфейс [fmt.Stringer].
 func (metaWrapper MetaWrapper) String() string {
 	return Stringify(metaWrapper)
 }
 
-// MetaNameWrapper объект-обёртка для Meta и поля Name
+// MetaNameWrapper объект-обёртка для [Meta] и поля Name
 type MetaNameWrapper struct {
 	Meta Meta   `json:"meta"`
 	Name string `json:"name"`
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (metaNameWrapper MetaNameWrapper) String() string {
 	return Stringify(metaNameWrapper)
 }
 
 // MetaCollection Метаданные коллекции.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-kollekcii
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-kollekcii
 type MetaCollection struct {
-	Href         string `json:"href,omitempty"`
-	Type         string `json:"type,omitempty"`
-	MediaType    string `json:"mediaType,omitempty"`
-	NextHref     string `json:"nextHref,omitempty"`
-	PreviousHref string `json:"previousHref,omitempty"`
-	Size         int    `json:"size,omitempty"`
-	Limit        int    `json:"Limit,omitempty"`
-	Offset       int    `json:"Offset,omitempty"`
+	Href         string `json:"href,omitempty"`         // ссылка на объект
+	Type         string `json:"type,omitempty"`         // тип объекта (код сущности)
+	MediaType    string `json:"mediaType,omitempty"`    // тип данных, который приходят в ответ от сервиса, либо отправляется в теле запроса
+	NextHref     string `json:"nextHref,omitempty"`     // ссылка на следующую страницу коллекции
+	PreviousHref string `json:"previousHref,omitempty"` // ссылка на предыдущую страницу коллекции
+	Size         int    `json:"size,omitempty"`         // количество элементов в коллекции
+	Limit        int    `json:"limit,omitempty"`        // максимальное число элементов в коллекции, возвращаемых за один запрос
+	Offset       int    `json:"offset,omitempty"`       // смещение выборки коллекции от первого элемента
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (metaCollection MetaCollection) String() string {
 	return Stringify(metaCollection)
 }
 
-// MetaArray Объект с полями meta и rows, где rows - массив объектов
+// MetaArray объект с полями meta и rows, где rows - массив объектов T.
 type MetaArray[T any] struct {
 	Rows Slice[T]       `json:"rows,omitempty"`
 	Meta MetaCollection `json:"meta,omitempty"`
 }
 
-func NewMetaArrayFrom[T any](rows []*T) *MetaArray[T] {
-	return &MetaArray[T]{Rows: rows}
+// NewMetaArrayFrom принимает срез объектов T и возвращает [MetaArray] с переданными объектами в поле Rows.
+//
+// nil значения игнорируются.
+func NewMetaArrayFrom[T any](rows Slice[T]) *MetaArray[T] {
+	return &MetaArray[T]{Rows: rows.Filter(func(t *T) bool { return t != nil })}
 }
 
-// Len возвращает количество элементов Rows
+// Len возвращает количество элементов Rows.
 func (metaArray MetaArray[T]) Len() int {
 	return len(metaArray.Rows)
 }
 
-// Size возвращает размер выданного списка
+// Size возвращает размер выданного списка.
 func (metaArray MetaArray[T]) Size() int {
 	return metaArray.Meta.Size
 }
@@ -170,15 +194,17 @@ func (metaArray *MetaArray[T]) Push(elements ...*T) *MetaArray[T] {
 	return metaArray
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (metaArray MetaArray[T]) String() string {
 	return Stringify(metaArray)
 }
 
-// MarshalJSON реализует интерфейс json.Marshaler
+// MarshalJSON реализует интерфейс [json.Marshaler].
 func (metaArray MetaArray[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(metaArray.Rows)
 }
 
+// MetaType код сущности.
 type MetaType string
 
 func (metaType MetaType) String() string {
@@ -366,12 +392,17 @@ const (
 	MetaTypeProductionStageCompletionResult     MetaType = "productionstagecompletionresult"
 	MetaTypeProcessingPlanStages                MetaType = "processingplanstages"
 	MetaTypePayroll                             MetaType = "payroll"
+	MetaTypeEntitySettings                      MetaType = "entitysettings"
+	MetaTypeStateSettings                       MetaType = "statesettings"
+	MetaTypeTemplateSettings                    MetaType = "templatesettings"
 	MetaTypeUnknown                             MetaType = ""
 )
 
-func MetaTypeFromEntity(v any) (MetaType, error) {
+// MetaTypeFromEntity принимает объект v и определяет его код сущности.
+//
+// Функция вернёт [MetaTypeUnknown], если код сущности определить невозможно.
+func MetaTypeFromEntity(v any) MetaType {
 	var metaType MetaType
-	var err error
 
 	val := reflect.ValueOf(v)
 	for val.Kind() == reflect.Ptr {
@@ -613,7 +644,6 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeAttribute
 	case Async:
 		metaType = MetaTypeAsync
-
 	case ProductionTask:
 		metaType = MetaTypeProductionTask
 	case ProductionRow:
@@ -622,7 +652,6 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeProductionTaskResult
 	case ProductionStage:
 		metaType = MetaTypeProductionStage
-
 	case ProductionStageCompletion:
 		metaType = MetaTypeProductionStageCompletion
 	case ProductionStageCompletionMaterial:
@@ -631,7 +660,7 @@ func MetaTypeFromEntity(v any) (MetaType, error) {
 		metaType = MetaTypeProductionStageCompletionResult
 
 	default:
-		err = fmt.Errorf("unrecognized entity: %v", metaType)
+		metaType = MetaTypeUnknown
 	}
-	return metaType, err
+	return metaType
 }

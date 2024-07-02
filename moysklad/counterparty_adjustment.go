@@ -315,8 +315,8 @@ type CounterPartyAdjustmentService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных корректировок взаиморасчётов.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -361,5 +361,5 @@ type CounterPartyAdjustmentService interface {
 
 // NewCounterPartyAdjustmentService принимает [Client] и возвращает сервис для работы с корректировками баланса контрагента.
 func NewCounterPartyAdjustmentService(client *Client) CounterPartyAdjustmentService {
-	return newMainService[CounterpartyAdjustment, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/counterpartyadjustment"))
+	return newMainService[CounterpartyAdjustment, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/counterpartyadjustment"))
 }

@@ -442,8 +442,8 @@ type FactureInService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных полученных счетов-фактур.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -583,5 +583,5 @@ type FactureInService interface {
 
 // NewFactureInService принимает [Client] и возвращает сервис для работы со счетами-фактурами полученными.
 func NewFactureInService(client *Client) FactureInService {
-	return newMainService[FactureIn, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/facturein"))
+	return newMainService[FactureIn, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/facturein"))
 }

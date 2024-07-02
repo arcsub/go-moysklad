@@ -806,7 +806,7 @@ type customerOrderService struct {
 	endpointCreateUpdateMany[CustomerOrder]
 	endpointGetByID[CustomerOrder]
 	endpointUpdate[CustomerOrder]
-	endpointMetadata[MetaAttributesSharedStatesWrapper]
+	endpointMetadata[MetaAttributesStatesSharedWrapper]
 	endpointPositions[CustomerOrderPosition]
 	endpointAttributes
 	endpointPublication
@@ -865,8 +865,8 @@ type CustomerOrderService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных заказов покупателей.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -1100,7 +1100,7 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[CustomerOrder]{e},
 		endpointGetByID:          endpointGetByID[CustomerOrder]{e},
 		endpointUpdate:           endpointUpdate[CustomerOrder]{e},
-		endpointMetadata:         endpointMetadata[MetaAttributesSharedStatesWrapper]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesStatesSharedWrapper]{e},
 		endpointPositions:        endpointPositions[CustomerOrderPosition]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointPublication:      endpointPublication{e},

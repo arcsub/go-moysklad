@@ -579,8 +579,8 @@ type InternalOrderService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных внутренних заказов.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -767,5 +767,5 @@ type InternalOrderService interface {
 
 // NewInternalOrderService принимает [Client] и возвращает сервис для работы с внутренними заказами.
 func NewInternalOrderService(client *Client) InternalOrderService {
-	return newMainService[InternalOrder, InternalOrderPosition, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/internalorder"))
+	return newMainService[InternalOrder, InternalOrderPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/internalorder"))
 }

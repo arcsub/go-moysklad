@@ -850,8 +850,8 @@ type CounterpartyService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных контрагентов.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaTagsWrapper.
-	GetMetadata(ctx context.Context) (*MetaTagsWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedTagsWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedTagsWrapper, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -1019,7 +1019,7 @@ type counterpartyService struct {
 	endpointDelete
 	endpointGetByID[Counterparty]
 	endpointUpdate[Counterparty]
-	endpointMetadata[MetaTagsWrapper]
+	endpointMetadata[MetaAttributesStatesSharedTagsWrapper]
 	endpointAttributes
 	endpointSettings[CounterpartySettings]
 	endpointAccounts
@@ -1041,7 +1041,7 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 		endpointDelete:           endpointDelete{e},
 		endpointGetByID:          endpointGetByID[Counterparty]{e},
 		endpointUpdate:           endpointUpdate[Counterparty]{e},
-		endpointMetadata:         endpointMetadata[MetaTagsWrapper]{e},
+		endpointMetadata:         endpointMetadata[MetaAttributesStatesSharedTagsWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointSettings:         endpointSettings[CounterpartySettings]{e},
 		endpointAccounts:         endpointAccounts{e},

@@ -729,8 +729,8 @@ type InvoiceInService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных счетов поставщиков.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -917,5 +917,5 @@ type InvoiceInService interface {
 
 // NewInvoiceInService принимает [Client] и возвращает сервис для работы со счетами поставщиков.
 func NewInvoiceInService(client *Client) InvoiceInService {
-	return newMainService[InvoiceIn, InvoiceInPosition, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/invoicein"))
+	return newMainService[InvoiceIn, InvoiceInPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/invoicein"))
 }

@@ -430,8 +430,8 @@ type ContractService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных договоров.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного договора по ID.
 	// Принимает контекст, ID договора и опционально объект параметров запроса Params.
@@ -542,5 +542,5 @@ type ContractService interface {
 
 // NewContractService принимает [Client] и возвращает сервис для работы с договорами.
 func NewContractService(client *Client) ContractService {
-	return newMainService[Contract, any, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/contract"))
+	return newMainService[Contract, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/contract"))
 }

@@ -689,8 +689,8 @@ type CommissionReportOutService interface {
 
 	// GetMetadata выполняет запрос на получение метаданных выданных отчётов комиссионера.
 	// Принимает контекст.
-	// Возвращает объект метаданных MetaAttributesSharedStatesWrapper.
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -887,5 +887,5 @@ type CommissionReportOutService interface {
 
 // NewCommissionReportOutService принимает [Client] и возвращает сервис для работы с выданными отчётами комиссионера.
 func NewCommissionReportOutService(client *Client) CommissionReportOutService {
-	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetaAttributesSharedStatesWrapper, any](NewEndpoint(client, "entity/commissionreportout"))
+	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/commissionreportout"))
 }
