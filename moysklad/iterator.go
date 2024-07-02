@@ -5,24 +5,24 @@ import (
 	"sync"
 )
 
-// Iterator структура итератора
+// Iterator структура итератора.
 type Iterator[E any] struct {
 	el  Slice[E]
 	idx int
 	mu  sync.Mutex
 }
 
-// Len возвращает количество элементов
+// Len возвращает количество элементов.
 func (iterator *Iterator[E]) Len() int {
 	return len(iterator.el)
 }
 
-// HasNext возвращает true, если текущее значение счётчика меньше длины среза
+// HasNext возвращает true, если текущее значение счётчика меньше длины среза.
 func (iterator *Iterator[E]) HasNext() bool {
 	return iterator.idx < iterator.Len()
 }
 
-// Next возвращает следующий элемент среза или nil, если элемент отсутствует
+// Next возвращает следующий элемент итератора или nil, если элементы итератора закончились.
 func (iterator *Iterator[E]) Next() *E {
 	if iterator.HasNext() {
 		iterator.mu.Lock()
@@ -34,19 +34,20 @@ func (iterator *Iterator[E]) Next() *E {
 	return nil
 }
 
-// Push добавляет элементы в срез
+// Push добавляет элементы в итератор.
 func (iterator *Iterator[E]) Push(elements ...*E) {
 	iterator.mu.Lock()
 	defer iterator.mu.Unlock()
-	iterator.el = append(iterator.el, elements...)
+	iterator.el.Push(elements...)
 }
 
-// Stop сбрасывает текущее значение индекса
+// Stop сбрасывает текущее значение индекса.
 func (iterator *Iterator[E]) Stop() {
 	iterator.idx = 0
 }
 
 // Filter фильтрация элементов итератора.
+//
 // Возвращает новый итератор с отфильтрованными элементами.
 func (iterator *Iterator[E]) Filter(f func(e *E) bool) *Iterator[E] {
 	var n = &Iterator[E]{}
@@ -64,17 +65,17 @@ func (iterator *Iterator[E]) Filter(f func(e *E) bool) *Iterator[E] {
 	return n
 }
 
-// Slice возвращает срез элементов
+// Slice возвращает срез элементов.
 func (iterator *Iterator[E]) Slice() Slice[E] {
 	return iterator.el
 }
 
-// MarshalJSON реализует интерфейс json.Marshaler
+// MarshalJSON реализует интерфейс [json.Marshaler].
 func (iterator *Iterator[E]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(iterator.el)
 }
 
-// UnmarshalJSON реализует интерфейс json.Unmarshaler
+// UnmarshalJSON реализует интерфейс [json.Unmarshaler].
 func (iterator *Iterator[E]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &iterator.el)
 }
