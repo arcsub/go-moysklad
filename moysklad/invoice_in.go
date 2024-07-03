@@ -68,10 +68,10 @@ func (invoiceIn InvoiceIn) Clean() *InvoiceIn {
 	return &InvoiceIn{Meta: invoiceIn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (invoiceIn InvoiceIn) AsOperation() *Operation {
+func (invoiceIn InvoiceIn) operation() *Operation {
 	return &Operation{Meta: invoiceIn.GetMeta(), LinkedSum: invoiceIn.GetSum()}
 }
 

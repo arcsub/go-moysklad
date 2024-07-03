@@ -70,10 +70,10 @@ func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
 	return &CommissionReportIn{Meta: commissionReportIn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
+func (commissionReportIn CommissionReportIn) operation() *Operation {
 	return &Operation{Meta: commissionReportIn.GetMeta(), LinkedSum: commissionReportIn.GetSum()}
 }
 

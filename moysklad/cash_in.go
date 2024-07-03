@@ -28,7 +28,7 @@ type CashIn struct {
 	Group          *Group                   `json:"group,omitempty"`          // Отдел сотрудника
 	ID             *uuid.UUID               `json:"id,omitempty"`             // ID Приходного ордера
 	Meta           *Meta                    `json:"meta,omitempty"`           // Метаданные Приходного ордера
-	Operations     Slice[Operation]         `json:"operations,omitempty"`     // Метаданные связанных операций
+	Operations     Operations               `json:"operations,omitempty"`     // Метаданные связанных операций
 	Agent          *Agent                   `json:"agent,omitempty"`          // Метаданные контрагента
 	Created        *Timestamp               `json:"created,omitempty"`        // Дата создания
 	Owner          *Employee                `json:"owner,omitempty"`          // Метаданные владельца (Сотрудника)
@@ -58,10 +58,10 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (cashIn CashIn) AsOperation() *Operation {
+func (cashIn CashIn) operation() *Operation {
 	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
 }
 
@@ -146,7 +146,7 @@ func (cashIn CashIn) GetMeta() Meta {
 }
 
 // GetOperations возвращает Метаданные связанных операций.
-func (cashIn CashIn) GetOperations() Slice[Operation] {
+func (cashIn CashIn) GetOperations() Operations {
 	return cashIn.Operations
 }
 
@@ -310,7 +310,7 @@ func (cashIn *CashIn) SetMeta(meta *Meta) *CashIn {
 }
 
 // SetOperations устанавливает Метаданные связанных операций.
-func (cashIn *CashIn) SetOperations(operations ...AsOperationInterface) *CashIn {
+func (cashIn *CashIn) SetOperations(operations ...OperationInterface) *CashIn {
 	cashIn.Operations = NewOperationsFrom(operations)
 	return cashIn
 }

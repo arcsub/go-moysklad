@@ -76,10 +76,10 @@ func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 	return &CustomerOrder{Meta: customerOrder.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (customerOrder CustomerOrder) AsOperation() *Operation {
+func (customerOrder CustomerOrder) operation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}
 }
 

@@ -59,10 +59,10 @@ func (factureOut FactureOut) Clean() *FactureOut {
 	return &FactureOut{Meta: factureOut.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (factureOut FactureOut) AsOperation() *Operation {
+func (factureOut FactureOut) operation() *Operation {
 	return &Operation{Meta: factureOut.GetMeta(), LinkedSum: factureOut.GetSum()}
 }
 

@@ -78,10 +78,10 @@ func (demand Demand) Clean() *Demand {
 	return &Demand{Meta: demand.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (demand Demand) AsOperation() *Operation {
+func (demand Demand) operation() *Operation {
 	return &Operation{Meta: demand.GetMeta(), LinkedSum: demand.GetSum()}
 }
 

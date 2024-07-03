@@ -30,7 +30,7 @@ type CashOut struct {
 	Owner          *Employee                `json:"owner,omitempty"`          // Метаданные владельца (Сотрудника)
 	Meta           *Meta                    `json:"meta,omitempty"`           // Метаданные Расходного ордера
 	Moment         *Timestamp               `json:"moment,omitempty"`         // Дата документа
-	Operations     Slice[Operation]         `json:"operations,omitempty"`     // Массив ссылок на связанные операции
+	Operations     Operations               `json:"operations,omitempty"`     // Массив ссылок на связанные операции
 	Agent          *Agent                   `json:"agent,omitempty"`          // Метаданные контрагента
 	ID             *uuid.UUID               `json:"id,omitempty"`             // ID Расходного ордера
 	PaymentPurpose *string                  `json:"paymentPurpose,omitempty"` // Основание
@@ -59,10 +59,10 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
+// operation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (cashOut CashOut) AsOperation() *Operation {
+func (cashOut CashOut) operation() *Operation {
 	return &Operation{Meta: cashOut.GetMeta(), LinkedSum: cashOut.GetSum()}
 }
 
@@ -157,7 +157,7 @@ func (cashOut CashOut) GetMoment() Timestamp {
 }
 
 // GetOperations возвращает Метаданные связанных операций.
-func (cashOut CashOut) GetOperations() Slice[Operation] {
+func (cashOut CashOut) GetOperations() Operations {
 	return cashOut.Operations
 }
 
@@ -330,7 +330,7 @@ func (cashOut *CashOut) SetMoment(moment *Timestamp) *CashOut {
 }
 
 // SetOperations устанавливает Метаданные связанных операций.
-func (cashOut *CashOut) SetOperations(operations ...AsOperationInterface) *CashOut {
+func (cashOut *CashOut) SetOperations(operations ...OperationInterface) *CashOut {
 	cashOut.Operations = NewOperationsFrom(operations)
 	return cashOut
 }
