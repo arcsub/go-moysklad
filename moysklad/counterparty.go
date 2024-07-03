@@ -308,14 +308,14 @@ func (counterparty Counterparty) GetLegalFirstName() string {
 
 // GetLegalLastName возвращает Фамилию для Контрагента типа [Индивидуальный предприниматель, Физическое лицо].
 //
-// Игнорируется для Контрагентов типа [Юридическое лицо]
+// Игнорируется для Контрагентов типа [Юридическое лицо].
 func (counterparty Counterparty) GetLegalLastName() string {
 	return Deref(counterparty.LegalLastName)
 }
 
 // GetLegalMiddleName возвращает Отчество для Контрагента типа [Индивидуальный предприниматель, Физическое лицо].
 //
-// Игнорируется для Контрагентов типа [Юридическое лицо]
+// Игнорируется для Контрагентов типа [Юридическое лицо].
 func (counterparty Counterparty) GetLegalMiddleName() string {
 	return Deref(counterparty.LegalMiddleName)
 }
@@ -475,6 +475,8 @@ func (counterparty *Counterparty) SetActualAddressFull(actualAddressFull *Addres
 }
 
 // SetAccounts устанавливает Массив счетов Контрагентов.
+//
+// Принимает множества объектов [AgentAccount].
 func (counterparty *Counterparty) SetAccounts(accounts ...*AgentAccount) *Counterparty {
 	counterparty.Accounts = NewMetaArrayFrom(accounts)
 	return counterparty

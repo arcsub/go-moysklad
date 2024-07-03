@@ -281,7 +281,7 @@ func (employee *Employee) SetMiddleName(middleName string) *Employee {
 	return employee
 }
 
-// SetArchived устанавливает флаг нахождения комплекта в архиве.
+// SetArchived устанавливает флаг нахождения сотрудника в архиве.
 func (employee *Employee) SetArchived(archived bool) *Employee {
 	employee.Archived = &archived
 	return employee

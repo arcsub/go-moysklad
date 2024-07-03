@@ -496,7 +496,7 @@ func (service *assortmentService) GetListAsync(ctx context.Context, params ...*P
 	if len(params) > 0 {
 		p = params[0]
 	}
-	p.withAsync()
+	p.WithAsync()
 	_, resp, err := NewRequestBuilder[any](service.client, service.uri).SetParams(p).Get(ctx)
 	if err != nil {
 		return nil, resp, nil
