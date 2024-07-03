@@ -204,6 +204,16 @@ func (metaArray MetaArray[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(metaArray.Rows)
 }
 
+type MetaNameID struct {
+	Meta Meta      `json:"meta"`
+	Name string    `json:"name"`
+	ID   uuid.UUID `json:"id"`
+}
+
+func (metaNameID MetaNameID) String() string {
+	return Stringify(metaNameID)
+}
+
 // MetaType код сущности.
 type MetaType string
 

@@ -79,7 +79,7 @@ func (assortmentPosition AssortmentPosition) GetMeta() Meta {
 	return assortmentPosition.Meta
 }
 
-// Raw реализует интерфейс RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper.
 func (assortmentPosition AssortmentPosition) Raw() []byte {
 	return assortmentPosition.raw
 }

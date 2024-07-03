@@ -103,7 +103,7 @@ func (discount Discount) MetaType() MetaType {
 	return discount.Meta.GetType()
 }
 
-// Raw реализует интерфейс RawMetaTyper
+// Raw реализует интерфейс RawMetaTyper.
 func (discount *Discount) Raw() []byte {
 	return discount.data
 }
