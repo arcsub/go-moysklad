@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // InternalOrder Внутренний заказ.
@@ -244,8 +245,8 @@ func (internalOrder *InternalOrder) SetDescription(description string) *Internal
 }
 
 // SetDeliveryPlannedMoment устанавливает Планируемую дата приемки.
-func (internalOrder *InternalOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment *Timestamp) *InternalOrder {
-	internalOrder.DeliveryPlannedMoment = deliveryPlannedMoment
+func (internalOrder *InternalOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment time.Time) *InternalOrder {
+	internalOrder.DeliveryPlannedMoment = NewTimestamp(deliveryPlannedMoment)
 	return internalOrder
 }
 
@@ -320,8 +321,8 @@ func (internalOrder *InternalOrder) SetApplicable(applicable bool) *InternalOrde
 }
 
 // SetMoment устанавливает Дату документа.
-func (internalOrder *InternalOrder) SetMoment(moment *Timestamp) *InternalOrder {
-	internalOrder.Moment = moment
+func (internalOrder *InternalOrder) SetMoment(moment time.Time) *InternalOrder {
+	internalOrder.Moment = NewTimestamp(moment)
 	return internalOrder
 }
 

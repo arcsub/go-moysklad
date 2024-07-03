@@ -46,7 +46,7 @@ func (operation Operation) MetaType() MetaType {
 	return operation.Meta.GetType()
 }
 
-// Raw реализует интерфейс RawMetaTyper.
+// Raw реализует интерфейс [RawMetaTyper].
 func (operation Operation) Raw() []byte {
 	return operation.raw
 }

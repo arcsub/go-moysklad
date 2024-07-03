@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Enter Оприходование.
@@ -208,8 +209,8 @@ func (enter *Enter) SetOrganization(organization *Organization) *Enter {
 }
 
 // SetMoment устанавливает Дату документа.
-func (enter *Enter) SetMoment(moment *Timestamp) *Enter {
-	enter.Moment = moment
+func (enter *Enter) SetMoment(moment time.Time) *Enter {
+	enter.Moment = NewTimestamp(moment)
 	return enter
 }
 

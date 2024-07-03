@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CustomerOrder Заказ покупателя.
@@ -386,8 +387,8 @@ func (customerOrder *CustomerOrder) SetAgent(agent *Counterparty) *CustomerOrder
 }
 
 // SetDeliveryPlannedMoment устанавливает Планируемую дата отгрузки.
-func (customerOrder *CustomerOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment *Timestamp) *CustomerOrder {
-	customerOrder.DeliveryPlannedMoment = deliveryPlannedMoment
+func (customerOrder *CustomerOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment time.Time) *CustomerOrder {
+	customerOrder.DeliveryPlannedMoment = NewTimestamp(deliveryPlannedMoment)
 	return customerOrder
 }
 
@@ -432,8 +433,8 @@ func (customerOrder *CustomerOrder) SetName(name string) *CustomerOrder {
 }
 
 // SetMoment устанавливает Дату документа.
-func (customerOrder *CustomerOrder) SetMoment(moment *Timestamp) *CustomerOrder {
-	customerOrder.Moment = moment
+func (customerOrder *CustomerOrder) SetMoment(moment time.Time) *CustomerOrder {
+	customerOrder.Moment = NewTimestamp(moment)
 	return customerOrder
 }
 
@@ -570,7 +571,7 @@ func (customerOrder *CustomerOrder) SetDemands(demands ...*Demand) *CustomerOrde
 // SetPayments устанавливает Массив ссылок на связанные платежи.
 //
 // Принимает множество объектов [Payment].
-func (customerOrder *CustomerOrder) SetPayments(payments ...AsPaymentInterface) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPayments(payments ...PaymentInterface) *CustomerOrder {
 	customerOrder.Payments = NewPaymentsFrom(payments)
 	return customerOrder
 }

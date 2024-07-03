@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CounterpartyAdjustment Корректировка взаиморасчетов.
@@ -212,8 +213,8 @@ func (counterPartyAdjustment *CounterpartyAdjustment) SetMeta(meta *Meta) *Count
 }
 
 // SetMoment устанавливает Дату документа.
-func (counterPartyAdjustment *CounterpartyAdjustment) SetMoment(moment *Timestamp) *CounterpartyAdjustment {
-	counterPartyAdjustment.Moment = moment
+func (counterPartyAdjustment *CounterpartyAdjustment) SetMoment(moment time.Time) *CounterpartyAdjustment {
+	counterPartyAdjustment.Moment = NewTimestamp(moment)
 	return counterPartyAdjustment
 }
 

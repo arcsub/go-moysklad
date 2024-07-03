@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Counterparty Контрагент.
@@ -529,14 +530,14 @@ func (counterparty *Counterparty) SetTags(tags ...string) *Counterparty {
 // SetBirthDate устанавливает Дату рождения Контрагента типа [Физическое лицо].
 //
 // Игнорируется для Контрагентов типов [Индивидуальный предприниматель, Юридическое лицо].
-func (counterparty *Counterparty) SetBirthDate(birthDate *Timestamp) *Counterparty {
-	counterparty.BirthDate = birthDate
+func (counterparty *Counterparty) SetBirthDate(birthDate time.Time) *Counterparty {
+	counterparty.BirthDate = NewTimestamp(birthDate)
 	return counterparty
 }
 
 // SetCertificateDate устанавливает Дату свидетельства.
-func (counterparty *Counterparty) SetCertificateDate(certificateDate *Timestamp) *Counterparty {
-	counterparty.CertificateDate = certificateDate
+func (counterparty *Counterparty) SetCertificateDate(certificateDate time.Time) *Counterparty {
+	counterparty.CertificateDate = NewTimestamp(certificateDate)
 	return counterparty
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CashIn Приходный ордер.
@@ -70,7 +71,7 @@ func (cashIn CashIn) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
 }
 
-// asPayment реализует интерфейс AsPaymentInterface.
+// asPayment реализует интерфейс PaymentInterface.
 func (cashIn CashIn) asPayment() *Payment {
 	return &Payment{Meta: cashIn.GetMeta()}
 }
@@ -256,8 +257,8 @@ func (cashIn *CashIn) SetApplicable(applicable bool) *CashIn {
 }
 
 // SetMoment устанавливает Дату документа.
-func (cashIn *CashIn) SetMoment(moment *Timestamp) *CashIn {
-	cashIn.Moment = moment
+func (cashIn *CashIn) SetMoment(moment time.Time) *CashIn {
+	cashIn.Moment = NewTimestamp(moment)
 	return cashIn
 }
 
@@ -310,6 +311,8 @@ func (cashIn *CashIn) SetMeta(meta *Meta) *CashIn {
 }
 
 // SetOperations устанавливает Метаданные связанных операций.
+//
+// Принимает множество объектов, реализующих интерфейс [OperationInterface].
 func (cashIn *CashIn) SetOperations(operations ...OperationInterface) *CashIn {
 	cashIn.Operations = NewOperationsFrom(operations)
 	return cashIn

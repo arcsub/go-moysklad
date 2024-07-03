@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CommissionReportOut Выданный отчёт комиссионера.
@@ -321,8 +322,8 @@ func (commissionReportOut *CommissionReportOut) SetCode(code string) *Commission
 }
 
 // SetCommissionPeriodEnd устанавливает Конец периода.
-func (commissionReportOut *CommissionReportOut) SetCommissionPeriodEnd(commissionPeriodEnd *Timestamp) *CommissionReportOut {
-	commissionReportOut.CommissionPeriodEnd = commissionPeriodEnd
+func (commissionReportOut *CommissionReportOut) SetCommissionPeriodEnd(commissionPeriodEnd time.Time) *CommissionReportOut {
+	commissionReportOut.CommissionPeriodEnd = NewTimestamp(commissionPeriodEnd)
 	return commissionReportOut
 }
 
@@ -377,8 +378,8 @@ func (commissionReportOut *CommissionReportOut) SetMeta(meta *Meta) *CommissionR
 }
 
 // SetMoment устанавливает Дату документа.
-func (commissionReportOut *CommissionReportOut) SetMoment(moment *Timestamp) *CommissionReportOut {
-	commissionReportOut.Moment = moment
+func (commissionReportOut *CommissionReportOut) SetMoment(moment time.Time) *CommissionReportOut {
+	commissionReportOut.Moment = NewTimestamp(moment)
 	return commissionReportOut
 }
 
@@ -389,8 +390,8 @@ func (commissionReportOut *CommissionReportOut) SetName(name string) *Commission
 }
 
 // SetCommissionPeriodStart устанавливает Начало периода.
-func (commissionReportOut *CommissionReportOut) SetCommissionPeriodStart(commissionPeriodStart *Timestamp) *CommissionReportOut {
-	commissionReportOut.CommissionPeriodStart = commissionPeriodStart
+func (commissionReportOut *CommissionReportOut) SetCommissionPeriodStart(commissionPeriodStart time.Time) *CommissionReportOut {
+	commissionReportOut.CommissionPeriodStart = NewTimestamp(commissionPeriodStart)
 	return commissionReportOut
 }
 
@@ -434,8 +435,8 @@ func (commissionReportOut *CommissionReportOut) SetRewardPercent(rewardPercent f
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [AsPaymentInterface].
-func (commissionReportOut *CommissionReportOut) SetPayments(payments ...AsPaymentInterface) *CommissionReportOut {
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (commissionReportOut *CommissionReportOut) SetPayments(payments ...PaymentInterface) *CommissionReportOut {
 	commissionReportOut.Payments = NewPaymentsFrom(payments)
 	return commissionReportOut
 }

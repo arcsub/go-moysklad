@@ -6,6 +6,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
+	"time"
 )
 
 // Inventory Инвентаризация.
@@ -282,8 +283,8 @@ func (inventory *Inventory) SetStore(store *Store) *Inventory {
 }
 
 // SetMoment устанавливает Дату документа.
-func (inventory *Inventory) SetMoment(moment *Timestamp) *Inventory {
-	inventory.Moment = moment
+func (inventory *Inventory) SetMoment(moment time.Time) *Inventory {
+	inventory.Moment = NewTimestamp(moment)
 	return inventory
 }
 

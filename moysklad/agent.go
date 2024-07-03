@@ -171,7 +171,7 @@ func (agent Agent) MetaType() MetaType {
 	return agent.GetMeta().GetType()
 }
 
-// Raw реализует интерфейс RawMetaTyper.
+// Raw реализует интерфейс [RawMetaTyper].
 func (agent Agent) Raw() []byte {
 	return agent.raw
 }

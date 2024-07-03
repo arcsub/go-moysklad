@@ -788,6 +788,6 @@ type endpointEvaluate[T any] struct{ Endpoint }
 func (endpoint *endpointEvaluate[T]) Evaluate(ctx context.Context, entity *T, evaluate ...Evaluate) (*T, *resty.Response, error) {
 	uriParts := strings.Split(endpoint.uri, "/")
 	path := fmt.Sprintf("wizard/%s", uriParts[len(uriParts)-1])
-	params := NewParams().WithEvaluate(evaluate)
+	params := NewParams().WithEvaluate(evaluate...)
 	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Post(ctx, entity)
 }

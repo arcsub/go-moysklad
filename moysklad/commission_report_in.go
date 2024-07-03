@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CommissionReportIn Полученный отчёт комиссионера.
@@ -357,14 +358,14 @@ func (commissionReportIn *CommissionReportIn) SetCommissionOverheadSum(sum float
 }
 
 // SetCommissionPeriodEnd устанавливает Конец периода.
-func (commissionReportIn *CommissionReportIn) SetCommissionPeriodEnd(commissionPeriodEnd *Timestamp) *CommissionReportIn {
-	commissionReportIn.CommissionPeriodEnd = commissionPeriodEnd
+func (commissionReportIn *CommissionReportIn) SetCommissionPeriodEnd(commissionPeriodEnd time.Time) *CommissionReportIn {
+	commissionReportIn.CommissionPeriodEnd = NewTimestamp(commissionPeriodEnd)
 	return commissionReportIn
 }
 
 // SetCommissionPeriodStart устанавливает Начало периода.
-func (commissionReportIn *CommissionReportIn) SetCommissionPeriodStart(commissionPeriodStart *Timestamp) *CommissionReportIn {
-	commissionReportIn.CommissionPeriodStart = commissionPeriodStart
+func (commissionReportIn *CommissionReportIn) SetCommissionPeriodStart(commissionPeriodStart time.Time) *CommissionReportIn {
+	commissionReportIn.CommissionPeriodStart = NewTimestamp(commissionPeriodStart)
 	return commissionReportIn
 }
 
@@ -411,8 +412,8 @@ func (commissionReportIn *CommissionReportIn) SetMeta(meta *Meta) *CommissionRep
 }
 
 // SetMoment устанавливает Дату документа.
-func (commissionReportIn *CommissionReportIn) SetMoment(moment *Timestamp) *CommissionReportIn {
-	commissionReportIn.Moment = moment
+func (commissionReportIn *CommissionReportIn) SetMoment(moment time.Time) *CommissionReportIn {
+	commissionReportIn.Moment = NewTimestamp(moment)
 	return commissionReportIn
 }
 
@@ -478,8 +479,8 @@ func (commissionReportIn *CommissionReportIn) SetRewardPercent(rewardPercent flo
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [AsPaymentInterface].
-func (commissionReportIn *CommissionReportIn) SetPayments(payments ...AsPaymentInterface) *CommissionReportIn {
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (commissionReportIn *CommissionReportIn) SetPayments(payments ...PaymentInterface) *CommissionReportIn {
 	commissionReportIn.Payments = NewPaymentsFrom(payments)
 	return commissionReportIn
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // InvoiceOut Счет покупателю.
@@ -361,8 +362,8 @@ func (invoiceOut *InvoiceOut) SetMeta(meta *Meta) *InvoiceOut {
 }
 
 // SetMoment устанавливает Дату документа.
-func (invoiceOut *InvoiceOut) SetMoment(moment *Timestamp) *InvoiceOut {
-	invoiceOut.Moment = moment
+func (invoiceOut *InvoiceOut) SetMoment(moment time.Time) *InvoiceOut {
+	invoiceOut.Moment = NewTimestamp(moment)
 	return invoiceOut
 }
 
@@ -382,7 +383,7 @@ func (invoiceOut *InvoiceOut) SetContract(contract *Contract) *InvoiceOut {
 
 // SetAgent устанавливает Метаданные контрагента [Counterparty] или организации [Organization].
 //
-// Принимает объект, реализующий интерфейс [AgentCounterpartyOrganizationInterface].
+// Принимает [Counterparty] или [Organization].
 func (invoiceOut *InvoiceOut) SetAgent(agent AgentCounterpartyOrganizationInterface) *InvoiceOut {
 	if agent != nil {
 		invoiceOut.Agent = agent.asCOAgent()
@@ -399,8 +400,8 @@ func (invoiceOut *InvoiceOut) SetOrganization(organization *Organization) *Invoi
 }
 
 // SetPaymentPlannedMoment устанавливает Планируемую дату оплаты.
-func (invoiceOut *InvoiceOut) SetPaymentPlannedMoment(paymentPlannedMoment *Timestamp) *InvoiceOut {
-	invoiceOut.PaymentPlannedMoment = paymentPlannedMoment
+func (invoiceOut *InvoiceOut) SetPaymentPlannedMoment(paymentPlannedMoment time.Time) *InvoiceOut {
+	invoiceOut.PaymentPlannedMoment = NewTimestamp(paymentPlannedMoment)
 	return invoiceOut
 }
 
@@ -482,8 +483,8 @@ func (invoiceOut *InvoiceOut) SetCustomerOrder(customerOrder *CustomerOrder) *In
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [AsPaymentInterface].
-func (invoiceOut *InvoiceOut) SetPayments(payments ...AsPaymentInterface) *InvoiceOut {
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (invoiceOut *InvoiceOut) SetPayments(payments ...PaymentInterface) *InvoiceOut {
 	invoiceOut.Payments = NewPaymentsFrom(payments)
 	return invoiceOut
 }

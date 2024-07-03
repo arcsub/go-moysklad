@@ -936,7 +936,7 @@ func (notification Notification) MetaType() MetaType {
 	return notification.Meta.GetType()
 }
 
-// Raw реализует интерфейс RawMetaTyper.
+// Raw реализует интерфейс [RawMetaTyper].
 func (notification Notification) Raw() []byte {
 	return notification.raw
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Demand Отгрузка.
@@ -285,7 +286,7 @@ func (demand Demand) GetCustomerOrder() CustomerOrder {
 	return Deref(demand.CustomerOrder)
 }
 
-// GetFactureOut возвращает Ссылку на Счет-фактуру выданный, с которым связана эта Отгрузка.
+// GetFactureOut возвращает Ссылку на выданный Счет-фактуру, с которым связана эта Отгрузка.
 func (demand Demand) GetFactureOut() FactureOut {
 	return Deref(demand.FactureOut)
 }
@@ -423,8 +424,8 @@ func (demand *Demand) SetMeta(meta *Meta) *Demand {
 }
 
 // SetMoment устанавливает Дату документа.
-func (demand *Demand) SetMoment(moment *Timestamp) *Demand {
-	demand.Moment = moment
+func (demand *Demand) SetMoment(moment time.Time) *Demand {
+	demand.Moment = NewTimestamp(moment)
 	return demand
 }
 
@@ -582,8 +583,8 @@ func (demand *Demand) SetReturns(returns ...*SalesReturn) *Demand {
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [AsPaymentInterface].
-func (demand *Demand) SetPayments(payments ...AsPaymentInterface) *Demand {
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (demand *Demand) SetPayments(payments ...PaymentInterface) *Demand {
 	demand.Payments = NewPaymentsFrom(payments)
 	return demand
 }

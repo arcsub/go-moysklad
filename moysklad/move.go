@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Move Перемещение.
@@ -232,8 +233,8 @@ func (move Move) GetAttributes() Slice[Attribute] {
 }
 
 // SetMoment устанавливает Дату документа.
-func (move *Move) SetMoment(moment *Timestamp) *Move {
-	move.Moment = moment
+func (move *Move) SetMoment(moment time.Time) *Move {
+	move.Moment = NewTimestamp(moment)
 	return move
 }
 

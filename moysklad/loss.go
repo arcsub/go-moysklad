@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Loss Списание.
@@ -215,8 +216,8 @@ func (loss *Loss) SetSyncID(syncID uuid.UUID) *Loss {
 }
 
 // SetMoment устанавливает Дату документа.
-func (loss *Loss) SetMoment(moment *Timestamp) *Loss {
-	loss.Moment = moment
+func (loss *Loss) SetMoment(moment time.Time) *Loss {
+	loss.Moment = NewTimestamp(moment)
 	return loss
 }
 

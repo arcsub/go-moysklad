@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Contract Договор.
@@ -255,8 +256,8 @@ func (contract *Contract) SetMeta(meta *Meta) *Contract {
 }
 
 // SetMoment устанавливает Дату Договора.
-func (contract *Contract) SetMoment(moment *Timestamp) *Contract {
-	contract.Moment = moment
+func (contract *Contract) SetMoment(moment time.Time) *Contract {
+	contract.Moment = NewTimestamp(moment)
 	return contract
 }
 

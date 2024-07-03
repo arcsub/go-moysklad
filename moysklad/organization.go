@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Organization Юрлицо.
@@ -443,8 +444,8 @@ func (organization *Organization) SetSyncID(syncID uuid.UUID) *Organization {
 }
 
 // SetTrackingContractDate устанавливает Дату договора с ЦРПТ.
-func (organization *Organization) SetTrackingContractDate(trackingContractDate *Timestamp) *Organization {
-	organization.TrackingContractDate = trackingContractDate
+func (organization *Organization) SetTrackingContractDate(trackingContractDate time.Time) *Organization {
+	organization.TrackingContractDate = NewTimestamp(trackingContractDate)
 	return organization
 }
 
@@ -477,8 +478,8 @@ func (organization *Organization) SetStamp(stamp *Image) *Organization {
 }
 
 // SetCertificateDate устанавливает Дату свидетельства.
-func (organization *Organization) SetCertificateDate(certificateDate *Timestamp) *Organization {
-	organization.CertificateDate = certificateDate
+func (organization *Organization) SetCertificateDate(certificateDate time.Time) *Organization {
+	organization.CertificateDate = NewTimestamp(certificateDate)
 	return organization
 }
 

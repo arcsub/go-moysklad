@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // InvoiceIn Счет поставщика.
@@ -355,8 +356,8 @@ func (invoiceIn *InvoiceIn) SetFiles(files ...*File) *InvoiceIn {
 }
 
 // SetIncomingDate устанавливает Входящую дату.
-func (invoiceIn *InvoiceIn) SetIncomingDate(incomingDate *Timestamp) *InvoiceIn {
-	invoiceIn.IncomingDate = incomingDate
+func (invoiceIn *InvoiceIn) SetIncomingDate(incomingDate time.Time) *InvoiceIn {
+	invoiceIn.IncomingDate = NewTimestamp(incomingDate)
 	return invoiceIn
 }
 
@@ -373,8 +374,8 @@ func (invoiceIn *InvoiceIn) SetMeta(meta *Meta) *InvoiceIn {
 }
 
 // SetMoment устанавливает Дату документа.
-func (invoiceIn *InvoiceIn) SetMoment(moment *Timestamp) *InvoiceIn {
-	invoiceIn.Moment = moment
+func (invoiceIn *InvoiceIn) SetMoment(moment time.Time) *InvoiceIn {
+	invoiceIn.Moment = NewTimestamp(moment)
 	return invoiceIn
 }
 
@@ -419,8 +420,8 @@ func (invoiceIn *InvoiceIn) SetAgentAccount(agentAccount *AgentAccount) *Invoice
 }
 
 // SetPaymentPlannedMoment устанавливает Планируемую дату оплаты.
-func (invoiceIn *InvoiceIn) SetPaymentPlannedMoment(paymentPlannedMoment *Timestamp) *InvoiceIn {
-	invoiceIn.PaymentPlannedMoment = paymentPlannedMoment
+func (invoiceIn *InvoiceIn) SetPaymentPlannedMoment(paymentPlannedMoment time.Time) *InvoiceIn {
+	invoiceIn.PaymentPlannedMoment = NewTimestamp(paymentPlannedMoment)
 	return invoiceIn
 }
 
@@ -490,8 +491,8 @@ func (invoiceIn *InvoiceIn) SetVatIncluded(vatIncluded bool) *InvoiceIn {
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [AsPaymentInterface].
-func (invoiceIn *InvoiceIn) SetPayments(payments ...AsPaymentInterface) *InvoiceIn {
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (invoiceIn *InvoiceIn) SetPayments(payments ...PaymentInterface) *InvoiceIn {
 	invoiceIn.Payments = NewPaymentsFrom(payments)
 	return invoiceIn
 }

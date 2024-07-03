@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // FactureOut Счет-фактура выданный.
@@ -301,8 +302,8 @@ func (factureOut *FactureOut) SetGroup(group *Group) *FactureOut {
 }
 
 // SetMoment устанавливает Дату документа.
-func (factureOut *FactureOut) SetMoment(moment *Timestamp) *FactureOut {
-	factureOut.Moment = moment
+func (factureOut *FactureOut) SetMoment(moment time.Time) *FactureOut {
+	factureOut.Moment = NewTimestamp(moment)
 	return factureOut
 }
 
@@ -313,8 +314,8 @@ func (factureOut *FactureOut) SetName(name string) *FactureOut {
 }
 
 // SetPaymentDate устанавливает Дату платежного документа.
-func (factureOut *FactureOut) SetPaymentDate(paymentDate *Timestamp) *FactureOut {
-	factureOut.PaymentDate = paymentDate
+func (factureOut *FactureOut) SetPaymentDate(paymentDate time.Time) *FactureOut {
+	factureOut.PaymentDate = NewTimestamp(paymentDate)
 	return factureOut
 }
 
@@ -378,8 +379,8 @@ func (factureOut *FactureOut) SetDemands(demands ...*Demand) *FactureOut {
 
 // SetPayments устанавливает Метаданные ссылок на связанные входящие платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [AsPaymentInterface].
-func (factureOut *FactureOut) SetPayments(payments ...AsPaymentInterface) *FactureOut {
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (factureOut *FactureOut) SetPayments(payments ...PaymentInterface) *FactureOut {
 	factureOut.Payments = NewPaymentsFrom(payments)
 	return factureOut
 }

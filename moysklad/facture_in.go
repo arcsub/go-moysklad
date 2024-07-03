@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // FactureIn Счет-фактура полученный.
@@ -219,8 +220,8 @@ func (factureIn FactureIn) GetAttributes() Slice[Attribute] {
 }
 
 // SetMoment устанавливает Дату документа.
-func (factureIn *FactureIn) SetMoment(moment *Timestamp) *FactureIn {
-	factureIn.Moment = moment
+func (factureIn *FactureIn) SetMoment(moment time.Time) *FactureIn {
+	factureIn.Moment = NewTimestamp(moment)
 	return factureIn
 }
 
@@ -285,8 +286,8 @@ func (factureIn *FactureIn) SetMeta(meta *Meta) *FactureIn {
 }
 
 // SetIncomingDate устанавливает Входящую дату.
-func (factureIn *FactureIn) SetIncomingDate(incomingDate *Timestamp) *FactureIn {
-	factureIn.IncomingDate = incomingDate
+func (factureIn *FactureIn) SetIncomingDate(incomingDate time.Time) *FactureIn {
+	factureIn.IncomingDate = NewTimestamp(incomingDate)
 	return factureIn
 }
 
@@ -354,9 +355,9 @@ func (factureIn *FactureIn) SetSupplies(supplies ...*Supply) *FactureIn {
 
 // SetPayments устанавливает Массив ссылок на связанные платежи.
 //
-// Принимает множество объектов [Payment].
-func (factureIn *FactureIn) SetPayments(payments ...*Payment) *FactureIn {
-	factureIn.Payments.Push(payments...)
+// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
+func (factureIn *FactureIn) SetPayments(payments ...PaymentInterface) *FactureIn {
+	factureIn.Payments = NewPaymentsFrom(payments)
 	return factureIn
 }
 

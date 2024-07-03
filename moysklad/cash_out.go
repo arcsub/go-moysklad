@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CashOut Расходный ордер.
@@ -45,7 +46,7 @@ type CashOut struct {
 	SyncID         *uuid.UUID               `json:"syncId,omitempty"`         // ID синхронизации
 	Updated        *Timestamp               `json:"updated,omitempty"`        // Момент последнего обновления Расходного ордера
 	VatSum         *float64                 `json:"vatSum,omitempty"`         // Сумма НДС
-	FactureOut     *FactureOut              `json:"factureOut,omitempty"`     // Ссылка на полученный счет-фактуру, с которым связан этот платеж
+	FactureOut     *FactureOut              `json:"factureOut,omitempty"`     // Ссылка на выданный счет-фактуру, с которым связан этот платеж
 	Attributes     Slice[Attribute]         `json:"attributes,omitempty"`     // Список метаданных доп. полей
 }
 
@@ -71,7 +72,7 @@ func (cashOut CashOut) asTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
 }
 
-// asPayment реализует интерфейс AsPaymentInterface.
+// asPayment реализует интерфейс PaymentInterface.
 func (cashOut CashOut) asPayment() *Payment {
 	return &Payment{Meta: cashOut.GetMeta()}
 }
@@ -231,7 +232,7 @@ func (cashOut CashOut) GetVatSum() float64 {
 	return Deref(cashOut.VatSum)
 }
 
-// GetFactureOut возвращает Ссылку на полученный счет-фактуру, с которым связан этот платеж.
+// GetFactureOut возвращает Ссылку на выданный счет-фактуру, с которым связан этот платеж.
 func (cashOut CashOut) GetFactureOut() FactureOut {
 	return Deref(cashOut.FactureOut)
 }
@@ -324,12 +325,14 @@ func (cashOut *CashOut) SetMeta(meta *Meta) *CashOut {
 }
 
 // SetMoment устанавливает Дату документа.
-func (cashOut *CashOut) SetMoment(moment *Timestamp) *CashOut {
-	cashOut.Moment = moment
+func (cashOut *CashOut) SetMoment(moment time.Time) *CashOut {
+	cashOut.Moment = NewTimestamp(moment)
 	return cashOut
 }
 
 // SetOperations устанавливает Метаданные связанных операций.
+//
+// Принимает множество объектов, реализующих интерфейс [OperationInterface].
 func (cashOut *CashOut) SetOperations(operations ...OperationInterface) *CashOut {
 	cashOut.Operations = NewOperationsFrom(operations)
 	return cashOut

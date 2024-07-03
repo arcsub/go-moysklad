@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // BonusTransaction Бонусная операция.
@@ -228,8 +229,8 @@ func (bonusTransaction *BonusTransaction) SetExternalCode(externalCode string) *
 }
 
 // SetMoment устанавливает Время проведения бонусной операции.
-func (bonusTransaction *BonusTransaction) SetMoment(moment *Timestamp) *BonusTransaction {
-	bonusTransaction.Moment = moment
+func (bonusTransaction *BonusTransaction) SetMoment(moment time.Time) *BonusTransaction {
+	bonusTransaction.Moment = NewTimestamp(moment)
 	return bonusTransaction
 }
 

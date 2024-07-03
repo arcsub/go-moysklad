@@ -24,8 +24,15 @@ func (Assortment) MetaType() MetaType {
 
 // AssortmentPosition представляет позицию ассортимента.
 //
-// Создать позицию можно с помощью NewAssortmentPosition, передав в качестве аргумента объект,
-// удовлетворяющий интерфейсу AssortmentType.
+// Позицией ассортимента могут быть:
+//   - Product (Товар)
+//   - Variant (Модификация)
+//   - Bundle (Комплект)
+//   - Service (Услуга)
+//   - Consignment (Серия)
+//
+// Создать позицию можно с помощью [NewAssortmentPosition], передав в качестве аргумента объект,
+// удовлетворяющий интерфейсу [AssortmentInterface].
 type AssortmentPosition struct {
 	Meta         Meta           `json:"meta"`                   // Метаданные сущности
 	Code         string         `json:"code,omitempty"`         // Код сущности
@@ -38,26 +45,12 @@ type AssortmentPosition struct {
 	ID           uuid.UUID      `json:"id,omitempty"`        // ID сущности
 }
 
-// AssortmentType описывает типы, которые входят в состав ассортимента.
-//
-// Возможные типы:
-//   - Product 		– Товар
-//   - Variant 		– Модификация
-//   - Bundle 		– Комплект
-//   - Service 		– Услуга
-//   - Consignment 	– Серия
-type AssortmentType interface {
-	Product | Variant | Bundle | Service | Consignment
-	MetaOwner
-}
-
-// AssortmentInterface описывает необходимый метод asAssortment
+// AssortmentInterface описывает метод, возвращающий [AssortmentPosition].
 type AssortmentInterface interface {
-	// asAssortment возвращает указатель на [AssortmentPosition]
 	asAssortment() *AssortmentPosition
 }
 
-// NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу [AssortmentType].
+// NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу [AssortmentInterface].
 //
 // Возвращает [AssortmentPosition] с заполненным полем Meta.
 func NewAssortmentPosition[T AssortmentInterface](entity T) *AssortmentPosition {
@@ -79,7 +72,7 @@ func (assortmentPosition AssortmentPosition) GetMeta() Meta {
 	return assortmentPosition.Meta
 }
 
-// Raw реализует интерфейс RawMetaTyper.
+// Raw реализует интерфейс [RawMetaTyper].
 func (assortmentPosition AssortmentPosition) Raw() []byte {
 	return assortmentPosition.raw
 }
@@ -96,13 +89,36 @@ func (assortmentPosition *AssortmentPosition) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// IsProduct возвращает true, если объект имеет код сущности [MetaTypeProduct].
+func (assortmentPosition *AssortmentPosition) IsProduct() bool {
+	return assortmentPosition.GetMeta().GetType() == MetaTypeProduct
+}
+
+// IsVariant возвращает true, если объект имеет код сущности [MetaTypeVariant].
+func (assortmentPosition *AssortmentPosition) IsVariant() bool {
+	return assortmentPosition.GetMeta().GetType() == MetaTypeVariant
+}
+
+// IsBundle возвращает true, если объект имеет код сущности [MetaTypeBundle].
+func (assortmentPosition *AssortmentPosition) IsBundle() bool {
+	return assortmentPosition.GetMeta().GetType() == MetaTypeBundle
+}
+
+// IsService возвращает true, если объект имеет код сущности [MetaTypeService].
+func (assortmentPosition *AssortmentPosition) IsService() bool {
+	return assortmentPosition.GetMeta().GetType() == MetaTypeService
+}
+
+// IsConsignment возвращает true, если объект имеет код сущности [MetaTypeConsignment].
+func (assortmentPosition *AssortmentPosition) IsConsignment() bool {
+	return assortmentPosition.GetMeta().GetType() == MetaTypeConsignment
+}
+
 // AsProduct пытается привести объект к типу [Product].
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Product].
-//   - nil в случае неудачи.
+// Возвращает [Product] или nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsProduct() *Product {
 	return UnmarshalAsType[Product](assortmentPosition)
 }
@@ -111,9 +127,7 @@ func (assortmentPosition *AssortmentPosition) AsProduct() *Product {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Variant].
-//   - nil в случае неудачи.
+// Возвращает [Variant] или nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsVariant() *Variant {
 	return UnmarshalAsType[Variant](assortmentPosition)
 }
@@ -122,9 +136,7 @@ func (assortmentPosition *AssortmentPosition) AsVariant() *Variant {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Bundle].
-//   - nil в случае неудачи.
+// Возвращает [Bundle] или nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsBundle() *Bundle {
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
@@ -133,9 +145,7 @@ func (assortmentPosition *AssortmentPosition) AsBundle() *Bundle {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Service].
-//   - nil в случае неудачи.
+// Возвращает [Service] или nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsService() *Service {
 	return UnmarshalAsType[Service](assortmentPosition)
 }
@@ -144,34 +154,32 @@ func (assortmentPosition *AssortmentPosition) AsService() *Service {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает: [Consignment]
-//   - указатель на .
-//   - nil в случае неудачи.
+// Возвращает: [Consignment] или nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsConsignment() *Consignment {
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
-// FilterBundle фильтрует позиции по типу [Bundle] (Комплект)
+// FilterBundle фильтрует позиции по типу [Bundle] (Комплект).
 func (assortment Assortment) FilterBundle() Slice[Bundle] {
 	return filterType[Bundle](assortment)
 }
 
-// FilterProduct фильтрует позиции по типу [Product] (Товар)
+// FilterProduct фильтрует позиции по типу [Product] (Товар).
 func (assortment Assortment) FilterProduct() Slice[Product] {
 	return filterType[Product](assortment)
 }
 
-// FilterVariant фильтрует позиции по типу [Variant] (Модификация)
+// FilterVariant фильтрует позиции по типу [Variant] (Модификация).
 func (assortment Assortment) FilterVariant() Slice[Variant] {
 	return filterType[Variant](assortment)
 }
 
-// FilterConsignment фильтрует позиции по типу [Consignment] (Серия)
+// FilterConsignment фильтрует позиции по типу [Consignment] (Серия).
 func (assortment Assortment) FilterConsignment() Slice[Consignment] {
 	return filterType[Consignment](assortment)
 }
 
-// FilterService фильтрует позиции по типу [Service] (Услуга)
+// FilterService фильтрует позиции по типу [Service] (Услуга).
 func (assortment Assortment) FilterService() Slice[Service] {
 	return filterType[Service](assortment)
 }
@@ -381,11 +389,11 @@ func (minPrice MinPrice) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ostatki-i-sebestoimost-w-poziciqh-dokumentow
 type Stock struct {
-	Cost      float64 `json:"cost"`
-	Quantity  float64 `json:"quantity"`
-	Reserve   float64 `json:"reserve"`
-	InTransit float64 `json:"intransit"`
-	Available float64 `json:"available"`
+	Cost      float64 `json:"cost"`      // Себестоимость
+	Quantity  float64 `json:"quantity"`  // Количество
+	Reserve   float64 `json:"reserve"`   // Резерв
+	InTransit float64 `json:"intransit"` // Ожидание
+	Available float64 `json:"available"` // Доступно
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -483,46 +491,6 @@ const (
 	TaxSystemSameAsGroup             TaxSystem = "TAX_SYSTEM_SAME_AS_GROUP"             // Совпадает с группой
 )
 
-type assortmentService struct {
-	Endpoint
-}
-
-func (service *assortmentService) Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
-	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
-}
-
-func (service *assortmentService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
-	p := new(Params)
-	if len(params) > 0 {
-		p = params[0]
-	}
-	p.WithAsync()
-	_, resp, err := NewRequestBuilder[any](service.client, service.uri).SetParams(p).Get(ctx)
-	if err != nil {
-		return nil, resp, nil
-	}
-	async := NewAsyncResultService[AssortmentResponse](service.client, resp)
-	return async, resp, err
-}
-
-func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AssortmentInterface) (*DeleteManyResponse, *resty.Response, error) {
-	var mw = make([]MetaWrapper, 0, len(entities))
-	for _, entity := range entities {
-		mw = append(mw, entity.asAssortment().GetMeta().Wrap())
-	}
-	return NewRequestBuilder[DeleteManyResponse](service.client, service.uri).Post(ctx, mw)
-}
-
-func (service *assortmentService) GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error) {
-	path := fmt.Sprintf("%s/settings", service.uri)
-	return NewRequestBuilder[AssortmentSettings](service.client, path).Get(ctx)
-}
-
-func (service *assortmentService) UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error) {
-	path := fmt.Sprintf("%s/settings", service.uri)
-	return NewRequestBuilder[AssortmentSettings](service.client, path).Put(ctx, settings)
-}
-
 // AssortmentService методы сервиса для работы с ассортиментом.
 type AssortmentService interface {
 	// Get выполняет запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
@@ -549,6 +517,48 @@ type AssortmentService interface {
 	// Принимает контекст и объект AssortmentSettings.
 	// Возвращает изменённый объект AssortmentSettings.
 	UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error)
+}
+
+type assortmentService struct {
+	Endpoint
+}
+
+func (service *assortmentService) Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
+	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
+}
+
+func (service *assortmentService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
+	p := NewParams()
+	if len(params) > 0 {
+		p = params[0]
+	}
+	p.WithAsync()
+	_, resp, err := NewRequestBuilder[any](service.client, service.uri).SetParams(p).Get(ctx)
+	if err != nil {
+		return nil, resp, nil
+	}
+	async := NewAsyncResultService[AssortmentResponse](service.client, resp)
+	return async, resp, err
+}
+
+func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AssortmentInterface) (*DeleteManyResponse, *resty.Response, error) {
+	var mw = make([]MetaWrapper, 0, len(entities))
+	for _, entity := range entities {
+		if entity != nil {
+			mw = append(mw, entity.asAssortment().GetMeta().Wrap())
+		}
+	}
+	return NewRequestBuilder[DeleteManyResponse](service.client, service.uri).Post(ctx, mw)
+}
+
+func (service *assortmentService) GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error) {
+	path := fmt.Sprintf("%s/settings", service.uri)
+	return NewRequestBuilder[AssortmentSettings](service.client, path).Get(ctx)
+}
+
+func (service *assortmentService) UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error) {
+	path := fmt.Sprintf("%s/settings", service.uri)
+	return NewRequestBuilder[AssortmentSettings](service.client, path).Put(ctx, settings)
 }
 
 // NewAssortmentService принимает [Client] и возвращает сервис для работы с ассортиментом.
