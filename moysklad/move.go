@@ -60,8 +60,8 @@ func (move Move) Clean() *Move {
 	return &Move{Meta: move.Meta}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (move Move) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (move Move) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: move.Meta}
 }
 

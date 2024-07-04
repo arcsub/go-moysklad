@@ -69,16 +69,21 @@ func (invoiceIn InvoiceIn) Clean() *InvoiceIn {
 	return &InvoiceIn{Meta: invoiceIn.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (invoiceIn InvoiceIn) operation() *Operation {
+func (invoiceIn InvoiceIn) AsOperation() *Operation {
 	return &Operation{Meta: invoiceIn.GetMeta(), LinkedSum: invoiceIn.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (invoiceIn InvoiceIn) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (invoiceIn InvoiceIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: invoiceIn.Meta}
+}
+
+// AsOperationOut реализует интерфейс [OperationOut].
+func (invoiceIn InvoiceIn) AsOperationOut() *Operation {
+	return invoiceIn.AsOperation()
 }
 
 // GetOrganizationAccount возвращает Метаданные счета юрлица.
@@ -406,7 +411,7 @@ func (invoiceIn *InvoiceIn) SetGroup(group *Group) *InvoiceIn {
 // Принимает [Counterparty] или [Organization].
 func (invoiceIn *InvoiceIn) SetAgent(agent AgentCounterpartyOrganizationInterface) *InvoiceIn {
 	if agent != nil {
-		invoiceIn.Agent = agent.asCOAgent()
+		invoiceIn.Agent = agent.AsCOAgent()
 	}
 	return invoiceIn
 }

@@ -34,21 +34,21 @@ type Agent struct {
 //
 // Интерфейс должны реализовывать: [Counterparty] и [Organization].
 type AgentCounterpartyOrganizationInterface interface {
-	asCOAgent() *Agent
+	AsCOAgent() *Agent
 }
 
 // AgentCounterpartyEmployeeInterface описывает метод, который возвращает *Agent
 //
 // Интерфейс должны реализовывать: [Counterparty] и [Employee].
 type AgentCounterpartyEmployeeInterface interface {
-	asCEAgent() *Agent
+	AsCEAgent() *Agent
 }
 
 // AgentInterface описывает метод, который возвращает *Agent
 //
 // Интерфейс должны реализовывать: [Counterparty], [Organization] и [Employee].
 type AgentInterface interface {
-	asAgent() *Agent
+	AsAgent() *Agent
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].

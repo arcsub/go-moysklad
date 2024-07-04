@@ -60,8 +60,8 @@ func (internalOrder InternalOrder) Clean() *InternalOrder {
 	return &InternalOrder{Meta: internalOrder.Meta}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (internalOrder InternalOrder) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (internalOrder InternalOrder) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: internalOrder.Meta}
 }
 

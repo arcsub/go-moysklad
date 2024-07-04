@@ -68,16 +68,21 @@ func (commissionReportOut CommissionReportOut) Clean() *CommissionReportOut {
 	return &CommissionReportOut{Meta: commissionReportOut.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (commissionReportOut CommissionReportOut) operation() *Operation {
+func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportOut.GetMeta(), LinkedSum: commissionReportOut.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (commissionReportOut CommissionReportOut) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (commissionReportOut CommissionReportOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportOut.Meta}
+}
+
+// AsOperationOut реализует интерфейс [OperationOut].
+func (commissionReportOut CommissionReportOut) AsOperationOut() *Operation {
+	return commissionReportOut.AsOperation()
 }
 
 // GetApplicable возвращает Отметку о проведении.

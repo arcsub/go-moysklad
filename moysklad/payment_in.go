@@ -62,12 +62,12 @@ func (paymentIn PaymentIn) Clean() *PaymentIn {
 	return &PaymentIn{Meta: paymentIn.Meta}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (paymentIn PaymentIn) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (paymentIn PaymentIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: paymentIn.Meta}
 }
 
-// asPayment реализует интерфейс PaymentInterface.
+// asPayment реализует интерфейс [PaymentInterface].
 func (paymentIn PaymentIn) asPayment() *Payment {
 	return &Payment{Meta: paymentIn.GetMeta()}
 }
@@ -93,6 +93,14 @@ func (paymentIn PaymentIn) GetMoment() Timestamp {
 }
 
 // GetOperations возвращает Метаданные связанных операций.
+//
+// Разрешенные типы связанных операций:
+//   - CustomerOrder (Заказ покупателя)
+//   - PurchaseReturn (Возврат поставщику)
+//   - Demand (Отгрузка)
+//   - InvoiceOut (Счет покупателю)
+//   - CommissionReportIn (Полученный отчет комиссионера)
+//   - RetailShift (Смена)
 func (paymentIn PaymentIn) GetOperations() Operations {
 	return paymentIn.Operations
 }
@@ -275,9 +283,21 @@ func (paymentIn *PaymentIn) SetMoment(moment time.Time) *PaymentIn {
 
 // SetOperations устанавливает Метаданные связанных операций.
 //
-// Принимает множество объектов, реализующих интерфейс [OperationInterface].
-func (paymentIn *PaymentIn) SetOperations(operations ...OperationInterface) *PaymentIn {
-	paymentIn.Operations = NewOperationsFrom(operations)
+// Разрешенные типы связанных операций:
+//   - CustomerOrder (Заказ покупателя)
+//   - PurchaseReturn (Возврат поставщику)
+//   - Demand (Отгрузка)
+//   - InvoiceOut (Счет покупателю)
+//   - CommissionReportIn (Полученный отчет комиссионера)
+//   - RetailShift (Смена)
+//
+// Принимает множество объектов, реализующих интерфейс [OperationIn].
+func (paymentIn *PaymentIn) SetOperations(operations ...OperationIn) *PaymentIn {
+	for _, operation := range operations {
+		if operation != nil {
+			paymentIn.Operations.Push(operation.AsOperationIn())
+		}
+	}
 	return paymentIn
 }
 
@@ -348,7 +368,7 @@ func (paymentIn *PaymentIn) SetFactureOut(factureOut *FactureOut) *PaymentIn {
 // Принимает [Counterparty] или [Organization].
 func (paymentIn *PaymentIn) SetAgent(agent AgentCounterpartyOrganizationInterface) *PaymentIn {
 	if agent != nil {
-		paymentIn.Agent = agent.asCOAgent()
+		paymentIn.Agent = agent.AsCOAgent()
 	}
 	return paymentIn
 }
@@ -457,10 +477,10 @@ func (PaymentIn) MetaType() MetaType {
 	return MetaTypePaymentIn
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (paymentIn PaymentIn) operation() *Operation {
+func (paymentIn PaymentIn) AsOperation() *Operation {
 	return &Operation{Meta: paymentIn.GetMeta(), LinkedSum: paymentIn.GetSum()}
 }
 
@@ -526,7 +546,7 @@ type PaymentInService interface {
 	Template(ctx context.Context) (*PaymentIn, *resty.Response, error)
 
 	// TemplateBased выполняет запрос на получение шаблона входящего платежа на основе других документов.
-	// Основание, на котором может быть создано:
+	// Основание, на котором может быть создан:
 	//	- Заказ покупателя (CustomerOrder)
 	//	- Возврат поставщику (PurchaseReturn)
 	//	- Отгрузка (Demand)

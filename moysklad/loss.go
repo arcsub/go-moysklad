@@ -56,8 +56,8 @@ func (loss Loss) Clean() *Loss {
 	return &Loss{Meta: loss.Meta}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (loss Loss) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (loss Loss) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: loss.Meta}
 }
 

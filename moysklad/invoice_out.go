@@ -68,16 +68,21 @@ func (invoiceOut InvoiceOut) Clean() *InvoiceOut {
 	return &InvoiceOut{Meta: invoiceOut.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (invoiceOut InvoiceOut) operation() *Operation {
+func (invoiceOut InvoiceOut) AsOperation() *Operation {
 	return &Operation{Meta: invoiceOut.GetMeta(), LinkedSum: invoiceOut.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (invoiceOut InvoiceOut) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (invoiceOut InvoiceOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: invoiceOut.Meta}
+}
+
+// AsOperationIn реализует интерфейс [OperationIn].
+func (invoiceOut InvoiceOut) AsOperationIn() *Operation {
+	return invoiceOut.AsOperation()
 }
 
 // GetPayedSum возвращает Сумму входящих платежей по Счету покупателю.
@@ -386,7 +391,7 @@ func (invoiceOut *InvoiceOut) SetContract(contract *Contract) *InvoiceOut {
 // Принимает [Counterparty] или [Organization].
 func (invoiceOut *InvoiceOut) SetAgent(agent AgentCounterpartyOrganizationInterface) *InvoiceOut {
 	if agent != nil {
-		invoiceOut.Agent = agent.asCOAgent()
+		invoiceOut.Agent = agent.AsCOAgent()
 	}
 	return invoiceOut
 }

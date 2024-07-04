@@ -57,15 +57,15 @@ func (factureIn FactureIn) Clean() *FactureIn {
 	return &FactureIn{Meta: factureIn.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (factureIn FactureIn) operation() *Operation {
+func (factureIn FactureIn) AsOperation() *Operation {
 	return &Operation{Meta: factureIn.GetMeta(), LinkedSum: factureIn.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (factureIn FactureIn) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (factureIn FactureIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: factureIn.Meta}
 }
 
@@ -296,7 +296,7 @@ func (factureIn *FactureIn) SetIncomingDate(incomingDate time.Time) *FactureIn {
 // Принимает [Counterparty] или [Organization].
 func (factureIn *FactureIn) SetAgent(agent AgentCounterpartyOrganizationInterface) *FactureIn {
 	if agent != nil {
-		factureIn.Agent = agent.asCOAgent()
+		factureIn.Agent = agent.AsCOAgent()
 	}
 	return factureIn
 }

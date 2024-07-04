@@ -55,8 +55,8 @@ func (inventory Inventory) Clean() *Inventory {
 	return &Inventory{Meta: inventory.Meta}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (inventory Inventory) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (inventory Inventory) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: inventory.Meta}
 }
 

@@ -79,16 +79,21 @@ func (demand Demand) Clean() *Demand {
 	return &Demand{Meta: demand.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (demand Demand) operation() *Operation {
+func (demand Demand) AsOperation() *Operation {
 	return &Operation{Meta: demand.GetMeta(), LinkedSum: demand.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (demand Demand) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (demand Demand) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: demand.Meta}
+}
+
+// AsOperationIn реализует интерфейс [OperationIn].
+func (demand Demand) AsOperationIn() *Operation {
+	return demand.AsOperation()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -356,7 +361,7 @@ func (demand Demand) GetAttributes() Slice[Attribute] {
 // Принимает [Counterparty] или [Organization].
 func (demand *Demand) SetAgent(agent AgentCounterpartyOrganizationInterface) *Demand {
 	if agent != nil {
-		demand.Agent = agent.asCOAgent()
+		demand.Agent = agent.AsCOAgent()
 	}
 	return demand
 }
@@ -607,7 +612,7 @@ func (demand *Demand) SetCargoName(cargoName string) *Demand {
 //
 // Принимает [Counterparty] или [Organization].
 func (demand *Demand) SetCarrier(carrier AgentCounterpartyOrganizationInterface) *Demand {
-	demand.Carrier = carrier.asCOAgent()
+	demand.Carrier = carrier.AsCOAgent()
 	return demand
 }
 
@@ -615,7 +620,7 @@ func (demand *Demand) SetCarrier(carrier AgentCounterpartyOrganizationInterface)
 //
 // Принимает [Counterparty] или [Organization].
 func (demand *Demand) SetConsignee(consignee AgentCounterpartyOrganizationInterface) *Demand {
-	demand.Consignee = consignee.asCOAgent()
+	demand.Consignee = consignee.AsCOAgent()
 	return demand
 }
 

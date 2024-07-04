@@ -60,19 +60,19 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (cashOut CashOut) operation() *Operation {
+func (cashOut CashOut) AsOperation() *Operation {
 	return &Operation{Meta: cashOut.GetMeta(), LinkedSum: cashOut.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (cashOut CashOut) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (cashOut CashOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
 }
 
-// asPayment реализует интерфейс PaymentInterface.
+// asPayment реализует интерфейс [PaymentInterface].
 func (cashOut CashOut) asPayment() *Payment {
 	return &Payment{Meta: cashOut.GetMeta()}
 }
@@ -158,6 +158,13 @@ func (cashOut CashOut) GetMoment() Timestamp {
 }
 
 // GetOperations возвращает Метаданные связанных операций.
+//
+// Разрешенные типы связанных операций:
+//   - SalesReturn (Возврат покупателя)
+//   - Supply (Приемка)
+//   - InvoiceIn (Счет поставщика)
+//   - PurchaseOrder (Заказ поставщику)
+//   - CommissionReportOut (Выданный отчет комиссионера)
 func (cashOut CashOut) GetOperations() Operations {
 	return cashOut.Operations
 }
@@ -332,9 +339,20 @@ func (cashOut *CashOut) SetMoment(moment time.Time) *CashOut {
 
 // SetOperations устанавливает Метаданные связанных операций.
 //
-// Принимает множество объектов, реализующих интерфейс [OperationInterface].
-func (cashOut *CashOut) SetOperations(operations ...OperationInterface) *CashOut {
-	cashOut.Operations = NewOperationsFrom(operations)
+// Разрешенные типы связанных операций:
+//   - SalesReturn (Возврат покупателя)
+//   - Supply (Приемка)
+//   - InvoiceIn (Счет поставщика)
+//   - PurchaseOrder (Заказ поставщику)
+//   - CommissionReportOut (Выданный отчет комиссионера)
+//
+// Принимает множество объектов, реализующих интерфейс [OperationOut].
+func (cashOut *CashOut) SetOperations(operations ...OperationOut) *CashOut {
+	for _, operation := range operations {
+		if operation != nil {
+			cashOut.Operations.Push(operation.AsOperationOut())
+		}
+	}
 	return cashOut
 }
 
@@ -343,7 +361,7 @@ func (cashOut *CashOut) SetOperations(operations ...OperationInterface) *CashOut
 // Принимает [Counterparty], [Organization] или [Employee].
 func (cashOut *CashOut) SetAgent(agent AgentInterface) *CashOut {
 	if agent != nil {
-		cashOut.Agent = agent.asAgent()
+		cashOut.Agent = agent.AsAgent()
 	}
 	return cashOut
 }

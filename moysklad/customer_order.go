@@ -77,16 +77,21 @@ func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 	return &CustomerOrder{Meta: customerOrder.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (customerOrder CustomerOrder) operation() *Operation {
+func (customerOrder CustomerOrder) AsOperation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (customerOrder CustomerOrder) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (customerOrder CustomerOrder) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: customerOrder.Meta}
+}
+
+// AsOperationIn реализует интерфейс [OperationIn].
+func (commissionReportOut CommissionReportOut) AsOperationIn() *Operation {
+	return commissionReportOut.AsOperation()
 }
 
 // GetOrganizationAccount возвращает Метаданные счета юрлица.

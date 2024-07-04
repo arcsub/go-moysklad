@@ -49,8 +49,8 @@ func (bonusTransaction BonusTransaction) Clean() *BonusTransaction {
 	return &BonusTransaction{Meta: bonusTransaction.Meta}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (bonusTransaction BonusTransaction) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (bonusTransaction BonusTransaction) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: bonusTransaction.Meta}
 }
 
@@ -217,7 +217,7 @@ func (bonusTransaction *BonusTransaction) SetApplicable(applicable bool) *BonusT
 // Принимает [Counterparty] или [Organization].
 func (bonusTransaction *BonusTransaction) SetAgent(agent AgentCounterpartyOrganizationInterface) *BonusTransaction {
 	if agent != nil {
-		bonusTransaction.Agent = agent.asCOAgent()
+		bonusTransaction.Agent = agent.AsCOAgent()
 	}
 	return bonusTransaction
 }

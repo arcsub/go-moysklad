@@ -77,12 +77,12 @@ func (organization Organization) Clean() *Organization {
 }
 
 // AsTaskAgent реализует интерфейс [AgentCounterpartyOrganizationInterface].
-func (organization Organization) asCOAgent() *Agent {
-	return organization.asAgent()
+func (organization Organization) AsCOAgent() *Agent {
+	return organization.AsAgent()
 }
 
-// asAgent реализует интерфейс [AgentInterface].
-func (organization Organization) asAgent() *Agent {
+// AsAgent реализует интерфейс [AgentInterface].
+func (organization Organization) AsAgent() *Agent {
 	if organization.Meta == nil {
 		return nil
 	}

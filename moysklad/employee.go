@@ -55,13 +55,13 @@ func (employee Employee) Clean() *Employee {
 	return &Employee{Meta: employee.Meta}
 }
 
-// asCEAgent реализует интерфейс [AgentCounterpartyEmployeeInterface].
-func (employee Employee) asCEAgent() *Agent {
-	return employee.asAgent()
+// AsCEAgent реализует интерфейс [AgentCounterpartyEmployeeInterface].
+func (employee Employee) AsCEAgent() *Agent {
+	return employee.AsAgent()
 }
 
-// asAgent реализует интерфейс [AgentInterface].
-func (employee Employee) asAgent() *Agent {
+// AsAgent реализует интерфейс [AgentInterface].
+func (employee Employee) AsAgent() *Agent {
 	if employee.Meta == nil {
 		return nil
 	}

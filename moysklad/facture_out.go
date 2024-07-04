@@ -60,15 +60,15 @@ func (factureOut FactureOut) Clean() *FactureOut {
 	return &FactureOut{Meta: factureOut.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (factureOut FactureOut) operation() *Operation {
+func (factureOut FactureOut) AsOperation() *Operation {
 	return &Operation{Meta: factureOut.GetMeta(), LinkedSum: factureOut.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (factureOut FactureOut) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (factureOut FactureOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: factureOut.Meta}
 }
 
@@ -324,7 +324,7 @@ func (factureOut *FactureOut) SetPaymentDate(paymentDate time.Time) *FactureOut 
 // Принимает [Counterparty] или [Organization].
 func (factureOut *FactureOut) SetAgent(agent AgentCounterpartyOrganizationInterface) *FactureOut {
 	if agent != nil {
-		factureOut.Agent = agent.asCOAgent()
+		factureOut.Agent = agent.AsCOAgent()
 	}
 	return factureOut
 }
@@ -398,7 +398,7 @@ func (factureOut *FactureOut) SetReturns(returns ...*PurchaseReturn) *FactureOut
 // Принимает [Counterparty] или [Organization].
 func (factureOut *FactureOut) SetConsignee(consignee AgentCounterpartyOrganizationInterface) *FactureOut {
 	if consignee != nil {
-		factureOut.Consignee = consignee.asCOAgent()
+		factureOut.Consignee = consignee.AsCOAgent()
 	}
 	return factureOut
 }

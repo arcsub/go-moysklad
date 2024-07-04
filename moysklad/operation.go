@@ -24,14 +24,39 @@ type Operation struct {
 
 // OperationInterface описывает метод, возвращающий [Operation].
 type OperationInterface interface {
-	operation() *Operation
+	AsOperation() *Operation
+}
+
+// OperationIn описывает метод, возвращающий [Operation] для объектов [CashIn] и [PaymentIn].
+//
+// Метод должны реализовывать:
+//   - CustomerOrder (Заказ покупателя)
+//   - PurchaseReturn (Возврат поставщику)
+//   - Demand (Отгрузка)
+//   - InvoiceOut (Счет покупателю)
+//   - CommissionReportIn (Полученный отчет комиссионера)
+//   - RetailShift (Смена)
+type OperationIn interface {
+	AsOperationIn() *Operation
+}
+
+// OperationOut описывает метод, возвращающий [Operation] для объектов [CashOut] и [PaymentOut].
+//
+// Метод должны реализовывать:
+//   - SalesReturn (Возврат покупателя)
+//   - Supply (Приемка)
+//   - InvoiceIn (Счет поставщика)
+//   - PurchaseOrder (Заказ поставщику)
+//   - CommissionReportOut (Выданный отчет комиссионера)
+type OperationOut interface {
+	AsOperationOut() *Operation
 }
 
 // NewOperationsFrom преобразует список объектов, реализующих интерфейс [OperationInterface] в список операций [Operations].
 func NewOperationsFrom[T OperationInterface](operations []T) Operations {
 	var op = make(Operations, 0, len(operations))
 	for _, entity := range operations {
-		op.Push(entity)
+		op.Push(entity.AsOperation())
 	}
 	return op
 }
@@ -225,9 +250,9 @@ type Operations Slice[Operation]
 // Push Привязка платежей к документам.
 //
 // Принимает множество объектов, реализующих интерфейс [OperationInterface].
-func (operations *Operations) Push(elements ...OperationInterface) *Operations {
+func (operations *Operations) Push(elements ...*Operation) *Operations {
 	for _, operation := range elements {
-		*operations = append(*operations, operation.operation())
+		*operations = append(*operations, operation)
 	}
 	return operations
 }

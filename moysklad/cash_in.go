@@ -59,19 +59,19 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
-// operation возвращает объект [Operation] c полями meta и linkedSum.
+// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
 //
 // Значение поля linkedSum заполняется из поля sum.
-func (cashIn CashIn) operation() *Operation {
+func (cashIn CashIn) AsOperation() *Operation {
 	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
 }
 
-// asTaskOperation реализует интерфейс [TaskOperationInterface].
-func (cashIn CashIn) asTaskOperation() *TaskOperation {
+// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+func (cashIn CashIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
 }
 
-// asPayment реализует интерфейс PaymentInterface.
+// asPayment реализует интерфейс [PaymentInterface].
 func (cashIn CashIn) asPayment() *Payment {
 	return &Payment{Meta: cashIn.GetMeta()}
 }
@@ -312,9 +312,21 @@ func (cashIn *CashIn) SetMeta(meta *Meta) *CashIn {
 
 // SetOperations устанавливает Метаданные связанных операций.
 //
-// Принимает множество объектов, реализующих интерфейс [OperationInterface].
-func (cashIn *CashIn) SetOperations(operations ...OperationInterface) *CashIn {
-	cashIn.Operations = NewOperationsFrom(operations)
+// Разрешенные типы связанных операций:
+//   - CustomerOrder (Заказ покупателя)
+//   - PurchaseReturn (Возврат поставщику)
+//   - Demand (Отгрузка)
+//   - InvoiceOut (Счет покупателю)
+//   - CommissionReportIn (Полученный отчет комиссионера)
+//   - RetailShift (Смена)
+//
+// Принимает множество объектов, реализующих интерфейс [OperationIn].
+func (cashIn *CashIn) SetOperations(operations ...OperationIn) *CashIn {
+	for _, operation := range operations {
+		if operation != nil {
+			cashIn.Operations.Push(operation.AsOperationIn())
+		}
+	}
 	return cashIn
 }
 
@@ -323,7 +335,7 @@ func (cashIn *CashIn) SetOperations(operations ...OperationInterface) *CashIn {
 // Принимает [Counterparty], [Organization] или [Employee].
 func (cashIn *CashIn) SetAgent(agent AgentInterface) *CashIn {
 	if agent != nil {
-		cashIn.Agent = agent.asAgent()
+		cashIn.Agent = agent.AsAgent()
 	}
 	return cashIn
 }
