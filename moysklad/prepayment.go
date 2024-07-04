@@ -183,7 +183,7 @@ func (prepayment Prepayment) GetPublished() bool {
 	return Deref(prepayment.Published)
 }
 
-// GetQRSum возвращает плачено по QR-коду.
+// GetQRSum возвращает оплачено по QR-коду.
 func (prepayment Prepayment) GetQRSum() float64 {
 	return Deref(prepayment.QRSum)
 }
@@ -377,11 +377,6 @@ type PrepaymentService interface {
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
 	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PrepaymentPosition, *resty.Response, error)
-
-	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
-	// Принимает контекст, ID документа и ID позиции.
-	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
