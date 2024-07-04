@@ -237,6 +237,26 @@ func (payment *Payment) UnmarshalJSON(data []byte) (err error) {
 	return nil
 }
 
+// IsCashIn возвращает true, если объект имеет код сущности [MetaTypeCashIn].
+func (payment Payment) IsCashIn() bool {
+	return payment.Meta.GetType() == MetaTypeCashIn
+}
+
+// IsCashOut возвращает true, если объект имеет код сущности [MetaTypeCashOut].
+func (payment Payment) IsCashOut() bool {
+	return payment.Meta.GetType() == MetaTypeCashOut
+}
+
+// IsPaymentIn возвращает true, если объект имеет код сущности [MetaTypePaymentIn].
+func (payment Payment) IsPaymentIn() bool {
+	return payment.Meta.GetType() == MetaTypePaymentIn
+}
+
+// IsPaymentOut возвращает true, если объект имеет код сущности [MetaTypePaymentOut].
+func (payment Payment) IsPaymentOut() bool {
+	return payment.Meta.GetType() == MetaTypePaymentOut
+}
+
 // AsCashIn пытается привести объект к типу [CashIn].
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
