@@ -157,7 +157,7 @@ func (inventory Inventory) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Инвентаризации.
 func (inventory Inventory) GetState() State {
-	return inventory.State.GetValue()
+	return Deref(inventory.State).GetValue()
 }
 
 // GetStore возвращает Метаданные склада.

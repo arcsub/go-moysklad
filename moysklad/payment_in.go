@@ -112,7 +112,7 @@ func (paymentIn PaymentIn) GetName() string {
 
 // GetContract возвращает Метаданные договора.
 func (paymentIn PaymentIn) GetContract() Contract {
-	return paymentIn.Contract.GetValue()
+	return Deref(paymentIn.Contract).GetValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -202,7 +202,7 @@ func (paymentIn PaymentIn) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (paymentIn PaymentIn) GetProject() Project {
-	return paymentIn.Project.GetValue()
+	return Deref(paymentIn.Project).GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -212,7 +212,7 @@ func (paymentIn PaymentIn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (paymentIn PaymentIn) GetRate() Rate {
-	return paymentIn.Rate.GetValue()
+	return Deref(paymentIn.Rate).GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -222,12 +222,12 @@ func (paymentIn PaymentIn) GetShared() bool {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (paymentIn PaymentIn) GetSalesChannel() SalesChannel {
-	return paymentIn.SalesChannel.GetValue()
+	return Deref(paymentIn.SalesChannel).GetValue()
 }
 
 // GetState возвращает Метаданные статуса Входящего платежа.
 func (paymentIn PaymentIn) GetState() State {
-	return paymentIn.State.GetValue()
+	return Deref(paymentIn.State).GetValue()
 }
 
 // GetSum возвращает Сумму Входящего платежа в установленной валюте.

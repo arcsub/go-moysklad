@@ -116,7 +116,7 @@ func (organization Organization) GetBonusPoints() int {
 
 // GetBonusProgram возвращает Метаданные активной бонусной программы.
 func (organization Organization) GetBonusProgram() BonusProgram {
-	return organization.BonusProgram.GetValue()
+	return Deref(organization.BonusProgram).GetValue()
 }
 
 // GetActualAddress возвращает Фактический адрес Юрлица.

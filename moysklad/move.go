@@ -122,12 +122,12 @@ func (move Move) GetID() uuid.UUID {
 
 // GetInternalOrder возвращает Метаданные Внутреннего заказа, связанного с Перемещением.
 func (move Move) GetInternalOrder() InternalOrder {
-	return move.InternalOrder.GetValue()
+	return Deref(move.InternalOrder).GetValue()
 }
 
 // GetCustomerOrder возвращает Ссылку на Заказ Покупателя, связанного с Перемещением.
 func (move Move) GetCustomerOrder() CustomerOrder {
-	return move.CustomerOrder.GetValue()
+	return Deref(move.CustomerOrder).GetValue()
 }
 
 // GetMeta возвращает Метаданные Перемещения.
@@ -174,7 +174,7 @@ func (move Move) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (move Move) GetProject() Project {
-	return move.Project.GetValue()
+	return Deref(move.Project).GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -184,7 +184,7 @@ func (move Move) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (move Move) GetRate() Rate {
-	return move.Rate.GetValue()
+	return Deref(move.Rate).GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -199,7 +199,7 @@ func (move Move) GetSourceStore() Store {
 
 // GetState возвращает Метаданные статуса Перемещения.
 func (move Move) GetState() State {
-	return move.State.GetValue()
+	return Deref(move.State).GetValue()
 }
 
 // GetSum возвращает Сумму Перемещения в копейках.

@@ -75,7 +75,7 @@ func (payment Payment) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (payment Payment) GetContract() Contract {
-	return payment.Contract.GetValue()
+	return Deref(payment.Contract).GetValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -150,7 +150,7 @@ func (payment Payment) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (payment Payment) GetProject() Project {
-	return payment.Project.GetValue()
+	return Deref(payment.Project).GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -160,12 +160,12 @@ func (payment Payment) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (payment Payment) GetRate() Rate {
-	return payment.Rate.GetValue()
+	return Deref(payment.Rate).GetValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (payment Payment) GetSalesChannel() SalesChannel {
-	return payment.SalesChannel.GetValue()
+	return Deref(payment.SalesChannel).GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.

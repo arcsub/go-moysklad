@@ -145,7 +145,7 @@ func (bundle Bundle) GetComponents() MetaArray[BundleComponent] {
 
 // GetCountry возвращает Метаданные Страны.
 func (bundle Bundle) GetCountry() Country {
-	return bundle.Country.GetValue()
+	return Deref(bundle.Country).GetValue()
 }
 
 // GetDiscountProhibited возвращает Признак запрета скидок.
@@ -180,12 +180,12 @@ func (bundle Bundle) GetVat() int {
 
 // GetMinPrice возвращает Минимальную цену.
 func (bundle Bundle) GetMinPrice() MinPrice {
-	return bundle.MinPrice.GetValue()
+	return Deref(bundle.MinPrice).GetValue()
 }
 
 // GetOverhead возвращает Дополнительные расходы.
 func (bundle Bundle) GetOverhead() BundleOverhead {
-	return bundle.Overhead.GetValue()
+	return Deref(bundle.Overhead).GetValue()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -215,7 +215,7 @@ func (bundle Bundle) GetSalePrices() Slice[SalePrice] {
 
 // GetProductFolder возвращает Метаданные группы Комплекта.
 func (bundle Bundle) GetProductFolder() ProductFolder {
-	return bundle.ProductFolder.GetValue()
+	return Deref(bundle.ProductFolder).GetValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -245,7 +245,7 @@ func (bundle Bundle) GetVatEnabled() bool {
 
 // GetUom возвращает Единицу измерения.
 func (bundle Bundle) GetUom() Uom {
-	return bundle.Uom.GetValue()
+	return Deref(bundle.Uom).GetValue()
 }
 
 // GetBarcodes возвращает Штрихкоды.

@@ -118,7 +118,7 @@ func (invoiceIn InvoiceIn) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (invoiceIn InvoiceIn) GetContract() Contract {
-	return invoiceIn.Contract.GetValue()
+	return Deref(invoiceIn.Contract).GetValue()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -218,7 +218,7 @@ func (invoiceIn InvoiceIn) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (invoiceIn InvoiceIn) GetProject() Project {
-	return invoiceIn.Project.GetValue()
+	return Deref(invoiceIn.Project).GetValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -228,7 +228,7 @@ func (invoiceIn InvoiceIn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (invoiceIn InvoiceIn) GetRate() Rate {
-	return invoiceIn.Rate.GetValue()
+	return Deref(invoiceIn.Rate).GetValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -243,12 +243,12 @@ func (invoiceIn InvoiceIn) GetShippedSum() float64 {
 
 // GetState возвращает Метаданные статуса счета поставщика.
 func (invoiceIn InvoiceIn) GetState() State {
-	return invoiceIn.State.GetValue()
+	return Deref(invoiceIn.State).GetValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (invoiceIn InvoiceIn) GetStore() Store {
-	return invoiceIn.Store.GetValue()
+	return Deref(invoiceIn.Store).GetValue()
 }
 
 // GetSum возвращает Сумму Счета поставщика в установленной валюте.

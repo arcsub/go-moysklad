@@ -169,7 +169,7 @@ func (priceList PriceList) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Прайс-листа.
 func (priceList PriceList) GetState() State {
-	return priceList.State.GetValue()
+	return Deref(priceList.State).GetValue()
 }
 
 // GetSyncID возвращает ID синхронизации.
