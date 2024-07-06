@@ -366,7 +366,7 @@ func (salary *Salary) SetValue(value float64) *Salary {
 
 // MailActivationRequired структура ответа на запрос активации сотрудника.
 //
-// Если поле mailActivationRequired равно true и сотрудник ранее не был активен, это означает,
+// Если поле mailActivationRequired равно «true» и сотрудник ранее не был активен, это означает,
 // что на указанную у сотрудника почту было выслано письмо со ссылкой на вход для сотрудника.
 //
 // Если поле mailActivationRequired равно false, то можно использовать ранее заданный пароль для данного пользователя.
@@ -516,7 +516,7 @@ type EmployeeService interface {
 
 	// Delete выполняет запрос на удаление сотрудника.
 	// Принимает контекст и ID сотрудника.
-	// Возвращает true в случае успешного удаления сотрудника.
+	// Возвращает «true» в случае успешного удаления сотрудника.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных сотрудников.
@@ -552,7 +552,7 @@ type EmployeeService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -595,12 +595,12 @@ type EmployeeService interface {
 
 	// Deactivate выполняет запрос на деактивацию сотрудника.
 	// Принимает контекст и ID сотрудника.
-	// Возвращает true в случае успешной деактивации.
+	// Возвращает «true» в случае успешной деактивации.
 	Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// ResetPassword выполняет запрос на сброс пароля сотрудника.
 	// Принимает контекст и ID сотрудника.
-	// Возвращает true в случае успешного сброса пароля.
+	// Возвращает «true» в случае успешного сброса пароля.
 	ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 

@@ -377,7 +377,7 @@ type PrepaymentReturnService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -407,12 +407,12 @@ type PrepaymentReturnService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
@@ -437,7 +437,7 @@ type PrepaymentReturnService interface {
 
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
-	// Возвращает true в случае успешного удаления статуса.
+	// Возвращает «true» в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -457,7 +457,7 @@ type PrepaymentReturnService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

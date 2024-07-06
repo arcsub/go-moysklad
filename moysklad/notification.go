@@ -1183,17 +1183,17 @@ type NotificationService interface {
 
 	// Delete выполняет запрос на удаление уведомления.
 	// Принимает контекст и ID уведомления.
-	// Возвращает true в случае успешного удаления уведомления.
+	// Возвращает «true» в случае успешного удаления уведомления.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// MarkAsRead выполняет запрос на отметку о прочтении Уведомления.
 	// Принимает контекст и ID уведомления.
-	// Возвращает true в случае успешного запроса.
+	// Возвращает «true» в случае успешного запроса.
 	MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// MarkAsReadAll выполняет запрос на отметку о прочтении всех уведомлений.
 	// Принимает контекст.
-	// Возвращает true в случае успешного запроса.
+	// Возвращает «true» в случае успешного запроса.
 	MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error)
 
 	// GetSubscription выполняет запрос настроек Уведомлений текущего пользователя.
@@ -1203,7 +1203,7 @@ type NotificationService interface {
 
 	// UpdateSubscription выполняет запрос на изменение настроек Уведомлений текущего пользователя.
 	// Принимает контекст и настройки уведомлений.
-	// Возвращает true в случае успешного запроса.
+	// Возвращает «true» в случае успешного запроса.
 	UpdateSubscription(ctx context.Context, notificationSubscription *NotificationSubscription) (bool, *resty.Response, error)
 }
 

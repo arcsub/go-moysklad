@@ -689,7 +689,7 @@ type OrganizationService interface {
 
 	// Delete выполняет запрос на удаление юрлица.
 	// Принимает контекст и ID юрлица.
-	// Возвращает true в случае успешного удаления юрлица.
+	// Возвращает «true» в случае успешного удаления юрлица.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного юрлица по ID.
@@ -735,7 +735,7 @@ type OrganizationService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -765,7 +765,7 @@ type OrganizationService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }
 

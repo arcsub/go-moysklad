@@ -45,7 +45,7 @@ type Payment struct {
 
 // PaymentInterface описывает метод, возвращающий [Payment].
 type PaymentInterface interface {
-	asPayment() *Payment
+	AsPayment() *Payment
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -298,7 +298,7 @@ func NewPaymentsFrom[T PaymentInterface](elements []T) Slice[Payment] {
 	payments := make(Slice[Payment], 0, len(elements))
 	for _, payment := range elements {
 		if reflect.ValueOf(payment).Kind() == reflect.Ptr {
-			payments.Push(payment.asPayment())
+			payments.Push(payment.AsPayment())
 		}
 	}
 	return payments

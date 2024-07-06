@@ -115,7 +115,7 @@ type GroupService interface {
 
 	// Delete выполняет запрос на удаление отдела.
 	// Принимает контекст и ID отдела.
-	// Возвращает true в случае успешного удаления отдела.
+	// Возвращает «true» в случае успешного удаления отдела.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного отдела по ID.

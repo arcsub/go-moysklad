@@ -333,7 +333,7 @@ type CurrencyService interface {
 
 	// Delete выполняет запрос на удаление валюты.
 	// Принимает контекст и ID валюты.
-	// Возвращает true в случае успешного удаления валюты.
+	// Возвращает «true» в случае успешного удаления валюты.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной валюты по ID.

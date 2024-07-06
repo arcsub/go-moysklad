@@ -196,7 +196,7 @@ type CountryService interface {
 
 	// Delete выполняет запрос на удаление страны.
 	// Принимает контекст и ID страны.
-	// Возвращает true в случае успешного удаления страны.
+	// Возвращает «true» в случае успешного удаления страны.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной страны по ID.

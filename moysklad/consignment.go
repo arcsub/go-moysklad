@@ -43,9 +43,7 @@ func (consignment Consignment) Clean() *Consignment {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Consignment].
-//   - nil в случае неудачи.
+// Возвращает [Consignment] или nil в случае неудачи.
 func NewConsignmentFromAssortment(assortmentPosition *AssortmentPosition) *Consignment {
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
@@ -54,15 +52,13 @@ func NewConsignmentFromAssortment(assortmentPosition *AssortmentPosition) *Consi
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Consignment].
-//   - nil в случае неудачи.
+// Возвращает [Consignment] или nil в случае неудачи.
 func (consignment Consignment) FromAssortment(assortmentPosition *AssortmentPosition) *Consignment {
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
-// asAssortment возвращает [AssortmentPosition] с единственным заполненным полем [Meta].
-func (consignment Consignment) asAssortment() *AssortmentPosition {
+// AsAssortment реализует интерфейс [AssortmentInterface].
+func (consignment Consignment) AsAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: consignment.GetMeta()}
 }
 
@@ -175,7 +171,7 @@ func (consignment *Consignment) SetExternalCode(externalCode string) *Consignmen
 //
 // Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (consignment *Consignment) SetAssortment(assortment AssortmentInterface) *Consignment {
-	consignment.Assortment = assortment.asAssortment()
+	consignment.Assortment = assortment.AsAssortment()
 	return consignment
 }
 
@@ -246,7 +242,7 @@ type ConsignmentService interface {
 
 	// Delete выполняет запрос на удаление серии.
 	// Принимает контекст и ID серии.
-	// Возвращает true в случае успешного удаления серии.
+	// Возвращает «true» в случае успешного удаления серии.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной серии по ID.
@@ -292,7 +288,7 @@ type ConsignmentService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.

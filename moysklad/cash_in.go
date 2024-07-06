@@ -59,9 +59,7 @@ func (cashIn CashIn) Clean() *CashIn {
 	return &CashIn{Meta: cashIn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
-//
-// Значение поля linkedSum заполняется из поля sum.
+// AsOperation возвращает объект [Operation] c полем [Meta].
 func (cashIn CashIn) AsOperation() *Operation {
 	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
 }
@@ -71,8 +69,8 @@ func (cashIn CashIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
 }
 
-// asPayment реализует интерфейс [PaymentInterface].
-func (cashIn CashIn) asPayment() *Payment {
+// AsPayment реализует интерфейс [PaymentInterface].
+func (cashIn CashIn) AsPayment() *Payment {
 	return &Payment{Meta: cashIn.GetMeta()}
 }
 
@@ -479,7 +477,7 @@ type CashInService interface {
 
 	// Delete выполняет запрос на удаление приходного ордера.
 	// Принимает контекст и ID приходного ордера.
-	// Возвращает true в случае успешного удаления приходного ордера.
+	// Возвращает «true» в случае успешного удаления приходного ордера.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных приходных ордеров.
@@ -515,7 +513,7 @@ type CashInService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -566,7 +564,7 @@ type CashInService interface {
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
-	// Возвращает true в случае успешного удаления публикации.
+	// Возвращает «true» в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
@@ -576,12 +574,12 @@ type CashInService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
@@ -606,7 +604,7 @@ type CashInService interface {
 
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
-	// Возвращает true в случае успешного удаления статуса.
+	// Возвращает «true» в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -626,7 +624,7 @@ type CashInService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

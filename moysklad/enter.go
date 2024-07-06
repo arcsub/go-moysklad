@@ -379,7 +379,7 @@ func (enter Enter) Delete(ctx context.Context, client *Client) (bool, *resty.Res
 type EnterPosition struct {
 	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	Country    *Country            `json:"country,omitempty"`    // Метаданные Страны
+	Country    *NullValue[Country] `json:"country,omitempty"`    // Метаданные Страны
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
 	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
 	Overhead   *float64            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Оприходования не заданы, то накладные расходы нельзя задать
@@ -403,7 +403,7 @@ func (enterPosition EnterPosition) GetAssortment() AssortmentPosition {
 
 // GetCountry возвращает Метаданные Страны.
 func (enterPosition EnterPosition) GetCountry() Country {
-	return Deref(enterPosition.Country)
+	return Deref(enterPosition.Country).GetValue()
 }
 
 // GetGTD возвращает ГТД.
@@ -467,16 +467,16 @@ func (enterPosition EnterPosition) GetThings() Slice[string] {
 // Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (enterPosition *EnterPosition) SetAssortment(assortment AssortmentInterface) *EnterPosition {
 	if assortment != nil {
-		enterPosition.Assortment = assortment.asAssortment()
+		enterPosition.Assortment = assortment.AsAssortment()
 	}
 	return enterPosition
 }
 
 // SetCountry устанавливает Метаданные Страны.
+//
+// Передача nil передаёт сброс значения (null).
 func (enterPosition *EnterPosition) SetCountry(country *Country) *EnterPosition {
-	if country != nil {
-		enterPosition.Country = country.Clean()
-	}
+	enterPosition.Country = NewNullValue(country)
 	return enterPosition
 }
 
@@ -574,7 +574,7 @@ type EnterService interface {
 
 	// Delete выполняет запрос на удаление оприходования.
 	// Принимает контекст и ID оприходования.
-	// Возвращает true в случае успешного удаления оприходования.
+	// Возвращает «true» в случае успешного удаления оприходования.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного оприходования по ID.
@@ -632,7 +632,7 @@ type EnterService interface {
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
-	// Возвращает true в случае успешного удаления позиции.
+	// Возвращает «true» в случае успешного удаления позиции.
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
@@ -683,7 +683,7 @@ type EnterService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -708,7 +708,7 @@ type EnterService interface {
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
-	// Возвращает true в случае успешного удаления публикации.
+	// Возвращает «true» в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
@@ -718,7 +718,7 @@ type EnterService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
@@ -733,7 +733,7 @@ type EnterService interface {
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
@@ -758,7 +758,7 @@ type EnterService interface {
 
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
-	// Возвращает true в случае успешного удаления статуса.
+	// Возвращает «true» в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -778,7 +778,7 @@ type EnterService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

@@ -156,7 +156,7 @@ type ExpenseItemService interface {
 
 	// Delete выполняет запрос на удаление статьи расходов.
 	// Принимает контекст и ID статьи расходов.
-	// Возвращает true в случае успешного удаления статьи расходов.
+	// Возвращает «true» в случае успешного удаления статьи расходов.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной статьи расходов по ID.
@@ -171,7 +171,7 @@ type ExpenseItemService interface {
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 

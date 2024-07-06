@@ -372,7 +372,7 @@ type BonusTransactionService interface {
 
 	// Delete выполняет запрос на удаление бонусной операции.
 	// Принимает контекст и ID бонусной операции.
-	// Возвращает true в случае успешного удаления бонусной операции.
+	// Возвращает «true» в случае успешного удаления бонусной операции.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной операции.

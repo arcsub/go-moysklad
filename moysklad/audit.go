@@ -136,7 +136,7 @@ type AuditPosition struct {
 
 // getFieldAndUnmarshall достаёт значение из поля field объекта Diff и пытается привести к типу T.
 //
-// Возвращает true и T в случае успеха.
+// Возвращает «true» и T в случае успеха.
 func getFieldAndUnmarshall[T any](diff Diff, field string) (bool, T) {
 	if positions, ok := diff[field]; ok {
 		if p, err := UnmarshallAny[T](positions); err == nil {
@@ -146,12 +146,12 @@ func getFieldAndUnmarshall[T any](diff Diff, field string) (bool, T) {
 	return false, *new(T)
 }
 
-// GetPositions возвращает true и позиции изменённого документа, если такие присутствуют в объекте Diff.
+// GetPositions возвращает «true» и позиции изменённого документа, если такие присутствуют в объекте Diff.
 func (diff Diff) GetPositions() (bool, []OldNew[AuditPosition]) {
 	return getFieldAndUnmarshall[[]OldNew[AuditPosition]](diff, "positions")
 }
 
-// GetSalesPrices возвращает true и объект SalePriceElem, если в объекте Diff присутствует поле salePrices.
+// GetSalesPrices возвращает «true» и объект SalePriceElem, если в объекте Diff присутствует поле salePrices.
 func (diff Diff) GetSalesPrices() (bool, SalePriceElem) {
 	var o SalePriceElem
 	if salePrices, ok := diff["salePrices"]; ok {
@@ -177,22 +177,22 @@ func (diff Diff) GetSalesPrices() (bool, SalePriceElem) {
 	return false, o
 }
 
-// GetFieldString возвращает true и объект OldNew со значениями типа string, поле fieldName присутствует в объекте Diff.
+// GetFieldString возвращает «true» и объект OldNew со значениями типа string, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldString(fieldName string) (bool, OldNew[string]) {
 	return getFieldAndUnmarshall[OldNew[string]](diff, fieldName)
 }
 
-// GetFieldBool возвращает true и объект OldNew со значениями типа bool, поле fieldName присутствует в объекте Diff.
+// GetFieldBool возвращает «true» и объект OldNew со значениями типа bool, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldBool(fieldName string) (bool, OldNew[bool]) {
 	return getFieldAndUnmarshall[OldNew[bool]](diff, fieldName)
 }
 
-// GetFieldFloat возвращает true и объект OldNew со значениями типа float64, поле fieldName присутствует в объекте Diff.
+// GetFieldFloat возвращает «true» и объект OldNew со значениями типа float64, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldFloat(fieldName string) (bool, OldNew[float64]) {
 	return getFieldAndUnmarshall[OldNew[float64]](diff, fieldName)
 }
 
-// GetFieldInt возвращает true и объект OldNew со значениями типа int, поле fieldName присутствует в объекте Diff.
+// GetFieldInt возвращает «true» и объект OldNew со значениями типа int, поле fieldName присутствует в объекте Diff.
 func (diff Diff) GetFieldInt(fieldName string) (bool, OldNew[int]) {
 	return getFieldAndUnmarshall[OldNew[int]](diff, fieldName)
 }

@@ -24,7 +24,7 @@ type Operation struct {
 
 // OperationInterface описывает метод, возвращающий [Operation].
 type OperationInterface interface {
-	AsOperation() *Operation
+	AsOperation(...float64) *Operation
 }
 
 // OperationIn описывает метод, возвращающий [Operation] для объектов [CashIn] и [PaymentIn].
@@ -50,15 +50,6 @@ type OperationIn interface {
 //   - CommissionReportOut (Выданный отчет комиссионера)
 type OperationOut interface {
 	AsOperationOut() *Operation
-}
-
-// NewOperationsFrom преобразует список объектов, реализующих интерфейс [OperationInterface] в список операций [Operations].
-func NewOperationsFrom[T OperationInterface](operations []T) Operations {
-	var op = make(Operations, 0, len(operations))
-	for _, entity := range operations {
-		op.Push(entity.AsOperation())
-	}
-	return op
 }
 
 // String реализует интерфейс [fmt.Stringer].

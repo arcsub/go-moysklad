@@ -301,7 +301,7 @@ type CounterPartyAdjustmentService interface {
 
 	// Delete выполняет запрос на удаление корректировку взаиморасчётов.
 	// Принимает контекст и ID корректировки взаиморасчётов.
-	// Возвращает true в случае успешного удаления корректировки взаиморасчётов.
+	// Возвращает «true» в случае успешного удаления корректировки взаиморасчётов.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной корректировки взаиморасчётов по ID.
@@ -331,7 +331,7 @@ type CounterPartyAdjustmentService interface {
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -351,7 +351,7 @@ type CounterPartyAdjustmentService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

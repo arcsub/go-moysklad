@@ -47,7 +47,7 @@ type Bundle struct {
 	TNVED               *string                     `json:"tnved,omitempty"`               // Код ТН ВЭД
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`          // Включен ли НДС для комплекта. С помощью этого флага для комплекта можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Uom                 *NullValue[Uom]             `json:"uom,omitempty"`                 // Единица измерения
-	UseParentVat        *bool                       `json:"useParentVat,omitempty"`        // Используется ли ставка НДС родительской группы. Если true для единицы ассортимента будет применена ставка, установленная для родительской группы.
+	UseParentVat        *bool                       `json:"useParentVat,omitempty"`        // Используется ли ставка НДС родительской группы. Если «true» для единицы ассортимента будет применена ставка, установленная для родительской группы.
 	TaxSystem           TaxSystem                   `json:"taxSystem,omitempty"`           // Код системы налогообложения
 	TrackingType        TrackingType                `json:"trackingType,omitempty"`        // Тип маркируемой продукции
 	PaymentItemType     PaymentItem                 `json:"paymentItemType,omitempty"`     // Признак предмета расчета
@@ -60,9 +60,7 @@ type Bundle struct {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Bundle].
-//   - nil в случае неудачи.
+// Возвращает [Bundle] или nil в случае неудачи.
 func NewBundleFromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
@@ -71,15 +69,13 @@ func NewBundleFromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
 //
 // Метод гарантирует преобразование в необходимый тип только при идентичных [MetaType].
 //
-// Возвращает:
-//   - указатель на [Bundle].
-//   - nil в случае неудачи.
+// Возвращает [Bundle] или nil в случае неудачи.
 func (bundle Bundle) FromAssortment(assortmentPosition *AssortmentPosition) *Bundle {
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
-// asAssortment возвращает [AssortmentPosition] с единственным заполненным полем [Meta].
-func (bundle Bundle) asAssortment() *AssortmentPosition {
+// AsAssortment реализует интерфейс [AssortmentInterface].
+func (bundle Bundle) AsAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: bundle.GetMeta()}
 }
 
@@ -591,7 +587,7 @@ type BundleComponent struct {
 // NewBundleComponent принимает объект, реализующий интерфейс [AssortmentInterface] и количество.
 // Возвращает новый компонент комплекта.
 func NewBundleComponent(assortment AssortmentInterface, quantity float64) *BundleComponent {
-	return &BundleComponent{Assortment: assortment.asAssortment(), Quantity: &quantity}
+	return &BundleComponent{Assortment: assortment.AsAssortment(), Quantity: &quantity}
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -619,7 +615,7 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 // Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (bundleComponent *BundleComponent) SetAssortment(assortment AssortmentInterface) *BundleComponent {
 	if assortment != nil {
-		bundleComponent.Assortment = assortment.asAssortment()
+		bundleComponent.Assortment = assortment.AsAssortment()
 	}
 	return bundleComponent
 }
@@ -673,7 +669,7 @@ type BundleService interface {
 
 	// Delete выполняет запрос на удаление комплекта.
 	// Принимает контекст и ID комплекта.
-	// Возвращает true в случае успешного удаления комплекта.
+	// Возвращает «true» в случае успешного удаления комплекта.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление комплектов.
@@ -702,7 +698,7 @@ type BundleService interface {
 
 	// DeleteComponent выполняет запрос на удаление компонента комплекта по ID.
 	// Принимает контекст, ID комплекта и ID компонента комплекта.
-	// Возвращает true в случае успешного удаления компонента комплекта.
+	// Возвращает «true» в случае успешного удаления компонента комплекта.
 	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -722,7 +718,7 @@ type BundleService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
@@ -748,7 +744,7 @@ type BundleService interface {
 
 	// DeleteImage выполняет запрос на удаление изображения комплекта.
 	// Принимает контекст, ID комплекта и ID изображения.
-	// Возвращает true в случае успешного удаления изображения комплекта.
+	// Возвращает «true» в случае успешного удаления изображения комплекта.
 	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteImageMany выполняет запрос на массовое удаление изображений комплекта.
@@ -784,7 +780,7 @@ type BundleService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -799,7 +795,7 @@ type BundleService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }
 

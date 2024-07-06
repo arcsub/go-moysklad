@@ -426,7 +426,7 @@ type ContractService interface {
 
 	// Delete выполняет запрос на удаление договора.
 	// Принимает контекст и ID договора.
-	// Возвращает true в случае успешного удаления договора.
+	// Возвращает «true» в случае успешного удаления договора.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных договоров.
@@ -472,7 +472,7 @@ type ContractService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -497,7 +497,7 @@ type ContractService interface {
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
-	// Возвращает true в случае успешного удаления публикации.
+	// Возвращает «true» в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
@@ -512,7 +512,7 @@ type ContractService interface {
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
@@ -537,7 +537,7 @@ type ContractService interface {
 
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
-	// Возвращает true в случае успешного удаления статуса.
+	// Возвращает «true» в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 

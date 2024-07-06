@@ -68,10 +68,8 @@ func (commissionReportOut CommissionReportOut) Clean() *CommissionReportOut {
 	return &CommissionReportOut{Meta: commissionReportOut.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полями meta и linkedSum.
-//
-// Значение поля linkedSum заполняется из поля sum.
-func (commissionReportOut CommissionReportOut) AsOperation() *Operation {
+// AsOperation возвращает объект [Operation] c полем [Meta].
+func (commissionReportOut CommissionReportOut) AsOperation(linkedSum ...float64) *Operation {
 	return &Operation{Meta: commissionReportOut.GetMeta(), LinkedSum: commissionReportOut.GetSum()}
 }
 
@@ -594,7 +592,7 @@ func (commissionReportOutPosition CommissionReportOutPosition) GetVatEnabled() b
 // Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (commissionReportOutPosition *CommissionReportOutPosition) SetAssortment(assortment AssortmentInterface) *CommissionReportOutPosition {
 	if assortment != nil {
-		commissionReportOutPosition.Assortment = assortment.asAssortment()
+		commissionReportOutPosition.Assortment = assortment.AsAssortment()
 	}
 	return commissionReportOutPosition
 }
@@ -680,7 +678,7 @@ type CommissionReportOutService interface {
 
 	// Delete выполняет запрос на удаление выданного отчёта комиссионера.
 	// Принимает контекст и ID выданного отчёта комиссионера.
-	// Возвращает true в случае успешного удаления выданного отчёта комиссионера.
+	// Возвращает «true» в случае успешного удаления выданного отчёта комиссионера.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного выданного отчёта комиссионера по ID.
@@ -725,7 +723,7 @@ type CommissionReportOutService interface {
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
-	// Возвращает true в случае успешного удаления позиции.
+	// Возвращает «true» в случае успешного удаления позиции.
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
@@ -776,7 +774,7 @@ type CommissionReportOutService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -791,7 +789,7 @@ type CommissionReportOutService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
@@ -821,12 +819,12 @@ type CommissionReportOutService interface {
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
-	// Возвращает true в случае успешного удаления публикации.
+	// Возвращает «true» в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
@@ -851,7 +849,7 @@ type CommissionReportOutService interface {
 
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
-	// Возвращает true в случае успешного удаления статуса.
+	// Возвращает «true» в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -871,7 +869,7 @@ type CommissionReportOutService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

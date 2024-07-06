@@ -499,7 +499,7 @@ func (movePosition MovePosition) GetThings() Slice[string] {
 // Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (movePosition *MovePosition) SetAssortment(assortment AssortmentInterface) *MovePosition {
 	if assortment != nil {
-		movePosition.Assortment = assortment.asAssortment()
+		movePosition.Assortment = assortment.AsAssortment()
 	}
 	return movePosition
 }
@@ -590,7 +590,7 @@ type MoveService interface {
 
 	// Delete выполняет запрос на удаление перемещения.
 	// Принимает контекст и ID перемещения.
-	// Возвращает true в случае успешного удаления перемещения.
+	// Возвращает «true» в случае успешного удаления перемещения.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного перемещения по ID.
@@ -648,7 +648,7 @@ type MoveService interface {
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
-	// Возвращает true в случае успешного удаления позиции.
+	// Возвращает «true» в случае успешного удаления позиции.
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
@@ -699,7 +699,7 @@ type MoveService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -724,7 +724,7 @@ type MoveService interface {
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
-	// Возвращает true в случае успешного удаления публикации.
+	// Возвращает «true» в случае успешного удаления публикации.
 	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
@@ -734,12 +734,12 @@ type MoveService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
@@ -764,7 +764,7 @@ type MoveService interface {
 
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
-	// Возвращает true в случае успешного удаления статуса.
+	// Возвращает «true» в случае успешного удаления статуса.
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -784,7 +784,7 @@ type MoveService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

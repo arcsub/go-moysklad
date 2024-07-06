@@ -415,7 +415,7 @@ func (inventoryPosition InventoryPosition) GetQuantity() float64 {
 // Принимает объект, реализующий интерфейс [AssortmentInterface].
 func (inventoryPosition *InventoryPosition) SetAssortment(assortment AssortmentInterface) *InventoryPosition {
 	if assortment != nil {
-		inventoryPosition.Assortment = assortment.asAssortment()
+		inventoryPosition.Assortment = assortment.AsAssortment()
 	}
 	return inventoryPosition
 }
@@ -487,7 +487,7 @@ type InventoryService interface {
 
 	// Delete выполняет запрос на удаление инвентаризации.
 	// Принимает контекст и ID инвентаризации.
-	// Возвращает true в случае успешного удаления инвентаризации.
+	// Возвращает «true» в случае успешного удаления инвентаризации.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного инвентаризации по ID.
@@ -537,7 +537,7 @@ type InventoryService interface {
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
-	// Возвращает true в случае успешного удаления позиции.
+	// Возвращает «true» в случае успешного удаления позиции.
 	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
@@ -588,7 +588,7 @@ type InventoryService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -603,17 +603,17 @@ type InventoryService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
-	// Возвращает true в случае успешного перемещения в корзину.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// Recalculate выполняет запрос на пересчёт расчётных остатков у позиций инвентаризации.
 	// Принимает контекст и ID инвентаризации.
-	// Возвращает true в случае успешного перерасчёта.
+	// Возвращает «true» в случае успешного перерасчёта.
 	Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -633,7 +633,7 @@ type InventoryService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.

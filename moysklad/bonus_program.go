@@ -20,7 +20,7 @@ type BonusProgram struct {
 	AllAgents                 *bool              `json:"allAgents,omitempty"`                 // Индикатор, действует ли бонусная программа на всех контрагентов
 	MaxPaidRatePercents       *int               `json:"maxPaidRatePercents,omitempty"`       // Максимальный процент оплаты баллами
 	EarnRateRoublesToPoint    *int               `json:"earnRateRoublesToPoint,omitempty"`    // Курс начисления
-	EarnWhileRedeeming        *bool              `json:"earnWhileRedeeming,omitempty"`        // Разрешить одновременное начисление и списание бонусов. Если true - бонусы будут начислены на денежную часть покупки, даже при частичной оплате покупки баллами.
+	EarnWhileRedeeming        *bool              `json:"earnWhileRedeeming,omitempty"`        // Разрешить одновременное начисление и списание бонусов. Если «true» - бонусы будут начислены на денежную часть покупки, даже при частичной оплате покупки баллами.
 	ID                        *uuid.UUID         `json:"id,omitempty"`                        // ID Бонусной программы
 	AccountID                 *uuid.UUID         `json:"accountId,omitempty"`                 // ID учётной записи
 	Meta                      *Meta              `json:"meta,omitempty"`                      // Метаданные Бонусной программы
@@ -291,7 +291,7 @@ type BonusProgramService interface {
 
 	// Delete выполняет запрос на удаление бонусной программы.
 	// Принимает контекст и ID бонусной программы.
-	// Возвращает true в случае успешного удаления бонусной программы.
+	// Возвращает «true» в случае успешного удаления бонусной программы.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных программ.

@@ -47,14 +47,14 @@ type AssortmentPosition struct {
 
 // AssortmentInterface описывает метод, возвращающий [AssortmentPosition].
 type AssortmentInterface interface {
-	asAssortment() *AssortmentPosition
+	AsAssortment() *AssortmentPosition
 }
 
 // NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу [AssortmentInterface].
 //
 // Возвращает [AssortmentPosition] с заполненным полем Meta.
 func NewAssortmentPosition[T AssortmentInterface](entity T) *AssortmentPosition {
-	return entity.asAssortment()
+	return entity.AsAssortment()
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -545,7 +545,7 @@ func (service *assortmentService) DeleteMany(ctx context.Context, entities ...As
 	var mw = make([]MetaWrapper, 0, len(entities))
 	for _, entity := range entities {
 		if entity != nil {
-			mw = append(mw, entity.asAssortment().GetMeta().Wrap())
+			mw = append(mw, entity.AsAssortment().GetMeta().Wrap())
 		}
 	}
 	return NewRequestBuilder[DeleteManyResponse](service.client, service.uri).Post(ctx, mw)

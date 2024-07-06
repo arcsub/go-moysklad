@@ -838,7 +838,7 @@ type CounterpartyService interface {
 
 	// Delete выполняет запрос на удаление контрагента.
 	// Принимает контекст и ID контрагента.
-	// Возвращает true в случае успешного удаления контрагента.
+	// Возвращает «true» в случае успешного удаления контрагента.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного контрагента по ID.
@@ -884,7 +884,7 @@ type CounterpartyService interface {
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
-	// Возвращает true в случае успешного удаления доп поля.
+	// Возвращает «true» в случае успешного удаления доп поля.
 	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
@@ -924,7 +924,7 @@ type CounterpartyService interface {
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
-	// Возвращает true в случае успешного удаления документа.
+	// Возвращает «true» в случае успешного удаления документа.
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
@@ -984,7 +984,7 @@ type CounterpartyService interface {
 
 	// DeleteNote выполняет запрос на удаление события контрагента.
 	// Принимает контекст и ID события контрагента.
-	// Возвращает true в случае успешного удаления события контрагента.
+	// Возвращает «true» в случае успешного удаления события контрагента.
 	DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
@@ -1004,7 +1004,7 @@ type CounterpartyService interface {
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
-	// Возвращает true в случае успешного удаления файла.
+	// Возвращает «true» в случае успешного удаления файла.
 	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
