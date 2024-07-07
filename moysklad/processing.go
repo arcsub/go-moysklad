@@ -60,7 +60,7 @@ func (processing Processing) Clean() *Processing {
 	return &Processing{Meta: processing.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (processing Processing) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: processing.Meta}
 }
@@ -462,8 +462,8 @@ func (processingPositionMaterial ProcessingPositionMaterial) GetQuantity() float
 
 // SetAssortment устанавливает Метаданные товара/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (processingPositionMaterial *ProcessingPositionMaterial) SetAssortment(assortment AssortmentInterface) *ProcessingPositionMaterial {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (processingPositionMaterial *ProcessingPositionMaterial) SetAssortment(assortment AssortmentConverter) *ProcessingPositionMaterial {
 	if assortment != nil {
 		processingPositionMaterial.Assortment = assortment.AsAssortment()
 	}
@@ -522,8 +522,8 @@ func (processingPositionProduct ProcessingPositionProduct) GetQuantity() float64
 
 // SetAssortment устанавливает Метаданные товара/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (processingPositionProduct *ProcessingPositionProduct) SetAssortment(assortment AssortmentInterface) *ProcessingPositionProduct {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (processingPositionProduct *ProcessingPositionProduct) SetAssortment(assortment AssortmentConverter) *ProcessingPositionProduct {
 	if assortment != nil {
 		processingPositionProduct.Assortment = assortment.AsAssortment()
 	}

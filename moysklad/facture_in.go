@@ -62,7 +62,7 @@ func (factureIn FactureIn) AsOperation() *Operation {
 	return &Operation{Meta: factureIn.GetMeta(), LinkedSum: factureIn.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (factureIn FactureIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: factureIn.Meta}
 }
@@ -292,9 +292,9 @@ func (factureIn *FactureIn) SetIncomingDate(incomingDate time.Time) *FactureIn {
 // SetAgent устанавливает Метаданные Контрагента.
 //
 // Принимает [Counterparty] или [Organization].
-func (factureIn *FactureIn) SetAgent(agent AgentCounterpartyOrganizationInterface) *FactureIn {
+func (factureIn *FactureIn) SetAgent(agent AgentOrganizationConverter) *FactureIn {
 	if agent != nil {
-		factureIn.Agent = agent.AsCOAgent()
+		factureIn.Agent = agent.AsOrganizationAgent()
 	}
 	return factureIn
 }
@@ -353,8 +353,8 @@ func (factureIn *FactureIn) SetSupplies(supplies ...*Supply) *FactureIn {
 
 // SetPayments устанавливает Массив ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
-func (factureIn *FactureIn) SetPayments(payments ...PaymentInterface) *FactureIn {
+// Принимает множество объектов, реализующих интерфейс [PaymentConverter].
+func (factureIn *FactureIn) SetPayments(payments ...PaymentConverter) *FactureIn {
 	factureIn.Payments = NewPaymentsFrom(payments)
 	return factureIn
 }
@@ -505,9 +505,9 @@ type FactureInService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

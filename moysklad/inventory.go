@@ -55,7 +55,7 @@ func (inventory Inventory) Clean() *Inventory {
 	return &Inventory{Meta: inventory.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (inventory Inventory) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: inventory.Meta}
 }
@@ -412,8 +412,8 @@ func (inventoryPosition InventoryPosition) GetQuantity() float64 {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (inventoryPosition *InventoryPosition) SetAssortment(assortment AssortmentInterface) *InventoryPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (inventoryPosition *InventoryPosition) SetAssortment(assortment AssortmentConverter) *InventoryPosition {
 	if assortment != nil {
 		inventoryPosition.Assortment = assortment.AsAssortment()
 	}

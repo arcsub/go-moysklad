@@ -26,7 +26,7 @@ type Payroll struct {
 	State        *State           `json:"state,omitempty"`        // Метаданные статуса Начисления зарплаты
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (payroll Payroll) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: payroll.Meta}
 }

@@ -62,17 +62,17 @@ func (paymentOut PaymentOut) Clean() *PaymentOut {
 	return &PaymentOut{Meta: paymentOut.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (paymentOut PaymentOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: paymentOut.Meta}
 }
 
 // AsOperation возвращает объект [Operation] c полем [Meta].
-func (paymentOut PaymentOut) AsOperation(linkedSum ...float64) *Operation {
+func (paymentOut PaymentOut) AsOperation() *Operation {
 	return &Operation{Meta: paymentOut.GetMeta(), LinkedSum: paymentOut.GetSum()}
 }
 
-// AsPayment реализует интерфейс [PaymentInterface].
+// AsPayment реализует интерфейс [PaymentConverter].
 func (paymentOut PaymentOut) AsPayment() *Payment {
 	return &Payment{Meta: paymentOut.GetMeta()}
 }
@@ -294,8 +294,8 @@ func (paymentOut *PaymentOut) SetName(name string) *PaymentOut {
 //   - PurchaseOrder (Заказ поставщику)
 //   - CommissionReportOut (Выданный отчет комиссионера)
 //
-// Принимает множество объектов, реализующих интерфейс [OperationOut].
-func (paymentOut *PaymentOut) SetOperations(operations ...OperationOut) *PaymentOut {
+// Принимает множество объектов, реализующих интерфейс [OperationOutConverter].
+func (paymentOut *PaymentOut) SetOperations(operations ...OperationOutConverter) *PaymentOut {
 	for _, operation := range operations {
 		if operation != nil {
 			paymentOut.Operations.Push(operation.AsOperationOut())
@@ -373,7 +373,7 @@ func (paymentOut *PaymentOut) SetFactureIn(factureIn *FactureIn) *PaymentOut {
 // SetAgent устанавливает Метаданные контрагента.
 //
 // Принимает [Counterparty], [Organization] или [Employee].
-func (paymentOut *PaymentOut) SetAgent(agent AgentInterface) *PaymentOut {
+func (paymentOut *PaymentOut) SetAgent(agent AgentConverter) *PaymentOut {
 	if agent != nil {
 		paymentOut.Agent = agent.AsAgent()
 	}
@@ -455,12 +455,6 @@ func (paymentOut *PaymentOut) SetSum(sum float64) *PaymentOut {
 // SetSyncID устанавливает ID синхронизации.
 func (paymentOut *PaymentOut) SetSyncID(syncID uuid.UUID) *PaymentOut {
 	paymentOut.SyncID = &syncID
-	return paymentOut
-}
-
-// SetVatSum устанавливает Сумму НДС.
-func (paymentOut *PaymentOut) SetVatSum(vatSum float64) *PaymentOut {
-	paymentOut.VatSum = &vatSum
 	return paymentOut
 }
 
@@ -607,9 +601,9 @@ type PaymentOutService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

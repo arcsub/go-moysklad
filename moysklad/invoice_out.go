@@ -73,12 +73,12 @@ func (invoiceOut InvoiceOut) AsOperation() *Operation {
 	return &Operation{Meta: invoiceOut.GetMeta(), LinkedSum: invoiceOut.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (invoiceOut InvoiceOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: invoiceOut.Meta}
 }
 
-// AsOperationIn реализует интерфейс [OperationIn].
+// AsOperationIn реализует интерфейс [OperationInConverter].
 func (invoiceOut InvoiceOut) AsOperationIn() *Operation {
 	return invoiceOut.AsOperation()
 }
@@ -387,9 +387,9 @@ func (invoiceOut *InvoiceOut) SetContract(contract *Contract) *InvoiceOut {
 // SetAgent устанавливает Метаданные контрагента [Counterparty] или организации [Organization].
 //
 // Принимает [Counterparty] или [Organization].
-func (invoiceOut *InvoiceOut) SetAgent(agent AgentCounterpartyOrganizationInterface) *InvoiceOut {
+func (invoiceOut *InvoiceOut) SetAgent(agent AgentOrganizationConverter) *InvoiceOut {
 	if agent != nil {
-		invoiceOut.Agent = agent.AsCOAgent()
+		invoiceOut.Agent = agent.AsOrganizationAgent()
 	}
 	return invoiceOut
 }
@@ -486,8 +486,8 @@ func (invoiceOut *InvoiceOut) SetCustomerOrder(customerOrder *CustomerOrder) *In
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
-func (invoiceOut *InvoiceOut) SetPayments(payments ...PaymentInterface) *InvoiceOut {
+// Принимает множество объектов, реализующих интерфейс [PaymentConverter].
+func (invoiceOut *InvoiceOut) SetPayments(payments ...PaymentConverter) *InvoiceOut {
 	invoiceOut.Payments = NewPaymentsFrom(payments)
 	return invoiceOut
 }
@@ -599,8 +599,8 @@ func (invoiceOutPosition InvoiceOutPosition) GetStock() Stock {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (invoiceOutPosition *InvoiceOutPosition) SetAssortment(assortment AssortmentInterface) *InvoiceOutPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (invoiceOutPosition *InvoiceOutPosition) SetAssortment(assortment AssortmentConverter) *InvoiceOutPosition {
 	if assortment != nil {
 		invoiceOutPosition.Assortment = assortment.AsAssortment()
 	}
@@ -814,9 +814,9 @@ type InvoiceOutService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

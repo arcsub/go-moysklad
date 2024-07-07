@@ -55,7 +55,7 @@ func (enter Enter) Clean() *Enter {
 	return &Enter{Meta: enter.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (enter Enter) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: enter.Meta}
 }
@@ -464,8 +464,8 @@ func (enterPosition EnterPosition) GetThings() Slice[string] {
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (enterPosition *EnterPosition) SetAssortment(assortment AssortmentInterface) *EnterPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (enterPosition *EnterPosition) SetAssortment(assortment AssortmentConverter) *EnterPosition {
 	if assortment != nil {
 		enterPosition.Assortment = assortment.AsAssortment()
 	}
@@ -702,9 +702,9 @@ type EnterService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

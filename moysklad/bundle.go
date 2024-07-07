@@ -74,7 +74,7 @@ func (bundle Bundle) FromAssortment(assortmentPosition *AssortmentPosition) *Bun
 	return UnmarshalAsType[Bundle](assortmentPosition)
 }
 
-// AsAssortment реализует интерфейс [AssortmentInterface].
+// AsAssortment реализует интерфейс [AssortmentConverter].
 func (bundle Bundle) AsAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: bundle.GetMeta()}
 }
@@ -584,9 +584,9 @@ type BundleComponent struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
 }
 
-// NewBundleComponent принимает объект, реализующий интерфейс [AssortmentInterface] и количество.
+// NewBundleComponent принимает объект, реализующий интерфейс [AssortmentConverter] и количество.
 // Возвращает новый компонент комплекта.
-func NewBundleComponent(assortment AssortmentInterface, quantity float64) *BundleComponent {
+func NewBundleComponent(assortment AssortmentConverter, quantity float64) *BundleComponent {
 	return &BundleComponent{Assortment: assortment.AsAssortment(), Quantity: &quantity}
 }
 
@@ -612,8 +612,8 @@ func (bundleComponent BundleComponent) GetQuantity() float64 {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (bundleComponent *BundleComponent) SetAssortment(assortment AssortmentInterface) *BundleComponent {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (bundleComponent *BundleComponent) SetAssortment(assortment AssortmentConverter) *BundleComponent {
 	if assortment != nil {
 		bundleComponent.Assortment = assortment.AsAssortment()
 	}

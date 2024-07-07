@@ -65,12 +65,12 @@ func (cashOut CashOut) AsOperation() *Operation {
 	return &Operation{Meta: cashOut.GetMeta(), LinkedSum: cashOut.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (cashOut CashOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashOut.Meta}
 }
 
-// AsPayment реализует интерфейс [PaymentInterface].
+// AsPayment реализует интерфейс [PaymentConverter].
 func (cashOut CashOut) AsPayment() *Payment {
 	return &Payment{Meta: cashOut.GetMeta()}
 }
@@ -344,8 +344,8 @@ func (cashOut *CashOut) SetMoment(moment time.Time) *CashOut {
 //   - PurchaseOrder (Заказ поставщику)
 //   - CommissionReportOut (Выданный отчет комиссионера)
 //
-// Принимает множество объектов, реализующих интерфейс [OperationOut].
-func (cashOut *CashOut) SetOperations(operations ...OperationOut) *CashOut {
+// Принимает множество объектов, реализующих интерфейс [OperationOutConverter].
+func (cashOut *CashOut) SetOperations(operations ...OperationOutConverter) *CashOut {
 	for _, operation := range operations {
 		if operation != nil {
 			cashOut.Operations.Push(operation.AsOperationOut())
@@ -357,7 +357,7 @@ func (cashOut *CashOut) SetOperations(operations ...OperationOut) *CashOut {
 // SetAgent устанавливает Метаданные контрагента.
 //
 // Принимает [Counterparty], [Organization] или [Employee].
-func (cashOut *CashOut) SetAgent(agent AgentInterface) *CashOut {
+func (cashOut *CashOut) SetAgent(agent AgentConverter) *CashOut {
 	if agent != nil {
 		cashOut.Agent = agent.AsAgent()
 	}
@@ -417,12 +417,6 @@ func (cashOut *CashOut) SetSum(sum float64) *CashOut {
 // SetSyncID устанавливает ID синхронизации.
 func (cashOut *CashOut) SetSyncID(syncID uuid.UUID) *CashOut {
 	cashOut.SyncID = &syncID
-	return cashOut
-}
-
-// SetVatSum устанавливает Сумму НДС.
-func (cashOut *CashOut) SetVatSum(vatSum float64) *CashOut {
-	cashOut.VatSum = &vatSum
 	return cashOut
 }
 
@@ -577,9 +571,9 @@ type CashOutService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

@@ -43,8 +43,8 @@ type Payment struct {
 	raw            []byte                   // сырые данные для последующей конвертации в нужный тип
 }
 
-// PaymentInterface описывает метод, возвращающий [Payment].
-type PaymentInterface interface {
+// PaymentConverter описывает метод, возвращающий [Payment].
+type PaymentConverter interface {
 	AsPayment() *Payment
 }
 
@@ -293,8 +293,8 @@ func (payment *Payment) AsPaymentOut() *PaymentOut {
 	return UnmarshalAsType[PaymentOut](payment)
 }
 
-// NewPaymentsFrom преобразует список объектов, реализующих интерфейс [PaymentInterface] в список платежей [Payment].
-func NewPaymentsFrom[T PaymentInterface](elements []T) Slice[Payment] {
+// NewPaymentsFrom преобразует список объектов, реализующих интерфейс [PaymentConverter] в список платежей [Payment].
+func NewPaymentsFrom[T PaymentConverter](elements []T) Slice[Payment] {
 	payments := make(Slice[Payment], 0, len(elements))
 	for _, payment := range elements {
 		if reflect.ValueOf(payment).Kind() == reflect.Ptr {

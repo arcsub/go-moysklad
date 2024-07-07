@@ -84,12 +84,12 @@ func (demand Demand) AsOperation() *Operation {
 	return &Operation{Meta: demand.GetMeta(), LinkedSum: demand.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (demand Demand) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: demand.Meta}
 }
 
-// AsOperationIn реализует интерфейс [OperationIn].
+// AsOperationIn реализует интерфейс [OperationInConverter].
 func (demand Demand) AsOperationIn() *Operation {
 	return demand.AsOperation()
 }
@@ -357,9 +357,9 @@ func (demand Demand) GetAttributes() Slice[Attribute] {
 // SetAgent устанавливает Метаданные Контрагента.
 //
 // Принимает [Counterparty] или [Organization].
-func (demand *Demand) SetAgent(agent AgentCounterpartyOrganizationInterface) *Demand {
+func (demand *Demand) SetAgent(agent AgentOrganizationConverter) *Demand {
 	if agent != nil {
-		demand.Agent = agent.AsCOAgent()
+		demand.Agent = agent.AsOrganizationAgent()
 	}
 	return demand
 }
@@ -586,8 +586,8 @@ func (demand *Demand) SetReturns(returns ...*SalesReturn) *Demand {
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
-func (demand *Demand) SetPayments(payments ...PaymentInterface) *Demand {
+// Принимает множество объектов, реализующих интерфейс [PaymentConverter].
+func (demand *Demand) SetPayments(payments ...PaymentConverter) *Demand {
 	demand.Payments = NewPaymentsFrom(payments)
 	return demand
 }
@@ -609,16 +609,16 @@ func (demand *Demand) SetCargoName(cargoName string) *Demand {
 // SetCarrier устанавливает Метаданные перевозчика (контрагент или юрлицо).
 //
 // Принимает [Counterparty] или [Organization].
-func (demand *Demand) SetCarrier(carrier AgentCounterpartyOrganizationInterface) *Demand {
-	demand.Carrier = carrier.AsCOAgent()
+func (demand *Demand) SetCarrier(carrier AgentOrganizationConverter) *Demand {
+	demand.Carrier = carrier.AsOrganizationAgent()
 	return demand
 }
 
 // SetConsignee устанавливает Метаданные грузополучателя (контрагент или юрлицо).
 //
 // Принимает [Counterparty] или [Organization].
-func (demand *Demand) SetConsignee(consignee AgentCounterpartyOrganizationInterface) *Demand {
-	demand.Consignee = consignee.AsCOAgent()
+func (demand *Demand) SetConsignee(consignee AgentOrganizationConverter) *Demand {
+	demand.Consignee = consignee.AsOrganizationAgent()
 	return demand
 }
 
@@ -805,8 +805,8 @@ func (demandPosition DemandPosition) GetStock() Stock {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (demandPosition *DemandPosition) SetAssortment(assortment AssortmentInterface) *DemandPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (demandPosition *DemandPosition) SetAssortment(assortment AssortmentConverter) *DemandPosition {
 	if assortment != nil {
 		demandPosition.Assortment = assortment.AsAssortment()
 	}
@@ -1065,9 +1065,9 @@ type DemandService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

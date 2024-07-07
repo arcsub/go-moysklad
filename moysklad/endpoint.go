@@ -631,10 +631,13 @@ func (endpoint *endpointPublication) GetPublicationByID(ctx context.Context, id,
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-publikaciq-dokumentow-sozdat-publikaciu
-func (endpoint *endpointPublication) Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error) {
-	publication := new(Publication).SetTemplate(template)
+func (endpoint *endpointPublication) Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error) {
+	if template == nil {
+		return nil, nil, fmt.Errorf("publish: template is empty")
+	}
+
 	path := fmt.Sprintf("%s/%s/publication", endpoint.uri, id)
-	return NewRequestBuilder[Publication](endpoint.client, path).Post(ctx, publication)
+	return NewRequestBuilder[Publication](endpoint.client, path).Post(ctx, template.AsTemplate())
 }
 
 // DeletePublication выполняет запрос на удаление Публикации с указанным id.

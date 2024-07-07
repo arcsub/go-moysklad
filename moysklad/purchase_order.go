@@ -76,12 +76,12 @@ func (purchaseOrder PurchaseOrder) AsOperation() *Operation {
 	return &Operation{Meta: purchaseOrder.GetMeta(), LinkedSum: purchaseOrder.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (purchaseOrder PurchaseOrder) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: purchaseOrder.Meta}
 }
 
-// AsOperationOut реализует интерфейс [OperationOut].
+// AsOperationOut реализует интерфейс [OperationOutConverter].
 func (purchaseOrder PurchaseOrder) AsOperationOut() *Operation {
 	return purchaseOrder.AsOperation()
 }
@@ -413,9 +413,9 @@ func (purchaseOrder *PurchaseOrder) SetDescription(description string) *Purchase
 // SetAgent устанавливает Метаданные Контрагента.
 //
 // Принимает [Counterparty] или [Organization].
-func (purchaseOrder *PurchaseOrder) SetAgent(agent AgentCounterpartyOrganizationInterface) *PurchaseOrder {
+func (purchaseOrder *PurchaseOrder) SetAgent(agent AgentOrganizationConverter) *PurchaseOrder {
 	if agent != nil {
-		purchaseOrder.Agent = agent.AsCOAgent()
+		purchaseOrder.Agent = agent.AsOrganizationAgent()
 	}
 	return purchaseOrder
 }
@@ -510,8 +510,8 @@ func (purchaseOrder *PurchaseOrder) SetInvoicesIn(invoicesIn ...*InvoiceIn) *Pur
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
-func (purchaseOrder *PurchaseOrder) SetPayments(payments ...PaymentInterface) *PurchaseOrder {
+// Принимает множество объектов, реализующих интерфейс [PaymentConverter].
+func (purchaseOrder *PurchaseOrder) SetPayments(payments ...PaymentConverter) *PurchaseOrder {
 	purchaseOrder.Payments = NewPaymentsFrom(payments)
 	return purchaseOrder
 }
@@ -649,8 +649,8 @@ func (purchaseOrderPosition PurchaseOrderPosition) GetStock() Stock {
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (purchaseOrderPosition *PurchaseOrderPosition) SetAssortment(assortment AssortmentInterface) *PurchaseOrderPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (purchaseOrderPosition *PurchaseOrderPosition) SetAssortment(assortment AssortmentConverter) *PurchaseOrderPosition {
 	if assortment != nil {
 		purchaseOrderPosition.Assortment = assortment.AsAssortment()
 	}
@@ -879,9 +879,9 @@ type PurchaseOrderService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

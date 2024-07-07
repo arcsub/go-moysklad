@@ -76,12 +76,12 @@ func (counterparty Counterparty) Clean() *Counterparty {
 	return &Counterparty{Meta: counterparty.Meta}
 }
 
-// AsCOAgent реализует интерфейс [AgentCounterpartyOrganizationInterface].
-func (counterparty Counterparty) AsCOAgent() *Agent {
+// AsOrganizationAgent реализует интерфейс [AgentOrganizationConverter].
+func (counterparty Counterparty) AsOrganizationAgent() *Agent {
 	return counterparty.AsAgent()
 }
 
-// AsAgent реализует интерфейс [AgentInterface].
+// AsAgent реализует интерфейс [AgentConverter].
 func (counterparty Counterparty) AsAgent() *Agent {
 	if counterparty.Meta == nil {
 		return nil
@@ -89,9 +89,9 @@ func (counterparty Counterparty) AsAgent() *Agent {
 	return &Agent{Meta: counterparty.Meta}
 }
 
-// AsCEAgent реализует интерфейс [AgentCounterpartyEmployeeInterface].
-func (counterparty Counterparty) AsCEAgent() *Agent {
-	return counterparty.AsCOAgent()
+// AsEmployeeAgent реализует интерфейс [AgentEmployeeConverter].
+func (counterparty Counterparty) AsEmployeeAgent() *Agent {
+	return counterparty.AsOrganizationAgent()
 }
 
 // GetName возвращает Наименование Контрагента.

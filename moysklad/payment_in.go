@@ -62,12 +62,12 @@ func (paymentIn PaymentIn) Clean() *PaymentIn {
 	return &PaymentIn{Meta: paymentIn.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (paymentIn PaymentIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: paymentIn.Meta}
 }
 
-// AsPayment реализует интерфейс [PaymentInterface].
+// AsPayment реализует интерфейс [PaymentConverter].
 func (paymentIn PaymentIn) AsPayment() *Payment {
 	return &Payment{Meta: paymentIn.GetMeta()}
 }
@@ -291,8 +291,8 @@ func (paymentIn *PaymentIn) SetMoment(moment time.Time) *PaymentIn {
 //   - CommissionReportIn (Полученный отчет комиссионера)
 //   - RetailShift (Смена)
 //
-// Принимает множество объектов, реализующих интерфейс [OperationIn].
-func (paymentIn *PaymentIn) SetOperations(operations ...OperationIn) *PaymentIn {
+// Принимает множество объектов, реализующих интерфейс [OperationInConverter].
+func (paymentIn *PaymentIn) SetOperations(operations ...OperationInConverter) *PaymentIn {
 	for _, operation := range operations {
 		if operation != nil {
 			paymentIn.Operations.Push(operation.AsOperationIn())
@@ -366,9 +366,9 @@ func (paymentIn *PaymentIn) SetFactureOut(factureOut *FactureOut) *PaymentIn {
 // SetAgent устанавливает Метаданные Контрагента.
 //
 // Принимает [Counterparty] или [Organization].
-func (paymentIn *PaymentIn) SetAgent(agent AgentCounterpartyOrganizationInterface) *PaymentIn {
+func (paymentIn *PaymentIn) SetAgent(agent AgentOrganizationConverter) *PaymentIn {
 	if agent != nil {
-		paymentIn.Agent = agent.AsCOAgent()
+		paymentIn.Agent = agent.AsOrganizationAgent()
 	}
 	return paymentIn
 }
@@ -606,9 +606,9 @@ type PaymentInService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

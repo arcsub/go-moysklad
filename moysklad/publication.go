@@ -28,16 +28,6 @@ func (publication Publication) GetHref() string {
 	return Deref(publication.Href)
 }
 
-// SetTemplate устанавливает Метаданные Шаблона печати.
-//
-// Принимает [CustomTemplate] или [EmbeddedTemplate].
-func (publication *Publication) SetTemplate(template TemplateInterface) *Publication {
-	if template != nil {
-		publication.Template = template.AsTemplate()
-	}
-	return publication
-}
-
 // String реализует интерфейс [fmt.Stringer].
 func (publication Publication) String() string {
 	return Stringify(publication)

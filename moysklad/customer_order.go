@@ -82,12 +82,12 @@ func (customerOrder CustomerOrder) AsOperation() *Operation {
 	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (customerOrder CustomerOrder) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: customerOrder.Meta}
 }
 
-// AsOperationIn реализует интерфейс [OperationIn].
+// AsOperationIn реализует интерфейс [OperationInConverter].
 func (commissionReportOut CommissionReportOut) AsOperationIn() *Operation {
 	return commissionReportOut.AsOperation()
 }
@@ -574,7 +574,7 @@ func (customerOrder *CustomerOrder) SetDemands(demands ...*Demand) *CustomerOrde
 // SetPayments устанавливает Массив ссылок на связанные платежи.
 //
 // Принимает множество объектов [Payment].
-func (customerOrder *CustomerOrder) SetPayments(payments ...PaymentInterface) *CustomerOrder {
+func (customerOrder *CustomerOrder) SetPayments(payments ...PaymentConverter) *CustomerOrder {
 	customerOrder.Payments = NewPaymentsFrom(payments)
 	return customerOrder
 }
@@ -725,8 +725,8 @@ func (customerOrderPosition *CustomerOrderPosition) SetQuantity(quantity float64
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (customerOrderPosition *CustomerOrderPosition) SetAssortment(assortment AssortmentInterface) *CustomerOrderPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (customerOrderPosition *CustomerOrderPosition) SetAssortment(assortment AssortmentConverter) *CustomerOrderPosition {
 	if assortment != nil {
 		customerOrderPosition.Assortment = assortment.AsAssortment()
 	}
@@ -969,9 +969,9 @@ type CustomerOrderService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

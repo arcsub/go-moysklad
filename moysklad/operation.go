@@ -22,12 +22,12 @@ type Operation struct {
 	ID        uuid.UUID      `json:"id,omitempty"`        // ID сущности
 }
 
-// OperationInterface описывает метод, возвращающий [Operation].
-type OperationInterface interface {
-	AsOperation(...float64) *Operation
+// OperationConverter описывает метод, возвращающий [Operation].
+type OperationConverter interface {
+	AsOperation() *Operation
 }
 
-// OperationIn описывает метод, возвращающий [Operation] для объектов [CashIn] и [PaymentIn].
+// OperationInConverter описывает метод, возвращающий [Operation] для объектов [CashIn] и [PaymentIn].
 //
 // Метод должны реализовывать:
 //   - CustomerOrder (Заказ покупателя)
@@ -36,11 +36,11 @@ type OperationInterface interface {
 //   - InvoiceOut (Счет покупателю)
 //   - CommissionReportIn (Полученный отчет комиссионера)
 //   - RetailShift (Смена)
-type OperationIn interface {
+type OperationInConverter interface {
 	AsOperationIn() *Operation
 }
 
-// OperationOut описывает метод, возвращающий [Operation] для объектов [CashOut] и [PaymentOut].
+// OperationOutConverter описывает метод, возвращающий [Operation] для объектов [CashOut] и [PaymentOut].
 //
 // Метод должны реализовывать:
 //   - SalesReturn (Возврат покупателя)
@@ -48,7 +48,7 @@ type OperationIn interface {
 //   - InvoiceIn (Счет поставщика)
 //   - PurchaseOrder (Заказ поставщику)
 //   - CommissionReportOut (Выданный отчет комиссионера)
-type OperationOut interface {
+type OperationOutConverter interface {
 	AsOperationOut() *Operation
 }
 
@@ -240,7 +240,7 @@ type Operations Slice[Operation]
 
 // Push Привязка платежей к документам.
 //
-// Принимает множество объектов, реализующих интерфейс [OperationInterface].
+// Принимает множество объектов, реализующих интерфейс [OperationConverter].
 func (operations *Operations) Push(elements ...*Operation) *Operations {
 	for _, operation := range elements {
 		*operations = append(*operations, operation)

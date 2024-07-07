@@ -92,7 +92,7 @@ func (product Product) FromAssortment(assortmentPosition *AssortmentPosition) *P
 	return UnmarshalAsType[Product](assortmentPosition)
 }
 
-// AsAssortment реализует интерфейс [AssortmentInterface].
+// AsAssortment реализует интерфейс [AssortmentConverter].
 func (product Product) AsAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: product.GetMeta()}
 }

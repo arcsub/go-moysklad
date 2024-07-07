@@ -76,12 +76,12 @@ func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
 	return &Operation{Meta: commissionReportIn.GetMeta(), LinkedSum: commissionReportIn.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (commissionReportIn CommissionReportIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: commissionReportIn.Meta}
 }
 
-// AsOperationIn реализует интерфейс [OperationIn].
+// AsOperationIn реализует интерфейс [OperationInConverter].
 func (commissionReportIn CommissionReportIn) AsOperationIn() *Operation {
 	return commissionReportIn.AsOperation()
 }
@@ -482,8 +482,8 @@ func (commissionReportIn *CommissionReportIn) SetRewardPercent(rewardPercent flo
 
 // SetPayments устанавливает Метаданные ссылок на связанные платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
-func (commissionReportIn *CommissionReportIn) SetPayments(payments ...PaymentInterface) *CommissionReportIn {
+// Принимает множество объектов, реализующих интерфейс [PaymentConverter].
+func (commissionReportIn *CommissionReportIn) SetPayments(payments ...PaymentConverter) *CommissionReportIn {
 	commissionReportIn.Payments = NewPaymentsFrom(payments)
 	return commissionReportIn
 }
@@ -658,8 +658,8 @@ func (commissionReportInPosition CommissionReportInPosition) GetVatEnabled() boo
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (commissionReportInPosition *CommissionReportInPosition) SetAssortment(assortment AssortmentInterface) *CommissionReportInPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (commissionReportInPosition *CommissionReportInPosition) SetAssortment(assortment AssortmentConverter) *CommissionReportInPosition {
 	if assortment != nil {
 		commissionReportInPosition.Assortment = assortment.AsAssortment()
 	}
@@ -774,8 +774,8 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetVatE
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetAssortment(assortment AssortmentInterface) *CommissionReportInReturnPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (commissionReportInReturnPosition *CommissionReportInReturnPosition) SetAssortment(assortment AssortmentConverter) *CommissionReportInReturnPosition {
 	if assortment != nil {
 		commissionReportInReturnPosition.Assortment = assortment.AsAssortment()
 	}
@@ -990,9 +990,9 @@ type CommissionReportInService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

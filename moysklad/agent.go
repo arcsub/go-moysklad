@@ -30,24 +30,24 @@ type Agent struct {
 	raw          []byte           // сырые данные для последующей конвертации в нужный тип
 }
 
-// AgentCounterpartyOrganizationInterface описывает метод, который возвращает *Agent
+// AgentOrganizationConverter описывает метод, который возвращает [Agent].
 //
 // Интерфейс должны реализовывать: [Counterparty] и [Organization].
-type AgentCounterpartyOrganizationInterface interface {
-	AsCOAgent() *Agent
+type AgentOrganizationConverter interface {
+	AsOrganizationAgent() *Agent
 }
 
-// AgentCounterpartyEmployeeInterface описывает метод, который возвращает *Agent
+// AgentEmployeeConverter описывает метод, который возвращает [Agent].
 //
 // Интерфейс должны реализовывать: [Counterparty] и [Employee].
-type AgentCounterpartyEmployeeInterface interface {
-	AsCEAgent() *Agent
+type AgentEmployeeConverter interface {
+	AsEmployeeAgent() *Agent
 }
 
-// AgentInterface описывает метод, который возвращает *Agent
+// AgentConverter описывает метод, который возвращает [Agent].
 //
 // Интерфейс должны реализовывать: [Counterparty], [Organization] и [Employee].
-type AgentInterface interface {
+type AgentConverter interface {
 	AsAgent() *Agent
 }
 

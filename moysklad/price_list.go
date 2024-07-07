@@ -52,7 +52,7 @@ func (priceList PriceList) Clean() *PriceList {
 	return &PriceList{Meta: priceList.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (priceList PriceList) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: priceList.Meta}
 }
@@ -441,8 +441,8 @@ func (priceListPosition PriceListPosition) GetPack() Pack {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (priceListPosition *PriceListPosition) SetAssortment(assortment AssortmentInterface) *PriceListPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (priceListPosition *PriceListPosition) SetAssortment(assortment AssortmentConverter) *PriceListPosition {
 	if assortment != nil {
 		priceListPosition.Assortment = assortment.AsAssortment()
 	}

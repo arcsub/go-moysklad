@@ -65,7 +65,7 @@ func (factureOut FactureOut) AsOperation() *Operation {
 	return &Operation{Meta: factureOut.GetMeta(), LinkedSum: factureOut.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (factureOut FactureOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: factureOut.Meta}
 }
@@ -320,9 +320,9 @@ func (factureOut *FactureOut) SetPaymentDate(paymentDate time.Time) *FactureOut 
 // SetAgent устанавливает Метаданные Контрагента, связанного с бонусной операцией.
 //
 // Принимает [Counterparty] или [Organization].
-func (factureOut *FactureOut) SetAgent(agent AgentCounterpartyOrganizationInterface) *FactureOut {
+func (factureOut *FactureOut) SetAgent(agent AgentOrganizationConverter) *FactureOut {
 	if agent != nil {
-		factureOut.Agent = agent.AsCOAgent()
+		factureOut.Agent = agent.AsOrganizationAgent()
 	}
 	return factureOut
 }
@@ -377,8 +377,8 @@ func (factureOut *FactureOut) SetDemands(demands ...*Demand) *FactureOut {
 
 // SetPayments устанавливает Метаданные ссылок на связанные входящие платежи.
 //
-// Принимает множество объектов, реализующих интерфейс [PaymentInterface].
-func (factureOut *FactureOut) SetPayments(payments ...PaymentInterface) *FactureOut {
+// Принимает множество объектов, реализующих интерфейс [PaymentConverter].
+func (factureOut *FactureOut) SetPayments(payments ...PaymentConverter) *FactureOut {
 	factureOut.Payments = NewPaymentsFrom(payments)
 	return factureOut
 }
@@ -394,9 +394,9 @@ func (factureOut *FactureOut) SetReturns(returns ...*PurchaseReturn) *FactureOut
 // SetConsignee устанавливает Метаданные грузополучателя (контрагент или юрлицо).
 //
 // Принимает [Counterparty] или [Organization].
-func (factureOut *FactureOut) SetConsignee(consignee AgentCounterpartyOrganizationInterface) *FactureOut {
+func (factureOut *FactureOut) SetConsignee(consignee AgentOrganizationConverter) *FactureOut {
 	if consignee != nil {
-		factureOut.Consignee = consignee.AsCOAgent()
+		factureOut.Consignee = consignee.AsOrganizationAgent()
 	}
 	return factureOut
 }
@@ -547,9 +547,9 @@ type FactureOutService interface {
 	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*FactureOut, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

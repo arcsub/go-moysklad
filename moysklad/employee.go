@@ -55,12 +55,12 @@ func (employee Employee) Clean() *Employee {
 	return &Employee{Meta: employee.Meta}
 }
 
-// AsCEAgent реализует интерфейс [AgentCounterpartyEmployeeInterface].
-func (employee Employee) AsCEAgent() *Agent {
+// AsEmployeeAgent реализует интерфейс [AgentEmployeeConverter].
+func (employee Employee) AsEmployeeAgent() *Agent {
 	return employee.AsAgent()
 }
 
-// AsAgent реализует интерфейс [AgentInterface].
+// AsAgent реализует интерфейс [AgentConverter].
 func (employee Employee) AsAgent() *Agent {
 	if employee.Meta == nil {
 		return nil

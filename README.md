@@ -6,13 +6,14 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad?style=flat-square)
 
+# go-moysklad (МойСклад)
+
+SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api)
+
 <p align="center">
   <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6bec5834-6eb9-442f-b1ee-efeaa85bb946" width="200px">
 </p>
 
-# go-moysklad (МойСклад)
-
-SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api)
 > [!WARNING]
 > SDK находится в стадии разработки!
 >

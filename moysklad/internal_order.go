@@ -60,7 +60,7 @@ func (internalOrder InternalOrder) Clean() *InternalOrder {
 	return &InternalOrder{Meta: internalOrder.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (internalOrder InternalOrder) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: internalOrder.Meta}
 }
@@ -483,8 +483,8 @@ func (internalOrderPosition InternalOrderPosition) GetVatEnabled() bool {
 
 // SetAssortment устанавливает Метаданные товара/услуги/серии/модификации, которую представляет собой позиция.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (internalOrderPosition *InternalOrderPosition) SetAssortment(assortment AssortmentInterface) *InternalOrderPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (internalOrderPosition *InternalOrderPosition) SetAssortment(assortment AssortmentConverter) *InternalOrderPosition {
 	if assortment != nil {
 		internalOrderPosition.Assortment = assortment.AsAssortment()
 	}
@@ -680,9 +680,9 @@ type InternalOrderService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

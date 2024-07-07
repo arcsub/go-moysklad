@@ -32,7 +32,7 @@ func (Assortment) MetaType() MetaType {
 //   - Consignment (Серия)
 //
 // Создать позицию можно с помощью [NewAssortmentPosition], передав в качестве аргумента объект,
-// удовлетворяющий интерфейсу [AssortmentInterface].
+// удовлетворяющий интерфейсу [AssortmentConverter].
 type AssortmentPosition struct {
 	Meta         Meta           `json:"meta"`                   // Метаданные сущности
 	Code         string         `json:"code,omitempty"`         // Код сущности
@@ -45,15 +45,15 @@ type AssortmentPosition struct {
 	ID           uuid.UUID      `json:"id,omitempty"`        // ID сущности
 }
 
-// AssortmentInterface описывает метод, возвращающий [AssortmentPosition].
-type AssortmentInterface interface {
+// AssortmentConverter описывает метод, возвращающий [AssortmentPosition].
+type AssortmentConverter interface {
 	AsAssortment() *AssortmentPosition
 }
 
-// NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу [AssortmentInterface].
+// NewAssortmentPosition принимает в качестве аргумента объект, удовлетворяющий интерфейсу [AssortmentConverter].
 //
 // Возвращает [AssortmentPosition] с заполненным полем Meta.
-func NewAssortmentPosition[T AssortmentInterface](entity T) *AssortmentPosition {
+func NewAssortmentPosition[T AssortmentConverter](entity T) *AssortmentPosition {
 	return entity.AsAssortment()
 }
 
@@ -504,9 +504,9 @@ type AssortmentService interface {
 	GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление позиций в Ассортименте.
-	// Принимает контекст и множество объектов, реализующих интерфейс AssortmentInterface.
+	// Принимает контекст и множество объектов, реализующих интерфейс AssortmentConverter.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteMany(ctx context.Context, entities ...AssortmentInterface) (*DeleteManyResponse, *resty.Response, error)
+	DeleteMany(ctx context.Context, entities ...AssortmentConverter) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetSettings выполняет запрос на получение настроек справочника ассортимента.
 	// Принимает контекст.
@@ -541,7 +541,7 @@ func (service *assortmentService) GetListAsync(ctx context.Context, params ...*P
 	return async, resp, err
 }
 
-func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AssortmentInterface) (*DeleteManyResponse, *resty.Response, error) {
+func (service *assortmentService) DeleteMany(ctx context.Context, entities ...AssortmentConverter) (*DeleteManyResponse, *resty.Response, error) {
 	var mw = make([]MetaWrapper, 0, len(entities))
 	for _, entity := range entities {
 		if entity != nil {

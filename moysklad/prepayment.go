@@ -63,7 +63,7 @@ func (prepayment Prepayment) Clean() *Prepayment {
 	return &Prepayment{Meta: prepayment.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (prepayment Prepayment) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: prepayment.Meta}
 }

@@ -56,7 +56,7 @@ func (loss Loss) Clean() *Loss {
 	return &Loss{Meta: loss.Meta}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (loss Loss) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: loss.Meta}
 }
@@ -437,8 +437,8 @@ func (lossPosition LossPosition) GetThings() Slice[string] {
 
 // SetAssortment устанавливает Метаданные товара/услуги, которую представляет собой компонент.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (lossPosition *LossPosition) SetAssortment(assortment AssortmentInterface) *LossPosition {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (lossPosition *LossPosition) SetAssortment(assortment AssortmentConverter) *LossPosition {
 	if assortment != nil {
 		lossPosition.Assortment = assortment.AsAssortment()
 	}
@@ -659,9 +659,9 @@ type LossService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

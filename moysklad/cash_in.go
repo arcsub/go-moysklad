@@ -64,12 +64,12 @@ func (cashIn CashIn) AsOperation() *Operation {
 	return &Operation{Meta: cashIn.GetMeta(), LinkedSum: cashIn.GetSum()}
 }
 
-// AsTaskOperation реализует интерфейс [TaskOperationInterface].
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (cashIn CashIn) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: cashIn.Meta}
 }
 
-// AsPayment реализует интерфейс [PaymentInterface].
+// AsPayment реализует интерфейс [PaymentConverter].
 func (cashIn CashIn) AsPayment() *Payment {
 	return &Payment{Meta: cashIn.GetMeta()}
 }
@@ -242,12 +242,6 @@ func (cashIn *CashIn) SetOrganization(organization *Organization) *CashIn {
 	return cashIn
 }
 
-// SetVatSum устанавливает Сумму НДС.
-func (cashIn *CashIn) SetVatSum(vatSum *float64) *CashIn {
-	cashIn.VatSum = vatSum
-	return cashIn
-}
-
 // SetApplicable устанавливает Отметку о проведении.
 func (cashIn *CashIn) SetApplicable(applicable bool) *CashIn {
 	cashIn.Applicable = &applicable
@@ -318,8 +312,8 @@ func (cashIn *CashIn) SetMeta(meta *Meta) *CashIn {
 //   - CommissionReportIn (Полученный отчет комиссионера)
 //   - RetailShift (Смена)
 //
-// Принимает множество объектов, реализующих интерфейс [OperationIn].
-func (cashIn *CashIn) SetOperations(operations ...OperationIn) *CashIn {
+// Принимает множество объектов, реализующих интерфейс [OperationInConverter].
+func (cashIn *CashIn) SetOperations(operations ...OperationInConverter) *CashIn {
 	for _, operation := range operations {
 		if operation != nil {
 			cashIn.Operations.Push(operation.AsOperationIn())
@@ -331,7 +325,7 @@ func (cashIn *CashIn) SetOperations(operations ...OperationIn) *CashIn {
 // SetAgent устанавливает Метаданные контрагента.
 //
 // Принимает [Counterparty], [Organization] или [Employee].
-func (cashIn *CashIn) SetAgent(agent AgentInterface) *CashIn {
+func (cashIn *CashIn) SetAgent(agent AgentConverter) *CashIn {
 	if agent != nil {
 		cashIn.Agent = agent.AsAgent()
 	}
@@ -558,9 +552,9 @@ type CashInService interface {
 	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
-	// Принимает контекст, ID документа и шаблон.
+	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateInterface) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.

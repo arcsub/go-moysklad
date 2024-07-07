@@ -57,7 +57,7 @@ func (consignment Consignment) FromAssortment(assortmentPosition *AssortmentPosi
 	return UnmarshalAsType[Consignment](assortmentPosition)
 }
 
-// AsAssortment реализует интерфейс [AssortmentInterface].
+// AsAssortment реализует интерфейс [AssortmentConverter].
 func (consignment Consignment) AsAssortment() *AssortmentPosition {
 	return &AssortmentPosition{Meta: consignment.GetMeta()}
 }
@@ -169,8 +169,8 @@ func (consignment *Consignment) SetExternalCode(externalCode string) *Consignmen
 
 // SetAssortment устанавливает Метаданные товара.
 //
-// Принимает объект, реализующий интерфейс [AssortmentInterface].
-func (consignment *Consignment) SetAssortment(assortment AssortmentInterface) *Consignment {
+// Принимает объект, реализующий интерфейс [AssortmentConverter].
+func (consignment *Consignment) SetAssortment(assortment AssortmentConverter) *Consignment {
 	consignment.Assortment = assortment.AsAssortment()
 	return consignment
 }
