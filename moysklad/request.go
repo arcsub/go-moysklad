@@ -236,7 +236,7 @@ func (context Context) String() string {
 
 // List объект ответа на запрос списка сущностей T.
 type List[T any] struct {
-	Context Context `json:"context"` // метаданные о выполнившем запрос сотруднике
+	Context Context `json:"context"` // Метаданные о выполнившем запрос сотруднике
 	MetaArray[T]
 }
 
