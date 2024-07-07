@@ -697,15 +697,61 @@ func (PurchaseReturnPosition) MetaType() MetaType {
 
 // PurchaseReturnService описывает метод сервиса для работы с возвратами поставщикам.
 type PurchaseReturnService interface {
+	// GetList выполняет запрос на получение списка возвратов поставщику.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[PurchaseReturn], *resty.Response, error)
+
+	// Create выполняет запрос на создание возврата поставщику.
+	// Обязательные поля для заполнения:
+	//	- organization (Ссылка на ваше юрлицо)
+	//	- store (Ссылка на склад)
+	//	- agent (Ссылка на контрагента)
+	// Принимает контекст, возврат поставщику и опционально объект параметров запроса Params.
+	// Возвращает созданный возврат поставщику.
 	Create(ctx context.Context, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
+
+	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение возвратов поставщику.
+	// Изменяемые возвраты поставщику должны содержать идентификатор в виде метаданных.
+	// Принимает контекст, список возвратов поставщику и опционально объект параметров запроса Params.
+	// Возвращает список созданных и/или изменённых возвратов поставщику.
 	CreateUpdateMany(ctx context.Context, purchaseReturnList Slice[PurchaseReturn], params ...*Params) (*Slice[PurchaseReturn], *resty.Response, error)
+
+	// DeleteMany выполняет запрос на массовое удаление возвратов поставщику.
+	// Принимает контекст и множество возвратов поставщику.
+	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*PurchaseReturn) (*DeleteManyResponse, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление возврата поставщику.
+	// Принимает контекст и ID возврата поставщику.
+	// Возвращает «true» в случае успешного удаления возврата поставщику.
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// GetByID выполняет запрос на получение отдельного возврата поставщику по ID.
+	// Принимает контекст, ID возврата поставщику и опционально объект параметров запроса Params.
+	// Возвращает найденный возврат поставщику.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PurchaseReturn, *resty.Response, error)
+
+	// Update выполняет запрос на изменение возврата поставщику.
+	// Принимает контекст, возврат поставщику и опционально объект параметров запроса Params.
+	// Возвращает изменённый возврат поставщику.
 	Update(ctx context.Context, id uuid.UUID, purchaseReturn *PurchaseReturn, params ...*Params) (*PurchaseReturn, *resty.Response, error)
+
+	// Template выполняет запрос на получение предзаполненного возврата поставщику со стандартными полями без связи с какими-либо другими документами.
+	// Принимает контекст.
+	// Возвращает предзаполненный возврат поставщику.
 	Template(ctx context.Context) (*PurchaseReturn, *resty.Response, error)
+
+	// TemplateBased выполняет запрос на получение шаблона возврата поставщику на основе других документов.
+	// Основание, на котором может быть создан:
+	//	- Приемка (Supply)
+	// Принимает контекст и множество документов из списка выше.
+	// Возвращает предзаполненный возврат поставщику на основании переданных документов.
 	TemplateBased(ctx context.Context, basedOn ...MetaOwner) (*PurchaseReturn, *resty.Response, error)
+
+	// GetMetadata выполняет запрос на получение метаданных возвратов поставщику.
+	// Принимает контекст.
+	// Возвращает объект метаданных MetaAttributesStatesSharedWrapper.
 	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
@@ -722,6 +768,10 @@ type PurchaseReturnService interface {
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PurchaseReturnPosition, params ...*Params) (*PurchaseReturnPosition, *resty.Response, error)
+
+	// CreatePosition выполняет запрос на добавление позиции документа.
+	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
+	// Возвращает добавленную позицию.
 	CreatePosition(ctx context.Context, id uuid.UUID, position *PurchaseReturnPosition, params ...*Params) (*PurchaseReturnPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
