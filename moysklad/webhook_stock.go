@@ -101,6 +101,18 @@ func (webhookStock *WebhookStock) SetReportType(reportType WebhookReport) *Webho
 	return webhookStock
 }
 
+// SetReportTypeAll устанавливает Тип отчета остатков, к которым привязан вебхук на изменение остатков в значение [WebhookReportAll].
+func (webhookStock *WebhookStock) SetReportTypeAll() *WebhookStock {
+	webhookStock.ReportType = WebhookReportAll
+	return webhookStock
+}
+
+// SetReportTypeByStore устанавливает Тип отчета остатков, к которым привязан вебхук на изменение остатков в значение [WebhookReportByStore].
+func (webhookStock *WebhookStock) SetReportTypeByStore() *WebhookStock {
+	webhookStock.ReportType = WebhookReportByStore
+	return webhookStock
+}
+
 // String реализует интерфейс [fmt.Stringer].
 func (webhookStock WebhookStock) String() string {
 	return Stringify(webhookStock)
@@ -145,7 +157,7 @@ type WebhookStockService interface {
 	Create(ctx context.Context, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение вебхуков на изменение остатков.
-	// Изменяемые вебхуки на изменение остаткову должны содержать идентификатор в виде метаданных.
+	// Изменяемые вебхуки на изменение остатков должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список вебхуков на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых вебхуков на изменение остатков.
 	CreateUpdateMany(ctx context.Context, webhookStockList Slice[WebhookStock], params ...*Params) (*Slice[WebhookStock], *resty.Response, error)
