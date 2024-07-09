@@ -383,6 +383,59 @@ func (minPrice MinPrice) String() string {
 	return Stringify(minPrice)
 }
 
+// SalePrice Цена продажи
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-ceny-prodazhi
+type SalePrice struct {
+	Value     *float64   `json:"value,omitempty"`     // Значение цены
+	Currency  *Currency  `json:"currency,omitempty"`  // Ссылка на валюту в формате Метаданных
+	PriceType *PriceType `json:"priceType,omitempty"` // Тип цены
+}
+
+// GetValue возвращает Значение цены.
+func (salePrice SalePrice) GetValue() float64 {
+	return Deref(salePrice.Value)
+}
+
+// GetCurrency возвращает Ссылку на валюту в формате Метаданных.
+func (salePrice SalePrice) GetCurrency() Currency {
+	return Deref(salePrice.Currency)
+}
+
+// GetPriceType возвращает Тип цены.
+func (salePrice SalePrice) GetPriceType() PriceType {
+	return Deref(salePrice.PriceType)
+}
+
+// SetValue устанавливает Значение цены.
+func (salePrice *SalePrice) SetValue(value float64) *SalePrice {
+	salePrice.Value = &value
+	return salePrice
+}
+
+// SetCurrency устанавливает Ссылку на валюту в формате Метаданных.
+func (salePrice *SalePrice) SetCurrency(currency *Currency) *SalePrice {
+	if currency != nil {
+		salePrice.Currency = currency.Clean()
+	}
+	return salePrice
+}
+
+// SetPriceType устанавливает Тип цены.
+func (salePrice *SalePrice) SetPriceType(priceType *PriceType) *SalePrice {
+	if priceType != nil {
+		salePrice.PriceType = priceType.Clean()
+	}
+	return salePrice
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (salePrice SalePrice) String() string {
+	return Stringify(salePrice)
+}
+
 // Stock Остатки и себестоимость в позициях документов.
 //
 // [Документация МойСклад]
