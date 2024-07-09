@@ -182,7 +182,7 @@ func (processing Processing) GetProductListStore() Store {
 
 // GetProject возвращает Метаданные проекта.
 func (processing Processing) GetProject() Project {
-	return Deref(processing.Project).GetValue()
+	return Deref(processing.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -202,7 +202,7 @@ func (processing Processing) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Техоперации.
 func (processing Processing) GetState() State {
-	return Deref(processing.State).GetValue()
+	return Deref(processing.State).getValue()
 }
 
 // GetName возвращает Наименование Техоперации.

@@ -251,20 +251,25 @@ func NewNullValue[T any](value *T) *NullValue[T] {
 	return &NullValue[T]{value: value}
 }
 
-// IsNull возвращает true, если поле null.
-func (nullValue NullValue[T]) IsNull() bool {
+// IsNull возвращает true, если объект не инициализирован или поле null.
+func (nullValue *NullValue[T]) IsNull() bool {
+	return nullValue == nil || nullValue.isNull()
+}
+
+// isNull возвращает true, если поле null.
+func (nullValue NullValue[T]) isNull() bool {
 	return nullValue.null || nullValue.value == nil
 }
 
-// GetValue возвращает значение поля.
-func (nullValue NullValue[T]) GetValue() T {
+// getValue возвращает значение поля.
+func (nullValue NullValue[T]) getValue() T {
 	return Deref(nullValue.value)
 }
 
-// SetValue устанавливает значение поля.
-func (nullValue *NullValue[T]) SetValue(value *T) *NullValue[T] {
+// setValue устанавливает значение поля.
+func (nullValue *NullValue[T]) setValue(value *T) *NullValue[T] {
 	if value == nil {
-		nullValue.SetNull()
+		nullValue.setNull()
 	} else {
 		nullValue.value = value
 		nullValue.null = false
@@ -272,8 +277,8 @@ func (nullValue *NullValue[T]) SetValue(value *T) *NullValue[T] {
 	return nullValue
 }
 
-// SetNull устанавливает значение поля null.
-func (nullValue *NullValue[T]) SetNull() *NullValue[T] {
+// setNull устанавливает значение поля null.
+func (nullValue *NullValue[T]) setNull() *NullValue[T] {
 	nullValue.value = nil
 	nullValue.null = true
 	return nullValue
@@ -286,10 +291,10 @@ func (nullValue NullValue[T]) String() string {
 
 // MarshalJSON реализует интерфейс [json.Marshaler].
 func (nullValue NullValue[T]) MarshalJSON() ([]byte, error) {
-	if nullValue.IsNull() {
+	if nullValue.isNull() {
 		return json.Marshal(nil)
 	}
-	return json.Marshal(nullValue.GetValue())
+	return json.Marshal(nullValue.getValue())
 }
 
 // UnmarshalJSON реализует интерфейс [json.Unmarshaler].

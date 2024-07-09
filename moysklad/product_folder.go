@@ -125,7 +125,7 @@ func (productFolder ProductFolder) GetPathName() string {
 
 // GetProductFolder возвращает Ссылку на Группу товаров, в которую входит данная Группа товаров, в формате Метаданных.
 func (productFolder ProductFolder) GetProductFolder() ProductFolder {
-	return Deref(productFolder.ProductFolder).GetValue()
+	return Deref(productFolder.ProductFolder).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.

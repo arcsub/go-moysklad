@@ -157,7 +157,7 @@ func (enter Enter) GetAccountID() uuid.UUID {
 
 // GetProject возвращает Метаданные проекта.
 func (enter Enter) GetProject() Project {
-	return Deref(enter.Project).GetValue()
+	return Deref(enter.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -167,7 +167,7 @@ func (enter Enter) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (enter Enter) GetRate() Rate {
-	return Deref(enter.Rate).GetValue()
+	return Deref(enter.Rate).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -177,7 +177,7 @@ func (enter Enter) GetShared() bool {
 
 // GetState возвращает Метаданные статуса оприходования.
 func (enter Enter) GetState() State {
-	return Deref(enter.State).GetValue()
+	return Deref(enter.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.
@@ -403,7 +403,7 @@ func (enterPosition EnterPosition) GetAssortment() AssortmentPosition {
 
 // GetCountry возвращает Метаданные Страны.
 func (enterPosition EnterPosition) GetCountry() Country {
-	return Deref(enterPosition.Country).GetValue()
+	return Deref(enterPosition.Country).getValue()
 }
 
 // GetGTD возвращает ГТД.

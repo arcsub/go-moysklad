@@ -121,7 +121,7 @@ func (demand Demand) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (demand Demand) GetContract() Contract {
-	return demand.Contract.GetValue()
+	return demand.Contract.getValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -211,7 +211,7 @@ func (demand Demand) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (demand Demand) GetProject() Project {
-	return demand.Project.GetValue()
+	return demand.Project.getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -221,12 +221,12 @@ func (demand Demand) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (demand Demand) GetRate() Rate {
-	return demand.Rate.GetValue()
+	return demand.Rate.getValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (demand Demand) GetSalesChannel() SalesChannel {
-	return demand.SalesChannel.GetValue()
+	return demand.SalesChannel.getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -246,7 +246,7 @@ func (demand Demand) GetShipmentAddressFull() Address {
 
 // GetState возвращает Метаданные статуса Отгрузки.
 func (demand Demand) GetState() State {
-	return demand.State.GetValue()
+	return demand.State.getValue()
 }
 
 // GetStore возвращает Метаданные склада.

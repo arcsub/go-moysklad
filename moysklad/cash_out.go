@@ -102,7 +102,7 @@ func (cashOut CashOut) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (cashOut CashOut) GetContract() Contract {
-	return Deref(cashOut.Contract).GetValue()
+	return Deref(cashOut.Contract).getValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -189,7 +189,7 @@ func (cashOut CashOut) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (cashOut CashOut) GetProject() Project {
-	return Deref(cashOut.Project).GetValue()
+	return Deref(cashOut.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -199,12 +199,12 @@ func (cashOut CashOut) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (cashOut CashOut) GetRate() Rate {
-	return Deref(cashOut.Rate).GetValue()
+	return Deref(cashOut.Rate).getValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (cashOut CashOut) GetSalesChannel() SalesChannel {
-	return Deref(cashOut.SalesChannel).GetValue()
+	return Deref(cashOut.SalesChannel).getValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -214,7 +214,7 @@ func (cashOut CashOut) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Расходного ордера.
 func (cashOut CashOut) GetState() State {
-	return Deref(cashOut.State).GetValue()
+	return Deref(cashOut.State).getValue()
 }
 
 // GetSum возвращает Сумму Расходного ордера в установленной валюте.

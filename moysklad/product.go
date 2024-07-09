@@ -99,7 +99,7 @@ func (product Product) AsAssortment() *AssortmentPosition {
 
 // GetSupplier возвращает Метаданные контрагента-поставщика.
 func (product Product) GetSupplier() Counterparty {
-	return Deref(product.Supplier).GetValue()
+	return Deref(product.Supplier).getValue()
 }
 
 // GetOnTap возвращает Признак разливного товара.
@@ -156,7 +156,7 @@ func (product Product) GetName() string {
 
 // GetAlcoholic возвращает Объект, содержащий поля алкогольной продукции.
 func (product Product) GetAlcoholic() Alcoholic {
-	return Deref(product.Alcoholic).GetValue()
+	return Deref(product.Alcoholic).getValue()
 }
 
 // GetArchived возвращает true, если Товар находится в архиве.
@@ -181,7 +181,7 @@ func (product Product) GetBuyPrice() BuyPrice {
 
 // GetCountry возвращает Метаданные Страны.
 func (product Product) GetCountry() Country {
-	return Deref(product.Country).GetValue()
+	return Deref(product.Country).getValue()
 }
 
 // GetDiscountProhibited возвращает Признак запрета скидок.
@@ -227,7 +227,7 @@ func (product Product) GetIsSerialTrackable() bool {
 
 // GetMinPrice возвращает Минимальную цену.
 func (product Product) GetMinPrice() MinPrice {
-	return Deref(product.MinPrice).GetValue()
+	return Deref(product.MinPrice).getValue()
 }
 
 // GetTaxSystem возвращает Код системы налогообложения.
@@ -278,7 +278,7 @@ func (product Product) GetPpeType() string {
 
 // GetProductFolder возвращает Метаданные группы Товара.
 func (product Product) GetProductFolder() ProductFolder {
-	return Deref(product.ProductFolder).GetValue()
+	return Deref(product.ProductFolder).getValue()
 }
 
 // GetSalePrices возвращает Цены продажи.
@@ -329,7 +329,7 @@ func (product Product) GetVatEnabled() bool {
 
 // GetUom возвращает Единицу измерения.
 func (product Product) GetUom() Uom {
-	return Deref(product.Uom).GetValue()
+	return Deref(product.Uom).getValue()
 }
 
 // GetUpdated возвращает Момент последнего обновления товара.

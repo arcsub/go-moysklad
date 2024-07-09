@@ -173,7 +173,7 @@ func (purchaseReturn PurchaseReturn) GetAccountID() uuid.UUID {
 
 // GetContract возвращает Метаданные договора.
 func (purchaseReturn PurchaseReturn) GetContract() Contract {
-	return Deref(purchaseReturn.Contract).GetValue()
+	return Deref(purchaseReturn.Contract).getValue()
 }
 
 // GetAgent возвращает Метаданные Контрагента.
@@ -188,7 +188,7 @@ func (purchaseReturn PurchaseReturn) GetOrganization() Organization {
 
 // GetProject возвращает Метаданные проекта.
 func (purchaseReturn PurchaseReturn) GetProject() Project {
-	return purchaseReturn.Project.GetValue()
+	return purchaseReturn.Project.getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -198,7 +198,7 @@ func (purchaseReturn PurchaseReturn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (purchaseReturn PurchaseReturn) GetRate() Rate {
-	return purchaseReturn.Rate.GetValue()
+	return purchaseReturn.Rate.getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -208,7 +208,7 @@ func (purchaseReturn PurchaseReturn) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Возврата поставщику.
 func (purchaseReturn PurchaseReturn) GetState() State {
-	return Deref(purchaseReturn.State).GetValue()
+	return Deref(purchaseReturn.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.

@@ -99,7 +99,7 @@ func (customerOrder CustomerOrder) GetOrganizationAccount() AgentAccount {
 
 // GetProject возвращает Метаданные проекта.
 func (customerOrder CustomerOrder) GetProject() Project {
-	return Deref(customerOrder.Project).GetValue()
+	return Deref(customerOrder.Project).getValue()
 }
 
 // GetAgentAccount возвращает Метаданные счета контрагента.
@@ -219,7 +219,7 @@ func (customerOrder CustomerOrder) GetAccountID() uuid.UUID {
 
 // GetContract возвращает Метаданные договора.
 func (customerOrder CustomerOrder) GetContract() Contract {
-	return Deref(customerOrder.Contract).GetValue()
+	return Deref(customerOrder.Contract).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -229,7 +229,7 @@ func (customerOrder CustomerOrder) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (customerOrder CustomerOrder) GetRate() Rate {
-	return Deref(customerOrder.Rate).GetValue()
+	return Deref(customerOrder.Rate).getValue()
 }
 
 // GetReservedSum возвращает Сумму товаров в резерве.
@@ -239,7 +239,7 @@ func (customerOrder CustomerOrder) GetReservedSum() float64 {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (customerOrder CustomerOrder) GetSalesChannel() SalesChannel {
-	return Deref(customerOrder.SalesChannel).GetValue()
+	return Deref(customerOrder.SalesChannel).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -264,12 +264,12 @@ func (customerOrder CustomerOrder) GetShippedSum() float64 {
 
 // GetState возвращает Метаданные статуса Заказа покупателя.
 func (customerOrder CustomerOrder) GetState() State {
-	return Deref(customerOrder.State).GetValue()
+	return Deref(customerOrder.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (customerOrder CustomerOrder) GetStore() Store {
-	return Deref(customerOrder.Store).GetValue()
+	return Deref(customerOrder.Store).getValue()
 }
 
 // GetSum возвращает Сумму Заказа в установленной валюте.

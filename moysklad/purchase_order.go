@@ -118,7 +118,7 @@ func (purchaseOrder PurchaseOrder) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (purchaseOrder PurchaseOrder) GetContract() Contract {
-	return Deref(purchaseOrder.Contract).GetValue()
+	return Deref(purchaseOrder.Contract).getValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -213,7 +213,7 @@ func (purchaseOrder PurchaseOrder) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (purchaseOrder PurchaseOrder) GetProject() Project {
-	return Deref(purchaseOrder.Project).GetValue()
+	return Deref(purchaseOrder.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -223,7 +223,7 @@ func (purchaseOrder PurchaseOrder) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (purchaseOrder PurchaseOrder) GetRate() Rate {
-	return Deref(purchaseOrder.Rate).GetValue()
+	return Deref(purchaseOrder.Rate).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -238,12 +238,12 @@ func (purchaseOrder PurchaseOrder) GetShippedSum() float64 {
 
 // GetState возвращает Метаданные статуса заказа поставщику.
 func (purchaseOrder PurchaseOrder) GetState() State {
-	return Deref(purchaseOrder.State).GetValue()
+	return Deref(purchaseOrder.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (purchaseOrder PurchaseOrder) GetStore() Store {
-	return Deref(purchaseOrder.Store).GetValue()
+	return Deref(purchaseOrder.Store).getValue()
 }
 
 // GetSum возвращает Сумму Заказа поставщику в установленной валюте.
@@ -577,7 +577,7 @@ type PurchaseOrderPosition struct {
 	Vat        *float64            `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Wait       *bool               `json:"wait,omitempty"`       // Ожидается данной позиции
-	Stock      *Stock              `json:"stock,omitempty"`      // Остатки и себестоимость `?fields=stock&expand=positions`
+	Stock      *Stock              `json:"stock,omitempty"`      // Остатки и себестоимость позиции (указывается при наличии параметра запроса `fields=stock`)
 }
 
 // GetAccountID возвращает ID учётной записи.

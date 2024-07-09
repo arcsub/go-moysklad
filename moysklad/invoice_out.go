@@ -175,7 +175,7 @@ func (invoiceOut InvoiceOut) GetAccountID() uuid.UUID {
 
 // GetContract возвращает Метаданные договора.
 func (invoiceOut InvoiceOut) GetContract() Contract {
-	return Deref(invoiceOut.Contract).GetValue()
+	return Deref(invoiceOut.Contract).getValue()
 }
 
 // GetAgent возвращает Метаданные контрагента.
@@ -205,7 +205,7 @@ func (invoiceOut InvoiceOut) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (invoiceOut InvoiceOut) GetProject() Project {
-	return Deref(invoiceOut.Project).GetValue()
+	return Deref(invoiceOut.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -215,7 +215,7 @@ func (invoiceOut InvoiceOut) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (invoiceOut InvoiceOut) GetRate() Rate {
-	return Deref(invoiceOut.Rate).GetValue()
+	return Deref(invoiceOut.Rate).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -230,12 +230,12 @@ func (invoiceOut InvoiceOut) GetShippedSum() float64 {
 
 // GetState возвращает Метаданные статуса счета.
 func (invoiceOut InvoiceOut) GetState() State {
-	return Deref(invoiceOut.State).GetValue()
+	return Deref(invoiceOut.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (invoiceOut InvoiceOut) GetStore() Store {
-	return Deref(invoiceOut.Store).GetValue()
+	return Deref(invoiceOut.Store).getValue()
 }
 
 // GetSum возвращает Сумму Счета покупателю в установленной валюте.
@@ -542,7 +542,7 @@ type InvoiceOutPosition struct {
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Vat        *int                `json:"vat,omitempty"`        // НДС, которым облагается текущая позиция
 	VatEnabled *bool               `json:"vatEnabled,omitempty"` // Включен ли НДС для позиции. С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
-	Stock      *Stock              `json:"stock,omitempty"`      // Остатки и себестоимость `?fields=stock&expand=positions`
+	Stock      *Stock              `json:"stock,omitempty"`      // Остатки и себестоимость позиции (указывается при наличии параметра запроса `fields=stock`)
 }
 
 // GetAccountID возвращает ID учётной записи.

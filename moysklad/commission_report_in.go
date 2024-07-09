@@ -228,7 +228,7 @@ func (commissionReportIn CommissionReportIn) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (commissionReportIn CommissionReportIn) GetProject() Project {
-	return commissionReportIn.Project.GetValue()
+	return commissionReportIn.Project.getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -238,7 +238,7 @@ func (commissionReportIn CommissionReportIn) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (commissionReportIn CommissionReportIn) GetRate() Rate {
-	return commissionReportIn.Rate.GetValue()
+	return commissionReportIn.Rate.getValue()
 }
 
 // GetReturnToCommissionerPositions возвращает Метаданные позиций возврата на склад комиссионера Полученного отчёта комиссионера.
@@ -258,7 +258,7 @@ func (commissionReportIn CommissionReportIn) GetPayments() Slice[Payment] {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (commissionReportIn CommissionReportIn) GetSalesChannel() SalesChannel {
-	return commissionReportIn.SalesChannel.GetValue()
+	return commissionReportIn.SalesChannel.getValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -268,7 +268,7 @@ func (commissionReportIn CommissionReportIn) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Полученного отчёта комиссионера.
 func (commissionReportIn CommissionReportIn) GetState() State {
-	return commissionReportIn.State.GetValue()
+	return commissionReportIn.State.getValue()
 }
 
 // GetSum возвращает Сумму Полученного отчёта комиссионера в копейках.

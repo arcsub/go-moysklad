@@ -97,7 +97,7 @@ func (factureOut FactureOut) GetCode() string {
 
 // GetContract возвращает Метаданные договора.
 func (factureOut FactureOut) GetContract() Contract {
-	return Deref(factureOut.Contract).GetValue()
+	return Deref(factureOut.Contract).getValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -172,7 +172,7 @@ func (factureOut FactureOut) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (factureOut FactureOut) GetRate() Rate {
-	return Deref(factureOut.Rate).GetValue()
+	return Deref(factureOut.Rate).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -182,7 +182,7 @@ func (factureOut FactureOut) GetShared() bool {
 
 // GetState возвращает Метаданные статуса выданного Счета-фактуры.
 func (factureOut FactureOut) GetState() State {
-	return Deref(factureOut.State).GetValue()
+	return Deref(factureOut.State).getValue()
 }
 
 // GetStateContractID возвращает Идентификатор государственного контракта, договора (соглашения).

@@ -141,7 +141,7 @@ func (contract Contract) GetOwner() Employee {
 
 // GetRate возвращает Валюту.
 func (contract Contract) GetRate() Rate {
-	return Deref(contract.Rate).GetValue()
+	return Deref(contract.Rate).getValue()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -161,7 +161,7 @@ func (contract Contract) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Договора.
 func (contract Contract) GetState() State {
-	return Deref(contract.State).GetValue()
+	return Deref(contract.State).getValue()
 }
 
 // GetSum возвращает Сумму Договора.

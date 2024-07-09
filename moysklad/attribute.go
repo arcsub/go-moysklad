@@ -77,7 +77,7 @@ func (attribute Attribute) GetDownload() Meta {
 
 // GetFile возвращает Описание файла и контент.
 func (attribute Attribute) GetFile() AttributeFile {
-	return Deref(attribute.File).GetValue()
+	return Deref(attribute.File).getValue()
 }
 
 // SetMeta устанавливает Метаданные доп. поля.

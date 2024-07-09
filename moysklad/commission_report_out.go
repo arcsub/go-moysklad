@@ -215,7 +215,7 @@ func (commissionReportOut CommissionReportOut) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (commissionReportOut CommissionReportOut) GetProject() Project {
-	return Deref(commissionReportOut.Project).GetValue()
+	return Deref(commissionReportOut.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -225,7 +225,7 @@ func (commissionReportOut CommissionReportOut) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (commissionReportOut CommissionReportOut) GetRate() Rate {
-	return Deref(commissionReportOut.Rate).GetValue()
+	return Deref(commissionReportOut.Rate).getValue()
 }
 
 // GetRewardPercent возвращает Процент вознаграждения (всегда 0 если вознаграждение не рассчитывается).
@@ -240,7 +240,7 @@ func (commissionReportOut CommissionReportOut) GetPayments() Slice[Payment] {
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (commissionReportOut CommissionReportOut) GetSalesChannel() SalesChannel {
-	return Deref(commissionReportOut.SalesChannel).GetValue()
+	return Deref(commissionReportOut.SalesChannel).getValue()
 }
 
 // GetShared возвращает флаг общего доступа.
@@ -250,7 +250,7 @@ func (commissionReportOut CommissionReportOut) GetShared() bool {
 
 // GetState возвращает Метаданные статуса.
 func (commissionReportOut CommissionReportOut) GetState() State {
-	return Deref(commissionReportOut.State).GetValue()
+	return Deref(commissionReportOut.State).getValue()
 }
 
 // GetSum возвращает Сумму Выданного отчёта комиссионера в копейках.

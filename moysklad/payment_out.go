@@ -116,7 +116,7 @@ func (paymentOut PaymentOut) GetOrganization() Organization {
 
 // GetContract возвращает Метаданные договора.
 func (paymentOut PaymentOut) GetContract() Contract {
-	return Deref(paymentOut.Contract).GetValue()
+	return Deref(paymentOut.Contract).getValue()
 }
 
 // GetCreated возвращает Дату создания.
@@ -201,7 +201,7 @@ func (paymentOut PaymentOut) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (paymentOut PaymentOut) GetProject() Project {
-	return Deref(paymentOut.Project).GetValue()
+	return Deref(paymentOut.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -211,12 +211,12 @@ func (paymentOut PaymentOut) GetPublished() bool {
 
 // GetRate возвращает Курс Валюты.
 func (paymentOut PaymentOut) GetRate() Rate {
-	return Deref(paymentOut.Rate).GetValue()
+	return Deref(paymentOut.Rate).getValue()
 }
 
 // GetSalesChannel возвращает Метаданные канала продаж.
 func (paymentOut PaymentOut) GetSalesChannel() SalesChannel {
-	return Deref(paymentOut.SalesChannel).GetValue()
+	return Deref(paymentOut.SalesChannel).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -226,7 +226,7 @@ func (paymentOut PaymentOut) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Исходящего платежа.
 func (paymentOut PaymentOut) GetState() State {
-	return Deref(paymentOut.State).GetValue()
+	return Deref(paymentOut.State).getValue()
 }
 
 // GetSum возвращает Сумму Исходящего платежа в копейках.

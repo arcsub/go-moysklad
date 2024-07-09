@@ -109,7 +109,7 @@ func (consignment Consignment) GetAssortment() AssortmentPosition {
 
 // GetImage возвращает Изображение товара, к которому относится данная серия.
 func (consignment Consignment) GetImage() Image {
-	return Deref(consignment.Image).GetValue()
+	return Deref(consignment.Image).getValue()
 }
 
 // GetLabel возвращает Метку Серии.

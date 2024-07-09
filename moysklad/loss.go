@@ -133,7 +133,7 @@ func (loss Loss) GetApplicable() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (loss Loss) GetProject() Project {
-	return Deref(loss.Project).GetValue()
+	return Deref(loss.Project).getValue()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -163,7 +163,7 @@ func (loss Loss) GetPublished() bool {
 
 // GetRate возвращает Валюту.
 func (loss Loss) GetRate() Rate {
-	return Deref(loss.Rate).GetValue()
+	return Deref(loss.Rate).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -173,7 +173,7 @@ func (loss Loss) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Списания.
 func (loss Loss) GetState() State {
-	return Deref(loss.State).GetValue()
+	return Deref(loss.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.

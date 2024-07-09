@@ -167,7 +167,7 @@ func (internalOrder InternalOrder) GetPrinted() bool {
 
 // GetProject возвращает Метаданные проекта.
 func (internalOrder InternalOrder) GetProject() Project {
-	return Deref(internalOrder.Project).GetValue()
+	return Deref(internalOrder.Project).getValue()
 }
 
 // GetPublished возвращает true, если документ опубликован.
@@ -182,7 +182,7 @@ func (internalOrder InternalOrder) GetPurchaseOrders() Slice[PurchaseOrder] {
 
 // GetRate возвращает Валюту.
 func (internalOrder InternalOrder) GetRate() Rate {
-	return Deref(internalOrder.Rate).GetValue()
+	return Deref(internalOrder.Rate).getValue()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -192,12 +192,12 @@ func (internalOrder InternalOrder) GetShared() bool {
 
 // GetState возвращает Метаданные статуса Внутреннего заказа.
 func (internalOrder InternalOrder) GetState() State {
-	return Deref(internalOrder.State).GetValue()
+	return Deref(internalOrder.State).getValue()
 }
 
 // GetStore возвращает Метаданные склада.
 func (internalOrder InternalOrder) GetStore() Store {
-	return Deref(internalOrder.Store).GetValue()
+	return Deref(internalOrder.Store).getValue()
 }
 
 // GetSum возвращает Сумму Внутреннего заказа в копейках.

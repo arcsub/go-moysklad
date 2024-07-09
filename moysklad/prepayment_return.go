@@ -189,7 +189,7 @@ func (prepaymentReturn PrepaymentReturn) GetQRSum() float64 {
 
 // GetRate возвращает Валюту.
 func (prepaymentReturn PrepaymentReturn) GetRate() Rate {
-	return prepaymentReturn.Rate.GetValue()
+	return prepaymentReturn.Rate.getValue()
 }
 
 // GetRetailShift возвращает Метаданные Розничной смены.
