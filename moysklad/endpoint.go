@@ -545,10 +545,10 @@ type endpointPrintDocument struct{ Endpoint }
 
 var reContentDisposition = regexp.MustCompile(`filename="(.*)"`)
 
-func getFileFromResponse(resp *resty.Response) (*PrintFile, error) {
+func printFileFromResp(resp *resty.Response) (*PrintFile, *resty.Response, error) {
 	buf := new(bytes.Buffer)
 	if _, err := io.Copy(buf, resp.RawBody()); err != nil {
-		return nil, err
+		return nil, resp, err
 	}
 
 	var fileName string
@@ -557,7 +557,7 @@ func getFileFromResponse(resp *resty.Response) (*PrintFile, error) {
 		fileName = match[1]
 	}
 	file := &PrintFile{buf, fileName}
-	return file, nil
+	return file, resp, nil
 }
 
 // PrintDocument выполняет запрос на печать документа.
@@ -571,12 +571,7 @@ func (endpoint *endpointPrintDocument) PrintDocument(ctx context.Context, id uui
 	if err != nil {
 		return nil, resp, err
 	}
-
-	file, err := getFileFromResponse(resp)
-	if err != nil {
-		return nil, resp, err
-	}
-	return file, resp, err
+	return printFileFromResp(resp)
 }
 
 type endpointPrintLabel struct{ Endpoint }
@@ -596,12 +591,7 @@ func (endpoint *endpointPrintLabel) PrintLabel(ctx context.Context, id uuid.UUID
 	if err != nil {
 		return nil, resp, err
 	}
-
-	file, err := getFileFromResponse(resp)
-	if err != nil {
-		return nil, resp, err
-	}
-	return file, resp, err
+	return printFileFromResp(resp)
 }
 
 type endpointPublication struct{ Endpoint }
