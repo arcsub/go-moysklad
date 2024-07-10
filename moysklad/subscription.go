@@ -3,29 +3,53 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
+	"time"
 )
 
 // Subscription Подписка компании.
-// Ключевое слово: subscription
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-podpiska-kompanii
+//
+// Код сущности: subscription
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-podpiska-kompanii
 type Subscription struct {
-	Role                          string `json:"role,omitempty"`
-	Tariff                        Tariff `json:"tariff,omitempty"`
-	SubscriptionEndDate           int64  `json:"subscriptionEndDate,omitempty"`
-	IsSubscriptionChangeAvailable bool   `json:"isSubscriptionChangeAvailable,omitempty"`
+	Role                          string `json:"role,omitempty"`                          // Роль авторизованного пользователя (USER/ADMIN)
+	Tariff                        Tariff `json:"tariff,omitempty"`                        // Действующий тариф Аккаунта
+	SubscriptionEndDate           int64  `json:"subscriptionEndDate,omitempty"`           // Дата (в миллисекундах) окончания действия текущего тарифа, если тариф отличается от “Пробный” и “Бесплатный”
+	IsSubscriptionChangeAvailable bool   `json:"isSubscriptionChangeAvailable,omitempty"` // Доступность изменения подписки
 }
 
+// GetSubscriptionEndDateAsTime возвращает дату окончания действия текущего тарифа, если тариф отличается от “Пробный” и “Бесплатный”.
+func (subscription Subscription) GetSubscriptionEndDateAsTime() time.Time {
+	return time.Unix(subscription.SubscriptionEndDate, 0)
+}
+
+// String реализует интерфейс [fmt.Stringer].
 func (subscription Subscription) String() string {
 	return Stringify(subscription)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Subscription) MetaType() MetaType {
 	return MetaTypeSubscription
 }
 
 // Tariff Действующий тариф аккаунта.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-podpiska-kompanii-dejstwuuschij-tarif-akkaunta
+//
+// Возможные значения:
+//   - TariffBasic        – Тариф "Базовый"
+//   - TariffCorporate    – Тариф "Корпоративный"
+//   - TariffFree         – Тариф "Бесплатный 2014"
+//   - TariffMinimal      – Тариф "Индивидуальный"
+//   - TariffProfessional – Тариф "Профессиональный"
+//   - TariffRetail       – Тариф "Бесплатный"
+//   - TariffStart        – Тариф "Старт"
+//   - TariffTrial        – Тариф "Пробный"
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-podpiska-kompanii-dejstwuuschij-tarif-akkaunta
 type Tariff string
 
 const (
@@ -43,16 +67,19 @@ type subscriptionService struct {
 	Endpoint
 }
 
+// Get выполняет запрос на получение подписки компании.
+// Принимает контекст.
+// Возвращает подписку компании.
 func (service *subscriptionService) Get(ctx context.Context) (*Subscription, *resty.Response, error) {
 	return NewRequestBuilder[Subscription](service.client, service.uri).Get(ctx)
 }
 
-// SubscriptionService Сервис для работы с подпиской компании.
+// SubscriptionService описывает методы сервиса для работы с подпиской компании.
 type SubscriptionService interface {
 	Get(ctx context.Context) (*Subscription, *resty.Response, error)
 }
 
+// NewSubscriptionService принимает [Client] и возвращает сервис для работы с подпиской компании.
 func NewSubscriptionService(client *Client) SubscriptionService {
-	e := NewEndpoint(client, "entity/subscription")
-	return &subscriptionService{e}
+	return &subscriptionService{NewEndpoint(client, "entity/subscription")}
 }
