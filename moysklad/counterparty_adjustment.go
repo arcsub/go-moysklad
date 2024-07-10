@@ -255,7 +255,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) String() string {
 
 // MetaType возвращает код сущности.
 func (CounterpartyAdjustment) MetaType() MetaType {
-	return MetaTypeCounterPartyAdjustment
+	return MetaTypeCounterpartyAdjustment
 }
 
 // Update shortcut

@@ -249,7 +249,7 @@ const (
 	MetaTypeContactPerson                       MetaType = "contactperson"
 	MetaTypeContract                            MetaType = "contract"
 	MetaTypeCounterparty                        MetaType = "counterparty"
-	MetaTypeCounterPartyAdjustment              MetaType = "counterpartyadjustment"
+	MetaTypeCounterpartyAdjustment              MetaType = "counterpartyadjustment"
 	MetaTypeCountry                             MetaType = "country"
 	MetaTypeCurrency                            MetaType = "currency"
 	MetaTypeCustomerOrder                       MetaType = "customerorder"
@@ -631,7 +631,7 @@ func MetaTypeFromEntity(v any) MetaType {
 	case SalesChannel:
 		metaType = MetaTypeSalesChannel
 	case CounterpartyAdjustment:
-		metaType = MetaTypeCounterPartyAdjustment
+		metaType = MetaTypeCounterpartyAdjustment
 	case Metadata:
 		metaType = MetaTypeMetadata
 	case Token:
