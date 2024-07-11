@@ -17,58 +17,58 @@ type Address struct {
 	Street     *string      `json:"street,omitempty"`     // Улица
 }
 
-// GetAddInfo возвращает значение поля AddInfo (Другое).
+// GetAddInfo возвращает Другое.
 func (address Address) GetAddInfo() string {
 	return Deref(address.AddInfo)
 }
 
-// GetApartment возвращает значение поля Apartment (Квартира).
+// GetApartment возвращает Квартиру.
 func (address Address) GetApartment() string {
 	return Deref(address.Apartment)
 }
 
-// GetCity возвращает значение поля City (Город).
+// GetCity возвращает Город.
 func (address Address) GetCity() string {
 	return Deref(address.City)
 }
 
-// GetComment возвращает значение поля Comment (Комментарий).
+// GetComment возвращает Комментарий.
 func (address Address) GetComment() string {
 	return Deref(address.Comment)
 }
 
-// GetCountry возвращает значение поля Country (Метаданные страны).
+// GetCountry возвращает Метаданные страны.
 func (address Address) GetCountry() MetaWrapper {
 	return Deref(address.Country)
 }
 
-// GetHouse возвращает значение поля House (Дом).
+// GetHouse возвращает Дом.
 func (address Address) GetHouse() string {
 	return Deref(address.House)
 }
 
-// GetPostalCode возвращает значение поля PostalCode (Почтовый индекс).
+// GetPostalCode возвращает Почтовый индекс.
 func (address Address) GetPostalCode() string {
 	return Deref(address.PostalCode)
 }
 
-// GetRegion возвращает значение поля Region (Метаданные региона).
+// GetRegion возвращает Метаданные региона.
 func (address Address) GetRegion() MetaWrapper {
 	return Deref(address.Region)
 }
 
-// GetStreet возвращает значение поля Street (Улица).
+// GetStreet возвращает Улицу.
 func (address Address) GetStreet() string {
 	return Deref(address.Street)
 }
 
-// SetAddInfo устанавливает значение поля AddInfo (Другое) и возвращает указатель на [Address].
+// SetAddInfo устанавливает Другое.
 func (address *Address) SetAddInfo(addInfo string) *Address {
 	address.AddInfo = &addInfo
 	return address
 }
 
-// SetApartment устанавливает значение поля Apartment (Квартира) и возвращает указатель на [Address].
+// SetApartment устанавливает Квартиру.
 func (address *Address) SetApartment(apartment string) *Address {
 	address.Apartment = &apartment
 	return address

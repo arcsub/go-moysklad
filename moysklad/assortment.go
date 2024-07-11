@@ -91,27 +91,27 @@ func (assortmentPosition *AssortmentPosition) UnmarshalJSON(data []byte) error {
 
 // IsProduct возвращает true, если объект имеет код сущности [MetaTypeProduct].
 func (assortmentPosition *AssortmentPosition) IsProduct() bool {
-	return assortmentPosition.GetMeta().GetType() == MetaTypeProduct
+	return CheckType(assortmentPosition, MetaTypeProduct)
 }
 
 // IsVariant возвращает true, если объект имеет код сущности [MetaTypeVariant].
 func (assortmentPosition *AssortmentPosition) IsVariant() bool {
-	return assortmentPosition.GetMeta().GetType() == MetaTypeVariant
+	return CheckType(assortmentPosition, MetaTypeVariant)
 }
 
 // IsBundle возвращает true, если объект имеет код сущности [MetaTypeBundle].
 func (assortmentPosition *AssortmentPosition) IsBundle() bool {
-	return assortmentPosition.GetMeta().GetType() == MetaTypeBundle
+	return CheckType(assortmentPosition, MetaTypeBundle)
 }
 
 // IsService возвращает true, если объект имеет код сущности [MetaTypeService].
 func (assortmentPosition *AssortmentPosition) IsService() bool {
-	return assortmentPosition.GetMeta().GetType() == MetaTypeService
+	return CheckType(assortmentPosition, MetaTypeService)
 }
 
 // IsConsignment возвращает true, если объект имеет код сущности [MetaTypeConsignment].
 func (assortmentPosition *AssortmentPosition) IsConsignment() bool {
-	return assortmentPosition.GetMeta().GetType() == MetaTypeConsignment
+	return CheckType(assortmentPosition, MetaTypeConsignment)
 }
 
 // AsProduct пытается привести объект к типу [Product].

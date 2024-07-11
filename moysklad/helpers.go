@@ -368,3 +368,8 @@ func AsMetaWrapperSlice[T MetaOwner](entities []*T) []MetaWrapper {
 	}
 	return o
 }
+
+// CheckType сопоставляет код сущности entity со значением [MetaType].
+func CheckType[T MetaOwner](entity T, metaType MetaType) bool {
+	return entity.GetMeta().GetType() == metaType
+}
