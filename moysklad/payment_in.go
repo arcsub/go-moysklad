@@ -477,9 +477,9 @@ func (PaymentIn) MetaType() MetaType {
 	return MetaTypePaymentIn
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (paymentIn PaymentIn) AsOperation() *Operation {
-	return &Operation{Meta: paymentIn.GetMeta(), LinkedSum: paymentIn.GetSum()}
+	return newOperation(paymentIn)
 }
 
 // Update shortcut

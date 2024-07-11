@@ -69,9 +69,9 @@ func (invoiceIn InvoiceIn) Clean() *InvoiceIn {
 	return &InvoiceIn{Meta: invoiceIn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (invoiceIn InvoiceIn) AsOperation() *Operation {
-	return &Operation{Meta: invoiceIn.GetMeta(), LinkedSum: invoiceIn.GetSum()}
+	return newOperation(invoiceIn)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

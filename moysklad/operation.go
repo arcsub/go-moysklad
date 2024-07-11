@@ -5,21 +5,68 @@ import (
 	"github.com/google/uuid"
 )
 
-// Operation операция, к которой привязан платёж.
-//
-// Представляет из себя структуру из полей:
-// `Meta` для определения типа сущности
-// `LinkedSum` для хранения суммы по операции
-// `data` для хранения сырых данных
+// Operation общие поля операций, к которым привязан платёж.
 type Operation struct {
-	Group     Group          `json:"group,omitempty"` // Отдел сотрудника
-	Meta      Meta           `json:"meta,omitempty"`  // Метаданные сущности
-	Name      string         `json:"name,omitempty"`  // Наименование сущности
+	Group     *Group         `json:"group,omitempty"` // Отдел сотрудника
+	Meta      *Meta          `json:"meta,omitempty"`  // Метаданные операции
+	Name      *string        `json:"name,omitempty"`  // Наименование операции
 	raw       []byte         // сырые данные для последующей конвертации в нужный тип
 	Payments  Slice[Payment] `json:"payments,omitempty"`  // Список ссылок на связанные платежи
-	LinkedSum float64        `json:"linkedSum,omitempty"` // Сумма, оплаченную по данному документу
-	AccountID uuid.UUID      `json:"accountId,omitempty"` // ID учётной записи
-	ID        uuid.UUID      `json:"id,omitempty"`        // ID сущности
+	LinkedSum *float64       `json:"linkedSum,omitempty"` // Сумма, оплаченную по данному документу
+	AccountID *uuid.UUID     `json:"accountId,omitempty"` // ID учётной записи
+	ID        *uuid.UUID     `json:"id,omitempty"`        // ID операции
+}
+
+func newOperation(metaOwner MetaOwner) *Operation {
+	meta := metaOwner.GetMeta()
+	return &Operation{Meta: &meta}
+}
+
+// GetGroup возвращает Отдел сотрудника.
+func (operation Operation) GetGroup() Group {
+	return Deref(operation.Group)
+}
+
+// GetMeta возвращает Метаданные операции.
+func (operation Operation) GetMeta() Meta {
+	return Deref(operation.Meta)
+}
+
+// GetName возвращает наименование операции.
+func (operation Operation) GetName() string {
+	return Deref(operation.Name)
+}
+
+// GetPayments возвращает список ссылок на связанные платежи.
+func (operation Operation) GetPayments() Slice[Payment] {
+	return operation.Payments
+}
+
+// GetLinkedSum возвращает Сумму, оплаченную по данному документу.
+func (operation Operation) GetLinkedSum() float64 {
+	return Deref(operation.LinkedSum)
+}
+
+// GetAccountID возвращает ID учётной записи.
+func (operation Operation) GetAccountID() uuid.UUID {
+	return Deref(operation.AccountID)
+}
+
+// GetID возвращает ID операции.
+func (operation Operation) GetID() uuid.UUID {
+	return Deref(operation.ID)
+}
+
+// SetMeta устанавливает Метаданные операции.
+func (operation *Operation) SetMeta(meta *Meta) *Operation {
+	operation.Meta = meta
+	return operation
+}
+
+// SetLinkedSum устанавливает Сумму, оплаченную по данному документу.
+func (operation *Operation) SetLinkedSum(linkedSum float64) *Operation {
+	operation.LinkedSum = &linkedSum
+	return operation
 }
 
 // OperationConverter описывает метод, возвращающий [Operation].

@@ -60,9 +60,9 @@ func (factureOut FactureOut) Clean() *FactureOut {
 	return &FactureOut{Meta: factureOut.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (factureOut FactureOut) AsOperation() *Operation {
-	return &Operation{Meta: factureOut.GetMeta(), LinkedSum: factureOut.GetSum()}
+	return newOperation(factureOut)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

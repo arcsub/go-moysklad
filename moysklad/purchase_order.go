@@ -71,9 +71,9 @@ func (purchaseOrder PurchaseOrder) Clean() *PurchaseOrder {
 	return &PurchaseOrder{Meta: purchaseOrder.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (purchaseOrder PurchaseOrder) AsOperation() *Operation {
-	return &Operation{Meta: purchaseOrder.GetMeta(), LinkedSum: purchaseOrder.GetSum()}
+	return newOperation(purchaseOrder)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

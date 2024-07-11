@@ -66,9 +66,9 @@ func (purchaseReturn PurchaseReturn) Clean() *PurchaseReturn {
 	return &PurchaseReturn{Meta: purchaseReturn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (purchaseReturn PurchaseReturn) AsOperation() *Operation {
-	return &Operation{Meta: purchaseReturn.GetMeta(), LinkedSum: purchaseReturn.GetSum()}
+	return newOperation(purchaseReturn)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

@@ -67,9 +67,9 @@ func (paymentOut PaymentOut) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: paymentOut.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (paymentOut PaymentOut) AsOperation() *Operation {
-	return &Operation{Meta: paymentOut.GetMeta(), LinkedSum: paymentOut.GetSum()}
+	return newOperation(paymentOut)
 }
 
 // AsPayment реализует интерфейс [PaymentConverter].

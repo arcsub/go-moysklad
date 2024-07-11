@@ -79,9 +79,9 @@ func (demand Demand) Clean() *Demand {
 	return &Demand{Meta: demand.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (demand Demand) AsOperation() *Operation {
-	return &Operation{Meta: demand.GetMeta(), LinkedSum: demand.GetSum()}
+	return newOperation(demand)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

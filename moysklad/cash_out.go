@@ -60,9 +60,9 @@ func (cashOut CashOut) Clean() *CashOut {
 	return &CashOut{Meta: cashOut.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (cashOut CashOut) AsOperation() *Operation {
-	return &Operation{Meta: cashOut.GetMeta(), LinkedSum: cashOut.GetSum()}
+	return newOperation(cashOut)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

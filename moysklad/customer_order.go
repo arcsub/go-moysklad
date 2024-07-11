@@ -77,9 +77,9 @@ func (customerOrder CustomerOrder) Clean() *CustomerOrder {
 	return &CustomerOrder{Meta: customerOrder.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (customerOrder CustomerOrder) AsOperation() *Operation {
-	return &Operation{Meta: customerOrder.GetMeta(), LinkedSum: customerOrder.GetSum()}
+	return newOperation(customerOrder)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].

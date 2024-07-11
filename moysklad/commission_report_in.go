@@ -71,9 +71,9 @@ func (commissionReportIn CommissionReportIn) Clean() *CommissionReportIn {
 	return &CommissionReportIn{Meta: commissionReportIn.Meta}
 }
 
-// AsOperation возвращает объект [Operation] c полем [Meta].
+// AsOperation реализует интерфейс [OperationConverter].
 func (commissionReportIn CommissionReportIn) AsOperation() *Operation {
-	return &Operation{Meta: commissionReportIn.GetMeta(), LinkedSum: commissionReportIn.GetSum()}
+	return newOperation(commissionReportIn)
 }
 
 // AsTaskOperation реализует интерфейс [TaskOperationConverter].
