@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Region Регион.
@@ -65,8 +66,8 @@ func (region Region) GetName() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления Региона.
-func (region Region) GetUpdated() Timestamp {
-	return Deref(region.Updated)
+func (region Region) GetUpdated() time.Time {
+	return Deref(region.Updated).Time()
 }
 
 // GetVersion возвращает Версию сущности.

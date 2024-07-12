@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"time"
 )
 
 // AgentAccount Счёт Контрагента.
@@ -78,8 +79,8 @@ func (agentAccount AgentAccount) GetMeta() Meta {
 }
 
 // GetUpdated возвращает Момент последнего обновления.
-func (agentAccount AgentAccount) GetUpdated() Timestamp {
-	return Deref(agentAccount.Updated)
+func (agentAccount AgentAccount) GetUpdated() time.Time {
+	return Deref(agentAccount.Updated).Time()
 }
 
 // SetAccountNumber устанавливает Номер счета.

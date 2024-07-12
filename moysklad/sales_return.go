@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // SalesReturn Возврат покупателя.
@@ -109,13 +110,13 @@ func (salesReturn SalesReturn) GetOrganizationAccount() AgentAccount {
 }
 
 // GetCreated возвращает Дату создания.
-func (salesReturn SalesReturn) GetCreated() Timestamp {
-	return Deref(salesReturn.Created)
+func (salesReturn SalesReturn) GetCreated() time.Time {
+	return Deref(salesReturn.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Возврата Покупателя.
-func (salesReturn SalesReturn) GetDeleted() Timestamp {
-	return Deref(salesReturn.Deleted)
+func (salesReturn SalesReturn) GetDeleted() time.Time {
+	return Deref(salesReturn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Возврата Покупателя.
@@ -149,8 +150,8 @@ func (salesReturn SalesReturn) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (salesReturn SalesReturn) GetMoment() Timestamp {
-	return Deref(salesReturn.Moment)
+func (salesReturn SalesReturn) GetMoment() time.Time {
+	return Deref(salesReturn.Moment).Time()
 }
 
 // GetName возвращает Наименование Возврата Покупателя.
@@ -229,8 +230,8 @@ func (salesReturn SalesReturn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Входящего платежа.
-func (salesReturn SalesReturn) GetUpdated() Timestamp {
-	return Deref(salesReturn.Updated)
+func (salesReturn SalesReturn) GetUpdated() time.Time {
+	return Deref(salesReturn.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

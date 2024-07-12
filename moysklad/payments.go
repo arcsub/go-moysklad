@@ -4,6 +4,7 @@ import (
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"reflect"
+	"time"
 )
 
 // Payment общие поля для входящих/исходящих платежей и приходных/расходных ордеров.
@@ -79,13 +80,13 @@ func (payment Payment) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (payment Payment) GetCreated() Timestamp {
-	return Deref(payment.Created)
+func (payment Payment) GetCreated() time.Time {
+	return Deref(payment.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления платежа.
-func (payment Payment) GetDeleted() Timestamp {
-	return Deref(payment.Deleted)
+func (payment Payment) GetDeleted() time.Time {
+	return Deref(payment.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий платежа.
@@ -119,8 +120,8 @@ func (payment Payment) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату платежа.
-func (payment Payment) GetMoment() Timestamp {
-	return Deref(payment.Moment)
+func (payment Payment) GetMoment() time.Time {
+	return Deref(payment.Moment).Time()
 }
 
 // GetName возвращает Наименование платежа.
@@ -189,8 +190,8 @@ func (payment Payment) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления платежа.
-func (payment Payment) GetUpdated() Timestamp {
-	return Deref(payment.Updated)
+func (payment Payment) GetUpdated() time.Time {
+	return Deref(payment.Updated).Time()
 }
 
 // GetVatSum возвращает Сумму НДС.

@@ -132,8 +132,8 @@ func (retailShift RetailShift) GetName() string {
 }
 
 // GetCloseDate возвращает Дату закрытия смены.
-func (retailShift RetailShift) GetCloseDate() Timestamp {
-	return Deref(retailShift.CloseDate)
+func (retailShift RetailShift) GetCloseDate() time.Time {
+	return Deref(retailShift.CloseDate).Time()
 }
 
 // GetContract возвращает Метаданные договора.
@@ -142,13 +142,13 @@ func (retailShift RetailShift) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (retailShift RetailShift) GetCreated() Timestamp {
-	return Deref(retailShift.Created)
+func (retailShift RetailShift) GetCreated() time.Time {
+	return Deref(retailShift.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Розничной смены.
-func (retailShift RetailShift) GetDeleted() Timestamp {
-	return Deref(retailShift.Deleted)
+func (retailShift RetailShift) GetDeleted() time.Time {
+	return Deref(retailShift.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Розничной смены.
@@ -197,8 +197,8 @@ func (retailShift RetailShift) GetAcquire() Agent {
 }
 
 // GetMoment возвращает Дату смены.
-func (retailShift RetailShift) GetMoment() Timestamp {
-	return Deref(retailShift.Moment)
+func (retailShift RetailShift) GetMoment() time.Time {
+	return Deref(retailShift.Moment).Time()
 }
 
 // GetOrganizationAccount возвращает Метаданные счета юрлица.
@@ -276,8 +276,8 @@ func (retailShift RetailShift) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Списания.
-func (retailShift RetailShift) GetUpdated() Timestamp {
-	return Deref(retailShift.Updated)
+func (retailShift RetailShift) GetUpdated() time.Time {
+	return Deref(retailShift.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

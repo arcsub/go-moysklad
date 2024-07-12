@@ -78,8 +78,8 @@ func (paymentOut PaymentOut) AsPayment() *Payment {
 }
 
 // GetMoment возвращает Дату документа.
-func (paymentOut PaymentOut) GetMoment() Timestamp {
-	return Deref(paymentOut.Moment)
+func (paymentOut PaymentOut) GetMoment() time.Time {
+	return Deref(paymentOut.Moment).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.
@@ -120,13 +120,13 @@ func (paymentOut PaymentOut) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (paymentOut PaymentOut) GetCreated() Timestamp {
-	return Deref(paymentOut.Created)
+func (paymentOut PaymentOut) GetCreated() time.Time {
+	return Deref(paymentOut.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Исходящего платежа.
-func (paymentOut PaymentOut) GetDeleted() Timestamp {
-	return Deref(paymentOut.Deleted)
+func (paymentOut PaymentOut) GetDeleted() time.Time {
+	return Deref(paymentOut.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Исходящего платежа.
@@ -240,8 +240,8 @@ func (paymentOut PaymentOut) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Исходящего платежа.
-func (paymentOut PaymentOut) GetUpdated() Timestamp {
-	return Deref(paymentOut.Updated)
+func (paymentOut PaymentOut) GetUpdated() time.Time {
+	return Deref(paymentOut.Updated).Time()
 }
 
 // GetVatSum возвращает Сумму НДС.

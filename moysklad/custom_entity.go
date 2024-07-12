@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // CustomEntity Пользовательский справочник.
@@ -137,8 +138,8 @@ func (customEntityElement CustomEntityElement) GetName() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления элементе Пользовательского справочника.
-func (customEntityElement CustomEntityElement) GetUpdated() Timestamp {
-	return Deref(customEntityElement.Updated)
+func (customEntityElement CustomEntityElement) GetUpdated() time.Time {
+	return Deref(customEntityElement.Updated).Time()
 }
 
 // GetGroup возвращает Отдел сотрудника.

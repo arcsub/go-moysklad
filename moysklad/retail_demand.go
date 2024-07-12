@@ -130,8 +130,8 @@ func (retailDemand RetailDemand) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (retailDemand RetailDemand) GetCreated() Timestamp {
-	return Deref(retailDemand.Created)
+func (retailDemand RetailDemand) GetCreated() time.Time {
+	return Deref(retailDemand.Created).Time()
 }
 
 // GetCustomerOrder возвращает Метаданные Заказа Покупателя.
@@ -140,8 +140,8 @@ func (retailDemand RetailDemand) GetCustomerOrder() CustomerOrder {
 }
 
 // GetDeleted возвращает Момент последнего удаления Розничной продажи.
-func (retailDemand RetailDemand) GetDeleted() Timestamp {
-	return Deref(retailDemand.Deleted)
+func (retailDemand RetailDemand) GetDeleted() time.Time {
+	return Deref(retailDemand.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Розничной продажи.
@@ -190,8 +190,8 @@ func (retailDemand RetailDemand) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (retailDemand RetailDemand) GetMoment() Timestamp {
-	return Deref(retailDemand.Moment)
+func (retailDemand RetailDemand) GetMoment() time.Time {
+	return Deref(retailDemand.Moment).Time()
 }
 
 // GetName возвращает Наименование Розничной продажи.
@@ -315,8 +315,8 @@ func (retailDemand RetailDemand) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Розничной продажи.
-func (retailDemand RetailDemand) GetUpdated() Timestamp {
-	return Deref(retailDemand.Updated)
+func (retailDemand RetailDemand) GetUpdated() time.Time {
+	return Deref(retailDemand.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

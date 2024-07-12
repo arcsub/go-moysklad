@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Variant Модификация.
@@ -75,8 +76,8 @@ func (variant Variant) GetArchived() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Модификации.
-func (variant Variant) GetUpdated() Timestamp {
-	return Deref(variant.Updated)
+func (variant Variant) GetUpdated() time.Time {
+	return Deref(variant.Updated).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.

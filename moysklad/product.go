@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Product Товар.
@@ -333,8 +334,8 @@ func (product Product) GetUom() Uom {
 }
 
 // GetUpdated возвращает Момент последнего обновления товара.
-func (product Product) GetUpdated() Timestamp {
-	return Deref(product.Updated)
+func (product Product) GetUpdated() time.Time {
+	return Deref(product.Updated).Time()
 }
 
 // GetBarcodes возвращает Штрихкоды.

@@ -68,8 +68,8 @@ func (factureIn FactureIn) AsTaskOperation() *TaskOperation {
 }
 
 // GetMoment возвращает Дату документа.
-func (factureIn FactureIn) GetMoment() Timestamp {
-	return Deref(factureIn.Moment)
+func (factureIn FactureIn) GetMoment() time.Time {
+	return Deref(factureIn.Moment).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.
@@ -98,13 +98,13 @@ func (factureIn FactureIn) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (factureIn FactureIn) GetCreated() Timestamp {
-	return Deref(factureIn.Created)
+func (factureIn FactureIn) GetCreated() time.Time {
+	return Deref(factureIn.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления полученного счета-фактуры.
-func (factureIn FactureIn) GetDeleted() Timestamp {
-	return Deref(factureIn.Deleted)
+func (factureIn FactureIn) GetDeleted() time.Time {
+	return Deref(factureIn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий полученного счета-фактуры.
@@ -138,8 +138,8 @@ func (factureIn FactureIn) GetMeta() Meta {
 }
 
 // GetIncomingDate возвращает Входящую дату.
-func (factureIn FactureIn) GetIncomingDate() Timestamp {
-	return Deref(factureIn.IncomingDate)
+func (factureIn FactureIn) GetIncomingDate() time.Time {
+	return Deref(factureIn.IncomingDate).Time()
 }
 
 // GetAgent возвращает Метаданные контрагента.
@@ -193,8 +193,8 @@ func (factureIn FactureIn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления.
-func (factureIn FactureIn) GetUpdated() Timestamp {
-	return Deref(factureIn.Updated)
+func (factureIn FactureIn) GetUpdated() time.Time {
+	return Deref(factureIn.Updated).Time()
 }
 
 // GetSupplies возвращает Массив ссылок на связанные приемки.

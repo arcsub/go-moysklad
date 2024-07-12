@@ -85,13 +85,13 @@ func (bonusTransaction BonusTransaction) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (bonusTransaction BonusTransaction) GetCreated() Timestamp {
-	return Deref(bonusTransaction.Created)
+func (bonusTransaction BonusTransaction) GetCreated() time.Time {
+	return Deref(bonusTransaction.Created).Time()
 }
 
 // GetExecutionDate возвращает Дату начисления бонусной операции.
-func (bonusTransaction BonusTransaction) GetExecutionDate() Timestamp {
-	return Deref(bonusTransaction.ExecutionDate)
+func (bonusTransaction BonusTransaction) GetExecutionDate() time.Time {
+	return Deref(bonusTransaction.ExecutionDate).Time()
 }
 
 // GetMeta возвращает Метаданные Бонусной операции.
@@ -115,8 +115,8 @@ func (bonusTransaction BonusTransaction) GetExternalCode() string {
 }
 
 // GetMoment возвращает Время проведения бонусной операции.
-func (bonusTransaction BonusTransaction) GetMoment() Timestamp {
-	return Deref(bonusTransaction.Moment)
+func (bonusTransaction BonusTransaction) GetMoment() time.Time {
+	return Deref(bonusTransaction.Moment).Time()
 }
 
 // GetName возвращает Наименование Бонусной операции.
@@ -145,8 +145,8 @@ func (bonusTransaction BonusTransaction) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Бонусной операции.
-func (bonusTransaction BonusTransaction) GetUpdated() Timestamp {
-	return Deref(bonusTransaction.Updated)
+func (bonusTransaction BonusTransaction) GetUpdated() time.Time {
+	return Deref(bonusTransaction.Updated).Time()
 }
 
 // GetTransactionType возвращает Тип бонусной операции.

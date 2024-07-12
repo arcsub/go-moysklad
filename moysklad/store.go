@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Store Склад.
@@ -127,8 +128,8 @@ func (store Store) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Склада.
-func (store Store) GetUpdated() Timestamp {
-	return Deref(store.Updated)
+func (store Store) GetUpdated() time.Time {
+	return Deref(store.Updated).Time()
 }
 
 // GetZones возвращает Зоны склада.
@@ -317,8 +318,8 @@ func (slot Slot) GetName() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления Ячейки.
-func (slot Slot) GetUpdated() Timestamp {
-	return Deref(slot.Updated)
+func (slot Slot) GetUpdated() time.Time {
+	return Deref(slot.Updated).Time()
 }
 
 // GetZone возвращает Зону ячейки.
@@ -402,8 +403,8 @@ func (zone Zone) GetName() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления Зоны.
-func (zone Zone) GetUpdated() Timestamp {
-	return Deref(zone.Updated)
+func (zone Zone) GetUpdated() time.Time {
+	return Deref(zone.Updated).Time()
 }
 
 // SetExternalCode устанавливает Внешний код Зоны.

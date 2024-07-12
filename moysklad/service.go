@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Service Услуга.
@@ -222,8 +223,8 @@ func (service Service) GetUom() Uom {
 }
 
 // GetUpdated возвращает Момент последнего обновления Услуги.
-func (service Service) GetUpdated() Timestamp {
-	return Deref(service.Updated)
+func (service Service) GetUpdated() time.Time {
+	return Deref(service.Updated).Time()
 }
 
 // GetPaymentItemType возвращает Признак предмета расчета.

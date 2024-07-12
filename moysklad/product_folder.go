@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // ProductFolder Группа товаров.
@@ -139,8 +140,8 @@ func (productFolder ProductFolder) GetID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Группы товаров.
-func (productFolder ProductFolder) GetUpdated() Timestamp {
-	return Deref(productFolder.Updated)
+func (productFolder ProductFolder) GetUpdated() time.Time {
+	return Deref(productFolder.Updated).Time()
 }
 
 // GetMeta возвращает Метаданные Группы товаров.

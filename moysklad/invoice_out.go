@@ -119,13 +119,13 @@ func (invoiceOut InvoiceOut) GetOrganizationAccount() AgentAccount {
 }
 
 // GetCreated возвращает Дату создания.
-func (invoiceOut InvoiceOut) GetCreated() Timestamp {
-	return Deref(invoiceOut.Created)
+func (invoiceOut InvoiceOut) GetCreated() time.Time {
+	return Deref(invoiceOut.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Счета покупателю.
-func (invoiceOut InvoiceOut) GetDeleted() Timestamp {
-	return Deref(invoiceOut.Deleted)
+func (invoiceOut InvoiceOut) GetDeleted() time.Time {
+	return Deref(invoiceOut.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Счета покупателю.
@@ -159,8 +159,8 @@ func (invoiceOut InvoiceOut) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (invoiceOut InvoiceOut) GetMoment() Timestamp {
-	return Deref(invoiceOut.Moment)
+func (invoiceOut InvoiceOut) GetMoment() time.Time {
+	return Deref(invoiceOut.Moment).Time()
 }
 
 // GetName возвращает Наименование Счета покупателю.
@@ -189,8 +189,8 @@ func (invoiceOut InvoiceOut) GetOrganization() Organization {
 }
 
 // GetPaymentPlannedMoment возвращает Планируемую дату оплаты.
-func (invoiceOut InvoiceOut) GetPaymentPlannedMoment() Timestamp {
-	return Deref(invoiceOut.PaymentPlannedMoment)
+func (invoiceOut InvoiceOut) GetPaymentPlannedMoment() time.Time {
+	return Deref(invoiceOut.PaymentPlannedMoment).Time()
 }
 
 // GetPositions возвращает Метаданные позиций Счета покупателю.
@@ -249,8 +249,8 @@ func (invoiceOut InvoiceOut) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Счета покупателю.
-func (invoiceOut InvoiceOut) GetUpdated() Timestamp {
-	return Deref(invoiceOut.Updated)
+func (invoiceOut InvoiceOut) GetUpdated() time.Time {
+	return Deref(invoiceOut.Updated).Time()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).

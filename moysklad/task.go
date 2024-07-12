@@ -70,13 +70,13 @@ func (task Task) GetAuthorApplication() Application {
 }
 
 // GetCompleted возвращает Время выполнения задачи.
-func (task Task) GetCompleted() Timestamp {
-	return Deref(task.Completed)
+func (task Task) GetCompleted() time.Time {
+	return Deref(task.Completed).Time()
 }
 
 // GetCreated возвращает Момент создания.
-func (task Task) GetCreated() Timestamp {
-	return Deref(task.Created)
+func (task Task) GetCreated() time.Time {
+	return Deref(task.Created).Time()
 }
 
 // GetDescription возвращает Текст задачи.
@@ -90,8 +90,8 @@ func (task Task) GetDone() bool {
 }
 
 // GetDueToDate возвращает Срок задачи.
-func (task Task) GetDueToDate() Timestamp {
-	return Deref(task.DueToDate)
+func (task Task) GetDueToDate() time.Time {
+	return Deref(task.DueToDate).Time()
 }
 
 // GetFiles возвращает Метаданные массива Файлов.
@@ -132,8 +132,8 @@ func (task Task) GetOperation() TaskOperation {
 }
 
 // GetUpdated возвращает Момент последнего обновления Задачи.
-func (task Task) GetUpdated() Timestamp {
-	return Deref(task.Updated)
+func (task Task) GetUpdated() time.Time {
+	return Deref(task.Updated).Time()
 }
 
 // SetAgent устанавливает Метаданные Контрагента или юрлица, связанного с задачей.
@@ -268,8 +268,8 @@ func (taskNote TaskNote) GetAuthorApplication() Meta {
 }
 
 // GetMoment возвращает Момент создания комментария.
-func (taskNote TaskNote) GetMoment() Timestamp {
-	return Deref(taskNote.Moment)
+func (taskNote TaskNote) GetMoment() time.Time {
+	return Deref(taskNote.Moment).Time()
 }
 
 // GetDescription возвращает Текст комментария.

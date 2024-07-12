@@ -2,6 +2,7 @@ package moysklad
 
 import (
 	"github.com/google/uuid"
+	"time"
 )
 
 // ContactPerson Контактное лицо.
@@ -86,8 +87,8 @@ func (contactPerson ContactPerson) GetPosition() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления.
-func (contactPerson ContactPerson) GetUpdated() Timestamp {
-	return Deref(contactPerson.Updated)
+func (contactPerson ContactPerson) GetUpdated() time.Time {
+	return Deref(contactPerson.Updated).Time()
 }
 
 // SetAgent устанавливает Метаданные контрагента.

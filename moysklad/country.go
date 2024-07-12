@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Country Страна.
@@ -88,8 +89,8 @@ func (country Country) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Страны.
-func (country Country) GetUpdated() Timestamp {
-	return Deref(country.Updated)
+func (country Country) GetUpdated() time.Time {
+	return Deref(country.Updated).Time()
 }
 
 // SetCode устанавливает Код Страны.

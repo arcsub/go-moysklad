@@ -81,13 +81,13 @@ func (processing Processing) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (processing Processing) GetCreated() Timestamp {
-	return Deref(processing.Created)
+func (processing Processing) GetCreated() time.Time {
+	return Deref(processing.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Техоперации.
-func (processing Processing) GetDeleted() Timestamp {
-	return Deref(processing.Deleted)
+func (processing Processing) GetDeleted() time.Time {
+	return Deref(processing.Deleted).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -116,8 +116,8 @@ func (processing Processing) GetID() uuid.UUID {
 }
 
 // GetMoment возвращает Дату документа.
-func (processing Processing) GetMoment() Timestamp {
-	return Deref(processing.Moment)
+func (processing Processing) GetMoment() time.Time {
+	return Deref(processing.Moment).Time()
 }
 
 // GetMaterialListStore возвращает Метаданные склада для материалов.
@@ -171,8 +171,8 @@ func (processing Processing) GetProcessingSum() float64 {
 }
 
 // GetUpdated возвращает Момент последнего обновления Техоперации.
-func (processing Processing) GetUpdated() Timestamp {
-	return Deref(processing.Updated)
+func (processing Processing) GetUpdated() time.Time {
+	return Deref(processing.Updated).Time()
 }
 
 // GetProductListStore возвращает Метаданные склада для продукции.

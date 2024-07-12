@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Bundle Комплект.
@@ -220,8 +221,8 @@ func (bundle Bundle) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления сущности.
-func (bundle Bundle) GetUpdated() Timestamp {
-	return Deref(bundle.Updated)
+func (bundle Bundle) GetUpdated() time.Time {
+	return Deref(bundle.Updated).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.

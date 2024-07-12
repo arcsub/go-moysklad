@@ -121,13 +121,13 @@ func (supply Supply) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (supply Supply) GetCreated() Timestamp {
-	return Deref(supply.Created)
+func (supply Supply) GetCreated() time.Time {
+	return Deref(supply.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Приемки.
-func (supply Supply) GetDeleted() Timestamp {
-	return Deref(supply.Deleted)
+func (supply Supply) GetDeleted() time.Time {
+	return Deref(supply.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Приемки.
@@ -156,8 +156,8 @@ func (supply Supply) GetID() uuid.UUID {
 }
 
 // GetIncomingDate возвращает Входящую дату.
-func (supply Supply) GetIncomingDate() Timestamp {
-	return Deref(supply.IncomingDate)
+func (supply Supply) GetIncomingDate() time.Time {
+	return Deref(supply.IncomingDate).Time()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -171,8 +171,8 @@ func (supply Supply) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (supply Supply) GetMoment() Timestamp {
-	return Deref(supply.Moment)
+func (supply Supply) GetMoment() time.Time {
+	return Deref(supply.Moment).Time()
 }
 
 // GetName возвращает Наименование Приемки.
@@ -256,8 +256,8 @@ func (supply Supply) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Списания.
-func (supply Supply) GetUpdated() Timestamp {
-	return Deref(supply.Updated)
+func (supply Supply) GetUpdated() time.Time {
+	return Deref(supply.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

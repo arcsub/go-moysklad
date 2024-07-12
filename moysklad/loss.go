@@ -72,8 +72,8 @@ func (loss Loss) GetSyncID() uuid.UUID {
 }
 
 // GetMoment возвращает Дату документа.
-func (loss Loss) GetMoment() Timestamp {
-	return Deref(loss.Moment)
+func (loss Loss) GetMoment() time.Time {
+	return Deref(loss.Moment).Time()
 }
 
 // GetCode возвращает Код Списания.
@@ -82,13 +82,13 @@ func (loss Loss) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (loss Loss) GetCreated() Timestamp {
-	return Deref(loss.Created)
+func (loss Loss) GetCreated() time.Time {
+	return Deref(loss.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Списания.
-func (loss Loss) GetDeleted() Timestamp {
-	return Deref(loss.Deleted)
+func (loss Loss) GetDeleted() time.Time {
+	return Deref(loss.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Списания.
@@ -192,8 +192,8 @@ func (loss Loss) GetName() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления Списания.
-func (loss Loss) GetUpdated() Timestamp {
-	return Deref(loss.Updated)
+func (loss Loss) GetUpdated() time.Time {
+	return Deref(loss.Updated).Time()
 }
 
 // GetAttributes возвращает Список метаданных доп. полей.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // SalesChannel Канал продаж.
@@ -95,8 +96,8 @@ func (salesChannel SalesChannel) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Канала продаж.
-func (salesChannel SalesChannel) GetUpdated() Timestamp {
-	return Deref(salesChannel.Updated)
+func (salesChannel SalesChannel) GetUpdated() time.Time {
+	return Deref(salesChannel.Updated).Time()
 }
 
 // GetType возвращает Тип Канала продаж.

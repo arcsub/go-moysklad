@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // TaxRate Ставка НДС.
@@ -72,8 +73,8 @@ func (taxRate TaxRate) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления налоговой ставки.
-func (taxRate TaxRate) GetUpdated() Timestamp {
-	return Deref(taxRate.Updated)
+func (taxRate TaxRate) GetUpdated() time.Time {
+	return Deref(taxRate.Updated).Time()
 }
 
 // SetArchived устанавливает флаг нахождения в архиве.

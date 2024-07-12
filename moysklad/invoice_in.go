@@ -90,8 +90,8 @@ func (invoiceIn InvoiceIn) GetOrganizationAccount() AgentAccount {
 }
 
 // GetCreated возвращает Дату создания.
-func (invoiceIn InvoiceIn) GetCreated() Timestamp {
-	return Deref(invoiceIn.Created)
+func (invoiceIn InvoiceIn) GetCreated() time.Time {
+	return Deref(invoiceIn.Created).Time()
 }
 
 // GetPayedSum возвращает Сумму входящих платежей по Счету поставщика.
@@ -125,8 +125,8 @@ func (invoiceIn InvoiceIn) GetOwner() Employee {
 }
 
 // GetDeleted возвращает Момент последнего удаления Счета поставщика.
-func (invoiceIn InvoiceIn) GetDeleted() Timestamp {
-	return Deref(invoiceIn.Deleted)
+func (invoiceIn InvoiceIn) GetDeleted() time.Time {
+	return Deref(invoiceIn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Счета поставщика.
@@ -155,8 +155,8 @@ func (invoiceIn InvoiceIn) GetID() uuid.UUID {
 }
 
 // GetIncomingDate возвращает Входящую дату.
-func (invoiceIn InvoiceIn) GetIncomingDate() Timestamp {
-	return Deref(invoiceIn.IncomingDate)
+func (invoiceIn InvoiceIn) GetIncomingDate() time.Time {
+	return Deref(invoiceIn.IncomingDate).Time()
 }
 
 // GetIncomingNumber возвращает Входящий номер.
@@ -170,8 +170,8 @@ func (invoiceIn InvoiceIn) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (invoiceIn InvoiceIn) GetMoment() Timestamp {
-	return Deref(invoiceIn.Moment)
+func (invoiceIn InvoiceIn) GetMoment() time.Time {
+	return Deref(invoiceIn.Moment).Time()
 }
 
 // GetName возвращает Наименование Счета поставщика.
@@ -200,8 +200,8 @@ func (invoiceIn InvoiceIn) GetAgentAccount() AgentAccount {
 }
 
 // GetPaymentPlannedMoment возвращает Планируемую дату оплаты.
-func (invoiceIn InvoiceIn) GetPaymentPlannedMoment() Timestamp {
-	return Deref(invoiceIn.PaymentPlannedMoment)
+func (invoiceIn InvoiceIn) GetPaymentPlannedMoment() time.Time {
+	return Deref(invoiceIn.PaymentPlannedMoment).Time()
 }
 
 // GetPositions возвращает Метаданные позиций Счета поставщика.
@@ -260,8 +260,8 @@ func (invoiceIn InvoiceIn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Счета поставщика.
-func (invoiceIn InvoiceIn) GetUpdated() Timestamp {
-	return Deref(invoiceIn.Updated)
+func (invoiceIn InvoiceIn) GetUpdated() time.Time {
+	return Deref(invoiceIn.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

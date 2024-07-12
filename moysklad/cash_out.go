@@ -81,8 +81,8 @@ func (cashOut CashOut) GetName() string {
 }
 
 // GetDeleted возвращает Момент последнего удаления Расходного ордера.
-func (cashOut CashOut) GetDeleted() Timestamp {
-	return Deref(cashOut.Deleted)
+func (cashOut CashOut) GetDeleted() time.Time {
+	return Deref(cashOut.Deleted).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.
@@ -106,8 +106,8 @@ func (cashOut CashOut) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (cashOut CashOut) GetCreated() Timestamp {
-	return Deref(cashOut.Created)
+func (cashOut CashOut) GetCreated() time.Time {
+	return Deref(cashOut.Created).Time()
 }
 
 // GetOrganization возвращает Метаданные юрлица.
@@ -151,8 +151,8 @@ func (cashOut CashOut) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (cashOut CashOut) GetMoment() Timestamp {
-	return Deref(cashOut.Moment)
+func (cashOut CashOut) GetMoment() time.Time {
+	return Deref(cashOut.Moment).Time()
 }
 
 // GetOperations возвращает Метаданные связанных операций.
@@ -228,8 +228,8 @@ func (cashOut CashOut) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Расходного ордера.
-func (cashOut CashOut) GetUpdated() Timestamp {
-	return Deref(cashOut.Updated)
+func (cashOut CashOut) GetUpdated() time.Time {
+	return Deref(cashOut.Updated).Time()
 }
 
 // GetVatSum возвращает Сумму НДС.

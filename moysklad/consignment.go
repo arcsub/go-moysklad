@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Consignment Серия.
@@ -118,8 +119,8 @@ func (consignment Consignment) GetLabel() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления сущности.
-func (consignment Consignment) GetUpdated() Timestamp {
-	return Deref(consignment.Updated)
+func (consignment Consignment) GetUpdated() time.Time {
+	return Deref(consignment.Updated).Time()
 }
 
 // GetAttributes возвращает Список метаданных доп. полей.

@@ -115,8 +115,8 @@ func (contract Contract) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату Договора.
-func (contract Contract) GetMoment() Timestamp {
-	return Deref(contract.Moment)
+func (contract Contract) GetMoment() time.Time {
+	return Deref(contract.Moment).Time()
 }
 
 // GetPrinted возвращает true, если Договор напечатан.
@@ -150,8 +150,8 @@ func (contract Contract) GetAccountID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления.
-func (contract Contract) GetUpdated() Timestamp {
-	return Deref(contract.Updated)
+func (contract Contract) GetUpdated() time.Time {
+	return Deref(contract.Updated).Time()
 }
 
 // GetShared возвращает флаг Общего доступа.

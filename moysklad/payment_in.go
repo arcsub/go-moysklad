@@ -88,8 +88,8 @@ func (paymentIn PaymentIn) GetAgentAccount() AgentAccount {
 }
 
 // GetMoment возвращает Дату документа.
-func (paymentIn PaymentIn) GetMoment() Timestamp {
-	return Deref(paymentIn.Moment)
+func (paymentIn PaymentIn) GetMoment() time.Time {
+	return Deref(paymentIn.Moment).Time()
 }
 
 // GetOperations возвращает Метаданные связанных операций.
@@ -116,13 +116,13 @@ func (paymentIn PaymentIn) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (paymentIn PaymentIn) GetCreated() Timestamp {
-	return Deref(paymentIn.Created)
+func (paymentIn PaymentIn) GetCreated() time.Time {
+	return Deref(paymentIn.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Входящего платежа.
-func (paymentIn PaymentIn) GetDeleted() Timestamp {
-	return Deref(paymentIn.Deleted)
+func (paymentIn PaymentIn) GetDeleted() time.Time {
+	return Deref(paymentIn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Входящего платежа.
@@ -151,8 +151,8 @@ func (paymentIn PaymentIn) GetID() uuid.UUID {
 }
 
 // GetIncomingDate возвращает Входящую дату.
-func (paymentIn PaymentIn) GetIncomingDate() Timestamp {
-	return Deref(paymentIn.IncomingDate)
+func (paymentIn PaymentIn) GetIncomingDate() time.Time {
+	return Deref(paymentIn.IncomingDate).Time()
 }
 
 // GetIncomingNumber возвращает Входящий номер.
@@ -241,8 +241,8 @@ func (paymentIn PaymentIn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Входящего платежа.
-func (paymentIn PaymentIn) GetUpdated() Timestamp {
-	return Deref(paymentIn.Updated)
+func (paymentIn PaymentIn) GetUpdated() time.Time {
+	return Deref(paymentIn.Updated).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.

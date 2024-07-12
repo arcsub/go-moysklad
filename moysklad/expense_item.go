@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // ExpenseItem Статья расходов.
@@ -70,8 +71,8 @@ func (expenseItem ExpenseItem) GetName() string {
 }
 
 // GetUpdated возвращает Момент последнего обновления сущности.
-func (expenseItem ExpenseItem) GetUpdated() Timestamp {
-	return Deref(expenseItem.Updated)
+func (expenseItem ExpenseItem) GetUpdated() time.Time {
+	return Deref(expenseItem.Updated).Time()
 }
 
 // SetCode устанавливает Код Статьи расходов.

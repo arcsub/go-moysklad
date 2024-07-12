@@ -76,13 +76,13 @@ func (inventory Inventory) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (inventory Inventory) GetCreated() Timestamp {
-	return Deref(inventory.Created)
+func (inventory Inventory) GetCreated() time.Time {
+	return Deref(inventory.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Инвентаризации.
-func (inventory Inventory) GetDeleted() Timestamp {
-	return Deref(inventory.Deleted)
+func (inventory Inventory) GetDeleted() time.Time {
+	return Deref(inventory.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Инвентаризации.
@@ -111,8 +111,8 @@ func (inventory Inventory) GetID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Инвентаризации.
-func (inventory Inventory) GetUpdated() Timestamp {
-	return Deref(inventory.Updated)
+func (inventory Inventory) GetUpdated() time.Time {
+	return Deref(inventory.Updated).Time()
 }
 
 // GetMeta возвращает Метаданные Инвентаризации.
@@ -166,8 +166,8 @@ func (inventory Inventory) GetStore() Store {
 }
 
 // GetMoment возвращает Дату документа.
-func (inventory Inventory) GetMoment() Timestamp {
-	return Deref(inventory.Moment)
+func (inventory Inventory) GetMoment() time.Time {
+	return Deref(inventory.Moment).Time()
 }
 
 // GetSyncID возвращает ID синхронизации.

@@ -71,8 +71,8 @@ func (enter Enter) GetSum() float64 {
 }
 
 // GetMoment возвращает Дату документа.
-func (enter Enter) GetMoment() Timestamp {
-	return Deref(enter.Moment)
+func (enter Enter) GetMoment() time.Time {
+	return Deref(enter.Moment).Time()
 }
 
 // GetCode возвращает Код Оприходования.
@@ -81,13 +81,13 @@ func (enter Enter) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (enter Enter) GetCreated() Timestamp {
-	return Deref(enter.Created)
+func (enter Enter) GetCreated() time.Time {
+	return Deref(enter.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Оприходования.
-func (enter Enter) GetDeleted() Timestamp {
-	return Deref(enter.Deleted)
+func (enter Enter) GetDeleted() time.Time {
+	return Deref(enter.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Оприходования.
@@ -121,8 +121,8 @@ func (enter Enter) GetMeta() Meta {
 }
 
 // GetUpdated возвращает Момент последнего обновления Оприходования.
-func (enter Enter) GetUpdated() Timestamp {
-	return Deref(enter.Updated)
+func (enter Enter) GetUpdated() time.Time {
+	return Deref(enter.Updated).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.

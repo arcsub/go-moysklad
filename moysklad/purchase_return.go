@@ -117,13 +117,13 @@ func (purchaseReturn PurchaseReturn) GetOrganizationAccount() AgentAccount {
 }
 
 // GetCreated возвращает Дату создания.
-func (purchaseReturn PurchaseReturn) GetCreated() Timestamp {
-	return Deref(purchaseReturn.Created)
+func (purchaseReturn PurchaseReturn) GetCreated() time.Time {
+	return Deref(purchaseReturn.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Возврата поставщику.
-func (purchaseReturn PurchaseReturn) GetDeleted() Timestamp {
-	return Deref(purchaseReturn.Deleted)
+func (purchaseReturn PurchaseReturn) GetDeleted() time.Time {
+	return Deref(purchaseReturn.Deleted).Time()
 }
 
 // GetDescription возвращает Описание Возврата поставщику.
@@ -157,8 +157,8 @@ func (purchaseReturn PurchaseReturn) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (purchaseReturn PurchaseReturn) GetMoment() Timestamp {
-	return Deref(purchaseReturn.Moment)
+func (purchaseReturn PurchaseReturn) GetMoment() time.Time {
+	return Deref(purchaseReturn.Moment).Time()
 }
 
 // GetName возвращает Наименование Возврата поставщику.
@@ -227,8 +227,8 @@ func (purchaseReturn PurchaseReturn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Возврата поставщику.
-func (purchaseReturn PurchaseReturn) GetUpdated() Timestamp {
-	return Deref(purchaseReturn.Updated)
+func (purchaseReturn PurchaseReturn) GetUpdated() time.Time {
+	return Deref(purchaseReturn.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Project Проект.
@@ -95,8 +96,8 @@ func (project Project) GetShared() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления проекта.
-func (project Project) GetUpdated() Timestamp {
-	return Deref(project.Updated)
+func (project Project) GetUpdated() time.Time {
+	return Deref(project.Updated).Time()
 }
 
 // GetAttributes возвращает Список метаданных доп. полей.

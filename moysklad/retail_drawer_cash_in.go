@@ -58,13 +58,13 @@ func (retailDrawerCashIn RetailDrawerCashIn) AsTaskOperation() *TaskOperation {
 }
 
 // GetMoment возвращает Дату документа.
-func (retailDrawerCashIn RetailDrawerCashIn) GetMoment() Timestamp {
-	return Deref(retailDrawerCashIn.Moment)
+func (retailDrawerCashIn RetailDrawerCashIn) GetMoment() time.Time {
+	return Deref(retailDrawerCashIn.Moment).Time()
 }
 
 // GetCreated возвращает Дату создания.
-func (retailDrawerCashIn RetailDrawerCashIn) GetCreated() Timestamp {
-	return Deref(retailDrawerCashIn.Created)
+func (retailDrawerCashIn RetailDrawerCashIn) GetCreated() time.Time {
+	return Deref(retailDrawerCashIn.Created).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -83,8 +83,8 @@ func (retailDrawerCashIn RetailDrawerCashIn) GetName() string {
 }
 
 // GetDeleted возвращает Момент последнего удаления Внесения денег.
-func (retailDrawerCashIn RetailDrawerCashIn) GetDeleted() Timestamp {
-	return Deref(retailDrawerCashIn.Deleted)
+func (retailDrawerCashIn RetailDrawerCashIn) GetDeleted() time.Time {
+	return Deref(retailDrawerCashIn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Внесения денег.
@@ -173,8 +173,8 @@ func (retailDrawerCashIn RetailDrawerCashIn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Внесения денег.
-func (retailDrawerCashIn RetailDrawerCashIn) GetUpdated() Timestamp {
-	return Deref(retailDrawerCashIn.Updated)
+func (retailDrawerCashIn RetailDrawerCashIn) GetUpdated() time.Time {
+	return Deref(retailDrawerCashIn.Updated).Time()
 }
 
 // GetAttributes возвращает Список метаданных доп. полей.

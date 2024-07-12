@@ -84,18 +84,18 @@ func (counterPartyAdjustment CounterpartyAdjustment) GetApplicable() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Корректировки взаиморасчетов.
-func (counterPartyAdjustment CounterpartyAdjustment) GetUpdated() Timestamp {
-	return Deref(counterPartyAdjustment.Updated)
+func (counterPartyAdjustment CounterpartyAdjustment) GetUpdated() time.Time {
+	return Deref(counterPartyAdjustment.Updated).Time()
 }
 
 // GetCreated возвращает Дату создания.
-func (counterPartyAdjustment CounterpartyAdjustment) GetCreated() Timestamp {
-	return Deref(counterPartyAdjustment.Created)
+func (counterPartyAdjustment CounterpartyAdjustment) GetCreated() time.Time {
+	return Deref(counterPartyAdjustment.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Корректировки взаиморасчетов.
-func (counterPartyAdjustment CounterpartyAdjustment) GetDeleted() Timestamp {
-	return Deref(counterPartyAdjustment.Deleted)
+func (counterPartyAdjustment CounterpartyAdjustment) GetDeleted() time.Time {
+	return Deref(counterPartyAdjustment.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Корректировки взаиморасчетов.
@@ -119,8 +119,8 @@ func (counterPartyAdjustment CounterpartyAdjustment) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (counterPartyAdjustment CounterpartyAdjustment) GetMoment() Timestamp {
-	return Deref(counterPartyAdjustment.Moment)
+func (counterPartyAdjustment CounterpartyAdjustment) GetMoment() time.Time {
+	return Deref(counterPartyAdjustment.Moment).Time()
 }
 
 // GetOrganization возвращает Метаданные юрлица.

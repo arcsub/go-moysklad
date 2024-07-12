@@ -76,8 +76,8 @@ func (factureOut FactureOut) GetOrganization() Organization {
 }
 
 // GetDeleted возвращает Момент последнего удаления выданного Счета-фактуры.
-func (factureOut FactureOut) GetDeleted() Timestamp {
-	return Deref(factureOut.Deleted)
+func (factureOut FactureOut) GetDeleted() time.Time {
+	return Deref(factureOut.Deleted).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.
@@ -101,8 +101,8 @@ func (factureOut FactureOut) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (factureOut FactureOut) GetCreated() Timestamp {
-	return Deref(factureOut.Created)
+func (factureOut FactureOut) GetCreated() time.Time {
+	return Deref(factureOut.Created).Time()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -141,8 +141,8 @@ func (factureOut FactureOut) GetPrinted() bool {
 }
 
 // GetMoment возвращает Момент документа.
-func (factureOut FactureOut) GetMoment() Timestamp {
-	return Deref(factureOut.Moment)
+func (factureOut FactureOut) GetMoment() time.Time {
+	return Deref(factureOut.Moment).Time()
 }
 
 // GetName возвращает Наименование выданного Счета-фактуры.
@@ -151,8 +151,8 @@ func (factureOut FactureOut) GetName() string {
 }
 
 // GetPaymentDate возвращает Дату платежного документа.
-func (factureOut FactureOut) GetPaymentDate() Timestamp {
-	return Deref(factureOut.PaymentDate)
+func (factureOut FactureOut) GetPaymentDate() time.Time {
+	return Deref(factureOut.PaymentDate).Time()
 }
 
 // GetAgent возвращает Метаданные Контрагента.
@@ -201,8 +201,8 @@ func (factureOut FactureOut) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления выданного Счета-фактуры.
-func (factureOut FactureOut) GetUpdated() Timestamp {
-	return Deref(factureOut.Updated)
+func (factureOut FactureOut) GetUpdated() time.Time {
+	return Deref(factureOut.Updated).Time()
 }
 
 // GetDemands возвращает Массив ссылок на связанные отгрузки.

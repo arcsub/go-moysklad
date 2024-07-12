@@ -86,18 +86,18 @@ func (internalOrder InternalOrder) GetAccountID() uuid.UUID {
 }
 
 // GetCreated возвращает Дату создания.
-func (internalOrder InternalOrder) GetCreated() Timestamp {
-	return Deref(internalOrder.Created)
+func (internalOrder InternalOrder) GetCreated() time.Time {
+	return Deref(internalOrder.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Внутреннего заказа.
-func (internalOrder InternalOrder) GetDeleted() Timestamp {
-	return Deref(internalOrder.Deleted)
+func (internalOrder InternalOrder) GetDeleted() time.Time {
+	return Deref(internalOrder.Deleted).Time()
 }
 
 // GetDeliveryPlannedMoment возвращает Планируемую дата приемки.
-func (internalOrder InternalOrder) GetDeliveryPlannedMoment() Timestamp {
-	return Deref(internalOrder.DeliveryPlannedMoment)
+func (internalOrder InternalOrder) GetDeliveryPlannedMoment() time.Time {
+	return Deref(internalOrder.DeliveryPlannedMoment).Time()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -156,8 +156,8 @@ func (internalOrder InternalOrder) GetApplicable() bool {
 }
 
 // GetMoment возвращает Дату документа.
-func (internalOrder InternalOrder) GetMoment() Timestamp {
-	return Deref(internalOrder.Moment)
+func (internalOrder InternalOrder) GetMoment() time.Time {
+	return Deref(internalOrder.Moment).Time()
 }
 
 // GetPrinted возвращает true, если документ напечатан.
@@ -211,8 +211,8 @@ func (internalOrder InternalOrder) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Внутреннего заказа.
-func (internalOrder InternalOrder) GetUpdated() Timestamp {
-	return Deref(internalOrder.Updated)
+func (internalOrder InternalOrder) GetUpdated() time.Time {
+	return Deref(internalOrder.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

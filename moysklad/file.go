@@ -1,5 +1,7 @@
 package moysklad
 
+import "time"
+
 // File Файл.
 //
 // Код сущности: files
@@ -20,8 +22,8 @@ type File struct {
 }
 
 // GetCreated возвращает Время загрузки Файла на сервер.
-func (file File) GetCreated() Timestamp {
-	return Deref(file.Created)
+func (file File) GetCreated() time.Time {
+	return Deref(file.Created).Time()
 }
 
 // GetCreatedBy возвращает Метаданные сотрудника, загрузившего Файл.

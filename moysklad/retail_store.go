@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // RetailStore Точка продаж.
@@ -288,8 +289,8 @@ func (retailStore RetailStore) GetSyncAgents() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления точки продаж.
-func (retailStore RetailStore) GetUpdated() Timestamp {
-	return Deref(retailStore.Updated)
+func (retailStore RetailStore) GetUpdated() time.Time {
+	return Deref(retailStore.Updated).Time()
 }
 
 // GetRequiredDiscountCardNumber возвращает Обязательность поля номер бонусной карты при создании контрагента.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Prepayment Предоплата.
@@ -99,8 +100,8 @@ func (prepayment Prepayment) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (prepayment Prepayment) GetCreated() Timestamp {
-	return Deref(prepayment.Created)
+func (prepayment Prepayment) GetCreated() time.Time {
+	return Deref(prepayment.Created).Time()
 }
 
 // GetCustomerOrder возвращает Метаданные Заказа Покупателя.
@@ -109,8 +110,8 @@ func (prepayment Prepayment) GetCustomerOrder() CustomerOrder {
 }
 
 // GetDeleted возвращает Момент последнего удаления Предоплаты.
-func (prepayment Prepayment) GetDeleted() Timestamp {
-	return Deref(prepayment.Deleted)
+func (prepayment Prepayment) GetDeleted() time.Time {
+	return Deref(prepayment.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Предоплаты.
@@ -144,8 +145,8 @@ func (prepayment Prepayment) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (prepayment Prepayment) GetMoment() Timestamp {
-	return Deref(prepayment.Moment)
+func (prepayment Prepayment) GetMoment() time.Time {
+	return Deref(prepayment.Moment).Time()
 }
 
 // GetName возвращает Наименование Предоплаты.
@@ -234,8 +235,8 @@ func (prepayment Prepayment) GetVatSum() float64 {
 }
 
 // GetUpdated возвращает Момент последнего обновления Предоплаты.
-func (prepayment Prepayment) GetUpdated() Timestamp {
-	return Deref(prepayment.Updated)
+func (prepayment Prepayment) GetUpdated() time.Time {
+	return Deref(prepayment.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

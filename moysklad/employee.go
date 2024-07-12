@@ -6,6 +6,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
+	"time"
 )
 
 // Employee Сотрудник.
@@ -94,8 +95,8 @@ func (employee Employee) GetCode() string {
 }
 
 // GetCreated возвращает Момент создания Сотрудника.
-func (employee Employee) GetCreated() Timestamp {
-	return Deref(employee.Created)
+func (employee Employee) GetCreated() time.Time {
+	return Deref(employee.Created).Time()
 }
 
 // GetDescription возвращает Комментарий к Сотруднику.
@@ -129,8 +130,8 @@ func (employee Employee) GetGroup() Group {
 }
 
 // GetUpdated возвращает Момент последнего обновления Сотрудника.
-func (employee Employee) GetUpdated() Timestamp {
-	return Deref(employee.Updated)
+func (employee Employee) GetUpdated() time.Time {
+	return Deref(employee.Updated).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.

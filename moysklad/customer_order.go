@@ -128,18 +128,18 @@ func (customerOrder CustomerOrder) GetAgent() Counterparty {
 }
 
 // GetCreated возвращает Дату создания.
-func (customerOrder CustomerOrder) GetCreated() Timestamp {
-	return Deref(customerOrder.Created)
+func (customerOrder CustomerOrder) GetCreated() time.Time {
+	return Deref(customerOrder.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Заказа покупателя.
-func (customerOrder CustomerOrder) GetDeleted() Timestamp {
-	return Deref(customerOrder.Deleted)
+func (customerOrder CustomerOrder) GetDeleted() time.Time {
+	return Deref(customerOrder.Deleted).Time()
 }
 
 // GetDeliveryPlannedMoment возвращает Планируемую дата отгрузки.
-func (customerOrder CustomerOrder) GetDeliveryPlannedMoment() Timestamp {
-	return Deref(customerOrder.DeliveryPlannedMoment)
+func (customerOrder CustomerOrder) GetDeliveryPlannedMoment() time.Time {
+	return Deref(customerOrder.DeliveryPlannedMoment).Time()
 }
 
 // GetDescription возвращает Комментарий Заказа покупателя.
@@ -183,8 +183,8 @@ func (customerOrder CustomerOrder) GetName() string {
 }
 
 // GetMoment возвращает Дату документа.
-func (customerOrder CustomerOrder) GetMoment() Timestamp {
-	return Deref(customerOrder.Moment)
+func (customerOrder CustomerOrder) GetMoment() time.Time {
+	return Deref(customerOrder.Moment).Time()
 }
 
 // GetOrganization возвращает Метаданные юрлица.
@@ -288,8 +288,8 @@ func (customerOrder CustomerOrder) GetPrepayments() Slice[Prepayment] {
 }
 
 // GetUpdated возвращает Момент последнего обновления Заказа покупателя.
-func (customerOrder CustomerOrder) GetUpdated() Timestamp {
-	return Deref(customerOrder.Updated)
+func (customerOrder CustomerOrder) GetUpdated() time.Time {
+	return Deref(customerOrder.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

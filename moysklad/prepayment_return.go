@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // PrepaymentReturn Возврат предоплаты.
@@ -98,13 +99,13 @@ func (prepaymentReturn PrepaymentReturn) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (prepaymentReturn PrepaymentReturn) GetCreated() Timestamp {
-	return Deref(prepaymentReturn.Created)
+func (prepaymentReturn PrepaymentReturn) GetCreated() time.Time {
+	return Deref(prepaymentReturn.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Возврата предоплаты.
-func (prepaymentReturn PrepaymentReturn) GetDeleted() Timestamp {
-	return Deref(prepaymentReturn.Deleted)
+func (prepaymentReturn PrepaymentReturn) GetDeleted() time.Time {
+	return Deref(prepaymentReturn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Возврата предоплаты.
@@ -138,8 +139,8 @@ func (prepaymentReturn PrepaymentReturn) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (prepaymentReturn PrepaymentReturn) GetMoment() Timestamp {
-	return Deref(prepaymentReturn.Moment)
+func (prepaymentReturn PrepaymentReturn) GetMoment() time.Time {
+	return Deref(prepaymentReturn.Moment).Time()
 }
 
 // GetName возвращает Наименование Возврата предоплаты.
@@ -228,8 +229,8 @@ func (prepaymentReturn PrepaymentReturn) GetVatSum() float64 {
 }
 
 // GetUpdated возвращает Момент последнего обновления Возврата предоплаты.
-func (prepaymentReturn PrepaymentReturn) GetUpdated() Timestamp {
-	return Deref(prepaymentReturn.Updated)
+func (prepaymentReturn PrepaymentReturn) GetUpdated() time.Time {
+	return Deref(prepaymentReturn.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

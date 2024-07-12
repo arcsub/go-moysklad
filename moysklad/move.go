@@ -66,13 +66,13 @@ func (move Move) AsTaskOperation() *TaskOperation {
 }
 
 // GetMoment возвращает Дату документа.
-func (move Move) GetMoment() Timestamp {
-	return Deref(move.Moment)
+func (move Move) GetMoment() time.Time {
+	return Deref(move.Moment).Time()
 }
 
 // GetUpdated возвращает Момент последнего обновления Перемещения.
-func (move Move) GetUpdated() Timestamp {
-	return Deref(move.Updated)
+func (move Move) GetUpdated() time.Time {
+	return Deref(move.Updated).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -86,13 +86,13 @@ func (move Move) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (move Move) GetCreated() Timestamp {
-	return Deref(move.Created)
+func (move Move) GetCreated() time.Time {
+	return Deref(move.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Перемещения.
-func (move Move) GetDeleted() Timestamp {
-	return Deref(move.Deleted)
+func (move Move) GetDeleted() time.Time {
+	return Deref(move.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Перемещения.

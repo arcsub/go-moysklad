@@ -122,18 +122,18 @@ func (purchaseOrder PurchaseOrder) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (purchaseOrder PurchaseOrder) GetCreated() Timestamp {
-	return Deref(purchaseOrder.Created)
+func (purchaseOrder PurchaseOrder) GetCreated() time.Time {
+	return Deref(purchaseOrder.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Заказа поставщику.
-func (purchaseOrder PurchaseOrder) GetDeleted() Timestamp {
-	return Deref(purchaseOrder.Deleted)
+func (purchaseOrder PurchaseOrder) GetDeleted() time.Time {
+	return Deref(purchaseOrder.Deleted).Time()
 }
 
 // GetDeliveryPlannedMoment возвращает Планируемую дата отгрузки.
-func (purchaseOrder PurchaseOrder) GetDeliveryPlannedMoment() Timestamp {
-	return Deref(purchaseOrder.DeliveryPlannedMoment)
+func (purchaseOrder PurchaseOrder) GetDeliveryPlannedMoment() time.Time {
+	return Deref(purchaseOrder.DeliveryPlannedMoment).Time()
 }
 
 // GetOrganizationAccount возвращает Метаданные счета юрлица.
@@ -172,8 +172,8 @@ func (purchaseOrder PurchaseOrder) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (purchaseOrder PurchaseOrder) GetMoment() Timestamp {
-	return Deref(purchaseOrder.Moment)
+func (purchaseOrder PurchaseOrder) GetMoment() time.Time {
+	return Deref(purchaseOrder.Moment).Time()
 }
 
 // GetName возвращает Наименование Заказа поставщику.
@@ -257,8 +257,8 @@ func (purchaseOrder PurchaseOrder) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления заказа поставщику.
-func (purchaseOrder PurchaseOrder) GetUpdated() Timestamp {
-	return Deref(purchaseOrder.Updated)
+func (purchaseOrder PurchaseOrder) GetUpdated() time.Time {
+	return Deref(purchaseOrder.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

@@ -3,6 +3,7 @@ package moysklad
 import (
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Agent представляет объект с общими полями объектов:
@@ -77,8 +78,8 @@ func (agent Agent) IsEmployee() bool {
 }
 
 // GetUpdated возвращает Момент последнего обновления Контрагента/Юрлица/Сотрудника.
-func (agent Agent) GetUpdated() Timestamp {
-	return Deref(agent.Updated)
+func (agent Agent) GetUpdated() time.Time {
+	return Deref(agent.Updated).Time()
 }
 
 // GetShared возвращает флаг Общего доступа.
@@ -117,8 +118,8 @@ func (agent Agent) GetPhone() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (agent Agent) GetCreated() Timestamp {
-	return Deref(agent.Created)
+func (agent Agent) GetCreated() time.Time {
+	return Deref(agent.Created).Time()
 }
 
 // GetArchived возвращает true, если Контрагент/Юрлицо/Сотрудник добавлен в архив.

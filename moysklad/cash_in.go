@@ -90,8 +90,8 @@ func (cashIn CashIn) GetApplicable() bool {
 }
 
 // GetMoment возвращает Дату документа.
-func (cashIn CashIn) GetMoment() Timestamp {
-	return Deref(cashIn.Moment)
+func (cashIn CashIn) GetMoment() time.Time {
+	return Deref(cashIn.Moment).Time()
 }
 
 // GetCode возвращает Код Приходного ордера.
@@ -110,8 +110,8 @@ func (cashIn CashIn) GetAccountID() uuid.UUID {
 }
 
 // GetDeleted возвращает Момент последнего удаления Приходного ордера.
-func (cashIn CashIn) GetDeleted() Timestamp {
-	return Deref(cashIn.Deleted)
+func (cashIn CashIn) GetDeleted() time.Time {
+	return Deref(cashIn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Приходного ордера.
@@ -155,8 +155,8 @@ func (cashIn CashIn) GetAgent() Agent {
 }
 
 // GetCreated возвращает Дату создания.
-func (cashIn CashIn) GetCreated() Timestamp {
-	return Deref(cashIn.Created)
+func (cashIn CashIn) GetCreated() time.Time {
+	return Deref(cashIn.Created).Time()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -215,8 +215,8 @@ func (cashIn CashIn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Приходного ордера.
-func (cashIn CashIn) GetUpdated() Timestamp {
-	return Deref(cashIn.Updated)
+func (cashIn CashIn) GetUpdated() time.Time {
+	return Deref(cashIn.Updated).Time()
 }
 
 // GetName возвращает Наименование Приходного ордера.

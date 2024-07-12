@@ -78,18 +78,18 @@ func (priceList PriceList) GetCode() string {
 }
 
 // GetMoment возвращает Дату документа.
-func (priceList PriceList) GetMoment() Timestamp {
-	return Deref(priceList.Moment)
+func (priceList PriceList) GetMoment() time.Time {
+	return Deref(priceList.Moment).Time()
 }
 
 // GetCreated возвращает Дату создания.
-func (priceList PriceList) GetCreated() Timestamp {
-	return Deref(priceList.Created)
+func (priceList PriceList) GetCreated() time.Time {
+	return Deref(priceList.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Прайс-листа.
-func (priceList PriceList) GetDeleted() Timestamp {
-	return Deref(priceList.Deleted)
+func (priceList PriceList) GetDeleted() time.Time {
+	return Deref(priceList.Deleted).Time()
 }
 
 // GetName возвращает Наименование Прайс-листа.
@@ -118,8 +118,8 @@ func (priceList PriceList) GetID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Прайс-листа.
-func (priceList PriceList) GetUpdated() Timestamp {
-	return Deref(priceList.Updated)
+func (priceList PriceList) GetUpdated() time.Time {
+	return Deref(priceList.Updated).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.

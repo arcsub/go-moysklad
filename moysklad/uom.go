@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Uom Единица измерения.
@@ -77,8 +78,8 @@ func (uom Uom) GetShared() bool {
 	return Deref(uom.Shared)
 }
 
-func (uom Uom) GetUpdated() Timestamp {
-	return Deref(uom.Updated)
+func (uom Uom) GetUpdated() time.Time {
+	return Deref(uom.Updated).Time()
 }
 
 func (uom *Uom) SetCode(code string) *Uom {

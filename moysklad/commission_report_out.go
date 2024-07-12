@@ -114,8 +114,8 @@ func (commissionReportOut CommissionReportOut) GetCode() string {
 }
 
 // GetCommissionPeriodEnd возвращает Конец периода.
-func (commissionReportOut CommissionReportOut) GetCommissionPeriodEnd() Timestamp {
-	return Deref(commissionReportOut.CommissionPeriodEnd)
+func (commissionReportOut CommissionReportOut) GetCommissionPeriodEnd() time.Time {
+	return Deref(commissionReportOut.CommissionPeriodEnd).Time()
 }
 
 // GetAgent возвращает Метаданные контрагента.
@@ -134,13 +134,13 @@ func (commissionReportOut CommissionReportOut) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (commissionReportOut CommissionReportOut) GetCreated() Timestamp {
-	return Deref(commissionReportOut.Created)
+func (commissionReportOut CommissionReportOut) GetCreated() time.Time {
+	return Deref(commissionReportOut.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Выданного отчёта комиссионера.
-func (commissionReportOut CommissionReportOut) GetDeleted() Timestamp {
-	return Deref(commissionReportOut.Deleted)
+func (commissionReportOut CommissionReportOut) GetDeleted() time.Time {
+	return Deref(commissionReportOut.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Выданного отчёта комиссионера.
@@ -174,8 +174,8 @@ func (commissionReportOut CommissionReportOut) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (commissionReportOut CommissionReportOut) GetMoment() Timestamp {
-	return Deref(commissionReportOut.Moment)
+func (commissionReportOut CommissionReportOut) GetMoment() time.Time {
+	return Deref(commissionReportOut.Moment).Time()
 }
 
 // GetName возвращает Наименование Выданного отчёта комиссионера.
@@ -189,8 +189,8 @@ func (commissionReportOut CommissionReportOut) GetAccountID() uuid.UUID {
 }
 
 // GetCommissionPeriodStart возвращает Начало периода.
-func (commissionReportOut CommissionReportOut) GetCommissionPeriodStart() Timestamp {
-	return Deref(commissionReportOut.CommissionPeriodStart)
+func (commissionReportOut CommissionReportOut) GetCommissionPeriodStart() time.Time {
+	return Deref(commissionReportOut.CommissionPeriodStart).Time()
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -264,8 +264,8 @@ func (commissionReportOut CommissionReportOut) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления.
-func (commissionReportOut CommissionReportOut) GetUpdated() Timestamp {
-	return Deref(commissionReportOut.Updated)
+func (commissionReportOut CommissionReportOut) GetUpdated() time.Time {
+	return Deref(commissionReportOut.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

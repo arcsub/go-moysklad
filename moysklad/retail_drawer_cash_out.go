@@ -69,8 +69,8 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetApplicable() bool {
 }
 
 // GetMoment возвращает Дату документа.
-func (retailDrawerCashOut RetailDrawerCashOut) GetMoment() Timestamp {
-	return Deref(retailDrawerCashOut.Moment)
+func (retailDrawerCashOut RetailDrawerCashOut) GetMoment() time.Time {
+	return Deref(retailDrawerCashOut.Moment).Time()
 }
 
 // GetName возвращает Наименование Выплаты денег.
@@ -84,13 +84,13 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetCode() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (retailDrawerCashOut RetailDrawerCashOut) GetCreated() Timestamp {
-	return Deref(retailDrawerCashOut.Created)
+func (retailDrawerCashOut RetailDrawerCashOut) GetCreated() time.Time {
+	return Deref(retailDrawerCashOut.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Выплаты денег.
-func (retailDrawerCashOut RetailDrawerCashOut) GetDeleted() Timestamp {
-	return Deref(retailDrawerCashOut.Deleted)
+func (retailDrawerCashOut RetailDrawerCashOut) GetDeleted() time.Time {
+	return Deref(retailDrawerCashOut.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Выплаты денег.
@@ -179,8 +179,8 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Выплаты денег.
-func (retailDrawerCashOut RetailDrawerCashOut) GetUpdated() Timestamp {
-	return Deref(retailDrawerCashOut.Updated)
+func (retailDrawerCashOut RetailDrawerCashOut) GetUpdated() time.Time {
+	return Deref(retailDrawerCashOut.Updated).Time()
 }
 
 // GetAttributes возвращает Список метаданных доп. полей.

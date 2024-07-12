@@ -127,13 +127,13 @@ func (commissionReportIn CommissionReportIn) GetCommissionOverheadSum() float64 
 }
 
 // GetCommissionPeriodEnd возвращает Конец периода.
-func (commissionReportIn CommissionReportIn) GetCommissionPeriodEnd() Timestamp {
-	return Deref(commissionReportIn.CommissionPeriodEnd)
+func (commissionReportIn CommissionReportIn) GetCommissionPeriodEnd() time.Time {
+	return Deref(commissionReportIn.CommissionPeriodEnd).Time()
 }
 
 // GetCommissionPeriodStart возвращает Начало периода.
-func (commissionReportIn CommissionReportIn) GetCommissionPeriodStart() Timestamp {
-	return Deref(commissionReportIn.CommissionPeriodStart)
+func (commissionReportIn CommissionReportIn) GetCommissionPeriodStart() time.Time {
+	return Deref(commissionReportIn.CommissionPeriodStart).Time()
 }
 
 // GetCommitentSum возвращает Сумму комитента в установленной валюте.
@@ -147,13 +147,13 @@ func (commissionReportIn CommissionReportIn) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (commissionReportIn CommissionReportIn) GetCreated() Timestamp {
-	return Deref(commissionReportIn.Created)
+func (commissionReportIn CommissionReportIn) GetCreated() time.Time {
+	return Deref(commissionReportIn.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Полученного отчёта комиссионера.
-func (commissionReportIn CommissionReportIn) GetDeleted() Timestamp {
-	return Deref(commissionReportIn.Deleted)
+func (commissionReportIn CommissionReportIn) GetDeleted() time.Time {
+	return Deref(commissionReportIn.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Полученного отчёта комиссионера.
@@ -187,8 +187,8 @@ func (commissionReportIn CommissionReportIn) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (commissionReportIn CommissionReportIn) GetMoment() Timestamp {
-	return Deref(commissionReportIn.Moment)
+func (commissionReportIn CommissionReportIn) GetMoment() time.Time {
+	return Deref(commissionReportIn.Moment).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.
@@ -282,8 +282,8 @@ func (commissionReportIn CommissionReportIn) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Полученного отчёта комиссионера.
-func (commissionReportIn CommissionReportIn) GetUpdated() Timestamp {
-	return Deref(commissionReportIn.Updated)
+func (commissionReportIn CommissionReportIn) GetUpdated() time.Time {
+	return Deref(commissionReportIn.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

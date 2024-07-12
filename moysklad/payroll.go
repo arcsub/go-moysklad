@@ -1,6 +1,9 @@
 package moysklad
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"time"
+)
 
 // Payroll Начисление зарплаты.
 //
@@ -62,8 +65,8 @@ func (payroll Payroll) GetGroup() Group {
 }
 
 // GetUpdated возвращает Момент последнего обновления Начисления зарплаты.
-func (payroll Payroll) GetUpdated() Timestamp {
-	return Deref(payroll.Updated)
+func (payroll Payroll) GetUpdated() time.Time {
+	return Deref(payroll.Updated).Time()
 }
 
 // GetName возвращает Наименование Начисления зарплаты.
@@ -77,8 +80,8 @@ func (payroll Payroll) GetExternalCode() string {
 }
 
 // GetMoment возвращает Дату документа.
-func (payroll Payroll) GetMoment() Timestamp {
-	return Deref(payroll.Moment)
+func (payroll Payroll) GetMoment() time.Time {
+	return Deref(payroll.Moment).Time()
 }
 
 // GetApplicable возвращает Отметку о проведении.
@@ -97,8 +100,8 @@ func (payroll Payroll) GetOrganization() Organization {
 }
 
 // GetCreated возвращает Дату создания.
-func (payroll Payroll) GetCreated() Timestamp {
-	return Deref(payroll.Created)
+func (payroll Payroll) GetCreated() time.Time {
+	return Deref(payroll.Created).Time()
 }
 
 // GetPrinted возвращает true, если документ напечатан.

@@ -1,5 +1,7 @@
 package moysklad
 
+import "time"
+
 // Image Изображение.
 //
 // Код сущности: image
@@ -54,8 +56,8 @@ func (image Image) GetTitle() string {
 }
 
 // GetUpdated возвращает Время загрузки файла на сервер.
-func (image Image) GetUpdated() Timestamp {
-	return Deref(image.Updated)
+func (image Image) GetUpdated() time.Time {
+	return Deref(image.Updated).Time()
 }
 
 // SetContent устанавливает изображение, закодированное в Base64.

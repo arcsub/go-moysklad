@@ -90,8 +90,8 @@ func (organization Organization) AsAgent() *Agent {
 }
 
 // GetUpdated возвращает Момент последнего обновления Юрлица.
-func (organization Organization) GetUpdated() Timestamp {
-	return Deref(organization.Updated)
+func (organization Organization) GetUpdated() time.Time {
+	return Deref(organization.Updated).Time()
 }
 
 // GetChiefAccountSign возвращает Подпись главного бухгалтера.
@@ -130,8 +130,8 @@ func (organization Organization) GetUTMUrl() string {
 }
 
 // GetCreated возвращает Дату создания.
-func (organization Organization) GetCreated() Timestamp {
-	return Deref(organization.Created)
+func (organization Organization) GetCreated() time.Time {
+	return Deref(organization.Created).Time()
 }
 
 // GetDescription возвращает Комментарий к Юрлицу.
@@ -180,8 +180,8 @@ func (organization Organization) GetSyncID() uuid.UUID {
 }
 
 // GetTrackingContractDate возвращает Дату договора с ЦРПТ.
-func (organization Organization) GetTrackingContractDate() Timestamp {
-	return Deref(organization.TrackingContractDate)
+func (organization Organization) GetTrackingContractDate() time.Time {
+	return Deref(organization.TrackingContractDate).Time()
 }
 
 // GetTrackingContractNumber возвращает Номер договора с ЦРПТ.
@@ -205,8 +205,8 @@ func (organization Organization) GetStamp() Image {
 }
 
 // GetCertificateDate возвращает Дату свидетельства.
-func (organization Organization) GetCertificateDate() Timestamp {
-	return Deref(organization.CertificateDate)
+func (organization Organization) GetCertificateDate() time.Time {
+	return Deref(organization.CertificateDate).Time()
 }
 
 // GetAccountID возвращает ID учётной записи.

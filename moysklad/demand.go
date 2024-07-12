@@ -125,13 +125,13 @@ func (demand Demand) GetContract() Contract {
 }
 
 // GetCreated возвращает Дату создания.
-func (demand Demand) GetCreated() Timestamp {
-	return Deref(demand.Created)
+func (demand Demand) GetCreated() time.Time {
+	return Deref(demand.Created).Time()
 }
 
 // GetDeleted возвращает Момент последнего удаления Отгрузки.
-func (demand Demand) GetDeleted() Timestamp {
-	return Deref(demand.Deleted)
+func (demand Demand) GetDeleted() time.Time {
+	return Deref(demand.Deleted).Time()
 }
 
 // GetDescription возвращает Комментарий Отгрузки.
@@ -165,8 +165,8 @@ func (demand Demand) GetMeta() Meta {
 }
 
 // GetMoment возвращает Дату документа.
-func (demand Demand) GetMoment() Timestamp {
-	return Deref(demand.Moment)
+func (demand Demand) GetMoment() time.Time {
+	return Deref(demand.Moment).Time()
 }
 
 // GetName возвращает Наименование Отгрузки.
@@ -265,8 +265,8 @@ func (demand Demand) GetSyncID() uuid.UUID {
 }
 
 // GetUpdated возвращает Момент последнего обновления Отгрузки.
-func (demand Demand) GetUpdated() Timestamp {
-	return Deref(demand.Updated)
+func (demand Demand) GetUpdated() time.Time {
+	return Deref(demand.Updated).Time()
 }
 
 // GetVatEnabled возвращает true, если учитывается НДС.

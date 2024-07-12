@@ -150,8 +150,8 @@ func (counterparty Counterparty) GetContactPersons() MetaArray[ContactPerson] {
 }
 
 // GetCreated возвращает Момент создания.
-func (counterparty Counterparty) GetCreated() Timestamp {
-	return Deref(counterparty.Created)
+func (counterparty Counterparty) GetCreated() time.Time {
+	return Deref(counterparty.Created).Time()
 }
 
 // GetDescription возвращает Комментарий к Контрагенту.
@@ -259,20 +259,20 @@ func (counterparty Counterparty) GetTags() Slice[string] {
 }
 
 // GetUpdated возвращает Момент последнего обновления контрагента.
-func (counterparty Counterparty) GetUpdated() Timestamp {
-	return Deref(counterparty.Updated)
+func (counterparty Counterparty) GetUpdated() time.Time {
+	return Deref(counterparty.Updated).Time()
 }
 
 // GetBirthDate возвращает Дату рождения Контрагента типа [Физическое лицо].
 //
 // Игнорируется для Контрагентов типов [Индивидуальный предприниматель, Юридическое лицо].
-func (counterparty Counterparty) GetBirthDate() Timestamp {
-	return Deref(counterparty.BirthDate)
+func (counterparty Counterparty) GetBirthDate() time.Time {
+	return Deref(counterparty.BirthDate).Time()
 }
 
 // GetCertificateDate возвращает Дату свидетельства.
-func (counterparty Counterparty) GetCertificateDate() Timestamp {
-	return Deref(counterparty.CertificateDate)
+func (counterparty Counterparty) GetCertificateDate() time.Time {
+	return Deref(counterparty.CertificateDate).Time()
 }
 
 // GetCertificateNumber возвращает Номер свидетельства.
@@ -754,8 +754,8 @@ func (note Note) GetAuthorApplication() Application {
 }
 
 // GetCreated возвращает Момент создания события Контрагента.
-func (note Note) GetCreated() Timestamp {
-	return Deref(note.Created)
+func (note Note) GetCreated() time.Time {
+	return Deref(note.Created).Time()
 }
 
 // GetDescription возвращает Текст события Контрагента.
