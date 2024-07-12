@@ -938,6 +938,12 @@ type TaskService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointTask        = EndpointEntity + string(MetaTypeTask)
+	EndpointTaskNotes   = EndpointTask + "/%s/notes"
+	EndpointTaskNotesID = EndpointTaskNotes + "/%s"
+)
+
 type taskService struct {
 	Endpoint
 	endpointGetList[Task]
@@ -952,17 +958,17 @@ type taskService struct {
 }
 
 func (service *taskService) GetNoteList(ctx context.Context, taskID uuid.UUID, params ...*Params) (*List[TaskNote], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	path := fmt.Sprintf(EndpointTaskNotes, taskID)
 	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 func (service *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, taskNoteText string) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	path := fmt.Sprintf(EndpointTaskNotes, taskID)
 	return NewRequestBuilder[TaskNote](service.client, path).Post(ctx, &TaskNote{Description: String(taskNoteText)})
 }
 
 func (service *taskService) CreateNoteMany(ctx context.Context, taskID uuid.UUID, taskNoteText ...string) (*Slice[TaskNote], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", service.uri, taskID)
+	path := fmt.Sprintf(EndpointTaskNotes, taskID)
 	var taskNotes Slice[TaskNote]
 	for _, text := range taskNoteText {
 		taskNotes.Push(&TaskNote{Description: String(text)})
@@ -971,23 +977,23 @@ func (service *taskService) CreateNoteMany(ctx context.Context, taskID uuid.UUID
 }
 
 func (service *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, taskID, taskNoteID)
+	path := fmt.Sprintf(EndpointTaskNotesID, taskID, taskNoteID)
 	return NewRequestBuilder[TaskNote](service.client, path).Get(ctx)
 }
 
 func (service *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNoteText string) (*TaskNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, taskID, taskNoteID)
+	path := fmt.Sprintf(EndpointTaskNotesID, taskID, taskNoteID)
 	return NewRequestBuilder[TaskNote](service.client, path).Put(ctx, &TaskNote{Description: String(taskNoteText)})
 }
 
 func (service *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/notes/%s", taskID, taskNoteID)
+	path := fmt.Sprintf(EndpointTaskNotesID, taskID, taskNoteID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // NewTaskService принимает [Client] и возвращает сервис для работы с задачами.
 func NewTaskService(client *Client) TaskService {
-	e := NewEndpoint(client, "entity/task")
+	e := NewEndpoint(client, EndpointTask)
 	return &taskService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Task]{e},

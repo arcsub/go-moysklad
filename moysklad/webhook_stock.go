@@ -183,7 +183,11 @@ type WebhookStockService interface {
 	Update(ctx context.Context, id uuid.UUID, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
 }
 
+const (
+	EndpointWebhookStock = EndpointEntity + string(MetaTypeWebhookStock)
+)
+
 // NewWebhookStockService принимает [Client] и возвращает сервис для работы с вебхуками на изменение остатков.
 func NewWebhookStockService(client *Client) WebhookStockService {
-	return newMainService[WebhookStock, any, any, any](NewEndpoint(client, "entity/webhookstock"))
+	return newMainService[WebhookStock, any, any, any](client, EndpointWebhookStock)
 }

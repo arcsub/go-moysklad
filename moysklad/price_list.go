@@ -672,7 +672,11 @@ type PriceListService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointPriceList = EndpointEntity + string(MetaTypePriceList)
+)
+
 // NewPriceListService принимает [Client] и возвращает сервис для работы с прайс-листами.
 func NewPriceListService(client *Client) PriceListService {
-	return newMainService[PriceList, PriceListPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/pricelist"))
+	return newMainService[PriceList, PriceListPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointPriceList)
 }

@@ -363,7 +363,11 @@ type ProductFolderService interface {
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointProductFolder = EndpointEntity + string(MetaTypeProductFolder)
+)
+
 // NewProductFolderService принимает [Client] и возвращает сервис для работы с группами товаров.
 func NewProductFolderService(client *Client) ProductFolderService {
-	return newMainService[ProductFolder, any, MetaAttributesWrapper, any](NewEndpoint(client, "entity/productfolder"))
+	return newMainService[ProductFolder, any, MetaAttributesWrapper, any](client, EndpointProductFolder)
 }

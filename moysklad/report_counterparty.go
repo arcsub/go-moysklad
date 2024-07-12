@@ -83,13 +83,12 @@ type ReportCounterpartyService interface {
 	GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error)
 }
 
+const (
+	EndpointReportCounterparty = EndpointReport + string(MetaTypeCounterparty)
+)
+
 type reportCounterpartyService struct {
 	Endpoint
-}
-
-// NewReportCounterpartyService принимает [Client] и возвращает сервис для работы с показателями контрагентов.
-func NewReportCounterpartyService(client *Client) ReportCounterpartyService {
-	return &reportCounterpartyService{NewEndpoint(client, "report/counterparty")}
 }
 
 func (service *reportCounterpartyService) GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error) {
@@ -111,4 +110,9 @@ func (service *reportCounterpartyService) GetByCounterparties(ctx context.Contex
 func (service *reportCounterpartyService) GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", service.uri, id)
 	return NewRequestBuilder[ReportCounterparty](service.client, path).Get(ctx)
+}
+
+// NewReportCounterpartyService принимает [Client] и возвращает сервис для работы с показателями контрагентов.
+func NewReportCounterpartyService(client *Client) ReportCounterpartyService {
+	return &reportCounterpartyService{NewEndpoint(client, EndpointReportCounterparty)}
 }

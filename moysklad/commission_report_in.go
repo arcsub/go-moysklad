@@ -1091,6 +1091,12 @@ type CommissionReportInService interface {
 	Evaluate(ctx context.Context, commissionReportIn *CommissionReportIn, evaluate ...Evaluate) (*CommissionReportIn, *resty.Response, error)
 }
 
+const (
+	EndpointCommissionReportIn                  = EndpointEntity + string(MetaTypeCommissionReportIn)
+	EndpointCommissionReportInReturnPositions   = EndpointCommissionReportIn + "/%s/returntocommissionerpositions"
+	EndpointCommissionReportInReturnPositionsID = EndpointCommissionReportInReturnPositions + "/%s"
+)
+
 type commissionReportInService struct {
 	Endpoint
 	endpointGetList[CommissionReportIn]
@@ -1113,9 +1119,39 @@ type commissionReportInService struct {
 	endpointEvaluate[CommissionReportIn]
 }
 
+func (service *commissionReportInService) GetReturnPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCommissionReportInReturnPositions, id)
+	return NewRequestBuilder[List[CommissionReportInReturnPosition]](service.client, path).SetParams(params...).Get(ctx)
+}
+
+func (service *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCommissionReportInReturnPositionsID, id, positionID)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Get(ctx)
+}
+
+func (service *commissionReportInService) CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCommissionReportInReturnPositions, id)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).Post(ctx, position)
+}
+
+func (service *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCommissionReportInReturnPositionsID, id, positionID)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Put(ctx, position)
+}
+
+func (service *commissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointPositionsID, id, positionID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
+}
+
+func (service *commissionReportInService) DeleteReturnPositionMany(ctx context.Context, id uuid.UUID, entities ...*CommissionReportInReturnPosition) (*DeleteManyResponse, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointPositionsDelete, id)
+	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, entities)
+}
+
 // NewCommissionReportInService принимает [Client] и возвращает сервис для работы с полученными отчётами комиссионера.
 func NewCommissionReportInService(client *Client) CommissionReportInService {
-	e := NewEndpoint(client, "entity/commissionreportin")
+	e := NewEndpoint(client, EndpointCommissionReportIn)
 	return &commissionReportInService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[CommissionReportIn]{e},
@@ -1137,34 +1173,4 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointFiles:            endpointFiles{e},
 		endpointEvaluate:         endpointEvaluate[CommissionReportIn]{e},
 	}
-}
-
-func (service *commissionReportInService) GetReturnPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error) {
-	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
-	return NewRequestBuilder[List[CommissionReportInReturnPosition]](service.client, path).SetParams(params...).Get(ctx)
-}
-
-func (service *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
-	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionID)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Get(ctx)
-}
-
-func (service *commissionReportInService) CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
-	path := fmt.Sprintf("%s/returntocommissionerpositions", id)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).Post(ctx, position)
-}
-
-func (service *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
-	path := fmt.Sprintf("%s/returntocommissionerpositions/%s", id, positionID)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Put(ctx, position)
-}
-
-func (service *commissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/positions/%s", id, positionID)
-	return NewRequestBuilder[any](service.client, path).Delete(ctx)
-}
-
-func (service *commissionReportInService) DeleteReturnPositionMany(ctx context.Context, id uuid.UUID, entities ...*CommissionReportInReturnPosition) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/positions/delete", id)
-	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, entities)
 }

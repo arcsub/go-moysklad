@@ -602,6 +602,16 @@ type StoreService interface {
 	UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error)
 }
 
+const (
+	EndpointStore            = EndpointEntity + string(MetaTypeStore)
+	EndpointStoreSlots       = EndpointStore + "/%s/slots"
+	EndpointStoreSlotsID     = EndpointStoreSlots + "/%s"
+	EndpointStoreSlotsDelete = EndpointStoreSlots + EndpointDelete
+	EndpointStoreZones       = EndpointStore + "/%s/zones"
+	EndpointStoreZonesID     = EndpointStoreZones + "/%s"
+	EndpointStoreZonesDelete = EndpointStoreZones + EndpointDelete
+)
+
 type storeService struct {
 	Endpoint
 	endpointGetList[Store]
@@ -617,78 +627,78 @@ type storeService struct {
 }
 
 func (service *storeService) GetSlotList(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreSlots, storeID)
 	return NewRequestBuilder[List[Slot]](service.client, path).Get(ctx)
 }
 
 func (service *storeService) CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreSlots, storeID)
 	return NewRequestBuilder[Slot](service.client, path).Post(ctx, slot)
 }
 
 func (service *storeService) CreateUpdateSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*Slice[Slot], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreSlots, storeID)
 	return NewRequestBuilder[Slice[Slot]](service.client, path).Post(ctx, slots)
 }
 
 func (service *storeService) DeleteSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/delete", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreSlotsDelete, storeID)
 	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, AsMetaWrapperSlice(slots))
 }
 
 func (service *storeService) GetSlotByID(ctx context.Context, storeID, slotID uuid.UUID) (*Slot, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/%s", service.uri, storeID, slotID)
+	path := fmt.Sprintf(EndpointStoreSlotsID, storeID, slotID)
 	return NewRequestBuilder[Slot](service.client, path).Get(ctx)
 }
 
 func (service *storeService) DeleteSlot(ctx context.Context, storeID, slotID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/%s", service.uri, storeID, slotID)
+	path := fmt.Sprintf(EndpointStoreSlotsID, storeID, slotID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 func (service *storeService) UpdateSlot(ctx context.Context, storeID, slotID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/slots/%s", service.uri, storeID, slotID)
+	path := fmt.Sprintf(EndpointStoreSlotsID, storeID, slotID)
 	return NewRequestBuilder[Slot](service.client, path).Put(ctx, slot)
 }
 
 func (service *storeService) GetZoneList(ctx context.Context, storeID uuid.UUID) (*List[Zone], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreZones, storeID)
 	return NewRequestBuilder[List[Zone]](service.client, path).Get(ctx)
 }
 
 func (service *storeService) CreateZone(ctx context.Context, storeID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreZones, storeID)
 	return NewRequestBuilder[Zone](service.client, path).Post(ctx, zone)
 }
 
 func (service *storeService) CreateUpdateZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*Slice[Zone], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreZones, storeID)
 	return NewRequestBuilder[Slice[Zone]](service.client, path).Post(ctx, zones)
 }
 
 func (service *storeService) DeleteZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/delete", service.uri, storeID)
+	path := fmt.Sprintf(EndpointStoreZonesDelete, storeID)
 	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, AsMetaWrapperSlice(zones))
 }
 
 func (service *storeService) DeleteZone(ctx context.Context, storeID, zoneID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/%s", service.uri, storeID, zoneID)
+	path := fmt.Sprintf(EndpointStoreZonesID, storeID, zoneID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 func (service *storeService) GetZoneByID(ctx context.Context, storeID, zoneID uuid.UUID) (*Zone, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/%s", service.uri, storeID, zoneID)
+	path := fmt.Sprintf(EndpointStoreZonesID, storeID, zoneID)
 	return NewRequestBuilder[Zone](service.client, path).Get(ctx)
 }
 
 func (service *storeService) UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/zones/%s", service.uri, storeID, zoneID)
+	path := fmt.Sprintf(EndpointStoreZonesID, storeID, zoneID)
 	return NewRequestBuilder[Zone](service.client, path).Put(ctx, zone)
 }
 
 // NewStoreService принимает [Client] и возвращает сервис для работы со складами.
 func NewStoreService(client *Client) StoreService {
-	e := NewEndpoint(client, "entity/store")
+	e := NewEndpoint(client, EndpointStore)
 	return &storeService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Store]{e},

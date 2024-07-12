@@ -187,10 +187,11 @@ type UomService interface {
 	Update(ctx context.Context, id uuid.UUID, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)
 }
 
-const EntityEndpoint = "entity/"
-const UomEndpoint = EntityEndpoint + "uom"
+const (
+	EndpointUom = EndpointEntity + string(MetaTypeUom)
+)
 
 // NewUomService принимает [Client] и возвращает сервис для работы с единицами измерения.
 func NewUomService(client *Client) UomService {
-	return newMainService[Uom, any, any, any](NewEndpoint(client, UomEndpoint))
+	return newMainService[Uom, any, any, any](client, EndpointUom)
 }

@@ -745,7 +745,11 @@ type LossService interface {
 	Evaluate(ctx context.Context, entity *Loss, evaluate ...Evaluate) (*Loss, *resty.Response, error)
 }
 
+const (
+	EndpointLoss = EndpointEntity + string(MetaTypeLoss)
+)
+
 // NewLossService принимает [Client] и возвращает сервис для работы со списаниями.
 func NewLossService(client *Client) LossService {
-	return newMainService[Loss, LossPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/loss"))
+	return newMainService[Loss, LossPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointLoss)
 }

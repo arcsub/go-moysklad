@@ -646,7 +646,11 @@ type CashOutService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointCashOut = EndpointEntity + string(MetaTypeCashOut)
+)
+
 // NewCashOutService принимает [Client] и возвращает сервис для работы с расходными ордерами.
 func NewCashOutService(client *Client) CashOutService {
-	return newMainService[CashOut, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/cashout"))
+	return newMainService[CashOut, any, MetaAttributesStatesSharedWrapper, any](client, EndpointCashOut)
 }

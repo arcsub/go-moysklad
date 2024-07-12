@@ -188,7 +188,11 @@ type TaxRateService interface {
 	Update(ctx context.Context, id uuid.UUID, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
 }
 
+const (
+	EndpointTaxRate = EndpointEntity + string(MetaTypeTaxRate)
+)
+
 // NewTaxRateService принимает [Client] и возвращает сервис для работы со ставками НДС.
 func NewTaxRateService(client *Client) TaxRateService {
-	return newMainService[TaxRate, any, any, any](NewEndpoint(client, "entity/taxrate"))
+	return newMainService[TaxRate, any, any, any](client, EndpointTaxRate)
 }

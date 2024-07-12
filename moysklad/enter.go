@@ -798,7 +798,11 @@ type EnterService interface {
 	Evaluate(ctx context.Context, entity *Enter, evaluate ...Evaluate) (*Enter, *resty.Response, error)
 }
 
+const (
+	EndpointEnter = EndpointEntity + string(MetaTypeEnter)
+)
+
 // NewEnterService принимает [Client] и возвращает сервис для работы с оприходованиями.
 func NewEnterService(client *Client) EnterService {
-	return newMainService[Enter, EnterPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/enter"))
+	return newMainService[Enter, EnterPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointEnter)
 }

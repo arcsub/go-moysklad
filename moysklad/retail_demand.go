@@ -1058,7 +1058,11 @@ type RetailDemandService interface {
 	Evaluate(ctx context.Context, entity *RetailDemand, evaluate ...Evaluate) (*RetailDemand, *resty.Response, error)
 }
 
+const (
+	EndpointRetailDemand = EndpointEntity + string(MetaTypeRetailDemand)
+)
+
 // NewRetailDemandService принимает [Client] и возвращает сервис для работы с розничными продажами.
 func NewRetailDemandService(client *Client) RetailDemandService {
-	return newMainService[RetailDemand, RetailDemandPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/retaildemand"))
+	return newMainService[RetailDemand, RetailDemandPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointRetailDemand)
 }

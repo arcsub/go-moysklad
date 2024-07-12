@@ -369,6 +369,14 @@ type RoleService interface {
 	GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error)
 }
 
+const (
+	EndpointRole           = EndpointEntity + string(MetaTypeRole)
+	EndpointRoleAdmin      = EndpointRole + "/admin"
+	EndpointRoleIndividual = EndpointRole + "/individual"
+	EndpointRoleCashier    = EndpointRole + "/cashier"
+	EndpointRoleWorker     = EndpointRole + "/worker"
+)
+
 type roleService struct {
 	Endpoint
 	endpointGetList[Role]
@@ -379,24 +387,24 @@ type roleService struct {
 }
 
 func (service *roleService) GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error) {
-	return NewRequestBuilder[AdminRole](service.client, "entity/role/admin").Get(ctx)
+	return NewRequestBuilder[AdminRole](service.client, EndpointRoleAdmin).Get(ctx)
 }
 
 func (service *roleService) GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error) {
-	return NewRequestBuilder[IndividualRole](service.client, "entity/role/individual").Get(ctx)
+	return NewRequestBuilder[IndividualRole](service.client, EndpointRoleIndividual).Get(ctx)
 }
 
 func (service *roleService) GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error) {
-	return NewRequestBuilder[CashierRole](service.client, "entity/role/cashier").Get(ctx)
+	return NewRequestBuilder[CashierRole](service.client, EndpointRoleCashier).Get(ctx)
 }
 
 func (service *roleService) GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error) {
-	return NewRequestBuilder[WorkerRole](service.client, "entity/role/worker").Get(ctx)
+	return NewRequestBuilder[WorkerRole](service.client, EndpointRoleWorker).Get(ctx)
 }
 
 // NewRoleService принимает [Client] и возвращает сервис для работы с ролями и правами сотрудников.
 func NewRoleService(client *Client) RoleService {
-	e := NewEndpoint(client, "entity/role")
+	e := NewEndpoint(client, EndpointRole)
 	return &roleService{
 		Endpoint:        e,
 		endpointGetList: endpointGetList[Role]{e},

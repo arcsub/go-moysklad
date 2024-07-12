@@ -653,6 +653,11 @@ type InventoryService interface {
 	Evaluate(ctx context.Context, entity *Inventory, evaluate ...Evaluate) (*Inventory, *resty.Response, error)
 }
 
+const (
+	EndpointInventory            = EndpointEntity + string(MetaTypeInventory)
+	EndpointInventoryRecalculate = "rpc/inventory/%s/recalcCalculatedQuantity"
+)
+
 type inventoryService struct {
 	Endpoint
 	endpointGetList[Inventory]
@@ -675,7 +680,7 @@ type inventoryService struct {
 
 // NewInventoryService принимает [Client] и возвращает сервис для работы с инвентаризациями.
 func NewInventoryService(client *Client) InventoryService {
-	e := NewEndpoint(client, "entity/inventory")
+	e := NewEndpoint(client, EndpointInventory)
 	return &inventoryService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Inventory]{e},
@@ -698,7 +703,7 @@ func NewInventoryService(client *Client) InventoryService {
 }
 
 func (service *inventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("rpc/inventory/%s/recalcCalculatedQuantity", id)
+	path := fmt.Sprintf(EndpointInventoryRecalculate, id)
 	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {
 		return false, resp, err

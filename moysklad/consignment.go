@@ -307,8 +307,12 @@ type ConsignmentService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
+const (
+	EndpointConsignment = EndpointEntity + string(MetaTypeConsignment)
+)
+
 // NewConsignmentService принимает [Client] и возвращает сервис для работы с сериями.
 func NewConsignmentService(client *Client) ConsignmentService {
-	return newMainService[Consignment, any, MetaAttributesWrapper, any](NewEndpoint(client, "entity/consignment"))
+	return newMainService[Consignment, any, MetaAttributesWrapper, any](client, EndpointConsignment)
 
 }

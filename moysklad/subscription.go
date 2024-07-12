@@ -63,6 +63,10 @@ const (
 	TariffTrial        Tariff = "TRIAL"        // Тариф "Пробный"
 )
 
+const (
+	EndpointSubscription = EndpointEntity + string(MetaTypeSubscription)
+)
+
 type subscriptionService struct {
 	Endpoint
 }
@@ -81,5 +85,5 @@ type SubscriptionService interface {
 
 // NewSubscriptionService принимает [Client] и возвращает сервис для работы с подпиской компании.
 func NewSubscriptionService(client *Client) SubscriptionService {
-	return &subscriptionService{NewEndpoint(client, "entity/subscription")}
+	return &subscriptionService{NewEndpoint(client, EndpointSubscription)}
 }

@@ -753,6 +753,14 @@ type ProcessingService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointProcessing            = EndpointEntity + string(MetaTypeProcessing)
+	EndpointProcessingMaterials   = EndpointProcessing + "/%s/materials"
+	EndpointProcessingMaterialsID = EndpointProcessingMaterials + "/%s"
+	EndpointProcessingProducts    = EndpointProcessing + "/%s/products"
+	EndpointProcessingProductsID  = EndpointProcessingProducts + "/%s"
+)
+
 type processingService struct {
 	Endpoint
 	endpointGetList[Processing]
@@ -773,68 +781,68 @@ type processingService struct {
 }
 
 func (service *processingService) GetMaterialList(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
+	path := fmt.Sprintf(EndpointProcessingMaterials, id)
 	return NewRequestBuilder[List[ProcessingPlanMaterial]](service.client, path).Get(ctx)
 }
 
 func (service *processingService) CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
+	path := fmt.Sprintf(EndpointProcessingMaterials, id)
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Post(ctx, material)
 }
 
 func (service *processingService) CreateMaterialMany(ctx context.Context, id uuid.UUID, materials ...*ProcessingPlanMaterial) (*Slice[ProcessingPlanMaterial], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials", service.uri, id)
+	path := fmt.Sprintf(EndpointProcessingMaterials, id)
 	return NewRequestBuilder[Slice[ProcessingPlanMaterial]](service.client, path).Post(ctx, materials)
 }
 
 func (service *processingService) GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials/%s", service.uri, id, materialID)
+	path := fmt.Sprintf(EndpointProcessingMaterialsID, id, materialID)
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Get(ctx)
 }
 
 func (service *processingService) UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials/%s", service.uri, id, materialID)
+	path := fmt.Sprintf(EndpointProcessingMaterialsID, id, materialID)
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Put(ctx, material)
 }
 
 func (service *processingService) DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/materials/%s", service.uri, id, materialID)
+	path := fmt.Sprintf(EndpointProcessingMaterialsID, id, materialID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 func (service *processingService) GetProductList(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products", service.uri, id)
+	path := fmt.Sprintf(EndpointProcessingProducts, id)
 	return NewRequestBuilder[List[ProcessingPlanProduct]](service.client, path).Get(ctx)
 }
 
 func (service *processingService) CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products", service.uri, id)
+	path := fmt.Sprintf(EndpointProcessingProducts, id)
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Post(ctx, product)
 }
 
 func (service *processingService) CreateProductMany(ctx context.Context, id uuid.UUID, products ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products", service.uri, id)
+	path := fmt.Sprintf(EndpointProcessingProducts, id)
 	return NewRequestBuilder[Slice[ProcessingPlanProduct]](service.client, path).Post(ctx, products)
 }
 
 func (service *processingService) GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products/%s", service.uri, id, productID)
+	path := fmt.Sprintf(EndpointProcessingProductsID, id, productID)
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Get(ctx)
 }
 
 func (service *processingService) UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products/%s", service.uri, id, productID)
+	path := fmt.Sprintf(EndpointProcessingProductsID, id, productID)
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Put(ctx, product)
 }
 
 func (service *processingService) DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/products/%s", service.uri, id, productID)
+	path := fmt.Sprintf(EndpointProcessingProductsID, id, productID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
 // NewProcessingService принимает [Client] и возвращает сервис для работы с техоперациями.
 func NewProcessingService(client *Client) ProcessingService {
-	e := NewEndpoint(client, "entity/processing")
+	e := NewEndpoint(client, EndpointProcessing)
 	return &processingService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Processing]{e},

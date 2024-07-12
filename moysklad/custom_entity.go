@@ -260,6 +260,12 @@ type CustomEntityService interface {
 	UpdateElement(ctx context.Context, id, elementID uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
 }
 
+const (
+	EndpointCustomEntity     = EndpointEntity + string(MetaTypeCustomEntity)
+	EndpointCustomEntityID   = EndpointCustomEntity + "/%s"
+	EndpointCustomEntityIDID = EndpointCustomEntityID + "/%s"
+)
+
 type customEntityService struct {
 	Endpoint
 	endpointCreate[CustomEntity]
@@ -267,38 +273,38 @@ type customEntityService struct {
 	endpointDelete
 }
 
+func (service *customEntityService) GetElementList(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomEntityID, id)
+	return NewRequestBuilder[List[CustomEntityElement]](service.client, path).Get(ctx)
+}
+
+func (service *customEntityService) CreateElement(ctx context.Context, id uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomEntityID, id)
+	return NewRequestBuilder[CustomEntityElement](service.client, path).Post(ctx, element)
+}
+
+func (service *customEntityService) DeleteElement(ctx context.Context, id, elementID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomEntityIDID, id, elementID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
+}
+
+func (service *customEntityService) GetElementByID(ctx context.Context, id, elementID uuid.UUID) (*CustomEntityElement, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomEntityIDID, id, elementID)
+	return NewRequestBuilder[CustomEntityElement](service.client, path).Get(ctx)
+}
+
+func (service *customEntityService) UpdateElement(ctx context.Context, id, elementID uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomEntityIDID, id, elementID)
+	return NewRequestBuilder[CustomEntityElement](service.client, path).Put(ctx, element)
+}
+
 // NewCustomEntityService принимает [Client] и возвращает сервис для работы с пользовательскими справочниками.
 func NewCustomEntityService(client *Client) CustomEntityService {
-	e := NewEndpoint(client, "entity/customentity")
+	e := NewEndpoint(client, EndpointCustomEntity)
 	return &customEntityService{
 		Endpoint:       e,
 		endpointCreate: endpointCreate[CustomEntity]{e},
 		endpointUpdate: endpointUpdate[CustomEntity]{e},
 		endpointDelete: endpointDelete{e},
 	}
-}
-
-func (service *customEntityService) GetElementList(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s", service.uri, id)
-	return NewRequestBuilder[List[CustomEntityElement]](service.client, path).Get(ctx)
-}
-
-func (service *customEntityService) CreateElement(ctx context.Context, id uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s", service.uri, id)
-	return NewRequestBuilder[CustomEntityElement](service.client, path).Post(ctx, element)
-}
-
-func (service *customEntityService) DeleteElement(ctx context.Context, id, elementID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/%s", service.uri, id, elementID)
-	return NewRequestBuilder[any](service.client, path).Delete(ctx)
-}
-
-func (service *customEntityService) GetElementByID(ctx context.Context, id, elementID uuid.UUID) (*CustomEntityElement, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/%s", service.uri, id, elementID)
-	return NewRequestBuilder[CustomEntityElement](service.client, path).Get(ctx)
-}
-
-func (service *customEntityService) UpdateElement(ctx context.Context, id, elementID uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/%s", service.uri, id, elementID)
-	return NewRequestBuilder[CustomEntityElement](service.client, path).Put(ctx, element)
 }

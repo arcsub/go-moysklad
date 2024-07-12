@@ -799,6 +799,12 @@ type BundleService interface {
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointBundle             = EndpointEntity + string(MetaTypeBundle)
+	EndpointBundleComponents   = EndpointBundle + "/%s/components"
+	EndpointBundleComponentsID = EndpointBundleComponents + "/%s"
+)
+
 type bundleService struct {
 	Endpoint
 	endpointGetList[Bundle]
@@ -814,9 +820,34 @@ type bundleService struct {
 	endpointSyncID[Bundle]
 }
 
+func (service *bundleService) GetComponentList(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointBundleComponents, id)
+	return NewRequestBuilder[List[BundleComponent]](service.client, path).Get(ctx)
+}
+
+func (service *bundleService) CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointBundleComponents, id)
+	return NewRequestBuilder[BundleComponent](service.client, path).Post(ctx, bundleComponent)
+}
+
+func (service *bundleService) GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointBundleComponentsID, id, componentID)
+	return NewRequestBuilder[BundleComponent](service.client, path).Get(ctx)
+}
+
+func (service *bundleService) UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointBundleComponentsID, id, componentID)
+	return NewRequestBuilder[BundleComponent](service.client, path).Put(ctx, bundleComponent)
+}
+
+func (service *bundleService) DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointBundleComponentsID, id, componentID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
+}
+
 // NewBundleService принимает [Client] и возвращает сервис для работы с комплектами.
 func NewBundleService(client *Client) BundleService {
-	e := NewEndpoint(client, "entity/bundle")
+	e := NewEndpoint(client, EndpointBundle)
 	return &bundleService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Bundle]{e},
@@ -831,29 +862,4 @@ func NewBundleService(client *Client) BundleService {
 		endpointAttributes:       endpointAttributes{e},
 		endpointSyncID:           endpointSyncID[Bundle]{e},
 	}
-}
-
-func (service *bundleService) GetComponentList(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components", id)
-	return NewRequestBuilder[List[BundleComponent]](service.client, path).Get(ctx)
-}
-
-func (service *bundleService) CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components", id)
-	return NewRequestBuilder[BundleComponent](service.client, path).Post(ctx, bundleComponent)
-}
-
-func (service *bundleService) GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentID)
-	return NewRequestBuilder[BundleComponent](service.client, path).Get(ctx)
-}
-
-func (service *bundleService) UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentID)
-	return NewRequestBuilder[BundleComponent](service.client, path).Put(ctx, bundleComponent)
-}
-
-func (service *bundleService) DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("entity/bundle/%s/components/%s", id, componentID)
-	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

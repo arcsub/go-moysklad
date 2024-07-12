@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
@@ -16,6 +15,16 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-assortiment
 type Assortment Slice[AssortmentPosition]
+
+// Push добавляет элементы в конец среза.
+func (assortment *Assortment) Push(elements ...AssortmentConverter) *Assortment {
+	for _, element := range elements {
+		if element != nil {
+			*assortment = append(*assortment, element.AsAssortment())
+		}
+	}
+	return assortment
+}
 
 // MetaType возвращает код сущности.
 func (Assortment) MetaType() MetaType {
@@ -576,6 +585,11 @@ type assortmentService struct {
 	Endpoint
 }
 
+const (
+	EndpointAssortment         = EndpointEntity + string(MetaTypeAssortment)
+	EndpointAssortmentSettings = EndpointAssortment + "/settings"
+)
+
 func (service *assortmentService) Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
 	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
 }
@@ -605,16 +619,14 @@ func (service *assortmentService) DeleteMany(ctx context.Context, entities ...As
 }
 
 func (service *assortmentService) GetSettings(ctx context.Context) (*AssortmentSettings, *resty.Response, error) {
-	path := fmt.Sprintf("%s/settings", service.uri)
-	return NewRequestBuilder[AssortmentSettings](service.client, path).Get(ctx)
+	return NewRequestBuilder[AssortmentSettings](service.client, EndpointAssortmentSettings).Get(ctx)
 }
 
 func (service *assortmentService) UpdateSettings(ctx context.Context, settings *AssortmentSettings) (*AssortmentSettings, *resty.Response, error) {
-	path := fmt.Sprintf("%s/settings", service.uri)
-	return NewRequestBuilder[AssortmentSettings](service.client, path).Put(ctx, settings)
+	return NewRequestBuilder[AssortmentSettings](service.client, EndpointAssortmentSettings).Put(ctx, settings)
 }
 
 // NewAssortmentService принимает [Client] и возвращает сервис для работы с ассортиментом.
 func NewAssortmentService(client *Client) AssortmentService {
-	return &assortmentService{NewEndpoint(client, "entity/assortment")}
+	return &assortmentService{NewEndpoint(client, EndpointAssortment)}
 }

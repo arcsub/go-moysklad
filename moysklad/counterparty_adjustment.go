@@ -360,7 +360,11 @@ type CounterPartyAdjustmentService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointCounterpartyAdjustment = EndpointEntity + string(MetaTypeCounterpartyAdjustment)
+)
+
 // NewCounterPartyAdjustmentService принимает [Client] и возвращает сервис для работы с корректировками баланса контрагента.
 func NewCounterPartyAdjustmentService(client *Client) CounterPartyAdjustmentService {
-	return newMainService[CounterpartyAdjustment, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/counterpartyadjustment"))
+	return newMainService[CounterpartyAdjustment, any, MetaAttributesStatesSharedWrapper, any](client, EndpointCounterpartyAdjustment)
 }

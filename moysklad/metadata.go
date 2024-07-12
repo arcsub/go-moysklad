@@ -132,6 +132,10 @@ type MetadataService interface {
 	Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error)
 }
 
+const (
+	EndpointMetadata = EndpointEntity + string(MetaTypeMetadata)
+)
+
 type metadataService struct {
 	Endpoint
 }
@@ -142,5 +146,5 @@ func (service *metadataService) Get(ctx context.Context, params ...*Params) (*Me
 
 // NewMetadataService принимает [Client] и возвращает сервис для работы с глобальными метаданными.
 func NewMetadataService(client *Client) MetadataService {
-	return &metadataService{NewEndpoint(client, "entity/metadata")}
+	return &metadataService{NewEndpoint(client, EndpointMetadata)}
 }

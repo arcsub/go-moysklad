@@ -459,19 +459,6 @@ const (
 	PrintFormatOpenInBrowser PrintFormat = "individual" // Открыть в браузере
 )
 
-type userSettingsService struct {
-	Endpoint
-}
-
-func (service *userSettingsService) Get(ctx context.Context) (*UserSettings, *resty.Response, error) {
-	return NewRequestBuilder[UserSettings](service.client, service.uri).Get(ctx)
-}
-
-func (service *userSettingsService) Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s", service.uri, id)
-	return NewRequestBuilder[UserSettings](service.client, path).Put(ctx, userSettings)
-}
-
 // UserSettingsService описывает методы сервиса для работы с настройками пользователей.
 type UserSettingsService interface {
 	// Get выполняет запрос на получение настроек пользователя.
@@ -485,7 +472,24 @@ type UserSettingsService interface {
 	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error)
 }
 
+const (
+	EndpointUserSettings = EndpointContext + string(MetaTypeUserSettings)
+)
+
+type userSettingsService struct {
+	Endpoint
+}
+
+func (service *userSettingsService) Get(ctx context.Context) (*UserSettings, *resty.Response, error) {
+	return NewRequestBuilder[UserSettings](service.client, service.uri).Get(ctx)
+}
+
+func (service *userSettingsService) Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s", service.uri, id)
+	return NewRequestBuilder[UserSettings](service.client, path).Put(ctx, userSettings)
+}
+
 // NewContextUserSettingsService принимает [Client] и возвращает сервис для работы с настройками пользователей.
 func NewContextUserSettingsService(client *Client) UserSettingsService {
-	return &userSettingsService{NewEndpoint(client, "context/usersettings")}
+	return &userSettingsService{NewEndpoint(client, EndpointUserSettings)}
 }

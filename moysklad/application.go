@@ -69,7 +69,11 @@ type ApplicationService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Application, *resty.Response, error)
 }
 
+const (
+	EndpointApplication = EndpointEntity + string(MetaTypeApplication)
+)
+
 // NewApplicationService принимает [Client] и возвращает сервис для работы с серверными приложениями.
 func NewApplicationService(client *Client) ApplicationService {
-	return newMainService[Application, any, any, any](NewEndpoint(client, "entity/application"))
+	return newMainService[Application, any, any, any](client, EndpointApplication)
 }

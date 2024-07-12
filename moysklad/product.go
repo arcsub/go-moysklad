@@ -912,7 +912,11 @@ type ProductService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointProduct = EndpointEntity + string(MetaTypeProduct)
+)
+
 // NewProductService принимает [Client] и возвращает сервис для работы с товарами.
 func NewProductService(client *Client) ProductService {
-	return newMainService[Product, any, MetaAttributesSharedWrapper, any](NewEndpoint(client, "entity/product"))
+	return newMainService[Product, any, MetaAttributesSharedWrapper, any](client, EndpointProduct)
 }

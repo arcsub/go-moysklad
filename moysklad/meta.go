@@ -340,7 +340,7 @@ const (
 	MetaTypePurchaseReturnPosition              MetaType = "purchasereturnposition"
 	MetaTypeReceiptTemplate                     MetaType = "receipttemplate"
 	MetaTypeRegion                              MetaType = "region"
-	MetaTypeRetailDemand                        MetaType = "demand"
+	MetaTypeRetailDemand                        MetaType = "retaildemand"
 	MetaTypeRetailDemandPosition                MetaType = "demandposition"
 	MetaTypeRetailDrawerCashIn                  MetaType = "retaildrawercashin"
 	MetaTypeRetailDrawerCashOut                 MetaType = "retaildrawercashout"

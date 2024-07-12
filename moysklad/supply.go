@@ -1050,7 +1050,11 @@ type SupplyService interface {
 	Evaluate(ctx context.Context, entity *Supply, evaluate ...Evaluate) (*Supply, *resty.Response, error)
 }
 
+const (
+	EndpointSupply = EndpointEntity + string(MetaTypeSupply)
+)
+
 // NewSupplyService принимает [Client] и возвращает сервис для работы с приёмками.
 func NewSupplyService(client *Client) SupplyService {
-	return newMainService[Supply, SupplyPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/supply"))
+	return newMainService[Supply, SupplyPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointSupply)
 }

@@ -65,21 +65,26 @@ type ReportSalesService interface {
 	GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[SalesPlotSeries], *resty.Response, error)
 }
 
+const (
+	EndpointReportSales           = EndpointReport + "sales"
+	EndpointReportSalesPlotSeries = EndpointReportSales + "/plotseries"
+)
+
 type reportSalesService struct {
 	Endpoint
 }
 
-// NewReportSalesService принимает [Client] и возвращает сервис для работы с отчётом Показатели продаж.
-func NewReportSalesService(client *Client) ReportSalesService {
-	return &reportSalesService{NewEndpoint(client, "report/sales")}
-}
-
 func (service *reportSalesService) GetPlotSeries(ctx context.Context, params ...*Params) (*SalesPlotSeries, *resty.Response, error) {
-	return NewRequestBuilder[SalesPlotSeries](service.client, "report/sales/plotseries").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[SalesPlotSeries](service.client, EndpointReportSalesPlotSeries).SetParams(params...).Get(ctx)
 }
 
 func (service *reportSalesService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[SalesPlotSeries], *resty.Response, error) {
-	return NewRequestBuilder[SalesPlotSeries](service.client, "report/sales/plotseries").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[SalesPlotSeries](service.client, EndpointReportSalesPlotSeries).SetParams(params...).Async(ctx)
+}
+
+// NewReportSalesService принимает [Client] и возвращает сервис для работы с отчётом Показатели продаж.
+func NewReportSalesService(client *Client) ReportSalesService {
+	return &reportSalesService{NewEndpoint(client, EndpointReportSales)}
 }
 
 // ReportOrdersService описывает методы сервиса для работы с отчётом Показатели заказов.
@@ -95,19 +100,24 @@ type ReportOrdersService interface {
 	GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[OrdersPlotSeries], *resty.Response, error)
 }
 
+const (
+	EndpointReportOrders           = EndpointReport + "orders"
+	EndpointReportOrdersPlotSeries = EndpointReportOrders + "/plotseries"
+)
+
 type reportOrdersService struct {
 	Endpoint
 }
 
-// NewReportOrdersService принимает [Client] и возвращает сервис для работы с отчётом Показатели заказов.
-func NewReportOrdersService(client *Client) ReportOrdersService {
-	return &reportOrdersService{NewEndpoint(client, "report/orders")}
-}
-
 func (service *reportOrdersService) GetPlotSeries(ctx context.Context, params ...*Params) (*OrdersPlotSeries, *resty.Response, error) {
-	return NewRequestBuilder[OrdersPlotSeries](service.client, "report/orders/plotseries").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[OrdersPlotSeries](service.client, EndpointReportOrdersPlotSeries).SetParams(params...).Get(ctx)
 }
 
 func (service *reportOrdersService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[OrdersPlotSeries], *resty.Response, error) {
-	return NewRequestBuilder[OrdersPlotSeries](service.client, "report/orders/plotseries").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[OrdersPlotSeries](service.client, EndpointReportOrdersPlotSeries).SetParams(params...).Async(ctx)
+}
+
+// NewReportOrdersService принимает [Client] и возвращает сервис для работы с отчётом Показатели заказов.
+func NewReportOrdersService(client *Client) ReportOrdersService {
+	return &reportOrdersService{NewEndpoint(client, EndpointReportOrders)}
 }

@@ -209,51 +209,60 @@ type ReportProfitService interface {
 	GetBySalesChannelAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error)
 }
 
+const (
+	EndpointReportProfit               = EndpointReport + "profit"
+	EndpointReportProfitByProduct      = EndpointReportProfit + "/byproduct"
+	EndpointReportProfitByVariant      = EndpointReportProfit + "/byvariant"
+	EndpointReportProfitByEmployee     = EndpointReportProfit + "/byemployee"
+	EndpointReportProfitByCounterparty = EndpointReportProfit + "/bycounterparty"
+	EndpointReportProfitBySalesChannel = EndpointReportProfit + "/bysaleschannel"
+)
+
 type reportProfitService struct {
 	Endpoint
 }
 
-// NewReportProfitService принимает [Client] и возвращает сервис для работы с отчётом Прибыльность.
-func NewReportProfitService(client *Client) ReportProfitService {
-	return &reportProfitService{NewEndpoint(client, "report/profit")}
-}
-
 func (service *reportProfitService) GetByProduct(ctx context.Context, params ...*Params) (*List[ProfitByProduct], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByProduct]](service.client, "report/profit/byproduct").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, EndpointReportProfitByProduct).SetParams(params...).Get(ctx)
 }
 
 func (service *reportProfitService) GetByVariant(ctx context.Context, params ...*Params) (*List[ProfitByVariant], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByVariant]](service.client, "report/profit/byvariant").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, EndpointReportProfitByVariant).SetParams(params...).Get(ctx)
 }
 
 func (service *reportProfitService) GetByEmployee(ctx context.Context, params ...*Params) (*List[ProfitByEmployee], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByEmployee]](service.client, "report/profit/byemployee").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, EndpointReportProfitByEmployee).SetParams(params...).Get(ctx)
 }
 
 func (service *reportProfitService) GetByCounterparty(ctx context.Context, params ...*Params) (*List[ProfitByCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, "report/profit/bycounterparty").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, EndpointReportProfitByCounterparty).SetParams(params...).Get(ctx)
 }
 
 func (service *reportProfitService) GetBySalesChannel(ctx context.Context, params ...*Params) (*List[ProfitBySalesChannel], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, "report/profit/bysaleschannel").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, EndpointReportProfitBySalesChannel).SetParams(params...).Get(ctx)
 }
 
 func (service *reportProfitService) GetByProductAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByProduct]](service.client, "report/profit/byproduct").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, EndpointReportProfitByProduct).SetParams(params...).Async(ctx)
 }
 
 func (service *reportProfitService) GetByVariantAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByVariant]](service.client, "report/profit/byvariant").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, EndpointReportProfitByVariant).SetParams(params...).Async(ctx)
 }
 
 func (service *reportProfitService) GetByEmployeeAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByEmployee]](service.client, "report/profit/byemployee").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, EndpointReportProfitByEmployee).SetParams(params...).Async(ctx)
 }
 
 func (service *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, "report/profit/bycounterparty").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, EndpointReportProfitByCounterparty).SetParams(params...).Async(ctx)
 }
 
 func (service *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, "report/profit/bysaleschannel").SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, EndpointReportProfitBySalesChannel).SetParams(params...).Async(ctx)
+}
+
+// NewReportProfitService принимает [Client] и возвращает сервис для работы с отчётом Прибыльность.
+func NewReportProfitService(client *Client) ReportProfitService {
+	return &reportProfitService{NewEndpoint(client, EndpointReportProfit)}
 }

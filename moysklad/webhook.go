@@ -246,7 +246,11 @@ type WebhookService interface {
 	Update(ctx context.Context, id uuid.UUID, webhook *Webhook, params ...*Params) (*Webhook, *resty.Response, error)
 }
 
+const (
+	EndpointWebhook = EndpointEntity + string(MetaTypeWebhook)
+)
+
 // NewWebhookService принимает [Client] и возвращает сервис для работы с вебхуками.
 func NewWebhookService(client *Client) WebhookService {
-	return newMainService[Webhook, any, any, any](NewEndpoint(client, "entity/webhook"))
+	return newMainService[Webhook, any, any, any](client, EndpointWebhook)
 }

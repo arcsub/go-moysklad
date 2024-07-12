@@ -85,7 +85,11 @@ type ThingService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Thing, *resty.Response, error)
 }
 
+const (
+	EndpointThing = EndpointEntity + string(MetaTypeThing)
+)
+
 // NewThingService принимает [Client] и возвращает сервис для работы с серийными номерами.
 func NewThingService(client *Client) ThingService {
-	return newMainService[Thing, any, any, any](NewEndpoint(client, "entity/thing"))
+	return newMainService[Thing, any, any, any](client, EndpointThing)
 }

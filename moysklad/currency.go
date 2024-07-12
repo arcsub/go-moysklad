@@ -357,7 +357,11 @@ type CurrencyService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
+const (
+	EndpointCurrency = EndpointEntity + string(MetaTypeCurrency)
+)
+
 // NewCurrencyService принимает [Client] и возвращает сервис для работы с валютами.
 func NewCurrencyService(client *Client) CurrencyService {
-	return newMainService[Currency, any, any, any](NewEndpoint(client, "entity/currency"))
+	return newMainService[Currency, any, any, any](client, EndpointCurrency)
 }

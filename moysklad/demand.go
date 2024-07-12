@@ -1186,7 +1186,11 @@ type DemandService interface {
 	Evaluate(ctx context.Context, entity *Demand, evaluate ...Evaluate) (*Demand, *resty.Response, error)
 }
 
+const (
+	EndpointDemand = EndpointEntity + string(MetaTypeDemand)
+)
+
 // NewDemandService принимает [Client] и возвращает сервис для работы с отгрузками.
 func NewDemandService(client *Client) DemandService {
-	return newMainService[Demand, DemandPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/demand"))
+	return newMainService[Demand, DemandPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointDemand)
 }

@@ -466,7 +466,11 @@ type PrepaymentReturnService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointPrepaymentReturn = EndpointEntity + string(MetaTypePrepaymentReturn)
+)
+
 // NewPrepaymentReturnService принимает [Client] и возвращает сервис для работы с возвратами предоплат.
 func NewPrepaymentReturnService(client *Client) PrepaymentReturnService {
-	return newMainService[PrepaymentReturn, PrepaymentReturnPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/prepaymentreturn"))
+	return newMainService[PrepaymentReturn, PrepaymentReturnPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointPrepaymentReturn)
 }

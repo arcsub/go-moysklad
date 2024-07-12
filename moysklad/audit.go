@@ -267,13 +267,14 @@ type AuditService interface {
 	GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error)
 }
 
+const (
+	EndpointAudit        = string(MetaTypeAudit)
+	EndpointAuditEvents  = EndpointAudit + "/%s/events"
+	EndpointAuditFilters = EndpointAudit + "/metadata/filters"
+)
+
 type auditService struct {
 	Endpoint
-}
-
-// NewAuditService принимает [Client] и возвращает сервис для работы с аудитом.
-func NewAuditService(client *Client) AuditService {
-	return &auditService{NewEndpoint(client, "audit")}
 }
 
 func (service *auditService) GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error) {
@@ -281,10 +282,15 @@ func (service *auditService) GetContexts(ctx context.Context, params ...*Params)
 }
 
 func (service *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
-	path := fmt.Sprintf("audit/%s/events", id)
+	path := fmt.Sprintf(EndpointAuditEvents, id)
 	return NewRequestBuilder[List[AuditEvent]](service.client, path).Get(ctx)
 }
 
 func (service *auditService) GetFilters(ctx context.Context) (*AuditFilters, *resty.Response, error) {
-	return NewRequestBuilder[AuditFilters](service.client, "audit/metadata/filters").Get(ctx)
+	return NewRequestBuilder[AuditFilters](service.client, EndpointAuditFilters).Get(ctx)
+}
+
+// NewAuditService принимает [Client] и возвращает сервис для работы с аудитом.
+func NewAuditService(client *Client) AuditService {
+	return &auditService{NewEndpoint(client, EndpointAudit)}
 }

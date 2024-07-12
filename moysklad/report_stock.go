@@ -188,46 +188,49 @@ type ReportStockService interface {
 	GetByStoreAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockByStore]], *resty.Response, error)
 }
 
+const (
+	EndpointReportStock               = EndpointReport + string(MetaTypeReportStock)
+	EndpointReportStockAll            = EndpointReportStock + "/all"
+	EndpointReportStockAllCurrent     = EndpointReportStockAll + "/current"
+	EndpointReportStockByStore        = EndpointReportStock + "/bystore"
+	EndpointReportStockByStoreCurrent = EndpointReportStockByStore + "/current"
+	EndpointReportStockByOperation    = EndpointReportStock + "/byoperation?operation.id=%s"
+)
+
 type reportStockService struct {
 	Endpoint
 }
 
-// NewReportStockService принимает [Client] и возвращает сервис для работы с отчётом Остатки.
-func NewReportStockService(client *Client) ReportStockService {
-	return &reportStockService{NewEndpoint(client, "report/stock")}
-}
-
 func (service *reportStockService) GetAll(ctx context.Context, params ...*Params) (*List[StockAll], *resty.Response, error) {
-	path := fmt.Sprintf("%s/all", service.uri)
-	return NewRequestBuilder[List[StockAll]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[StockAll]](service.client, EndpointReportStockAll).SetParams(params...).Get(ctx)
 }
 
 func (service *reportStockService) GetByStore(ctx context.Context, params ...*Params) (*List[StockByStore], *resty.Response, error) {
-	path := fmt.Sprintf("%s/bystore", service.uri)
-	return NewRequestBuilder[List[StockByStore]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[StockByStore]](service.client, EndpointReportStockByStore).SetParams(params...).Get(ctx)
 }
 
 func (service *reportStockService) GetCurrentAll(ctx context.Context, params ...*Params) (*Slice[StockCurrentAll], *resty.Response, error) {
-	path := fmt.Sprintf("%s/all/current", service.uri)
-	return NewRequestBuilder[Slice[StockCurrentAll]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[Slice[StockCurrentAll]](service.client, EndpointReportStockAllCurrent).SetParams(params...).Get(ctx)
 }
 
 func (service *reportStockService) GetCurrentByStore(ctx context.Context, params ...*Params) (*Slice[StockCurrentByStore], *resty.Response, error) {
-	path := fmt.Sprintf("%s/bystore/current", service.uri)
-	return NewRequestBuilder[Slice[StockCurrentByStore]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[Slice[StockCurrentByStore]](service.client, EndpointReportStockByStoreCurrent).SetParams(params...).Get(ctx)
 }
 
 func (service *reportStockService) GetByOperationID(ctx context.Context, operationID uuid.UUID, params ...*Params) (*List[StockByOperation], *resty.Response, error) {
-	path := fmt.Sprintf("%s/byoperation?operation.id=%s", service.uri, operationID)
+	path := fmt.Sprintf(EndpointReportStockByOperation, operationID)
 	return NewRequestBuilder[List[StockByOperation]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 func (service *reportStockService) GetAllAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockAll]], *resty.Response, error) {
-	path := fmt.Sprintf("%s/all", service.uri)
-	return NewRequestBuilder[List[StockAll]](service.client, path).SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[StockAll]](service.client, EndpointReportStockAll).SetParams(params...).Async(ctx)
 }
 
 func (service *reportStockService) GetByStoreAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockByStore]], *resty.Response, error) {
-	path := fmt.Sprintf("%s/bystore", service.uri)
-	return NewRequestBuilder[List[StockByStore]](service.client, path).SetParams(params...).Async(ctx)
+	return NewRequestBuilder[List[StockByStore]](service.client, EndpointReportStockByStore).SetParams(params...).Async(ctx)
+}
+
+// NewReportStockService принимает [Client] и возвращает сервис для работы с отчётом Остатки.
+func NewReportStockService(client *Client) ReportStockService {
+	return &reportStockService{NewEndpoint(client, EndpointReportStock)}
 }

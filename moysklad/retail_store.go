@@ -1381,6 +1381,12 @@ type RetailStoreService interface {
 	GetCashierByID(ctx context.Context, id, cashierID uuid.UUID, params ...*Params) (*Cashier, *resty.Response, error)
 }
 
+const (
+	EndpointRetailStore           = EndpointEntity + string(MetaTypeRetailStore)
+	EndpointRetailStoreCashiers   = EndpointRetailStore + "/%s/cashiers"
+	EndpointRetailStoreCashiersID = EndpointRetailStoreCashiers + "/%s"
+)
+
 type retailStoreService struct {
 	Endpoint
 	endpointGetList[RetailStore]
@@ -1394,18 +1400,18 @@ type retailStoreService struct {
 }
 
 func (service *retailStoreService) GetCashiers(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[Cashier], *resty.Response, error) {
-	path := fmt.Sprintf("entity/retailstore/%s/cashiers", id)
+	path := fmt.Sprintf(EndpointRetailStoreCashiers, id)
 	return NewRequestBuilder[MetaArray[Cashier]](service.client, path).SetParams(params...).Get(ctx)
 }
 
 func (service *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID uuid.UUID, params ...*Params) (*Cashier, *resty.Response, error) {
-	path := fmt.Sprintf("entity/retailstore/%s/cashiers/%s", id, cashierID)
+	path := fmt.Sprintf(EndpointRetailStoreCashiersID, id, cashierID)
 	return NewRequestBuilder[Cashier](service.client, path).SetParams(params...).Get(ctx)
 }
 
 // NewRetailStoreService принимает [Client] и возвращает сервис для работы с точками продаж.
 func NewRetailStoreService(client *Client) RetailStoreService {
-	e := NewEndpoint(client, "entity/retailstore")
+	e := NewEndpoint(client, EndpointRetailStore)
 	return &retailStoreService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[RetailStore]{e},

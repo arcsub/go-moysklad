@@ -73,35 +73,42 @@ type ReportDashboardService interface {
 	GetByMonthAsync(ctx context.Context) (AsyncResultService[Dashboard], *resty.Response, error)
 }
 
+const (
+	EndpointReportDashboard      = EndpointReport + string(MetaTypeReportDashboard)
+	EndpointReportDashboardDay   = EndpointReportDashboard + "/day"
+	EndpointReportDashboardWeek  = EndpointReportDashboard + "/week"
+	EndpointReportDashboardMonth = EndpointReportDashboard + "/month"
+)
+
 type reportDashboardService struct {
 	Endpoint
 }
 
-// NewReportDashboardService принимает [Client] и возвращает сервис для работы с отчётом показатели.
-func NewReportDashboardService(client *Client) ReportDashboardService {
-	return &reportDashboardService{NewEndpoint(client, "report/dashboard")}
-}
-
 func (service *reportDashboardService) GetByDay(ctx context.Context) (*Dashboard, *resty.Response, error) {
-	return NewRequestBuilder[Dashboard](service.client, "report/dashboard/day").Get(ctx)
+	return NewRequestBuilder[Dashboard](service.client, EndpointReportDashboardDay).Get(ctx)
 }
 
 func (service *reportDashboardService) GetByWeek(ctx context.Context) (*Dashboard, *resty.Response, error) {
-	return NewRequestBuilder[Dashboard](service.client, "report/dashboard/week").Get(ctx)
+	return NewRequestBuilder[Dashboard](service.client, EndpointReportDashboardWeek).Get(ctx)
 }
 
 func (service *reportDashboardService) GetByMonth(ctx context.Context) (*Dashboard, *resty.Response, error) {
-	return NewRequestBuilder[Dashboard](service.client, "report/dashboard/month").Get(ctx)
+	return NewRequestBuilder[Dashboard](service.client, EndpointReportDashboardMonth).Get(ctx)
 }
 
 func (service *reportDashboardService) GetByDayAsync(ctx context.Context) (AsyncResultService[Dashboard], *resty.Response, error) {
-	return NewRequestBuilder[Dashboard](service.client, "report/dashboard/day").Async(ctx)
+	return NewRequestBuilder[Dashboard](service.client, EndpointReportDashboardDay).Async(ctx)
 }
 
 func (service *reportDashboardService) GetByWeekAsync(ctx context.Context) (AsyncResultService[Dashboard], *resty.Response, error) {
-	return NewRequestBuilder[Dashboard](service.client, "report/dashboard/week").Async(ctx)
+	return NewRequestBuilder[Dashboard](service.client, EndpointReportDashboardWeek).Async(ctx)
 }
 
 func (service *reportDashboardService) GetByMonthAsync(ctx context.Context) (AsyncResultService[Dashboard], *resty.Response, error) {
-	return NewRequestBuilder[Dashboard](service.client, "report/dashboard/month").Async(ctx)
+	return NewRequestBuilder[Dashboard](service.client, EndpointReportDashboardMonth).Async(ctx)
+}
+
+// NewReportDashboardService принимает [Client] и возвращает сервис для работы с отчётом показатели.
+func NewReportDashboardService(client *Client) ReportDashboardService {
+	return &reportDashboardService{NewEndpoint(client, EndpointReportDashboard)}
 }

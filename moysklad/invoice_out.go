@@ -900,7 +900,11 @@ type InvoiceOutService interface {
 	Evaluate(ctx context.Context, entity *InvoiceOut, evaluate ...Evaluate) (*InvoiceOut, *resty.Response, error)
 }
 
+const (
+	EndpointInvoiceOut = EndpointEntity + string(MetaTypeInvoiceOut)
+)
+
 // NewInvoiceOutService принимает [Client] и возвращает сервис для работы со счетами покупателей.
 func NewInvoiceOutService(client *Client) InvoiceOutService {
-	return newMainService[InvoiceOut, InvoiceOutPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/invoiceout"))
+	return newMainService[InvoiceOut, InvoiceOutPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointInvoiceOut)
 }

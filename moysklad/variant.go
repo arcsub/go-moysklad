@@ -542,6 +542,12 @@ type VariantService interface {
 	DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointVariant                  = EndpointEntity + string(MetaTypeVariant)
+	EndpointVariantCharacteristics   = EndpointVariant + "/metadata/characteristics"
+	EndpointVariantCharacteristicsID = EndpointVariantCharacteristics + "/%s"
+)
+
 type variantService struct {
 	Endpoint
 	endpointGetList[Variant]
@@ -556,9 +562,32 @@ type variantService struct {
 	endpointNamedFilter
 }
 
+func (service *variantService) CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
+	return NewRequestBuilder[Characteristic](service.client, EndpointVariantCharacteristics).Post(ctx, characteristic)
+}
+
+func (service *variantService) CreateCharacteristicMany(ctx context.Context, characteristics ...*Characteristic) (*Slice[Characteristic], *resty.Response, error) {
+	return NewRequestBuilder[Slice[Characteristic]](service.client, EndpointVariantCharacteristics).Post(ctx, characteristics)
+}
+
+func (service *variantService) GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointVariantCharacteristicsID, id)
+	return NewRequestBuilder[Characteristic](service.client, path).Get(ctx)
+}
+
+func (service *variantService) UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointVariantCharacteristicsID, id)
+	return NewRequestBuilder[Characteristic](service.client, path).Put(ctx, characteristic)
+}
+
+func (service *variantService) DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointVariantCharacteristicsID, id)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
+}
+
 // NewVariantService принимает [Client] и возвращает сервис для работы с модификациями.
 func NewVariantService(client *Client) VariantService {
-	e := NewEndpoint(client, "entity/variant")
+	e := NewEndpoint(client, EndpointVariant)
 	return &variantService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Variant]{e},
@@ -572,29 +601,4 @@ func NewVariantService(client *Client) VariantService {
 		endpointImages:           endpointImages{e},
 		endpointNamedFilter:      endpointNamedFilter{e},
 	}
-}
-
-func (service *variantService) CreateCharacteristic(ctx context.Context, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics", service.uri)
-	return NewRequestBuilder[Characteristic](service.client, path).Post(ctx, characteristic)
-}
-
-func (service *variantService) CreateCharacteristicMany(ctx context.Context, characteristics ...*Characteristic) (*Slice[Characteristic], *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics", service.uri)
-	return NewRequestBuilder[Slice[Characteristic]](service.client, path).Post(ctx, characteristics)
-}
-
-func (service *variantService) GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics/%s", service.uri, id)
-	return NewRequestBuilder[Characteristic](service.client, path).Get(ctx)
-}
-
-func (service *variantService) UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics/%s", service.uri, id)
-	return NewRequestBuilder[Characteristic](service.client, path).Put(ctx, characteristic)
-}
-
-func (service *variantService) DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/metadata/characteristics/%s", service.uri, id)
-	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

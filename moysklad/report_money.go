@@ -77,21 +77,23 @@ type ReportMoneyService interface {
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
 	GetMoneyReportAsync(ctx context.Context) (AsyncResultService[List[Money]], *resty.Response, error)
 }
+
+const (
+	EndpointReportMoney           = EndpointReport + string(MetaTypeReportMoney)
+	EndpointReportMoneyPlotSeries = EndpointReportMoney + "/plotseries"
+	EndpointReportMoneyByAccount  = EndpointReportMoney + "/byaccount"
+)
+
 type reportMoneyService struct {
 	Endpoint
 }
 
-// NewReportMoneyService принимает [Client] и возвращает сервис для работы с отчётом Деньги.
-func NewReportMoneyService(client *Client) ReportMoneyService {
-	return &reportMoneyService{NewEndpoint(client, "report/money")}
-}
-
 func (service *reportMoneyService) GetPlotSeries(ctx context.Context, params ...*Params) (*MoneyPlotSeries, *resty.Response, error) {
-	return NewRequestBuilder[MoneyPlotSeries](service.client, "report/money/plotseries").SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MoneyPlotSeries](service.client, EndpointReportMoneyPlotSeries).SetParams(params...).Get(ctx)
 }
 
 func (service *reportMoneyService) GetMoney(ctx context.Context) (*List[Money], *resty.Response, error) {
-	return NewRequestBuilder[List[Money]](service.client, "report/money/byaccount").Get(ctx)
+	return NewRequestBuilder[List[Money]](service.client, EndpointReportMoneyByAccount).Get(ctx)
 }
 
 func (service *reportMoneyService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error) {
@@ -101,9 +103,14 @@ func (service *reportMoneyService) GetPlotSeriesAsync(ctx context.Context, param
 	} else {
 		param = NewParams()
 	}
-	return NewRequestBuilder[MoneyPlotSeries](service.client, "report/money/plotseries").SetParams(param.WithAsync()).Async(ctx)
+	return NewRequestBuilder[MoneyPlotSeries](service.client, EndpointReportMoneyPlotSeries).SetParams(param.WithAsync()).Async(ctx)
 }
 
 func (service *reportMoneyService) GetMoneyReportAsync(ctx context.Context) (AsyncResultService[List[Money]], *resty.Response, error) {
-	return NewRequestBuilder[List[Money]](service.client, "report/money/byaccount").SetParams(NewParams().WithAsync()).Async(ctx)
+	return NewRequestBuilder[List[Money]](service.client, EndpointReportMoneyByAccount).SetParams(NewParams().WithAsync()).Async(ctx)
+}
+
+// NewReportMoneyService принимает [Client] и возвращает сервис для работы с отчётом Деньги.
+func NewReportMoneyService(client *Client) ReportMoneyService {
+	return &reportMoneyService{NewEndpoint(client, EndpointReportMoney)}
 }

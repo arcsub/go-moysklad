@@ -121,7 +121,11 @@ type RegionService interface {
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Region, *resty.Response, error)
 }
 
+const (
+	EndpointRegion = EndpointEntity + string(MetaTypeRegion)
+)
+
 // NewRegionService принимает [Client] и возвращает сервис для работы с регионами.
 func NewRegionService(client *Client) RegionService {
-	return newMainService[Region, any, any, any](NewEndpoint(client, "entity/region"))
+	return newMainService[Region, any, any, any](client, EndpointRegion)
 }

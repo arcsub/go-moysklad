@@ -287,7 +287,11 @@ type ProjectService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
+const (
+	EndpointProject = EndpointEntity + string(MetaTypeProject)
+)
+
 // NewProjectService принимает [Client] и возвращает сервис для работы с проектами.
 func NewProjectService(client *Client) ProjectService {
-	return newMainService[Project, any, MetaAttributesSharedWrapper, any](NewEndpoint(client, "entity/project"))
+	return newMainService[Project, any, MetaAttributesSharedWrapper, any](client, EndpointProject)
 }

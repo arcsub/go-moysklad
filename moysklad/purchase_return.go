@@ -947,7 +947,11 @@ type PurchaseReturnService interface {
 	Evaluate(ctx context.Context, entity *PurchaseReturn, evaluate ...Evaluate) (*PurchaseReturn, *resty.Response, error)
 }
 
+const (
+	EndpointPurchaseReturn = EndpointEntity + string(MetaTypePurchaseReturn)
+)
+
 // NewPurchaseReturnService принимает [Client] и возвращает сервис для работы с возвратами поставщикам.
 func NewPurchaseReturnService(client *Client) PurchaseReturnService {
-	return newMainService[PurchaseReturn, PurchaseReturnPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/purchasereturn"))
+	return newMainService[PurchaseReturn, PurchaseReturnPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointPurchaseReturn)
 }

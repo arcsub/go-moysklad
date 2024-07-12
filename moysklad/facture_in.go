@@ -580,7 +580,11 @@ type FactureInService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointFactureIn = EndpointEntity + string(MetaTypeFactureIn)
+)
+
 // NewFactureInService принимает [Client] и возвращает сервис для работы со счетами-фактурами полученными.
 func NewFactureInService(client *Client) FactureInService {
-	return newMainService[FactureIn, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/facturein"))
+	return newMainService[FactureIn, any, MetaAttributesStatesSharedWrapper, any](client, EndpointFactureIn)
 }

@@ -622,7 +622,11 @@ type FactureOutService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointFactureOut = EndpointEntity + string(MetaTypeFactureOut)
+)
+
 // NewFactureOutService принимает [Client] и возвращает сервис для работы со счетами-фактурами выданными.
 func NewFactureOutService(client *Client) FactureOutService {
-	return newMainService[FactureOut, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/factureout"))
+	return newMainService[FactureOut, any, MetaAttributesStatesSharedWrapper, any](client, EndpointFactureOut)
 }

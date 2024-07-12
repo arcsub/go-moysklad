@@ -528,7 +528,11 @@ type ServiceService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointService = EndpointEntity + string(MetaTypeService)
+)
+
 // NewServiceService принимает [Client] и возвращает сервис для работы с услугами.
 func NewServiceService(client *Client) ServiceService {
-	return newMainService[Service, any, any, any](NewEndpoint(client, "entity/service"))
+	return newMainService[Service, any, any, any](client, EndpointService)
 }

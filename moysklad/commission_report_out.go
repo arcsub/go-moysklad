@@ -889,7 +889,11 @@ type CommissionReportOutService interface {
 	Evaluate(ctx context.Context, entity *CommissionReportOut, evaluate ...Evaluate) (*CommissionReportOut, *resty.Response, error)
 }
 
+const (
+	EndpointCommissionReportOut = EndpointEntity + string(MetaTypeCommissionReportOut)
+)
+
 // NewCommissionReportOutService принимает [Client] и возвращает сервис для работы с выданными отчётами комиссионера.
 func NewCommissionReportOutService(client *Client) CommissionReportOutService {
-	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/commissionreportout"))
+	return newMainService[CommissionReportOut, CommissionReportOutPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointCommissionReportOut)
 }

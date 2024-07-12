@@ -213,6 +213,8 @@ func (bonusProgram *BonusProgram) SetWelcomeBonusesModeFirstPurchase() *BonusPro
 }
 
 // SetAgentTags устанавливает Теги контрагентов, к которым применяется бонусная программа.
+//
+// Принимает множество string.
 func (bonusProgram *BonusProgram) SetAgentTags(agentTags ...string) *BonusProgram {
 	bonusProgram.AgentTags = NewSliceFrom(agentTags)
 	return bonusProgram
@@ -300,7 +302,11 @@ type BonusProgramService interface {
 	DeleteMany(ctx context.Context, entities ...*BonusProgram) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointBonusProgram = EndpointEntity + string(MetaTypeBonusProgram)
+)
+
 // NewBonusProgramService принимает [Client] и возвращает сервис для работы с бонусными программами.
 func NewBonusProgramService(client *Client) BonusProgramService {
-	return newMainService[BonusProgram, any, any, any](NewEndpoint(client, "entity/bonusprogram"))
+	return newMainService[BonusProgram, any, any, any](client, EndpointBonusProgram)
 }

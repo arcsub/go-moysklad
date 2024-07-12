@@ -1095,9 +1095,25 @@ type CustomerOrderService interface {
 	Evaluate(ctx context.Context, entity *CustomerOrder, evaluate ...Evaluate) (*CustomerOrder, *resty.Response, error)
 }
 
+const (
+	EndpointCustomerOrder        = EndpointEntity + string(MetaTypeCustomerOrder)
+	EndpointCustomerOrderNotes   = EndpointCustomerOrder + "/%s/notes"
+	EndpointCustomerOrderNotesID = EndpointCustomerOrderNotes + "/%s"
+)
+
+func (service *customerOrderService) GetNoteList(ctx context.Context, id uuid.UUID) (*List[EventNote], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomerOrderNotes, id)
+	return NewRequestBuilder[List[EventNote]](service.client, path).Get(ctx)
+}
+
+func (service *customerOrderService) GetNoteByID(ctx context.Context, id uuid.UUID, noteID uuid.UUID) (*EventNote, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomerOrderNotesID, id, noteID)
+	return NewRequestBuilder[EventNote](service.client, path).Get(ctx)
+}
+
 // NewCustomerOrderService принимает [Client] и возвращает сервис для работы с заказами покупателя.
 func NewCustomerOrderService(client *Client) CustomerOrderService {
-	e := NewEndpoint(client, "entity/customerorder")
+	e := NewEndpoint(client, EndpointCustomerOrder)
 	return &customerOrderService{
 		endpointGetList:          endpointGetList[CustomerOrder]{e},
 		endpointCreate:           endpointCreate[CustomerOrder]{e},
@@ -1115,14 +1131,4 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointTemplate:         endpointTemplate[CustomerOrder]{e},
 		endpointEvaluate:         endpointEvaluate[CustomerOrder]{e},
 	}
-}
-
-func (service *customerOrderService) GetNoteList(ctx context.Context, id uuid.UUID) (*List[EventNote], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", service.uri, id)
-	return NewRequestBuilder[List[EventNote]](service.client, path).Get(ctx)
-}
-
-func (service *customerOrderService) GetNoteByID(ctx context.Context, id uuid.UUID, noteID uuid.UUID) (*EventNote, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
-	return NewRequestBuilder[EventNote](service.client, path).Get(ctx)
 }

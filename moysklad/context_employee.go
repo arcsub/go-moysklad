@@ -145,15 +145,19 @@ type ContextEmployeeService interface {
 	Get(ctx context.Context) (*ContextEmployee, *resty.Response, error)
 }
 
+const (
+	EndpointContextEmployee = EndpointContext + string(MetaTypeEmployee)
+)
+
 type contextEmployeeService struct {
 	Endpoint
 }
 
-// NewContextEmployeeService принимает [Client] и возвращает сервис для работы с контекстом сотрудника.
-func NewContextEmployeeService(client *Client) ContextEmployeeService {
-	return &contextEmployeeService{NewEndpoint(client, "context/employee")}
-}
-
 func (service *contextEmployeeService) Get(ctx context.Context) (*ContextEmployee, *resty.Response, error) {
 	return NewRequestBuilder[ContextEmployee](service.client, service.uri).Get(ctx)
+}
+
+// NewContextEmployeeService принимает [Client] и возвращает сервис для работы с контекстом сотрудника.
+func NewContextEmployeeService(client *Client) ContextEmployeeService {
+	return &contextEmployeeService{NewEndpoint(client, EndpointContextEmployee)}
 }

@@ -919,7 +919,11 @@ type InvoiceInService interface {
 	Evaluate(ctx context.Context, entity *InvoiceIn, evaluate ...Evaluate) (*InvoiceIn, *resty.Response, error)
 }
 
+const (
+	EndpointInvoiceIn = EndpointEntity + string(MetaTypeInvoiceIn)
+)
+
 // NewInvoiceInService принимает [Client] и возвращает сервис для работы со счетами поставщиков.
 func NewInvoiceInService(client *Client) InvoiceInService {
-	return newMainService[InvoiceIn, InvoiceInPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/invoicein"))
+	return newMainService[InvoiceIn, InvoiceInPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointInvoiceIn)
 }

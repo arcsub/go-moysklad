@@ -175,7 +175,11 @@ type ExpenseItemService interface {
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointExpenseItem = EndpointEntity + string(MetaTypeExpenseItem)
+)
+
 // NewExpenseItemService принимает [Client] и возвращает сервис для работы со статьями расходов.
 func NewExpenseItemService(client *Client) ExpenseItemService {
-	return newMainService[ExpenseItem, any, any, any](NewEndpoint(client, "entity/expenseitem"))
+	return newMainService[ExpenseItem, any, any, any](client, EndpointExpenseItem)
 }

@@ -75,17 +75,12 @@ type asyncService struct {
 	Endpoint
 }
 
-// NewAsyncService принимает [Client] и возвращает сервис для работы с асинхронными задачами.
-func NewAsyncService(client *Client) AsyncService {
-	return &asyncService{NewEndpoint(client, "async")}
-}
-
 func (service *asyncService) GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error) {
 	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
 func (service *asyncService) GetStatusByID(ctx context.Context, id uuid.UUID) (*Async, *resty.Response, error) {
-	path := fmt.Sprintf("async/%s", id)
+	path := fmt.Sprintf(EndpointAsyncID, id)
 	return NewRequestBuilder[Async](service.client, path).Get(ctx)
 }
 
@@ -115,6 +110,12 @@ type asyncResultService[T any] struct {
 	statusURL string  // URL статуса Асинхронной задачи.
 	resultURL string  // URL результата выполнения Асинхронной задачи.
 }
+
+const (
+	EndpointAsync       = string(MetaTypeAsync)
+	EndpointAsyncID     = EndpointAsync + "/%s"
+	EndpointAsyncCancel = "%s/cancel"
+)
 
 // NewAsyncResultService принимает [Client] и возвращает сервис для работы с асинхронной задачей.
 func NewAsyncResultService[T any](client *Client, resp *resty.Response) AsyncResultService[T] {
@@ -150,10 +151,15 @@ func (service *asyncResultService[T]) Result(ctx context.Context) (*T, *resty.Re
 }
 
 func (service *asyncResultService[T]) Cancel(ctx context.Context) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/cancel", service.StatusURL())
+	path := fmt.Sprintf(EndpointAsyncCancel, service.StatusURL())
 	_, resp, err := NewRequestBuilder[any](service.client, path).Post(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}
 	return resp.StatusCode() == http.StatusNoContent, resp, nil
+}
+
+// NewAsyncService принимает [Client] и возвращает сервис для работы с асинхронными задачами.
+func NewAsyncService(client *Client) AsyncService {
+	return &asyncService{NewEndpoint(client, EndpointAsync)}
 }

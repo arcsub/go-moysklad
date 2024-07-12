@@ -200,7 +200,7 @@ type CountryService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной страны по ID.
-	// Принимает контекст, ID страны взаиморасчётов и опционально объект параметров запроса Params.
+	// Принимает контекст, ID страны и опционально объект параметров запроса Params.
 	// Возвращает найденную страну.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Country, *resty.Response, error)
 
@@ -220,7 +220,11 @@ type CountryService interface {
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
 }
 
+const (
+	EndpointCountry = EndpointEntity + string(MetaTypeCountry)
+)
+
 // NewCountryService принимает [Client] и возвращает сервис для работы со странами.
 func NewCountryService(client *Client) CountryService {
-	return newMainService[Country, any, any, any](NewEndpoint(client, "entity/country"))
+	return newMainService[Country, any, any, any](client, EndpointCountry)
 }

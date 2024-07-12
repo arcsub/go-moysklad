@@ -676,7 +676,11 @@ type PaymentOutService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	PaymentOutEndpoint = EndpointEntity + string(MetaTypePaymentOut)
+)
+
 // NewPaymentOutService принимает [Client] и возвращает сервис для работы с исходящими платежами.
 func NewPaymentOutService(client *Client) PaymentOutService {
-	return newMainService[PaymentOut, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/paymentout"))
+	return newMainService[PaymentOut, any, MetaAttributesStatesSharedWrapper, any](client, PaymentOutEndpoint)
 }

@@ -975,7 +975,11 @@ type PurchaseOrderService interface {
 	Evaluate(ctx context.Context, entity *PurchaseOrder, evaluate ...Evaluate) (*PurchaseOrder, *resty.Response, error)
 }
 
+const (
+	EndpointPurchaseOrder = EndpointEntity + string(MetaTypePurchaseOrder)
+)
+
 // NewPurchaseOrderService принимает [Client] и возвращает сервис для работы с заказами поставщикам.
 func NewPurchaseOrderService(client *Client) PurchaseOrderService {
-	return newMainService[PurchaseOrder, PurchaseOrderPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/purchaseorder"))
+	return newMainService[PurchaseOrder, PurchaseOrderPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointPurchaseOrder)
 }

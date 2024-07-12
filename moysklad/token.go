@@ -27,6 +27,10 @@ type SecurityTokenService interface {
 	GetNewToken(ctx context.Context) (*Token, *resty.Response, error)
 }
 
+const (
+	EndpointToken = EndpointSecurity + string(MetaTypeToken)
+)
+
 type securityTokenService struct {
 	Endpoint
 }
@@ -37,5 +41,5 @@ func (service *securityTokenService) GetNewToken(ctx context.Context) (*Token, *
 
 // NewSecurityTokenService принимает [Client] и возвращает сервис для получения нового токена.
 func NewSecurityTokenService(client *Client) SecurityTokenService {
-	return &securityTokenService{NewEndpoint(client, "security/token")}
+	return &securityTokenService{NewEndpoint(client, EndpointToken)}
 }

@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -122,40 +121,42 @@ type ReportTurnoverService interface {
 	GetByOperationsWithVariant(ctx context.Context, variant *Variant) (*List[TurnoverByOperation], *resty.Response, error)
 }
 
+const (
+	EndpointReportTurnover             = EndpointReport + string(MetaTypeReportTurnover)
+	EndpointReportTurnoverAll          = EndpointReportTurnover + "/all"
+	EndpointReportTurnoverByStore      = EndpointReportTurnover + "/bystore"
+	EndpointReportTurnoverByOperations = EndpointReportTurnover + "/byoperations"
+)
+
 type reportTurnoverService struct {
 	Endpoint
 }
 
-// NewReportTurnoverService принимает [Client] и возвращает сервис для работы с отчётом Обороты.
-func NewReportTurnoverService(client *Client) ReportTurnoverService {
-	return &reportTurnoverService{NewEndpoint(client, "report/turnover")}
-}
-
 func (service *reportTurnoverService) GetAll(ctx context.Context, params ...*Params) (*List[TurnoverAll], *resty.Response, error) {
-	path := fmt.Sprintf("%s/all", service.uri)
-	return NewRequestBuilder[List[TurnoverAll]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[TurnoverAll]](service.client, EndpointReportTurnoverAll).SetParams(params...).Get(ctx)
 }
 
 func (service *reportTurnoverService) GetByStoreWithProduct(ctx context.Context, product *Product) (*List[TurnoverByOperation], *resty.Response, error) {
-	path := fmt.Sprintf("%s/bystore", service.uri)
 	params := NewParams().WithFilterObject(product)
-	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[TurnoverByOperation]](service.client, EndpointReportTurnoverByStore).SetParams(params).Get(ctx)
 }
 
 func (service *reportTurnoverService) GetByStoreWithVariant(ctx context.Context, variant *Variant) (*List[TurnoverByOperation], *resty.Response, error) {
-	path := fmt.Sprintf("%s/bystore", service.uri)
 	params := NewParams().WithFilterObject(variant)
-	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[TurnoverByOperation]](service.client, EndpointReportTurnoverByStore).SetParams(params).Get(ctx)
 }
 
 func (service *reportTurnoverService) GetByOperationsWithProduct(ctx context.Context, product *Product) (*List[TurnoverByOperation], *resty.Response, error) {
-	path := fmt.Sprintf("%s/byoperations", service.uri)
 	params := NewParams().WithFilterObject(product)
-	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[TurnoverByOperation]](service.client, EndpointReportTurnoverByOperations).SetParams(params).Get(ctx)
 }
 
 func (service *reportTurnoverService) GetByOperationsWithVariant(ctx context.Context, variant *Variant) (*List[TurnoverByOperation], *resty.Response, error) {
-	path := fmt.Sprintf("%s/byoperations", service.uri)
 	params := NewParams().WithFilterObject(variant)
-	return NewRequestBuilder[List[TurnoverByOperation]](service.client, path).SetParams(params).Get(ctx)
+	return NewRequestBuilder[List[TurnoverByOperation]](service.client, EndpointReportTurnoverByOperations).SetParams(params).Get(ctx)
+}
+
+// NewReportTurnoverService принимает [Client] и возвращает сервис для работы с отчётом Обороты.
+func NewReportTurnoverService(client *Client) ReportTurnoverService {
+	return &reportTurnoverService{NewEndpoint(client, EndpointReportTurnover)}
 }

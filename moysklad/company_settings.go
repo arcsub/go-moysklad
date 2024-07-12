@@ -230,15 +230,12 @@ type contextCompanySettingsService struct {
 	endpointMetadata[MetadataCompanySettings]
 }
 
-// NewContextCompanySettingsService принимает [Client] и возвращает сервис для работы с настройками компании.
-func NewContextCompanySettingsService(client *Client) ContextCompanySettingsService {
-	e := NewEndpoint(client, "context/companysettings")
-	return &contextCompanySettingsService{
-		Endpoint:         e,
-		endpointUpdate:   endpointUpdate[CompanySettings]{e},
-		endpointMetadata: endpointMetadata[MetadataCompanySettings]{e},
-	}
-}
+const (
+	EndpointCompanySettings                 = EndpointContext + string(MetaTypeCompanySettings)
+	EndpointCompanySettingsPriceType        = EndpointCompanySettings + "/pricetype"
+	EndpointCompanySettingsPriceTypeID      = EndpointCompanySettingsPriceType + "/%s"
+	EndpointCompanySettingsPriceTypeDefault = EndpointCompanySettingsPriceType + "/default"
+)
 
 func (service *contextCompanySettingsService) Get(ctx context.Context) (*CompanySettings, *resty.Response, error) {
 	return NewRequestBuilder[CompanySettings](service.client, service.uri).Get(ctx)
@@ -249,8 +246,7 @@ func (service *contextCompanySettingsService) Update(ctx context.Context, settin
 }
 
 func (service *contextCompanySettingsService) GetPriceTypes(ctx context.Context) (*Slice[PriceType], *resty.Response, error) {
-	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[Slice[PriceType]](service.client, path).Get(ctx)
+	return NewRequestBuilder[Slice[PriceType]](service.client, EndpointCompanySettingsPriceType).Get(ctx)
 }
 
 func (service *contextCompanySettingsService) CreatePriceType(ctx context.Context, priceType *PriceType) (*Slice[PriceType], *resty.Response, error) {
@@ -259,21 +255,28 @@ func (service *contextCompanySettingsService) CreatePriceType(ctx context.Contex
 		return nil, resp, err
 	}
 	priceTypes.Push(priceType) // добавляем новый тип цен в конец списка
-	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
+	return NewRequestBuilder[Slice[PriceType]](service.client, EndpointCompanySettingsPriceType).Post(ctx, priceTypes)
 }
 
 func (service *contextCompanySettingsService) UpdatePriceTypeMany(ctx context.Context, priceTypes Slice[PriceType]) (*Slice[PriceType], *resty.Response, error) {
-	path := "context/companysettings/pricetype"
-	return NewRequestBuilder[Slice[PriceType]](service.client, path).Post(ctx, priceTypes)
+	return NewRequestBuilder[Slice[PriceType]](service.client, EndpointCompanySettingsPriceType).Post(ctx, priceTypes)
 }
 
 func (service *contextCompanySettingsService) GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
-	path := fmt.Sprintf("context/companysettings/pricetype/%s", id)
+	path := fmt.Sprintf(EndpointCompanySettingsPriceTypeID, id)
 	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
 }
 
 func (service *contextCompanySettingsService) GetPriceTypeDefault(ctx context.Context) (*PriceType, *resty.Response, error) {
-	path := "context/companysettings/pricetype/default"
-	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
+	return NewRequestBuilder[PriceType](service.client, EndpointCompanySettingsPriceTypeDefault).Get(ctx)
+}
+
+// NewContextCompanySettingsService принимает [Client] и возвращает сервис для работы с настройками компании.
+func NewContextCompanySettingsService(client *Client) ContextCompanySettingsService {
+	e := NewEndpoint(client, EndpointCompanySettings)
+	return &contextCompanySettingsService{
+		Endpoint:         e,
+		endpointUpdate:   endpointUpdate[CompanySettings]{e},
+		endpointMetadata: endpointMetadata[MetadataCompanySettings]{e},
+	}
 }

@@ -804,7 +804,11 @@ type MoveService interface {
 	Evaluate(ctx context.Context, entity *Move, evaluate ...Evaluate) (*Move, *resty.Response, error)
 }
 
+const (
+	EndpointMove = EndpointEntity + string(MetaTypeMove)
+)
+
 // NewMoveService принимает [Client] и возвращает сервис для работы со перемещениями.
 func NewMoveService(client *Client) MoveService {
-	return newMainService[Move, MovePosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/move"))
+	return newMainService[Move, MovePosition, MetaAttributesStatesSharedWrapper, any](client, EndpointMove)
 }

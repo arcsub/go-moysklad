@@ -991,7 +991,11 @@ type SalesReturnService interface {
 	Evaluate(ctx context.Context, entity *SalesReturn, evaluate ...Evaluate) (*SalesReturn, *resty.Response, error)
 }
 
+const (
+	EndpointSalesReturn = EndpointEntity + string(MetaTypeSalesReturn)
+)
+
 // NewSalesReturnService принимает [Client] и возвращает сервис для работы с возвратами покупателей.
 func NewSalesReturnService(client *Client) SalesReturnService {
-	return newMainService[SalesReturn, SalesReturnPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/salesreturn"))
+	return newMainService[SalesReturn, SalesReturnPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointSalesReturn)
 }

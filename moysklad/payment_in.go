@@ -681,7 +681,11 @@ type PaymentInService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointPaymentIn = EndpointEntity + string(MetaTypePaymentIn)
+)
+
 // NewPaymentInService принимает [Client] и возвращает сервис для работы с входящими платежами.
 func NewPaymentInService(client *Client) PaymentInService {
-	return newMainService[PaymentIn, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/paymentin"))
+	return newMainService[PaymentIn, any, MetaAttributesStatesSharedWrapper, any](client, EndpointPaymentIn)
 }

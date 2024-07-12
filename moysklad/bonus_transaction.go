@@ -386,7 +386,11 @@ type BonusTransactionService interface {
 	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 }
 
+const (
+	EndpointBonusTransaction = EndpointEntity + string(MetaTypeBonusTransaction)
+)
+
 // NewBonusTransactionService принимает [Client] и возвращает сервис для работы с бонусными операциями.
 func NewBonusTransactionService(client *Client) BonusTransactionService {
-	return newMainService[BonusTransaction, any, any, any](NewEndpoint(client, "entity/bonustransaction"))
+	return newMainService[BonusTransaction, any, any, any](client, EndpointBonusTransaction)
 }

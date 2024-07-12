@@ -604,6 +604,14 @@ type EmployeeService interface {
 	ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointEmployee              = EndpointEntity + string(MetaTypeEmployee)
+	EndpointEmployeeSecurity      = EndpointEmployee + "/%s/security"
+	EndpointEmployeeActivate      = EndpointEmployee + "/%s/access/activate"
+	EndpointEmployeeDeactivate    = EndpointEmployee + "/%s/access/deactivate"
+	EndpointEmployeeResetPassword = EndpointEmployee + "/%s/access/resetpassword"
+)
+
 type employeeService struct {
 	Endpoint
 	endpointGetList[Employee]
@@ -617,9 +625,43 @@ type employeeService struct {
 	endpointUpdate[Employee]
 }
 
+func (service *employeeService) GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointEmployeeSecurity, id)
+	return NewRequestBuilder[EmployeePermission](service.client, path).Get(ctx)
+}
+
+func (service *employeeService) UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointEmployeeSecurity, id)
+	return NewRequestBuilder[EmployeePermission](service.client, path).Put(ctx, permissions)
+}
+
+func (service *employeeService) Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointEmployeeActivate, id)
+	mailActivationRequired, resp, err := NewRequestBuilder[MailActivationRequired](service.client, path).Put(ctx, permissions)
+	return mailActivationRequired.MailActivationRequired, resp, err
+}
+
+func (service *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointEmployeeDeactivate, id)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
+	if err != nil {
+		return false, resp, err
+	}
+	return resp.StatusCode() == http.StatusNoContent, resp, nil
+}
+
+func (service *employeeService) ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointEmployeeResetPassword, id)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
+	if err != nil {
+		return false, resp, err
+	}
+	return resp.StatusCode() == http.StatusNoContent, resp, nil
+}
+
 // NewEmployeeService принимает [Client] и возвращает сервис для работы с сотрудниками.
 func NewEmployeeService(client *Client) EmployeeService {
-	e := NewEndpoint(client, "entity/employee")
+	e := NewEndpoint(client, EndpointEmployee)
 	return &employeeService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Employee]{e},
@@ -632,38 +674,4 @@ func NewEmployeeService(client *Client) EmployeeService {
 		endpointGetByID:          endpointGetByID[Employee]{e},
 		endpointUpdate:           endpointUpdate[Employee]{e},
 	}
-}
-
-func (service *employeeService) GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/security", service.uri, id)
-	return NewRequestBuilder[EmployeePermission](service.client, path).Get(ctx)
-}
-
-func (service *employeeService) UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/security", service.uri, id)
-	return NewRequestBuilder[EmployeePermission](service.client, path).Put(ctx, permissions)
-}
-
-func (service *employeeService) Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/access/activate", service.uri, id)
-	mailActivationRequired, resp, err := NewRequestBuilder[MailActivationRequired](service.client, path).Put(ctx, permissions)
-	return mailActivationRequired.MailActivationRequired, resp, err
-}
-
-func (service *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/access/deactivate", service.uri, id)
-	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
-	if err != nil {
-		return false, resp, err
-	}
-	return resp.StatusCode() == http.StatusNoContent, resp, nil
-}
-
-func (service *employeeService) ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/access/resetpassword", id)
-	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
-	if err != nil {
-		return false, resp, err
-	}
-	return resp.StatusCode() == http.StatusNoContent, resp, nil
 }

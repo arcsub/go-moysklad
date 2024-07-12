@@ -1013,6 +1013,14 @@ type CounterpartyService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointCounterparty                 = EndpointEntity + string(MetaTypeCounterparty)
+	EndpointCounterpartyContactPersons   = EndpointCounterparty + "/%s/contactpersons"
+	EndpointCounterpartyContactPersonsID = EndpointCounterpartyContactPersons + "/%s"
+	EndpointCounterpartyNotes            = EndpointCounterparty + "/%s/notes"
+	EndpointCounterpartyNotesID          = EndpointCounterpartyNotes + "/%s"
+)
+
 type counterpartyService struct {
 	Endpoint
 	endpointGetList[Counterparty]
@@ -1032,9 +1040,58 @@ type counterpartyService struct {
 	endpointFiles
 }
 
+func (service *counterpartyService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params...).Async(ctx)
+}
+
+func (service *counterpartyService) GetContactPersonList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyContactPersons, id)
+	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params...).Get(ctx)
+}
+
+func (service *counterpartyService) GetContactPersonByID(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyContactPersonsID, id, contactPersonID)
+	return NewRequestBuilder[ContactPerson](service.client, path).Get(ctx)
+}
+
+func (service *counterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyContactPersons, id)
+	return NewRequestBuilder[Slice[ContactPerson]](service.client, path).Post(ctx, contactPerson)
+}
+
+func (service *counterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyContactPersonsID, id, contactPersonID)
+	return NewRequestBuilder[ContactPerson](service.client, path).Put(ctx, contactPerson)
+}
+
+func (service *counterpartyService) GetNoteList(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyNotes, id)
+	return NewRequestBuilder[List[Note]](service.client, path).Get(ctx)
+}
+
+func (service *counterpartyService) GetNoteByID(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyNotesID, id, noteID)
+	return NewRequestBuilder[Note](service.client, path).Get(ctx)
+}
+
+func (service *counterpartyService) CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyNotes, id)
+	return NewRequestBuilder[MetaArray[Note]](service.client, path).Post(ctx, note)
+}
+
+func (service *counterpartyService) UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyNotesID, id, noteID)
+	return NewRequestBuilder[Note](service.client, path).Put(ctx, note)
+}
+
+func (service *counterpartyService) DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCounterpartyNotesID, id, noteID)
+	return NewRequestBuilder[any](service.client, path).Delete(ctx)
+}
+
 // NewCounterpartyService принимает [Client] и возвращает сервис для работы с контрагентами.
 func NewCounterpartyService(client *Client) CounterpartyService {
-	e := NewEndpoint(client, "entity/counterparty")
+	e := NewEndpoint(client, EndpointCounterparty)
 	return &counterpartyService{
 		Endpoint:                 e,
 		endpointGetList:          endpointGetList[Counterparty]{e},
@@ -1053,53 +1110,4 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},
 	}
-}
-
-func (service *counterpartyService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params...).Async(ctx)
-}
-
-func (service *counterpartyService) GetContactPersonList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/contactpersons", service.uri, id)
-	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params...).Get(ctx)
-}
-
-func (service *counterpartyService) GetContactPersonByID(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonID)
-	return NewRequestBuilder[ContactPerson](service.client, path).Get(ctx)
-}
-
-func (service *counterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/contactpersons", service.uri, id)
-	return NewRequestBuilder[Slice[ContactPerson]](service.client, path).Post(ctx, contactPerson)
-}
-
-func (service *counterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/contactpersons/%s", service.uri, id, contactPersonID)
-	return NewRequestBuilder[ContactPerson](service.client, path).Put(ctx, contactPerson)
-}
-
-func (service *counterpartyService) GetNoteList(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", service.uri, id)
-	return NewRequestBuilder[List[Note]](service.client, path).Get(ctx)
-}
-
-func (service *counterpartyService) GetNoteByID(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
-	return NewRequestBuilder[Note](service.client, path).Get(ctx)
-}
-
-func (service *counterpartyService) CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes", service.uri, id)
-	return NewRequestBuilder[MetaArray[Note]](service.client, path).Post(ctx, note)
-}
-
-func (service *counterpartyService) UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
-	return NewRequestBuilder[Note](service.client, path).Put(ctx, note)
-}
-
-func (service *counterpartyService) DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/notes/%s", service.uri, id, noteID)
-	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

@@ -769,7 +769,11 @@ type OrganizationService interface {
 	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointOrganization = EndpointEntity + string(MetaTypeOrganization)
+)
+
 // NewOrganizationService принимает [Client] и возвращает сервис для работы с юридическими лицами.
 func NewOrganizationService(client *Client) OrganizationService {
-	return newMainService[Organization, any, MetaAttributesSharedWrapper, any](NewEndpoint(client, "entity/organization"))
+	return newMainService[Organization, any, MetaAttributesSharedWrapper, any](client, EndpointOrganization)
 }

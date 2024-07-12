@@ -303,7 +303,11 @@ type SalesChannelService interface {
 	Update(ctx context.Context, id uuid.UUID, salesChannel *SalesChannel, params ...*Params) (*SalesChannel, *resty.Response, error)
 }
 
+const (
+	EndpointSalesChannel = EndpointEntity + string(MetaTypeSalesChannel)
+)
+
 // NewSalesChannelService принимает [Client] и возвращает сервис для работы с каналами продаж.
 func NewSalesChannelService(client *Client) SalesChannelService {
-	return newMainService[SalesChannel, any, any, any](NewEndpoint(client, "entity/saleschannel"))
+	return newMainService[SalesChannel, any, any, any](client, EndpointSalesChannel)
 }

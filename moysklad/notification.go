@@ -1207,6 +1207,13 @@ type NotificationService interface {
 	UpdateSubscription(ctx context.Context, notificationSubscription *NotificationSubscription) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointNotification              = string(MetaTypeNotification)
+	EndpointNotificationSubscription  = EndpointNotification + "/subscription"
+	EndpointNotificationMarkAsRead    = EndpointNotification + "/%s/markasread"
+	EndpointNotificationMarkAsReadAll = EndpointNotification + "/markasreadall"
+)
+
 type notificationService struct {
 	Endpoint
 	endpointGetList[Notification]
@@ -1214,36 +1221,33 @@ type notificationService struct {
 	endpointDelete
 }
 
+func (service *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointNotificationMarkAsRead, id)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
+	return resp.StatusCode() == http.StatusOK, resp, err
+}
+
+func (service *notificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
+	_, resp, err := NewRequestBuilder[any](service.client, EndpointNotificationMarkAsReadAll).Put(ctx, nil)
+	return resp.StatusCode() == http.StatusOK, resp, err
+}
+
+func (service *notificationService) GetSubscription(ctx context.Context) (*NotificationSubscription, *resty.Response, error) {
+	return NewRequestBuilder[NotificationSubscription](service.client, EndpointNotificationSubscription).Get(ctx)
+}
+
+func (service *notificationService) UpdateSubscription(ctx context.Context, notificationSubscription *NotificationSubscription) (bool, *resty.Response, error) {
+	_, resp, err := NewRequestBuilder[any](service.client, EndpointNotificationSubscription).Put(ctx, notificationSubscription)
+	return resp.StatusCode() == http.StatusOK, resp, err
+}
+
 // NewNotificationService принимает [Client] и возвращает сервис для работы с уведомлениями.
 func NewNotificationService(client *Client) NotificationService {
-	e := NewEndpoint(client, "notification")
+	e := NewEndpoint(client, EndpointNotification)
 	return &notificationService{
 		Endpoint:        e,
 		endpointGetList: endpointGetList[Notification]{e},
 		endpointGetByID: endpointGetByID[Notification]{e},
 		endpointDelete:  endpointDelete{e},
 	}
-}
-
-func (service *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/%s/markasread", service.uri, id)
-	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
-	return resp.StatusCode() == http.StatusOK, resp, err
-}
-
-func (service *notificationService) MarkAsReadAll(ctx context.Context) (bool, *resty.Response, error) {
-	path := fmt.Sprintf("%s/markasreadall", service.uri)
-	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
-	return resp.StatusCode() == http.StatusOK, resp, err
-}
-
-func (service *notificationService) GetSubscription(ctx context.Context) (*NotificationSubscription, *resty.Response, error) {
-	path := "subscription"
-	return NewRequestBuilder[NotificationSubscription](service.client, path).Get(ctx)
-}
-
-func (service *notificationService) UpdateSubscription(ctx context.Context, notificationSubscription *NotificationSubscription) (bool, *resty.Response, error) {
-	path := "subscription"
-	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, notificationSubscription)
-	return resp.StatusCode() == http.StatusOK, resp, err
 }

@@ -541,7 +541,11 @@ type ContractService interface {
 	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointContract = EndpointEntity + string(MetaTypeContract)
+)
+
 // NewContractService принимает [Client] и возвращает сервис для работы с договорами.
 func NewContractService(client *Client) ContractService {
-	return newMainService[Contract, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/contract"))
+	return newMainService[Contract, any, MetaAttributesStatesSharedWrapper, any](client, EndpointContract)
 }

@@ -766,7 +766,11 @@ type InternalOrderService interface {
 	Evaluate(ctx context.Context, entity *InternalOrder, evaluate ...Evaluate) (*InternalOrder, *resty.Response, error)
 }
 
+const (
+	EndpointInternalOrder = EndpointEntity + string(MetaTypeInternalOrder)
+)
+
 // NewInternalOrderService принимает [Client] и возвращает сервис для работы с внутренними заказами.
 func NewInternalOrderService(client *Client) InternalOrderService {
-	return newMainService[InternalOrder, InternalOrderPosition, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/internalorder"))
+	return newMainService[InternalOrder, InternalOrderPosition, MetaAttributesStatesSharedWrapper, any](client, EndpointInternalOrder)
 }

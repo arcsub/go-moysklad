@@ -129,7 +129,11 @@ type GroupService interface {
 	Update(ctx context.Context, id uuid.UUID, group *Group, params ...*Params) (*Group, *resty.Response, error)
 }
 
+const (
+	EndpointGroup = EndpointEntity + string(MetaTypeGroup)
+)
+
 // NewGroupService принимает [Client] и возвращает сервис для работы с отделами.
 func NewGroupService(client *Client) GroupService {
-	return newMainService[Group, any, any, any](NewEndpoint(client, "entity/group"))
+	return newMainService[Group, any, any, any](client, EndpointGroup)
 }

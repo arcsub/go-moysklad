@@ -627,7 +627,11 @@ type CashInService interface {
 	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
+const (
+	EndpointCashIn = EndpointEntity + string(MetaTypeCashIn)
+)
+
 // NewCashInService принимает [Client] и возвращает сервис для работы с приходными ордерами.
 func NewCashInService(client *Client) CashInService {
-	return newMainService[CashIn, any, MetaAttributesStatesSharedWrapper, any](NewEndpoint(client, "entity/cashin"))
+	return newMainService[CashIn, any, MetaAttributesStatesSharedWrapper, any](client, EndpointCashIn)
 }
