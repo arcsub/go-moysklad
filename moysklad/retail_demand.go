@@ -800,11 +800,7 @@ func (retailDemandPosition *RetailDemandPosition) SetThings(things ...string) *R
 // AsRetailSalesReturnPosition преобразует позицию розничной продажи в позицию розничного возврата.
 //
 // Копирует все поля позиции, кроме ID и AccountID.
-//
-// Опционально принимает количество товаров/услуг позиции для указания количества, отличного от позиции розничной продажи.
-//
-// При передаче аргумента нижняя граница будет равна 1, а верхняя граница будет равна количеству позиции розничной продажи.
-func (retailDemandPosition *RetailDemandPosition) AsRetailSalesReturnPosition(quantity ...float64) *RetailSalesReturnPosition {
+func (retailDemandPosition *RetailDemandPosition) AsRetailSalesReturnPosition() *RetailSalesReturnPosition {
 	retailSalesReturnPosition := &RetailSalesReturnPosition{
 		Assortment: retailDemandPosition.Assortment,
 		Cost:       retailDemandPosition.Cost,
@@ -814,14 +810,7 @@ func (retailDemandPosition *RetailDemandPosition) AsRetailSalesReturnPosition(qu
 		Quantity:   retailDemandPosition.Quantity,
 		Vat:        retailDemandPosition.Vat,
 		VatEnabled: retailDemandPosition.VatEnabled,
-		Stock:      retailDemandPosition.Stock,
 		Things:     retailDemandPosition.Things,
-	}
-
-	// передача аргумента
-	if len(quantity) > 0 {
-		n := Clamp(quantity[0], 1, retailDemandPosition.GetQuantity()) // задаём нижнюю и верхнюю границы
-		retailSalesReturnPosition.Quantity = Float(n)
 	}
 
 	return retailSalesReturnPosition

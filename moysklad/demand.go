@@ -695,7 +695,7 @@ func (demand Demand) Delete(ctx context.Context, client *Client) (bool, *resty.R
 type DemandPosition struct {
 	Slot              *Slot               `json:"slot,omitempty"`               // Ячейка на складе
 	Price             *float64            `json:"price,omitempty"`              // Цена товара/услуги в копейках
-	Cost              *int                `json:"cost,omitempty"`               // Себестоимость (только для услуг)
+	Cost              *float64            `json:"cost,omitempty"`               // Себестоимость (только для услуг)
 	Discount          *float64            `json:"discount,omitempty"`           // Процент скидки или наценки. Наценка указывается отрицательным числом, т.е. -10 создаст наценку в 10%
 	AccountID         *uuid.UUID          `json:"accountId,omitempty"`          // ID учётной записи
 	Pack              *Pack               `json:"pack,omitempty"`               // Упаковка Товара
@@ -722,7 +722,7 @@ func (demandPosition DemandPosition) GetAssortment() AssortmentPosition {
 }
 
 // GetCost возвращает Себестоимость (только для услуг).
-func (demandPosition DemandPosition) GetCost() int {
+func (demandPosition DemandPosition) GetCost() float64 {
 	return Deref(demandPosition.Cost)
 }
 
@@ -814,7 +814,7 @@ func (demandPosition *DemandPosition) SetAssortment(assortment AssortmentConvert
 }
 
 // SetCost устанавливает Себестоимость (только для услуг).
-func (demandPosition *DemandPosition) SetCost(cost int) *DemandPosition {
+func (demandPosition *DemandPosition) SetCost(cost float64) *DemandPosition {
 	demandPosition.Cost = &cost
 	return demandPosition
 }
@@ -895,6 +895,26 @@ func (demandPosition *DemandPosition) SetVat(vat int) *DemandPosition {
 func (demandPosition *DemandPosition) SetVatEnabled(vatEnabled bool) *DemandPosition {
 	demandPosition.VatEnabled = &vatEnabled
 	return demandPosition
+}
+
+// AsSalesReturnPosition преобразует позицию отгрузки в позицию возврата покупателя.
+//
+// Копирует все поля позиции, кроме ID и AccountID.
+func (demandPosition DemandPosition) AsSalesReturnPosition() *SalesReturnPosition {
+	salesReturnPosition := &SalesReturnPosition{
+		Assortment: demandPosition.Assortment,
+		Cost:       demandPosition.Cost,
+		Discount:   demandPosition.Discount,
+		Pack:       demandPosition.Pack,
+		Price:      demandPosition.Price,
+		Quantity:   demandPosition.Quantity,
+		Slot:       demandPosition.Slot,
+		Vat:        demandPosition.Vat,
+		VatEnabled: demandPosition.VatEnabled,
+		Things:     demandPosition.Things,
+	}
+
+	return salesReturnPosition
 }
 
 // String реализует интерфейс [fmt.Stringer].
