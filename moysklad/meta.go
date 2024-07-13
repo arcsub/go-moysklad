@@ -88,24 +88,24 @@ func (meta *Meta) IsEqual(other *Meta) bool {
 	return IsEqualPtr(meta.Href, other.Href)
 }
 
-// GetIDFromHref возвращает UUID из поля Href.
+// GetUUIDFromHref возвращает UUID из поля Href.
 //
-// Возвращает nil, если поле Href пусто или не содержит идентификатора.
-func (meta Meta) GetIDFromHref() *uuid.UUID {
+// Возвращает [uuid.Nil], если поле Href пустое или не содержит идентификатора.
+func (meta Meta) GetUUIDFromHref() uuid.UUID {
 	href := Deref(meta.Href)
 	if href == "" {
-		return nil
+		return uuid.Nil
 	}
 
 	sep := strings.Split(href, "/")
 	if len(sep) == 0 {
-		return nil
+		return uuid.Nil
 	}
 
 	if id, err := uuid.Parse(sep[len(sep)-1]); err == nil {
-		return &id
+		return id
 	}
-	return nil
+	return uuid.Nil
 }
 
 // MetaWrapper объект-обёртка для [Meta]
