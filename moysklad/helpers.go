@@ -113,7 +113,7 @@ func stringifyValue(w io.Writer, val reflect.Value) {
 }
 
 // Clamp задаёт значение в диапазоне между указанными нижней и верхней границами.
-func Clamp(val, min, max int) int {
+func Clamp[T int | float64](val, min, max T) T {
 	switch {
 	case val < min:
 		return min
