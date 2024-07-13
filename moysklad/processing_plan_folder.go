@@ -4,13 +4,18 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
+	"time"
 )
 
 // ProcessingPlanFolder Группа тех. карт.
-// Ключевое слово: processingplanfolder
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-gruppa-tehkart-gruppy-tehkart
+//
+// Код сущности: processingplanfolder
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-gruppa-tehkart-gruppy-tehkart
 type ProcessingPlanFolder struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учетной записи
+	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи    // ID учётной записи
 	Archived     *bool      `json:"archived,omitempty"`     // Добавлена ли Группа тех. карт в архив
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Группы тех. карт
 	Code         *string    `json:"code,omitempty"`         // Код Группы тех. карт
@@ -19,14 +24,19 @@ type ProcessingPlanFolder struct {
 	ID           *uuid.UUID `json:"id,omitempty"`           // ID Группы тех. карт
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные
 	Name         *string    `json:"name,omitempty"`         // Наименование
-	Owner        *Employee  `json:"owner,omitempty"`        // Владелец (Сотрудник)
+	Owner        *Employee  `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)        // Владелец (Сотрудник)
 	PathName     *string    `json:"pathName,omitempty"`     // Наименование Группы тех. карт, в которую входит данная Группа тех. карт
-	Shared       *bool      `json:"shared,omitempty"`       // Общий доступ
+	Shared       *bool      `json:"shared,omitempty"`       // Общий доступ       // Общий доступ
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления сущности
 }
 
-// Clean возвращает сущность с единственным заполненным полем Meta
+// Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
+// Метод позволяет избавиться от лишних данных при передаче запроса.
 func (processingPlanFolder ProcessingPlanFolder) Clean() *ProcessingPlanFolder {
+	if processingPlanFolder.Meta == nil {
+		return nil
+	}
 	return &ProcessingPlanFolder{Meta: processingPlanFolder.Meta}
 }
 
@@ -78,8 +88,8 @@ func (processingPlanFolder ProcessingPlanFolder) GetShared() bool {
 	return Deref(processingPlanFolder.Shared)
 }
 
-func (processingPlanFolder ProcessingPlanFolder) GetUpdated() Timestamp {
-	return Deref(processingPlanFolder.Updated)
+func (processingPlanFolder ProcessingPlanFolder) GetUpdated() time.Time {
+	return Deref(processingPlanFolder.Updated).Time()
 }
 
 func (processingPlanFolder *ProcessingPlanFolder) SetArchived(archived bool) *ProcessingPlanFolder {
@@ -131,7 +141,7 @@ func (processingPlanFolder ProcessingPlanFolder) String() string {
 	return Stringify(processingPlanFolder)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (ProcessingPlanFolder) MetaType() MetaType {
 	return MetaTypeProcessingPlanFolder
 }
@@ -159,13 +169,28 @@ type ProcessingPlanFolderService interface {
 	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
-	GetMetadata(ctx context.Context) (*MetaAttributesSharedStatesWrapper, *resty.Response, error)
-	GetNamedFilters(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
+
+	// GetNamedFilterList выполняет запрос на получение списка фильтров.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает объект List.
+	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+
+	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
+	// Принимает контекст и ID фильтра.
+	// Возвращает найденный фильтр.
 	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+
+	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
+	// Принимает контекст и ID документа.
+	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 }
 
+const (
+	EndpointProcessingPlanFolder = EndpointEntity + string(MetaTypeProcessingPlanFolder)
+)
+
 func NewProcessingPlanFolderService(client *Client) ProcessingPlanFolderService {
-	e := NewEndpoint(client, "entity/processingplanfolder")
-	return newMainService[ProcessingPlanFolder, any, MetaAttributesSharedStatesWrapper, any](e)
+	return newMainService[ProcessingPlanFolder, any, MetaAttributesStatesSharedWrapper, any](client, EndpointProcessingPlanFolder)
 }
