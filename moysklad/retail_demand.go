@@ -797,6 +797,23 @@ func (retailDemandPosition *RetailDemandPosition) SetThings(things ...string) *R
 	return retailDemandPosition
 }
 
+// AsRetailSalesReturnPosition преобразует позицию розничной продажи в позицию розничного возврата.
+func (retailDemandPosition *RetailDemandPosition) AsRetailSalesReturnPosition() *RetailSalesReturnPosition {
+	retailSalesReturnPosition := &RetailSalesReturnPosition{
+		Assortment: retailDemandPosition.Assortment,
+		Cost:       retailDemandPosition.Cost,
+		Discount:   retailDemandPosition.Discount,
+		Pack:       retailDemandPosition.Pack,
+		Price:      retailDemandPosition.Price,
+		Quantity:   retailDemandPosition.Quantity,
+		Vat:        retailDemandPosition.Vat,
+		VatEnabled: retailDemandPosition.VatEnabled,
+		Stock:      retailDemandPosition.Stock,
+		Things:     retailDemandPosition.Things,
+	}
+	return retailSalesReturnPosition
+}
+
 // String реализует интерфейс [fmt.Stringer].
 func (retailDemandPosition RetailDemandPosition) String() string {
 	return Stringify(retailDemandPosition)
