@@ -389,7 +389,7 @@ func (customerOrder *CustomerOrder) SetAgent(agent *Counterparty) *CustomerOrder
 	return customerOrder
 }
 
-// SetDeliveryPlannedMoment устанавливает Планируемую дата отгрузки.
+// SetDeliveryPlannedMoment устанавливает Планируемую дату отгрузки.
 func (customerOrder *CustomerOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment time.Time) *CustomerOrder {
 	customerOrder.DeliveryPlannedMoment = NewTimestamp(deliveryPlannedMoment)
 	return customerOrder

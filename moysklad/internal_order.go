@@ -244,7 +244,7 @@ func (internalOrder *InternalOrder) SetDescription(description string) *Internal
 	return internalOrder
 }
 
-// SetDeliveryPlannedMoment устанавливает Планируемую дата приемки.
+// SetDeliveryPlannedMoment устанавливает Планируемую дату приемки.
 func (internalOrder *InternalOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment time.Time) *InternalOrder {
 	internalOrder.DeliveryPlannedMoment = NewTimestamp(deliveryPlannedMoment)
 	return internalOrder

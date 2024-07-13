@@ -350,7 +350,7 @@ func (purchaseOrder *PurchaseOrder) SetContract(contract *Contract) *PurchaseOrd
 	return purchaseOrder
 }
 
-// SetDeliveryPlannedMoment устанавливает Планируемую дата отгрузки.
+// SetDeliveryPlannedMoment устанавливает Планируемую дату отгрузки.
 func (purchaseOrder *PurchaseOrder) SetDeliveryPlannedMoment(deliveryPlannedMoment time.Time) *PurchaseOrder {
 	purchaseOrder.DeliveryPlannedMoment = NewTimestamp(deliveryPlannedMoment)
 	return purchaseOrder
