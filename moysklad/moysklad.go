@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.63"                                // Версия библиотеки
+	Version                      = "v0.0.64"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
 	headerGetContent             = "X-Lognex-Get-Content"                   // Заголовок для получения файла напрямую.
