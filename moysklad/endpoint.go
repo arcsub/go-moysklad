@@ -64,12 +64,13 @@ const (
 	EndpointTrackingCodesDelete = EndpointTrackingCodes + EndpointDelete
 )
 
-type mainService[E MetaOwner, P any, M any, S any] struct {
+type mainService[E MetaIDOwner, P any, M any, S any] struct {
 	endpointGetList[E]
 	endpointCreate[E]
 	endpointCreateUpdateMany[E]
 	endpointDeleteMany[E]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[E]
 	endpointGetByID[E]
 	endpointUpdate[E]
 	endpointMetadata[M]
@@ -93,7 +94,7 @@ type mainService[E MetaOwner, P any, M any, S any] struct {
 	endpointEvaluate[E]
 }
 
-func newMainService[E MetaOwner, P any, M any, S any](client *Client, path string) *mainService[E, P, M, S] {
+func newMainService[E MetaIDOwner, P any, M any, S any](client *Client, path string) *mainService[E, P, M, S] {
 	endpoint := NewEndpoint(client, path)
 
 	return &mainService[E, P, M, S]{
@@ -101,7 +102,8 @@ func newMainService[E MetaOwner, P any, M any, S any](client *Client, path strin
 		endpointCreate:           endpointCreate[E]{endpoint},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[E]{endpoint},
 		endpointDeleteMany:       endpointDeleteMany[E]{endpoint},
-		endpointDelete:           endpointDelete{endpoint},
+		endpointDeleteByID:       endpointDeleteByID{endpoint},
+		endpointDelete:           endpointDelete[E]{endpoint},
 		endpointGetByID:          endpointGetByID[E]{endpoint},
 		endpointUpdate:           endpointUpdate[E]{endpoint},
 		endpointMetadata:         endpointMetadata[M]{endpoint},
@@ -133,10 +135,19 @@ func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...*Para
 	return NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(params...).Get(ctx)
 }
 
-type endpointDelete struct{ Endpoint }
+type endpointDeleteByID struct{ Endpoint }
 
-// Delete выполняет запрос на удаление объекта по ID.
-func (endpoint *endpointDelete) Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+// DeleteByID выполняет запрос на удаление объекта по ID.
+func (endpoint *endpointDeleteByID) DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf("%s/%s", endpoint.uri, id)
+	return NewRequestBuilder[any](endpoint.client, path).Delete(ctx)
+}
+
+type endpointDelete[T MetaIDOwner] struct{ Endpoint }
+
+// Delete выполняет запрос на удаление объекта.
+func (endpoint *endpointDelete[T]) Delete(ctx context.Context, entity *T) (bool, *resty.Response, error) {
+	id := GetUUIDFromEntity(entity)
 	path := fmt.Sprintf("%s/%s", endpoint.uri, id)
 	return NewRequestBuilder[any](endpoint.client, path).Delete(ctx)
 }

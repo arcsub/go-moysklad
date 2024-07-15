@@ -331,18 +331,18 @@ func (Employee) MetaType() MetaType {
 }
 
 // Update shortcut
-func (employee Employee) Update(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
-	return NewEmployeeService(client).Update(ctx, employee.GetID(), &employee, params...)
+func (employee *Employee) Update(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+	return NewEmployeeService(client).Update(ctx, employee.GetID(), employee, params...)
 }
 
 // Create shortcut
-func (employee Employee) Create(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
-	return NewEmployeeService(client).Create(ctx, &employee, params...)
+func (employee *Employee) Create(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+	return NewEmployeeService(client).Create(ctx, employee, params...)
 }
 
 // Delete shortcut
-func (employee Employee) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewEmployeeService(client).Delete(ctx, employee.GetID())
+func (employee *Employee) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewEmployeeService(client).Delete(ctx, employee)
 }
 
 // Salary Оклад.
@@ -515,10 +515,15 @@ type EmployeeService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Employee) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление сотрудника.
+	// DeleteByID выполняет запрос на удаление сотрудника по ID.
 	// Принимает контекст и ID сотрудника.
 	// Возвращает «true» в случае успешного удаления сотрудника.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление сотрудника.
+	// Принимает контекст и сотрудника.
+	// Возвращает «true» в случае успешного удаления сотрудника.
+	Delete(ctx context.Context, entity *Employee) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных сотрудников.
 	// Принимает контекст.
@@ -619,7 +624,8 @@ type employeeService struct {
 	endpointCreate[Employee]
 	endpointCreateUpdateMany[Employee]
 	endpointDeleteMany[Employee]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Employee]
 	endpointMetadata[MetaAttributesSharedWrapper]
 	endpointAttributes
 	endpointGetByID[Employee]
@@ -669,7 +675,8 @@ func NewEmployeeService(client *Client) EmployeeService {
 		endpointCreate:           endpointCreate[Employee]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Employee]{e},
 		endpointDeleteMany:       endpointDeleteMany[Employee]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Employee]{e},
 		endpointMetadata:         endpointMetadata[MetaAttributesSharedWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointGetByID:          endpointGetByID[Employee]{e},

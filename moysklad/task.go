@@ -229,18 +229,18 @@ func (Task) MetaType() MetaType {
 }
 
 // Update shortcut
-func (task Task) Update(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
-	return NewTaskService(client).Update(ctx, task.GetID(), &task, params...)
+func (task *Task) Update(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+	return NewTaskService(client).Update(ctx, task.GetID(), task, params...)
 }
 
 // Create shortcut
-func (task Task) Create(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
-	return NewTaskService(client).Create(ctx, &task, params...)
+func (task *Task) Create(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+	return NewTaskService(client).Create(ctx, task, params...)
 }
 
 // Delete shortcut
-func (task Task) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewTaskService(client).Delete(ctx, task.GetID())
+func (task *Task) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewTaskService(client).Delete(ctx, task)
 }
 
 // TaskNote Комментарий задачи.
@@ -855,10 +855,15 @@ type TaskService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Task) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление задачи.
+	// DeleteByID выполняет запрос на удаление задачи по ID.
 	// Принимает контекст и ID задачи.
 	// Возвращает «true» в случае успешного удаления задачи.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление задачи.
+	// Принимает контекст и задачу.
+	// Возвращает «true» в случае успешного удаления задачи.
+	Delete(ctx context.Context, entity *Task) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной задачи по ID.
 	// Принимает контекст, ID задачи и опционально объект параметров запроса Params.
@@ -950,7 +955,8 @@ type taskService struct {
 	endpointCreate[Task]
 	endpointCreateUpdateMany[Task]
 	endpointDeleteMany[Task]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Task]
 	endpointGetByID[Task]
 	endpointUpdate[Task]
 	endpointNamedFilter
@@ -1000,7 +1006,8 @@ func NewTaskService(client *Client) TaskService {
 		endpointCreate:           endpointCreate[Task]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Task]{e},
 		endpointDeleteMany:       endpointDeleteMany[Task]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Task]{e},
 		endpointGetByID:          endpointGetByID[Task]{e},
 		endpointUpdate:           endpointUpdate[Task]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},

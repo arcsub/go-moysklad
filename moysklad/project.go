@@ -182,18 +182,18 @@ func (Project) MetaType() MetaType {
 }
 
 // Update shortcut
-func (project Project) Update(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
-	return NewProjectService(client).Update(ctx, project.GetID(), &project, params...)
+func (project *Project) Update(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+	return NewProjectService(client).Update(ctx, project.GetID(), project, params...)
 }
 
 // Create shortcut
-func (project Project) Create(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
-	return NewProjectService(client).Create(ctx, &project, params...)
+func (project *Project) Create(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+	return NewProjectService(client).Create(ctx, project, params...)
 }
 
 // Delete shortcut
-func (project Project) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewProjectService(client).Delete(ctx, project.GetID())
+func (project *Project) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProjectService(client).Delete(ctx, project)
 }
 
 // ProjectService описывает методы сервиса для работы с проектами.
@@ -221,10 +221,15 @@ type ProjectService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Project) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление проекта.
+	// DeleteByID выполняет запрос на удаление проекта по ID.
 	// Принимает контекст и ID проекта.
 	// Возвращает «true» в случае успешного удаления проекта.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление проекта.
+	// Принимает контекст и проект.
+	// Возвращает «true» в случае успешного удаления проекта.
+	Delete(ctx context.Context, entity *Project) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного проекта по ID.
 	// Принимает контекст, ID проекта и опционально объект параметров запроса Params.

@@ -371,18 +371,18 @@ func (ProcessingOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingOrder ProcessingOrder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
-	return NewProcessingOrderService(client).Update(ctx, processingOrder.GetID(), &processingOrder, params...)
+func (processingOrder *ProcessingOrder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+	return NewProcessingOrderService(client).Update(ctx, processingOrder.GetID(), processingOrder, params...)
 }
 
 // Create shortcut
-func (processingOrder ProcessingOrder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
-	return NewProcessingOrderService(client).Create(ctx, &processingOrder, params...)
+func (processingOrder *ProcessingOrder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+	return NewProcessingOrderService(client).Create(ctx, processingOrder, params...)
 }
 
 // Delete shortcut
-func (processingOrder ProcessingOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewProcessingOrderService(client).Delete(ctx, processingOrder.GetID())
+func (processingOrder *ProcessingOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProcessingOrderService(client).Delete(ctx, processingOrder)
 }
 
 // ProcessingOrderPosition Позиция Заказа на производство.
@@ -504,10 +504,15 @@ type ProcessingOrderService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*ProcessingOrder) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление заказа на производство.
+	// DeleteByID выполняет запрос на удаление заказа на производство по ID.
 	// Принимает контекст и ID заказа на производство.
 	// Возвращает «true» в случае успешного удаления заказа на производство.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление заказа на производство.
+	// Принимает контекст и заказ на производство.
+	// Возвращает «true» в случае успешного удаления заказа на производство.
+	Delete(ctx context.Context, entity *ProcessingOrder) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение заказа на производство по ID.
 	// Принимает контекст, ID заказа на производство и опционально объект параметров запроса Params.

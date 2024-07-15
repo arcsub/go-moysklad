@@ -156,18 +156,18 @@ func (Country) MetaType() MetaType {
 }
 
 // Update shortcut
-func (country Country) Update(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
-	return NewCountryService(client).Update(ctx, country.GetID(), &country, params...)
+func (country *Country) Update(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+	return NewCountryService(client).Update(ctx, country.GetID(), country, params...)
 }
 
 // Create shortcut
-func (country Country) Create(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
-	return NewCountryService(client).Create(ctx, &country, params...)
+func (country *Country) Create(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+	return NewCountryService(client).Create(ctx, country, params...)
 }
 
 // Delete shortcut
-func (country Country) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCountryService(client).Delete(ctx, country.GetID())
+func (country *Country) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCountryService(client).Delete(ctx, country)
 }
 
 // CountryService описывает методы сервиса для работы со странами.
@@ -195,10 +195,15 @@ type CountryService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Country) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление страны.
+	// DeleteByID выполняет запрос на удаление страны по ID.
 	// Принимает контекст и ID страны.
 	// Возвращает «true» в случае успешного удаления страны.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление страны.
+	// Принимает контекст и страну.
+	// Возвращает «true» в случае успешного удаления страны.
+	Delete(ctx context.Context, entity *Country) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной страны по ID.
 	// Принимает контекст, ID страны и опционально объект параметров запроса Params.

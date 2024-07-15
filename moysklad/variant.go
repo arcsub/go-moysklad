@@ -284,18 +284,18 @@ func (Variant) MetaType() MetaType {
 }
 
 // Update shortcut
-func (variant Variant) Update(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
-	return NewVariantService(client).Update(ctx, variant.GetID(), &variant, params...)
+func (variant *Variant) Update(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+	return NewVariantService(client).Update(ctx, variant.GetID(), variant, params...)
 }
 
 // Create shortcut
-func (variant Variant) Create(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
-	return NewVariantService(client).Create(ctx, &variant, params...)
+func (variant *Variant) Create(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+	return NewVariantService(client).Create(ctx, variant, params...)
 }
 
 // Delete shortcut
-func (variant Variant) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewVariantService(client).Delete(ctx, variant.GetID())
+func (variant *Variant) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewVariantService(client).Delete(ctx, variant)
 }
 
 // VariantPack Упаковка модификации.
@@ -460,10 +460,15 @@ type VariantService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Variant) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление модификации.
+	// DeleteByID выполняет запрос на удаление модификации по ID.
 	// Принимает контекст и ID модификации.
 	// Возвращает «true» в случае успешного удаления модификации.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление модификации.
+	// Принимает контекст и модификацию.
+	// Возвращает «true» в случае успешного удаления модификации.
+	Delete(ctx context.Context, entity *Variant) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной модификации по ID.
 	// Принимает контекст, ID модификации и опционально объект параметров запроса Params.
@@ -555,7 +560,8 @@ type variantService struct {
 	endpointCreate[Variant]
 	endpointCreateUpdateMany[Variant]
 	endpointDeleteMany[Variant]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Variant]
 	endpointGetByID[Variant]
 	endpointUpdate[Variant]
 	endpointMetadata[MetaCharacteristicsWrapper]
@@ -595,7 +601,8 @@ func NewVariantService(client *Client) VariantService {
 		endpointCreate:           endpointCreate[Variant]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Variant]{e},
 		endpointDeleteMany:       endpointDeleteMany[Variant]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Variant]{e},
 		endpointGetByID:          endpointGetByID[Variant]{e},
 		endpointUpdate:           endpointUpdate[Variant]{e},
 		endpointMetadata:         endpointMetadata[MetaCharacteristicsWrapper]{e},

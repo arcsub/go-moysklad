@@ -163,6 +163,21 @@ func (Webhook) MetaType() MetaType {
 	return MetaTypeWebhook
 }
 
+// Update shortcut
+func (webhook *Webhook) Update(ctx context.Context, client *Client, params ...*Params) (*Webhook, *resty.Response, error) {
+	return NewWebhookService(client).Update(ctx, webhook.GetID(), webhook, params...)
+}
+
+// Create shortcut
+func (webhook *Webhook) Create(ctx context.Context, client *Client, params ...*Params) (*Webhook, *resty.Response, error) {
+	return NewWebhookService(client).Create(ctx, webhook, params...)
+}
+
+// Delete shortcut
+func (webhook *Webhook) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewWebhookService(client).Delete(ctx, webhook)
+}
+
 // MarshalJSON реализует интерфейс [json.Marshaler].
 func (webhook Webhook) MarshalJSON() ([]byte, error) {
 	webhook.Method = String("POST")
@@ -230,10 +245,15 @@ type WebhookService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Webhook) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление вебхука.
+	// DeleteByID выполняет запрос на удаление вебхука по ID.
 	// Принимает контекст и ID вебхука.
 	// Возвращает «true» в случае успешного удаления вебхука.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление вебхука.
+	// Принимает контекст и вебхук.
+	// Возвращает «true» в случае успешного удаления вебхука.
+	Delete(ctx context.Context, entity *Webhook) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного вебхука по ID.
 	// Принимает контекст, ID вебхука и опционально объект параметров запроса Params.

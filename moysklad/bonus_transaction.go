@@ -291,18 +291,18 @@ func (BonusTransaction) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bonusTransaction BonusTransaction) Update(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
-	return NewBonusTransactionService(client).Update(ctx, bonusTransaction.GetID(), &bonusTransaction, params...)
+func (bonusTransaction *BonusTransaction) Update(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+	return NewBonusTransactionService(client).Update(ctx, bonusTransaction.GetID(), bonusTransaction, params...)
 }
 
 // Create shortcut
-func (bonusTransaction BonusTransaction) Create(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
-	return NewBonusTransactionService(client).Create(ctx, &bonusTransaction, params...)
+func (bonusTransaction *BonusTransaction) Create(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+	return NewBonusTransactionService(client).Create(ctx, bonusTransaction, params...)
 }
 
 // Delete shortcut
-func (bonusTransaction BonusTransaction) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewBonusTransactionService(client).Delete(ctx, bonusTransaction.GetID())
+func (bonusTransaction *BonusTransaction) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewBonusTransactionService(client).Delete(ctx, bonusTransaction)
 }
 
 // BonusTransactionCategory Категория бонусной операции.
@@ -370,10 +370,15 @@ type BonusTransactionService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*BonusTransaction) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление бонусной операции.
+	// DeleteByID выполняет запрос на удаление бонусной операции по ID.
 	// Принимает контекст и ID бонусной операции.
 	// Возвращает «true» в случае успешного удаления бонусной операции.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление бонусной операции.
+	// Принимает контекст и бонусную операцию.
+	// Возвращает «true» в случае успешного удаления бонусной операции.
+	Delete(ctx context.Context, entity *BonusTransaction) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной операции.
 	// Принимает контекст, ID бонусной операции и опционально объект параметров запроса Params.

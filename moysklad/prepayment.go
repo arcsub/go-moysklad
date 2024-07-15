@@ -331,7 +331,9 @@ func (prepaymentPosition PrepaymentPosition) GetVat() int {
 // GetVatEnabled возвращает true, если НДС включен для позиции.
 //
 // С помощью этого флага для позиции можно выставлять НДС = 0 или НДС = "без НДС".
-// (vat = 0, vatEnabled = false) -> vat = "без НДС",
+//
+// (vat = 0, vatEnabled = false) -> vat = "без НДС"
+//
 // (vat = 0, vatEnabled = true) -> vat = 0%.
 func (prepaymentPosition PrepaymentPosition) GetVatEnabled() bool {
 	return Deref(prepaymentPosition.VatEnabled)
@@ -354,10 +356,15 @@ type PrepaymentService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Prepayment], *resty.Response, error)
 
-	// Delete выполняет запрос на удаление предоплаты.
+	// DeleteByID выполняет запрос на удаление предоплаты по ID.
 	// Принимает контекст и ID предоплаты.
 	// Возвращает «true» в случае успешного удаления предоплаты.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление предоплаты.
+	// Принимает контекст и предоплату.
+	// Возвращает «true» в случае успешного удаления предоплаты.
+	Delete(ctx context.Context, entity *Prepayment) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной предоплаты по ID.
 	// Принимает контекст, ID предоплаты и опционально объект параметров запроса Params.

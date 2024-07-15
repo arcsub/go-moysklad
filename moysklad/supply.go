@@ -551,18 +551,18 @@ func (Supply) MetaType() MetaType {
 }
 
 // Update shortcut
-func (supply Supply) Update(ctx context.Context, client *Client, params ...*Params) (*Supply, *resty.Response, error) {
-	return NewSupplyService(client).Update(ctx, supply.GetID(), &supply, params...)
+func (supply *Supply) Update(ctx context.Context, client *Client, params ...*Params) (*Supply, *resty.Response, error) {
+	return NewSupplyService(client).Update(ctx, supply.GetID(), supply, params...)
 }
 
 // Create shortcut
-func (supply Supply) Create(ctx context.Context, client *Client, params ...*Params) (*Supply, *resty.Response, error) {
-	return NewSupplyService(client).Create(ctx, &supply, params...)
+func (supply *Supply) Create(ctx context.Context, client *Client, params ...*Params) (*Supply, *resty.Response, error) {
+	return NewSupplyService(client).Create(ctx, supply, params...)
 }
 
 // Delete shortcut
-func (supply Supply) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewSupplyService(client).Delete(ctx, supply.GetID())
+func (supply *Supply) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewSupplyService(client).Delete(ctx, supply)
 }
 
 // SupplyPosition Позиция Приемки.
@@ -819,10 +819,15 @@ type SupplyService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Supply) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление приемки.
+	// DeleteByID выполняет запрос на удаление приемки по ID.
 	// Принимает контекст и ID приемки.
 	// Возвращает «true» в случае успешного удаления приемки.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление приемки.
+	// Принимает контекст и приемку.
+	// Возвращает «true» в случае успешного удаления приемки.
+	Delete(ctx context.Context, entity *Supply) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной приемки по ID.
 	// Принимает контекст, ID приемки и опционально объект параметров запроса Params.

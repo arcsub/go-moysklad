@@ -222,18 +222,18 @@ func (SalesChannel) MetaType() MetaType {
 }
 
 // Update shortcut
-func (salesChannel SalesChannel) Update(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
-	return NewSalesChannelService(client).Update(ctx, salesChannel.GetID(), &salesChannel, params...)
+func (salesChannel *SalesChannel) Update(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+	return NewSalesChannelService(client).Update(ctx, salesChannel.GetID(), salesChannel, params...)
 }
 
 // Create shortcut
-func (salesChannel SalesChannel) Create(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
-	return NewSalesChannelService(client).Create(ctx, &salesChannel, params...)
+func (salesChannel *SalesChannel) Create(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+	return NewSalesChannelService(client).Create(ctx, salesChannel, params...)
 }
 
 // Delete shortcut
-func (salesChannel SalesChannel) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewSalesChannelService(client).Delete(ctx, salesChannel.GetID())
+func (salesChannel *SalesChannel) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewSalesChannelService(client).Delete(ctx, salesChannel)
 }
 
 // SalesChannelType Тип канала продаж.
@@ -288,10 +288,15 @@ type SalesChannelService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*SalesChannel) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление канала продаж.
+	// DeleteByID выполняет запрос на удаление канала продаж по ID.
 	// Принимает контекст и ID канала продаж.
 	// Возвращает «true» в случае успешного удаления канала продаж.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление канала продаж.
+	// Принимает контекст и канал продаж.
+	// Возвращает «true» в случае успешного удаления канала продаж.
+	Delete(ctx context.Context, entity *SalesChannel) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного канала продаж по ID.
 	// Принимает контекст, ID канала продаж и опционально объект параметров запроса Params.

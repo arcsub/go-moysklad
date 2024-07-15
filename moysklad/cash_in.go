@@ -429,18 +429,18 @@ func (CashIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (cashIn CashIn) Update(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
-	return NewCashInService(client).Update(ctx, cashIn.GetID(), &cashIn, params...)
+func (cashIn *CashIn) Update(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+	return NewCashInService(client).Update(ctx, cashIn.GetID(), cashIn, params...)
 }
 
 // Create shortcut
-func (cashIn CashIn) Create(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
-	return NewCashInService(client).Create(ctx, &cashIn, params...)
+func (cashIn *CashIn) Create(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+	return NewCashInService(client).Create(ctx, cashIn, params...)
 }
 
 // Delete shortcut
-func (cashIn CashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCashInService(client).Delete(ctx, cashIn.GetID())
+func (cashIn *CashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCashInService(client).Delete(ctx, cashIn)
 }
 
 // CashInService методы сервиса для работы с приходными ордерами.
@@ -469,10 +469,15 @@ type CashInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CashIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление приходного ордера.
+	// DeleteByID выполняет запрос на удаление приходного ордера по ID.
 	// Принимает контекст и ID приходного ордера.
 	// Возвращает «true» в случае успешного удаления приходного ордера.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление приходного ордера.
+	// Принимает контекст и приходный ордер.
+	// Возвращает «true» в случае успешного удаления приходного ордера.
+	Delete(ctx context.Context, entity *CashIn) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных приходных ордеров.
 	// Принимает контекст.

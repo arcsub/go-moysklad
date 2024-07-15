@@ -208,18 +208,18 @@ func (ProductionStageCompletion) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productionStageCompletion ProductionStageCompletion) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
-	return client.Entity().ProductionStageCompletion().Update(ctx, productionStageCompletion.GetID(), &productionStageCompletion, params...)
+func (productionStageCompletion *ProductionStageCompletion) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+	return NewProductionStageCompletionService(client).Update(ctx, productionStageCompletion.GetID(), productionStageCompletion, params...)
 }
 
 // Create shortcut
-func (productionStageCompletion ProductionStageCompletion) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
-	return client.Entity().ProductionStageCompletion().Create(ctx, &productionStageCompletion, params...)
+func (productionStageCompletion *ProductionStageCompletion) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+	return NewProductionStageCompletionService(client).Create(ctx, productionStageCompletion, params...)
 }
 
 // Delete shortcut
-func (productionStageCompletion ProductionStageCompletion) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().ProductionStageCompletion().Delete(ctx, productionStageCompletion.GetID())
+func (productionStageCompletion *ProductionStageCompletion) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProductionStageCompletionService(client).Delete(ctx, productionStageCompletion)
 }
 
 // ProductionStageCompletionMaterial Материалы Выполнения этапа производства
@@ -349,7 +349,12 @@ type ProductionStageCompletionService interface {
 	Create(ctx context.Context, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, productionStageCompletionList Slice[ProductionStageCompletion], params ...*Params) (*Slice[ProductionStageCompletion], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProductionStageCompletion) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление выполнения этапов производства.
+	// Принимает контекст и выполнение этапов производства.
+	// Возвращает «true» в случае успешного удаления выполнения этапов производства.
+	Delete(ctx context.Context, entity *ProductionStageCompletion) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
 	GetMaterials(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProductionStageCompletionMaterial], *resty.Response, error)
@@ -373,7 +378,8 @@ type productionStageCompletionService struct {
 	endpointCreate[ProductionStageCompletion]
 	endpointCreateUpdateMany[ProductionStageCompletion]
 	endpointDeleteMany[ProductionStageCompletion]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[ProductionStageCompletion]
 	endpointGetByID[ProductionStageCompletion]
 	endpointUpdate[ProductionStageCompletion]
 }
@@ -436,7 +442,8 @@ func NewProductionStageCompletionService(client *Client) ProductionStageCompleti
 		endpointCreate:           endpointCreate[ProductionStageCompletion]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[ProductionStageCompletion]{e},
 		endpointDeleteMany:       endpointDeleteMany[ProductionStageCompletion]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[ProductionStageCompletion]{e},
 		endpointGetByID:          endpointGetByID[ProductionStageCompletion]{e},
 		endpointUpdate:           endpointUpdate[ProductionStageCompletion]{e},
 	}

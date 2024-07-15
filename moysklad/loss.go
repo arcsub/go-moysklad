@@ -354,18 +354,18 @@ func (Loss) MetaType() MetaType {
 }
 
 // Update shortcut
-func (loss Loss) Update(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
-	return NewLossService(client).Update(ctx, loss.GetID(), &loss, params...)
+func (loss *Loss) Update(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
+	return NewLossService(client).Update(ctx, loss.GetID(), loss, params...)
 }
 
 // Create shortcut
-func (loss Loss) Create(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
-	return NewLossService(client).Create(ctx, &loss, params...)
+func (loss *Loss) Create(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
+	return NewLossService(client).Create(ctx, loss, params...)
 }
 
 // Delete shortcut
-func (loss Loss) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewLossService(client).Delete(ctx, loss.GetID())
+func (loss *Loss) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewLossService(client).Delete(ctx, loss)
 }
 
 // LossPosition Позиция Списания.
@@ -529,10 +529,15 @@ type LossService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Loss) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление списания.
-	// Принимает контекст и ID списания.
+	// DeleteByID выполняет запрос на удаление списания.
+	// Принимает контекст и списание.
 	// Возвращает «true» в случае успешного удаления списания.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление списания.
+	// Принимает контекст и списание.
+	// Возвращает «true» в случае успешного удаления списания.
+	Delete(ctx context.Context, entity *Loss) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного списания по ID.
 	// Принимает контекст, ID списания и опционально объект параметров запроса Params.

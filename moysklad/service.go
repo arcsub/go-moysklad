@@ -429,18 +429,18 @@ func (Service) MetaType() MetaType {
 }
 
 // Update shortcut
-func (service Service) Update(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
-	return NewServiceService(client).Update(ctx, service.GetID(), &service, params...)
+func (service *Service) Update(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
+	return NewServiceService(client).Update(ctx, service.GetID(), service, params...)
 }
 
 // Create shortcut
-func (service Service) Create(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
-	return NewServiceService(client).Create(ctx, &service, params...)
+func (service *Service) Create(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
+	return NewServiceService(client).Create(ctx, service, params...)
 }
 
 // Delete shortcut
-func (service Service) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewServiceService(client).Delete(ctx, service.GetID())
+func (service *Service) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewServiceService(client).Delete(ctx, service)
 }
 
 // ServiceService описывает методы сервиса для работы с услугами.
@@ -468,10 +468,15 @@ type ServiceService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Service) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление услуги.
+	// DeleteByID выполняет запрос на удаление услуги по ID.
 	// Принимает контекст и ID услуги.
 	// Возвращает «true» в случае успешного удаления услуги.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление услуги.
+	// Принимает контекст и услугу.
+	// Возвращает «true» в случае успешного удаления услуги.
+	Delete(ctx context.Context, entity *Service) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной услуги по ID.
 	// Принимает контекст, ID услуги и опционально объект параметров запроса Params.

@@ -505,18 +505,18 @@ func (SalesReturn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (salesReturn SalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
-	return NewSalesReturnService(client).Update(ctx, salesReturn.GetID(), &salesReturn, params...)
+func (salesReturn *SalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+	return NewSalesReturnService(client).Update(ctx, salesReturn.GetID(), salesReturn, params...)
 }
 
 // Create shortcut
-func (salesReturn SalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
-	return NewSalesReturnService(client).Create(ctx, &salesReturn, params...)
+func (salesReturn *SalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+	return NewSalesReturnService(client).Create(ctx, salesReturn, params...)
 }
 
 // Delete shortcut
-func (salesReturn SalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewSalesReturnService(client).Delete(ctx, salesReturn.GetID())
+func (salesReturn *SalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewSalesReturnService(client).Delete(ctx, salesReturn)
 }
 
 // SalesReturnPosition Позиция Возврата покупателя.
@@ -767,10 +767,15 @@ type SalesReturnService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*SalesReturn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление возврата покупателя.
+	// DeleteByID выполняет запрос на удаление возврата покупателя по ID.
 	// Принимает контекст и ID возврата покупателя.
 	// Возвращает «true» в случае успешного удаления возврата покупателя.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление возврата покупателя.
+	// Принимает контекст и возврат покупателя.
+	// Возвращает «true» в случае успешного удаления возврата покупателя.
+	Delete(ctx context.Context, entity *SalesReturn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного возврата покупателя по ID.
 	// Принимает контекст, ID возврата покупателя и опционально объект параметров запроса Params.

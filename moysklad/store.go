@@ -245,18 +245,18 @@ func (Store) MetaType() MetaType {
 }
 
 // Update shortcut
-func (store Store) Update(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
-	return NewStoreService(client).Update(ctx, store.GetID(), &store, params...)
+func (store *Store) Update(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+	return NewStoreService(client).Update(ctx, store.GetID(), store, params...)
 }
 
 // Create shortcut
-func (store Store) Create(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
-	return NewStoreService(client).Create(ctx, &store, params...)
+func (store *Store) Create(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+	return NewStoreService(client).Create(ctx, store, params...)
 }
 
 // Delete shortcut
-func (store Store) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewStoreService(client).Delete(ctx, store.GetID())
+func (store *Store) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewStoreService(client).Delete(ctx, store)
 }
 
 // Slot Ячейка склада.
@@ -460,10 +460,15 @@ type StoreService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Store) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление склада.
+	// DeleteByID выполняет запрос на удаление склада по ID.
 	// Принимает контекст и ID склада.
 	// Возвращает «true» в случае успешного удаления склада.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление склада.
+	// Принимает контекст и склад.
+	// Возвращает «true» в случае успешного удаления склада.
+	Delete(ctx context.Context, entity *Store) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных складов.
 	// Принимает контекст.
@@ -619,7 +624,8 @@ type storeService struct {
 	endpointCreate[Store]
 	endpointCreateUpdateMany[Store]
 	endpointDeleteMany[Store]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Store]
 	endpointMetadata[MetaAttributesSharedWrapper]
 	endpointAttributes
 	endpointGetByID[Store]
@@ -706,7 +712,8 @@ func NewStoreService(client *Client) StoreService {
 		endpointCreate:           endpointCreate[Store]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Store]{e},
 		endpointDeleteMany:       endpointDeleteMany[Store]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Store]{e},
 		endpointMetadata:         endpointMetadata[MetaAttributesSharedWrapper]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointGetByID:          endpointGetByID[Store]{e},

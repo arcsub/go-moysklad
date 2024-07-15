@@ -152,18 +152,18 @@ func (ProcessingStage) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingStage ProcessingStage) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
-	return client.Entity().ProcessingStage().Update(ctx, processingStage.GetID(), &processingStage, params...)
+func (processingStage *ProcessingStage) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+	return NewProcessingStageService(client).Update(ctx, processingStage.GetID(), processingStage, params...)
 }
 
 // Create shortcut
-func (processingStage ProcessingStage) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
-	return client.Entity().ProcessingStage().Create(ctx, &processingStage, params...)
+func (processingStage *ProcessingStage) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+	return NewProcessingStageService(client).Create(ctx, processingStage, params...)
 }
 
 // Delete shortcut
-func (processingStage ProcessingStage) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().ProcessingStage().Delete(ctx, processingStage.GetID())
+func (processingStage *ProcessingStage) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProcessingStageService(client).Delete(ctx, processingStage)
 }
 
 // ProcessingStageService
@@ -173,7 +173,12 @@ type ProcessingStageService interface {
 	Create(ctx context.Context, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...*Params) (*Slice[ProcessingStage], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление этапа производства.
+	// Принимает контекст и этап производства.
+	// Возвращает «true» в случае успешного удаления этапа производства.
+	Delete(ctx context.Context, entity *ProcessingStage) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingStage, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
 

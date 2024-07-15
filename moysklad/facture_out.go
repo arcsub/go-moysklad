@@ -426,18 +426,18 @@ func (FactureOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (factureOut FactureOut) Update(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
-	return NewFactureOutService(client).Update(ctx, factureOut.GetID(), &factureOut, params...)
+func (factureOut *FactureOut) Update(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
+	return NewFactureOutService(client).Update(ctx, factureOut.GetID(), factureOut, params...)
 }
 
 // Create shortcut
-func (factureOut FactureOut) Create(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
-	return NewFactureOutService(client).Create(ctx, &factureOut, params...)
+func (factureOut *FactureOut) Create(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
+	return NewFactureOutService(client).Create(ctx, factureOut, params...)
 }
 
 // Delete shortcut
-func (factureOut FactureOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewFactureOutService(client).Delete(ctx, factureOut.GetID())
+func (factureOut *FactureOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewFactureOutService(client).Delete(ctx, factureOut)
 }
 
 // FactureOutService описывает методы сервиса для работы со счетами-фактурами выданными.
@@ -466,10 +466,15 @@ type FactureOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*FactureOut) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление выданного счета-фактуры.
+	// DeleteByID выполняет запрос на удаление выданного счета-фактуры по ID.
 	// Принимает контекст и ID выданного счета-фактуры.
 	// Возвращает «true» в случае успешного удаления выданного счета-фактуры.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление выданного счета-фактуры.
+	// Принимает контекст и выданный счет-фактуру.
+	// Возвращает «true» в случае успешного удаления выданного счета-фактуры.
+	Delete(ctx context.Context, entity *FactureOut) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного выданного счета-фактуры по ID.
 	// Принимает контекст, ID выданного счета-фактуры и опционально объект параметров запроса Params.

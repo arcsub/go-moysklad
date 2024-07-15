@@ -373,6 +373,21 @@ func (Contract) MetaType() MetaType {
 	return MetaTypeContract
 }
 
+// Update shortcut
+func (contract *Contract) Update(ctx context.Context, client *Client, params ...*Params) (*Contract, *resty.Response, error) {
+	return NewContractService(client).Update(ctx, contract.GetID(), contract, params...)
+}
+
+// Create shortcut
+func (contract *Contract) Create(ctx context.Context, client *Client, params ...*Params) (*Contract, *resty.Response, error) {
+	return NewContractService(client).Create(ctx, contract, params...)
+}
+
+// Delete shortcut
+func (contract *Contract) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewContractService(client).Delete(ctx, contract)
+}
+
 // ContractType Тип Договора.
 //
 // Возможные значения:
@@ -424,10 +439,15 @@ type ContractService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Contract) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление договора.
+	// DeleteByID выполняет запрос на удаление договора.
 	// Принимает контекст и ID договора.
 	// Возвращает «true» в случае успешного удаления договора.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление договора.
+	// Принимает контекст и договор.
+	// Возвращает «true» в случае успешного удаления договора.
+	Delete(ctx context.Context, entity *Contract) (bool, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных договоров.
 	// Принимает контекст.

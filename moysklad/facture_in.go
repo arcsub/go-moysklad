@@ -384,18 +384,18 @@ func (FactureIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (factureIn FactureIn) Update(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
-	return NewFactureInService(client).Update(ctx, factureIn.GetID(), &factureIn, params...)
+func (factureIn *FactureIn) Update(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
+	return NewFactureInService(client).Update(ctx, factureIn.GetID(), factureIn, params...)
 }
 
 // Create shortcut
-func (factureIn FactureIn) Create(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
-	return NewFactureInService(client).Create(ctx, &factureIn, params...)
+func (factureIn *FactureIn) Create(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
+	return NewFactureInService(client).Create(ctx, factureIn, params...)
 }
 
 // Delete shortcut
-func (factureIn FactureIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewFactureInService(client).Delete(ctx, factureIn.GetID())
+func (factureIn *FactureIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewFactureInService(client).Delete(ctx, factureIn)
 }
 
 // FactureInService описывает методы сервиса для работы со счетами-фактурами полученными.
@@ -424,10 +424,15 @@ type FactureInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*FactureIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление полученного счета-фактуры.
+	// DeleteByID выполняет запрос на удаление полученного счета-фактуры по ID.
 	// Принимает контекст и ID полученного счета-фактуры.
 	// Возвращает «true» в случае успешного удаления полученного счета-фактуры.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление полученного счета-фактуры.
+	// Принимает контекст и полученный счет-фактуру.
+	// Возвращает «true» в случае успешного удаления полученного счета-фактуры.
+	Delete(ctx context.Context, entity *FactureIn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного полученного счета-фактуры по ID.
 	// Принимает контекст, ID полученного счета-фактуры и опционально объект параметров запроса Params.

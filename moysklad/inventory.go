@@ -329,18 +329,18 @@ func (Inventory) MetaType() MetaType {
 }
 
 // Update shortcut
-func (inventory Inventory) Update(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
-	return NewInventoryService(client).Update(ctx, inventory.GetID(), &inventory, params...)
+func (inventory *Inventory) Update(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+	return NewInventoryService(client).Update(ctx, inventory.GetID(), inventory, params...)
 }
 
 // Create shortcut
-func (inventory Inventory) Create(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
-	return NewInventoryService(client).Create(ctx, &inventory, params...)
+func (inventory *Inventory) Create(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+	return NewInventoryService(client).Create(ctx, inventory, params...)
 }
 
 // Delete shortcut
-func (inventory Inventory) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewInventoryService(client).Delete(ctx, inventory.GetID())
+func (inventory *Inventory) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewInventoryService(client).Delete(ctx, inventory)
 }
 
 // InventoryPosition Позиция Инвентаризации.
@@ -485,10 +485,15 @@ type InventoryService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Inventory) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление инвентаризации.
+	// DeleteByID выполняет запрос на удаление инвентаризации по ID.
 	// Принимает контекст и ID инвентаризации.
 	// Возвращает «true» в случае успешного удаления инвентаризации.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление инвентаризации.
+	// Принимает контекст и инвентаризацию.
+	// Возвращает «true» в случае успешного удаления инвентаризации.
+	Delete(ctx context.Context, entity *Inventory) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного инвентаризации по ID.
 	// Принимает контекст, ID инвентаризации и опционально объект параметров запроса Params.
@@ -664,7 +669,8 @@ type inventoryService struct {
 	endpointCreate[Inventory]
 	endpointCreateUpdateMany[Inventory]
 	endpointDeleteMany[Inventory]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Inventory]
 	endpointGetByID[Inventory]
 	endpointUpdate[Inventory]
 	endpointTemplate[Inventory]
@@ -678,6 +684,15 @@ type inventoryService struct {
 	endpointEvaluate[Inventory]
 }
 
+func (service *inventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointInventoryRecalculate, id)
+	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
+	if err != nil {
+		return false, resp, err
+	}
+	return resp.StatusCode() == http.StatusCreated, resp, nil
+}
+
 // NewInventoryService принимает [Client] и возвращает сервис для работы с инвентаризациями.
 func NewInventoryService(client *Client) InventoryService {
 	e := NewEndpoint(client, EndpointInventory)
@@ -687,7 +702,8 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointCreate:           endpointCreate[Inventory]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Inventory]{e},
 		endpointDeleteMany:       endpointDeleteMany[Inventory]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Inventory]{e},
 		endpointGetByID:          endpointGetByID[Inventory]{e},
 		endpointUpdate:           endpointUpdate[Inventory]{e},
 		endpointTemplate:         endpointTemplate[Inventory]{e},
@@ -700,13 +716,4 @@ func NewInventoryService(client *Client) InventoryService {
 		endpointFiles:            endpointFiles{e},
 		endpointEvaluate:         endpointEvaluate[Inventory]{e},
 	}
-}
-
-func (service *inventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
-	path := fmt.Sprintf(EndpointInventoryRecalculate, id)
-	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
-	if err != nil {
-		return false, resp, err
-	}
-	return resp.StatusCode() == http.StatusCreated, resp, nil
 }

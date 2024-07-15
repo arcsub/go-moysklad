@@ -75,18 +75,18 @@ func (role Role) String() string { return Stringify(role) }
 func (Role) MetaType() MetaType { return MetaTypeRole }
 
 // Update shortcut
-func (role Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
-	return NewRoleService(client).Update(ctx, role.GetID(), &role, params...)
+func (role *Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+	return NewRoleService(client).Update(ctx, role.GetID(), role, params...)
 }
 
 // Create shortcut
-func (role Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
-	return NewRoleService(client).Create(ctx, &role, params...)
+func (role *Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+	return NewRoleService(client).Create(ctx, role, params...)
 }
 
 // Delete shortcut
-func (role Role) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewRoleService(client).Delete(ctx, role.GetID())
+func (role *Role) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRoleService(client).Delete(ctx, role)
 }
 
 // AdminRole Роль администратора.
@@ -333,10 +333,15 @@ type RoleService interface {
 	// Возвращает созданную пользовательскую роль.
 	Create(ctx context.Context, role *Role, params ...*Params) (*Role, *resty.Response, error)
 
-	// Delete выполняет запрос на массовое удаление пользовательской роли.
+	// DeleteByID выполняет запрос на массовое удаление пользовательской роли по ID.
 	// Принимает контекст и ID пользовательской роли.
 	// Возвращает «true» в случае успешного удаления пользовательской роли.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление пользовательской роли.
+	// Принимает контекст и пользовательскую роль.
+	// Возвращает «true» в случае успешного удаления пользовательской роли.
+	Delete(ctx context.Context, entity *Role) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной пользовательской роли по ID.
 	// Принимает контекст, ID пользовательской роли и опционально объект параметров запроса Params.
@@ -381,7 +386,8 @@ type roleService struct {
 	Endpoint
 	endpointGetList[Role]
 	endpointCreate[Role]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Role]
 	endpointGetByID[Role]
 	endpointUpdate[Role]
 }
@@ -406,11 +412,12 @@ func (service *roleService) GetWorkerRole(ctx context.Context) (*WorkerRole, *re
 func NewRoleService(client *Client) RoleService {
 	e := NewEndpoint(client, EndpointRole)
 	return &roleService{
-		Endpoint:        e,
-		endpointGetList: endpointGetList[Role]{e},
-		endpointCreate:  endpointCreate[Role]{e},
-		endpointDelete:  endpointDelete{e},
-		endpointGetByID: endpointGetByID[Role]{e},
-		endpointUpdate:  endpointUpdate[Role]{e},
+		Endpoint:           e,
+		endpointGetList:    endpointGetList[Role]{e},
+		endpointCreate:     endpointCreate[Role]{e},
+		endpointDeleteByID: endpointDeleteByID{e},
+		endpointDelete:     endpointDelete[Role]{e},
+		endpointGetByID:    endpointGetByID[Role]{e},
+		endpointUpdate:     endpointUpdate[Role]{e},
 	}
 }

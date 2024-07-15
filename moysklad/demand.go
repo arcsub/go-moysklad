@@ -671,18 +671,18 @@ func (Demand) MetaType() MetaType {
 }
 
 // Update shortcut
-func (demand Demand) Update(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
-	return NewDemandService(client).Update(ctx, demand.GetID(), &demand, params...)
+func (demand *Demand) Update(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+	return NewDemandService(client).Update(ctx, demand.GetID(), demand, params...)
 }
 
 // Create shortcut
-func (demand Demand) Create(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
-	return NewDemandService(client).Create(ctx, &demand, params...)
+func (demand *Demand) Create(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+	return NewDemandService(client).Create(ctx, demand, params...)
 }
 
 // Delete shortcut
-func (demand Demand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewDemandService(client).Delete(ctx, demand.GetID())
+func (demand *Demand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewDemandService(client).Delete(ctx, demand)
 }
 
 // DemandPosition Позиция Отгрузки
@@ -954,10 +954,15 @@ type DemandService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Demand) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление отгрузки.
+	// DeleteByID выполняет запрос на удаление отгрузки по ID.
 	// Принимает контекст и ID отгрузки.
 	// Возвращает «true» в случае успешного удаления отгрузки.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление отгрузки.
+	// Принимает контекст и отгрузку.
+	// Возвращает «true» в случае успешного удаления отгрузки.
+	Delete(ctx context.Context, entity *Demand) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной отгрузки по ID.
 	// Принимает контекст, ID отгрузки взаиморасчётов и опционально объект параметров запроса Params.

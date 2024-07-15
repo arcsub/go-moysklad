@@ -231,18 +231,18 @@ func (BonusProgram) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bonusProgram BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
-	return NewBonusProgramService(client).Update(ctx, bonusProgram.GetID(), &bonusProgram, params...)
+func (bonusProgram *BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+	return NewBonusProgramService(client).Update(ctx, bonusProgram.GetID(), bonusProgram, params...)
 }
 
 // Create shortcut
-func (bonusProgram BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
-	return NewBonusProgramService(client).Create(ctx, &bonusProgram, params...)
+func (bonusProgram *BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+	return NewBonusProgramService(client).Create(ctx, bonusProgram, params...)
 }
 
 // Delete shortcut
-func (bonusProgram BonusProgram) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewBonusProgramService(client).Delete(ctx, bonusProgram.GetID())
+func (bonusProgram *BonusProgram) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewBonusProgramService(client).Delete(ctx, bonusProgram)
 }
 
 // WelcomeBonusesMode Условия бонусных баллов.
@@ -291,10 +291,15 @@ type BonusProgramService interface {
 	// Возвращает бонусную программу.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusProgram, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление бонусной программы.
+	// DeleteByID выполняет запрос на удаление бонусной программы по ID.
 	// Принимает контекст и ID бонусной программы.
 	// Возвращает «true» в случае успешного удаления бонусной программы.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление бонусной программы.
+	// Принимает контекст и бонусную программу.
+	// Возвращает «true» в случае успешного бонусной программы.
+	Delete(ctx context.Context, entity *BonusProgram) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных программ.
 	// Принимает контекст и множество бонусных программ.

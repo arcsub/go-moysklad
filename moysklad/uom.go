@@ -133,18 +133,18 @@ func (Uom) MetaType() MetaType {
 }
 
 // Update shortcut
-func (uom Uom) Update(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
-	return NewUomService(client).Update(ctx, uom.GetID(), &uom, params...)
+func (uom *Uom) Update(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+	return NewUomService(client).Update(ctx, uom.GetID(), uom, params...)
 }
 
 // Create shortcut
-func (uom Uom) Create(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
-	return NewUomService(client).Create(ctx, &uom, params...)
+func (uom *Uom) Create(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+	return NewUomService(client).Create(ctx, uom, params...)
 }
 
 // Delete shortcut
-func (uom Uom) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewUomService(client).Delete(ctx, uom.GetID())
+func (uom *Uom) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewUomService(client).Delete(ctx, uom)
 }
 
 // UomService описывает методы сервиса для работы с единицами измерения.
@@ -172,10 +172,15 @@ type UomService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Uom) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление единицы измерения.
+	// DeleteByID выполняет запрос на удаление единицы измерения по ID.
 	// Принимает контекст и ID единицы измерения.
 	// Возвращает «true» в случае успешного удаления единицы измерения.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление единицы измерения.
+	// Принимает контекст и единицу измерения.
+	// Возвращает «true» в случае успешного удаления единицы измерения.
+	Delete(ctx context.Context, entity *Uom) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной единицы измерения по ID.
 	// Принимает контекст, ID единицы измерения и опционально объект параметров запроса Params.

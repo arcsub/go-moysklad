@@ -134,18 +134,18 @@ func (TaxRate) MetaType() MetaType {
 }
 
 // Update shortcut
-func (taxRate TaxRate) Update(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
-	return NewTaxRateService(client).Update(ctx, taxRate.GetID(), &taxRate, params...)
+func (taxRate *TaxRate) Update(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+	return NewTaxRateService(client).Update(ctx, taxRate.GetID(), taxRate, params...)
 }
 
 // Create shortcut
-func (taxRate TaxRate) Create(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
-	return NewTaxRateService(client).Create(ctx, &taxRate, params...)
+func (taxRate *TaxRate) Create(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+	return NewTaxRateService(client).Create(ctx, taxRate, params...)
 }
 
 // Delete shortcut
-func (taxRate TaxRate) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewTaxRateService(client).Delete(ctx, taxRate.GetID())
+func (taxRate *TaxRate) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewTaxRateService(client).Delete(ctx, taxRate)
 }
 
 // TaxRateService описывает методы сервиса для работы со ставками НДС.
@@ -173,10 +173,15 @@ type TaxRateService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*TaxRate) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление заказа поставщику.
-	// Принимает контекст и ID заказа поставщику.
-	// Возвращает «true» в случае успешного удаления заказа поставщику.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	// DeleteByID выполняет запрос на удаление налоговой ставки по ID.
+	// Принимает контекст и ID налоговой ставки.
+	// Возвращает «true» в случае успешного удаления налоговой ставки.
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление налоговой ставки.
+	// Принимает контекст и налоговую ставку.
+	// Возвращает «true» в случае успешного удаления налоговой ставки.
+	Delete(ctx context.Context, entity *TaxRate) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной налоговой ставки по ID.
 	// Принимает контекст, ID налоговой ставки и опционально объект параметров запроса Params.

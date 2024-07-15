@@ -673,18 +673,18 @@ func (Product) MetaType() MetaType {
 }
 
 // Create shortcut
-func (product Product) Create(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
-	return NewProductService(client).Create(ctx, &product, params...)
+func (product *Product) Create(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+	return NewProductService(client).Create(ctx, product, params...)
 }
 
 // Update shortcut
-func (product Product) Update(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
-	return NewProductService(client).Update(ctx, product.GetID(), &product, params...)
+func (product *Product) Update(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+	return NewProductService(client).Update(ctx, product.GetID(), product, params...)
 }
 
 // Delete shortcut
-func (product Product) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewProductService(client).Delete(ctx, product.GetID())
+func (product *Product) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProductService(client).Delete(ctx, product)
 }
 
 // Alcoholic Объект, содержащий поля алкогольной продукции.
@@ -775,10 +775,15 @@ type ProductService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Product) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление товара.
+	// DeleteByID выполняет запрос на удаление товара по ID.
 	// Принимает контекст и ID товара.
 	// Возвращает «true» в случае успешного удаления товара.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление товара.
+	// Принимает контекст и товар.
+	// Возвращает «true» в случае успешного удаления товара.
+	Delete(ctx context.Context, entity *Product) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного товара по ID.
 	// Принимает контекст, ID товара и опционально объект параметров запроса Params.

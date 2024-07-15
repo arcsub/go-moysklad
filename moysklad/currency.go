@@ -205,18 +205,18 @@ func (Currency) MetaType() MetaType {
 }
 
 // Update shortcut
-func (currency Currency) Update(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
-	return client.Entity().Currency().Update(ctx, currency.GetID(), &currency, params...)
+func (currency *Currency) Update(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+	return NewCurrencyService(client).Update(ctx, currency.GetID(), currency, params...)
 }
 
 // Create shortcut
-func (currency Currency) Create(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
-	return client.Entity().Currency().Create(ctx, &currency, params...)
+func (currency *Currency) Create(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+	return NewCurrencyService(client).Create(ctx, currency, params...)
 }
 
 // Delete shortcut
-func (currency Currency) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().Currency().Delete(ctx, currency.GetID())
+func (currency *Currency) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCurrencyService(client).Delete(ctx, currency)
 }
 
 // RateUpdateType Способ обновления курса.
@@ -331,10 +331,15 @@ type CurrencyService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Currency) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление валюты.
+	// DeleteByID выполняет запрос на удаление валюты по ID.
 	// Принимает контекст и ID валюты.
 	// Возвращает «true» в случае успешного удаления валюты.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление валюты.
+	// Принимает контекст и валюту.
+	// Возвращает «true» в случае успешного удаления валюты.
+	Delete(ctx context.Context, entity *Currency) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной валюты по ID.
 	// Принимает контекст, ID валюты взаиморасчётов и опционально объект параметров запроса Params.

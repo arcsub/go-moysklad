@@ -293,18 +293,18 @@ func (ProductionTask) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productionTask ProductionTask) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
-	return client.Entity().ProductionTask().Update(ctx, productionTask.GetID(), &productionTask, params...)
+func (productionTask *ProductionTask) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+	return NewProductionTaskService(client).Update(ctx, productionTask.GetID(), productionTask, params...)
 }
 
 // Create shortcut
-func (productionTask ProductionTask) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
-	return client.Entity().ProductionTask().Create(ctx, &productionTask, params...)
+func (productionTask *ProductionTask) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+	return NewProductionTaskService(client).Create(ctx, productionTask, params...)
 }
 
 // Delete shortcut
-func (productionTask ProductionTask) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().ProductionTask().Delete(ctx, productionTask.GetID())
+func (productionTask *ProductionTask) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProductionTaskService(client).Delete(ctx, productionTask)
 }
 
 // ProductionRow Позиция производственного задания
@@ -479,7 +479,12 @@ type ProductionTaskService interface {
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductionTask, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление производственного задания.
+	// Принимает контекст и производственное задание.
+	// Возвращает «true» в случае успешного удаления производственного задания.
+	Delete(ctx context.Context, entity *ProductionTask) (bool, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -576,7 +581,8 @@ type productionTaskService struct {
 	endpointAttributes
 	endpointGetByID[ProductionTask]
 	endpointUpdate[ProductionTask]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[ProductionTask]
 	endpointPositions[ProductionRow]
 	endpointStates
 	endpointFiles
@@ -654,7 +660,8 @@ func NewProductionTaskService(client *Client) ProductionTaskService {
 		endpointGetByID:          endpointGetByID[ProductionTask]{e},
 		endpointUpdate:           endpointUpdate[ProductionTask]{e},
 		endpointPositions:        endpointPositions[ProductionRow]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[ProductionTask]{e},
 		endpointAttributes:       endpointAttributes{e},
 		endpointStates:           endpointStates{e},
 		endpointFiles:            endpointFiles{e},

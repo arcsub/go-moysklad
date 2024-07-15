@@ -483,18 +483,18 @@ func (paymentIn PaymentIn) AsOperation() *Operation {
 }
 
 // Update shortcut
-func (paymentIn PaymentIn) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
-	return NewPaymentInService(client).Update(ctx, paymentIn.GetID(), &paymentIn, params...)
+func (paymentIn *PaymentIn) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
+	return NewPaymentInService(client).Update(ctx, paymentIn.GetID(), paymentIn, params...)
 }
 
 // Create shortcut
-func (paymentIn PaymentIn) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
-	return NewPaymentInService(client).Create(ctx, &paymentIn, params...)
+func (paymentIn *PaymentIn) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
+	return NewPaymentInService(client).Create(ctx, paymentIn, params...)
 }
 
 // Delete shortcut
-func (paymentIn PaymentIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewPaymentInService(client).Delete(ctx, paymentIn.GetID())
+func (paymentIn *PaymentIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewPaymentInService(client).Delete(ctx, paymentIn)
 }
 
 // PaymentInService описывает методы сервиса для работы с входящими платежами.
@@ -523,10 +523,15 @@ type PaymentInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*PaymentIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление входящего платежа.
+	// DeleteByID выполняет запрос на удаление входящего платежа по ID.
 	// Принимает контекст и ID входящего платежа.
 	// Возвращает «true» в случае успешного удаления входящего платежа.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление входящего платежа.
+	// Принимает контекст и входящий платеж.
+	// Возвращает «true» в случае успешного удаления входящего платежа.
+	Delete(ctx context.Context, entity *PaymentIn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного входящего платежа по ID.
 	// Принимает контекст, ID входящего платежа и опционально объект параметров запроса Params.

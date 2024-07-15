@@ -612,18 +612,18 @@ func (CustomerOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (customerOrder CustomerOrder) Update(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
-	return client.Entity().CustomerOrder().Update(ctx, customerOrder.GetID(), &customerOrder, params...)
+func (customerOrder *CustomerOrder) Update(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+	return NewCustomerOrderService(client).Update(ctx, customerOrder.GetID(), customerOrder, params...)
 }
 
 // Create shortcut
-func (customerOrder CustomerOrder) Create(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
-	return client.Entity().CustomerOrder().Create(ctx, &customerOrder, params...)
+func (customerOrder *CustomerOrder) Create(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+	return NewCustomerOrderService(client).Create(ctx, customerOrder, params...)
 }
 
 // Delete shortcut
-func (customerOrder CustomerOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CustomerOrder().Delete(ctx, customerOrder.GetID())
+func (customerOrder *CustomerOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCustomerOrderService(client).Delete(ctx, customerOrder)
 }
 
 // CustomerOrderPosition Позиция Заказа покупателя.
@@ -818,7 +818,8 @@ type customerOrderService struct {
 	endpointFiles
 	endpointPrintTemplates
 	endpointSyncID[CustomerOrder]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[CustomerOrder]
 	endpointNamedFilter
 	endpointDeleteMany[CustomerOrder]
 	endpointTrash
@@ -852,10 +853,15 @@ type CustomerOrderService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CustomerOrder) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление заказа покупателя.
+	// DeleteByID выполняет запрос на удаление заказа покупателя по ID.
 	// Принимает контекст и ID заказа покупателя.
 	// Возвращает «true» в случае успешного удаления заказа покупателя.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление заказа покупателя.
+	// Принимает контекст и заказ покупателя.
+	// Возвращает «true» в случае успешного удаления заказа покупателя.
+	Delete(ctx context.Context, entity *CustomerOrder) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного заказа покупателя по ID.
 	// Принимает контекст, ID заказа покупателя и опционально объект параметров запроса Params.
@@ -1128,7 +1134,9 @@ func NewCustomerOrderService(client *Client) CustomerOrderService {
 		endpointFiles:            endpointFiles{e},
 		endpointPrintTemplates:   endpointPrintTemplates{e},
 		endpointSyncID:           endpointSyncID[CustomerOrder]{e},
-		endpointTemplate:         endpointTemplate[CustomerOrder]{e},
-		endpointEvaluate:         endpointEvaluate[CustomerOrder]{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[CustomerOrder]{e},
+		endpointNamedFilter:      endpointNamedFilter{e},
+		endpointDeleteMany:       endpointDeleteMany[CustomerOrder]{e},
 	}
 }

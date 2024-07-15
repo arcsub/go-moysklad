@@ -407,18 +407,18 @@ func (Move) MetaType() MetaType {
 }
 
 // Update shortcut
-func (move Move) Update(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
-	return NewMoveService(client).Update(ctx, move.GetID(), &move, params...)
+func (move *Move) Update(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+	return NewMoveService(client).Update(ctx, move.GetID(), move, params...)
 }
 
 // Create shortcut
-func (move Move) Create(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
-	return NewMoveService(client).Create(ctx, &move, params...)
+func (move *Move) Create(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+	return NewMoveService(client).Create(ctx, move, params...)
 }
 
 // Delete shortcut
-func (move Move) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewMoveService(client).Delete(ctx, move.GetID())
+func (move *Move) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewMoveService(client).Delete(ctx, move)
 }
 
 // MovePosition Позиция перемещения.
@@ -588,10 +588,15 @@ type MoveService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Move) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление перемещения.
+	// DeleteByID выполняет запрос на удаление перемещения по ID.
 	// Принимает контекст и ID перемещения.
 	// Возвращает «true» в случае успешного удаления перемещения.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление перемещения.
+	// Принимает контекст и перемещение.
+	// Возвращает «true» в случае успешного удаления перемещения.
+	Delete(ctx context.Context, entity *Move) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного перемещения по ID.
 	// Принимает контекст, ID перемещения и опционально объект параметров запроса Params.

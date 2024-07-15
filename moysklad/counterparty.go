@@ -638,18 +638,18 @@ func (Counterparty) MetaType() MetaType {
 }
 
 // Update shortcut
-func (counterparty Counterparty) Update(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
-	return NewCounterpartyService(client).Update(ctx, counterparty.GetID(), &counterparty, params...)
+func (counterparty *Counterparty) Update(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+	return NewCounterpartyService(client).Update(ctx, counterparty.GetID(), counterparty, params...)
 }
 
 // Create shortcut
-func (counterparty Counterparty) Create(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
-	return NewCounterpartyService(client).Create(ctx, &counterparty, params...)
+func (counterparty *Counterparty) Create(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+	return NewCounterpartyService(client).Create(ctx, counterparty, params...)
 }
 
 // Delete shortcut
-func (counterparty Counterparty) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCounterpartyService(client).Delete(ctx, counterparty.GetID())
+func (counterparty *Counterparty) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCounterpartyService(client).Delete(ctx, counterparty)
 }
 
 // CounterpartyDiscount скидка Контрагента.
@@ -836,10 +836,15 @@ type CounterpartyService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Counterparty) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление контрагента.
+	// DeleteByID выполняет запрос на удаление контрагента.
 	// Принимает контекст и ID контрагента.
 	// Возвращает «true» в случае успешного удаления контрагента.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление контрагента.
+	// Принимает контекст и контрагент.
+	// Возвращает «true» в случае успешного удаления контрагента.
+	Delete(ctx context.Context, entity *Counterparty) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного контрагента по ID.
 	// Принимает контекст, ID контрагента и опционально объект параметров запроса Params.
@@ -1027,7 +1032,8 @@ type counterpartyService struct {
 	endpointCreate[Counterparty]
 	endpointCreateUpdateMany[Counterparty]
 	endpointDeleteMany[Counterparty]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Counterparty]
 	endpointGetByID[Counterparty]
 	endpointUpdate[Counterparty]
 	endpointMetadata[MetaAttributesStatesSharedTagsWrapper]
@@ -1098,7 +1104,8 @@ func NewCounterpartyService(client *Client) CounterpartyService {
 		endpointCreate:           endpointCreate[Counterparty]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Counterparty]{e},
 		endpointDeleteMany:       endpointDeleteMany[Counterparty]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Counterparty]{e},
 		endpointGetByID:          endpointGetByID[Counterparty]{e},
 		endpointUpdate:           endpointUpdate[Counterparty]{e},
 		endpointMetadata:         endpointMetadata[MetaAttributesStatesSharedTagsWrapper]{e},

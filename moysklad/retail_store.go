@@ -922,18 +922,18 @@ func (RetailStore) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailStore RetailStore) Update(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
-	return NewRetailStoreService(client).Update(ctx, retailStore.GetID(), &retailStore, params...)
+func (retailStore *RetailStore) Update(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+	return NewRetailStoreService(client).Update(ctx, retailStore.GetID(), retailStore, params...)
 }
 
 // Create shortcut
-func (retailStore RetailStore) Create(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
-	return NewRetailStoreService(client).Create(ctx, &retailStore, params...)
+func (retailStore *RetailStore) Create(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+	return NewRetailStoreService(client).Create(ctx, retailStore, params...)
 }
 
 // Delete shortcut
-func (retailStore RetailStore) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewRetailStoreService(client).Delete(ctx, retailStore.GetID())
+func (retailStore *RetailStore) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRetailStoreService(client).Delete(ctx, retailStore)
 }
 
 // Cashier Кассир.
@@ -1346,10 +1346,15 @@ type RetailStoreService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*RetailStore) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление точки продаж.
+	// DeleteByID выполняет запрос на удаление точки продаж по ID.
 	// Принимает контекст и ID точки продаж.
 	// Возвращает «true» в случае успешного удаления точки продаж.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление точки продаж.
+	// Принимает контекст и точку продаж.
+	// Возвращает «true» в случае успешного удаления точки продаж.
+	Delete(ctx context.Context, entity *RetailStore) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной точки продаж по ID.
 	// Принимает контекст, ID точки продаж и опционально объект параметров запроса Params.
@@ -1394,7 +1399,8 @@ type retailStoreService struct {
 	endpointCreate[RetailStore]
 	endpointCreateUpdateMany[RetailStore]
 	endpointDeleteMany[RetailStore]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[RetailStore]
 	endpointGetByID[RetailStore]
 	endpointUpdate[RetailStore]
 	endpointNamedFilter
@@ -1419,7 +1425,8 @@ func NewRetailStoreService(client *Client) RetailStoreService {
 		endpointCreate:           endpointCreate[RetailStore]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[RetailStore]{e},
 		endpointDeleteMany:       endpointDeleteMany[RetailStore]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[RetailStore]{e},
 		endpointGetByID:          endpointGetByID[RetailStore]{e},
 		endpointUpdate:           endpointUpdate[RetailStore]{e},
 		endpointNamedFilter:      endpointNamedFilter{e},

@@ -527,18 +527,18 @@ func (InvoiceIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (invoiceIn InvoiceIn) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceIn, *resty.Response, error) {
-	return NewInvoiceInService(client).Update(ctx, invoiceIn.GetID(), &invoiceIn, params...)
+func (invoiceIn *InvoiceIn) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceIn, *resty.Response, error) {
+	return NewInvoiceInService(client).Update(ctx, invoiceIn.GetID(), invoiceIn, params...)
 }
 
 // Create shortcut
-func (invoiceIn InvoiceIn) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceIn, *resty.Response, error) {
-	return NewInvoiceInService(client).Create(ctx, &invoiceIn, params...)
+func (invoiceIn *InvoiceIn) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceIn, *resty.Response, error) {
+	return NewInvoiceInService(client).Create(ctx, invoiceIn, params...)
 }
 
 // Delete shortcut
-func (invoiceIn InvoiceIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewInvoiceInService(client).Delete(ctx, invoiceIn.GetID())
+func (invoiceIn *InvoiceIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewInvoiceInService(client).Delete(ctx, invoiceIn)
 }
 
 // InvoiceInPosition Позиция Счета поставщика.
@@ -703,10 +703,15 @@ type InvoiceInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*InvoiceIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление счета поставщика.
+	// DeleteByID выполняет запрос на удаление счета поставщика по ID.
 	// Принимает контекст и ID счета поставщика.
 	// Возвращает «true» в случае успешного удаления счета поставщика.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление счета поставщика.
+	// Принимает контекст и счет поставщика.
+	// Возвращает «true» в случае успешного удаления счета поставщика.
+	Delete(ctx context.Context, entity *InvoiceIn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного счета поставщика по ID.
 	// Принимает контекст, ID счета поставщика и опционально объект параметров запроса Params.

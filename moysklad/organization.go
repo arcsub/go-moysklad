@@ -648,18 +648,18 @@ func (Organization) MetaType() MetaType {
 }
 
 // Update shortcut
-func (organization Organization) Update(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
-	return NewOrganizationService(client).Update(ctx, organization.GetID(), &organization, params...)
+func (organization *Organization) Update(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+	return NewOrganizationService(client).Update(ctx, organization.GetID(), organization, params...)
 }
 
 // Create shortcut
-func (organization Organization) Create(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
-	return NewOrganizationService(client).Create(ctx, &organization, params...)
+func (organization *Organization) Create(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+	return NewOrganizationService(client).Create(ctx, organization, params...)
 }
 
 // Delete shortcut
-func (organization Organization) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewOrganizationService(client).Delete(ctx, organization.GetID())
+func (organization *Organization) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewOrganizationService(client).Delete(ctx, organization)
 }
 
 // OrganizationService описывает методы сервиса для работы с юридическими лицами.
@@ -687,10 +687,15 @@ type OrganizationService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Organization) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление юрлица.
+	// DeleteByID выполняет запрос на удаление юрлица по ID.
 	// Принимает контекст и ID юрлица.
 	// Возвращает «true» в случае успешного удаления юрлица.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление юрлица.
+	// Принимает контекст и юрлицо.
+	// Возвращает «true» в случае успешного удаления юрлица.
+	Delete(ctx context.Context, entity *Organization) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного юрлица по ID.
 	// Принимает контекст, ID юрлица и опционально объект параметров запроса Params.

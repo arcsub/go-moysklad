@@ -543,18 +543,18 @@ func (PurchaseOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (purchaseOrder PurchaseOrder) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
-	return NewPurchaseOrderService(client).Update(ctx, purchaseOrder.GetID(), &purchaseOrder, params...)
+func (purchaseOrder *PurchaseOrder) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
+	return NewPurchaseOrderService(client).Update(ctx, purchaseOrder.GetID(), purchaseOrder, params...)
 }
 
 // Create shortcut
-func (purchaseOrder PurchaseOrder) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
-	return NewPurchaseOrderService(client).Create(ctx, &purchaseOrder, params...)
+func (purchaseOrder *PurchaseOrder) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseOrder, *resty.Response, error) {
+	return NewPurchaseOrderService(client).Create(ctx, purchaseOrder, params...)
 }
 
 // Delete shortcut
-func (purchaseOrder PurchaseOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewPurchaseOrderService(client).Delete(ctx, purchaseOrder.GetID())
+func (purchaseOrder *PurchaseOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewPurchaseOrderService(client).Delete(ctx, purchaseOrder)
 }
 
 // PurchaseOrderPosition Позиция Заказа поставщику.
@@ -749,10 +749,15 @@ type PurchaseOrderService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*PurchaseOrder) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление заказа поставщику.
+	// DeleteByID выполняет запрос на удаление заказа поставщику по ID.
 	// Принимает контекст и ID заказа поставщику.
 	// Возвращает «true» в случае успешного удаления заказа поставщику.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление заказа поставщику.
+	// Принимает контекст и заказ поставщику.
+	// Возвращает «true» в случае успешного удаления заказа поставщику.
+	Delete(ctx context.Context, entity *PurchaseOrder) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного заказа поставщику по ID.
 	// Принимает контекст, ID заказа поставщику и опционально объект параметров запроса Params.

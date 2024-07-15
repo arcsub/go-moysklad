@@ -509,18 +509,18 @@ func (CommissionReportOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (commissionReportOut CommissionReportOut) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
-	return NewCommissionReportOutService(client).Update(ctx, commissionReportOut.GetID(), &commissionReportOut, params...)
+func (commissionReportOut *CommissionReportOut) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
+	return NewCommissionReportOutService(client).Update(ctx, commissionReportOut.GetID(), commissionReportOut, params...)
 }
 
 // Create shortcut
-func (commissionReportOut CommissionReportOut) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
-	return NewCommissionReportOutService(client).Create(ctx, &commissionReportOut, params...)
+func (commissionReportOut *CommissionReportOut) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportOut, *resty.Response, error) {
+	return NewCommissionReportOutService(client).Create(ctx, commissionReportOut, params...)
 }
 
 // Delete shortcut
-func (commissionReportOut CommissionReportOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCommissionReportOutService(client).Delete(ctx, commissionReportOut.GetID())
+func (commissionReportOut *CommissionReportOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCommissionReportOutService(client).Delete(ctx, commissionReportOut)
 }
 
 // CommissionReportOutPosition Позиция Выданного отчёта комиссионера.
@@ -676,10 +676,15 @@ type CommissionReportOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CommissionReportOut) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление выданного отчёта комиссионера.
+	// DeleteByID выполняет запрос на удаление выданного отчёта комиссионера по ID.
 	// Принимает контекст и ID выданного отчёта комиссионера.
 	// Возвращает «true» в случае успешного удаления выданного отчёта комиссионера.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление выданного отчёта комиссионера.
+	// Принимает контекст и выданный отчёт комиссионера.
+	// Возвращает «true» в случае успешного удаления выданного отчёта комиссионера.
+	Delete(ctx context.Context, entity *CommissionReportOut) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного выданного отчёта комиссионера по ID.
 	// Принимает контекст, ID выданного отчёта комиссионера и опционально объект параметров запроса Params.

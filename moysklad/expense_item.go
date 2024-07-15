@@ -116,18 +116,18 @@ func (ExpenseItem) MetaType() MetaType {
 }
 
 // Update shortcut
-func (expenseItem ExpenseItem) Update(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
-	return NewExpenseItemService(client).Update(ctx, expenseItem.GetID(), &expenseItem, params...)
+func (expenseItem *ExpenseItem) Update(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+	return NewExpenseItemService(client).Update(ctx, expenseItem.GetID(), expenseItem, params...)
 }
 
 // Create shortcut
-func (expenseItem ExpenseItem) Create(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
-	return NewExpenseItemService(client).Create(ctx, &expenseItem, params...)
+func (expenseItem *ExpenseItem) Create(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+	return NewExpenseItemService(client).Create(ctx, expenseItem, params...)
 }
 
 // Delete shortcut
-func (expenseItem ExpenseItem) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewExpenseItemService(client).Delete(ctx, expenseItem.GetID())
+func (expenseItem *ExpenseItem) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewExpenseItemService(client).Delete(ctx, expenseItem)
 }
 
 // ExpenseItemService описывает методы сервиса для работы со статьями расходов.
@@ -155,10 +155,15 @@ type ExpenseItemService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*ExpenseItem) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление статьи расходов.
+	// DeleteByID выполняет запрос на удаление статьи расходов по ID.
 	// Принимает контекст и ID статьи расходов.
 	// Возвращает «true» в случае успешного удаления статьи расходов.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление статьи расходов.
+	// Принимает контекст и статью расходов.
+	// Возвращает «true» в случае успешного удаления статьи расходов.
+	Delete(ctx context.Context, entity *ExpenseItem) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной статьи расходов по ID.
 	// Принимает контекст, ID статьи расходов взаиморасчётов и опционально объект параметров запроса Params.

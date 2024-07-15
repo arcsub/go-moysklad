@@ -313,18 +313,18 @@ func (RetailDrawerCashIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailDrawerCashIn RetailDrawerCashIn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
-	return NewRetailDrawerCashInService(client).Update(ctx, retailDrawerCashIn.GetID(), &retailDrawerCashIn, params...)
+func (retailDrawerCashIn *RetailDrawerCashIn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
+	return NewRetailDrawerCashInService(client).Update(ctx, retailDrawerCashIn.GetID(), retailDrawerCashIn, params...)
 }
 
 // Create shortcut
-func (retailDrawerCashIn RetailDrawerCashIn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
-	return NewRetailDrawerCashInService(client).Create(ctx, &retailDrawerCashIn, params...)
+func (retailDrawerCashIn *RetailDrawerCashIn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
+	return NewRetailDrawerCashInService(client).Create(ctx, retailDrawerCashIn, params...)
 }
 
 // Delete shortcut
-func (retailDrawerCashIn RetailDrawerCashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewRetailDrawerCashInService(client).Delete(ctx, retailDrawerCashIn.GetID())
+func (retailDrawerCashIn *RetailDrawerCashIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRetailDrawerCashInService(client).Delete(ctx, retailDrawerCashIn)
 }
 
 // RetailDrawerCashInService описывает методы сервиса для работы с внесениями денег.
@@ -354,10 +354,15 @@ type RetailDrawerCashInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*RetailDrawerCashIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление внесения денег.
+	// DeleteByID выполняет запрос на удаление внесения денег по ID.
 	// Принимает контекст и ID внесения денег.
 	// Возвращает «true» в случае успешного удаления внесения денег.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление внесения денег.
+	// Принимает контекст и внесение денег.
+	// Возвращает «true» в случае успешного удаления внесения денег.
+	Delete(ctx context.Context, entity *RetailDrawerCashIn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение внесения денег по ID.
 	// Принимает контекст, ID внесения денег и опционально объект параметров запроса Params.

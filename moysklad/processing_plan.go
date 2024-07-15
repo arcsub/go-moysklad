@@ -203,18 +203,18 @@ func (ProcessingPlan) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingPlan ProcessingPlan) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
-	return client.Entity().ProcessingPlan().Update(ctx, processingPlan.GetID(), &processingPlan, params...)
+func (processingPlan *ProcessingPlan) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+	return NewProcessingPlanService(client).Update(ctx, processingPlan.GetID(), processingPlan, params...)
 }
 
 // Create shortcut
-func (processingPlan ProcessingPlan) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
-	return client.Entity().ProcessingPlan().Create(ctx, &processingPlan, params...)
+func (processingPlan *ProcessingPlan) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+	return NewProcessingPlanService(client).Create(ctx, processingPlan, params...)
 }
 
 // Delete shortcut
-func (processingPlan ProcessingPlan) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().ProcessingPlan().Delete(ctx, processingPlan.GetID())
+func (processingPlan *ProcessingPlan) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProcessingPlanService(client).Delete(ctx, processingPlan)
 }
 
 // ProcessingPlanStages Этапы Техкарты.
@@ -429,7 +429,12 @@ type ProcessingPlanService interface {
 	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление техкарты.
+	// Принимает контекст и техкарту.
+	// Возвращает «true» в случае успешного удаления техкарты.
+	Delete(ctx context.Context, entity *ProcessingPlan) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 
@@ -447,6 +452,10 @@ type ProcessingPlanService interface {
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+
+	// CreatePosition выполняет запрос на добавление позиции документа.
+	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
+	// Возвращает добавленную позицию.
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
@@ -514,7 +523,8 @@ type processingPlanService struct {
 	endpointCreate[ProcessingPlan]
 	endpointCreateUpdateMany[ProcessingPlan]
 	endpointDeleteMany[ProcessingPlan]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[ProcessingPlan]
 	endpointGetByID[ProcessingPlan]
 	endpointUpdate[ProcessingPlan]
 	endpointPositions[ProcessingPlanProduct]
@@ -594,7 +604,8 @@ func NewProcessingPlanService(client *Client) ProcessingPlanService {
 		endpointCreate:           endpointCreate[ProcessingPlan]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[ProcessingPlan]{e},
 		endpointDeleteMany:       endpointDeleteMany[ProcessingPlan]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[ProcessingPlan]{e},
 		endpointGetByID:          endpointGetByID[ProcessingPlan]{e},
 		endpointUpdate:           endpointUpdate[ProcessingPlan]{e},
 		endpointPositions:        endpointPositions[ProcessingPlanProduct]{e},

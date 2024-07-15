@@ -518,18 +518,18 @@ func (Bundle) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bundle Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
-	return NewBundleService(client).Update(ctx, bundle.GetID(), &bundle, params...)
+func (bundle *Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+	return NewBundleService(client).Update(ctx, bundle.GetID(), bundle, params...)
 }
 
 // Create shortcut
-func (bundle Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
-	return NewBundleService(client).Create(ctx, &bundle, params...)
+func (bundle *Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+	return NewBundleService(client).Create(ctx, bundle, params...)
 }
 
 // Delete shortcut
-func (bundle Bundle) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewBundleService(client).Delete(ctx, bundle.GetID())
+func (bundle *Bundle) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewBundleService(client).Delete(ctx, bundle)
 }
 
 // BundleOverhead Дополнительные расходы
@@ -668,10 +668,15 @@ type BundleService interface {
 	// Возвращает изменённый комплект.
 	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление комплекта.
+	// DeleteByID выполняет запрос на удаление комплекта по ID.
 	// Принимает контекст и ID комплекта.
 	// Возвращает «true» в случае успешного удаления комплекта.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление комплекта.
+	// Принимает контекст и комплект.
+	// Возвращает «true» в случае успешного удаления комплекта.
+	Delete(ctx context.Context, entity *Bundle) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление комплектов.
 	// Принимает контекст и множество комплектов.
@@ -813,7 +818,8 @@ type bundleService struct {
 	endpointCreateUpdateMany[Bundle]
 	endpointGetByID[Bundle]
 	endpointUpdate[Bundle]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Bundle]
 	endpointDeleteMany[Bundle]
 	endpointFiles
 	endpointImages
@@ -856,7 +862,8 @@ func NewBundleService(client *Client) BundleService {
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Bundle]{e},
 		endpointGetByID:          endpointGetByID[Bundle]{e},
 		endpointUpdate:           endpointUpdate[Bundle]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Bundle]{e},
 		endpointDeleteMany:       endpointDeleteMany[Bundle]{e},
 		endpointFiles:            endpointFiles{e},
 		endpointImages:           endpointImages{e},

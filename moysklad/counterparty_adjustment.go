@@ -259,18 +259,18 @@ func (CounterpartyAdjustment) MetaType() MetaType {
 }
 
 // Update shortcut
-func (counterPartyAdjustment CounterpartyAdjustment) Update(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
-	return NewCounterPartyAdjustmentService(client).Update(ctx, counterPartyAdjustment.GetID(), &counterPartyAdjustment, params...)
+func (counterPartyAdjustment *CounterpartyAdjustment) Update(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
+	return NewCounterPartyAdjustmentService(client).Update(ctx, counterPartyAdjustment.GetID(), counterPartyAdjustment, params...)
 }
 
 // Create shortcut
-func (counterPartyAdjustment CounterpartyAdjustment) Create(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
-	return NewCounterPartyAdjustmentService(client).Create(ctx, &counterPartyAdjustment, params...)
+func (counterPartyAdjustment *CounterpartyAdjustment) Create(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
+	return NewCounterPartyAdjustmentService(client).Create(ctx, counterPartyAdjustment, params...)
 }
 
 // Delete shortcut
-func (counterPartyAdjustment CounterpartyAdjustment) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCounterPartyAdjustmentService(client).Delete(ctx, counterPartyAdjustment.GetID())
+func (counterPartyAdjustment *CounterpartyAdjustment) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCounterPartyAdjustmentService(client).Delete(ctx, counterPartyAdjustment)
 }
 
 // CounterPartyAdjustmentService описывает методы сервиса для работы с корректировками баланса контрагента.
@@ -299,10 +299,15 @@ type CounterPartyAdjustmentService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CounterpartyAdjustment) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление корректировку взаиморасчётов.
+	// DeleteByID выполняет запрос на удаление корректировки взаиморасчётов по ID.
 	// Принимает контекст и ID корректировки взаиморасчётов.
 	// Возвращает «true» в случае успешного удаления корректировки взаиморасчётов.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление корректировки взаиморасчётов.
+	// Принимает контекст и корректировку взаиморасчётов.
+	// Возвращает «true» в случае успешного удаления корректировки взаиморасчётов.
+	Delete(ctx context.Context, entity *CounterpartyAdjustment) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной корректировки взаиморасчётов по ID.
 	// Принимает контекст, ID корректировки взаиморасчётов и опционально объект параметров запроса Params.

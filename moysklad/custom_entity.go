@@ -69,18 +69,18 @@ func (CustomEntity) MetaType() MetaType {
 }
 
 // Update shortcut
-func (customEntity CustomEntity) Update(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
-	return client.Entity().CustomEntity().Update(ctx, customEntity.GetID(), &customEntity, params...)
+func (customEntity *CustomEntity) Update(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+	return NewCustomEntityService(client).Update(ctx, customEntity.GetID(), customEntity, params...)
 }
 
 // Create shortcut
-func (customEntity CustomEntity) Create(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
-	return client.Entity().CustomEntity().Create(ctx, &customEntity, params...)
+func (customEntity *CustomEntity) Create(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+	return NewCustomEntityService(client).Create(ctx, customEntity, params...)
 }
 
 // Delete shortcut
-func (customEntity CustomEntity) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().CustomEntity().Delete(ctx, customEntity.GetID())
+func (customEntity *CustomEntity) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCustomEntityService(client).Delete(ctx, customEntity)
 }
 
 // CustomEntityElement Элемент Пользовательского справочника.
@@ -228,10 +228,15 @@ type CustomEntityService interface {
 	// Возвращает изменённый пользовательский справочник.
 	Update(ctx context.Context, id uuid.UUID, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление пользовательского справочника.
+	// DeleteByID выполняет запрос на удаление пользовательского справочника по ID.
 	// Принимает контекст и ID пользовательского справочника.
 	// Возвращает «true» в случае успешного удаления пользовательского справочника.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление пользовательского справочника.
+	// Принимает контекст и пользовательский справочник.
+	// Возвращает «true» в случае успешного удаления пользовательского справочника.
+	Delete(ctx context.Context, entity *CustomEntity) (bool, *resty.Response, error)
 
 	// GetElementList выполняет запрос на получение списка элементов пользовательского справочника.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -271,7 +276,8 @@ type customEntityService struct {
 	Endpoint
 	endpointCreate[CustomEntity]
 	endpointUpdate[CustomEntity]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[CustomEntity]
 }
 
 func (service *customEntityService) GetElementList(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error) {
@@ -303,9 +309,10 @@ func (service *customEntityService) UpdateElement(ctx context.Context, id, eleme
 func NewCustomEntityService(client *Client) CustomEntityService {
 	e := NewEndpoint(client, EndpointCustomEntity)
 	return &customEntityService{
-		Endpoint:       e,
-		endpointCreate: endpointCreate[CustomEntity]{e},
-		endpointUpdate: endpointUpdate[CustomEntity]{e},
-		endpointDelete: endpointDelete{e},
+		Endpoint:           e,
+		endpointCreate:     endpointCreate[CustomEntity]{e},
+		endpointUpdate:     endpointUpdate[CustomEntity]{e},
+		endpointDeleteByID: endpointDeleteByID{e},
+		endpointDelete:     endpointDelete[CustomEntity]{e},
 	}
 }

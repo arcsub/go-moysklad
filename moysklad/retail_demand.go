@@ -625,18 +625,18 @@ func (RetailDemand) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailDemand RetailDemand) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
-	return NewRetailDemandService(client).Update(ctx, retailDemand.GetID(), &retailDemand, params...)
+func (retailDemand *RetailDemand) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+	return NewRetailDemandService(client).Update(ctx, retailDemand.GetID(), retailDemand, params...)
 }
 
 // Create shortcut
-func (retailDemand RetailDemand) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
-	return NewRetailDemandService(client).Create(ctx, &retailDemand, params...)
+func (retailDemand *RetailDemand) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+	return NewRetailDemandService(client).Create(ctx, retailDemand, params...)
 }
 
 // Delete shortcut
-func (retailDemand RetailDemand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewRetailDemandService(client).Delete(ctx, retailDemand.GetID())
+func (retailDemand *RetailDemand) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRetailDemandService(client).Delete(ctx, retailDemand)
 }
 
 // RetailDemandPosition позиция розничной продажи.
@@ -851,10 +851,15 @@ type RetailDemandService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*RetailDemand) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление розничной продажи.
+	// DeleteByID выполняет запрос на удаление розничной продажи по ID.
 	// Принимает контекст и ID розничной продажи.
 	// Возвращает «true» в случае успешного удаления розничной продажи.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление розничной продажи.
+	// Принимает контекст и розничную продажу.
+	// Возвращает «true» в случае успешного удаления розничной продажи.
+	Delete(ctx context.Context, entity *RetailDemand) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной розничной продажи по ID.
 	// Принимает контекст, ID розничной продажи и опционально объект параметров запроса Params.

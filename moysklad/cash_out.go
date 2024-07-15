@@ -447,18 +447,18 @@ func (CashOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (cashOut CashOut) Update(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
-	return NewCashOutService(client).Update(ctx, cashOut.GetID(), &cashOut, params...)
+func (cashOut *CashOut) Update(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
+	return NewCashOutService(client).Update(ctx, cashOut.GetID(), cashOut, params...)
 }
 
 // Create shortcut
-func (cashOut CashOut) Create(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
-	return NewCashOutService(client).Create(ctx, &cashOut, params...)
+func (cashOut *CashOut) Create(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
+	return NewCashOutService(client).Create(ctx, cashOut, params...)
 }
 
 // Delete shortcut
-func (cashOut CashOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCashOutService(client).Delete(ctx, cashOut.GetID())
+func (cashOut *CashOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCashOutService(client).Delete(ctx, cashOut)
 }
 
 // CashOutService методы сервиса для работы с расходными ордерами.
@@ -483,10 +483,15 @@ type CashOutService interface {
 	// Возвращает список созданных и/или расходных приходных ордеров.
 	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params ...*Params) (*Slice[CashOut], *resty.Response, error)
 
-	// Delete выполняет запрос на удаление расходного ордера.
+	// DeleteByID выполняет запрос на удаление расходного ордера по ID.
 	// Принимает контекст и ID расходного ордера.
 	// Возвращает «true» в случае успешного удаления расходного ордера.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление расходного ордера.
+	// Принимает контекст и расходный ордер.
+	// Возвращает «true» в случае успешного удаления расходного ордер.
+	Delete(ctx context.Context, entity *CashOut) (bool, *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление расходных ордеров.
 	// Принимает контекст и множество расходных ордеров.

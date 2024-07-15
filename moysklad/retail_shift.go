@@ -469,18 +469,18 @@ func (RetailShift) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailShift RetailShift) Update(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
-	return NewRetailShiftService(client).Update(ctx, retailShift.GetID(), &retailShift, params...)
+func (retailShift *RetailShift) Update(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+	return NewRetailShiftService(client).Update(ctx, retailShift.GetID(), retailShift, params...)
 }
 
 // Create shortcut
-func (retailShift RetailShift) Create(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
-	return NewRetailShiftService(client).Create(ctx, &retailShift, params...)
+func (retailShift *RetailShift) Create(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+	return NewRetailShiftService(client).Create(ctx, retailShift, params...)
 }
 
 // Delete shortcut
-func (retailShift RetailShift) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewRetailShiftService(client).Delete(ctx, retailShift.GetID())
+func (retailShift *RetailShift) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRetailShiftService(client).Delete(ctx, retailShift)
 }
 
 // Cheque Информация о смене ККТ.
@@ -548,10 +548,15 @@ type RetailShiftService interface {
 	// Возвращает созданную розничную смены.
 	Create(ctx context.Context, retailShift *RetailShift, params ...*Params) (*RetailShift, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление розничной смены.
+	// DeleteByID выполняет запрос на удаление розничной смены по ID.
 	// Принимает контекст и ID розничной смены.
 	// Возвращает «true» в случае успешного удаления розничной смены.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление розничной смены.
+	// Принимает контекст и розничную смену.
+	// Возвращает «true» в случае успешного удаления розничной смены.
+	Delete(ctx context.Context, entity *RetailShift) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение розничной смены по ID.
 	// Принимает контекст, ID розничной смены и опционально объект параметров запроса Params.

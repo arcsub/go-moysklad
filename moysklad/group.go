@@ -85,18 +85,18 @@ func (Group) MetaType() MetaType {
 }
 
 // Update shortcut
-func (group Group) Update(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
-	return NewGroupService(client).Update(ctx, group.GetID(), &group, params...)
+func (group *Group) Update(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
+	return NewGroupService(client).Update(ctx, group.GetID(), group, params...)
 }
 
 // Create shortcut
-func (group Group) Create(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
-	return NewGroupService(client).Create(ctx, &group, params...)
+func (group *Group) Create(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
+	return NewGroupService(client).Create(ctx, group, params...)
 }
 
 // Delete shortcut
-func (group Group) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewGroupService(client).Delete(ctx, group.GetID())
+func (group *Group) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewGroupService(client).Delete(ctx, group)
 }
 
 // GroupService описывает методы сервиса для работы с отделами.
@@ -113,10 +113,15 @@ type GroupService interface {
 	// Возвращает созданный отдел.
 	Create(ctx context.Context, group *Group, params ...*Params) (*Group, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление отдела.
+	// DeleteByID выполняет запрос на удаление отдела по ID.
 	// Принимает контекст и ID отдела.
 	// Возвращает «true» в случае успешного удаления отдела.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление отдела.
+	// Принимает контекст и отдел.
+	// Возвращает «true» в случае успешного удаления отдела.
+	Delete(ctx context.Context, entity *Group) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного отдела по ID.
 	// Принимает контекст, ID отдела и опционально объект параметров запроса Params.

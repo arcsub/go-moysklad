@@ -503,18 +503,18 @@ func (retailSalesReturn RetailSalesReturn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailSalesReturn RetailSalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
-	return NewRetailSalesReturnService(client).Update(ctx, retailSalesReturn.GetID(), &retailSalesReturn, params...)
+func (retailSalesReturn *RetailSalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
+	return NewRetailSalesReturnService(client).Update(ctx, retailSalesReturn.GetID(), retailSalesReturn, params...)
 }
 
 // Create shortcut
-func (retailSalesReturn RetailSalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
-	return NewRetailSalesReturnService(client).Create(ctx, &retailSalesReturn, params...)
+func (retailSalesReturn *RetailSalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
+	return NewRetailSalesReturnService(client).Create(ctx, retailSalesReturn, params...)
 }
 
 // Delete shortcut
-func (retailSalesReturn RetailSalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewRetailSalesReturnService(client).Delete(ctx, retailSalesReturn.GetID())
+func (retailSalesReturn *RetailSalesReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRetailSalesReturnService(client).Delete(ctx, retailSalesReturn)
 }
 
 // RetailSalesReturnPosition позиция розничного возврата.
@@ -732,10 +732,15 @@ type RetailSalesReturnService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*RetailSalesReturn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление розничного возврата.
+	// DeleteByID выполняет запрос на удаление розничного возврата по ID.
 	// Принимает контекст и ID розничного возврата.
 	// Возвращает «true» в случае успешного удаления розничного возврата.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление розничного возврата.
+	// Принимает контекст и розничный возврат.
+	// Возвращает «true» в случае успешного удаления розничного возврата.
+	Delete(ctx context.Context, entity *RetailSalesReturn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение розничного возврата по ID.
 	// Принимает контекст, ID розничного возврата и опционально объект параметров запроса Params.

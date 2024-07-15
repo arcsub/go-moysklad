@@ -511,18 +511,18 @@ func (InvoiceOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (invoiceOut InvoiceOut) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
-	return NewInvoiceOutService(client).Update(ctx, invoiceOut.GetID(), &invoiceOut, params...)
+func (invoiceOut *InvoiceOut) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
+	return NewInvoiceOutService(client).Update(ctx, invoiceOut.GetID(), invoiceOut, params...)
 }
 
 // Create shortcut
-func (invoiceOut InvoiceOut) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
-	return NewInvoiceOutService(client).Create(ctx, &invoiceOut, params...)
+func (invoiceOut *InvoiceOut) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
+	return NewInvoiceOutService(client).Create(ctx, invoiceOut, params...)
 }
 
 // Delete shortcut
-func (invoiceOut InvoiceOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewInvoiceOutService(client).Delete(ctx, invoiceOut.GetID())
+func (invoiceOut *InvoiceOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewInvoiceOutService(client).Delete(ctx, invoiceOut)
 }
 
 // InvoiceOutPosition Позиция Счета покупателю.
@@ -684,10 +684,15 @@ type InvoiceOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*InvoiceOut) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление счета покупателю.
+	// DeleteByID выполняет запрос на удаление счета покупателю по ID.
 	// Принимает контекст и ID счета покупателю.
 	// Возвращает «true» в случае успешного удаления счета покупателю.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление счета покупателю.
+	// Принимает контекст и счет покупателю.
+	// Возвращает «true» в случае успешного удаления счета покупателю.
+	Delete(ctx context.Context, entity *InvoiceOut) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного счета покупателю по ID.
 	// Принимает контекст, ID счета покупателю и опционально объект параметров запроса Params.

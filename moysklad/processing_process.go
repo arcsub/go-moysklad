@@ -142,18 +142,18 @@ func (ProcessingProcess) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingProcess ProcessingProcess) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
-	return client.Entity().ProcessingProcess().Update(ctx, processingProcess.GetID(), &processingProcess, params...)
+func (processingProcess *ProcessingProcess) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+	return NewProcessingProcessService(client).Update(ctx, processingProcess.GetID(), processingProcess, params...)
 }
 
 // Create shortcut
-func (processingProcess ProcessingProcess) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
-	return client.Entity().ProcessingProcess().Create(ctx, &processingProcess, params...)
+func (processingProcess *ProcessingProcess) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+	return NewProcessingProcessService(client).Create(ctx, processingProcess, params...)
 }
 
 // Delete shortcut
-func (processingProcess ProcessingProcess) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().ProcessingProcess().Delete(ctx, processingProcess.GetID())
+func (processingProcess *ProcessingProcess) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProcessingProcessService(client).Delete(ctx, processingProcess)
 }
 
 // ProcessingProcessPosition Позиция Тех. процесса.
@@ -227,7 +227,12 @@ type ProcessingProcessService interface {
 	Create(ctx context.Context, processingProcess *ProcessingProcess, params ...*Params) (*ProcessingProcess, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingProcessList Slice[ProcessingProcess], params ...*Params) (*Slice[ProcessingProcess], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingProcess) (*DeleteManyResponse, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление тех процесса.
+	// Принимает контекст и тех процесс.
+	// Возвращает «true» в случае успешного удаления тех процесса.
+	Delete(ctx context.Context, entity *ProcessingProcess) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingProcess, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingProcess *ProcessingProcess, params ...*Params) (*ProcessingProcess, *resty.Response, error)
 
@@ -245,6 +250,10 @@ type ProcessingProcessService interface {
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
 	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingProcessPosition, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
+
+	// CreatePosition выполняет запрос на добавление позиции документа.
+	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
+	// Возвращает добавленную позицию.
 	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingProcessPosition, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.

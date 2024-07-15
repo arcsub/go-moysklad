@@ -311,18 +311,18 @@ func (PriceList) MetaType() MetaType {
 }
 
 // Update shortcut
-func (priceList PriceList) Update(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
-	return NewPriceListService(client).Update(ctx, priceList.GetID(), &priceList, params...)
+func (priceList *PriceList) Update(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+	return NewPriceListService(client).Update(ctx, priceList.GetID(), priceList, params...)
 }
 
 // Create shortcut
-func (priceList PriceList) Create(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
-	return NewPriceListService(client).Create(ctx, &priceList, params...)
+func (priceList *PriceList) Create(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+	return NewPriceListService(client).Create(ctx, priceList, params...)
 }
 
 // Delete shortcut
-func (priceList PriceList) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewPriceListService(client).Delete(ctx, priceList.GetID())
+func (priceList *PriceList) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewPriceListService(client).Delete(ctx, priceList)
 }
 
 // PriceListCell Ячейка прайс листа.
@@ -500,10 +500,15 @@ type PriceListService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*PriceList) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление прайс-листа.
+	// DeleteByID выполняет запрос на удаление прайс-листа по ID.
 	// Принимает контекст и ID прайс-листа.
 	// Возвращает «true» в случае успешного удаления прайс-листа.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление прайс-листа.
+	// Принимает контекст и прайс-лист.
+	// Возвращает «true» в случае успешного удаления прайс-листа.
+	Delete(ctx context.Context, entity *PriceList) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного прайс-листа по ID.
 	// Принимает контекст, ID прайс-листа и опционально объект параметров запроса Params.

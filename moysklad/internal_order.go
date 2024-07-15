@@ -409,18 +409,18 @@ func (InternalOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (internalOrder InternalOrder) Update(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
-	return NewInternalOrderService(client).Update(ctx, internalOrder.GetID(), &internalOrder, params...)
+func (internalOrder *InternalOrder) Update(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+	return NewInternalOrderService(client).Update(ctx, internalOrder.GetID(), internalOrder, params...)
 }
 
 // Create shortcut
-func (internalOrder InternalOrder) Create(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
-	return NewInternalOrderService(client).Create(ctx, &internalOrder, params...)
+func (internalOrder *InternalOrder) Create(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+	return NewInternalOrderService(client).Create(ctx, internalOrder, params...)
 }
 
 // Delete shortcut
-func (internalOrder InternalOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewInternalOrderService(client).Delete(ctx, internalOrder.GetID())
+func (internalOrder *InternalOrder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewInternalOrderService(client).Delete(ctx, internalOrder)
 }
 
 // InternalOrderPosition Позиция Внутреннего заказа.
@@ -558,10 +558,15 @@ type InternalOrderService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*InternalOrder) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление внутреннего заказа.
+	// DeleteByID выполняет запрос на удаление внутреннего заказа по ID.
 	// Принимает контекст и ID внутреннего заказа.
 	// Возвращает «true» в случае успешного удаления внутреннего заказа.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление внутреннего заказа.
+	// Принимает контекст и внутренний заказ.
+	// Возвращает «true» в случае успешного удаления внутреннего заказа.
+	Delete(ctx context.Context, entity *InternalOrder) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного внутреннего заказа по ID.
 	// Принимает контекст, ID внутреннего заказа и опционально объект параметров запроса Params.

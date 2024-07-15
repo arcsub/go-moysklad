@@ -201,18 +201,18 @@ func (Consignment) MetaType() MetaType {
 }
 
 // Update shortcut
-func (consignment Consignment) Update(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
-	return NewConsignmentService(client).Update(ctx, consignment.GetID(), &consignment, params...)
+func (consignment *Consignment) Update(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
+	return NewConsignmentService(client).Update(ctx, consignment.GetID(), consignment, params...)
 }
 
 // Create shortcut
-func (consignment Consignment) Create(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
-	return NewConsignmentService(client).Create(ctx, &consignment, params...)
+func (consignment *Consignment) Create(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
+	return NewConsignmentService(client).Create(ctx, consignment, params...)
 }
 
 // Delete shortcut
-func (consignment Consignment) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewConsignmentService(client).Delete(ctx, consignment.GetID())
+func (consignment *Consignment) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewConsignmentService(client).Delete(ctx, consignment)
 }
 
 // ConsignmentService описывает методы сервиса для работы с сериями.
@@ -241,10 +241,15 @@ type ConsignmentService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Consignment) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление серии.
+	// DeleteByID выполняет запрос на удаление серии по ID.
 	// Принимает контекст и ID серии.
 	// Возвращает «true» в случае успешного удаления серии.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление серии.
+	// Принимает контекст и серию.
+	// Возвращает «true» в случае успешного удаления серии.
+	Delete(ctx context.Context, entity *Consignment) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной серии по ID.
 	// Принимает контекст, ID серии и опционально объект параметров запроса Params.

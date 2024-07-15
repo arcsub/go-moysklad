@@ -505,18 +505,18 @@ func (PurchaseReturn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (purchaseReturn PurchaseReturn) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseReturn, *resty.Response, error) {
-	return NewPurchaseReturnService(client).Update(ctx, purchaseReturn.GetID(), &purchaseReturn, params...)
+func (purchaseReturn *PurchaseReturn) Update(ctx context.Context, client *Client, params ...*Params) (*PurchaseReturn, *resty.Response, error) {
+	return NewPurchaseReturnService(client).Update(ctx, purchaseReturn.GetID(), purchaseReturn, params...)
 }
 
 // Create shortcut
-func (purchaseReturn PurchaseReturn) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseReturn, *resty.Response, error) {
-	return NewPurchaseReturnService(client).Create(ctx, &purchaseReturn, params...)
+func (purchaseReturn *PurchaseReturn) Create(ctx context.Context, client *Client, params ...*Params) (*PurchaseReturn, *resty.Response, error) {
+	return NewPurchaseReturnService(client).Create(ctx, purchaseReturn, params...)
 }
 
 // Delete shortcut
-func (purchaseReturn PurchaseReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewPurchaseReturnService(client).Delete(ctx, purchaseReturn.GetID())
+func (purchaseReturn *PurchaseReturn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewPurchaseReturnService(client).Delete(ctx, purchaseReturn)
 }
 
 // PurchaseReturnPosition Позиция Возврата поставщику.
@@ -722,10 +722,15 @@ type PurchaseReturnService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*PurchaseReturn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление возврата поставщику.
+	// DeleteByID выполняет запрос на удаление возврата поставщику по ID.
 	// Принимает контекст и ID возврата поставщику.
 	// Возвращает «true» в случае успешного удаления возврата поставщику.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление возврата поставщику.
+	// Принимает контекст и возврат поставщику.
+	// Возвращает «true» в случае успешного удаления возврата поставщику.
+	Delete(ctx context.Context, entity *PurchaseReturn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного возврата поставщику по ID.
 	// Принимает контекст, ID возврата поставщику и опционально объект параметров запроса Params.

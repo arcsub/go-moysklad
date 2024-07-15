@@ -147,18 +147,18 @@ func (ProcessingPlanFolder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingPlanFolder ProcessingPlanFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
-	return client.Entity().ProcessingPlanFolder().Update(ctx, processingPlanFolder.GetID(), &processingPlanFolder, params...)
+func (processingPlanFolder *ProcessingPlanFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
+	return NewProcessingPlanFolderService(client).Update(ctx, processingPlanFolder.GetID(), processingPlanFolder, params...)
 }
 
 // Create shortcut
-func (processingPlanFolder ProcessingPlanFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
-	return client.Entity().ProcessingPlanFolder().Create(ctx, &processingPlanFolder, params...)
+func (processingPlanFolder *ProcessingPlanFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
+	return NewProcessingPlanFolderService(client).Create(ctx, processingPlanFolder, params...)
 }
 
 // Delete shortcut
-func (processingPlanFolder ProcessingPlanFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().ProcessingPlanFolder().Delete(ctx, processingPlanFolder.GetID())
+func (processingPlanFolder *ProcessingPlanFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProcessingPlanFolderService(client).Delete(ctx, processingPlanFolder)
 }
 
 // ProcessingPlanFolderService
@@ -166,7 +166,12 @@ func (processingPlanFolder ProcessingPlanFolder) Delete(ctx context.Context, cli
 type ProcessingPlanFolderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlanFolder], *resty.Response, error)
 	Create(ctx context.Context, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление группы техкарт.
+	// Принимает контекст и группу техкарт.
+	// Возвращает «true» в случае успешного удаления группы техкарт.
+	Delete(ctx context.Context, entity *ProcessingPlanFolder) (bool, *resty.Response, error)
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
 	Update(ctx context.Context, id uuid.UUID, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)

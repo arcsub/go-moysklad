@@ -355,18 +355,18 @@ func (Enter) MetaType() MetaType {
 }
 
 // Update shortcut
-func (enter Enter) Update(ctx context.Context, client *Client, params ...*Params) (*Enter, *resty.Response, error) {
-	return NewEnterService(client).Update(ctx, enter.GetID(), &enter, params...)
+func (enter *Enter) Update(ctx context.Context, client *Client, params ...*Params) (*Enter, *resty.Response, error) {
+	return NewEnterService(client).Update(ctx, enter.GetID(), enter, params...)
 }
 
 // Create shortcut
-func (enter Enter) Create(ctx context.Context, client *Client, params ...*Params) (*Enter, *resty.Response, error) {
-	return NewEnterService(client).Create(ctx, &enter, params...)
+func (enter *Enter) Create(ctx context.Context, client *Client, params ...*Params) (*Enter, *resty.Response, error) {
+	return NewEnterService(client).Create(ctx, enter, params...)
 }
 
 // Delete shortcut
-func (enter Enter) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewEnterService(client).Delete(ctx, enter.GetID())
+func (enter *Enter) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewEnterService(client).Delete(ctx, enter)
 }
 
 // EnterPosition Позиция оприходования.
@@ -572,10 +572,15 @@ type EnterService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Enter) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление оприходования.
+	// DeleteByID выполняет запрос на удаление оприходования по ID.
 	// Принимает контекст и ID оприходования.
 	// Возвращает «true» в случае успешного удаления оприходования.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление оприходования.
+	// Принимает контекст и оприходование.
+	// Возвращает «true» в случае успешного удаления оприходования.
+	Delete(ctx context.Context, entity *Enter) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного оприходования по ID.
 	// Принимает контекст, ID оприходования взаиморасчётов и опционально объект параметров запроса Params.

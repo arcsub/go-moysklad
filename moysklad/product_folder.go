@@ -268,18 +268,18 @@ func (ProductFolder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productFolder ProductFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
-	return NewProductFolderService(client).Update(ctx, productFolder.GetID(), &productFolder, params...)
+func (productFolder *ProductFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+	return NewProductFolderService(client).Update(ctx, productFolder.GetID(), productFolder, params...)
 }
 
 // Create shortcut
-func (productFolder ProductFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
-	return NewProductFolderService(client).Create(ctx, &productFolder, params...)
+func (productFolder *ProductFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+	return NewProductFolderService(client).Create(ctx, productFolder, params...)
 }
 
 // Delete shortcut
-func (productFolder ProductFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewProductFolderService(client).Delete(ctx, productFolder.GetID())
+func (productFolder *ProductFolder) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProductFolderService(client).Delete(ctx, productFolder)
 }
 
 // ProductFolderService описывает методы сервиса для работы с группами товаров.
@@ -307,10 +307,15 @@ type ProductFolderService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*ProductFolder) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление группы товаров.
+	// DeleteByID выполняет запрос на удаление группы товаров по ID.
 	// Принимает контекст и ID группы товаров.
 	// Возвращает «true» в случае успешного удаления группы товаров.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление группы товаров.
+	// Принимает контекст и группу товаров.
+	// Возвращает «true» в случае успешного удаления группы товаров.
+	Delete(ctx context.Context, entity *ProductFolder) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной группы товаров по ID.
 	// Принимает контекст, ID группы товаров и опционально объект параметров запроса Params.

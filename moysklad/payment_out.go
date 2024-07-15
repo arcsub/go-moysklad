@@ -477,18 +477,18 @@ func (PaymentOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (paymentOut PaymentOut) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
-	return NewPaymentOutService(client).Update(ctx, paymentOut.GetID(), &paymentOut, params...)
+func (paymentOut *PaymentOut) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
+	return NewPaymentOutService(client).Update(ctx, paymentOut.GetID(), paymentOut, params...)
 }
 
 // Create shortcut
-func (paymentOut PaymentOut) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
-	return NewPaymentOutService(client).Create(ctx, &paymentOut, params...)
+func (paymentOut *PaymentOut) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
+	return NewPaymentOutService(client).Create(ctx, paymentOut, params...)
 }
 
 // Delete shortcut
-func (paymentOut PaymentOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewPaymentOutService(client).Delete(ctx, paymentOut.GetID())
+func (paymentOut *PaymentOut) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewPaymentOutService(client).Delete(ctx, paymentOut)
 }
 
 // PaymentOutService описывает методы сервиса для работы с исходящими платежами.
@@ -518,10 +518,15 @@ type PaymentOutService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*PaymentOut) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление исходящего платежа.
+	// DeleteByID выполняет запрос на удаление исходящего платежа по ID.
 	// Принимает контекст и ID исходящего платежа.
 	// Возвращает «true» в случае успешного удаления исходящего платежа.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление исходящего платежа.
+	// Принимает контекст и исходящий платеж.
+	// Возвращает «true» в случае успешного удаления исходящего платежа.
+	Delete(ctx context.Context, entity *PaymentOut) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного исходящего платежа по ID.
 	// Принимает контекст, ID исходящего платежа и опционально объект параметров запроса Params.

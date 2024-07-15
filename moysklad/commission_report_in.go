@@ -553,18 +553,18 @@ func (CommissionReportIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (commissionReportIn CommissionReportIn) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
-	return NewCommissionReportInService(client).Update(ctx, commissionReportIn.GetID(), &commissionReportIn, params...)
+func (commissionReportIn *CommissionReportIn) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+	return NewCommissionReportInService(client).Update(ctx, commissionReportIn.GetID(), commissionReportIn, params...)
 }
 
 // Create shortcut
-func (commissionReportIn CommissionReportIn) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
-	return NewCommissionReportInService(client).Create(ctx, &commissionReportIn, params...)
+func (commissionReportIn *CommissionReportIn) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+	return NewCommissionReportInService(client).Create(ctx, commissionReportIn, params...)
 }
 
 // Delete shortcut
-func (commissionReportIn CommissionReportIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewCommissionReportInService(client).Delete(ctx, commissionReportIn.GetID())
+func (commissionReportIn *CommissionReportIn) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewCommissionReportInService(client).Delete(ctx, commissionReportIn)
 }
 
 // CommissionOverhead Прочие расходы.
@@ -853,10 +853,15 @@ type CommissionReportInService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*CommissionReportIn) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление полученного отчёта комиссионера.
+	// DeleteByID выполняет запрос на удаление полученного отчёта комиссионера по ID.
 	// Принимает контекст и ID полученного отчёта комиссионера.
 	// Возвращает «true» в случае успешного удаления полученного отчёта комиссионера.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление полученного отчёта комиссионера.
+	// Принимает контекст и полученный отчёт комиссионера.
+	// Возвращает «true» в случае успешного удаления полученного отчёта комиссионера.
+	Delete(ctx context.Context, entity *CommissionReportIn) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного полученного отчёта комиссионера по ID.
 	// Принимает контекст, ID полученного отчёта комиссионера и опционально объект параметров запроса Params.
@@ -1103,7 +1108,8 @@ type commissionReportInService struct {
 	endpointCreate[CommissionReportIn]
 	endpointCreateUpdateMany[CommissionReportIn]
 	endpointDeleteMany[CommissionReportIn]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[CommissionReportIn]
 	endpointGetByID[CommissionReportIn]
 	endpointUpdate[CommissionReportIn]
 	endpointMetadata[MetaAttributesStatesSharedWrapper]
@@ -1158,7 +1164,8 @@ func NewCommissionReportInService(client *Client) CommissionReportInService {
 		endpointCreate:           endpointCreate[CommissionReportIn]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[CommissionReportIn]{e},
 		endpointDeleteMany:       endpointDeleteMany[CommissionReportIn]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[CommissionReportIn]{e},
 		endpointGetByID:          endpointGetByID[CommissionReportIn]{e},
 		endpointUpdate:           endpointUpdate[CommissionReportIn]{e},
 		endpointMetadata:         endpointMetadata[MetaAttributesStatesSharedWrapper]{e},

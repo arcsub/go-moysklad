@@ -412,18 +412,18 @@ func (Processing) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processing Processing) Update(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
-	return NewProcessingService(client).Update(ctx, processing.GetID(), &processing, params...)
+func (processing *Processing) Update(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+	return NewProcessingService(client).Update(ctx, processing.GetID(), processing, params...)
 }
 
 // Create shortcut
-func (processing Processing) Create(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
-	return NewProcessingService(client).Create(ctx, &processing, params...)
+func (processing *Processing) Create(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+	return NewProcessingService(client).Create(ctx, processing, params...)
 }
 
 // Delete shortcut
-func (processing Processing) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return NewProcessingService(client).Delete(ctx, processing.GetID())
+func (processing *Processing) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewProcessingService(client).Delete(ctx, processing)
 }
 
 // ProcessingPositionMaterial Материал Техоперации.
@@ -583,10 +583,15 @@ type ProcessingService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*Processing) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление техоперации.
+	// DeleteByID выполняет запрос на удаление техоперации по ID.
 	// Принимает контекст и ID техоперации.
 	// Возвращает «true» в случае успешного удаления техоперации.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление техоперации.
+	// Принимает контекст и техоперацию.
+	// Возвращает «true» в случае успешного удаления техоперации.
+	Delete(ctx context.Context, entity *Processing) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельной техоперации по ID.
 	// Принимает контекст, ID техоперации и опционально объект параметров запроса Params.
@@ -767,7 +772,8 @@ type processingService struct {
 	endpointCreate[Processing]
 	endpointCreateUpdateMany[Processing]
 	endpointDeleteMany[Processing]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Processing]
 	endpointGetByID[Processing]
 	endpointUpdate[Processing]
 	endpointTemplate[Processing]
@@ -849,7 +855,8 @@ func NewProcessingService(client *Client) ProcessingService {
 		endpointCreate:           endpointCreate[Processing]{e},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[Processing]{e},
 		endpointDeleteMany:       endpointDeleteMany[Processing]{e},
-		endpointDelete:           endpointDelete{e},
+		endpointDeleteByID:       endpointDeleteByID{e},
+		endpointDelete:           endpointDelete[Processing]{e},
 		endpointGetByID:          endpointGetByID[Processing]{e},
 		endpointUpdate:           endpointUpdate[Processing]{e},
 		endpointMetadata:         endpointMetadata[MetaAttributesStatesSharedWrapper]{e},

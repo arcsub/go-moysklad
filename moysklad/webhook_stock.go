@@ -123,6 +123,21 @@ func (WebhookStock) MetaType() MetaType {
 	return MetaTypeWebhookStock
 }
 
+// Update shortcut
+func (webhookStock *WebhookStock) Update(ctx context.Context, client *Client, params ...*Params) (*WebhookStock, *resty.Response, error) {
+	return NewWebhookStockService(client).Update(ctx, webhookStock.GetID(), webhookStock, params...)
+}
+
+// Create shortcut
+func (webhookStock *WebhookStock) Create(ctx context.Context, client *Client, params ...*Params) (*WebhookStock, *resty.Response, error) {
+	return NewWebhookStockService(client).Create(ctx, webhookStock, params...)
+}
+
+// Delete shortcut
+func (webhookStock *WebhookStock) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewWebhookStockService(client).Delete(ctx, webhookStock)
+}
+
 // MarshalJSON реализует интерфейс [json.Marshaler].
 func (webhookStock WebhookStock) MarshalJSON() ([]byte, error) {
 	webhookStock.StockType = String("stock")
@@ -167,10 +182,15 @@ type WebhookStockService interface {
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteMany(ctx context.Context, entities ...*WebhookStock) (*DeleteManyResponse, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление вебхука на изменение остатков.
+	// DeleteByID выполняет запрос на удаление вебхука на изменение остатков по ID.
 	// Принимает контекст и ID вебхука на изменение остатков.
 	// Возвращает «true» в случае успешного удаления вебхука на изменение остатков.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление вебхука на изменение остатков.
+	// Принимает контекст и вебхук на изменение остатков.
+	// Возвращает «true» в случае успешного удаления вебхука на изменение остатков.
+	Delete(ctx context.Context, entity *WebhookStock) (bool, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного вебхука на изменение остатков по ID.
 	// Принимает контекст, ID вебхука на изменение остатков и опционально объект параметров запроса Params.

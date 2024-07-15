@@ -1181,10 +1181,10 @@ type NotificationService interface {
 	// Возвращает найденное уведомление.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Notification, *resty.Response, error)
 
-	// Delete выполняет запрос на удаление уведомления.
+	// DeleteByID выполняет запрос на удаление уведомления.
 	// Принимает контекст и ID уведомления.
 	// Возвращает «true» в случае успешного удаления уведомления.
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
 
 	// MarkAsRead выполняет запрос на отметку о прочтении Уведомления.
 	// Принимает контекст и ID уведомления.
@@ -1218,7 +1218,7 @@ type notificationService struct {
 	Endpoint
 	endpointGetList[Notification]
 	endpointGetByID[Notification]
-	endpointDelete
+	endpointDeleteByID
 }
 
 func (service *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
@@ -1245,9 +1245,9 @@ func (service *notificationService) UpdateSubscription(ctx context.Context, noti
 func NewNotificationService(client *Client) NotificationService {
 	e := NewEndpoint(client, EndpointNotification)
 	return &notificationService{
-		Endpoint:        e,
-		endpointGetList: endpointGetList[Notification]{e},
-		endpointGetByID: endpointGetByID[Notification]{e},
-		endpointDelete:  endpointDelete{e},
+		Endpoint:           e,
+		endpointGetList:    endpointGetList[Notification]{e},
+		endpointGetByID:    endpointGetByID[Notification]{e},
+		endpointDeleteByID: endpointDeleteByID{e},
 	}
 }
