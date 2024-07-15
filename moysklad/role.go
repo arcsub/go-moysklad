@@ -7,8 +7,12 @@ import (
 )
 
 // Role Пользовательская роль.
-// Ключевое слово: role
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skie-roli
+//
+// Код сущности: role
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skie-roli
 type Role struct {
 	ID          *uuid.UUID           `json:"id,omitempty"`          // ID пользовательской роли
 	Meta        *Meta                `json:"meta,omitempty"`        // Метаданные пользовательской роли
@@ -16,118 +20,131 @@ type Role struct {
 	Permissions *EmployeePermissions `json:"permissions,omitempty"` // Список пермиссий
 }
 
-// Clean возвращает сущность с единственным заполненным полем Meta
+// Clean возвращает указатель на объект с единственным заполненным полем [Meta].
+//
+// Метод позволяет избавиться от лишних данных при передаче запроса.
 func (role Role) Clean() *Role {
+	if role.Meta == nil {
+		return nil
+	}
 	return &Role{Meta: role.Meta}
 }
 
+// GetID возвращает ID пользовательской роли.
 func (role Role) GetID() uuid.UUID {
 	return Deref(role.ID)
 }
 
+// GetMeta возвращает Метаданные пользовательской роли.
 func (role Role) GetMeta() Meta {
 	return Deref(role.Meta)
 }
 
+// GetName возвращает Наименование пользовательской роли.
 func (role Role) GetName() string {
 	return Deref(role.Name)
 }
 
+// GetPermissions возвращает Список пермиссий.
 func (role Role) GetPermissions() EmployeePermissions {
 	return Deref(role.Permissions)
 }
 
+// SetMeta устанавливает Метаданные пользовательской роли.
 func (role *Role) SetMeta(meta *Meta) *Role {
 	role.Meta = meta
 	return role
 }
 
+// SetName устанавливает Наименование пользовательской роли.
 func (role *Role) SetName(name string) *Role {
 	role.Name = &name
 	return role
 }
 
+// SetPermissions устанавливает Список пермиссий.
 func (role *Role) SetPermissions(permissions *EmployeePermissions) *Role {
 	role.Permissions = permissions
 	return role
 }
 
-func (role Role) String() string {
-	return Stringify(role)
-}
+// String реализует интерфейс [fmt.Stringer].
+func (role Role) String() string { return Stringify(role) }
 
-// MetaType возвращает тип сущности.
-func (Role) MetaType() MetaType {
-	return MetaTypeRole
-}
+// MetaType возвращает код сущности.
+func (Role) MetaType() MetaType { return MetaTypeRole }
 
 // Update shortcut
-func (role Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
-	return client.Entity().Role().Update(ctx, role.GetID(), &role, params...)
+func (role *Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+	return NewRoleService(client).Update(ctx, role.GetID(), role, params...)
 }
 
 // Create shortcut
-func (role Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
-	return client.Entity().Role().Create(ctx, &role, params...)
+func (role *Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+	return NewRoleService(client).Create(ctx, role, params...)
 }
 
 // Delete shortcut
-func (role Role) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
-	return client.Entity().Role().Delete(ctx, role.GetID())
+func (role *Role) Delete(ctx context.Context, client *Client) (bool, *resty.Response, error) {
+	return NewRoleService(client).Delete(ctx, role)
 }
 
-// AdminRole Роль администратора
+// AdminRole Роль администратора.
 type AdminRole struct {
-	Meta Meta `json:"meta,omitempty"`
+	Meta Meta `json:"meta,omitempty"` // метаданные роли
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (adminRole AdminRole) String() string {
 	return Stringify(adminRole)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (AdminRole) MetaType() MetaType {
 	return MetaTypeSystemRole
 }
 
-// IndividualRole Индивидуальная роль
+// IndividualRole Индивидуальная роль.
 type IndividualRole struct {
-	Meta Meta `json:"meta,omitempty"`
+	Meta Meta `json:"meta,omitempty"` // метаданные роли
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (individualRole IndividualRole) String() string {
 	return Stringify(individualRole)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (IndividualRole) MetaType() MetaType {
 	return MetaTypeIndividualRole
 }
 
-// CashierRole Роль кассира
+// CashierRole Роль кассира.
 type CashierRole struct {
-	Meta Meta `json:"meta,omitempty"`
+	Meta Meta `json:"meta,omitempty"` // метаданные роли
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (cashierRole CashierRole) String() string {
 	return Stringify(cashierRole)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (CashierRole) MetaType() MetaType {
 	return MetaTypeSystemRole
 }
 
-// WorkerRole Роль сотрудника производства
+// WorkerRole Роль сотрудника производства.
 type WorkerRole struct {
-	Meta Meta `json:"meta,omitempty"`
+	Meta Meta `json:"meta,omitempty"` // метаданные роли
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (workerRole WorkerRole) String() string {
 	return Stringify(workerRole)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (WorkerRole) MetaType() MetaType {
 	return MetaTypeSystemRole
 }
@@ -135,219 +152,272 @@ func (WorkerRole) MetaType() MetaType {
 type PermissionValue string
 
 const (
-	PermissionNo             PermissionValue = "NO"               // Ни на кого
 	PermissionOwn            PermissionValue = "OWN"              // Только свои
 	PermissionOwnShared      PermissionValue = "OWN_SHARED"       // Свои и общие
 	PermissionOwnGroup       PermissionValue = "OWN_GROUP"        // Свои и отдела
 	PermissionOwnGroupShared PermissionValue = "OWN_GROUP_SHARED" // Свои, отдела и общие
 	PermissionAll            PermissionValue = "ALL"              // Все
+	PermissionNo             PermissionValue = "NO"               // Ни на кого
+	PermissionNone           PermissionValue = ""                 // Отсутствие прав
 )
 
 type ScriptPermissionValue string
 
 const (
-	ScriptPermissionValueNo                ScriptPermissionValue = "NO"                 // Нет прав ни на какие задачи
-	ScriptPermissionValueAuthor            ScriptPermissionValue = "AUTHOR"             // Созданные пользователем
-	ScriptPermissionValueAssignee          ScriptPermissionValue = "ASSIGNEE"           // Назначенные
 	ScriptPermissionValueOAuthorOrAssignee ScriptPermissionValue = "AUTHOR_OR_ASSIGNEE" // Созданные пользователем и назначенные ему
+	ScriptPermissionValueAssignee          ScriptPermissionValue = "ASSIGNEE"           // Назначенные
+	ScriptPermissionValueAuthor            ScriptPermissionValue = "AUTHOR"             // Созданные пользователем
 	ScriptPermissionValueAll               ScriptPermissionValue = "ALL"                // Возможность совершать действие над любыми задачами
+	ScriptPermissionValueNo                ScriptPermissionValue = "NO"                 // Нет прав ни на какие задачи
+	ScriptPermissionValueNone              PermissionValue       = ""                   // Отсутствие прав
 )
 
+type ViewPermission struct {
+	View PermissionValue `json:"view"` // Смотреть
+}
+
 type ViewCreateDeletePermission struct {
-	View   PermissionValue `json:"view"`
-	Create PermissionValue `json:"create"`
-	Delete PermissionValue `json:"delete"`
+	View   PermissionValue `json:"view"`   // Смотреть
+	Create PermissionValue `json:"create"` // Создавать
+	Delete PermissionValue `json:"delete"` // Удалять
 }
 
 type ViewPrintPermission struct {
-	View  PermissionValue `json:"view"`
-	Print PermissionValue `json:"print"`
+	View  PermissionValue `json:"view"`  // Смотреть
+	Print PermissionValue `json:"print"` // Печатать
 }
 
 type BasePermission struct {
-	View   PermissionValue `json:"view"`
-	Create PermissionValue `json:"create"`
-	Update PermissionValue `json:"update"`
-	Delete PermissionValue `json:"delete"`
+	View   PermissionValue `json:"view"`   // Смотреть
+	Create PermissionValue `json:"create"` // Создавать
+	Update PermissionValue `json:"update"` // Редактировать
+	Delete PermissionValue `json:"delete"` // Удалять
 }
 
 type DictionaryPermission struct {
-	View   PermissionValue `json:"view"`
-	Create PermissionValue `json:"create"`
-	Update PermissionValue `json:"update"`
-	Delete PermissionValue `json:"delete"`
-	Print  PermissionValue `json:"print"`
+	View   PermissionValue `json:"view"`   // Смотреть
+	Create PermissionValue `json:"create"` // Создавать
+	Update PermissionValue `json:"update"` // Редактировать
+	Delete PermissionValue `json:"delete"` // Удалять
+	Print  PermissionValue `json:"print"`  // Печатать
 }
 
 type OperationPermission struct {
-	View    PermissionValue `json:"view"`
-	Create  PermissionValue `json:"create"`
-	Update  PermissionValue `json:"update"`
-	Delete  PermissionValue `json:"delete"`
-	Approve PermissionValue `json:"approve"`
-	Print   PermissionValue `json:"print"`
+	View    PermissionValue `json:"view"`    // Смотреть
+	Create  PermissionValue `json:"create"`  // Создавать
+	Update  PermissionValue `json:"update"`  // Редактировать
+	Delete  PermissionValue `json:"delete"`  // Удалять
+	Approve PermissionValue `json:"approve"` // Проводить
+	Print   PermissionValue `json:"print"`   // Печатать
 }
 
 type ScriptPermission struct {
-	View   ScriptPermissionValue `json:"view"`
-	Create ScriptPermissionValue `json:"create"`
-	Update ScriptPermissionValue `json:"update"`
-	Delete ScriptPermissionValue `json:"delete"`
-	Done   ScriptPermissionValue `json:"done"`
+	View   ScriptPermissionValue `json:"view"`   // Смотреть
+	Create ScriptPermissionValue `json:"create"` // Создавать
+	Update ScriptPermissionValue `json:"update"` // Редактировать
+	Delete ScriptPermissionValue `json:"delete"` // Удалять
+	Done   ScriptPermissionValue `json:"done"`   // Выполнять
 }
 
 type EmployeePermissions struct {
-	ProcessingOrder                 OperationPermission        `json:"processingOrder"`
-	CustomerOrder                   OperationPermission        `json:"customerOrder"`
-	BonusTransaction                OperationPermission        `json:"bonusTransaction"`
-	SalesReturn                     OperationPermission        `json:"salesReturn"`
-	PriceList                       OperationPermission        `json:"priceList"`
-	Enter                           OperationPermission        `json:"enter"`
-	RetailSalesReturn               OperationPermission        `json:"retailSalesReturn"`
-	RetailDrawerCashOut             OperationPermission        `json:"retailDrawerCashOut"`
-	RetailDrawerCashIn              OperationPermission        `json:"retailDrawerCashIn"`
-	RetailDemand                    OperationPermission        `json:"retailDemand"`
-	CommissionReportOut             OperationPermission        `json:"commissionReportOut"`
-	PrepaymentReturn                OperationPermission        `json:"prepaymentReturn"`
-	PurchaseReturn                  OperationPermission        `json:"purchaseReturn"`
-	PurchaseOrder                   OperationPermission        `json:"purchaseOrder"`
-	Supply                          OperationPermission        `json:"supply"`
-	Demand                          OperationPermission        `json:"demand"`
-	CommissionReportIn              OperationPermission        `json:"commissionReportIn"`
-	Prepayment                      OperationPermission        `json:"prepayment"`
-	PaymentOut                      OperationPermission        `json:"paymentOut"`
-	PaymentIn                       OperationPermission        `json:"paymentIn"`
-	Move                            OperationPermission        `json:"move"`
-	Loss                            OperationPermission        `json:"loss"`
-	InvoiceOut                      OperationPermission        `json:"invoiceOut"`
-	InvoiceIn                       OperationPermission        `json:"invoiceIn"`
-	CashOut                         OperationPermission        `json:"cashOut"`
-	InternalOrder                   OperationPermission        `json:"internalOrder"`
-	CashIn                          OperationPermission        `json:"cashIn"`
-	FactureOut                      OperationPermission        `json:"factureOut"`
-	FactureIn                       OperationPermission        `json:"factureIn"`
-	Inventory                       DictionaryPermission       `json:"inventory"`
-	AccountAdjustment               DictionaryPermission       `json:"accountAdjustment"`
-	Good                            DictionaryPermission       `json:"good"`
-	UtilizationReport               DictionaryPermission       `json:"utilizationReport"`
-	CashBoxAdjustment               DictionaryPermission       `json:"cashboxAdjustment"`
-	RemainsOrder                    DictionaryPermission       `json:"remainsOrder"`
-	RemarkingOrder                  DictionaryPermission       `json:"remarkingOrder"`
-	Company                         DictionaryPermission       `json:"company"`
-	Contract                        DictionaryPermission       `json:"contract"`
-	CounterpartyAdjustment          DictionaryPermission       `json:"counterpartyAdjustment"`
-	RetailShift                     DictionaryPermission       `json:"retailShift"`
-	CRPTCancellation                DictionaryPermission       `json:"crptCancellation"`
-	CRPTPackageCreation             DictionaryPermission       `json:"crptPackageCreation"`
-	CRPTPackageDisaggregation       DictionaryPermission       `json:"crptPackageDisaggregation"`
-	CRPTPackageItemRemoval          DictionaryPermission       `json:"crptPackageItemRemoval"`
-	EnrollOrder                     DictionaryPermission       `json:"enrollOrder"`
-	AtkAggregation                  DictionaryPermission       `json:"atkAggregation"`
-	RetireOrder                     DictionaryPermission       `json:"retireOrder"`
-	Script                          ScriptPermission           `json:"script"`
-	EmissionOrder                   DictionaryPermission       `json:"emissionOrder"`
-	Currency                        BasePermission             `json:"currency"`
-	MyCompany                       BasePermission             `json:"myCompany"`
-	Employee                        BasePermission             `json:"employee"`
-	Warehouse                       BasePermission             `json:"warehouse"`
-	Country                         BasePermission             `json:"country"`
-	Uom                             BasePermission             `json:"uom"`
-	RetailStore                     BasePermission             `json:"retailStore"`
-	Project                         BasePermission             `json:"project"`
-	ProcessingPlan                  BasePermission             `json:"processingPlan"`
-	CustomEntity                    BasePermission             `json:"customEntity"`
-	Processing                      BasePermission             `json:"processing"`
-	GTINList                        ViewCreateDeletePermission `json:"GTINList"`
-	TrackingCodeList                ViewPrintPermission        `json:"trackingCodeList"`
-	ViewCashFlow                    bool                       `json:"viewCashFlow"`
-	SendEmail                       bool                       `json:"sendEmail"`
-	ViewMoneyDashboard              bool                       `json:"viewMoneyDashboard"`
-	ViewDashboard                   bool                       `json:"viewDashboard"`
-	ViewCustomerBalanceList         bool                       `json:"viewCustomerBalanceList"`
-	ViewCompanyCRM                  bool                       `json:"viewCompanyCRM"`
-	ViewCommissionGoods             bool                       `json:"viewCommissionGoods"`
-	ViewProfitAndLoss               bool                       `json:"viewProfitAndLoss"`
-	ViewPurchaseFunnel              bool                       `json:"viewPurchaseFunnel"`
-	ViewRecycleBin                  bool                       `json:"viewRecycleBin"`
-	ViewSaleProfit                  bool                       `json:"viewSaleProfit"`
-	ViewAudit                       bool                       `json:"viewAudit"`
-	SubscriptionControl             bool                       `json:"subscriptionControl"`
-	ViewProductCostAndProfit        bool                       `json:"viewProductCostAndProfit"`
-	RestoreFromRecycleBin           bool                       `json:"restoreFromRecycleBin"`
-	PurchaseControl                 bool                       `json:"purchaseControl"`
-	OnlineShops                     bool                       `json:"onlineShops"`
-	ListenCalls                     bool                       `json:"listenCalls"`
-	ImportData                      bool                       `json:"importData"`
-	ExportData                      bool                       `json:"exportData"`
-	ViewSerialNumbers               bool                       `json:"viewSerialNumbers"`
-	EditDocumentsOfRestrictedPeriod bool                       `json:"editDocumentsOfRestrictedPeriod"`
-	EditDocumentTemplates           bool                       `json:"editDocumentTemplates"`
-	EditCurrencyRateOfDocument      bool                       `json:"editCurrencyRateOfDocument"`
-	ViewStockReport                 bool                       `json:"viewStockReport"`
-	ViewTurnover                    bool                       `json:"viewTurnover"`
-	ApiRequest                      bool                       `json:"apiRequest"`
-	DeleteFromRecycleBin            bool                       `json:"deleteFromRecycleBin"`
+	ProcessingOrder                 OperationPermission        `json:"processingOrder"`                 // Заказ на производство
+	CustomerOrder                   OperationPermission        `json:"customerOrder"`                   // Заказ покупателя
+	BonusTransaction                OperationPermission        `json:"bonusTransaction"`                // Бонусные баллы
+	SalesReturn                     OperationPermission        `json:"salesReturn"`                     // Возврат покупателя
+	PriceList                       OperationPermission        `json:"priceList"`                       // Прайс-лист
+	Enter                           OperationPermission        `json:"enter"`                           // Оприходование
+	RetailSalesReturn               OperationPermission        `json:"retailSalesReturn"`               // Возвраты
+	RetailDrawerCashOut             OperationPermission        `json:"retailDrawerCashOut"`             // Выплаты
+	RetailDrawerCashIn              OperationPermission        `json:"retailDrawerCashIn"`              // Внесения
+	RetailDemand                    OperationPermission        `json:"retailDemand"`                    // Продажи
+	CommissionReportOut             OperationPermission        `json:"commissionReportOut"`             // Выданный отчет комиссионера
+	PrepaymentReturn                OperationPermission        `json:"prepaymentReturn"`                // Возврат предоплаты
+	PurchaseReturn                  OperationPermission        `json:"purchaseReturn"`                  // Возврат поставщику
+	PurchaseOrder                   OperationPermission        `json:"purchaseOrder"`                   // Заказ поставщику
+	Supply                          OperationPermission        `json:"supply"`                          // Приемки
+	Demand                          OperationPermission        `json:"demand"`                          // Отгрузка
+	CommissionReportIn              OperationPermission        `json:"commissionReportIn"`              // Полученный отчет комиссионера
+	Prepayment                      OperationPermission        `json:"prepayment"`                      // Предоплаты
+	PaymentOut                      OperationPermission        `json:"paymentOut"`                      // Исходящий платеж
+	PaymentIn                       OperationPermission        `json:"paymentIn"`                       // Входящий платеж
+	Move                            OperationPermission        `json:"move"`                            // Перемещение
+	Loss                            OperationPermission        `json:"loss"`                            // Списание
+	InvoiceOut                      OperationPermission        `json:"invoiceOut"`                      // Счет покупателю
+	InvoiceIn                       OperationPermission        `json:"invoiceIn"`                       // Счет поставщика
+	CashOut                         OperationPermission        `json:"cashOut"`                         // Расходной ордер
+	InternalOrder                   OperationPermission        `json:"internalOrder"`                   // Внутренние заказы
+	CashIn                          OperationPermission        `json:"cashIn"`                          // Приходной ордер
+	FactureOut                      OperationPermission        `json:"factureOut"`                      // Счета-фактуры выданные
+	FactureIn                       OperationPermission        `json:"factureIn"`                       // полученные счета-фактуры
+	ProductionTask                  OperationPermission        `json:"productionTask"`                  // Производственные задания
+	Inventory                       DictionaryPermission       `json:"inventory"`                       // Инвентаризация
+	AccountAdjustment               DictionaryPermission       `json:"accountAdjustment"`               // Корректировка остатков на счете
+	Good                            DictionaryPermission       `json:"good"`                            // Товары и Услуги
+	UtilizationReport               DictionaryPermission       `json:"utilizationReport"`               // Отчет об использовании
+	CashBoxAdjustment               DictionaryPermission       `json:"cashboxAdjustment"`               // Корректировка остатков в кассе
+	RemainsOrder                    DictionaryPermission       `json:"remainsOrder"`                    // Описание остатков
+	RemarkingOrder                  DictionaryPermission       `json:"remarkingOrder"`                  // Перемаркировка
+	Company                         DictionaryPermission       `json:"company"`                         // Контрагенты
+	Contract                        DictionaryPermission       `json:"contract"`                        // Договоры
+	CounterpartyAdjustment          DictionaryPermission       `json:"counterpartyAdjustment"`          // Корректировка взаиморасчетов
+	RetailShift                     DictionaryPermission       `json:"retailShift"`                     // Смены
+	CRPTCancellation                DictionaryPermission       `json:"crptCancellation"`                // Списание кодов маркировки
+	CRPTPackageCreation             DictionaryPermission       `json:"crptPackageCreation"`             // Формирование упаковки
+	CRPTPackageDisaggregation       DictionaryPermission       `json:"crptPackageDisaggregation"`       // Расформирование упаковки
+	CRPTPackageItemRemoval          DictionaryPermission       `json:"crptPackageItemRemoval"`          // Изъятие из упаковки
+	EnrollOrder                     DictionaryPermission       `json:"enrollOrder"`                     // Ввод в оборот кодов маркировки
+	AtkAggregation                  DictionaryPermission       `json:"atkAggregation"`                  // Формирование АТК
+	RetireOrderOSU                  DictionaryPermission       `json:"retireOrderOSU"`                  // Вывод из оборота ОСУ
+	RetireOrder                     DictionaryPermission       `json:"retireOrder"`                     // Вывод из оборота
+	ProductionStageCompletion       DictionaryPermission       `json:"productionStageCompletion"`       // Выполнение этапов
+	Script                          ScriptPermission           `json:"script"`                          // ?
+	EmissionOrder                   DictionaryPermission       `json:"emissionOrder"`                   // Заказ кодов маркировки
+	Currency                        BasePermission             `json:"currency"`                        // Валюты
+	MyCompany                       BasePermission             `json:"myCompany"`                       // Юр. Лица
+	Employee                        BasePermission             `json:"employee"`                        // Сотрудники
+	Warehouse                       BasePermission             `json:"warehouse"`                       // Склады
+	Country                         BasePermission             `json:"country"`                         // Страны
+	Uom                             BasePermission             `json:"uom"`                             // Единицы измерения
+	RetailStore                     BasePermission             `json:"retailStore"`                     // Точка продаж
+	Project                         BasePermission             `json:"project"`                         // Проекты
+	ProcessingPlan                  BasePermission             `json:"processingPlan"`                  // Техкарты
+	CustomEntity                    BasePermission             `json:"customEntity"`                    // Элементы пользовательских справочников
+	Processing                      BasePermission             `json:"processing"`                      // Техоперации
+	ProcessingStage                 BasePermission             `json:"processingStage"`                 // Этапы производства
+	ProcessingProcess               BasePermission             `json:"processingProcess"`               // Техпроцессы
+	TaxRate                         BasePermission             `json:"taxrate"`                         // Ставки НДС
+	GTINList                        ViewCreateDeletePermission `json:"GTINList"`                        // Список GTIN
+	TrackingCodeList                ViewPrintPermission        `json:"trackingCodeList"`                // Коды маркировки
+	ViewCashFlow                    bool                       `json:"viewCashFlow"`                    // Просматривать движение денежных средств
+	SendEmail                       bool                       `json:"sendEmail"`                       // Отправлять почту
+	ViewMoneyDashboard              bool                       `json:"viewMoneyDashboard"`              // Видеть остатки денег
+	ViewDashboard                   bool                       `json:"viewDashboard"`                   // Просматривать показатели
+	ViewCustomerBalanceList         bool                       `json:"viewCustomerBalanceList"`         // Просматривать взаиморасчеты
+	ViewCompanyCRM                  bool                       `json:"viewCompanyCRM"`                  // Просматривать показатели
+	ViewCommissionGoods             bool                       `json:"viewCommissionGoods"`             // Просматривать товары на реализации
+	ViewProfitAndLoss               bool                       `json:"viewProfitAndLoss"`               // Просматривать прибыль и убытки
+	ViewPurchaseFunnel              bool                       `json:"viewPurchaseFunnel"`              // Просматривать воронку продаж
+	ViewRecycleBin                  bool                       `json:"viewRecycleBin"`                  // Просматривать корзину
+	ViewSaleProfit                  bool                       `json:"viewSaleProfit"`                  // Просматривать прибыльность
+	ViewAudit                       bool                       `json:"viewAudit"`                       // Просматривать аудит
+	SubscriptionControl             bool                       `json:"subscriptionControl"`             // Управление подпиской
+	ViewProductCostAndProfit        bool                       `json:"viewProductCostAndProfit"`        // Видеть себестоимость, цену закупки и прибыль товаров
+	RestoreFromRecycleBin           bool                       `json:"restoreFromRecycleBin"`           // Восстанавливать документы
+	PurchaseControl                 bool                       `json:"purchaseControl"`                 // Управление закупками
+	OnlineShops                     bool                       `json:"onlineShops"`                     // Интернет магазины
+	ListenCalls                     bool                       `json:"listenCalls"`                     // Прослушивание звонков
+	ImportData                      bool                       `json:"importData"`                      // Импортировать данные
+	ExportData                      bool                       `json:"exportData"`                      // Экспортировать данные
+	ViewSerialNumbers               bool                       `json:"viewSerialNumbers"`               // Просматривать серийные номера
+	EditDocumentsOfRestrictedPeriod bool                       `json:"editDocumentsOfRestrictedPeriod"` // Редактировать документы закрытого периода
+	EditDocumentTemplates           bool                       `json:"editDocumentTemplates"`           // Редактировать шаблоны документов и отчетов
+	EditCurrencyRateOfDocument      bool                       `json:"editCurrencyRateOfDocument"`      // Редактировать курс валюты документа
+	ViewStockReport                 bool                       `json:"viewStockReport"`                 // Просматривать остатки по товарам
+	ViewTurnover                    bool                       `json:"viewTurnover"`                    // Просматривать обороты
+	ApiRequest                      bool                       `json:"apiRequest"`                      // Доступ по АПИ
+	DeleteFromRecycleBin            bool                       `json:"deleteFromRecycleBin"`            // Очищать корзину
 }
 
-// RoleService
-// Сервис для работы с ролями и правами сотрудников.
+// RoleService описывает методы сервиса для работы с ролями и правами сотрудников.
 type RoleService interface {
+	// GetList выполняет запрос на получение списка пользовательских ролей.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Role], *resty.Response, error)
+
+	// Create выполняет запрос на создание пользовательской роли.
+	// Обязательные поля для заполнения:
+	//	- name (Наименование пользовательской роли)
+	//	- permissions (Список пермиссий)
+	// Принимает контекст, пользовательскую роль и опционально объект параметров запроса Params.
+	// Возвращает созданную пользовательскую роль.
 	Create(ctx context.Context, role *Role, params ...*Params) (*Role, *resty.Response, error)
-	Delete(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// DeleteByID выполняет запрос на массовое удаление пользовательской роли по ID.
+	// Принимает контекст и ID пользовательской роли.
+	// Возвращает «true» в случае успешного удаления пользовательской роли.
+	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+
+	// Delete выполняет запрос на удаление пользовательской роли.
+	// Принимает контекст и пользовательскую роль.
+	// Возвращает «true» в случае успешного удаления пользовательской роли.
+	Delete(ctx context.Context, entity *Role) (bool, *resty.Response, error)
+
+	// GetByID выполняет запрос на получение отдельной пользовательской роли по ID.
+	// Принимает контекст, ID пользовательской роли и опционально объект параметров запроса Params.
+	// Возвращает пользовательскую роль.
 	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Role, *resty.Response, error)
+
+	// Update выполняет запрос на изменение пользовательской роли.
+	// Принимает контекст, пользовательскую роль и опционально объект параметров запроса Params.
+	// Возвращает изменённую пользовательскую роль.
 	Update(ctx context.Context, id uuid.UUID, role *Role, params ...*Params) (*Role, *resty.Response, error)
+
+	// GetAdminRole выполняет запрос на получение роли администратора.
+	// Принимает контекст.
+	// Возвращает роль администратора.
 	GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error)
+
+	// GetIndividualRole выполняет запрос на получение индивидуальной роли.
+	// Принимает контекст.
+	// Возвращает индивидуальную роль.
 	GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error)
+
+	// GetCashierRole выполняет запрос на получение роли кассира.
+	// Принимает контекст.
+	// Возвращает роль кассира.
 	GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error)
+
+	// GetWorkerRole выполняет запрос на получение роли сотрудника производства.
+	// Принимает контекст.
+	// Возвращает роль сотрудника производства.
 	GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error)
 }
+
+const (
+	EndpointRole           = EndpointEntity + string(MetaTypeRole)
+	EndpointRoleAdmin      = EndpointRole + "/admin"
+	EndpointRoleIndividual = EndpointRole + "/individual"
+	EndpointRoleCashier    = EndpointRole + "/cashier"
+	EndpointRoleWorker     = EndpointRole + "/worker"
+)
 
 type roleService struct {
 	Endpoint
 	endpointGetList[Role]
 	endpointCreate[Role]
-	endpointDelete
+	endpointDeleteByID
+	endpointDelete[Role]
 	endpointGetByID[Role]
 	endpointUpdate[Role]
 }
 
-func NewRoleService(client *Client) RoleService {
-	e := NewEndpoint(client, "entity/role")
-	return &roleService{
-		Endpoint:        e,
-		endpointGetList: endpointGetList[Role]{e},
-		endpointCreate:  endpointCreate[Role]{e},
-		endpointDelete:  endpointDelete{e},
-		endpointGetByID: endpointGetByID[Role]{e},
-		endpointUpdate:  endpointUpdate[Role]{e},
-	}
-}
-
-// GetAdminRole Запрос на получение роли админа.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-roli-admina
 func (service *roleService) GetAdminRole(ctx context.Context) (*AdminRole, *resty.Response, error) {
-	path := "entity/role/admin"
-	return NewRequestBuilder[AdminRole](service.client, path).Get(ctx)
+	return NewRequestBuilder[AdminRole](service.client, EndpointRoleAdmin).Get(ctx)
 }
 
-// GetIndividualRole Запрос на получение индивидуальной роли.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-indiwidual-noj-roli
 func (service *roleService) GetIndividualRole(ctx context.Context) (*IndividualRole, *resty.Response, error) {
-	path := "entity/role/individual"
-	return NewRequestBuilder[IndividualRole](service.client, path).Get(ctx)
+	return NewRequestBuilder[IndividualRole](service.client, EndpointRoleIndividual).Get(ctx)
 }
 
-// GetCashierRole Запрос на получение роли кассира.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-indiwidual-noj-roli
 func (service *roleService) GetCashierRole(ctx context.Context) (*CashierRole, *resty.Response, error) {
-	path := "entity/role/cashier"
-	return NewRequestBuilder[CashierRole](service.client, path).Get(ctx)
+	return NewRequestBuilder[CashierRole](service.client, EndpointRoleCashier).Get(ctx)
 }
 
-// GetWorkerRole Запрос на получение роли кассира.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik-zapros-na-poluchenie-roli-sotrudnika-proizwodstwa
 func (service *roleService) GetWorkerRole(ctx context.Context) (*WorkerRole, *resty.Response, error) {
-	path := "entity/role/worker"
-	return NewRequestBuilder[WorkerRole](service.client, path).Get(ctx)
+	return NewRequestBuilder[WorkerRole](service.client, EndpointRoleWorker).Get(ctx)
+}
+
+// NewRoleService принимает [Client] и возвращает сервис для работы с ролями и правами сотрудников.
+func NewRoleService(client *Client) RoleService {
+	e := NewEndpoint(client, EndpointRole)
+	return &roleService{
+		Endpoint:           e,
+		endpointGetList:    endpointGetList[Role]{e},
+		endpointCreate:     endpointCreate[Role]{e},
+		endpointDeleteByID: endpointDeleteByID{e},
+		endpointDelete:     endpointDelete[Role]{e},
+		endpointGetByID:    endpointGetByID[Role]{e},
+		endpointUpdate:     endpointUpdate[Role]{e},
+	}
 }

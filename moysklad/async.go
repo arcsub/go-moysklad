@@ -6,29 +6,41 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"net/http"
-	"net/url"
 )
 
 // Async Асинхронная задача.
-// Ключевое слово: async
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
+//
+// Код сущности: async
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
 type Async struct {
-	DeletionDate Timestamp  `json:"deletionDate,omitempty"`
-	Meta         Meta       `json:"meta,omitempty"`
-	Owner        Meta       `json:"owner,omitempty"`
-	RequestURL   string     `json:"request,omitempty"`
-	ResultURL    string     `json:"resultUrl,omitempty"`
-	State        AsyncState `json:"state,omitempty"`
-	ApiErrors    ApiErrors  `json:"errors,omitempty"`
-	AccountID    uuid.UUID  `json:"accountId,omitempty"`
-	ID           uuid.UUID  `json:"id,omitempty"`
+	DeletionDate Timestamp   `json:"deletionDate,omitempty"` // Дата, после которой результат выполнения задачи станет недоступен. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
+	Meta         Meta        `json:"meta,omitempty"`         // Метаданные Асинхронной задачи
+	Owner        MetaWrapper `json:"owner,omitempty"`        // Пользователь или приложение, которые создали Асинхронную задачу
+	RequestURL   string      `json:"request,omitempty"`      // URL запроса, по которому создана Асинхронная задача
+	ResultURL    string      `json:"resultUrl,omitempty"`    // Ссылка на результат выполнения задачи. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
+	State        AsyncState  `json:"state,omitempty"`        // Статус выполнения Асинхронной задачи.
+	Errors       ApiErrors   `json:"errors,omitempty"`       // Ошибки апи, если поле state имеет значение AsyncStateApiError (API_ERROR)
+	AccountID    uuid.UUID   `json:"accountId,omitempty"`    // ID учётной записи
+	ID           uuid.UUID   `json:"id,omitempty"`           // ID Асинхронной задачи
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (async Async) String() string {
 	return Stringify(async)
 }
 
 // AsyncState Статус выполнения Асинхронной задачи.
+//
+// Возможные значения:
+//   - AsyncStatePending     – Задача находится в очереди
+//   - AsyncStateProcessing  – Задача находится в обработке, результат еще не готов
+//   - AsyncStateDone        – Задача выполнена успешно
+//   - AsyncStateError       – Задача не была выполнена в результате внутренней ошибки. В этом случае нужно попробовать запустить задачу заново
+//   - AsyncStateCancel      – Задача была отменена
+//   - AsyncStateApiError    – Задача была завершена с ошибкой апи
 type AsyncState string
 
 const (
@@ -40,91 +52,90 @@ const (
 	AsyncStateApiError   AsyncState = "API_ERROR"  // Задача была завершена с ошибкой апи
 )
 
-// AsyncService Сервис для работы с асинхронными задачами.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen
+// AsyncService методы сервиса для работы с асинхронными задачами.
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen
 type AsyncService interface {
-	// GetStatuses выполняет запрос на получение Асинхронных задач.
-	//
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-statusy-asinhronnyh-zadach
+	// GetStatuses выполняет запрос на получение списка статусов выполнения Асинхронных задач.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Доступна фильтрация по полям state, request, deletionDate.
+	// Результат содержит статусы Асинхронных задач за последнюю неделю.
+	// Возвращает объект List.
 	GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error)
 
 	// GetStatusByID выполняет запрос на получение статуса Асинхронной задачи.
-	//
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-poluchenie-statusa-asinhronnoj-zadachi
-	GetStatusByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Async, *resty.Response, error)
+	// Принимает контекст и ID асинхронной задачи.
+	// Возвращает объект Async.
+	GetStatusByID(ctx context.Context, id uuid.UUID) (*Async, *resty.Response, error)
 }
 
 type asyncService struct {
 	Endpoint
 }
 
-func NewAsyncService(client *Client) AsyncService {
-	e := NewEndpoint(client, "async")
-	return &asyncService{e}
-}
-
 func (service *asyncService) GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error) {
 	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
-func (service *asyncService) GetStatusByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Async, *resty.Response, error) {
-	path := fmt.Sprintf("async/%s", id)
-	return NewRequestBuilder[Async](service.client, path).SetParams(params...).Get(ctx)
+func (service *asyncService) GetStatusByID(ctx context.Context, id uuid.UUID) (*Async, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointAsyncID, id)
+	return NewRequestBuilder[Async](service.client, path).Get(ctx)
 }
 
+// AsyncResultService методы сервиса для обработки асинхронного запроса.
 type AsyncResultService[T any] interface {
 	// StatusURL возвращает URL проверки статуса асинхронной задачи.
-	StatusURL() *url.URL
+	StatusURL() string
 
 	// ResultURL возвращает URL результата выполнения асинхронной задачи.
-	ResultURL() *url.URL
+	ResultURL() string
 
 	// Check выполняет запрос на проверку статус асинхронной задачи.
-	//
-	// Если статус задачи = AsyncStateDone (DONE), возвращает true, иначе false
+	// Возвращает true, если статус задачи имеет значение AsyncStateDone (DONE).
 	Check(ctx context.Context) (bool, *resty.Response, error)
 
 	// Result выполняет запрос на получение результата.
-	//
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-poluchenie-rezul-tata-wypolneniq-asinhronnoj-zadachi
+	// Возвращает объект обобщённого типа, который был указан при создании сервиса для обработки асинхронного запроса.
 	Result(ctx context.Context) (*T, *resty.Response, error)
 
 	// Cancel выполняет запрос на отмену Асинхронной задачи.
-	//
-	// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-otmena-asinhronnoj-zadachi
+	// Возвращает true, если задача успешно отменена.
 	Cancel(ctx context.Context) (bool, *resty.Response, error)
 }
 
 type asyncResultService[T any] struct {
-	client    *Client
-	statusURL *url.URL // URL статуса Асинхронной задачи.
-	resultURL *url.URL // URL результата выполнения Асинхронной задачи.
+	client    *Client // Клиент
+	statusURL string  // URL статуса Асинхронной задачи.
+	resultURL string  // URL результата выполнения Асинхронной задачи.
 }
 
-// NewAsyncResultService Сервис для работы с асинхронной задачей.
-func NewAsyncResultService[T any](client *Client, resp *resty.Response) AsyncResultService[T] {
-	statusUrlStr := resp.Header().Get("Location")
-	resultUrlStr := resp.Header().Get("Content-Location")
-	statusUrl, _ := url.Parse(statusUrlStr)
-	resultUrl, _ := url.Parse(resultUrlStr)
+const (
+	EndpointAsync       = string(MetaTypeAsync)
+	EndpointAsyncID     = EndpointAsync + "/%s"
+	EndpointAsyncCancel = "%s/cancel"
+)
 
+// NewAsyncResultService принимает [Client] и возвращает сервис для работы с асинхронной задачей.
+func NewAsyncResultService[T any](client *Client, resp *resty.Response) AsyncResultService[T] {
 	return &asyncResultService[T]{
 		client:    client,
-		statusURL: statusUrl,
-		resultURL: resultUrl,
+		statusURL: resp.Header().Get("Location"),
+		resultURL: resp.Header().Get("Content-Location"),
 	}
 }
 
-func (service *asyncResultService[T]) StatusURL() *url.URL {
+func (service *asyncResultService[T]) StatusURL() string {
 	return service.statusURL
 }
 
-func (service *asyncResultService[T]) ResultURL() *url.URL {
+func (service *asyncResultService[T]) ResultURL() string {
 	return service.resultURL
 }
 
 func (service *asyncResultService[T]) Check(ctx context.Context) (bool, *resty.Response, error) {
-	async, resp, err := NewRequestBuilder[Async](service.client, service.StatusURL().String()).Get(ctx)
+	async, resp, err := NewRequestBuilder[Async](service.client, service.StatusURL()).Get(ctx)
 	if err != nil {
 		return false, resp, err
 	}
@@ -132,7 +143,7 @@ func (service *asyncResultService[T]) Check(ctx context.Context) (bool, *resty.R
 }
 
 func (service *asyncResultService[T]) Result(ctx context.Context) (*T, *resty.Response, error) {
-	data, resp, err := NewRequestBuilder[T](service.client, service.ResultURL().String()).Get(ctx)
+	data, resp, err := NewRequestBuilder[T](service.client, service.ResultURL()).Get(ctx)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -140,10 +151,15 @@ func (service *asyncResultService[T]) Result(ctx context.Context) (*T, *resty.Re
 }
 
 func (service *asyncResultService[T]) Cancel(ctx context.Context) (bool, *resty.Response, error) {
-	u, _ := service.StatusURL().Parse("/cancel")
-	_, resp, err := NewRequestBuilder[any](service.client, u.String()).Post(ctx, nil)
+	path := fmt.Sprintf(EndpointAsyncCancel, service.StatusURL())
+	_, resp, err := NewRequestBuilder[any](service.client, path).Post(ctx, nil)
 	if err != nil {
 		return false, resp, err
 	}
 	return resp.StatusCode() == http.StatusNoContent, resp, nil
+}
+
+// NewAsyncService принимает [Client] и возвращает сервис для работы с асинхронными задачами.
+func NewAsyncService(client *Client) AsyncService {
+	return &asyncService{NewEndpoint(client, EndpointAsync)}
 }

@@ -1,112 +1,135 @@
 package moysklad
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"time"
+)
 
-// Payroll Начисление зарплаты. TODO
-// Ключевое слово: payroll
+// Payroll Начисление зарплаты.
+//
+// Код сущности: payroll
 type Payroll struct {
-	Meta         *Meta            `json:"meta,omitempty"`
-	ID           *uuid.UUID       `json:"id,omitempty"`
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`
-	Owner        *Employee        `json:"owner,omitempty"`
-	Shared       *bool            `json:"shared,omitempty"`
-	Group        *Group           `json:"group,omitempty"`
-	Updated      *Timestamp       `json:"updated,omitempty"`
-	Name         *string          `json:"name,omitempty"`
-	ExternalCode *string          `json:"externalCode,omitempty"`
-	Moment       *Timestamp       `json:"moment,omitempty"`
-	Applicable   *bool            `json:"applicable,omitempty"`
-	Sum          *float64         `json:"sum,omitempty"`
-	Organization *Organization    `json:"organization,omitempty"`
-	Created      *Timestamp       `json:"created,omitempty"`
-	Printed      *bool            `json:"printed,omitempty"`
-	Published    *bool            `json:"published,omitempty"`
-	Files        *MetaArray[File] `json:"files,omitempty"`
-	State        *State           `json:"state,omitempty"`
+	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Начисления зарплаты
+	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Начисления зарплаты
+	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	Owner        *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
+	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
+	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
+	Updated      *Timestamp       `json:"updated,omitempty"`      // Момент последнего обновления Начисления зарплаты
+	Name         *string          `json:"name,omitempty"`         // Наименование Начисления зарплаты
+	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Начисления зарплаты
+	Moment       *Timestamp       `json:"moment,omitempty"`       // Дата документа
+	Applicable   *bool            `json:"applicable,omitempty"`   // Отметка о проведении
+	Sum          *float64         `json:"sum,omitempty"`          // Сумма в копейках
+	Organization *Organization    `json:"organization,omitempty"` // Метаданные юрлица
+	Created      *Timestamp       `json:"created,omitempty"`      // Момент создания
+	Printed      *bool            `json:"printed,omitempty"`      // Напечатан ли документ
+	Published    *bool            `json:"published,omitempty"`    // Опубликован ли документ
+	Files        *MetaArray[File] `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
+	State        *State           `json:"state,omitempty"`        // Метаданные статуса Начисления зарплаты
 }
 
-// AsTaskOperation реализует интерфейс AsTaskOperationInterface
+// AsTaskOperation реализует интерфейс [TaskOperationConverter].
 func (payroll Payroll) AsTaskOperation() *TaskOperation {
 	return &TaskOperation{Meta: payroll.Meta}
 }
 
+// GetMeta возвращает Метаданные Начисления зарплаты.
 func (payroll Payroll) GetMeta() Meta {
 	return Deref(payroll.Meta)
 }
 
+// GetID возвращает ID Начисления зарплаты.
 func (payroll Payroll) GetID() uuid.UUID {
 	return Deref(payroll.ID)
 }
 
+// GetAccountID возвращает ID учётной записи.
 func (payroll Payroll) GetAccountID() uuid.UUID {
 	return Deref(payroll.AccountID)
 }
 
+// GetOwner возвращает Метаданные владельца (Сотрудника).
 func (payroll Payroll) GetOwner() Employee {
 	return Deref(payroll.Owner)
 }
 
+// GetShared возвращает флаг Общего доступа.
 func (payroll Payroll) GetShared() bool {
 	return Deref(payroll.Shared)
 }
 
+// GetGroup возвращает Отдел сотрудника.
 func (payroll Payroll) GetGroup() Group {
 	return Deref(payroll.Group)
 }
 
-func (payroll Payroll) GetUpdated() Timestamp {
-	return Deref(payroll.Updated)
+// GetUpdated возвращает Момент последнего обновления Начисления зарплаты.
+func (payroll Payroll) GetUpdated() time.Time {
+	return Deref(payroll.Updated).Time()
 }
 
+// GetName возвращает Наименование Начисления зарплаты.
 func (payroll Payroll) GetName() string {
 	return Deref(payroll.Name)
 }
 
+// GetExternalCode возвращает Внешний код Начисления зарплаты.
 func (payroll Payroll) GetExternalCode() string {
 	return Deref(payroll.ExternalCode)
 }
 
-func (payroll Payroll) GetMoment() Timestamp {
-	return Deref(payroll.Moment)
+// GetMoment возвращает Дату документа.
+func (payroll Payroll) GetMoment() time.Time {
+	return Deref(payroll.Moment).Time()
 }
 
+// GetApplicable возвращает Отметку о проведении.
 func (payroll Payroll) GetApplicable() bool {
 	return Deref(payroll.Applicable)
 }
 
+// GetSum возвращает Сумму в копейках.
 func (payroll Payroll) GetSum() float64 {
 	return Deref(payroll.Sum)
 }
 
+// GetOrganization возвращает Метаданные юрлица.
 func (payroll Payroll) GetOrganization() Organization {
 	return Deref(payroll.Organization)
 }
 
-func (payroll Payroll) GetCreated() Timestamp {
-	return Deref(payroll.Created)
+// GetCreated возвращает Дату создания.
+func (payroll Payroll) GetCreated() time.Time {
+	return Deref(payroll.Created).Time()
 }
 
+// GetPrinted возвращает true, если документ напечатан.
 func (payroll Payroll) GetPrinted() bool {
 	return Deref(payroll.Printed)
 }
 
+// GetPublished возвращает true, если документ опубликован.
 func (payroll Payroll) GetPublished() bool {
 	return Deref(payroll.Published)
 }
 
+// GetFiles возвращает Метаданные массива Файлов.
 func (payroll Payroll) GetFiles() MetaArray[File] {
 	return Deref(payroll.Files)
 }
 
+// GetState возвращает Метаданные статуса Начисления зарплаты.
 func (payroll Payroll) GetState() State {
 	return Deref(payroll.State)
 }
 
+// String реализует интерфейс [fmt.Stringer].
 func (payroll Payroll) String() string {
 	return Stringify(payroll)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Payroll) MetaType() MetaType {
 	return MetaTypePayroll
 }

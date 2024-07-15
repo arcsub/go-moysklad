@@ -6,37 +6,48 @@ import (
 )
 
 // Money Остатки денежных средств.
-// Ключевое слово: moneyreport
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-ostatki-denezhnyh-sredstw
+//
+// Код сущности: moneyreport
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-ostatki-denezhnyh-sredstw
 type Money struct {
 	Account      MetaNameWrapper `json:"account"`      // Счет организации (не выводится для остатка кассы, так как касса одна на организацию)
 	Organization MetaNameWrapper `json:"organization"` // Организация
 	Balance      float64         `json:"balance"`      // Текущий остаток денежных средств
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Money) MetaType() MetaType {
 	return MetaTypeReportMoney
 }
 
 // MoneyPlotSeries Движение денежных средств
-// Ключевое слово: moneyplotseries
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw
+//
+// Код сущности: moneyplotseries
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw
 type MoneyPlotSeries struct {
-	Context Context             `json:"context"`
-	Meta    Meta                `json:"meta"`
-	Series  []PlotSeriesElement `json:"series"`
-	Credit  float64             `json:"credit"`
-	Debit   float64             `json:"debit"`
+	Context Context             `json:"context"` // Метаданные о выполнившем запрос сотруднике
+	Meta    Meta                `json:"meta"`    // Метаданные запроса
+	Series  []PlotSeriesElement `json:"series"`  // Массив показателей
+	Credit  float64             `json:"credit"`  // Доход
+	Debit   float64             `json:"debit"`   // Расход
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (MoneyPlotSeries) MetaType() MetaType {
 	return MetaTypeReportMoneyPlotSeries
 }
 
 // PlotSeriesElement Показатели (series)
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw-pokazateli-series
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw-pokazateli-series
 type PlotSeriesElement struct {
 	Date    string  `json:"date"`    // Дата
 	Credit  float64 `json:"credit"`  // Доход за период
@@ -44,55 +55,62 @@ type PlotSeriesElement struct {
 	Balance float64 `json:"balance"` // Баланс (доход-расход)
 }
 
-// ReportMoneyService
-// Сервис для работы с отчётом "Деньги".
+// ReportMoneyService описывает методы сервиса для работы с отчётом Деньги.
 type ReportMoneyService interface {
+	// GetPlotSeries выполняет запрос на получение графика движения денежных средств.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает движение денежных средств.
 	GetPlotSeries(ctx context.Context, params ...*Params) (*MoneyPlotSeries, *resty.Response, error)
+
+	// GetMoney выполняет запрос на получение остатков денежных средств по кассам и счетам.
+	// Принимает контекст.
+	// Возвращает объект List.
 	GetMoney(ctx context.Context) (*List[Money], *resty.Response, error)
+
+	// GetPlotSeriesAsync выполняет запрос на получение графика движения денежных средств (асинхронно).
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает сервис для работы с контекстом асинхронного запроса.
 	GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error)
+
+	// GetMoneyReportAsync выполняет запрос на получение остатков денежных средств по кассам и счетам.
+	// Принимает контекст.
+	// Возвращает сервис для работы с контекстом асинхронного запроса.
 	GetMoneyReportAsync(ctx context.Context) (AsyncResultService[List[Money]], *resty.Response, error)
 }
+
+const (
+	EndpointReportMoney           = EndpointReport + string(MetaTypeReportMoney)
+	EndpointReportMoneyPlotSeries = EndpointReportMoney + "/plotseries"
+	EndpointReportMoneyByAccount  = EndpointReportMoney + "/byaccount"
+)
+
 type reportMoneyService struct {
 	Endpoint
 }
 
-func NewReportMoneyService(client *Client) ReportMoneyService {
-	e := NewEndpoint(client, "report/money")
-	return &reportMoneyService{e}
-}
-
-// GetPlotSeries Запрос на получение графика движения денежных средств.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw
 func (service *reportMoneyService) GetPlotSeries(ctx context.Context, params ...*Params) (*MoneyPlotSeries, *resty.Response, error) {
-	path := "report/money/plotseries"
-	return NewRequestBuilder[MoneyPlotSeries](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MoneyPlotSeries](service.client, EndpointReportMoneyPlotSeries).SetParams(params...).Get(ctx)
 }
 
-// GetMoney Запрос на получение остатков денежных средств по кассам и счетам.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-ostatki-denezhnyh-sredstw
 func (service *reportMoneyService) GetMoney(ctx context.Context) (*List[Money], *resty.Response, error) {
-	path := "report/money/byaccount"
-	return NewRequestBuilder[List[Money]](service.client, path).Get(ctx)
+	return NewRequestBuilder[List[Money]](service.client, EndpointReportMoneyByAccount).Get(ctx)
 }
 
-// GetPlotSeriesAsync Запрос на получение графика движения денежных средств (асинхронно).
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-dwizhenie-denezhnyh-sredstw
 func (service *reportMoneyService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[MoneyPlotSeries], *resty.Response, error) {
-	path := "report/money/plotseries"
 	var param *Params
 	if len(params) > 0 {
 		param = params[0]
 	} else {
-		param = new(Params)
+		param = NewParams()
 	}
-	param.withAsync()
-	return NewRequestBuilder[MoneyPlotSeries](service.client, path).SetParams(param).Async(ctx)
+	return NewRequestBuilder[MoneyPlotSeries](service.client, EndpointReportMoneyPlotSeries).SetParams(param.WithAsync()).Async(ctx)
 }
 
-// GetMoneyReportAsync Запрос на получение остатков денежных средств по кассам и счетам (асинхронно).
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-den-gi-ostatki-denezhnyh-sredstw
 func (service *reportMoneyService) GetMoneyReportAsync(ctx context.Context) (AsyncResultService[List[Money]], *resty.Response, error) {
-	path := "report/money/byaccount"
-	params := NewParams().withAsync()
-	return NewRequestBuilder[List[Money]](service.client, path).SetParams(params).Async(ctx)
+	return NewRequestBuilder[List[Money]](service.client, EndpointReportMoneyByAccount).SetParams(NewParams().WithAsync()).Async(ctx)
+}
+
+// NewReportMoneyService принимает [Client] и возвращает сервис для работы с отчётом Деньги.
+func NewReportMoneyService(client *Client) ReportMoneyService {
+	return &reportMoneyService{NewEndpoint(client, EndpointReportMoney)}
 }

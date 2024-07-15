@@ -1,17 +1,22 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
 [![](https://godoc.org/github.com/arcsub/go-moysklad?status.svg)](http://godoc.org/github.com/arcsub/go-moysklad)
-![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad)
-![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad)
-![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad)
 
-# go-moysklad (МойСклад)
+![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad?style=flat-square)
+![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad?style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/arcsub/go-moysklad?style=flat-square)
 
-SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api)
+<div align="center">
+  <h2>go-moysklad (МойСклад)</h2>
+  <div>SDK для работы с <a href="https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api">МойСклад JSON API 1.2</a></div>
+  <br>
+  <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6bec5834-6eb9-442f-b1ee-efeaa85bb946" width="200px">
+</div>
+
 > [!WARNING]
 > SDK находится в стадии разработки!
-> 
+>
 > Некоторые методы могут отсутствовать или работать неправильно!
 >
 > **Подробная документация в процессе написания.**
@@ -19,7 +24,7 @@ SDK для работы с [МойСклад JSON API 1.2](https://dev.moysklad.
 ## Установка
 
 > Требуемая версия go >= 1.21
-> 
+
 ```
 go get -u github.com/arcsub/go-moysklad
 ```
@@ -28,7 +33,7 @@ go get -u github.com/arcsub/go-moysklad
 
 ### Возвращаемые аргументы
 Каждый запрос на создание/изменение/удаление возвращает 3 аргумента.
-Рассмотрим объявление функции 
+Рассмотрим объявление функции
 ```go
 func (s *endpointCreate[T]) Create(ctx context.Context, entity *T, params ...*Params) (*T, *resty.Response, error)
 ```
@@ -286,7 +291,8 @@ params.WithStockFiled()
 ```
 
 #### Тип остатка `stockType=val`
-Используется в отчёте "Остатки" 
+
+Используется в отчёте "Остатки"
 
 Пример:
 ```go
@@ -426,7 +432,6 @@ func main() {
   fmt.Println("Deleted", success)
 }
 ```
-
 
 <div align="center">
   <a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">

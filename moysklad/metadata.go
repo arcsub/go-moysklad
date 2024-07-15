@@ -6,117 +6,110 @@ import (
 )
 
 // Metadata Глобальные метаданные.
-// Ключевое слово: metadata
+//
+// Код сущности: metadata
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-metadannye-metadannye-suschnosti
 type Metadata struct {
-	CompanySettings           MetadataCompanySettings             `json:"companysettings"`
-	BonusProgram              MetaAttributesWrapper               `json:"bonusprogram"`
-	Consignment               MetaAttributesWrapper               `json:"consignment"`
-	ProcessingPlan            MetaAttributesWrapper               `json:"processingplan"`
-	Assortment                Meta                                `json:"assortment"`
-	ProductFolder             MetaWrapper                         `json:"productfolder"`
-	ProcessingPlanFolder      MetaWrapper                         `json:"processingplanfolder"`
-	Application               MetaWrapper                         `json:"application"`
-	InvoiceIn                 AttributesCreateSharedWrapper       `json:"invoicein"`
-	Processing                AttributesCreateSharedWrapper       `json:"processing"`
-	Supply                    AttributesCreateSharedWrapper       `json:"supply"`
-	CommissionReportIn        AttributesCreateSharedWrapper       `json:"commissionreportin"`
-	CommissionReportOut       AttributesCreateSharedWrapper       `json:"commissionreportout"`
-	PrepaymentReturn          AttributesCreateSharedWrapper       `json:"prepaymentreturn"`
-	RetailShift               AttributesCreateSharedWrapper       `json:"retailshift"`
-	Loss                      AttributesCreateSharedWrapper       `json:"loss"`
-	FactureOut                AttributesCreateSharedWrapper       `json:"factureout"`
-	PurchaseOrder             AttributesCreateSharedWrapper       `json:"purchaseorder"`
-	CrptOrder                 AttributesCreateSharedWrapper       `json:"crptorder"`
-	Move                      AttributesCreateSharedWrapper       `json:"move"`
-	Employee                  AttributesCreateSharedWrapper       `json:"employee"`
-	InvoiceOut                AttributesCreateSharedWrapper       `json:"invoiceout"`
-	RetailDemand              AttributesCreateSharedWrapper       `json:"retaildemand"`
-	SalesReturn               AttributesCreateSharedWrapper       `json:"salesreturn"`
-	InternalOrder             AttributesCreateSharedWrapper       `json:"internalorder"`
-	Organization              AttributesCreateSharedWrapper       `json:"organization"`
-	Inventory                 AttributesCreateSharedWrapper       `json:"inventory"`
-	Demand                    AttributesCreateSharedWrapper       `json:"demand"`
-	PaymentOut                AttributesCreateSharedWrapper       `json:"paymentout"`
-	CounterpartyAdjustment    AttributesCreateSharedWrapper       `json:"counterpartyadjustment"`
-	ProductionTask            AttributesCreateSharedWrapper       `json:"productiontask"`
-	RetailDrawerCashIn        AttributesCreateSharedWrapper       `json:"retaildrawercashin"`
-	CashOut                   AttributesCreateSharedWrapper       `json:"cashout"`
-	PurchaseReturn            AttributesCreateSharedWrapper       `json:"purchasereturn"`
-	RetailDrawerCashOut       AttributesCreateSharedWrapper       `json:"retaildrawercashout"`
-	ProcessingOrder           AttributesCreateSharedWrapper       `json:"processingorder"`
-	Project                   AttributesCreateSharedWrapper       `json:"project"`
-	FactureOn                 AttributesCreateSharedWrapper       `json:"facturein"`
-	CashIn                    AttributesCreateSharedWrapper       `json:"cashin"`
-	Contract                  AttributesCreateSharedWrapper       `json:"contract"`
-	PaymentIn                 AttributesCreateSharedWrapper       `json:"paymentin"`
-	PriceList                 AttributesCreateSharedWrapper       `json:"pricelist"`
-	BonusTransaction          AttributesCreateSharedWrapper       `json:"bonustransaction"`
-	Store                     AttributesCreateSharedWrapper       `json:"store"`
-	RetailSalesReturn         AttributesCreateSharedWrapper       `json:"retailsalesreturn"`
-	Enter                     AttributesCreateSharedWrapper       `json:"enter"`
-	ProductionsTageCompletion AttributesCreateSharedWrapper       `json:"productionstagecompletion"`
-	Service                   MetaAttributesSharedWrapper         `json:"service"`
-	Prepayment                AttributesCreateSharedWrapper       `json:"prepayment"`
-	Product                   MetaAttributesSharedWrapper         `json:"product"`
-	Bundle                    MetaAttributesSharedWrapper         `json:"bundle"`
-	Counterparty              CounterpartyOption                  `json:"counterparty"`
-	CustomerOrder             AttributesStatesCreateSharedWrapper `json:"customerorder"`
-	Variant                   MetaCharacteristicsWrapper          `json:"variant"`
+	CompanySettings           MetadataCompanySettings               `json:"companysettings"`
+	BonusProgram              MetaAttributesWrapper                 `json:"bonusprogram"`
+	Consignment               MetaAttributesWrapper                 `json:"consignment"`
+	ProcessingPlan            MetaAttributesWrapper                 `json:"processingplan"`
+	Assortment                MetaWrapper                           `json:"assortment"`
+	ProductFolder             MetaWrapper                           `json:"productfolder"`
+	ProcessingPlanFolder      MetaWrapper                           `json:"processingplanfolder"`
+	Application               MetaWrapper                           `json:"application"`
+	InvoiceIn                 MetaAttributesSharedWrapper           `json:"invoicein"`
+	Processing                MetaAttributesSharedWrapper           `json:"processing"`
+	Supply                    MetaAttributesSharedWrapper           `json:"supply"`
+	CommissionReportIn        MetaAttributesSharedWrapper           `json:"commissionreportin"`
+	CommissionReportOut       MetaAttributesSharedWrapper           `json:"commissionreportout"`
+	PrepaymentReturn          MetaAttributesSharedWrapper           `json:"prepaymentreturn"`
+	RetailShift               MetaAttributesSharedWrapper           `json:"retailshift"`
+	Loss                      MetaAttributesSharedWrapper           `json:"loss"`
+	FactureOut                MetaAttributesSharedWrapper           `json:"factureout"`
+	PurchaseOrder             MetaAttributesSharedWrapper           `json:"purchaseorder"`
+	CrptOrder                 MetaAttributesSharedWrapper           `json:"crptorder"`
+	Move                      MetaAttributesSharedWrapper           `json:"move"`
+	Employee                  MetaAttributesSharedWrapper           `json:"employee"`
+	InvoiceOut                MetaAttributesSharedWrapper           `json:"invoiceout"`
+	RetailDemand              MetaAttributesSharedWrapper           `json:"retaildemand"`
+	SalesReturn               MetaAttributesSharedWrapper           `json:"salesreturn"`
+	InternalOrder             MetaAttributesSharedWrapper           `json:"internalorder"`
+	Organization              MetaAttributesSharedWrapper           `json:"organization"`
+	Inventory                 MetaAttributesSharedWrapper           `json:"inventory"`
+	Demand                    MetaAttributesSharedWrapper           `json:"demand"`
+	PaymentOut                MetaAttributesSharedWrapper           `json:"paymentout"`
+	CounterpartyAdjustment    MetaAttributesSharedWrapper           `json:"counterpartyadjustment"`
+	ProductionTask            MetaAttributesSharedWrapper           `json:"productiontask"`
+	RetailDrawerCashIn        MetaAttributesSharedWrapper           `json:"retaildrawercashin"`
+	CashOut                   MetaAttributesSharedWrapper           `json:"cashout"`
+	PurchaseReturn            MetaAttributesSharedWrapper           `json:"purchasereturn"`
+	RetailDrawerCashOut       MetaAttributesSharedWrapper           `json:"retaildrawercashout"`
+	ProcessingOrder           MetaAttributesSharedWrapper           `json:"processingorder"`
+	Project                   MetaAttributesSharedWrapper           `json:"project"`
+	FactureOn                 MetaAttributesSharedWrapper           `json:"facturein"`
+	CashIn                    MetaAttributesSharedWrapper           `json:"cashin"`
+	Contract                  MetaAttributesSharedWrapper           `json:"contract"`
+	PaymentIn                 MetaAttributesSharedWrapper           `json:"paymentin"`
+	PriceList                 MetaAttributesSharedWrapper           `json:"pricelist"`
+	BonusTransaction          MetaAttributesSharedWrapper           `json:"bonustransaction"`
+	Store                     MetaAttributesSharedWrapper           `json:"store"`
+	RetailSalesReturn         MetaAttributesSharedWrapper           `json:"retailsalesreturn"`
+	Enter                     MetaAttributesSharedWrapper           `json:"enter"`
+	ProductionsTageCompletion MetaAttributesSharedWrapper           `json:"productionstagecompletion"`
+	Service                   MetaAttributesSharedWrapper           `json:"service"`
+	Prepayment                MetaAttributesSharedWrapper           `json:"prepayment"`
+	Product                   MetaAttributesSharedWrapper           `json:"product"`
+	Bundle                    MetaAttributesSharedWrapper           `json:"bundle"`
+	Counterparty              MetaAttributesStatesSharedTagsWrapper `json:"counterparty"`
+	CustomerOrder             MetaAttributesStatesSharedWrapper     `json:"customerorder"`
+	Variant                   MetaCharacteristicsWrapper            `json:"variant"`
 }
 
-type MetaAttributesWrapper struct {
-	Meta       Meta        `json:"meta"`
-	Attributes MetaWrapper `json:"attributes"`
-}
-
-type AttributesCreateSharedWrapper struct {
-	MetaAttributesWrapper
-	CreateShared bool `json:"createShared"`
-}
-
-type AttributesStatesCreateSharedWrapper struct {
-	AttributesCreateSharedWrapper
-	States Slice[StatesElement] `json:"states"`
-}
-
-type CounterpartyOption struct {
-	AttributesStatesCreateSharedWrapper
-	Tags Slice[string] `json:"tags"`
-}
-
-type StatesElement struct {
-	Meta       Meta   `json:"meta"`
-	EntityType string `json:"entityType"`
-	StateType  string `json:"stateType"`
-	Color      int    `json:"color"`
-}
-
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (Metadata) MetaType() MetaType {
 	return MetaTypeMetadata
 }
 
-// Метаданные сущности
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-metadannye-metadannye-suschnosti
+// MetaAttributesWrapper содержит [Meta] и коллекцию доп. полей.
+type MetaAttributesWrapper struct {
+	Meta       Meta        `json:"meta"`       // Метаданные
+	Attributes MetaWrapper `json:"attributes"` // Коллекция доп. полей
+}
 
+// MetaAttributesSharedWrapper содержит [Meta], коллекцию доп. полей и флаг создания новых сущностей с меткой "Общий".
 type MetaAttributesSharedWrapper struct {
 	MetaAttributesWrapper
-	CreateShared bool `json:"createShared"`
+	CreateShared bool `json:"createShared"` // Создавать новые сущности с меткой "Общий"
 }
 
-type MetaAttributesSharedStatesWrapper struct {
+// MetaAttributesStatesSharedWrapper содержит [Meta], коллекцию доп. полей, коллекцию статусов и флаг создания новых сущностей с меткой "Общий".
+type MetaAttributesStatesSharedWrapper struct {
 	MetaAttributesSharedWrapper
-	States Slice[State] `json:"states"`
+	States Slice[StatesElement] `json:"states"` // Массив статусов
 }
 
+// MetaAttributesStatesSharedTagsWrapper содержит [Meta], коллекцию доп. полей, коллекцию статусов, группы контрагентов и флаг создания новых сущностей с меткой "Общий".
+type MetaAttributesStatesSharedTagsWrapper struct {
+	MetaAttributesSharedWrapper
+	Tags Slice[string] `json:"tags"`
+}
+
+// StatesElement элемент списка массива статусов.
+type StatesElement struct {
+	Meta       Meta     `json:"meta"`       // Метаданные статуса
+	EntityType MetaType `json:"entityType"` // Код сущности, к которой относится Статус (ключевое слово в рамках JSON API)
+	StateType  string   `json:"stateType"`  // Тип Статуса
+	Color      int      `json:"color"`      // Цвет Статуса
+}
+
+// MetaCharacteristicsWrapper содержит метаданные и коллекцию всех созданных характеристик Модификаций
 type MetaCharacteristicsWrapper struct {
 	Meta            Meta                  `json:"meta"`            // Метаданные
 	Characteristics Slice[Characteristic] `json:"characteristics"` // Коллекция всех созданных характеристик Модификаций
-}
-
-type MetaTagsWrapper struct {
-	MetaAttributesSharedWrapper
-	Tags Slice[string] `json:"tags"`
 }
 
 type MetaNameShared struct {
@@ -125,25 +118,33 @@ type MetaNameShared struct {
 	CreateShared bool   `json:"createShared,omitempty"`
 }
 
+// MetadataCompanySettings объект метаданных компании.
 type MetadataCompanySettings struct {
 	MetaAttributesWrapper
 	CustomEntities Slice[MetaNameShared] `json:"customEntities"`
 }
 
+// MetadataService описывает метод сервиса для работы с глобальными метаданными.
+type MetadataService interface {
+	// Get выполняет запрос на получение метаданных.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает объект Metadata.
+	Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error)
+}
+
+const (
+	EndpointMetadata = EndpointEntity + string(MetaTypeMetadata)
+)
+
 type metadataService struct {
 	Endpoint
 }
 
-func (service *metadataService) Get(ctx context.Context) (*Metadata, *resty.Response, error) {
-	return NewRequestBuilder[Metadata](service.client, service.uri).Get(ctx)
+func (service *metadataService) Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error) {
+	return NewRequestBuilder[Metadata](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
-// MetadataService Сервис для работы с метаданными.
-type MetadataService interface {
-	Get(ctx context.Context) (*Metadata, *resty.Response, error)
-}
-
+// NewMetadataService принимает [Client] и возвращает сервис для работы с глобальными метаданными.
 func NewMetadataService(client *Client) MetadataService {
-	e := NewEndpoint(client, "entity/metadata")
-	return &metadataService{e}
+	return &metadataService{NewEndpoint(client, EndpointMetadata)}
 }

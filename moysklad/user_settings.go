@@ -8,10 +8,14 @@ import (
 )
 
 // UserSettings Настройки пользователя.
-// Ключевое слово: usersettings
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-nastrojki-pol-zowatelq
+//
+// Код сущности: usersettings
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-nastrojki-pol-zowatelq
 type UserSettings struct {
-	AutoShowReports             *bool         `json:"autoShowReports,omitempty"`             // Строить ли отчеты автоматически при переходе на вкладку с отчетом
+	AutoShowReports             *bool         `json:"autoShowReports,omitempty"`             // Строить ли отчёты автоматически при переходе на вкладку с отчётом
 	DefaultCompany              *Meta         `json:"defaultCompany,omitempty"`              // Метаданные Организации, которая будет использоваться по умолчанию в документах
 	DefaultCustomerCounterparty *Meta         `json:"defaultCustomerCounterparty,omitempty"` // Метаданные Покупателя, который будет использоваться по умолчанию в документах раздела "Продажи"
 	DefaultPlace                *Meta         `json:"defaultPlace,omitempty"`                // Метаданные Склада, который будет использоваться по умолчанию в документах
@@ -19,126 +23,309 @@ type UserSettings struct {
 	DefaultPurchaseCounterparty *Meta         `json:"defaultPurchaseCounterparty,omitempty"` // Метаданные Поставщика, который будет использоваться по умолчанию в документах раздела "Закупки"
 	DefaultScreen               DefaultScreen `json:"defaultScreen,omitempty"`               // Страница, которая открывается у пользователя при логине
 	FieldsPerRow                *int          `json:"fieldsPerRow,omitempty"`                // Количество столбцов, в которых будут располагаться дополнительные поля в документах
-	Locale                      Locale        `json:"locale,omitempty"`                      // Язык системы. Допустимые значения "ru_RU" и "en_US"
+	Locale                      Locale        `json:"locale,omitempty"`                      // Язык системы
 	MailFooter                  *string       `json:"mailFooter,omitempty"`                  // Подставляется в подпись в письмах, отправляемых из МС
 	Meta                        *Meta         `json:"meta,omitempty"`                        // Метаданные настроек
 	PrintFormat                 PrintFormat   `json:"printFormat,omitempty"`                 // Правила печати документов
 }
 
+// GetAutoShowReports возвращает флаг построения отчётов автоматически при переходе на вкладку с отчётом.
 func (userSettings UserSettings) GetAutoShowReports() bool {
 	return Deref(userSettings.AutoShowReports)
 }
 
+// GetDefaultCompany возвращает Метаданные Организации, которая будет использоваться по умолчанию в документах.
 func (userSettings UserSettings) GetDefaultCompany() Meta {
 	return Deref(userSettings.DefaultCompany)
 }
 
+// GetDefaultCustomerCounterparty возвращает Метаданные Покупателя, который будет использоваться по умолчанию в документах раздела "Продажи".
 func (userSettings UserSettings) GetDefaultCustomerCounterparty() Meta {
 	return Deref(userSettings.DefaultCustomerCounterparty)
 }
 
+// GetDefaultPlace возвращает Метаданные Склада, который будет использоваться по умолчанию в документах.
 func (userSettings UserSettings) GetDefaultPlace() Meta {
 	return Deref(userSettings.DefaultPlace)
 }
 
+// GetDefaultProject возвращает Метаданные Проекта, который будет использоваться по умолчанию в документах.
 func (userSettings UserSettings) GetDefaultProject() Meta {
 	return Deref(userSettings.DefaultProject)
 }
 
+// GetDefaultPurchaseCounterparty возвращает Метаданные Поставщика, который будет использоваться по умолчанию в документах раздела "Закупки".
 func (userSettings UserSettings) GetDefaultPurchaseCounterparty() Meta {
 	return Deref(userSettings.DefaultPurchaseCounterparty)
 }
 
+// GetDefaultScreen возвращает Страницу, которая открывается у пользователя при логине.
 func (userSettings UserSettings) GetDefaultScreen() DefaultScreen {
 	return userSettings.DefaultScreen
 }
 
+// GetFieldsPerRow возвращает Количество столбцов, в которых будут располагаться дополнительные поля в документах.
 func (userSettings UserSettings) GetFieldsPerRow() int {
 	return Deref(userSettings.FieldsPerRow)
 }
 
+// GetLocale возвращает Язык системы.
 func (userSettings UserSettings) GetLocale() Locale {
 	return userSettings.Locale
 }
 
+// GetMailFooter возвращает подпись к письмам, отправляемых из МС.
 func (userSettings UserSettings) GetMailFooter() string {
 	return Deref(userSettings.MailFooter)
 }
 
+// GetMeta возвращает Метаданные настроек.
 func (userSettings UserSettings) GetMeta() Meta {
 	return Deref(userSettings.Meta)
 }
 
+// GetPrintFormat возвращает Правила печати документов.
 func (userSettings UserSettings) GetPrintFormat() PrintFormat {
 	return userSettings.PrintFormat
 }
 
+// SetAutoShowReports устанавливает флаг построения отчётов автоматически при переходе на вкладку с отчётом.
 func (userSettings *UserSettings) SetAutoShowReports(autoShowReports bool) *UserSettings {
 	userSettings.AutoShowReports = &autoShowReports
 	return userSettings
 }
 
+// SetDefaultCompany устанавливает Метаданные Организации, которая будет использоваться по умолчанию в документах.
 func (userSettings *UserSettings) SetDefaultCompany(defaultCompany *Organization) *UserSettings {
-	userSettings.DefaultCompany = defaultCompany.Meta
+	if defaultCompany != nil {
+		userSettings.DefaultCompany = defaultCompany.Meta
+	}
 	return userSettings
 }
 
-func (userSettings *UserSettings) SetDefaultCustomerCounterparty(defaultCustomerCounterparty *Counterparty) *UserSettings {
-	userSettings.DefaultCustomerCounterparty = defaultCustomerCounterparty.Meta
+// SetDefaultCustomerCounterparty устанавливает Метаданные Покупателя, который будет использоваться по умолчанию в документах раздела "Продажи".
+//
+// Принимает [Counterparty] или [Organization].
+func (userSettings *UserSettings) SetDefaultCustomerCounterparty(defaultCustomerCounterparty AgentOrganizationConverter) *UserSettings {
+	if defaultCustomerCounterparty != nil {
+		userSettings.DefaultCustomerCounterparty = defaultCustomerCounterparty.AsOrganizationAgent().Meta
+	}
 	return userSettings
 }
 
+// SetDefaultPlace устанавливает Метаданные Склада, который будет использоваться по умолчанию в документах.
 func (userSettings *UserSettings) SetDefaultPlace(defaultPlace *Store) *UserSettings {
-	userSettings.DefaultPlace = defaultPlace.Meta
+	if defaultPlace != nil {
+		userSettings.DefaultPlace = defaultPlace.Meta
+	}
 	return userSettings
 }
 
+// SetDefaultProject устанавливает Метаданные Проекта, который будет использоваться по умолчанию в документа.
 func (userSettings *UserSettings) SetDefaultProject(defaultProject *Project) *UserSettings {
-	userSettings.DefaultProject = defaultProject.Meta
+	if defaultProject != nil {
+		userSettings.DefaultProject = defaultProject.Meta
+	}
 	return userSettings
 }
 
-func (userSettings *UserSettings) SetDefaultPurchaseCounterparty(defaultPurchaseCounterparty *Counterparty) *UserSettings {
-	userSettings.DefaultPurchaseCounterparty = defaultPurchaseCounterparty.Meta
+// SetDefaultPurchaseCounterparty устанавливает Метаданные Поставщика, который будет использоваться по умолчанию в документах раздела "Закупки".
+//
+// Принимает [Counterparty] или [Organization].
+func (userSettings *UserSettings) SetDefaultPurchaseCounterparty(defaultPurchaseCounterparty AgentOrganizationConverter) *UserSettings {
+	if defaultPurchaseCounterparty != nil {
+		userSettings.DefaultPurchaseCounterparty = defaultPurchaseCounterparty.AsOrganizationAgent().Meta
+	}
 	return userSettings
 }
 
+// SetDefaultScreen устанавливает Страницу, которая открывается у пользователя при логине.
 func (userSettings *UserSettings) SetDefaultScreen(defaultScreen DefaultScreen) *UserSettings {
 	userSettings.DefaultScreen = defaultScreen
 	return userSettings
 }
 
+// SetFieldsPerRow устанавливает Количество столбцов, в которых будут располагаться дополнительные поля в документах.
 func (userSettings *UserSettings) SetFieldsPerRow(fieldsPerRow int) *UserSettings {
 	userSettings.FieldsPerRow = &fieldsPerRow
 	return userSettings
 }
 
+// SetLocale устанавливает Язык системы.
 func (userSettings *UserSettings) SetLocale(locale Locale) *UserSettings {
 	userSettings.Locale = locale
 	return userSettings
 }
 
+// SetLocaleRU устанавливает Язык системы в значение [LocaleRU].
+func (userSettings *UserSettings) SetLocaleRU() *UserSettings {
+	userSettings.Locale = LocaleRU
+	return userSettings
+}
+
+// SetLocaleEN устанавливает Язык системы в значение [LocaleEN].
+func (userSettings *UserSettings) SetLocaleEN() *UserSettings {
+	userSettings.Locale = LocaleEN
+	return userSettings
+}
+
+// SetMailFooter устанавливает подпись к письмам, отправляемых из МС.
 func (userSettings *UserSettings) SetMailFooter(mailFooter string) *UserSettings {
 	userSettings.MailFooter = &mailFooter
 	return userSettings
 }
 
+// SetPrintFormat устанавливает Правила печати документов.
 func (userSettings *UserSettings) SetPrintFormat(printFormat PrintFormat) *UserSettings {
 	userSettings.PrintFormat = printFormat
 	return userSettings
 }
 
+// SetPrintFormatPDF устанавливает Правила печати документов в значение [PrintFormatPDF].
+func (userSettings *UserSettings) SetPrintFormatPDF() *UserSettings {
+	userSettings.PrintFormat = PrintFormatPDF
+	return userSettings
+}
+
+// SetPrintFormatXLS устанавливает Правила печати документов в значение [PrintFormatXLS].
+func (userSettings *UserSettings) SetPrintFormatXLS() *UserSettings {
+	userSettings.PrintFormat = PrintFormatXLS
+	return userSettings
+}
+
+// SetPrintFormatODS устанавливает Правила печати документов в значение [PrintFormatODS].
+func (userSettings *UserSettings) SetPrintFormatODS() *UserSettings {
+	userSettings.PrintFormat = PrintFormatODS
+	return userSettings
+}
+
+// SetPrintFormatDefault устанавливает Правила печати документов в значение [PrintFormatDefault].
+func (userSettings *UserSettings) SetPrintFormatDefault() *UserSettings {
+	userSettings.PrintFormat = PrintFormatDefault
+	return userSettings
+}
+
+// SetPrintFormatOpenInBrowser устанавливает Правила печати документов в значение [PrintFormatOpenInBrowser].
+func (userSettings *UserSettings) SetPrintFormatOpenInBrowser() *UserSettings {
+	userSettings.PrintFormat = PrintFormatOpenInBrowser
+	return userSettings
+}
+
+// String реализует интерфейс [fmt.Stringer].
 func (userSettings UserSettings) String() string {
 	return Stringify(userSettings)
 }
 
-// MetaType возвращает тип сущности.
+// MetaType возвращает код сущности.
 func (UserSettings) MetaType() MetaType {
 	return MetaTypeUserSettings
 }
 
 // DefaultScreen Стартовый экран.
-// Документация МойСклад: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-nastrojki-pol-zowatelq-startowyj-akran
+//
+// Возможные значения:
+//   - DefaultScreenAudit                     – Аудит
+//   - DefaultScreenCurrency                  – Валюты
+//   - DefaultScreenEnrollOrder               – Ввод в оборот кодов маркировки
+//   - DefaultScreenCustomersBalanceList      – Взаиморасчеты
+//   - DefaultScreenRetailDrawerCashIn        – Внесения
+//   - DefaultScreenInternalOrder             – Внутренние заказы
+//   - DefaultScreenEnrollReturn              – Возврат в оборот
+//   - DefaultScreenRetailSalesReturn         – Возвраты
+//   - DefaultScreenSalesReturn               – Возвраты покупателей
+//   - DefaultScreenPurchaseReturn            – Возвраты поставщикам
+//   - DefaultScreenPrepaymentReturn          – Возвраты предоплат
+//   - DefaultScreenPurchaseFunnel            – Воронка продаж
+//   - DefaultScreenRetireOrder               – Вывод из оборота
+//   - DefaultScreenCommissionReportOut       – Выданные отчёты комиссионера
+//   - DefaultScreenRetailDrawerCashOut       – Выплаты
+//   - DefaultScreenCashFlow                  – Движение денежных средств
+//   - DefaultScreenContract                  – Договоры
+//   - DefaultScreenOperation                 – Документы
+//   - DefaultScreenUom                       – Единицы измерения
+//   - DefaultScreenCRPTLog                   – Журнал запросов в ИС МП
+//   - DefaultScreenLoyaltyLog                – Журнал запросов в систему лояльности
+//   - DefaultScreenPurpose                   – Задачи
+//   - DefaultScreenCRPTDemand                – Заказ кодов маркировки
+//   - DefaultScreenProcessingOrder           – Заказы на производство
+//   - DefaultScreenCustomerOrder             – Заказы покупателей
+//   - DefaultScreenPurchaseOrder             – Заказы поставщикам
+//   - DefaultScreenEvotorRequest             – Запросы
+//   - DefaultScreenPhoneCall                 – Звонки
+//   - DefaultScreenCRPTPackageItemRemoval    – Изъятие из упаковки
+//   - DefaultScreenImport                    – Импорт
+//   - DefaultScreenImportGoods               – Импорт из Excel
+//   - DefaultScreenImportEdo                 – Импорт приемки
+//   - DefaultScreenImportCustom              – Импорт справочника
+//   - DefaultScreenInventory                 – Инвентаризации
+//   - DefaultScreenCompany                   – Контрагенты
+//   - DefaultScreenRecycleBin                – Корзина
+//   - DefaultScreenAdjustment                – Корректировки
+//   - DefaultScreenBulkEdit                  – Массовое редактирование
+//   - DefaultScreenEvotorMapping             – Настройка обмена с Эвотор
+//   - DefaultScreenCompanySettings           – Настройки
+//   - DefaultScreenFeed                      – Новости
+//   - DefaultScreenTurnover                  – Обороты
+//   - DefaultScreenBonusTransaction          – Операции с баллами
+//   - DefaultScreenRemainsOrder              – Описание остатков
+//   - DefaultScreenEnter                     – Оприходования
+//   - DefaultScreenStockReport               – Остатки
+//   - DefaultScreenDemand                    – Отгрузки
+//   - DefaultScreenCommissionReport          – отчёты комиссионера
+//   - DefaultScreenFiscalEvent               – Очередь облачных чеков
+//   - DefaultScreenFiscalQueue               – Очередь облачных чеков
+//   - DefaultScreenRemarkingOrder            – Перемаркировка
+//   - DefaultScreenMove                      – Перемещения
+//   - DefaultScreenFinance                   – Платежи
+//   - DefaultScreenPayments                  – Подписка
+//   - DefaultScreenDashboard                 – Показатели
+//   - DefaultScreenCommissionReportIn        – Полученные отчёты комиссионера
+//   - DefaultScreenPriceList                 – Прайс-листы
+//   - DefaultScreenPrepayment                – Предоплаты
+//   - DefaultScreenPnl3                      – Прибыли и убытки
+//   - DefaultScreenPnl                       – Прибыльность
+//   - DefaultScreenSupply                    – Приемки
+//   - DefaultScreenApps                      – Приложения
+//   - DefaultScreenEmbedApps                 – Приложения
+//   - DefaultScreenCheckEquipment            – Проверка комплектации
+//   - DefaultScreenRetailDemand              – Продажи
+//   - DefaultScreenProject                   – Проекты
+//   - DefaultScreenTrackingIdentify          – Просмотр информации о КМ или ТУ
+//   - DefaultScreenCRPTPackageDisaggregation – Расформирование упаковки
+//   - DefaultScreenOrderAssembly             – Сбор заказа
+//   - DefaultScreenSerialNumbers             – Сер. номера
+//   - DefaultScreenConnectorSettings         – Синхронизация
+//   - DefaultScreenDiscount                  – Скидки
+//   - DefaultScreenWarehouse                 – Склады
+//   - DefaultScreenRetailShift               – Смены
+//   - DefaultScreenEvotorEvent               – События обмена с Эвотор
+//   - DefaultScreenEmployee                  – Сотрудники
+//   - DefaultScreenSpecialOffers             – Спецпредложения
+//   - DefaultScreenCRPTCancellation          – Списание кодов маркировки
+//   - DefaultScreenLoss                      – Списания
+//   - DefaultScreenCountry                   – Страны
+//   - DefaultScreenScriptTemplate            – Сценарии
+//   - DefaultScreenInvoiceOut                – Счета покупателям
+//   - DefaultScreenInvoiceIn                 – Счета поставщиков
+//   - DefaultScreenFactureOut                – Счета-фактуры выданные
+//   - DefaultScreenFactureIn                 – полученные счета-фактуры
+//   - DefaultScreenProcessingPlan            – Тех. карты
+//   - DefaultScreenProcessing                – Тех. операции
+//   - DefaultScreenGood                      – Товары и услуги
+//   - DefaultScreenCommissionGoods           – Товары на реализации
+//   - DefaultScreenRetailStore               – Точки продаж
+//   - DefaultScreenNotifications             – Уведомления
+//   - DefaultScreenPurchaseControl           – Управление закупками
+//   - DefaultScreenAccount                   – Учетная запись
+//   - DefaultScreenCRPTPackageCreation       – Формирование упаковки
+//   - DefaultScreenFeature                   – Характеристика
+//   - DefaultScreenExport                    – Экспорт
+//   - DefaultScreenMyCompany                 – Юр. лица
+//   - DefaultScreenHomePage                  – Начало работы
+//
+// [Документация МойСклад]
+//
+// [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-nastrojki-pol-zowatelq-startowyj-akran
 type DefaultScreen string
 
 const (
@@ -155,7 +342,7 @@ const (
 	DefaultScreenPrepaymentReturn          DefaultScreen = "prepaymentreturn"          // Возвраты предоплат
 	DefaultScreenPurchaseFunnel            DefaultScreen = "purchasefunnel"            // Воронка продаж
 	DefaultScreenRetireOrder               DefaultScreen = "retireorder"               // Вывод из оборота
-	DefaultScreenCommissionReportOut       DefaultScreen = "commissionreportout"       // Выданные отчеты комиссионера
+	DefaultScreenCommissionReportOut       DefaultScreen = "commissionreportout"       // Выданные отчёты комиссионера
 	DefaultScreenRetailDrawerCashOut       DefaultScreen = "retaildrawercashout"       // Выплаты
 	DefaultScreenCashFlow                  DefaultScreen = "cashflow"                  // Движение денежных средств
 	DefaultScreenContract                  DefaultScreen = "contract"                  // Договоры
@@ -189,7 +376,7 @@ const (
 	DefaultScreenEnter                     DefaultScreen = "enter"                     // Оприходования
 	DefaultScreenStockReport               DefaultScreen = "stockreport"               // Остатки
 	DefaultScreenDemand                    DefaultScreen = "demand"                    // Отгрузки
-	DefaultScreenCommissionReport          DefaultScreen = "commissionreport"          // Отчеты комиссионера
+	DefaultScreenCommissionReport          DefaultScreen = "commissionreport"          // отчёты комиссионера
 	DefaultScreenFiscalEvent               DefaultScreen = "fiscalevent"               // Очередь облачных чеков
 	DefaultScreenFiscalQueue               DefaultScreen = "fiscalqueue"               // Очередь облачных чеков
 	DefaultScreenRemarkingOrder            DefaultScreen = "remarkingorder"            // Перемаркировка
@@ -197,7 +384,7 @@ const (
 	DefaultScreenFinance                   DefaultScreen = "finance"                   // Платежи
 	DefaultScreenPayments                  DefaultScreen = "payments"                  // Подписка
 	DefaultScreenDashboard                 DefaultScreen = "dashboard"                 // Показатели
-	DefaultScreenCommissionReportIn        DefaultScreen = "commissionreportin"        // Полученные отчеты комиссионера
+	DefaultScreenCommissionReportIn        DefaultScreen = "commissionreportin"        // Полученные отчёты комиссионера
 	DefaultScreenPriceList                 DefaultScreen = "pricelist"                 // Прайс-листы
 	DefaultScreenPrepayment                DefaultScreen = "prepayment"                // Предоплаты
 	DefaultScreenPnl3                      DefaultScreen = "pnl3"                      // Прибыли и убытки
@@ -226,7 +413,7 @@ const (
 	DefaultScreenInvoiceOut                DefaultScreen = "invoiceout"                // Счета покупателям
 	DefaultScreenInvoiceIn                 DefaultScreen = "invoicein"                 // Счета поставщиков
 	DefaultScreenFactureOut                DefaultScreen = "factureout"                // Счета-фактуры выданные
-	DefaultScreenFactureIn                 DefaultScreen = "facturein"                 // Счета-фактуры полученные
+	DefaultScreenFactureIn                 DefaultScreen = "facturein"                 // полученные счета-фактуры
 	DefaultScreenProcessingPlan            DefaultScreen = "processingplan"            // Тех. карты
 	DefaultScreenProcessing                DefaultScreen = "processing"                // Тех. операции
 	DefaultScreenGood                      DefaultScreen = "good"                      // Товары и услуги
@@ -239,24 +426,54 @@ const (
 	DefaultScreenFeature                   DefaultScreen = "feature"                   // Характеристика
 	DefaultScreenExport                    DefaultScreen = "export"                    // Экспорт
 	DefaultScreenMyCompany                 DefaultScreen = "mycompany"                 // Юр. лица
-	DefaultScreenHomePage                  DefaultScreen = "homepage"                  // Юр. лица
+	DefaultScreenHomePage                  DefaultScreen = "homepage"                  // Начало работы
 )
 
+// Locale Язык системы.
+//
+// Возможные значения:
+//   - LocaleRU – русский
+//   - LocaleEN – английский
 type Locale string
 
 const (
-	LocaleRu Locale = "ru_RU"
-	LocaleEn Locale = "en_US"
+	LocaleRU Locale = "ru_RU" // русский
+	LocaleEN Locale = "en_US" // английский
 )
 
+// PrintFormat Правила печати документов.
+//
+// Возможные значения:
+//   - PrintFormatPDF           – Скачать в формате pdf
+//   - PrintFormatXLS           – Скачать в формате excel
+//   - PrintFormatODS           – Скачать в формате Open Office Calc
+//   - PrintFormatDefault       – Предлагать выбор
+//   - PrintFormatOpenInBrowser – Открыть в браузере
 type PrintFormat string
 
 const (
-	PrintFormatPDF           PrintFormat = "pdf"        // Скачать в формате PDF
-	PrintFormatXLS           PrintFormat = "xls"        // Скачать в формате Excel
+	PrintFormatPDF           PrintFormat = "pdf"        // Скачать в формате pdf
+	PrintFormatXLS           PrintFormat = "xls"        // Скачать в формате excel
 	PrintFormatODS           PrintFormat = "ods"        // Скачать в формате Open Office Calc
 	PrintFormatDefault       PrintFormat = ""           // Предлагать выбор
 	PrintFormatOpenInBrowser PrintFormat = "individual" // Открыть в браузере
+)
+
+// UserSettingsService описывает методы сервиса для работы с настройками пользователей.
+type UserSettingsService interface {
+	// Get выполняет запрос на получение настроек пользователя.
+	// Принимает контекст.
+	// Возвращает настройки пользователя.
+	Get(ctx context.Context) (*UserSettings, *resty.Response, error)
+
+	// Update выполняет запрос на изменение настроек пользователя.
+	// Принимает контекст и настройки пользователя.
+	// Возвращает изменённые настройки пользователя.
+	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error)
+}
+
+const (
+	EndpointUserSettings = EndpointContext + string(MetaTypeUserSettings)
 )
 
 type userSettingsService struct {
@@ -272,13 +489,7 @@ func (service *userSettingsService) Update(ctx context.Context, id uuid.UUID, us
 	return NewRequestBuilder[UserSettings](service.client, path).Put(ctx, userSettings)
 }
 
-// UserSettingsService Сервис для работы с настройками пользователей.
-type UserSettingsService interface {
-	Get(ctx context.Context) (*UserSettings, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error)
-}
-
+// NewContextUserSettingsService принимает [Client] и возвращает сервис для работы с настройками пользователей.
 func NewContextUserSettingsService(client *Client) UserSettingsService {
-	e := NewEndpoint(client, "context/usersettings")
-	return &userSettingsService{e}
+	return &userSettingsService{NewEndpoint(client, EndpointUserSettings)}
 }
