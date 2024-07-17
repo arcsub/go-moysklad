@@ -26,6 +26,18 @@ type Params struct {
 	Async       bool       `url:"async,omitempty"`          // Параметр создания асинхронной задачи
 }
 
+func GetParamsFromSliceOrNew(params []*Params) *Params {
+	if len(params) == 0 {
+		return NewParams()
+	}
+
+	if params[0] == nil {
+		return NewParams()
+	}
+
+	return params[0]
+}
+
 // Interval Интервал, с которым будет построен отчёт.
 //
 // Возможные значения:

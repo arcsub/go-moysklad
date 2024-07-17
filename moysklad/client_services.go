@@ -259,6 +259,9 @@ type ReportService interface {
 
 	// Turnover возвращает сервис для работы с отчётом Обороты.
 	Turnover() ReportTurnoverService
+
+	// ByOperations возвращает сервис для работы с отчётом по документам номенклатуры.
+	ByOperations() ReportByOperationsService
 }
 
 // Async возвращает сервис для работы с асинхронными задачами.
@@ -636,4 +639,8 @@ func (service *reportService) Stock() ReportStockService {
 
 func (service *reportService) Turnover() ReportTurnoverService {
 	return NewReportTurnoverService(service.client)
+}
+
+func (service *reportService) ByOperations() ReportByOperationsService {
+	return NewReportByOperationsService(service.client)
 }
