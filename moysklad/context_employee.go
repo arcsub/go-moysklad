@@ -14,34 +14,34 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-kontext-zaprosa-sotrudnika-poluchit-kontext-sotrudnika
 type ContextEmployee struct {
-	ID           uuid.UUID          `json:"id,omitempty"`           // ID Сотрудника
-	Owner        Employee           `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Image        Image              `json:"image,omitempty"`        // Фотография сотрудника
-	INN          string             `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
-	Code         string             `json:"code,omitempty"`         // Код Сотрудника
+	Meta         Meta               `json:"meta,omitempty"`         // Метаданные Сотрудника
+	Group        Group              `json:"group,omitempty"`        // Отдел сотрудника
 	Created      Timestamp          `json:"created,omitempty"`      // Момент создания Сотрудника
-	Description  string             `json:"description,omitempty"`  // Комментарий к Сотруднику
-	Email        string             `json:"email,omitempty"`        // Электронная почта сотрудника
-	ExternalCode string             `json:"externalCode,omitempty"` // Внешний код Сотрудника
+	Updated      Timestamp          `json:"updated,omitempty"`      // Момент последнего обновления Сотрудника
+	Salary       Salary             `json:"salary,omitempty"`       // Оклад сотрудника
+	Permissions  Permissions        `json:"permissions,omitempty"`  // Перечисление пермиссий сотрудника
+	Position     string             `json:"position,omitempty"`     // Должность сотрудника
+	Code         string             `json:"code,omitempty"`         // Код Сотрудника
 	FirstName    string             `json:"firstName,omitempty"`    // Имя
 	FullName     string             `json:"fullName,omitempty"`     // Имя Отчество Фамилия
-	Group        Group              `json:"group,omitempty"`        // Отдел сотрудника
-	Updated      Timestamp          `json:"updated,omitempty"`      // Момент последнего обновления Сотрудника
-	AccountID    uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
-	Cashiers     MetaArray[Cashier] `json:"cashiers,omitempty"`     // Массив кассиров
+	Email        string             `json:"email,omitempty"`        // Электронная почта сотрудника
+	Description  string             `json:"description,omitempty"`  // Комментарий к Сотруднику
+	ExternalCode string             `json:"externalCode,omitempty"` // Внешний код Сотрудника
+	UID          string             `json:"uid,omitempty"`          // Логин Сотрудника
 	LastName     string             `json:"lastName,omitempty"`     // Фамилия
-	Meta         Meta               `json:"meta,omitempty"`         // Метаданные Сотрудника
+	ShortFio     string             `json:"shortFio,omitempty"`     // Краткое ФИО
 	MiddleName   string             `json:"middleName,omitempty"`   // Отчество
 	Name         string             `json:"name,omitempty"`         // Наименование Сотрудника
-	Archived     bool               `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
+	INN          string             `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
 	Phone        string             `json:"phone,omitempty"`        // Телефон сотрудника
-	Position     string             `json:"position,omitempty"`     // Должность сотрудника
-	Salary       Salary             `json:"salary,omitempty"`       // Оклад сотрудника
-	Shared       bool               `json:"shared,omitempty"`       // Общий доступ
-	ShortFio     string             `json:"shortFio,omitempty"`     // Краткое ФИО
-	UID          string             `json:"uid,omitempty"`          // Логин Сотрудника
+	Owner        Employee           `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Attributes   Slice[Attribute]   `json:"attributes,omitempty"`   // Дополнительные поля Сотрудника
-	Permissions  Permissions        `json:"permissions,omitempty"`  // Перечисление пермиссий сотрудника
+	Cashiers     MetaArray[Cashier] `json:"cashiers,omitempty"`     // Массив кассиров
+	AccountID    uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
+	ID           uuid.UUID          `json:"id,omitempty"`           // ID Сотрудника
+	Shared       bool               `json:"shared,omitempty"`       // Общий доступ
+	Archived     bool               `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
 }
 
 // GetMeta возвращает Метаданные Сотрудника.

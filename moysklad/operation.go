@@ -7,14 +7,14 @@ import (
 
 // Operation общие поля операций, к которым привязан платёж.
 type Operation struct {
-	Group     *Group         `json:"group,omitempty"` // Отдел сотрудника
-	Meta      *Meta          `json:"meta,omitempty"`  // Метаданные операции
-	Name      *string        `json:"name,omitempty"`  // Наименование операции
-	raw       []byte         // сырые данные для последующей конвертации в нужный тип
-	Payments  Slice[Payment] `json:"payments,omitempty"`  // Список ссылок на связанные платежи
+	Group     *Group         `json:"group,omitempty"`     // Отдел сотрудника
+	Meta      *Meta          `json:"meta,omitempty"`      // Метаданные операции
+	Name      *string        `json:"name,omitempty"`      // Наименование операции
 	LinkedSum *float64       `json:"linkedSum,omitempty"` // Сумма, оплаченную по данному документу
 	AccountID *uuid.UUID     `json:"accountId,omitempty"` // ID учётной записи
 	ID        *uuid.UUID     `json:"id,omitempty"`        // ID операции
+	raw       []byte         // сырые данные для последующей конвертации в нужный тип
+	Payments  Slice[Payment] `json:"payments,omitempty"` // Список ссылок на связанные платежи
 }
 
 func newOperation(metaOwner MetaOwner) *Operation {
