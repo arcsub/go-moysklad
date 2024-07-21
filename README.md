@@ -432,10 +432,14 @@ func main() {
 }
 ```
 
-<div align="center">
+## Обратная связь
+
+Буду рад видеть ваши идеи и предложения в [Issues](https://github.com/arcsub/go-moysklad/issues).
+
+<!--div align="center">
   <a href="https://pay.cloudtips.ru/p/eac3797c" target="_blank">
   <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6431baa5-28e4-48b6-8d97-0e50bb6646d2" width="150px">
 <div align="center">Поддержать проект</div>
 </a>
-</div>
+</div-->
 <br/>

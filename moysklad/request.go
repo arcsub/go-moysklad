@@ -218,7 +218,8 @@ func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResult
 	return async, resp, nil
 }
 
-// FetchMeta позволяет выполнить точечный запрос по переданному объекту Meta.
+// FetchMeta позволяет выполнить точечный запрос по переданному объекту [Meta].
+//
 // Необходимо точно указать обобщённый тип T, который ожидаем получить в ответ, иначе есть риск получить ошибку.
 func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...*Params) (*T, *resty.Response, error) {
 	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params...).Get(ctx)

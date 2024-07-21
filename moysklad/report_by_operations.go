@@ -12,12 +12,12 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-po-dokumentam-nomenklatury-otchet-s-ostatkami
 type ReportByOperationsStock struct {
 	Assortment   MetaWrapper `json:"assortment"`   // Метаданные Товара/Модификации/Серии
+	Operation    MetaWrapper `json:"operation"`    // Метаданные документа
+	Store        MetaWrapper `json:"store"`        // Метаданные склада документа
+	Moment       Timestamp   `json:"moment"`       // Дата документа
 	AvgStockDays float64     `json:"avgStockDays"` // Количество дней на складе
 	CostPerUnit  float64     `json:"costPerUnit"`  // Себестоимость за единицу
-	Moment       Timestamp   `json:"moment"`       // Дата документа
-	Operation    MetaWrapper `json:"operation"`    // Метаданные документа
 	Stock        float64     `json:"stock"`        // Остатки
-	Store        MetaWrapper `json:"store"`        // Метаданные склада документа
 	SumCost      float64     `json:"sumCost"`      // Сумма себестоимости
 }
 
@@ -28,10 +28,10 @@ type ReportByOperationsStock struct {
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-po-dokumentam-nomenklatury-otchet-s-rezerwami
 type ReportByOperationsReserve struct {
 	Assortment MetaWrapper `json:"assortment"` // Метаданные Товара/Модификации/Серии
-	Moment     Timestamp   `json:"moment"`     // Дата документа
 	Operation  MetaWrapper `json:"operation"`  // Метаданные документа
-	Reserve    float64     `json:"reserve"`    // Резерв
 	Store      MetaWrapper `json:"store"`      // Метаданные склада документа
+	Moment     Timestamp   `json:"moment"`     // Дата документа
+	Reserve    float64     `json:"reserve"`    // Резерв
 }
 
 // ReportByOperationsTransit Отчет с ожиданием.
@@ -41,10 +41,10 @@ type ReportByOperationsReserve struct {
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/reports/#otchety-otchet-po-dokumentam-nomenklatury-otchet-s-ozhidaniem
 type ReportByOperationsTransit struct {
 	Assortment MetaWrapper `json:"assortment"` // Метаданные Товара/Модификации/Серии
-	InTransit  float64     `json:"inTransit"`  // Ожидания
-	Moment     Timestamp   `json:"moment"`     // Дата документа
 	Operation  MetaWrapper `json:"operation"`  // Метаданные документа
 	Store      MetaWrapper `json:"store"`      // Метаданные склада документа
+	Moment     Timestamp   `json:"moment"`     // Дата документа
+	InTransit  float64     `json:"inTransit"`  // Ожидания
 }
 
 // ReportByOperationsService описывает методы сервиса для работы с отчётом по документам номенклатуры.
