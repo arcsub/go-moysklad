@@ -177,7 +177,9 @@ func NewParams() *Params {
 // Clone копирует параметры запроса в новый указатель.
 func (params *Params) Clone() *Params {
 	clone := NewParams()
-	*clone = *params
+	if params != nil {
+		*clone = *params
+	}
 	return clone
 }
 
@@ -257,7 +259,7 @@ func (params *Params) WithStockFiled() *Params {
 
 // WithExpand Замена ссылок объектами.
 //
-// expand=fieldName
+// expand=fieldName1,fieldName2,...
 //
 // [Документация МойСклад #1]
 //
@@ -265,8 +267,8 @@ func (params *Params) WithStockFiled() *Params {
 //
 // [Документация МойСклад #1]: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-chto-takoe-expand
 // [Документация МойСклад #2]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-zamena-ssylok-ob-ektami-s-pomosch-u-expand
-func (params *Params) WithExpand(fieldName string) *Params {
-	params.Expand = append(params.Expand, fieldName)
+func (params *Params) WithExpand(fields ...string) *Params {
+	params.Expand = append(params.Expand, fields...)
 	return params
 }
 
@@ -477,24 +479,30 @@ func newOrderParam(fieldName string, dir OrderDirection) string {
 // WithOrder сортирует объекты по полю fieldName, по умолчанию (asc).
 //
 // order=fieldName
-func (params *Params) WithOrder(fieldName string) *Params {
-	params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDefault))
+func (params *Params) WithOrder(fields ...string) *Params {
+	for _, fieldName := range fields {
+		params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDefault))
+	}
 	return params
 }
 
 // WithOrderAsc сортирует объекты по полю fieldName, по возрастанию (asc).
 //
 // order=fieldName,asc
-func (params *Params) WithOrderAsc(fieldName string) *Params {
-	params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionAsc))
+func (params *Params) WithOrderAsc(fields ...string) *Params {
+	for _, fieldName := range fields {
+		params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionAsc))
+	}
 	return params
 }
 
 // WithOrderDesc сортирует объекты по полю fieldName, по убыванию (desc).
 //
 // order=fieldName,desc
-func (params *Params) WithOrderDesc(fieldName string) *Params {
-	params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDesc))
+func (params *Params) WithOrderDesc(fields ...string) *Params {
+	for _, fieldName := range fields {
+		params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDesc))
+	}
 	return params
 }
 
