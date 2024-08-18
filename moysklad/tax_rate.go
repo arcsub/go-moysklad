@@ -155,6 +155,11 @@ type TaxRateService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[TaxRate], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех налоговых ставок в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[TaxRate], *resty.Response, error)
+
 	// Create выполняет запрос на создание налоговой ставки.
 	// Обязательные поля для заполнения:
 	//	- rate (Значение налоговой ставки)

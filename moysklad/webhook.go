@@ -225,6 +225,11 @@ type WebhookService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Webhook], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех вебхуков в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Webhook], *resty.Response, error)
+
 	// Create выполняет запрос на создание вебхука.
 	// Обязательные поля для заполнения:
 	//	- entityType (Тип сущности, к которой привязан вебхук)

@@ -833,6 +833,11 @@ type RetailDemandService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[RetailDemand], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех розничных продаж в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailDemand], *resty.Response, error)
+
 	// Create выполняет запрос на создание розничной продажи.
 	// Обязательные поля для заполнения:
 	//	- retailShift (Ссылка на Розничную смену, в рамках которой происходит продажа)

@@ -345,6 +345,11 @@ type PrepaymentReturnService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[PrepaymentReturn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех возвратов предоплат в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[PrepaymentReturn], *resty.Response, error)
+
 	// GetByID выполняет запрос на получение отдельного возврата предоплаты по ID.
 	// Принимает контекст, ID возврата предоплаты и опционально объект параметров запроса Params.
 	// Возвращает найденный возврат предоплаты.

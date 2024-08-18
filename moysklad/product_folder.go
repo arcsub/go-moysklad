@@ -289,6 +289,11 @@ type ProductFolderService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[ProductFolder], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех групп товаров в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[ProductFolder], *resty.Response, error)
+
 	// Create выполняет запрос на создание группы товаров.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование группы товаров)

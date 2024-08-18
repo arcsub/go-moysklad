@@ -645,10 +645,15 @@ const (
 
 // AssortmentService методы сервиса для работы с ассортиментом.
 type AssortmentService interface {
-	// Get выполняет запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
+	// GetList выполняет запрос на получение товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект AssortmentResponse.
-	Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
+	GetList(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
+
+	// GetListAll выполняет запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Assortment, *resty.Response, error)
 
 	// GetListAsync выполняет асинхронный запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -680,8 +685,14 @@ const (
 	EndpointAssortmentSettings = EndpointAssortment + "/settings"
 )
 
-func (service *assortmentService) Get(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
+func (service *assortmentService) GetList(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
 	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
+}
+
+func (service *assortmentService) GetListAll(ctx context.Context, params ...*Params) (Assortment, *resty.Response, error) {
+	ep := &endpointGetList[AssortmentPosition]{service.Endpoint}
+	aps, resp, err := ep.GetListAll(ctx, params...)
+	return Assortment(aps), resp, err
 }
 
 func (service *assortmentService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {

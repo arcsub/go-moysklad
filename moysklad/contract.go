@@ -419,6 +419,11 @@ type ContractService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Contract], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех договоров в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Contract], *resty.Response, error)
+
 	// Create выполняет запрос на создание договора.
 	// Обязательные поля для заполнения:
 	//	- name (Номер договора)

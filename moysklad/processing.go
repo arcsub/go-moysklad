@@ -553,6 +553,11 @@ type ProcessingService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Processing], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех техопераций в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Processing], *resty.Response, error)
+
 	// Create выполняет запрос на создание техоперации.
 	// Обязательные для создания поля с привязкой техкарты:
 	//	- organization (Ссылка на ваше юрлицо)

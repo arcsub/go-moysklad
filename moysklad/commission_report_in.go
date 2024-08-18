@@ -829,6 +829,11 @@ type CommissionReportInService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportIn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех полученных отчётов комиссионера в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[CommissionReportIn], *resty.Response, error)
+
 	// Create выполняет запрос на создание полученного отчёта комиссионера.
 	// Обязательные поля для заполнения:
 	//	- agent (Контрагент)

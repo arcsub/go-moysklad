@@ -468,6 +468,11 @@ type CashOutService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[CashOut], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех расходных ордеров в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[CashOut], *resty.Response, error)
+
 	// Create выполняет запрос на создание расходного ордера.
 	// Обязательные поля для заполнения:
 	//	- organization (Метаданные юрлица)

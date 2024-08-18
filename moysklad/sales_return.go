@@ -741,10 +741,15 @@ func (SalesReturnPosition) MetaType() MetaType {
 
 // SalesReturnService описывает методы сервиса для работы с возвратами покупателей.
 type SalesReturnService interface {
-	// GetList выполняет запрос на получение списка возвратов покупателя.
+	// GetList выполняет запрос на получение списка возвратов покупателей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[SalesReturn], *resty.Response, error)
+
+	// GetListAll выполняет запрос на получение всех возвратов покупателей в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[SalesReturn], *resty.Response, error)
 
 	// Create выполняет запрос на создание возврата покупателя.
 	// Обязательные поля для заполнения:

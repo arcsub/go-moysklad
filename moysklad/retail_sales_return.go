@@ -706,6 +706,11 @@ type RetailSalesReturnService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[RetailSalesReturn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех розничных возвратов в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailSalesReturn], *resty.Response, error)
+
 	// Create выполняет запрос на создание внесения денег.
 	// Обязательные поля для заполнения:
 	//	- name -(омер возврата)

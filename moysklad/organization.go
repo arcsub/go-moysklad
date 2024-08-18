@@ -669,6 +669,11 @@ type OrganizationService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Organization], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех юрлиц в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Organization], *resty.Response, error)
+
 	// Create выполняет запрос на создание юрлица.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование Юрлица)

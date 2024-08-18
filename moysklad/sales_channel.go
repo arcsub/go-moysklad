@@ -269,6 +269,11 @@ type SalesChannelService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[SalesChannel], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех каналов продаж в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[SalesChannel], *resty.Response, error)
+
 	// Create выполняет запрос на создание канала продаж.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование Канала продаж)

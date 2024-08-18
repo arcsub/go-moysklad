@@ -818,6 +818,11 @@ type CounterpartyService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Counterparty], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех контрагентов в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Counterparty], *resty.Response, error)
+
 	// Create выполняет запрос на создание контрагента.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование контрагента)

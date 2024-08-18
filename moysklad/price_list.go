@@ -482,6 +482,11 @@ type PriceListService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[PriceList], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех прайс-листов в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[PriceList], *resty.Response, error)
+
 	// Create выполняет запрос на создание прайс-листа.
 	// Обязательные поля для заполнения:
 	//	- columns (Массив объектов, описывающих столбцы нового прайс-листа)

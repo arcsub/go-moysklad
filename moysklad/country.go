@@ -177,6 +177,11 @@ type CountryService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Country], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех стран в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Country], *resty.Response, error)
+
 	// Create выполняет запрос на создание страны.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование страны)

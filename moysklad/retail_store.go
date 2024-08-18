@@ -1325,6 +1325,11 @@ type RetailStoreService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[RetailStore], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех точек продаж в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailStore], *resty.Response, error)
+
 	// Create выполняет запрос на создание точи продаж.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование точки продаж)

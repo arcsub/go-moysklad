@@ -306,10 +306,15 @@ const (
 
 // CurrencyService описывает методы сервиса для работы с валютами.
 type CurrencyService interface {
-	// GetList выполняет запрос на получение списка валют
+	// GetList выполняет запрос на получение списка валют.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Currency], *resty.Response, error)
+
+	// GetListAll выполняет запрос на получение всех валют в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Currency], *resty.Response, error)
 
 	// Create выполняет запрос на создание валюты.
 	// Обязательные поля для заполнения:
