@@ -325,6 +325,11 @@ type RoleService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Role], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех пользовательских ролей в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Role], *resty.Response, error)
+
 	// Create выполняет запрос на создание пользовательской роли.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование пользовательской роли)

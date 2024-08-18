@@ -572,6 +572,11 @@ func (params *Params) QueryString() string {
 	return v.Encode()
 }
 
+// String реализует интерфейс [fmt.Stringer].
+func (params *Params) String() string {
+	return params.QueryString()
+}
+
 // WithEvaluate автозаполнение.
 //
 // action=value1,value2...

@@ -757,6 +757,11 @@ type ProductService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Product], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех товаров в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Product], *resty.Response, error)
+
 	// Create выполняет запрос на создание товара.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование товара)

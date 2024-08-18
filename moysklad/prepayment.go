@@ -356,6 +356,11 @@ type PrepaymentService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Prepayment], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех предоплат в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Prepayment], *resty.Response, error)
+
 	// DeleteByID выполняет запрос на удаление предоплаты по ID.
 	// Принимает контекст и ID предоплаты.
 	// Возвращает «true» в случае успешного удаления предоплаты.

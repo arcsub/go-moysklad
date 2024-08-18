@@ -268,6 +268,11 @@ type BonusProgramService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[BonusProgram], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех бонусных программ в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[BonusProgram], *resty.Response, error)
+
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
 	//	- name (имя бонусной программы)

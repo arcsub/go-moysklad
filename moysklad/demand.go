@@ -934,6 +934,11 @@ type DemandService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Demand], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех отгрузок в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Demand], *resty.Response, error)
+
 	// Create выполняет запрос на создание отгрузки.
 	// Обязательные поля для заполнения:
 	//	- organization (Ссылка на ваше юрлицо)

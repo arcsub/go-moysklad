@@ -73,6 +73,12 @@ func (meta *Meta) SetType(metaType MetaType) *Meta {
 	return meta
 }
 
+// SetMediaType устанавливает тип данных, который приходят в ответ от сервиса, либо отправляется в теле запроса.
+func (meta *Meta) SetMediaType(mediaType string) *Meta {
+	meta.MediaType = &mediaType
+	return meta
+}
+
 // Wrap оборачивает текущий объект [Meta] в [MetaWrapper].
 func (meta Meta) Wrap() MetaWrapper {
 	return MetaWrapper{meta}

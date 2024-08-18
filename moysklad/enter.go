@@ -553,6 +553,11 @@ type EnterService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Enter], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех оприходований в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Enter], *resty.Response, error)
+
 	// Create выполняет запрос на создание оприходования.
 	// Обязательные поля для заполнения:
 	//	- organization (Метаданные юрлица)

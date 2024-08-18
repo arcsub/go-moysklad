@@ -222,6 +222,11 @@ type ConsignmentService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Consignment], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех серий в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Consignment], *resty.Response, error)
+
 	// Create выполняет запрос на создание серии.
 	// Обязательные поля для заполнения:
 	//	- label (Метка Серии)

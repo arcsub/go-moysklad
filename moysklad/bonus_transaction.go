@@ -350,6 +350,11 @@ type BonusTransactionService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[BonusTransaction], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех бонусных операций в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[BonusTransaction], *resty.Response, error)
+
 	// Create выполняет запрос на создание бонусной операции.
 	// Обязательные поля для заполнения:
 	//	- agent (Метаданные Контрагента, связанного с бонусной операцией)

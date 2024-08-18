@@ -450,6 +450,11 @@ type ServiceService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Service], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех услуг в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Service], *resty.Response, error)
+
 	// Create выполняет запрос на создание услуги.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование услуги)

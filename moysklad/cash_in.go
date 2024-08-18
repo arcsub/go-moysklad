@@ -450,6 +450,11 @@ type CashInService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[CashIn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех приходных ордеров в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[CashIn], *resty.Response, error)
+
 	// Create выполняет запрос на создание приходного ордера.
 	// Обязательные поля для заполнения:
 	//	- organization (Метаданные юрлица)

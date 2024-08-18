@@ -702,6 +702,11 @@ type PurchaseReturnService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[PurchaseReturn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех возвратов поставщику в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[PurchaseReturn], *resty.Response, error)
+
 	// Create выполняет запрос на создание возврата поставщику.
 	// Обязательные поля для заполнения:
 	//	- organization (Ссылка на ваше юрлицо)

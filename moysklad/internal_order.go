@@ -540,6 +540,11 @@ type InternalOrderService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[InternalOrder], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех внутренних заказов в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[InternalOrder], *resty.Response, error)
+
 	// Create выполняет запрос на создание внутреннего заказа.
 	// Обязательные поля для заполнения:
 	//	- organization (Ссылка на ваше юрлицо)

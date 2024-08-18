@@ -163,6 +163,11 @@ type WebhookStockService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[WebhookStock], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех вебхуков на изменение остатков в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[WebhookStock], *resty.Response, error)
+
 	// Create выполняет запрос на создание вебхука на изменение остатков.
 	// Обязательные поля для заполнения:
 	//	- reportType (Тип отчета остатков, к которым привязан вебхук на изменение остатков)

@@ -683,6 +683,11 @@ type InvoiceInService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[InvoiceIn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех счетов поставщиков в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[InvoiceIn], *resty.Response, error)
+
 	// Create выполняет запрос на создание счета поставщика.
 	// Обязательные поля для заполнения:
 	//	- name (Номер Счета поставщика)

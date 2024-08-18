@@ -203,6 +203,11 @@ type ProjectService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[Project], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех проектов в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[Project], *resty.Response, error)
+
 	// Create выполняет запрос на создание проекта.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование проекта)

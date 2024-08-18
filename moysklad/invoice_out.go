@@ -664,6 +664,11 @@ type InvoiceOutService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[InvoiceOut], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех счетов покупателям в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[InvoiceOut], *resty.Response, error)
+
 	// Create выполняет запрос на создание счета покупателю.
 	// Обязательные поля для заполнения:
 	//	- name (Номер Счета покупателю)

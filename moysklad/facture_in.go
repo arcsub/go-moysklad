@@ -405,6 +405,11 @@ type FactureInService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[FactureIn], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех полученных счетов-фактур в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[FactureIn], *resty.Response, error)
+
 	// Create выполняет запрос на создание полученного счета-фактуры.
 	// Обязательные поля для заполнения:
 	//	- incomingNumber (Входящий номер)

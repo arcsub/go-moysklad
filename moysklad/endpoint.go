@@ -7,9 +7,11 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"io"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 const (
@@ -133,6 +135,47 @@ type endpointGetList[T any] struct{ Endpoint }
 // GetList выполняет запрос на получение объектов в виде списка.
 func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...*Params) (*List[T], *resty.Response, error) {
 	return NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(params...).Get(ctx)
+}
+
+// GetListAll выполняет запрос на получение всех объектов в виде списка.
+func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*Params) (Slice[T], *resty.Response, error) {
+	var offset = 1
+	var data Slice[T]
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+
+	paramsCpy := GetParamsFromSliceOrNew(params).WithLimit(offset).WithOffset(0)
+
+	list, resp, err := NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(paramsCpy).Get(ctx)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	data = append(data, list.Rows...)
+	size := list.Meta.Size
+
+	for i := offset; i < size; i += MaxPositions {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+
+			paramsCpy := paramsCpy.Clone().WithLimit(MaxPositions).WithOffset(i)
+
+			list, _, err = NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(paramsCpy).Get(ctx)
+			if err != nil {
+				log.Printf("GetListAll error: %s, params: %s", err, paramsCpy)
+				return
+			}
+
+			mu.Lock()
+			data = append(data, list.Rows...)
+			mu.Unlock()
+		}(i)
+	}
+
+	wg.Wait()
+
+	return data, resp, nil
 }
 
 type endpointDeleteByID struct{ Endpoint }

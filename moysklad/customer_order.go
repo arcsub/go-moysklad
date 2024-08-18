@@ -834,6 +834,11 @@ type CustomerOrderService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[CustomerOrder], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех заказов покупателей в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[CustomerOrder], *resty.Response, error)
+
 	// Create выполняет запрос на создание заказа покупателя.
 	// Обязательные поля для заполнения:
 	//	- organization (Ссылка на ваше юрлицо)

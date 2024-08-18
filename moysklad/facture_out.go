@@ -447,6 +447,11 @@ type FactureOutService interface {
 	// Возвращает объект List.
 	GetList(ctx context.Context, params ...*Params) (*List[FactureOut], *resty.Response, error)
 
+	// GetListAll выполняет запрос на получение всех выданных счетов-фактур в виде списка.
+	// Принимает контекст и опционально объект параметров запроса Params.
+	// Возвращает список объектов.
+	GetListAll(ctx context.Context, params ...*Params) (Slice[FactureOut], *resty.Response, error)
+
 	// Create выполняет запрос на создание выданного счета-фактуры.
 	// Обязательные поля для заполнения:
 	//	- paymentNumber (Название платежного документа)
