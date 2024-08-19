@@ -121,6 +121,12 @@ type SalePriceElem struct {
 	} `json:"newValue"` // Значение после изменения
 }
 
+// CustomerOrderState представляет объект для отображения изменений статусов заказа.
+type CustomerOrderState struct {
+	Meta Meta   `json:"meta"`
+	Name string `json:"name"` // Название статуса
+}
+
 // AuditPosition представляет объект для отображения изменений позиций документов.
 type AuditPosition struct {
 	Assortment struct {
@@ -149,6 +155,11 @@ func getFieldAndUnmarshall[T any](diff Diff, field string) (bool, T) {
 // GetPositions возвращает «true» и позиции изменённого документа, если такие присутствуют в объекте Diff.
 func (diff Diff) GetPositions() (bool, []OldNew[AuditPosition]) {
 	return getFieldAndUnmarshall[[]OldNew[AuditPosition]](diff, "positions")
+}
+
+// GetCustomerOrderState возвращает «true» и статусы измененного заказа, если такие присутствуют в объекте Diff.
+func (diff Diff) GetCustomerOrderState() (bool, OldNew[CustomerOrderState]) {
+	return getFieldAndUnmarshall[OldNew[CustomerOrderState]](diff, "state")
 }
 
 // GetSalesPrices возвращает «true» и объект SalePriceElem, если в объекте Diff присутствует поле salePrices.
