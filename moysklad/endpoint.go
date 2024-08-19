@@ -140,6 +140,7 @@ func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...*Para
 // GetListAll выполняет запрос на получение всех объектов в виде списка.
 func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*Params) (Slice[T], *resty.Response, error) {
 	var offset = 1
+	var perPage = MaxPositions
 	var data Slice[T]
 	var mu sync.Mutex
 	var wg sync.WaitGroup
@@ -154,12 +155,16 @@ func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*P
 	data = append(data, list.Rows...)
 	size := list.Meta.Size
 
-	for i := offset; i < size; i += MaxPositions {
+	if len(paramsCpy.Expand) > 0 {
+		perPage = 100
+	}
+
+	for i := offset; i < size; i += perPage {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
 
-			paramsCpy := paramsCpy.Clone().WithLimit(MaxPositions).WithOffset(i)
+			paramsCpy := paramsCpy.Clone().WithLimit(perPage).WithOffset(i)
 
 			list, _, err = NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(paramsCpy).Get(ctx)
 			if err != nil {
