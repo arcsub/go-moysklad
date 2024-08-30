@@ -28,6 +28,7 @@ type CashOut struct {
 	ExternalCode   *string                  `json:"externalCode,omitempty"`   // Внешний код Расходного ордера
 	Files          *MetaArray[File]         `json:"files,omitempty"`          // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group          *Group                   `json:"group,omitempty"`          // Отдел сотрудника
+	NoClosingDocs  *bool                    `json:"noClosingDocs,omitempty"`  // Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате
 	Owner          *Employee                `json:"owner,omitempty"`          // Метаданные владельца (Сотрудника)
 	Meta           *Meta                    `json:"meta,omitempty"`           // Метаданные Расходного ордера
 	Moment         *Timestamp               `json:"moment,omitempty"`         // Дата документа
@@ -138,6 +139,11 @@ func (cashOut CashOut) GetFiles() MetaArray[File] {
 // GetGroup возвращает Отдел сотрудника.
 func (cashOut CashOut) GetGroup() Group {
 	return Deref(cashOut.Group)
+}
+
+// GetNoClosingDocs возвращает Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате.
+func (cashOut CashOut) GetNoClosingDocs() bool {
+	return Deref(cashOut.NoClosingDocs)
 }
 
 // GetOwner возвращает Метаданные владельца (Сотрудника).
@@ -312,6 +318,12 @@ func (cashOut *CashOut) SetGroup(group *Group) *CashOut {
 	if group != nil {
 		cashOut.Group = group.Clean()
 	}
+	return cashOut
+}
+
+// SetNoClosingDocs устанавливает Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате.
+func (cashOut *CashOut) SetNoClosingDocs(value bool) *CashOut {
+	cashOut.NoClosingDocs = &value
 	return cashOut
 }
 

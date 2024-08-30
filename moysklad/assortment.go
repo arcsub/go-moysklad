@@ -612,6 +612,7 @@ const (
 	TrackingTypePerfumery      TrackingType = "PERFUMERY"       // Духи и туалетная вода
 	TrackingTypeSanitizer      TrackingType = "SANITIZER"       // Антисептики
 	TrackingTypeShoes          TrackingType = "SHOES"           // Тип маркировки "Обувь"
+	TrackingTypeSoftDrinks     TrackingType = "SOFT_DRINKS"     // Безалкогольные напитки
 	TrackingTypeTires          TrackingType = "TIRES"           // Шины и покрышки
 	TrackingTypeTobacco        TrackingType = "TOBACCO"         // Тип маркировки "Табак"
 	TrackingTypeWater          TrackingType = "WATER"           // Упакованная вода
