@@ -28,6 +28,7 @@ type PaymentOut struct {
 	ExpenseItem         *ExpenseItem             `json:"expenseItem,omitempty"`         // Метаданные Статьи расходов
 	ExternalCode        *string                  `json:"externalCode,omitempty"`        // Внешний код Исходящего платежа
 	Files               *MetaArray[File]         `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
+	NoClosingDocs       *bool                    `json:"noClosingDocs,omitempty"`       // Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате
 	Group               *Group                   `json:"group,omitempty"`               // Отдел сотрудника
 	ID                  *uuid.UUID               `json:"id,omitempty"`                  // ID Исходящего платежа
 	Meta                *Meta                    `json:"meta,omitempty"`                // Метаданные Исходящего платежа
@@ -147,6 +148,11 @@ func (paymentOut PaymentOut) GetExternalCode() string {
 // GetFiles возвращает Метаданные массива Файлов.
 func (paymentOut PaymentOut) GetFiles() MetaArray[File] {
 	return Deref(paymentOut.Files)
+}
+
+// GetNoClosingDocs возвращает Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате.
+func (paymentOut PaymentOut) GetNoClosingDocs() bool {
+	return Deref(paymentOut.NoClosingDocs)
 }
 
 // GetGroup возвращает Отдел сотрудника.
@@ -353,6 +359,12 @@ func (paymentOut *PaymentOut) SetGroup(group *Group) *PaymentOut {
 	if group != nil {
 		paymentOut.Group = group.Clean()
 	}
+	return paymentOut
+}
+
+// SetNoClosingDocs устанавливает Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате.
+func (paymentOut *PaymentOut) SetNoClosingDocs(value bool) *PaymentOut {
+	paymentOut.NoClosingDocs = &value
 	return paymentOut
 }
 
