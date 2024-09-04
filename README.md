@@ -13,8 +13,8 @@
   <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6bec5834-6eb9-442f-b1ee-efeaa85bb946" width="200px">
 </div>
 
-> [!WARNING]
-> SDK находится в стадии разработки!
+>
+> **SDK находится в стадии разработки!**
 >
 > Некоторые методы могут отсутствовать или работать неправильно!
 >
@@ -25,7 +25,7 @@
 > Требуемая версия go >= 1.21
 
 ```
-go get -u github.com/arcsub/go-moysklad
+go get -u gitverse.ru/arcsub/go-moysklad@HEAD
 ```
 
 ## Особенности
