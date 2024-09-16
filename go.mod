@@ -3,7 +3,7 @@ module github.com/arcsub/go-moysklad
 go 1.22.0
 
 require (
-	github.com/go-resty/resty/v2 v2.13.1
+	github.com/go-resty/resty/v2 v2.15.0
 	github.com/goccy/go-json v0.10.3
 	github.com/google/go-querystring v1.1.0
 	github.com/google/uuid v1.6.0
@@ -14,5 +14,5 @@ require (
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
-	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
 )
