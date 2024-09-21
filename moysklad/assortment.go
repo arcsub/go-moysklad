@@ -27,6 +27,36 @@ func (assortment *Assortment) Push(elements ...AssortmentConverter) *Assortment 
 	return assortment
 }
 
+// FilterBundle фильтрует позиции по типу [Bundle] (Комплект).
+func (assortment Assortment) FilterBundle() Slice[Bundle] {
+	return filterType[Bundle](assortment)
+}
+
+// FilterProduct фильтрует позиции по типу [Product] (Товар).
+func (assortment Assortment) FilterProduct() Slice[Product] {
+	return filterType[Product](assortment)
+}
+
+// FilterVariant фильтрует позиции по типу [Variant] (Модификация).
+func (assortment Assortment) FilterVariant() Slice[Variant] {
+	return filterType[Variant](assortment)
+}
+
+// FilterConsignment фильтрует позиции по типу [Consignment] (Серия).
+func (assortment Assortment) FilterConsignment() Slice[Consignment] {
+	return filterType[Consignment](assortment)
+}
+
+// FilterService фильтрует позиции по типу [Service] (Услуга).
+func (assortment Assortment) FilterService() Slice[Service] {
+	return filterType[Service](assortment)
+}
+
+// S преобразует обратно [Slice] в слайс указателей на тип [AssortmentPosition] и возвращает его.
+func (assortment Assortment) S() Slice[AssortmentPosition] {
+	return Slice[AssortmentPosition](assortment)
+}
+
 // MetaType возвращает код сущности.
 func (Assortment) MetaType() MetaType {
 	return MetaTypeAssortment
@@ -167,31 +197,6 @@ func (assortmentPosition *AssortmentPosition) AsService() *Service {
 // Возвращает: [Consignment] или nil в случае неудачи.
 func (assortmentPosition *AssortmentPosition) AsConsignment() *Consignment {
 	return UnmarshalAsType[Consignment](assortmentPosition)
-}
-
-// FilterBundle фильтрует позиции по типу [Bundle] (Комплект).
-func (assortment Assortment) FilterBundle() Slice[Bundle] {
-	return filterType[Bundle](assortment)
-}
-
-// FilterProduct фильтрует позиции по типу [Product] (Товар).
-func (assortment Assortment) FilterProduct() Slice[Product] {
-	return filterType[Product](assortment)
-}
-
-// FilterVariant фильтрует позиции по типу [Variant] (Модификация).
-func (assortment Assortment) FilterVariant() Slice[Variant] {
-	return filterType[Variant](assortment)
-}
-
-// FilterConsignment фильтрует позиции по типу [Consignment] (Серия).
-func (assortment Assortment) FilterConsignment() Slice[Consignment] {
-	return filterType[Consignment](assortment)
-}
-
-// FilterService фильтрует позиции по типу [Service] (Услуга).
-func (assortment Assortment) FilterService() Slice[Service] {
-	return filterType[Service](assortment)
 }
 
 // AssortmentSettings Настройки справочника.
@@ -693,7 +698,7 @@ func (service *assortmentService) GetList(ctx context.Context, params ...*Params
 func (service *assortmentService) GetListAll(ctx context.Context, params ...*Params) (Assortment, *resty.Response, error) {
 	ep := &endpointGetList[AssortmentPosition]{service.Endpoint}
 	aps, resp, err := ep.GetListAll(ctx, params...)
-	return Assortment(aps), resp, err
+	return Assortment(*aps), resp, err
 }
 
 func (service *assortmentService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {

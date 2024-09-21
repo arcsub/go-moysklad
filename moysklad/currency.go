@@ -314,7 +314,7 @@ type CurrencyService interface {
 	// GetListAll выполняет запрос на получение всех валют в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Currency], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Currency], *resty.Response, error)
 
 	// Create выполняет запрос на создание валюты.
 	// Обязательные поля для заполнения:

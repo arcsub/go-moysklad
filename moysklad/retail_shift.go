@@ -543,7 +543,7 @@ type RetailShiftService interface {
 	// GetListAll выполняет запрос на получение всех розничных смен в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailShift], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailShift], *resty.Response, error)
 
 	// Create выполняет запрос на создание розничной смены.
 	// Обязательные поля для заполнения:

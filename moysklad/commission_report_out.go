@@ -655,7 +655,7 @@ type CommissionReportOutService interface {
 	// GetListAll выполняет запрос на получение всех выданных отчётов комиссионера в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[CommissionReportOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[CommissionReportOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание выданного отчёта комиссионера.
 	// Обязательные поля для заполнения:
@@ -710,6 +710,8 @@ type CommissionReportOutService interface {
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportOutPosition], *resty.Response, error)
+
+	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[CommissionReportOutPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.

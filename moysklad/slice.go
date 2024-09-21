@@ -77,12 +77,11 @@ func (slice Slice[E]) Filter(f func(e *E) bool) Slice[E] {
 }
 
 // IntoChunks разбивает слайс на разные слайсы с заданной размерностью.
-func (slice Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
-	var items = slice
-	for chunkSize < items.Len() {
-		items, chunks = items[chunkSize:], append(chunks, items[:chunkSize:chunkSize])
+func (slice *Slice[E]) IntoChunks(chunkSize int) (chunks []Slice[E]) {
+	for chunkSize < slice.Len() {
+		*slice, chunks = (*slice)[chunkSize:], append(chunks, (*slice)[:chunkSize:chunkSize])
 	}
-	return append(chunks, items)
+	return append(chunks, *slice)
 }
 
 // UnPtr преобразует обратно [Slice] в слайс разыменованных типов T и возвращает его.

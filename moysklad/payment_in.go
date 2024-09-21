@@ -507,7 +507,7 @@ type PaymentInService interface {
 	// GetListAll выполняет запрос на получение всех входящих платежей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[PaymentIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[PaymentIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание входящего платежа.
 	// Обязательные поля для заполнения:

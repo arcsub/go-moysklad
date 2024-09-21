@@ -130,15 +130,7 @@ func newMainService[E MetaIDOwner, P any, M any, S any](client *Client, path str
 	}
 }
 
-type endpointGetList[T any] struct{ Endpoint }
-
-// GetList выполняет запрос на получение объектов в виде списка.
-func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...*Params) (*List[T], *resty.Response, error) {
-	return NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(params...).Get(ctx)
-}
-
-// GetListAll выполняет запрос на получение всех объектов в виде списка.
-func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*Params) (Slice[T], *resty.Response, error) {
+func getAll[T any](ctx context.Context, client *Client, path string, params []*Params) (*Slice[T], *resty.Response, error) {
 	var offset = 1
 	var perPage = MaxPositions
 	var data Slice[T]
@@ -147,7 +139,7 @@ func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*P
 
 	paramsCpy := GetParamsFromSliceOrNew(params).WithLimit(offset).WithOffset(0)
 
-	list, resp, err := NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(paramsCpy).Get(ctx)
+	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -166,9 +158,14 @@ func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*P
 
 			paramsCpy := paramsCpy.Clone().WithLimit(perPage).WithOffset(i)
 
-			list, _, err = NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(paramsCpy).Get(ctx)
+			list, resResp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
+
+			mu.Lock()
+			resp = resResp
+			mu.Unlock()
+
 			if err != nil {
-				log.Printf("GetListAll error: %s, params: %s", err, paramsCpy)
+				log.Println("getAll error:", err)
 				return
 			}
 
@@ -180,7 +177,99 @@ func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*P
 
 	wg.Wait()
 
-	return data, resp, nil
+	return &data, resp, nil
+}
+
+func posAll[T any](ctx context.Context, client *Client, path string, entities Slice[T], params []*Params) (*Slice[T], *resty.Response, error) {
+	paramsCpy := GetParamsFromSliceOrNew(params)
+
+	if entities.Len() > MaxPositions {
+		var data Slice[T]
+		var resp *resty.Response
+		var mu sync.Mutex
+		var wg sync.WaitGroup
+
+		for _, chunk := range entities.IntoChunks(MaxPositions) {
+			wg.Add(1)
+
+			go func(chunk Slice[T]) {
+				defer wg.Done()
+
+				list, resResp, err := NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, chunk)
+
+				mu.Lock()
+				resp = resResp
+				mu.Unlock()
+
+				if err != nil {
+					log.Println("postAll error:", err)
+					return
+				}
+
+				if list.Len() > 0 {
+					mu.Lock()
+					data.Push(list.S()...)
+					mu.Unlock()
+				}
+			}(chunk)
+		}
+
+		wg.Wait()
+
+		return &data, resp, nil
+	}
+
+	return NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, entities)
+}
+
+func deleteAll[T MetaOwner](ctx context.Context, client *Client, path string, entities Slice[T]) (*DeleteManyResponse, *resty.Response, error) {
+	if entities.Len() > MaxPositions {
+		var data DeleteManyResponse
+		var resp *resty.Response
+		var mu sync.Mutex
+		var wg sync.WaitGroup
+
+		for _, chunk := range entities.IntoChunks(MaxPositions) {
+			wg.Add(1)
+
+			go func(chunk Slice[T], resp *resty.Response) {
+				defer wg.Done()
+
+				list, resResp, err := NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(chunk))
+
+				mu.Lock()
+				resp = resResp
+				mu.Unlock()
+
+				if err != nil {
+					log.Println("deleteAll error:", err)
+					return
+				}
+
+				mu.Lock()
+				data = append(data, Deref(list)...)
+				mu.Unlock()
+			}(chunk, resp)
+		}
+
+		wg.Wait()
+
+		return &data, resp, nil
+	}
+
+	return NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(entities))
+}
+
+type endpointGetList[T any] struct{ Endpoint }
+
+// GetList выполняет запрос на получение объектов в виде списка.
+func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...*Params) (*List[T], *resty.Response, error) {
+	return NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(params...).Get(ctx)
+}
+
+// GetListAll выполняет запрос на получение всех объектов в виде списка.
+func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*Params) (*Slice[T], *resty.Response, error) {
+	return getAll[T](ctx, endpoint.client, endpoint.uri, params)
 }
 
 type endpointDeleteByID struct{ Endpoint }
@@ -304,7 +393,9 @@ func (endpoint *endpointCreate[T]) Create(ctx context.Context, entity *T, params
 }
 
 // DeleteManyResponse объект ответа на запрос удаления нескольких объектов.
-type DeleteManyResponse []struct {
+type DeleteManyResponse []DeleteManyRow
+
+type DeleteManyRow struct {
 	Info      string    `json:"info"`
 	ApiErrors ApiErrors `json:"errors"`
 }
@@ -318,7 +409,7 @@ type endpointDeleteMany[T MetaOwner] struct{ Endpoint }
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
 func (endpoint *endpointDeleteMany[T]) DeleteMany(ctx context.Context, entities ...*T) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf("%s/delete", endpoint.uri)
-	return NewRequestBuilder[DeleteManyResponse](endpoint.client, path).Post(ctx, AsMetaWrapperSlice(entities))
+	return deleteAll[T](ctx, endpoint.client, path, entities)
 }
 
 type endpointCreateUpdateMany[T any] struct{ Endpoint }
@@ -329,7 +420,7 @@ type endpointCreateUpdateMany[T any] struct{ Endpoint }
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
 func (endpoint *endpointCreateUpdateMany[T]) CreateUpdateMany(ctx context.Context, entities Slice[T], params ...*Params) (*Slice[T], *resty.Response, error) {
-	return NewRequestBuilder[Slice[T]](endpoint.client, endpoint.uri).SetParams(params...).Post(ctx, entities)
+	return posAll[T](ctx, endpoint.client, endpoint.uri, entities, params)
 }
 
 type endpointUpdate[T any] struct{ Endpoint }
@@ -588,6 +679,11 @@ func (endpoint *endpointPositions[T]) GetPositionList(ctx context.Context, id uu
 	return NewRequestBuilder[List[T]](endpoint.client, path).SetParams(params...).Get(ctx)
 }
 
+func (endpoint *endpointPositions[T]) GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[T], *resty.Response, error) {
+	path := fmt.Sprintf(EndpointPositions, endpoint.uri, id)
+	return getAll[T](ctx, endpoint.client, path, params)
+}
+
 // GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 func (endpoint *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*T, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositionsID, endpoint.uri, id, positionID)
@@ -609,7 +705,7 @@ func (endpoint *endpointPositions[T]) CreatePosition(ctx context.Context, id uui
 // CreatePositionMany выполняет запрос на массовое создание позиций документа.
 func (endpoint *endpointPositions[T]) CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*T) (*Slice[T], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositions, endpoint.uri, id)
-	return NewRequestBuilder[Slice[T]](endpoint.client, path).Post(ctx, positions)
+	return posAll[T](ctx, endpoint.client, path, positions, nil)
 }
 
 // DeletePosition выполняет запрос на удаление позиции документа.

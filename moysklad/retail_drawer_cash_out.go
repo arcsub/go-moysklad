@@ -349,7 +349,7 @@ type RetailDrawerCashOutService interface {
 	// GetListAll выполняет запрос на получение всех выплат денег в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailDrawerCashOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailDrawerCashOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание выплаты денег.
 	// Обязательные поля для заполнения:

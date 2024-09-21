@@ -1,4 +1,4 @@
-module gitverse.ru/arcsub/go-moysklad
+module github.com/arcsub/go-moysklad
 
 go 1.22.0
 
@@ -12,7 +12,6 @@ require (
 
 require (
 	github.com/benbjohnson/clock v1.3.0 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/stretchr/testify v1.8.1 // indirect
 	golang.org/x/net v0.25.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

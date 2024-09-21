@@ -444,7 +444,7 @@ type VariantService interface {
 	// GetListAll выполняет запрос на получение всех модификаций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Variant], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Variant], *resty.Response, error)
 
 	// Create выполняет запрос на создание заказа модификации.
 	// Обязательные поля для заполнения:

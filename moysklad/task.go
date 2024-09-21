@@ -838,7 +838,7 @@ type TaskService interface {
 	// GetListAll выполняет запрос на получение всех задач в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Task], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Task], *resty.Response, error)
 
 	// Create выполняет запрос на создание задачи.
 	// Создать новую задачу. Для создания новых задач необходима активная тарифная опция CRM.

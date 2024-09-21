@@ -337,7 +337,7 @@ type RetailDrawerCashInService interface {
 	// GetListAll выполняет запрос на получение всех внесений денег в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailDrawerCashIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание внесения денег.
 	// Обязательные поля для заполнения:

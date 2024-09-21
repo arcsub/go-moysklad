@@ -180,7 +180,7 @@ type CountryService interface {
 	// GetListAll выполняет запрос на получение всех стран в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Country], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Country], *resty.Response, error)
 
 	// Create выполняет запрос на создание страны.
 	// Обязательные поля для заполнения:

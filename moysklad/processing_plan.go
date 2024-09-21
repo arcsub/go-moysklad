@@ -443,6 +443,8 @@ type ProcessingPlanService interface {
 	// Возвращает объект List.
 	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ProcessingPlanProduct], *resty.Response, error)
 
+	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
