@@ -1,6 +1,7 @@
 package moysklad
 
 import (
+	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"reflect"
@@ -29,6 +30,18 @@ type Meta struct {
 	UUIDHref     *string   `json:"uuidHref,omitempty"`     // ссылка на объект в веб-версии МоегоСклада. Присутствует не во всех сущностях
 	DownloadHref *string   `json:"downloadHref,omitempty"` // ссылка на скачивание
 	Type         *MetaType `json:"type,omitempty"`         // тип объекта (код сущности)
+}
+
+func newMeta(metaType MetaType, id uuid.UUID) *Meta {
+	href := fmt.Sprintf("%s%s%s/%s", baseApiURL, EndpointEntity, metaType, id)
+
+	meta := new(Meta).SetHref(href).SetMediaType(ApplicationJson).SetType(metaType)
+
+	return meta
+}
+
+func NewMetaProduct(id uuid.UUID) *Meta {
+	return newMeta(MetaTypeProduct, id)
 }
 
 // GetHref возвращает ссылку на объект.

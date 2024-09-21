@@ -109,7 +109,7 @@ type GroupService interface {
 	// GetListAll выполняет запрос на получение всех отделов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Group], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Group], *resty.Response, error)
 
 	// Create выполняет запрос на создание отдела.
 	// Обязательные поля для заполнения:

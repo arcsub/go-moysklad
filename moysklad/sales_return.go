@@ -749,7 +749,7 @@ type SalesReturnService interface {
 	// GetListAll выполняет запрос на получение всех возвратов покупателей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[SalesReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
 
 	// Create выполняет запрос на создание возврата покупателя.
 	// Обязательные поля для заполнения:
@@ -813,6 +813,8 @@ type SalesReturnService interface {
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[SalesReturnPosition], *resty.Response, error)
+
+	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[SalesReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.

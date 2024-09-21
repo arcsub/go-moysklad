@@ -750,7 +750,7 @@ type DiscountService interface {
 	// GetListAll выполняет запрос на получение всех скидок в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Discount], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Discount], *resty.Response, error)
 
 	// UpdateRoundOffDiscount выполняет запрос на изменение округления копеек.
 	// Принимает контекст, ID округления копеек и скидку.

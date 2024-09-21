@@ -283,7 +283,7 @@ type CounterPartyAdjustmentService interface {
 	// GetListAll выполняет запрос на получение всех корректировок взаиморасчётов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[CounterpartyAdjustment], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[CounterpartyAdjustment], *resty.Response, error)
 
 	// Create выполняет запрос на создание корректировки взаиморасчётов.
 	// Обязательные поля для заполнения:

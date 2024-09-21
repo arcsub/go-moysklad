@@ -500,7 +500,7 @@ type EmployeeService interface {
 	// GetListAll выполняет запрос на получение всех сотрудников в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Employee], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Employee], *resty.Response, error)
 
 	// Create выполняет запрос на создание сотрудника.
 	// Обязательные поля для заполнения:

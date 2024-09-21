@@ -450,7 +450,7 @@ type FactureOutService interface {
 	// GetListAll выполняет запрос на получение всех выданных счетов-фактур в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[FactureOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[FactureOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание выданного счета-фактуры.
 	// Обязательные поля для заполнения:

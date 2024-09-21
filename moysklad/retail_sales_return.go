@@ -709,7 +709,7 @@ type RetailSalesReturnService interface {
 	// GetListAll выполняет запрос на получение всех розничных возвратов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[RetailSalesReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailSalesReturn], *resty.Response, error)
 
 	// Create выполняет запрос на создание внесения денег.
 	// Обязательные поля для заполнения:
@@ -774,6 +774,8 @@ type RetailSalesReturnService interface {
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[RetailSalesReturnPosition], *resty.Response, error)
+
+	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[RetailSalesReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.

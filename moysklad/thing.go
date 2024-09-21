@@ -82,7 +82,7 @@ type ThingService interface {
 	// GetListAll выполняет запрос на получение всех серийных номеров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Thing], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Thing], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного серийного номера по ID.
 	// Принимает контекст, ID серийного номера и опционально объект параметров запроса Params.

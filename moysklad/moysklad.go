@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/ratelimit"
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -14,7 +15,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.70"                                // Версия библиотеки
+	Version                      = "v0.0.71"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	ApplicationJson              = "application/json"                       // Тип данных
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
@@ -25,7 +26,6 @@ const (
 	MaxQueriesPerSecond          = 15                                       // Не более 45 запросов за 3 секундный период от аккаунта (45/3)
 	MaxQueriesPerUser            = 5                                        // Не более 5 параллельных запросов от одного пользователя
 	MaxPrintCount                = 1000                                     // Максимальное количество ценников/термоэтикеток
-
 	//MaxFiles                = 100                           // Максимальное количество файлов
 	//MaxImages               = 10                            // Максимальное количество изображений
 	//headerRateLimit         = "X-RateLimit-Limit"           // Количество запросов, которые равномерно можно сделать в течение интервала до появления 429 ошибки.
@@ -33,7 +33,6 @@ const (
 	//headerRetryTimeInterval = "X-Lognex-Retry-TimeInterval" // Интервал в миллисекундах, в течение которого можно сделать эти запросы
 	//headerRateReset         = "X-Lognex-Reset"              // Время до сброса ограничения в миллисекундах. Равно нулю, если ограничение не установлено.
 	//headerRetryAfter        = "X-Lognex-Retry-After"        // Время до сброса ограничения в миллисекундах.
-
 )
 
 type queryLimits struct {
@@ -57,27 +56,49 @@ type Client struct {
 	clientMu sync.Mutex
 }
 
+func (client *Client) parseCredentials(credentials []string) {
+	switch length := len(credentials); {
+	case length == 1:
+		client.SetAuthToken(credentials[0])
+	case length > 1:
+		client.SetBasicAuth(credentials[0], credentials[1])
+	default:
+		log.Fatalln("Авторизация не задана. Передайте 'логин, пароль' или 'TOKEN'")
+	}
+}
+
 // NewClient возвращает новый клиент для работы с API МойСклад.
-func NewClient() *Client {
-	return (&Client{Client: resty.New()}).init()
+func NewClient(credentials ...string) *Client {
+	client := &Client{Client: resty.New()}
+	client.parseCredentials(credentials)
+
+	return client.init()
 }
 
 // NewHTTPClient принимает [http.Client] и возвращает новый клиент для работы с API МойСклад.
-func NewHTTPClient(httpClient *http.Client) *Client {
-	return (&Client{Client: resty.NewWithClient(httpClient)}).init()
+func NewHTTPClient(httpClient *http.Client, credentials ...string) *Client {
+	client := &Client{Client: resty.NewWithClient(httpClient)}
+	client.parseCredentials(credentials)
+
+	return client.init()
 }
 
 // NewRestyClient принимает [resty.Client] и возвращает новый клиент для работы с API МойСклад.
-func NewRestyClient(restyClient *resty.Client) *Client {
+func NewRestyClient(restyClient *resty.Client, credentials ...string) *Client {
+	client := &Client{Client: restyClient}
+	client.parseCredentials(credentials)
+
 	return (&Client{Client: restyClient}).init()
 }
 
 // init инициализирует параметры клиента.
 func (client *Client) init() *Client {
-	client.setQueryLimits().
+	client.
+		setQueryLimits().
 		SetBaseURL(baseApiURL).
 		SetHeaders(headers()).
 		AddRetryCondition(retryCondition)
+
 	return client
 }
 
@@ -86,7 +107,7 @@ func headers() map[string]string {
 	return map[string]string{
 		"Accept":          "application/json;charset=utf-8", // https://dev.moysklad.ru/doc/api/remap/1.2/index.html#error_1062
 		"Accept-Encoding": "gzip",                           // Обязательное использование сжатия содержимого ответов
-		"User-Agent":      fmt.Sprintf("go-moysklad/%s (https://github.com/arcsub/go-moysklad)", Version),
+		"User-Agent":      fmt.Sprintf("go-moysklad/%s, https://github.com/arcsub/go-moysklad", Version),
 	}
 }
 
@@ -118,19 +139,15 @@ func (client *Client) setQueryLimits() *Client {
 
 // WithTimeout устанавливает необходимый таймаут для http клиента.
 func (client *Client) WithTimeout(timeout time.Duration) *Client {
-	client.SetTimeout(timeout)
-	return client
-}
+	transport := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: timeout,
+		}).DialContext,
+	}
 
-// WithTokenAuth возвращает клиент с авторизацией через Bearer токен.
-func (client *Client) WithTokenAuth(token string) *Client {
-	client.SetAuthToken(token)
-	return client
-}
+	client.SetTimeout(timeout).SetTransport(transport)
 
-// WithBasicAuth возвращает клиент с авторизацией по паре логин:пароль.
-func (client *Client) WithBasicAuth(username, password string) *Client {
-	client.SetBasicAuth(username, password)
 	return client
 }
 

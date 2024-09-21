@@ -348,7 +348,7 @@ type PrepaymentReturnService interface {
 	// GetListAll выполняет запрос на получение всех возвратов предоплат в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[PrepaymentReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[PrepaymentReturn], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного возврата предоплаты по ID.
 	// Принимает контекст, ID возврата предоплаты и опционально объект параметров запроса Params.
@@ -400,6 +400,8 @@ type PrepaymentReturnService interface {
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
 	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[PrepaymentReturnPosition], *resty.Response, error)
+
+	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[PrepaymentReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.

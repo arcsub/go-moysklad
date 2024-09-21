@@ -13,8 +13,8 @@
   <img src="https://github.com/arcsub/go-moysklad/assets/47686389/6bec5834-6eb9-442f-b1ee-efeaa85bb946" width="200px">
 </div>
 
-> [!WARNING]
-> SDK находится в стадии разработки!
+>
+> **SDK находится в стадии разработки!**
 >
 > Некоторые методы могут отсутствовать или работать неправильно!
 >
@@ -25,7 +25,7 @@
 > Требуемая версия go >= 1.21
 
 ```
-go get -u github.com/arcsub/go-moysklad
+go get -u github.com/arcsub/go-moysklad@HEAD
 ```
 
 ## Особенности
@@ -64,7 +64,7 @@ id := product.GetID()
 Например:
 ```go
 product := new(moysklad.Product)
-product.SetName("iPhone 15 Pro Max").SetCode("APPL15PM")
+product.SetName("iPhone 16 Pro Max").SetCode("APPL15PM")
 ```
 
 - ~~Для безопасного разыменовывания указателя необходимо передать указатель в метод `Deref()`~~
@@ -78,33 +78,35 @@ product.SetName("iPhone 15 Pro Max").SetCode("APPL15PM")
 ## Использование
 ### Создание экземпляра клиента
 ```go
-  client := moysklad.NewClient()
+  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
+client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
 ```
 
 ### Создание экземпляра клиента со своим http клиентом
 
 ```go
   httpClient := &http.Client{Timeout: 5 * time.Minute}
-  client := moysklad.NewHTTPClient(httpClient)
+client := moysklad.NewHTTPClient(httpClient, os.Getenv("MOYSKLAD_TOKEN"))
 ```
 
 ### Создание экземпляра клиента с resty клиентом
 
 ```go
   restyClient := resty.New()
-  client := moysklad.NewRestyClient(restyClient)
+client := moysklad.NewRestyClient(restyClient, os.Getenv("MOYSKLAD_TOKEN"))
 ```
 
 ### Аутентификация
 Имеется два способа аутентификации.
-- С помощью токена. Метод клиента `WithTokenAuth()`
+
+- С помощью токена.
 ```go
-  client := moysklad.NewClient().WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN"))
+  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
 ```
 
-- С помощью пары логин/пароль. Метод клиента `WithBasicAuth()`
+- С помощью пары логин/пароль.
 ```go
-  client := moysklad.NewClient().WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+  client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
 ```
 
 ### Методы клиента
@@ -114,24 +116,13 @@ product.SetName("iPhone 15 Pro Max").SetCode("APPL15PM")
 Установить необходимый таймаут для http клиента.
 
 ```go
-  client := moysklad.NewClient().WithTimeout(5 * time.Minute)
-```
-#### WithTokenAuth(token)
-Получить простой клиент с авторизацией через токен.
-```go
-  client := moysklad.NewClient().WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN"))
-```
-#### WithBasicAuth(username, password)
-Получить простой клиент с авторизацией через пару логин/пароль.
-```go
-  client := moysklad.NewClient().
-	  WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN")).WithTimeout(15 * time.Minute)
 ```
 #### WithDisabledWebhookContent(value)
 Временное отключение уведомлений вебхуков
 ```go
   // отключим уведомления вебхуков на данном клиенте
-  client := moysklad.NewClient().WithDisabledWebhookContent(true)
+client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN")).WithDisabledWebhookContent(true)
 ```
 
 ### Параметры запроса
@@ -157,7 +148,7 @@ params.WithOffset(100)
 #### Контекстный поиск `search=val`
 Пример:
 ```go
-params.WithSearch("iPhone 15")
+params.WithSearch("iPhone 16 Pro Max")
 ```
 #### Замена ссылок объектами
 Пример:
@@ -329,7 +320,7 @@ params.WithMomentTo(time.Now())
 Относительный путь: `/entity/product`
 Цепочка вызовов от клиента будет выглядеть следующим образом:
 ```go
-client := moysklad.NewClient()
+client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
 
 // `/entity/product`
 _ = client.Entity().Product()
@@ -375,8 +366,7 @@ import (
 
 func main() {
   // инициализируем простой клиент с аутентификацией по паре логин/пароль
-  client := moysklad.NewClient().
-	  WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")).
+  client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")).
 	  WithDisabledWebhookContent(true)
 
   // сервис для работы с товарами

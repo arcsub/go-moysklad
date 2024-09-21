@@ -513,7 +513,7 @@ type PaymentOutService interface {
 	// GetListAll выполняет запрос на получение всех исходящих платежей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[PaymentOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[PaymentOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание исходящего платежа.
 	// Обязательные поля для заполнения:

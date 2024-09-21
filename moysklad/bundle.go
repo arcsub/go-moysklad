@@ -647,7 +647,7 @@ type BundleService interface {
 	// GetListAll выполняет запрос на получение всех комплектов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Slice[Bundle], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...*Params) (*Slice[Bundle], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
