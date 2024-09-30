@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.71"                                // Версия библиотеки
+	Version                      = "v0.0.72"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	ApplicationJson              = "application/json"                       // Тип данных
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
@@ -35,6 +35,115 @@ const (
 	//headerRetryAfter        = "X-Lognex-Retry-After"        // Время до сброса ограничения в миллисекундах.
 )
 
+// Client базовый клиент для взаимодействия с API МойСклад.
+type Client struct {
+	*resty.Client
+	limits   *queryLimits
+	clientMu sync.Mutex
+}
+
+// NewClient возвращает новый клиент для работы с API МойСклад.
+func NewClient(credentials ...string) *Client {
+	client := &Client{Client: resty.New()}
+
+	return client.init(credentials)
+}
+
+// NewHTTPClient принимает [http.Client] и возвращает новый клиент для работы с API МойСклад.
+func NewHTTPClient(httpClient *http.Client, credentials ...string) *Client {
+	client := &Client{Client: resty.NewWithClient(httpClient)}
+
+	return client.init(credentials)
+}
+
+// NewRestyClient принимает [resty.Client] и возвращает новый клиент для работы с API МойСклад.
+func NewRestyClient(restyClient *resty.Client, credentials ...string) *Client {
+	client := &Client{Client: restyClient}
+
+	return client.init(credentials)
+}
+
+func (client *Client) setCredentials(credentials []string) *Client {
+	switch length := len(credentials); {
+	case length == 1:
+		client.SetAuthToken(credentials[0])
+	case length > 1:
+		client.SetBasicAuth(credentials[0], credentials[1])
+	default:
+		log.Fatalln("Авторизация не задана. Передайте 'логин, пароль' или 'TOKEN'")
+	}
+
+	return client
+}
+
+// init инициализирует параметры клиента.
+func (client *Client) init(credentials []string) *Client {
+	client.setQueryLimits()
+
+	client.SetBaseURL(baseApiURL)
+
+	client.setCredentials(credentials)
+
+	client.SetHeaders(headers())
+
+	client.AddRetryCondition(retryCondition)
+
+	return client
+}
+
+// setQueryLimits устанавливает количество запросов за 3-х секундный период и количество параллельных запросов.
+func (client *Client) setQueryLimits() *Client {
+	client.limits = &queryLimits{
+		rl:       ratelimit.New(MaxQueriesPerSecond),
+		queryBuf: make(chan struct{}, MaxQueriesPerUser),
+	}
+
+	return client
+}
+
+// WithTimeout устанавливает необходимый таймаут для http клиента.
+func (client *Client) WithTimeout(timeout time.Duration) *Client {
+	transport := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: timeout,
+		}).DialContext,
+	}
+
+	client.SetTimeout(timeout)
+
+	client.SetTransport(transport)
+
+	return client
+}
+
+// WithDisabledWebhookContent устанавливает флаг, который отвечает
+// за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
+//
+// [Подробнее]
+//
+// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
+func (client *Client) WithDisabledWebhookContent(value bool) *Client {
+	client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
+
+	return client
+}
+
+// WithDisabledWebhookByPrefix позволяет указать набор префиксов url-адресов.
+//
+// Если адрес вебхука содержит один из указанных префиксов, то этот вебхук не будет инициирован по результатам запроса.
+//
+// [Подробнее]
+//
+// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
+func (client *Client) WithDisabledWebhookByPrefix(urls ...string) *Client {
+	for _, url := range urls {
+		client.Header.Add(headerWebHookDisableByPrefix, url)
+	}
+
+	return client
+}
+
 type queryLimits struct {
 	rl       ratelimit.Limiter // Лимит между запросами
 	queryBuf chan struct{}     // Буферизированный канал
@@ -47,59 +156,6 @@ func (queryLimits *queryLimits) Wait() {
 
 func (queryLimits *queryLimits) Done() {
 	<-queryLimits.queryBuf
-}
-
-// Client базовый клиент для взаимодействия с API МойСклад.
-type Client struct {
-	*resty.Client
-	limits   *queryLimits
-	clientMu sync.Mutex
-}
-
-func (client *Client) parseCredentials(credentials []string) {
-	switch length := len(credentials); {
-	case length == 1:
-		client.SetAuthToken(credentials[0])
-	case length > 1:
-		client.SetBasicAuth(credentials[0], credentials[1])
-	default:
-		log.Fatalln("Авторизация не задана. Передайте 'логин, пароль' или 'TOKEN'")
-	}
-}
-
-// NewClient возвращает новый клиент для работы с API МойСклад.
-func NewClient(credentials ...string) *Client {
-	client := &Client{Client: resty.New()}
-	client.parseCredentials(credentials)
-
-	return client.init()
-}
-
-// NewHTTPClient принимает [http.Client] и возвращает новый клиент для работы с API МойСклад.
-func NewHTTPClient(httpClient *http.Client, credentials ...string) *Client {
-	client := &Client{Client: resty.NewWithClient(httpClient)}
-	client.parseCredentials(credentials)
-
-	return client.init()
-}
-
-// NewRestyClient принимает [resty.Client] и возвращает новый клиент для работы с API МойСклад.
-func NewRestyClient(restyClient *resty.Client, credentials ...string) *Client {
-	client := &Client{Client: restyClient}
-	client.parseCredentials(credentials)
-
-	return (&Client{Client: restyClient}).init()
-}
-
-// init инициализирует параметры клиента.
-func (client *Client) init() *Client {
-	client.
-		setQueryLimits().
-		SetBaseURL(baseApiURL).
-		SetHeaders(headers()).
-		AddRetryCondition(retryCondition)
-
-	return client
 }
 
 // headers устанавливает необходимые заголовки.
@@ -125,53 +181,6 @@ func isNetError(err error) bool {
 	if errors.As(err, &ne) && ne.Timeout() {
 		return true
 	}
+
 	return errors.Is(err, net.ErrClosed) || errors.Is(err, context.DeadlineExceeded)
-}
-
-// setQueryLimits устанавливает количество запросов за 3-х секундный период и количество параллельных запросов.
-func (client *Client) setQueryLimits() *Client {
-	client.limits = &queryLimits{
-		rl:       ratelimit.New(MaxQueriesPerSecond),
-		queryBuf: make(chan struct{}, MaxQueriesPerUser),
-	}
-	return client
-}
-
-// WithTimeout устанавливает необходимый таймаут для http клиента.
-func (client *Client) WithTimeout(timeout time.Duration) *Client {
-	transport := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   timeout,
-			KeepAlive: timeout,
-		}).DialContext,
-	}
-
-	client.SetTimeout(timeout).SetTransport(transport)
-
-	return client
-}
-
-// WithDisabledWebhookContent устанавливает флаг, который отвечает
-// за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
-//
-// [Подробнее]
-//
-// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
-func (client *Client) WithDisabledWebhookContent(value bool) *Client {
-	client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
-	return client
-}
-
-// WithDisabledWebhookByPrefix позволяет указать набор префиксов url-адресов.
-//
-// Если адрес вебхука содержит один из указанных префиксов, то этот вебхук не будет инициирован по результатам запроса.
-//
-// [Подробнее]
-//
-// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
-func (client *Client) WithDisabledWebhookByPrefix(urls ...string) *Client {
-	for _, url := range urls {
-		client.Header.Add(headerWebHookDisableByPrefix, url)
-	}
-	return client
 }
