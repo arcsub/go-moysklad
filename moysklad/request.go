@@ -9,16 +9,8 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"sync"
 )
-
-type Endpoint struct {
-	client *Client
-	uri    string
-}
-
-func NewEndpoint(client *Client, uri string) Endpoint {
-	return Endpoint{client, uri}
-}
 
 type RequestBuilder[T any] struct {
 	client *Client
@@ -28,6 +20,101 @@ type RequestBuilder[T any] struct {
 
 func NewRequestBuilder[T any](client *Client, uri string) *RequestBuilder[T] {
 	return &RequestBuilder[T]{client, client.R(), uri}
+}
+
+// Context объект, содержащий метаданные о выполнившем запрос сотруднике.
+type Context struct {
+	Employee MetaWrapper `json:"employee,omitempty"`
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (context Context) String() string {
+	return Stringify(context)
+}
+
+// List объект ответа на запрос списка сущностей T.
+type List[T any] struct {
+	Context Context `json:"context"` // Метаданные о выполнившем запрос сотруднике
+	MetaArray[T]
+}
+
+// String реализует интерфейс [fmt.Stringer].
+func (list List[T]) String() string {
+	return Stringify(list)
+}
+
+func (requestBuilder *RequestBuilder[T]) SetHeader(header, value string) *RequestBuilder[T] {
+	requestBuilder.req.Header.Set(header, value)
+
+	return requestBuilder
+}
+
+func (requestBuilder *RequestBuilder[T]) SetParams(params ...*Params) *RequestBuilder[T] {
+	if len(params) > 0 {
+		v, _ := query.Values(params[0])
+		requestBuilder.req.SetQueryParamsFromValues(v)
+	}
+
+	return requestBuilder
+}
+
+func (requestBuilder *RequestBuilder[T]) Send(ctx context.Context, method string, body any) (*T, *resty.Response, error) {
+	// Ограничения на количество запросов
+	requestBuilder.client.limits.Wait()
+	defer requestBuilder.client.limits.Done()
+
+	resp, err := requestBuilder.req.SetContext(ctx).SetBody(body).Execute(method, requestBuilder.uri)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return parseResponse[T](resp)
+}
+
+func (requestBuilder *RequestBuilder[T]) Get(ctx context.Context) (*T, *resty.Response, error) {
+	return requestBuilder.Send(ctx, http.MethodGet, nil)
+}
+
+func (requestBuilder *RequestBuilder[T]) Put(ctx context.Context, body any) (*T, *resty.Response, error) {
+	return requestBuilder.Send(ctx, http.MethodPut, body)
+}
+
+func (requestBuilder *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Response, error) {
+	return requestBuilder.Send(ctx, http.MethodPost, body)
+}
+
+func (requestBuilder *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
+	// Ограничения на количество запросов
+	requestBuilder.client.limits.Wait()
+	defer requestBuilder.client.limits.Done()
+
+	_, resp, err := requestBuilder.Send(ctx, http.MethodDelete, nil)
+	return resp.StatusCode() == http.StatusOK, resp, err
+}
+
+func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
+	// Ограничения на количество запросов
+	requestBuilder.client.limits.Wait()
+	defer requestBuilder.client.limits.Done()
+
+	// устанавливаем флаг async=true на создание асинхронной операции
+	requestBuilder.req.SetContext(ctx).SetQueryParam("async", "true")
+
+	resp, err := requestBuilder.req.Get(requestBuilder.uri)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	async := NewAsyncResultService[T](requestBuilder.client, resp)
+
+	return async, resp, nil
+}
+
+// FetchMeta позволяет выполнить точечный запрос по переданному объекту [Meta].
+//
+// Необходимо точно указать обобщённый тип T, который ожидаем получить в ответ, иначе есть риск получить ошибку.
+func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...*Params) (*T, *resty.Response, error) {
+	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params...).Get(ctx)
 }
 
 // TODO: improve
@@ -155,93 +242,132 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 	return &result, r, nil
 }
 
-func (requestBuilder *RequestBuilder[T]) SetHeader(header, value string) *RequestBuilder[T] {
-	requestBuilder.req.Header.Set(header, value)
-	return requestBuilder
-}
+func getAll[T any](ctx context.Context, client *Client, path string, params []*Params) (*Slice[T], *resty.Response, error) {
+	var offset = 1
+	var perPage = MaxPositions
+	var data Slice[T]
+	var mu sync.Mutex
+	var wg sync.WaitGroup
 
-func (requestBuilder *RequestBuilder[T]) SetParams(params ...*Params) *RequestBuilder[T] {
-	if len(params) > 0 {
-		v, _ := query.Values(params[0])
-		requestBuilder.req.SetQueryParamsFromValues(v)
-	}
-	return requestBuilder
-}
+	paramsCpy := GetParamsFromSliceOrNew(params).WithLimit(offset).WithOffset(0)
 
-func (requestBuilder *RequestBuilder[T]) Send(ctx context.Context, method string, body any) (*T, *resty.Response, error) {
-	// Ограничения на количество запросов
-	requestBuilder.client.limits.Wait()
-	defer requestBuilder.client.limits.Done()
-
-	resp, err := requestBuilder.req.SetContext(ctx).SetBody(body).Execute(method, requestBuilder.uri)
+	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return parseResponse[T](resp)
-}
+	data = append(data, list.Rows...)
+	size := list.Meta.Size
 
-func (requestBuilder *RequestBuilder[T]) Get(ctx context.Context) (*T, *resty.Response, error) {
-	return requestBuilder.Send(ctx, http.MethodGet, nil)
-}
-
-func (requestBuilder *RequestBuilder[T]) Put(ctx context.Context, body any) (*T, *resty.Response, error) {
-	return requestBuilder.Send(ctx, http.MethodPut, body)
-}
-
-func (requestBuilder *RequestBuilder[T]) Post(ctx context.Context, body any) (*T, *resty.Response, error) {
-	return requestBuilder.Send(ctx, http.MethodPost, body)
-}
-
-func (requestBuilder *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
-	// Ограничения на количество запросов
-	requestBuilder.client.limits.Wait()
-	defer requestBuilder.client.limits.Done()
-
-	_, resp, err := requestBuilder.Send(ctx, http.MethodDelete, nil)
-	return resp.StatusCode() == http.StatusOK, resp, err
-}
-
-func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {
-	// Ограничения на количество запросов
-	requestBuilder.client.limits.Wait()
-	defer requestBuilder.client.limits.Done()
-
-	// устанавливаем флаг async=true на создание асинхронной операции
-	requestBuilder.req.SetContext(ctx).SetQueryParam("async", "true")
-
-	resp, err := requestBuilder.req.Get(requestBuilder.uri)
-	if err != nil {
-		return nil, resp, err
+	if len(paramsCpy.Expand) > 0 {
+		perPage = 100
 	}
-	async := NewAsyncResultService[T](requestBuilder.client, resp)
-	return async, resp, nil
+
+	for i := offset; i < size; i += perPage {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+
+			paramsCpy := paramsCpy.Clone().WithLimit(perPage).WithOffset(i)
+
+			list, resResp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
+
+			mu.Lock()
+			resp = resResp
+			mu.Unlock()
+
+			if err != nil {
+				log.Println("getAll error:", err)
+				return
+			}
+
+			mu.Lock()
+			data = append(data, list.Rows...)
+			mu.Unlock()
+		}(i)
+	}
+
+	wg.Wait()
+
+	return &data, resp, nil
 }
 
-// FetchMeta позволяет выполнить точечный запрос по переданному объекту [Meta].
-//
-// Необходимо точно указать обобщённый тип T, который ожидаем получить в ответ, иначе есть риск получить ошибку.
-func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...*Params) (*T, *resty.Response, error) {
-	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params...).Get(ctx)
+func posAll[T any](ctx context.Context, client *Client, path string, entities Slice[T], params []*Params) (*Slice[T], *resty.Response, error) {
+	paramsCpy := GetParamsFromSliceOrNew(params)
+
+	if entities.Len() > MaxPositions {
+		var data Slice[T]
+		var resp *resty.Response
+		var mu sync.Mutex
+		var wg sync.WaitGroup
+
+		for _, chunk := range entities.IntoChunks(MaxPositions) {
+			wg.Add(1)
+
+			go func(chunk Slice[T]) {
+				defer wg.Done()
+
+				list, resResp, err := NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, chunk)
+
+				mu.Lock()
+				resp = resResp
+				mu.Unlock()
+
+				if err != nil {
+					log.Println("postAll error:", err)
+					return
+				}
+
+				if list.Len() > 0 {
+					mu.Lock()
+					data.Push(list.S()...)
+					mu.Unlock()
+				}
+			}(chunk)
+		}
+
+		wg.Wait()
+
+		return &data, resp, nil
+	}
+
+	return NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, entities)
 }
 
-// Context объект, содержащий метаданные о выполнившем запрос сотруднике.
-type Context struct {
-	Employee MetaWrapper `json:"employee,omitempty"`
-}
+func deleteAll[T MetaOwner](ctx context.Context, client *Client, path string, entities Slice[T]) (*DeleteManyResponse, *resty.Response, error) {
+	if entities.Len() > MaxPositions {
+		var data DeleteManyResponse
+		var resp *resty.Response
+		var mu sync.Mutex
+		var wg sync.WaitGroup
 
-// String реализует интерфейс [fmt.Stringer].
-func (context Context) String() string {
-	return Stringify(context)
-}
+		for _, chunk := range entities.IntoChunks(MaxPositions) {
+			wg.Add(1)
 
-// List объект ответа на запрос списка сущностей T.
-type List[T any] struct {
-	Context Context `json:"context"` // Метаданные о выполнившем запрос сотруднике
-	MetaArray[T]
-}
+			go func(chunk Slice[T], resp *resty.Response) {
+				defer wg.Done()
 
-// String реализует интерфейс [fmt.Stringer].
-func (list List[T]) String() string {
-	return Stringify(list)
+				list, resResp, err := NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(chunk))
+
+				mu.Lock()
+				resp = resResp
+				mu.Unlock()
+
+				if err != nil {
+					log.Println("deleteAll error:", err)
+					return
+				}
+
+				mu.Lock()
+				data = append(data, Deref(list)...)
+				mu.Unlock()
+			}(chunk, resp)
+		}
+
+		wg.Wait()
+
+		return &data, resp, nil
+	}
+
+	return NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(entities))
 }

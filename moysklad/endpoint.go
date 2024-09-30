@@ -7,11 +7,9 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 	"io"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
-	"sync"
 )
 
 const (
@@ -66,6 +64,15 @@ const (
 	EndpointTrackingCodesDelete = EndpointTrackingCodes + EndpointDelete
 )
 
+type Endpoint struct {
+	client *Client
+	uri    string
+}
+
+func NewEndpoint(client *Client, uri string) Endpoint {
+	return Endpoint{client, uri}
+}
+
 type mainService[E MetaIDOwner, P any, M any, S any] struct {
 	endpointGetList[E]
 	endpointCreate[E]
@@ -99,7 +106,7 @@ type mainService[E MetaIDOwner, P any, M any, S any] struct {
 func newMainService[E MetaIDOwner, P any, M any, S any](client *Client, path string) *mainService[E, P, M, S] {
 	endpoint := NewEndpoint(client, path)
 
-	return &mainService[E, P, M, S]{
+	service := &mainService[E, P, M, S]{
 		endpointGetList:          endpointGetList[E]{endpoint},
 		endpointCreate:           endpointCreate[E]{endpoint},
 		endpointCreateUpdateMany: endpointCreateUpdateMany[E]{endpoint},
@@ -128,136 +135,8 @@ func newMainService[E MetaIDOwner, P any, M any, S any](client *Client, path str
 		endpointTemplateBased:    endpointTemplateBased[E]{endpoint},
 		endpointEvaluate:         endpointEvaluate[E]{endpoint},
 	}
-}
 
-func getAll[T any](ctx context.Context, client *Client, path string, params []*Params) (*Slice[T], *resty.Response, error) {
-	var offset = 1
-	var perPage = MaxPositions
-	var data Slice[T]
-	var mu sync.Mutex
-	var wg sync.WaitGroup
-
-	paramsCpy := GetParamsFromSliceOrNew(params).WithLimit(offset).WithOffset(0)
-
-	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	data = append(data, list.Rows...)
-	size := list.Meta.Size
-
-	if len(paramsCpy.Expand) > 0 {
-		perPage = 100
-	}
-
-	for i := offset; i < size; i += perPage {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-
-			paramsCpy := paramsCpy.Clone().WithLimit(perPage).WithOffset(i)
-
-			list, resResp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
-
-			mu.Lock()
-			resp = resResp
-			mu.Unlock()
-
-			if err != nil {
-				log.Println("getAll error:", err)
-				return
-			}
-
-			mu.Lock()
-			data = append(data, list.Rows...)
-			mu.Unlock()
-		}(i)
-	}
-
-	wg.Wait()
-
-	return &data, resp, nil
-}
-
-func posAll[T any](ctx context.Context, client *Client, path string, entities Slice[T], params []*Params) (*Slice[T], *resty.Response, error) {
-	paramsCpy := GetParamsFromSliceOrNew(params)
-
-	if entities.Len() > MaxPositions {
-		var data Slice[T]
-		var resp *resty.Response
-		var mu sync.Mutex
-		var wg sync.WaitGroup
-
-		for _, chunk := range entities.IntoChunks(MaxPositions) {
-			wg.Add(1)
-
-			go func(chunk Slice[T]) {
-				defer wg.Done()
-
-				list, resResp, err := NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, chunk)
-
-				mu.Lock()
-				resp = resResp
-				mu.Unlock()
-
-				if err != nil {
-					log.Println("postAll error:", err)
-					return
-				}
-
-				if list.Len() > 0 {
-					mu.Lock()
-					data.Push(list.S()...)
-					mu.Unlock()
-				}
-			}(chunk)
-		}
-
-		wg.Wait()
-
-		return &data, resp, nil
-	}
-
-	return NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, entities)
-}
-
-func deleteAll[T MetaOwner](ctx context.Context, client *Client, path string, entities Slice[T]) (*DeleteManyResponse, *resty.Response, error) {
-	if entities.Len() > MaxPositions {
-		var data DeleteManyResponse
-		var resp *resty.Response
-		var mu sync.Mutex
-		var wg sync.WaitGroup
-
-		for _, chunk := range entities.IntoChunks(MaxPositions) {
-			wg.Add(1)
-
-			go func(chunk Slice[T], resp *resty.Response) {
-				defer wg.Done()
-
-				list, resResp, err := NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(chunk))
-
-				mu.Lock()
-				resp = resResp
-				mu.Unlock()
-
-				if err != nil {
-					log.Println("deleteAll error:", err)
-					return
-				}
-
-				mu.Lock()
-				data = append(data, Deref(list)...)
-				mu.Unlock()
-			}(chunk, resp)
-		}
-
-		wg.Wait()
-
-		return &data, resp, nil
-	}
-
-	return NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(entities))
+	return service
 }
 
 type endpointGetList[T any] struct{ Endpoint }
