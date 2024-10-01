@@ -64,7 +64,7 @@ const (
 )
 
 const (
-	EndpointSubscription = EndpointEntity + string(MetaTypeSubscription)
+	EndpointSubscription = EndpointAccountSettings + string(MetaTypeSubscription)
 )
 
 type subscriptionService struct {

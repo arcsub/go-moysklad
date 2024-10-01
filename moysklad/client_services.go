@@ -1,5 +1,11 @@
 package moysklad
 
+// AccountService описывает методы сервиса для работы с настройками учетной записи.
+type AccountService interface {
+	// Subscription возвращает сервис для работы с подпиской.
+	Subscription() SubscriptionService
+}
+
 // EntityService описывает методы сервиса для работы с сущностями и документами.
 type EntityService interface {
 	// Application возвращает сервис для работы с серверными приложениями.
@@ -194,9 +200,6 @@ type EntityService interface {
 	// Store возвращает сервис для работы со складами.
 	Store() StoreService
 
-	// Subscription возвращает сервис для работы с подпиской.
-	Subscription() SubscriptionService
-
 	// Supply возвращает сервис для работы с приёмками.
 	Supply() SupplyService
 
@@ -262,6 +265,11 @@ type ReportService interface {
 
 	// ByOperations возвращает сервис для работы с отчётом по документам номенклатуры.
 	ByOperations() ReportByOperationsService
+}
+
+// AccountSettings возвращает сервис для работы с настройками учётных записей.
+func (client *Client) AccountSettings() AccountService {
+	return &accountService{client}
 }
 
 // Async возвращает сервис для работы с асинхронными задачами.
@@ -557,10 +565,6 @@ func (service *entityService) Store() StoreService {
 	return NewStoreService(service.client)
 }
 
-func (service *entityService) Subscription() SubscriptionService {
-	return NewSubscriptionService(service.client)
-}
-
 func (service *entityService) Supply() SupplyService {
 	return NewSupplyService(service.client)
 }
@@ -591,6 +595,12 @@ func (service *entityService) Webhook() WebhookService {
 
 func (service *entityService) WebhookStock() WebhookStockService {
 	return NewWebhookStockService(service.client)
+}
+
+type accountService struct{ client *Client }
+
+func (service *accountService) Subscription() SubscriptionService {
+	return NewSubscriptionService(service.client)
 }
 
 type contextService struct{ client *Client }
