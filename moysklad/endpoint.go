@@ -13,12 +13,13 @@ import (
 )
 
 const (
-	EndpointEntity   = "entity/"
-	EndpointContext  = "context/"
-	EndpointReport   = "report/"
-	EndpointSecurity = "security/"
-	EndpointDelete   = "/delete"
-	EndpointSettings = "%s/settings"
+	EndpointEntity          = "entity/"
+	EndpointContext         = "context/"
+	EndpointReport          = "report/"
+	EndpointSecurity        = "security/"
+	EndpointAccountSettings = "accountSettings/"
+	EndpointDelete          = "/delete"
+	EndpointSettings        = "%s/settings"
 
 	EndpointExport = "%s/%s/export"
 

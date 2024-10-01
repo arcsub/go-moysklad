@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/ratelimit"
-	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -15,7 +14,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.72"                                // Версия библиотеки
+	Version                      = "v0.0.73"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	ApplicationJson              = "application/json"                       // Тип данных
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
@@ -69,8 +68,6 @@ func (client *Client) setCredentials(credentials []string) *Client {
 		client.SetAuthToken(credentials[0])
 	case length > 1:
 		client.SetBasicAuth(credentials[0], credentials[1])
-	default:
-		log.Fatalln("Авторизация не задана. Передайте 'логин, пароль' или 'TOKEN'")
 	}
 
 	return client
@@ -141,6 +138,18 @@ func (client *Client) WithDisabledWebhookByPrefix(urls ...string) *Client {
 		client.Header.Add(headerWebHookDisableByPrefix, url)
 	}
 
+	return client
+}
+
+// WithTokenAuth возвращает клиент с авторизацией через Bearer токен.
+func (client *Client) WithTokenAuth(token string) *Client {
+	client.SetAuthToken(token)
+	return client
+}
+
+// WithBasicAuth возвращает клиент с авторизацией по паре логин:пароль.
+func (client *Client) WithBasicAuth(username, password string) *Client {
+	client.SetBasicAuth(username, password)
 	return client
 }
 

@@ -111,6 +111,22 @@ client := moysklad.NewRestyClient(restyClient, os.Getenv("MOYSKLAD_TOKEN"))
 
 ### Методы клиента
 
+#### WithTokenAuth(token)
+
+Получить простой клиент с авторизацией через токен.
+
+```go
+  client := moysklad.NewClient().WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN"))
+```
+
+#### WithBasicAuth(username, password)
+
+Получить простой клиент с авторизацией через пару логин/пароль.
+
+```go
+  client := moysklad.NewClient().
+WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+```
 #### WithTimeout(timeout)
 
 Установить необходимый таймаут для http клиента.
