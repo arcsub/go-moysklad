@@ -1,8 +1,6 @@
 package moysklad
 
 import (
-	"context"
-	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/ratelimit"
@@ -25,11 +23,12 @@ const (
 	MaxQueriesPerSecond          = 15                                       // Не более 45 запросов за 3 секундный период от аккаунта (45/3)
 	MaxQueriesPerUser            = 5                                        // Не более 5 параллельных запросов от одного пользователя
 	MaxPrintCount                = 1000                                     // Максимальное количество ценников/термоэтикеток
+	headerRateLimit              = "X-RateLimit-Limit"                      // Количество запросов, которые равномерно можно сделать в течение интервала до появления 429 ошибки.
+	headerRateRemaining          = "X-RateLimit-Remaining"                  // Число запросов, которые можно отправить до получения 429 ошибки.
+	headerRetryTimeInterval      = "X-Lognex-Retry-TimeInterval"            // Интервал в миллисекундах, в течение которого можно сделать эти запросы
+
 	//MaxFiles                = 100                           // Максимальное количество файлов
 	//MaxImages               = 10                            // Максимальное количество изображений
-	//headerRateLimit         = "X-RateLimit-Limit"           // Количество запросов, которые равномерно можно сделать в течение интервала до появления 429 ошибки.
-	//headerRateRemaining     = "X-RateLimit-Remaining"       // Число запросов, которые можно отправить до получения 429 ошибки.
-	//headerRetryTimeInterval = "X-Lognex-Retry-TimeInterval" // Интервал в миллисекундах, в течение которого можно сделать эти запросы
 	//headerRateReset         = "X-Lognex-Reset"              // Время до сброса ограничения в миллисекундах. Равно нулю, если ограничение не установлено.
 	//headerRetryAfter        = "X-Lognex-Retry-After"        // Время до сброса ограничения в миллисекундах.
 )
@@ -37,8 +36,9 @@ const (
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
 	*resty.Client
-	limits   *queryLimits
-	clientMu sync.Mutex
+	limits      *queryLimits
+	clientMu    sync.Mutex
+	nextReqTime time.Time // время следующего запроса
 }
 
 // NewClient возвращает новый клиент для работы с API МойСклад.
@@ -73,17 +73,27 @@ func (client *Client) setCredentials(credentials []string) *Client {
 	return client
 }
 
-// init инициализирует параметры клиента.
+// init инициализирует стандартные параметры клиента.
 func (client *Client) init(credentials []string) *Client {
-	client.setQueryLimits()
+	headers := map[string]string{
+		"Accept":          "application/json;charset=utf-8", // https://dev.moysklad.ru/doc/api/remap/1.2/index.html#error_1062
+		"Accept-Encoding": "gzip",                           // Обязательное использование сжатия содержимого ответов
+		"User-Agent":      fmt.Sprintf("go-moysklad/%s, https://github.com/arcsub/go-moysklad", Version),
+	}
 
-	client.SetBaseURL(baseApiURL)
+	retryCondition := func(r *resty.Response, _ error) bool {
+		return r.StatusCode() == http.StatusTooManyRequests
+	}
 
-	client.setCredentials(credentials)
-
-	client.SetHeaders(headers())
-
-	client.AddRetryCondition(retryCondition)
+	client.setQueryLimits().
+		setCredentials(credentials).
+		SetHeaders(headers).
+		SetBaseURL(baseApiURL).
+		SetRetryWaitTime(time.Second).
+		SetRetryMaxWaitTime(10 * time.Second).
+		SetRetryCount(10).
+		AddRetryAfterErrorCondition().
+		AddRetryCondition(retryCondition)
 
 	return client
 }
@@ -165,31 +175,4 @@ func (queryLimits *queryLimits) Wait() {
 
 func (queryLimits *queryLimits) Done() {
 	<-queryLimits.queryBuf
-}
-
-// headers устанавливает необходимые заголовки.
-func headers() map[string]string {
-	return map[string]string{
-		"Accept":          "application/json;charset=utf-8", // https://dev.moysklad.ru/doc/api/remap/1.2/index.html#error_1062
-		"Accept-Encoding": "gzip",                           // Обязательное использование сжатия содержимого ответов
-		"User-Agent":      fmt.Sprintf("go-moysklad/%s, https://github.com/arcsub/go-moysklad", Version),
-	}
-}
-
-// retryCondition проверяет условия для повторного запроса: 429 ошибка, 500 и выше, или ошибка сети
-func retryCondition(r *resty.Response, err error) bool {
-	return r.StatusCode() == http.StatusTooManyRequests || r.StatusCode() >= http.StatusInternalServerError || isNetError(err)
-}
-
-// isNetError принимает ошибку и возвращает true, если ошибка является одной из перечисленных:
-//   - [net.Error]
-//   - [net.ErrClosed]
-//   - [context.DeadlineExceeded]
-func isNetError(err error) bool {
-	var ne net.Error
-	if errors.As(err, &ne) && ne.Timeout() {
-		return true
-	}
-
-	return errors.Is(err, net.ErrClosed) || errors.Is(err, context.DeadlineExceeded)
 }
