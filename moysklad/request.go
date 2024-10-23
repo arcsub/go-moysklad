@@ -8,8 +8,10 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 type RequestBuilder[T any] struct {
@@ -62,8 +64,11 @@ func (requestBuilder *RequestBuilder[T]) Send(ctx context.Context, method string
 	// Ограничения на количество запросов
 	requestBuilder.client.limits.Wait()
 	defer requestBuilder.client.limits.Done()
+	requestBuilder.waitLimits()
 
 	resp, err := requestBuilder.req.SetContext(ctx).SetBody(body).Execute(method, requestBuilder.uri)
+	requestBuilder.parseLimits(resp)
+
 	if err != nil {
 		return nil, resp, err
 	}
@@ -84,10 +89,6 @@ func (requestBuilder *RequestBuilder[T]) Post(ctx context.Context, body any) (*T
 }
 
 func (requestBuilder *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
-	// Ограничения на количество запросов
-	requestBuilder.client.limits.Wait()
-	defer requestBuilder.client.limits.Done()
-
 	_, resp, err := requestBuilder.Send(ctx, http.MethodDelete, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err
 }
@@ -96,11 +97,13 @@ func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResult
 	// Ограничения на количество запросов
 	requestBuilder.client.limits.Wait()
 	defer requestBuilder.client.limits.Done()
+	requestBuilder.waitLimits()
 
 	// устанавливаем флаг async=true на создание асинхронной операции
 	requestBuilder.req.SetContext(ctx).SetQueryParam("async", "true")
 
 	resp, err := requestBuilder.req.Get(requestBuilder.uri)
+	requestBuilder.parseLimits(resp)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -370,4 +373,33 @@ func deleteAll[T MetaOwner](ctx context.Context, client *Client, path string, en
 	}
 
 	return NewRequestBuilder[DeleteManyResponse](client, path).Post(ctx, AsMetaWrapperSlice(entities))
+}
+
+func (requestBuilder *RequestBuilder[T]) parseLimits(response *resty.Response) {
+	rateLimit, err := strconv.Atoi(response.Header().Get(headerRateLimit))
+	if err != nil || rateLimit <= 0 {
+		rateLimit = 1
+	}
+
+	rateRemaining, err := strconv.Atoi(response.Header().Get(headerRateRemaining))
+	if err != nil {
+		rateRemaining = 44
+	}
+
+	retryTimeInterval, err := strconv.Atoi(response.Header().Get(headerRetryTimeInterval))
+	if err != nil {
+		retryTimeInterval = 3000
+	}
+
+	t1 := Clamp(rateRemaining/rateLimit, 1, 1000)
+	t2 := Clamp(retryTimeInterval/rateLimit, 1, 1000)
+	td := time.Duration(2 * (1/t1 - 1) * t2)
+
+	requestBuilder.client.nextReqTime = time.Now().Add(time.Millisecond * td)
+}
+
+func (requestBuilder *RequestBuilder[T]) waitLimits() {
+	for time.Now().Before(requestBuilder.client.nextReqTime) {
+		time.After(100 * time.Millisecond)
+	}
 }
