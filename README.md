@@ -1,6 +1,7 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
 [![](https://godoc.org/github.com/arcsub/go-moysklad?status.svg)](http://godoc.org/github.com/arcsub/go-moysklad)
+[![Go Report Card](https://goreportcard.com/badge/github.com/arcsub/go-moysklad)](https://goreportcard.com/report/github.com/arcsub/go-moysklad)
 ![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad?style=flat-square)
 ![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad?style=flat-square)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad?style=flat-square)
@@ -78,45 +79,44 @@ product.SetName("iPhone 16 Pro Max").SetCode("APPL15PM")
 ## Использование
 ### Создание экземпляра клиента
 ```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
-client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+  client := moysklad.New(
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")), // с использованием токена
+// moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")), // или с использование логина и пароля
+)
 ```
 
 ### Создание экземпляра клиента со своим http клиентом
 
 ```go
   httpClient := &http.Client{Timeout: 5 * time.Minute}
-client := moysklad.NewHTTPClient(httpClient, os.Getenv("MOYSKLAD_TOKEN"))
+
+client := moysklad.New(
+moysklad.WithHTTPClient(httpClient),
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 ```
 
 ### Создание экземпляра клиента с resty клиентом
 
 ```go
   restyClient := resty.New()
-client := moysklad.NewRestyClient(restyClient, os.Getenv("MOYSKLAD_TOKEN"))
+
+client := moysklad.New(
+moysklad.WithRestyClient(httpClient),
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 ```
 
-### Аутентификация
-Имеется два способа аутентификации.
-
-- С помощью токена.
-```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
-```
-
-- С помощью пары логин/пароль.
-```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
-```
-
-### Методы клиента
+### Функциональные параметры
 
 #### WithTokenAuth(token)
 
 Получить простой клиент с авторизацией через токен.
 
 ```go
-  client := moysklad.NewClient().WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN"))
+  client := moysklad.New(
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 ```
 
 #### WithBasicAuth(username, password)
@@ -124,21 +124,35 @@ client := moysklad.NewRestyClient(restyClient, os.Getenv("MOYSKLAD_TOKEN"))
 Получить простой клиент с авторизацией через пару логин/пароль.
 
 ```go
-  client := moysklad.NewClient().
-WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+  client := moysklad.New(
+moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
+)
 ```
 #### WithTimeout(timeout)
 
 Установить необходимый таймаут для http клиента.
 
 ```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN")).WithTimeout(15 * time.Minute)
+  client := moysklad.New(
+moysklad.WithTimeout(15 * time.Minute), // таймаут 15 минут
+)
 ```
 #### WithDisabledWebhookContent(value)
 Временное отключение уведомлений вебхуков
 ```go
-  // отключим уведомления вебхуков на данном клиенте
-client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN")).WithDisabledWebhookContent(true)
+  client := moysklad.New(
+moysklad.WithDisabledWebhookContent(true), // отключим уведомления вебхуков на данном клиенте
+)
+```
+
+#### WithDisabledWebhookByPrefix(urls...)
+
+Позволяет указать набор префиксов url-адресов.
+
+```go
+  client := moysklad.New(
+moysklad.WithDisabledWebhookByPrefix("https://abc.ru/ms/v1/wh1", "https://abc.ru/ms/v1/wh2"),
+)
 ```
 
 ### Параметры запроса
@@ -336,7 +350,9 @@ params.WithMomentTo(time.Now())
 Относительный путь: `/entity/product`
 Цепочка вызовов от клиента будет выглядеть следующим образом:
 ```go
-client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
+  client := moysklad.New(
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 
 // `/entity/product`
 _ = client.Entity().Product()
@@ -382,8 +398,10 @@ import (
 
 func main() {
   // инициализируем простой клиент с аутентификацией по паре логин/пароль
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")).
-	  WithDisabledWebhookContent(true)
+  client := moysklad.New(
+    moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
+    moysklad.WithDisabledWebhookContent(true),
+  )
 
   // сервис для работы с товарами
   productService := client.Entity().Product()

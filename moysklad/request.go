@@ -393,7 +393,10 @@ func (requestBuilder *RequestBuilder[T]) parseLimits(response *resty.Response) {
 
 	t1 := Clamp(rateRemaining/rateLimit, 1, 1000)
 	t2 := Clamp(retryTimeInterval/rateLimit, 1, 1000)
-	td := time.Duration(2 * (1/t1 - 1) * t2)
+	td := time.Duration(2 * t2 * (1/t1 - 1))
+
+	requestBuilder.client.mu.Lock()
+	defer requestBuilder.client.mu.Unlock()
 
 	requestBuilder.client.nextReqTime = time.Now().Add(time.Millisecond * td)
 }
