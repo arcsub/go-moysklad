@@ -1,6 +1,7 @@
 ![](https://dev.moysklad.ru/doc/api/remap/1.2/images/logo-e9f672b5.svg)
 
 [![](https://godoc.org/github.com/arcsub/go-moysklad?status.svg)](http://godoc.org/github.com/arcsub/go-moysklad)
+[![Go Report Card](https://goreportcard.com/badge/github.com/arcsub/go-moysklad)](https://goreportcard.com/report/github.com/arcsub/go-moysklad)
 ![GitHub Tag](https://img.shields.io/github/v/tag/arcsub/go-moysklad?style=flat-square)
 ![GitHub License](https://img.shields.io/github/license/arcsub/go-moysklad?style=flat-square)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/arcsub/go-moysklad?style=flat-square)
@@ -78,45 +79,44 @@ product.SetName("iPhone 16 Pro Max").SetCode("APPL15PM")
 ## Использование
 ### Создание экземпляра клиента
 ```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
-client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+  client := moysklad.New(
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")), // с использованием токена
+// moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")), // или с использование логина и пароля
+)
 ```
 
 ### Создание экземпляра клиента со своим http клиентом
 
 ```go
   httpClient := &http.Client{Timeout: 5 * time.Minute}
-client := moysklad.NewHTTPClient(httpClient, os.Getenv("MOYSKLAD_TOKEN"))
+
+client := moysklad.New(
+moysklad.WithHTTPClient(httpClient),
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 ```
 
 ### Создание экземпляра клиента с resty клиентом
 
 ```go
   restyClient := resty.New()
-client := moysklad.NewRestyClient(restyClient, os.Getenv("MOYSKLAD_TOKEN"))
+
+client := moysklad.New(
+moysklad.WithRestyClient(httpClient),
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 ```
 
-### Аутентификация
-Имеется два способа аутентификации.
-
-- С помощью токена.
-```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
-```
-
-- С помощью пары логин/пароль.
-```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
-```
-
-### Методы клиента
+### Функциональные параметры
 
 #### WithTokenAuth(token)
 
 Получить простой клиент с авторизацией через токен.
 
 ```go
-  client := moysklad.NewClient().WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN"))
+  client := moysklad.New(
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 ```
 
 #### WithBasicAuth(username, password)
@@ -124,142 +124,150 @@ client := moysklad.NewRestyClient(restyClient, os.Getenv("MOYSKLAD_TOKEN"))
 Получить простой клиент с авторизацией через пару логин/пароль.
 
 ```go
-  client := moysklad.NewClient().
-WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD"))
+  client := moysklad.New(
+moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
+)
 ```
 #### WithTimeout(timeout)
 
 Установить необходимый таймаут для http клиента.
 
 ```go
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN")).WithTimeout(15 * time.Minute)
+  client := moysklad.New(
+moysklad.WithTimeout(15 * time.Minute), // таймаут 15 минут
+)
 ```
 #### WithDisabledWebhookContent(value)
 Временное отключение уведомлений вебхуков
 ```go
-  // отключим уведомления вебхуков на данном клиенте
-client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN")).WithDisabledWebhookContent(true)
+  client := moysklad.New(
+moysklad.WithDisabledWebhookContent(true), // отключим уведомления вебхуков на данном клиенте
+)
+```
+
+#### WithDisabledWebhookByPrefix(urls...)
+
+Позволяет указать набор префиксов url-адресов.
+
+```go
+  client := moysklad.New(
+moysklad.WithDisabledWebhookByPrefix("https://abc.ru/ms/v1/wh1", "https://abc.ru/ms/v1/wh2"),
+)
 ```
 
 ### Параметры запроса
-#### Создать экземпляр для работы с параметрами запроса
-```go
-params := new(moysklad.Params)
-```
 
-#### Методы для работы с параметрами запроса
-
-Количество элементов на странице `limit=val`
+#### Количество элементов на странице `limit=val`
 Пример:
 ```go
-params.WithLimit(100)
+  moysklad.WithLimit(100)
 ```
 
 #### Смещение от первого элемента `offset=val`
 Пример:
 ```go
-params.WithOffset(100)
+  moysklad.WithOffset(100)
 ```
 
 #### Контекстный поиск `search=val`
 Пример:
 ```go
-params.WithSearch("iPhone 16 Pro Max")
+  moysklad.WithSearch("iPhone 16 Pro Max")
 ```
 #### Замена ссылок объектами
 Пример:
 ```go
-params.WithExpand("positions").WithExpand("group")
+  moysklad.WithExpand("positions").WithExpand("group")
 ```
 
 #### Фильтрация по значению `key=value`
 Пример:
 ```go
-params.WithFilterEquals("name", "Яблоко")
+  moysklad.WithFilterEquals("name", "Яблоко")
 ```
 
 #### Строго больше `key>value`
 Пример:
 ```go
-params.WithFilterGreater("sum", "100")
+  moysklad.WithFilterGreater("sum", "100")
 ```
 
 #### Строго меньше `key<value`
 Пример:
 ```go
-params.WithFilterLesser("sum", "1000")
+  moysklad.WithFilterLesser("sum", "1000")
 ```
 
 #### Больше или равно `key=>value`
 Пример:
 ```go
-params.WithFilterGreaterOrEquals("moment", "2023-06-01")
+  moysklad.WithFilterGreaterOrEquals("moment", "2023-06-01")
 ```
 
 #### Меньше или равно `key<=value`
 Пример:
 ```go
-params.WithFilterLesserOrEquals("moment", "2023-06-01")
+  moysklad.WithFilterLesserOrEquals("moment", "2023-06-01")
 ```
 
 #### Не равно `key!=value`
 Пример:
 ```go
-params.WithFilterNotEquals("name", "0001")
+  moysklad.WithFilterNotEquals("name", "0001")
 ```
 
 #### Частичное совпадение (обычное подобие) `key~value`
 Пример:
 ```go
-params.WithFilterEquivalence("code", "ms")
+  moysklad.WithFilterEquivalence("code", "ms")
 ```
 
 #### Полное совпадение в начале значения (левое подобие) `key~=value`
 Пример:
 ```go
-params.WithFilterEquivalenceLeft("code", "ms")
+  moysklad.WithFilterEquivalenceLeft("code", "ms")
 ```
 
 #### Полное совпадение в конце значения (правое подобие) `key=~value`
 Пример:
 ```go
-params.WithFilterEquivalenceRight("code", "ms")
+  moysklad.WithFilterEquivalenceRight("code", "ms")
 ```
 
 #### Частичное совпадение не выводится `key!~value`
 Пример:
 ```go
-params.WithFilterNotEquivalence("code", "ms")
+  moysklad.WithFilterNotEquivalence("code", "ms")
 ```
 
 #### Фильтрация по удалённым документам `isDeleted=val`
 Пример:
 ```go
-params.WithFilterDeleted(true)
+  moysklad.WithFilterDeleted(true)
 ```
 
 #### Фильтрация по напечатанным документам `printed=val`
 Пример:
 ```go
-params.WithFilterPrinted(true)
+  moysklad.WithFilterPrinted(true)
 ```
 
 #### Фильтрация по опубликованным документам `published=val`
 Пример:
 ```go
-params.WithFilterPublished(true)
+  moysklad.WithFilterPublished(true)
 ```
 
 #### Фильтрация по архивным сущностям `archived=val`
 Пример:
 ```go
-params.WithFilterArchived(true)
+  moysklad.WithFilterArchived(true)
 ```
 
 #### Группировка выдачи `groupBy=val`
 Пример:
 ```go
-params.WithGroupBy(moysklad.GroupByProduct)
+  moysklad.WithGroupBy(moysklad.GroupByProduct)
 ```
 
 #### Применение сохранённого фильтра `namedFilter=href`
@@ -267,25 +275,25 @@ params.WithGroupBy(moysklad.GroupByProduct)
 
 Пример:
 ```go
-params.WithNamedFilter(&NamedFilter{...})
+  moysklad.WithNamedFilter(&NamedFilter{...})
 ```
 
 #### Сортировка по умолчанию `order=fieldName`
 Пример:
 ```go
-params.WithOrder("name")
+  moysklad.WithOrder("name")
 ```
 
 #### Сортировка по возрастанию `order=fieldName,asc`
 Пример:
 ```go
-params.WithOrderAsc("name")
+  moysklad.WithOrderAsc("name")
 ```
 
 #### Сортировка по убыванию `order=fieldName,desc`
 Пример:
 ```go
-params.WithOrderDesc("name")
+  moysklad.WithOrderDesc("name")
 ```
 
 #### Остатки и себестоимость в позициях документов `fields=stock`
@@ -293,7 +301,7 @@ params.WithOrderDesc("name")
 
 Пример:
 ```go
-params.WithStockFiled()
+  moysklad.WithStockFiled()
 ```
 
 #### Тип остатка `stockType=val`
@@ -302,7 +310,7 @@ params.WithStockFiled()
 
 Пример:
 ```go
-params.WithStockType(moysklad.StockDefault)
+  moysklad.WithStockType(moysklad.StockDefault)
 ```
 
 #### Интервал, с которым будет построен отчет `interval=val`
@@ -310,21 +318,31 @@ params.WithStockType(moysklad.StockDefault)
 
 Пример:
 ```go
-params.WithInterval(moysklad.IntervalMonth)
+  moysklad.WithInterval(moysklad.IntervalMonth)
 ```
 
 #### Начало периода `momentFrom=val`
 Метод принимает `time.Time`
 Пример:
 ```go
-params.WithMomentFrom(time.Now())
+  moysklad.WithMomentFrom(time.Now())
 ```
 
 #### Конец периода `momentTo=val`
 Метод принимает `time.Time`
 Пример:
 ```go
-params.WithMomentTo(time.Now())
+  moysklad.WithMomentTo(time.Now())
+```
+
+#### Пример передачи параметров запроса в метод
+
+```go
+  list, _, err := client.Entity().Product().GetList(context.Background(),
+moysklad.WithExpand("country"),
+moysklad.WithOrder("name"),
+moysklad.WithLimit(10),
+)
 ```
 
 ### Сервисы
@@ -336,7 +354,9 @@ params.WithMomentTo(time.Now())
 Относительный путь: `/entity/product`
 Цепочка вызовов от клиента будет выглядеть следующим образом:
 ```go
-client := moysklad.NewClient(os.Getenv("MOYSKLAD_TOKEN"))
+  client := moysklad.New(
+moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+)
 
 // `/entity/product`
 _ = client.Entity().Product()
@@ -382,8 +402,10 @@ import (
 
 func main() {
   // инициализируем простой клиент с аутентификацией по паре логин/пароль
-  client := moysklad.NewClient(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")).
-	  WithDisabledWebhookContent(true)
+  client := moysklad.New(
+    moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
+    moysklad.WithDisabledWebhookContent(true),
+  )
 
   // сервис для работы с товарами
   productService := client.Entity().Product()
@@ -405,7 +427,9 @@ func main() {
 
   // отправим запрос на создание товара
   // в качестве аргументов передадим контекст и товар
-  productCreated, _, err := productService.Create(context.Background(), product)
+  productCreated, _, err := productService.Create(context.Background(), product, 
+    moysklad.WithExpand("country", "owner", "productFolder"), // пример передачи параметров запроса
+  )
   if err != nil {
     panic(err)
   }
@@ -427,8 +451,8 @@ func main() {
   fmt.Println(productUpdated.GetName())
 
   // отправим запрос на удаление товара
-  // в качестве аргументов передадим контекст и ID удаляемой сущности
-  success, _, err := productService.Delete(context.Background(), productUpdated.GetID())
+  // в качестве аргументов передадим контекст и удаляемую сущность, в которой содержится идентификатор
+  success, _, err := productService.Delete(context.Background(), productUpdated)
   if err != nil {
     panic(err)
   }

@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -17,7 +17,7 @@ import (
 type PriceList struct {
 	Meta         *Meta                         `json:"meta,omitempty"`         // Метаданные Прайс-листа
 	Columns      Slice[PriceListColumn]        `json:"columns,omitempty"`      // Массив столбцов описания таблицы
-	AccountID    *uuid.UUID                    `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string                       `json:"accountId,omitempty"`    // ID учётной записи
 	Code         *string                       `json:"code,omitempty"`         // Код Прайс-листа
 	Moment       *Timestamp                    `json:"moment,omitempty"`       // Дата документа
 	Created      *Timestamp                    `json:"created,omitempty"`      // Дата создания
@@ -26,7 +26,7 @@ type PriceList struct {
 	ExternalCode *string                       `json:"externalCode,omitempty"` // Внешний код Прайс-листа
 	Files        *MetaArray[File]              `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group                        `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID                    `json:"id,omitempty"`           // ID Прайс-листа
+	ID           *string                       `json:"id,omitempty"`           // ID Прайс-листа
 	Updated      *Timestamp                    `json:"updated,omitempty"`      // Момент последнего обновления Прайс-листа
 	Applicable   *bool                         `json:"applicable,omitempty"`   // Отметка о проведении
 	Description  *string                       `json:"description,omitempty"`  // Комментарий Прайс-листа
@@ -38,7 +38,7 @@ type PriceList struct {
 	Published    *bool                         `json:"published,omitempty"`    // Опубликован ли документ
 	Shared       *bool                         `json:"shared,omitempty"`       // Общий доступ
 	State        *NullValue[State]             `json:"state,omitempty"`        // Метаданные статуса Прайс-листа
-	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`       // ID синхронизации
+	SyncID       *string                       `json:"syncId,omitempty"`       // ID синхронизации
 	Attributes   Slice[Attribute]              `json:"attributes,omitempty"`   // Список метаданных доп. полей
 }
 
@@ -68,7 +68,7 @@ func (priceList PriceList) GetColumns() Slice[PriceListColumn] {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (priceList PriceList) GetAccountID() uuid.UUID {
+func (priceList PriceList) GetAccountID() string {
 	return Deref(priceList.AccountID)
 }
 
@@ -113,7 +113,7 @@ func (priceList PriceList) GetGroup() Group {
 }
 
 // GetID возвращает ID Прайс-листа.
-func (priceList PriceList) GetID() uuid.UUID {
+func (priceList PriceList) GetID() string {
 	return Deref(priceList.ID)
 }
 
@@ -173,7 +173,7 @@ func (priceList PriceList) GetState() State {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (priceList PriceList) GetSyncID() uuid.UUID {
+func (priceList PriceList) GetSyncID() string {
 	return Deref(priceList.SyncID)
 }
 
@@ -287,7 +287,7 @@ func (priceList *PriceList) SetState(state *State) *PriceList {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (priceList *PriceList) SetSyncID(syncID uuid.UUID) *PriceList {
+func (priceList *PriceList) SetSyncID(syncID string) *PriceList {
 	priceList.SyncID = &syncID
 	return priceList
 }
@@ -311,12 +311,12 @@ func (PriceList) MetaType() MetaType {
 }
 
 // Update shortcut
-func (priceList *PriceList) Update(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+func (priceList *PriceList) Update(ctx context.Context, client *Client, params ...func(*Params)) (*PriceList, *resty.Response, error) {
 	return NewPriceListService(client).Update(ctx, priceList.GetID(), priceList, params...)
 }
 
 // Create shortcut
-func (priceList *PriceList) Create(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+func (priceList *PriceList) Create(ctx context.Context, client *Client, params ...func(*Params)) (*PriceList, *resty.Response, error) {
 	return NewPriceListService(client).Create(ctx, priceList, params...)
 }
 
@@ -407,15 +407,15 @@ func (priceListColumn PriceListColumn) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-prajs-list-prajs-listy-pozicii-prajs-lista
 type PriceListPosition struct {
-	AccountID  *uuid.UUID           `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string              `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition  `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID         *uuid.UUID           `json:"id,omitempty"`         // ID позиции
+	ID         *string              `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack                `json:"pack,omitempty"`       // Упаковка Товара
 	Cells      Slice[PriceListCell] `json:"cells,omitempty"`      // Массив значений столбцов в позиции Прайс-листа
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (priceListPosition PriceListPosition) GetAccountID() uuid.UUID {
+func (priceListPosition PriceListPosition) GetAccountID() string {
 	return Deref(priceListPosition.AccountID)
 }
 
@@ -430,7 +430,7 @@ func (priceListPosition PriceListPosition) GetCells() Slice[PriceListCell] {
 }
 
 // GetID возвращает ID позиции.
-func (priceListPosition PriceListPosition) GetID() uuid.UUID {
+func (priceListPosition PriceListPosition) GetID() string {
 	return Deref(priceListPosition.ID)
 }
 
@@ -480,25 +480,25 @@ type PriceListService interface {
 	// GetList выполняет запрос на получение списка прайс-листов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[PriceList], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[PriceList], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех прайс-листов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[PriceList], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[PriceList], *resty.Response, error)
 
 	// Create выполняет запрос на создание прайс-листа.
 	// Обязательные поля для заполнения:
 	//	- columns (Массив объектов, описывающих столбцы нового прайс-листа)
 	// Принимает контекст, прайс-лист и опционально объект параметров запроса Params.
 	// Возвращает созданный прайс-листа.
-	Create(ctx context.Context, priceList *PriceList, params ...*Params) (*PriceList, *resty.Response, error)
+	Create(ctx context.Context, priceList *PriceList, params ...func(*Params)) (*PriceList, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение прайс-листа.
 	// Изменяемые прайс-листы должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список прайс-листов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых прайс-листов.
-	CreateUpdateMany(ctx context.Context, priceListList Slice[PriceList], params ...*Params) (*Slice[PriceList], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, priceListList Slice[PriceList], params ...func(*Params)) (*Slice[PriceList], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление прайс-листов.
 	// Принимает контекст и множество прайс-листов.
@@ -508,7 +508,7 @@ type PriceListService interface {
 	// DeleteByID выполняет запрос на удаление прайс-листа по ID.
 	// Принимает контекст и ID прайс-листа.
 	// Возвращает «true» в случае успешного удаления прайс-листа.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление прайс-листа.
 	// Принимает контекст и прайс-лист.
@@ -518,12 +518,12 @@ type PriceListService interface {
 	// GetByID выполняет запрос на получение отдельного прайс-листа по ID.
 	// Принимает контекст, ID прайс-листа и опционально объект параметров запроса Params.
 	// Возвращает найденный прайс-лист.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PriceList, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*PriceList, *resty.Response, error)
 
 	// Update выполняет запрос на изменение прайс-листа.
 	// Принимает контекст, прайс-лист и опционально объект параметров запроса Params.
 	// Возвращает изменённый прайс-лист.
-	Update(ctx context.Context, id uuid.UUID, priceList *PriceList, params ...*Params) (*PriceList, *resty.Response, error)
+	Update(ctx context.Context, id string, priceList *PriceList, params ...func(*Params)) (*PriceList, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных прайс-листов.
 	// Принимает контекст.
@@ -533,54 +533,54 @@ type PriceListService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[PriceListPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[PriceListPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[PriceListPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[PriceListPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*PriceListPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*PriceListPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *PriceListPosition, params ...*Params) (*PriceListPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *PriceListPosition, params ...func(*Params)) (*PriceListPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *PriceListPosition, params ...*Params) (*PriceListPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *PriceListPosition, params ...func(*Params)) (*PriceListPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*PriceListPosition) (*Slice[PriceListPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*PriceListPosition) (*Slice[PriceListPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*PriceListPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*PriceListPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -590,7 +590,7 @@ type PriceListService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -606,12 +606,12 @@ type PriceListService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -621,22 +621,22 @@ type PriceListService interface {
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PriceList, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*PriceList, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -646,7 +646,7 @@ type PriceListService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -656,32 +656,32 @@ type PriceListService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

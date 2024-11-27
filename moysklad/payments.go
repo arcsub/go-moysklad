@@ -2,14 +2,14 @@ package moysklad
 
 import (
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
+
 	"reflect"
 	"time"
 )
 
 // Payment общие поля для входящих/исходящих платежей и приходных/расходных ордеров.
 type Payment struct {
-	AccountID      *uuid.UUID               `json:"accountId,omitempty"`      // ID учётной записи
+	AccountID      *string                  `json:"accountId,omitempty"`      // ID учётной записи
 	Agent          *Counterparty            `json:"agent,omitempty"`          // Метаданные контрагента
 	Applicable     *bool                    `json:"applicable,omitempty"`     // Отметка о проведении
 	Attributes     Slice[Attribute]         `json:"attributes,omitempty"`     // Коллекция доп. полей
@@ -21,7 +21,7 @@ type Payment struct {
 	ExternalCode   *string                  `json:"externalCode,omitempty"`   // Внешний код платежа
 	Files          *MetaArray[File]         `json:"files,omitempty"`          // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group          *Group                   `json:"group,omitempty"`          // Отдел сотрудника
-	ID             *uuid.UUID               `json:"id,omitempty"`             // ID платежа
+	ID             *string                  `json:"id,omitempty"`             // ID платежа
 	Meta           Meta                     `json:"meta"`                     // Метаданные платежа
 	Moment         *Timestamp               `json:"moment,omitempty"`         // Дата платежа
 	Name           *string                  `json:"name,omitempty"`           // Наименование платежа
@@ -36,7 +36,7 @@ type Payment struct {
 	Shared         *bool                    `json:"shared,omitempty"`         // Общий доступ
 	State          *State                   `json:"state,omitempty"`          // Метаданные статуса платежа
 	Sum            *float64                 `json:"sum,omitempty"`            // Сумма платежа в копейках
-	SyncID         *uuid.UUID               `json:"syncId,omitempty"`         // ID синхронизации
+	SyncID         *string                  `json:"syncId,omitempty"`         // ID синхронизации
 	Updated        *Timestamp               `json:"updated,omitempty"`        // Момент последнего обновления платежа
 	VatSum         *float64                 `json:"vatSum,omitempty"`         // Сумма НДС
 	LinkedSum      *float64                 `json:"linkedSum,omitempty"`      // Сумма, оплаченная по документу из этого платежа
@@ -50,7 +50,7 @@ type PaymentConverter interface {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (payment Payment) GetAccountID() uuid.UUID {
+func (payment Payment) GetAccountID() string {
 	return Deref(payment.AccountID)
 }
 
@@ -110,7 +110,7 @@ func (payment Payment) GetGroup() Group {
 }
 
 // GetID возвращает ID платежа.
-func (payment Payment) GetID() uuid.UUID {
+func (payment Payment) GetID() string {
 	return Deref(payment.ID)
 }
 
@@ -185,7 +185,7 @@ func (payment Payment) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (payment Payment) GetSyncID() uuid.UUID {
+func (payment Payment) GetSyncID() string {
 	return Deref(payment.SyncID)
 }
 

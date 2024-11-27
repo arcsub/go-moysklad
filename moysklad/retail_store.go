@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -19,7 +19,7 @@ type RetailStore struct {
 	Acquire                             *NullValue[Agent]           `json:"acquire,omitempty"`                             // Метаданные Банка-эквайера по операциям по карте
 	OnlyInStock                         *bool                       `json:"onlyInStock,omitempty"`                         // Выгружать только товары в наличии. Доступно только при активном контроле остатков. Влияет только на выгрузку остатков в POS API
 	Active                              *bool                       `json:"active,omitempty"`                              // Состояние точки продаж (Включена/Отключена)
-	AccountID                           *uuid.UUID                  `json:"accountId,omitempty"`                           // ID учётной записи
+	AccountID                           *string                     `json:"accountId,omitempty"`                           // ID учётной записи
 	AddressFull                         *Address                    `json:"addressFull,omitempty"`                         // Адрес с детализацией по отдельным полям
 	Meta                                *Meta                       `json:"meta,omitempty"`                                // Метаданные Точки продаж
 	AllowCustomPrice                    *bool                       `json:"allowCustomPrice,omitempty"`                    // Разрешить продажу по свободной цене
@@ -42,7 +42,7 @@ type RetailStore struct {
 	Environment                         *Environment                `json:"environment,omitempty"`                         // Информация об окружении
 	ExternalCode                        *string                     `json:"externalCode,omitempty"`                        // Внешний код Точки продаж
 	Group                               *Group                      `json:"group,omitempty"`                               // Отдел сотрудника
-	ID                                  *uuid.UUID                  `json:"id,omitempty"`                                  // ID Точки продаж
+	ID                                  *string                     `json:"id,omitempty"`                                  // ID Точки продаж
 	Store                               *Store                      `json:"store,omitempty"`                               // Метаданные Склада
 	IDQR                                *string                     `json:"idQR,omitempty"`                                // Идентификатор устройства QR (IdQR) для приложения оплаты по QR
 	IssueOrders                         *bool                       `json:"issueOrders,omitempty"`                         // Выдача заказов
@@ -122,7 +122,7 @@ func (retailStore RetailStore) GetActive() bool {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (retailStore RetailStore) GetAccountID() uuid.UUID {
+func (retailStore RetailStore) GetAccountID() string {
 	return Deref(retailStore.AccountID)
 }
 
@@ -239,7 +239,7 @@ func (retailStore RetailStore) GetGroup() Group {
 }
 
 // GetID возвращает ID Точки продаж.
-func (retailStore RetailStore) GetID() uuid.UUID {
+func (retailStore RetailStore) GetID() string {
 	return Deref(retailStore.ID)
 }
 
@@ -922,12 +922,12 @@ func (RetailStore) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailStore *RetailStore) Update(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+func (retailStore *RetailStore) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailStore, *resty.Response, error) {
 	return NewRetailStoreService(client).Update(ctx, retailStore.GetID(), retailStore, params...)
 }
 
 // Create shortcut
-func (retailStore *RetailStore) Create(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+func (retailStore *RetailStore) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailStore, *resty.Response, error) {
 	return NewRetailStoreService(client).Create(ctx, retailStore, params...)
 }
 
@@ -944,9 +944,9 @@ func (retailStore *RetailStore) Delete(ctx context.Context, client *Client) (boo
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kassir
 type Cashier struct {
-	AccountID   *uuid.UUID   `json:"accountId,omitempty"`   // ID учётной записи
+	AccountID   *string      `json:"accountId,omitempty"`   // ID учётной записи
 	Employee    *Employee    `json:"employee,omitempty"`    // Метаданные сотрудника, которого представляет собой кассир
-	ID          *uuid.UUID   `json:"id,omitempty"`          // ID кассира
+	ID          *string      `json:"id,omitempty"`          // ID кассира
 	Meta        *Meta        `json:"meta,omitempty"`        // Метаданные кассира
 	RetailStore *RetailStore `json:"retailStore,omitempty"` // Метаданные точки продаж, к которой прикреплен кассир
 }
@@ -962,7 +962,7 @@ func (cashier Cashier) Clean() *Cashier {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (cashier Cashier) GetAccountID() uuid.UUID {
+func (cashier Cashier) GetAccountID() string {
 	return Deref(cashier.AccountID)
 }
 
@@ -972,7 +972,7 @@ func (cashier Cashier) GetEmployee() Employee {
 }
 
 // GetID возвращает ID кассира.
-func (cashier Cashier) GetID() uuid.UUID {
+func (cashier Cashier) GetID() string {
 	return Deref(cashier.ID)
 }
 
@@ -1197,8 +1197,8 @@ func (fiscalMemoryStateError FiscalMemoryStateError) String() string {
 //
 // TODO: МойСклад не работает с кодом сущности 'receipttemplate'
 type ReceiptTemplate struct {
-	//AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учётной записи
-	//ID        *uuid.UUID `json:"id,omitempty"`        // ID сущности
+	//AccountID *string `json:"accountId,omitempty"` // ID учётной записи
+	//ID        *string `json:"id,omitempty"`        // ID сущности
 	//Name   *string `json:"name,omitempty"`   // Наименование
 	Meta   *Meta   `json:"meta,omitempty"`   // Метаданные
 	Header *string `json:"header,omitempty"` // Верхний блок
@@ -1323,12 +1323,12 @@ type RetailStoreService interface {
 	// GetList выполняет запрос на получение списка точек продаж.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailStore], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailStore], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех точек продаж в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailStore], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailStore], *resty.Response, error)
 
 	// Create выполняет запрос на создание точи продаж.
 	// Обязательные поля для заполнения:
@@ -1338,13 +1338,13 @@ type RetailStoreService interface {
 	//	- priceType (Тип цен, с которыми будут продаваться товары в рознице)
 	// Принимает контекст, точку продаж и опционально объект параметров запроса Params.
 	// Возвращает созданную точку продаж.
-	Create(ctx context.Context, retailStore *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
+	Create(ctx context.Context, retailStore *RetailStore, params ...func(*Params)) (*RetailStore, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение точек продаж.
 	// Изменяемые точки продаж должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список точек продаж и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых точек продаж.
-	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...*Params) (*Slice[RetailStore], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...func(*Params)) (*Slice[RetailStore], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление точек продаж.
 	// Принимает контекст и множество точек продаж.
@@ -1354,7 +1354,7 @@ type RetailStoreService interface {
 	// DeleteByID выполняет запрос на удаление точки продаж по ID.
 	// Принимает контекст и ID точки продаж.
 	// Возвращает «true» в случае успешного удаления точки продаж.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление точки продаж.
 	// Принимает контекст и точку продаж.
@@ -1364,32 +1364,32 @@ type RetailStoreService interface {
 	// GetByID выполняет запрос на получение отдельной точки продаж по ID.
 	// Принимает контекст, ID точки продаж и опционально объект параметров запроса Params.
 	// Возвращает точку продаж.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailStore, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailStore, *resty.Response, error)
 
 	// Update выполняет запрос на изменение точки продаж.
 	// Принимает контекст, точку продаж и опционально объект параметров запроса Params.
 	// Возвращает изменённую точку продаж.
-	Update(ctx context.Context, id uuid.UUID, entity *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
+	Update(ctx context.Context, id string, entity *RetailStore, params ...func(*Params)) (*RetailStore, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetCashiers выполняет запрос на получение списка кассиров.
 	// Принимает контекст, ID точки продаж и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetCashiers(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[Cashier], *resty.Response, error)
+	GetCashiers(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[Cashier], *resty.Response, error)
 
 	// GetCashierByID выполняет запрос на получение отдельного кассира по ID.
 	// Принимает контекст, ID точки продаж, ID кассира и опционально объект параметров запроса Params.
 	// Возвращает кассира.
-	GetCashierByID(ctx context.Context, id, cashierID uuid.UUID, params ...*Params) (*Cashier, *resty.Response, error)
+	GetCashierByID(ctx context.Context, id, cashierID string, params ...func(*Params)) (*Cashier, *resty.Response, error)
 }
 
 const (
@@ -1411,14 +1411,14 @@ type retailStoreService struct {
 	endpointNamedFilter
 }
 
-func (service *retailStoreService) GetCashiers(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[Cashier], *resty.Response, error) {
+func (service *retailStoreService) GetCashiers(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[Cashier], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointRetailStoreCashiers, id)
-	return NewRequestBuilder[MetaArray[Cashier]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[Cashier]](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID uuid.UUID, params ...*Params) (*Cashier, *resty.Response, error) {
+func (service *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID string, params ...func(*Params)) (*Cashier, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointRetailStoreCashiersID, id, cashierID)
-	return NewRequestBuilder[Cashier](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[Cashier](service.client, path).SetParams(params).Get(ctx)
 }
 
 // NewRetailStoreService принимает [Client] и возвращает сервис для работы с точками продаж.

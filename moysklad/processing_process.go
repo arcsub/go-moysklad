@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,12 +15,12 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehprocess
 type ProcessingProcess struct {
-	AccountID    *uuid.UUID                            `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string                               `json:"accountId,omitempty"`    // ID учётной записи
 	Archived     *bool                                 `json:"archived,omitempty"`     // Добавлен ли Тех. процесс в архив
 	Description  *string                               `json:"description,omitempty"`  // Комментарий Тех. процесса
 	ExternalCode *string                               `json:"externalCode,omitempty"` // Внешний код Тех. процесса
 	Group        *Group                                `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID                            `json:"id,omitempty"`           // ID Тех. процесса
+	ID           *string                               `json:"id,omitempty"`           // ID Тех. процесса
 	Meta         *Meta                                 `json:"meta,omitempty"`         // Метаданные Тех. процесса
 	Name         *string                               `json:"name,omitempty"`         // Наименование Тех. процесса
 	Owner        *Employee                             `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)        // Владелец (Сотрудник)
@@ -39,7 +39,7 @@ func (processingProcess ProcessingProcess) Clean() *ProcessingProcess {
 	return &ProcessingProcess{Meta: processingProcess.Meta}
 }
 
-func (processingProcess ProcessingProcess) GetAccountID() uuid.UUID {
+func (processingProcess ProcessingProcess) GetAccountID() string {
 	return Deref(processingProcess.AccountID)
 }
 
@@ -59,7 +59,7 @@ func (processingProcess ProcessingProcess) GetGroup() Group {
 	return Deref(processingProcess.Group)
 }
 
-func (processingProcess ProcessingProcess) GetID() uuid.UUID {
+func (processingProcess ProcessingProcess) GetID() string {
 	return Deref(processingProcess.ID)
 }
 
@@ -142,12 +142,12 @@ func (ProcessingProcess) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingProcess *ProcessingProcess) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+func (processingProcess *ProcessingProcess) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingProcess, *resty.Response, error) {
 	return NewProcessingProcessService(client).Update(ctx, processingProcess.GetID(), processingProcess, params...)
 }
 
 // Create shortcut
-func (processingProcess *ProcessingProcess) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingProcess, *resty.Response, error) {
+func (processingProcess *ProcessingProcess) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingProcess, *resty.Response, error) {
 	return NewProcessingProcessService(client).Create(ctx, processingProcess, params...)
 }
 
@@ -164,8 +164,8 @@ func (processingProcess *ProcessingProcess) Delete(ctx context.Context, client *
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehprocess-pozicii-tehprocessa
 type ProcessingProcessPosition struct {
-	AccountID       *uuid.UUID                            `json:"accountId,omitempty"`       // ID учётной записи
-	ID              *uuid.UUID                            `json:"id,omitempty"`              // ID позиции
+	AccountID       *string                               `json:"accountId,omitempty"`       // ID учётной записи
+	ID              *string                               `json:"id,omitempty"`              // ID позиции
 	Meta            *Meta                                 `json:"meta,omitempty"`            // Метаданные позиции Тех. процесса
 	ProcessingStage *ProcessingStage                      `json:"processingstage,omitempty"` // Метаданные этапа, который представляет собой позиция
 	NextPositions   *MetaArray[ProcessingProcessPosition] `json:"nextPositions,omitempty"`   // Метаданные следующих позиций позиции Техпроцесса
@@ -181,11 +181,11 @@ func (processingProcessPosition ProcessingProcessPosition) Clean() *ProcessingPr
 	return &ProcessingProcessPosition{Meta: processingProcessPosition.Meta}
 }
 
-func (processingProcessPosition ProcessingProcessPosition) GetAccountID() uuid.UUID {
+func (processingProcessPosition ProcessingProcessPosition) GetAccountID() string {
 	return Deref(processingProcessPosition.AccountID)
 }
 
-func (processingProcessPosition ProcessingProcessPosition) GetID() uuid.UUID {
+func (processingProcessPosition ProcessingProcessPosition) GetID() string {
 	return Deref(processingProcessPosition.ID)
 }
 
@@ -223,85 +223,85 @@ func (ProcessingProcessPosition) MetaType() MetaType {
 // ProcessingProcessService
 // Сервис для работы с тех процессами.
 type ProcessingProcessService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingProcess], *resty.Response, error)
-	Create(ctx context.Context, processingProcess *ProcessingProcess, params ...*Params) (*ProcessingProcess, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingProcessList Slice[ProcessingProcess], params ...*Params) (*Slice[ProcessingProcess], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingProcess], *resty.Response, error)
+	Create(ctx context.Context, processingProcess *ProcessingProcess, params ...func(*Params)) (*ProcessingProcess, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingProcessList Slice[ProcessingProcess], params ...func(*Params)) (*Slice[ProcessingProcess], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingProcess) (*DeleteManyResponse, *resty.Response, error)
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление тех процесса.
 	// Принимает контекст и тех процесс.
 	// Возвращает «true» в случае успешного удаления тех процесса.
 	Delete(ctx context.Context, entity *ProcessingProcess) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingProcess, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processingProcess *ProcessingProcess, params ...*Params) (*ProcessingProcess, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingProcess, *resty.Response, error)
+	Update(ctx context.Context, id string, processingProcess *ProcessingProcess, params ...func(*Params)) (*ProcessingProcess, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ProcessingProcessPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[ProcessingProcessPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[ProcessingProcessPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[ProcessingProcessPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*ProcessingProcessPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingProcessPosition, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingProcessPosition, params ...func(*Params)) (*ProcessingProcessPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingProcessPosition, params ...*Params) (*ProcessingProcessPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProcessingProcessPosition, params ...func(*Params)) (*ProcessingProcessPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingProcessPosition) (*Slice[ProcessingProcessPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*ProcessingProcessPosition) (*Slice[ProcessingProcessPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingProcessPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*ProcessingProcessPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (

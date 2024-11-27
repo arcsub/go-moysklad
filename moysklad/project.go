@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -20,8 +20,8 @@ type Project struct {
 	Code         *string          `json:"code,omitempty"`         // Код Проекта
 	Description  *string          `json:"description,omitempty"`  // Описание Проекта
 	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Проекта
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID проекта
+	AccountID    *string          `json:"accountId,omitempty"`    // ID учётной записи
+	ID           *string          `json:"id,omitempty"`           // ID проекта
 	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Проекта
 	Name         *string          `json:"name,omitempty"`         // Наименование Проекта
 	Owner        *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
@@ -66,12 +66,12 @@ func (project Project) GetExternalCode() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (project Project) GetAccountID() uuid.UUID {
+func (project Project) GetAccountID() string {
 	return Deref(project.AccountID)
 }
 
 // GetID возвращает ID проекта.
-func (project Project) GetID() uuid.UUID {
+func (project Project) GetID() string {
 	return Deref(project.ID)
 }
 
@@ -182,12 +182,12 @@ func (Project) MetaType() MetaType {
 }
 
 // Update shortcut
-func (project *Project) Update(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+func (project *Project) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Project, *resty.Response, error) {
 	return NewProjectService(client).Update(ctx, project.GetID(), project, params...)
 }
 
 // Create shortcut
-func (project *Project) Create(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+func (project *Project) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Project, *resty.Response, error) {
 	return NewProjectService(client).Create(ctx, project, params...)
 }
 
@@ -201,25 +201,25 @@ type ProjectService interface {
 	// GetList выполняет запрос на получение списка проектов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Project], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Project], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех проектов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Project], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Project], *resty.Response, error)
 
 	// Create выполняет запрос на создание проекта.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование проекта)
 	// Принимает контекст, проект и опционально объект параметров запроса Params.
 	// Возвращает созданный проект.
-	Create(ctx context.Context, project *Project, params ...*Params) (*Project, *resty.Response, error)
+	Create(ctx context.Context, project *Project, params ...func(*Params)) (*Project, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение проектов.
 	// Изменяемые проекты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список проектов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых проектов.
-	CreateUpdateMany(ctx context.Context, projectList Slice[Project], params ...*Params) (*Slice[Project], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, projectList Slice[Project], params ...func(*Params)) (*Slice[Project], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление проектов.
 	// Принимает контекст и множество проектов.
@@ -229,7 +229,7 @@ type ProjectService interface {
 	// DeleteByID выполняет запрос на удаление проекта по ID.
 	// Принимает контекст и ID проекта.
 	// Возвращает «true» в случае успешного удаления проекта.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление проекта.
 	// Принимает контекст и проект.
@@ -239,12 +239,12 @@ type ProjectService interface {
 	// GetByID выполняет запрос на получение отдельного проекта по ID.
 	// Принимает контекст, ID проекта и опционально объект параметров запроса Params.
 	// Возвращает найденный проект.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Project, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Project, *resty.Response, error)
 
 	// Update выполняет запрос на изменение проекта.
 	// Принимает контекст, проект и опционально объект параметров запроса Params.
 	// Возвращает изменённый проект.
-	Update(ctx context.Context, id uuid.UUID, project *Project, params ...*Params) (*Project, *resty.Response, error)
+	Update(ctx context.Context, id string, project *Project, params ...func(*Params)) (*Project, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных проектов.
 	// Принимает контекст.
@@ -259,7 +259,7 @@ type ProjectService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -275,12 +275,12 @@ type ProjectService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -290,12 +290,12 @@ type ProjectService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 }
 
 const (

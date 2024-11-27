@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -19,7 +19,7 @@ type Counterparty struct {
 	Name               *string                     `json:"name,omitempty"`               // Наименование Контрагента
 	OKPO               *string                     `json:"okpo,omitempty"`               // ОКПО
 	ActualAddress      *string                     `json:"actualAddress,omitempty"`      // Фактический адрес Контрагента
-	AccountID          *uuid.UUID                  `json:"accountId,omitempty"`          // ID учётной записи
+	AccountID          *string                     `json:"accountId,omitempty"`          // ID учётной записи
 	Archived           *bool                       `json:"archived,omitempty"`           // Добавлен ли Контрагент в архив
 	Notes              *MetaArray[Note]            `json:"notes,omitempty"`              // Массив событий Контрагента
 	BonusPoints        *int                        `json:"bonusPoints,omitempty"`        // Бонусные баллы по активной бонусной программе
@@ -36,7 +36,7 @@ type Counterparty struct {
 	Owner              *Employee                   `json:"owner,omitempty"`              // Метаданные владельца (Сотрудника)
 	Files              *MetaArray[File]            `json:"files,omitempty"`              // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group              *Group                      `json:"group,omitempty"`              // Отдел сотрудника
-	ID                 *uuid.UUID                  `json:"id,omitempty"`                 // ID Контрагента
+	ID                 *string                     `json:"id,omitempty"`                 // ID Контрагента
 	Meta               *Meta                       `json:"meta,omitempty"`               // Метаданные Контрагента
 	ActualAddressFull  *Address                    `json:"actualAddressFull,omitempty"`  // Фактический адрес Контрагента с детализацией по отдельным полям
 	Accounts           *MetaArray[AgentAccount]    `json:"accounts,omitempty"`           // Массив счетов Контрагентов
@@ -46,7 +46,7 @@ type Counterparty struct {
 	SalesAmount        *float64                    `json:"salesAmount,omitempty"`        // Сумма продаж
 	Shared             *bool                       `json:"shared,omitempty"`             // Общий доступ
 	State              *NullValue[State]           `json:"state,omitempty"`              // Метаданные Статуса Контрагента
-	SyncID             *uuid.UUID                  `json:"syncId,omitempty"`             // ID синхронизации
+	SyncID             *string                     `json:"syncId,omitempty"`             // ID синхронизации
 	Tags               Slice[string]               `json:"tags,omitempty"`               // Группы контрагента
 	Updated            *Timestamp                  `json:"updated,omitempty"`            // Момент последнего обновления Контрагента
 	BirthDate          *Timestamp                  `json:"birthDate,omitempty"`          // Дата рождения Контрагента типа [Физическое лицо]. Игнорируется для Контрагентов типов [Индивидуальный предприниматель, Юридическое лицо]
@@ -110,7 +110,7 @@ func (counterparty Counterparty) GetActualAddress() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (counterparty Counterparty) GetAccountID() uuid.UUID {
+func (counterparty Counterparty) GetAccountID() string {
 	return Deref(counterparty.AccountID)
 }
 
@@ -199,7 +199,7 @@ func (counterparty Counterparty) GetGroup() Group {
 }
 
 // GetID возвращает ID Контрагента.
-func (counterparty Counterparty) GetID() uuid.UUID {
+func (counterparty Counterparty) GetID() string {
 	return Deref(counterparty.ID)
 }
 
@@ -249,7 +249,7 @@ func (counterparty Counterparty) GetState() State {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (counterparty Counterparty) GetSyncID() uuid.UUID {
+func (counterparty Counterparty) GetSyncID() string {
 	return Deref(counterparty.SyncID)
 }
 
@@ -516,7 +516,7 @@ func (counterparty *Counterparty) SetState(state *State) *Counterparty {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (counterparty *Counterparty) SetSyncID(syncID uuid.UUID) *Counterparty {
+func (counterparty *Counterparty) SetSyncID(syncID string) *Counterparty {
 	counterparty.SyncID = &syncID
 	return counterparty
 }
@@ -638,12 +638,12 @@ func (Counterparty) MetaType() MetaType {
 }
 
 // Update shortcut
-func (counterparty *Counterparty) Update(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+func (counterparty *Counterparty) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Counterparty, *resty.Response, error) {
 	return NewCounterpartyService(client).Update(ctx, counterparty.GetID(), counterparty, params...)
 }
 
 // Create shortcut
-func (counterparty *Counterparty) Create(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+func (counterparty *Counterparty) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Counterparty, *resty.Response, error) {
 	return NewCounterpartyService(client).Create(ctx, counterparty, params...)
 }
 
@@ -723,18 +723,18 @@ func (CounterpartySettings) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-kontragenty-attributy-suschnosti-adres-sobytiq-kontragenta
 type Note struct {
-	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учётной записи
+	AccountID         *string       `json:"accountId,omitempty"`         // ID учётной записи
 	Agent             *Counterparty `json:"agent,omitempty"`             // Метаданные Контрагента
 	Author            *Employee     `json:"author,omitempty"`            // Метаданные Сотрудника - создателя события (администратор аккаунта, если автор - приложение)
 	AuthorApplication *Application  `json:"authorApplication,omitempty"` // Метаданные Приложения - создателя события
 	Created           *Timestamp    `json:"created,omitempty"`           // Момент создания события Контрагента
 	Description       *string       `json:"description,omitempty"`       // Текст события Контрагента
-	ID                *uuid.UUID    `json:"id,omitempty"`                // ID события контрагента
+	ID                *string       `json:"id,omitempty"`                // ID события контрагента
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные события контрагента
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (note Note) GetAccountID() uuid.UUID {
+func (note Note) GetAccountID() string {
 	return Deref(note.AccountID)
 }
 
@@ -764,7 +764,7 @@ func (note Note) GetDescription() string {
 }
 
 // GetID возвращает ID события контрагента.
-func (note Note) GetID() uuid.UUID {
+func (note Note) GetID() string {
 	return Deref(note.ID)
 }
 
@@ -816,25 +816,25 @@ type CounterpartyService interface {
 	// GetList выполняет запрос на получение списка контрагентов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Counterparty], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Counterparty], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех контрагентов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Counterparty], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Counterparty], *resty.Response, error)
 
 	// Create выполняет запрос на создание контрагента.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование контрагента)
 	// Принимает контекст, контрагент и опционально объект параметров запроса Params.
 	// Возвращает созданный контрагент.
-	Create(ctx context.Context, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
+	Create(ctx context.Context, counterparty *Counterparty, params ...func(*Params)) (*Counterparty, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или контрагентов.
 	// Изменяемые контрагенты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список контрагентов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых контрагентов.
-	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...*Params) (*Slice[Counterparty], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...func(*Params)) (*Slice[Counterparty], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление контрагентов.
 	// Принимает контекст и множество контрагентов.
@@ -844,7 +844,7 @@ type CounterpartyService interface {
 	// DeleteByID выполняет запрос на удаление контрагента.
 	// Принимает контекст и ID контрагента.
 	// Возвращает «true» в случае успешного удаления контрагента.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление контрагента.
 	// Принимает контекст и контрагент.
@@ -854,12 +854,12 @@ type CounterpartyService interface {
 	// GetByID выполняет запрос на получение отдельного контрагента по ID.
 	// Принимает контекст, ID контрагента и опционально объект параметров запроса Params.
 	// Возвращает найденный контрагент.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Counterparty, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Counterparty, *resty.Response, error)
 
 	// Update выполняет запрос на изменение контрагента.
 	// Принимает контекст, контрагент и опционально объект параметров запроса Params.
 	// Возвращает изменённый контрагент.
-	Update(ctx context.Context, id uuid.UUID, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
+	Update(ctx context.Context, id string, counterparty *Counterparty, params ...func(*Params)) (*Counterparty, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных контрагентов.
 	// Принимает контекст.
@@ -874,7 +874,7 @@ type CounterpartyService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -890,12 +890,12 @@ type CounterpartyService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -915,112 +915,112 @@ type CounterpartyService interface {
 	// GetAccountList выполняет запрос на получение списка счетов контрагента.
 	// Принимает контекст и ID контрагента.
 	// Возвращает объект List.
-	GetAccountList(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
+	GetAccountList(ctx context.Context, id string) (*List[AgentAccount], *resty.Response, error)
 
 	// GetAccountByID выполняет запрос на получение отдельного счёта контрагента по ID.
 	// Принимает контекст, ID контрагента и ID счёта контрагента.
 	// Возвращает найденный счёт контрагента.
-	GetAccountByID(ctx context.Context, id uuid.UUID, accountID uuid.UUID) (*AgentAccount, *resty.Response, error)
+	GetAccountByID(ctx context.Context, id string, accountID string) (*AgentAccount, *resty.Response, error)
 
 	// UpdateAccountMany выполняет запрос на массовое изменение счетов контрагента.
 	// Принимает контекст, ID контрагента и множество счетов контрагента.
 	// Возвращает список изменённых счетов контрагента.
-	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
+	UpdateAccountMany(ctx context.Context, id string, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Counterparty, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Counterparty, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetListAsync выполняет запрос на получение списка контрагентов асинхронно.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
+	GetListAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[Counterparty]], *resty.Response, error)
 
 	// GetContactPersonList выполняет запрос на получение списка контактных лиц контрагента.
 	// Принимает контекст, ID контрагента и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetContactPersonList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error)
+	GetContactPersonList(ctx context.Context, id string, params ...func(*Params)) (*List[ContactPerson], *resty.Response, error)
 
 	// GetContactPersonByID выполняет запрос на получение отдельного контактного лица контрагента по ID.
 	// Принимает контекст, ID контрагента и ID контактного лица.
 	// Возвращает найденное контактное лицо.
-	GetContactPersonByID(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error)
+	GetContactPersonByID(ctx context.Context, id, contactPersonID string) (*ContactPerson, *resty.Response, error)
 
 	// CreateContactPerson выполняет запрос на создание контактного лица контрагента.
 	// Принимает контекст, ID контрагента и контактное лицо контрагента.
 	// Возвращает созданное контактное лицо контрагента.
-	CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error)
+	CreateContactPerson(ctx context.Context, id string, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error)
 
 	// UpdateContactPerson выполняет запрос на изменение контактного лица контрагента.
 	// Принимает контекст, ID контактного лица контрагента и контактное лицо контрагента.
 	// Возвращает изменённое контактное лицо контрагента.
-	UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
+	UpdateContactPerson(ctx context.Context, id, contactPersonID string, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error)
 
 	// GetNoteList выполняет запрос на получение списка событий контрагента.
 	// Принимает контекст, ID контрагента и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNoteList(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error)
+	GetNoteList(ctx context.Context, id string) (*List[Note], *resty.Response, error)
 
 	// GetNoteByID выполняет запрос на получение отдельного события контрагента по ID.
 	// Принимает контекст, ID контрагента и ID события.
 	// Возвращает найденное событие.
-	GetNoteByID(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error)
+	GetNoteByID(ctx context.Context, id, noteID string) (*Note, *resty.Response, error)
 
 	// CreateNote выполняет запрос на создание события контрагента.
 	// Принимает контекст, ID контрагента и событие контрагента.
 	// Возвращает созданное событие контрагента.
-	CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error)
+	CreateNote(ctx context.Context, id string, note *Note) (*MetaArray[Note], *resty.Response, error)
 
 	// UpdateNote выполняет запрос на изменение события контрагента.
 	// Принимает контекст, ID события контрагента и событие контрагента.
 	// Возвращает изменённое событие контрагента.
-	UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error)
+	UpdateNote(ctx context.Context, id, noteID string, note *Note) (*Note, *resty.Response, error)
 
 	// DeleteNote выполняет запрос на удаление события контрагента.
 	// Принимает контекст и ID события контрагента.
 	// Возвращает «true» в случае успешного удаления события контрагента.
-	DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error)
+	DeleteNote(ctx context.Context, id, noteID string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (
@@ -1051,51 +1051,51 @@ type counterpartyService struct {
 	endpointFiles
 }
 
-func (service *counterpartyService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params...).Async(ctx)
+func (service *counterpartyService) GetListAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params).Async(ctx)
 }
 
-func (service *counterpartyService) GetContactPersonList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ContactPerson], *resty.Response, error) {
+func (service *counterpartyService) GetContactPersonList(ctx context.Context, id string, params ...func(*Params)) (*List[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyContactPersons, id)
-	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *counterpartyService) GetContactPersonByID(ctx context.Context, id, contactPersonID uuid.UUID) (*ContactPerson, *resty.Response, error) {
+func (service *counterpartyService) GetContactPersonByID(ctx context.Context, id, contactPersonID string) (*ContactPerson, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyContactPersonsID, id, contactPersonID)
 	return NewRequestBuilder[ContactPerson](service.client, path).Get(ctx)
 }
 
-func (service *counterpartyService) CreateContactPerson(ctx context.Context, id uuid.UUID, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error) {
+func (service *counterpartyService) CreateContactPerson(ctx context.Context, id string, contactPerson *ContactPerson) (*Slice[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyContactPersons, id)
 	return NewRequestBuilder[Slice[ContactPerson]](service.client, path).Post(ctx, contactPerson)
 }
 
-func (service *counterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonID uuid.UUID, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
+func (service *counterpartyService) UpdateContactPerson(ctx context.Context, id, contactPersonID string, contactPerson *ContactPerson) (*ContactPerson, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyContactPersonsID, id, contactPersonID)
 	return NewRequestBuilder[ContactPerson](service.client, path).Put(ctx, contactPerson)
 }
 
-func (service *counterpartyService) GetNoteList(ctx context.Context, id uuid.UUID) (*List[Note], *resty.Response, error) {
+func (service *counterpartyService) GetNoteList(ctx context.Context, id string) (*List[Note], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyNotes, id)
 	return NewRequestBuilder[List[Note]](service.client, path).Get(ctx)
 }
 
-func (service *counterpartyService) GetNoteByID(ctx context.Context, id, noteID uuid.UUID) (*Note, *resty.Response, error) {
+func (service *counterpartyService) GetNoteByID(ctx context.Context, id, noteID string) (*Note, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyNotesID, id, noteID)
 	return NewRequestBuilder[Note](service.client, path).Get(ctx)
 }
 
-func (service *counterpartyService) CreateNote(ctx context.Context, id uuid.UUID, note *Note) (*MetaArray[Note], *resty.Response, error) {
+func (service *counterpartyService) CreateNote(ctx context.Context, id string, note *Note) (*MetaArray[Note], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyNotes, id)
 	return NewRequestBuilder[MetaArray[Note]](service.client, path).Post(ctx, note)
 }
 
-func (service *counterpartyService) UpdateNote(ctx context.Context, id, noteID uuid.UUID, note *Note) (*Note, *resty.Response, error) {
+func (service *counterpartyService) UpdateNote(ctx context.Context, id, noteID string, note *Note) (*Note, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyNotesID, id, noteID)
 	return NewRequestBuilder[Note](service.client, path).Put(ctx, note)
 }
 
-func (service *counterpartyService) DeleteNote(ctx context.Context, id, noteID uuid.UUID) (bool, *resty.Response, error) {
+func (service *counterpartyService) DeleteNote(ctx context.Context, id, noteID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyNotesID, id, noteID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

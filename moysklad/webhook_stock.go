@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 )
 
 // WebhookStock Вебхук на изменение остатков.
@@ -15,19 +14,19 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuk-na-izmenenie-ostatkow
 type WebhookStock struct {
-	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учётной записи
+	AccountID         *string       `json:"accountId,omitempty"`         // ID учётной записи
 	AuthorApplication *Meta         `json:"authorApplication,omitempty"` // Метаданные Приложения, создавшего вебхук на изменение остатков
 	Enabled           *bool         `json:"enabled,omitempty"`           // Флажок состояния вебхука на изменение остатков (включен / отключен)
 	StockType         *string       `json:"stockType,omitempty"`         // Тип остатков, изменение которых вызывает вебхук на изменение остатков
 	ReportUrl         *string       `json:"reportUrl,omitempty"`         // URL на получения данных по изменившейся номенклатуре за указанный период
-	ID                *uuid.UUID    `json:"id,omitempty"`                // ID вебхука на изменение остатков
+	ID                *string       `json:"id,omitempty"`                // ID вебхука на изменение остатков
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные вебхука на изменение остатков
 	URL               *string       `json:"url,omitempty"`               // URL, по которому будет происходить обработка вебхука. Допустимая длина до 255 символов
 	ReportType        WebhookReport `json:"reportType,omitempty"`        // Тип отчета остатков, к которым привязан вебхук на изменение остатков
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (webhookStock WebhookStock) GetAccountID() uuid.UUID {
+func (webhookStock WebhookStock) GetAccountID() string {
 	return Deref(webhookStock.AccountID)
 }
 
@@ -52,7 +51,7 @@ func (webhookStock WebhookStock) GetReportUrl() string {
 }
 
 // GetID возвращает ID вебхука на изменение остатков.
-func (webhookStock WebhookStock) GetID() uuid.UUID {
+func (webhookStock WebhookStock) GetID() string {
 	return Deref(webhookStock.ID)
 }
 
@@ -124,12 +123,12 @@ func (WebhookStock) MetaType() MetaType {
 }
 
 // Update shortcut
-func (webhookStock *WebhookStock) Update(ctx context.Context, client *Client, params ...*Params) (*WebhookStock, *resty.Response, error) {
+func (webhookStock *WebhookStock) Update(ctx context.Context, client *Client, params ...func(*Params)) (*WebhookStock, *resty.Response, error) {
 	return NewWebhookStockService(client).Update(ctx, webhookStock.GetID(), webhookStock, params...)
 }
 
 // Create shortcut
-func (webhookStock *WebhookStock) Create(ctx context.Context, client *Client, params ...*Params) (*WebhookStock, *resty.Response, error) {
+func (webhookStock *WebhookStock) Create(ctx context.Context, client *Client, params ...func(*Params)) (*WebhookStock, *resty.Response, error) {
 	return NewWebhookStockService(client).Create(ctx, webhookStock, params...)
 }
 
@@ -161,12 +160,12 @@ type WebhookStockService interface {
 	// GetList выполняет запрос на получение списка вебхуков на изменение остатков.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[WebhookStock], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[WebhookStock], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех вебхуков на изменение остатков в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[WebhookStock], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[WebhookStock], *resty.Response, error)
 
 	// Create выполняет запрос на создание вебхука на изменение остатков.
 	// Обязательные поля для заполнения:
@@ -174,13 +173,13 @@ type WebhookStockService interface {
 	//	- url (URL, по которому будет происходить обработка вебхука)
 	// Принимает контекст, вебхук на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает созданный вебхук на изменение остатков.
-	Create(ctx context.Context, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
+	Create(ctx context.Context, webhookStock *WebhookStock, params ...func(*Params)) (*WebhookStock, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение вебхуков на изменение остатков.
 	// Изменяемые вебхуки на изменение остатков должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список вебхуков на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых вебхуков на изменение остатков.
-	CreateUpdateMany(ctx context.Context, webhookStockList Slice[WebhookStock], params ...*Params) (*Slice[WebhookStock], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, webhookStockList Slice[WebhookStock], params ...func(*Params)) (*Slice[WebhookStock], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление вебхуков на изменение остатков.
 	// Принимает контекст и множество вебхуков на изменение остатков.
@@ -190,7 +189,7 @@ type WebhookStockService interface {
 	// DeleteByID выполняет запрос на удаление вебхука на изменение остатков по ID.
 	// Принимает контекст и ID вебхука на изменение остатков.
 	// Возвращает «true» в случае успешного удаления вебхука на изменение остатков.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление вебхука на изменение остатков.
 	// Принимает контекст и вебхук на изменение остатков.
@@ -200,12 +199,12 @@ type WebhookStockService interface {
 	// GetByID выполняет запрос на получение отдельного вебхука на изменение остатков по ID.
 	// Принимает контекст, ID вебхука на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает найденный вебхук на изменение остатков.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*WebhookStock, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*WebhookStock, *resty.Response, error)
 
 	// Update выполняет запрос на изменение вебхука на изменение остатков.
 	// Принимает контекст, вебхук на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает изменённый вебхук на изменение остатков.
-	Update(ctx context.Context, id uuid.UUID, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
+	Update(ctx context.Context, id string, webhookStock *WebhookStock, params ...func(*Params)) (*WebhookStock, *resty.Response, error)
 }
 
 const (

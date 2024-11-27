@@ -2,7 +2,6 @@ package moysklad
 
 import (
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 )
 
 // Operation общие поля операций, к которым привязан платёж.
@@ -11,8 +10,8 @@ type Operation struct {
 	Meta      *Meta          `json:"meta,omitempty"`      // Метаданные операции
 	Name      *string        `json:"name,omitempty"`      // Наименование операции
 	LinkedSum *float64       `json:"linkedSum,omitempty"` // Сумма, оплаченную по данному документу
-	AccountID *uuid.UUID     `json:"accountId,omitempty"` // ID учётной записи
-	ID        *uuid.UUID     `json:"id,omitempty"`        // ID операции
+	AccountID *string        `json:"accountId,omitempty"` // ID учётной записи
+	ID        *string        `json:"id,omitempty"`        // ID операции
 	raw       []byte         // сырые данные для последующей конвертации в нужный тип
 	Payments  Slice[Payment] `json:"payments,omitempty"` // Список ссылок на связанные платежи
 }
@@ -48,12 +47,12 @@ func (operation Operation) GetLinkedSum() float64 {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (operation Operation) GetAccountID() uuid.UUID {
+func (operation Operation) GetAccountID() string {
 	return Deref(operation.AccountID)
 }
 
 // GetID возвращает ID операции.
-func (operation Operation) GetID() uuid.UUID {
+func (operation Operation) GetID() string {
 	return Deref(operation.ID)
 }
 

@@ -57,12 +57,12 @@ type ReportSalesService interface {
 	// GetPlotSeries выполняет запрос на получение показателей продаж.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает показатели продаж.
-	GetPlotSeries(ctx context.Context, params ...*Params) (*SalesPlotSeries, *resty.Response, error)
+	GetPlotSeries(ctx context.Context, params ...func(*Params)) (*SalesPlotSeries, *resty.Response, error)
 
 	// GetPlotSeriesAsync выполняет запрос на получение показателей продаж (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[SalesPlotSeries], *resty.Response, error)
+	GetPlotSeriesAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[SalesPlotSeries], *resty.Response, error)
 }
 
 const (
@@ -74,12 +74,12 @@ type reportSalesService struct {
 	Endpoint
 }
 
-func (service *reportSalesService) GetPlotSeries(ctx context.Context, params ...*Params) (*SalesPlotSeries, *resty.Response, error) {
-	return NewRequestBuilder[SalesPlotSeries](service.client, EndpointReportSalesPlotSeries).SetParams(params...).Get(ctx)
+func (service *reportSalesService) GetPlotSeries(ctx context.Context, params ...func(*Params)) (*SalesPlotSeries, *resty.Response, error) {
+	return NewRequestBuilder[SalesPlotSeries](service.client, EndpointReportSalesPlotSeries).SetParams(params).Get(ctx)
 }
 
-func (service *reportSalesService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[SalesPlotSeries], *resty.Response, error) {
-	return NewRequestBuilder[SalesPlotSeries](service.client, EndpointReportSalesPlotSeries).SetParams(params...).Async(ctx)
+func (service *reportSalesService) GetPlotSeriesAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[SalesPlotSeries], *resty.Response, error) {
+	return NewRequestBuilder[SalesPlotSeries](service.client, EndpointReportSalesPlotSeries).SetParams(params).Async(ctx)
 }
 
 // NewReportSalesService принимает [Client] и возвращает сервис для работы с отчётом Показатели продаж.
@@ -92,12 +92,12 @@ type ReportOrdersService interface {
 	// GetPlotSeries выполняет запрос на получение показателей заказов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает показатели заказов.
-	GetPlotSeries(ctx context.Context, params ...*Params) (*OrdersPlotSeries, *resty.Response, error)
+	GetPlotSeries(ctx context.Context, params ...func(*Params)) (*OrdersPlotSeries, *resty.Response, error)
 
 	// GetPlotSeriesAsync выполняет запрос на получение показателей заказов (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[OrdersPlotSeries], *resty.Response, error)
+	GetPlotSeriesAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[OrdersPlotSeries], *resty.Response, error)
 }
 
 const (
@@ -109,12 +109,12 @@ type reportOrdersService struct {
 	Endpoint
 }
 
-func (service *reportOrdersService) GetPlotSeries(ctx context.Context, params ...*Params) (*OrdersPlotSeries, *resty.Response, error) {
-	return NewRequestBuilder[OrdersPlotSeries](service.client, EndpointReportOrdersPlotSeries).SetParams(params...).Get(ctx)
+func (service *reportOrdersService) GetPlotSeries(ctx context.Context, params ...func(*Params)) (*OrdersPlotSeries, *resty.Response, error) {
+	return NewRequestBuilder[OrdersPlotSeries](service.client, EndpointReportOrdersPlotSeries).SetParams(params).Get(ctx)
 }
 
-func (service *reportOrdersService) GetPlotSeriesAsync(ctx context.Context, params ...*Params) (AsyncResultService[OrdersPlotSeries], *resty.Response, error) {
-	return NewRequestBuilder[OrdersPlotSeries](service.client, EndpointReportOrdersPlotSeries).SetParams(params...).Async(ctx)
+func (service *reportOrdersService) GetPlotSeriesAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[OrdersPlotSeries], *resty.Response, error) {
+	return NewRequestBuilder[OrdersPlotSeries](service.client, EndpointReportOrdersPlotSeries).SetParams(params).Async(ctx)
 }
 
 // NewReportOrdersService принимает [Client] и возвращает сервис для работы с отчётом Показатели заказов.

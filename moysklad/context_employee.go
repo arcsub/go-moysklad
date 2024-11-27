@@ -3,7 +3,6 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // ContextEmployee Контекст запроса сотрудника.
@@ -38,8 +37,8 @@ type ContextEmployee struct {
 	Owner        Employee           `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Attributes   Slice[Attribute]   `json:"attributes,omitempty"`   // Дополнительные поля Сотрудника
 	Cashiers     MetaArray[Cashier] `json:"cashiers,omitempty"`     // Массив кассиров
-	AccountID    uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
-	ID           uuid.UUID          `json:"id,omitempty"`           // ID Сотрудника
+	AccountID    string             `json:"accountId,omitempty"`    // ID учётной записи
+	ID           string             `json:"id,omitempty"`           // ID Сотрудника
 	Shared       bool               `json:"shared,omitempty"`       // Общий доступ
 	Archived     bool               `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
 }

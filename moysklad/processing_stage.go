@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,13 +15,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-jetap-proizwodstwa
 type ProcessingStage struct {
-	AccountID     *uuid.UUID           `json:"accountId,omitempty"`     // ID учётной записи     // ID учётной записи
+	AccountID     *string              `json:"accountId,omitempty"`     // ID учётной записи     // ID учётной записи
 	AllPerformers *bool                `json:"allPerformers,omitempty"` // Признак доступности назначения на этап любого сотрудника
 	Archived      *bool                `json:"archived,omitempty"`      // Добавлен ли Этап в архив
 	Description   *string              `json:"description,omitempty"`   // Комментарий Этапа
 	ExternalCode  *string              `json:"externalCode,omitempty"`  // Внешний код Этапа
 	Group         *Group               `json:"group,omitempty"`         // Отдел сотрудника         // Отдел сотрудника
-	ID            *uuid.UUID           `json:"id,omitempty"`            // ID Этапа
+	ID            *string              `json:"id,omitempty"`            // ID Этапа
 	Meta          *Meta                `json:"meta,omitempty"`          // Метаданные Этапа
 	Name          *string              `json:"name,omitempty"`          // Наименование Этапа
 	Owner         *Employee            `json:"owner,omitempty"`         // Метаданные владельца (Сотрудника)         // Владелец (Сотрудник)
@@ -40,7 +40,7 @@ func (processingStage ProcessingStage) Clean() *ProcessingStage {
 	return &ProcessingStage{Meta: processingStage.Meta}
 }
 
-func (processingStage ProcessingStage) GetAccountID() uuid.UUID {
+func (processingStage ProcessingStage) GetAccountID() string {
 	return Deref(processingStage.AccountID)
 }
 
@@ -64,7 +64,7 @@ func (processingStage ProcessingStage) GetGroup() Group {
 	return Deref(processingStage.Group)
 }
 
-func (processingStage ProcessingStage) GetID() uuid.UUID {
+func (processingStage ProcessingStage) GetID() string {
 	return Deref(processingStage.ID)
 }
 
@@ -152,12 +152,12 @@ func (ProcessingStage) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingStage *ProcessingStage) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+func (processingStage *ProcessingStage) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingStage, *resty.Response, error) {
 	return NewProcessingStageService(client).Update(ctx, processingStage.GetID(), processingStage, params...)
 }
 
 // Create shortcut
-func (processingStage *ProcessingStage) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+func (processingStage *ProcessingStage) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingStage, *resty.Response, error) {
 	return NewProcessingStageService(client).Create(ctx, processingStage, params...)
 }
 
@@ -169,33 +169,33 @@ func (processingStage *ProcessingStage) Delete(ctx context.Context, client *Clie
 // ProcessingStageService
 // Сервис для работы с этапами производства.
 type ProcessingStageService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingStage], *resty.Response, error)
-	Create(ctx context.Context, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...*Params) (*Slice[ProcessingStage], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingStage], *resty.Response, error)
+	Create(ctx context.Context, processingStage *ProcessingStage, params ...func(*Params)) (*ProcessingStage, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...func(*Params)) (*Slice[ProcessingStage], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление этапа производства.
 	// Принимает контекст и этап производства.
 	// Возвращает «true» в случае успешного удаления этапа производства.
 	Delete(ctx context.Context, entity *ProcessingStage) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingStage, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingStage, *resty.Response, error)
+	Update(ctx context.Context, id string, processingStage *ProcessingStage, params ...func(*Params)) (*ProcessingStage, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (

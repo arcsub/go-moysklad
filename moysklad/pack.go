@@ -1,21 +1,19 @@
 package moysklad
 
-import "github.com/google/uuid"
-
 // Pack Упаковка Товара.
 //
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-towar-towary-atributy-wlozhennyh-suschnostej-upakowki-towara
 type Pack struct {
-	ID       *uuid.UUID     `json:"id,omitempty"`       // ID упаковки товара
+	ID       *string        `json:"id,omitempty"`       // ID упаковки товара
 	Quantity *float64       `json:"quantity,omitempty"` // Количество Товаров в упаковке данного вида
 	Uom      *Uom           `json:"uom,omitempty"`      // Единица измерения
 	Barcodes Slice[Barcode] `json:"barcodes,omitempty"` // Штрихкоды
 }
 
 // GetID возвращает ID упаковки товара.
-func (pack Pack) GetID() uuid.UUID {
+func (pack Pack) GetID() string {
 	return Deref(pack.ID)
 }
 

@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -19,7 +19,7 @@ type BonusTransaction struct {
 	Group             *Group                   `json:"group,omitempty"`             // Отдел сотрудника
 	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные бонусной программы
 	BonusValue        *int                     `json:"bonusValue,omitempty"`        // Количество бонусных баллов
-	ID                *uuid.UUID               `json:"id,omitempty"`                // ID Бонусной операции
+	ID                *string                  `json:"id,omitempty"`                // ID Бонусной операции
 	Code              *string                  `json:"code,omitempty"`              // Код Бонусной операции
 	Created           *Timestamp               `json:"created,omitempty"`           // Момент создания Бонусной операции
 	ExecutionDate     *Timestamp               `json:"executionDate,omitempty"`     // Дата начисления бонусной операции
@@ -29,7 +29,7 @@ type BonusTransaction struct {
 	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Бонусной операции
 	Moment            *Timestamp               `json:"moment,omitempty"`            // Время проведения бонусной операции
 	Name              *string                  `json:"name,omitempty"`              // Наименование Бонусной операции
-	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учётной записи
+	AccountID         *string                  `json:"accountId,omitempty"`         // ID учётной записи
 	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
 	ParentDocument    *BonusTransaction        `json:"parentDocument,omitempty"`    // Метаданные связанного документа бонусной операции
 	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ
@@ -75,7 +75,7 @@ func (bonusTransaction BonusTransaction) GetBonusValue() int {
 }
 
 // GetID возвращает ID Бонусной операции.
-func (bonusTransaction BonusTransaction) GetID() uuid.UUID {
+func (bonusTransaction BonusTransaction) GetID() string {
 	return Deref(bonusTransaction.ID)
 }
 
@@ -125,7 +125,7 @@ func (bonusTransaction BonusTransaction) GetName() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (bonusTransaction BonusTransaction) GetAccountID() uuid.UUID {
+func (bonusTransaction BonusTransaction) GetAccountID() string {
 	return Deref(bonusTransaction.AccountID)
 }
 
@@ -291,12 +291,12 @@ func (BonusTransaction) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bonusTransaction *BonusTransaction) Update(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+func (bonusTransaction *BonusTransaction) Update(ctx context.Context, client *Client, params ...func(*Params)) (*BonusTransaction, *resty.Response, error) {
 	return NewBonusTransactionService(client).Update(ctx, bonusTransaction.GetID(), bonusTransaction, params...)
 }
 
 // Create shortcut
-func (bonusTransaction *BonusTransaction) Create(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+func (bonusTransaction *BonusTransaction) Create(ctx context.Context, client *Client, params ...func(*Params)) (*BonusTransaction, *resty.Response, error) {
 	return NewBonusTransactionService(client).Create(ctx, bonusTransaction, params...)
 }
 
@@ -348,12 +348,12 @@ type BonusTransactionService interface {
 	// GetList выполняет запрос на получение списка бонусных операций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[BonusTransaction], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[BonusTransaction], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех бонусных операций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[BonusTransaction], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной операции.
 	// Обязательные поля для заполнения:
@@ -362,13 +362,13 @@ type BonusTransactionService interface {
 	//	- transactionType (Тип бонусной операции)
 	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную операцию.
-	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...func(*Params)) (*BonusTransaction, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение бонусных операций.
 	// Изменяемые Бонусные операции должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список бонусных операций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых бонусных операций.
-	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...func(*Params)) (*Slice[BonusTransaction], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных операций.
 	// Принимает контекст и множество бонусных операций.
@@ -378,7 +378,7 @@ type BonusTransactionService interface {
 	// DeleteByID выполняет запрос на удаление бонусной операции по ID.
 	// Принимает контекст и ID бонусной операции.
 	// Возвращает «true» в случае успешного удаления бонусной операции.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление бонусной операции.
 	// Принимает контекст и бонусную операцию.
@@ -388,12 +388,12 @@ type BonusTransactionService interface {
 	// GetByID выполняет запрос на получение бонусной операции.
 	// Принимает контекст, ID бонусной операции и опционально объект параметров запроса Params.
 	// Возвращает бонусную операцию.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*BonusTransaction, *resty.Response, error)
 
 	// Update выполняет запрос на изменение бонусной операции.
 	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает изменённую бонусную операцию.
-	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	Update(ctx context.Context, id string, bonusTransaction *BonusTransaction, params ...func(*Params)) (*BonusTransaction, *resty.Response, error)
 }
 
 const (

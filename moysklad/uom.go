@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,12 +15,12 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-edinica-izmereniq
 type Uom struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи
 	Code         *string    `json:"code,omitempty"`         // Код Единицы измерения
 	Description  *string    `json:"description,omitempty"`  // Описание Единицы измерения
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Единицы измерения
 	Group        *Group     `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID сущности
+	ID           *string    `json:"id,omitempty"`           // ID сущности
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные
 	Name         *string    `json:"name,omitempty"`         // Наименование Единицы измерения
 	Owner        *Employee  `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
@@ -38,7 +38,7 @@ func (uom Uom) Clean() *Uom {
 	return &Uom{Meta: uom.Meta}
 }
 
-func (uom Uom) GetAccountID() uuid.UUID {
+func (uom Uom) GetAccountID() string {
 	return Deref(uom.AccountID)
 }
 
@@ -58,7 +58,7 @@ func (uom Uom) GetGroup() Group {
 	return Deref(uom.Group)
 }
 
-func (uom Uom) GetID() uuid.UUID {
+func (uom Uom) GetID() string {
 	return Deref(uom.ID)
 }
 
@@ -133,12 +133,12 @@ func (Uom) MetaType() MetaType {
 }
 
 // Update shortcut
-func (uom *Uom) Update(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+func (uom *Uom) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Uom, *resty.Response, error) {
 	return NewUomService(client).Update(ctx, uom.GetID(), uom, params...)
 }
 
 // Create shortcut
-func (uom *Uom) Create(ctx context.Context, client *Client, params ...*Params) (*Uom, *resty.Response, error) {
+func (uom *Uom) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Uom, *resty.Response, error) {
 	return NewUomService(client).Create(ctx, uom, params...)
 }
 
@@ -152,25 +152,25 @@ type UomService interface {
 	// GetList выполняет запрос на получение списка единиц измерения.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Uom], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Uom], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех единиц измерения в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Uom], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Uom], *resty.Response, error)
 
 	// Create выполняет запрос на создание единицы измерения.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование единицы измерения)
 	// Принимает контекст, единицу измерения и опционально объект параметров запроса Params.
 	// Возвращает созданную единицу измерения.
-	Create(ctx context.Context, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)
+	Create(ctx context.Context, uom *Uom, params ...func(*Params)) (*Uom, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение единиц измерения.
 	// Изменяемые единицы измерения должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список единиц измерения и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых единиц измерения.
-	CreateUpdateMany(ctx context.Context, uomList Slice[Uom], params ...*Params) (*Slice[Uom], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, uomList Slice[Uom], params ...func(*Params)) (*Slice[Uom], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление единиц измерения.
 	// Принимает контекст и множество единиц измерения.
@@ -180,7 +180,7 @@ type UomService interface {
 	// DeleteByID выполняет запрос на удаление единицы измерения по ID.
 	// Принимает контекст и ID единицы измерения.
 	// Возвращает «true» в случае успешного удаления единицы измерения.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление единицы измерения.
 	// Принимает контекст и единицу измерения.
@@ -190,12 +190,12 @@ type UomService interface {
 	// GetByID выполняет запрос на получение отдельной единицы измерения по ID.
 	// Принимает контекст, ID единицы измерения и опционально объект параметров запроса Params.
 	// Возвращает найденную единицу измерения.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Uom, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Uom, *resty.Response, error)
 
 	// Update выполняет запрос на изменение единицы измерения.
 	// Принимает контекст, единицу измерения и опционально объект параметров запроса Params.
 	// Возвращает изменённую единицу измерения.
-	Update(ctx context.Context, id uuid.UUID, uom *Uom, params ...*Params) (*Uom, *resty.Response, error)
+	Update(ctx context.Context, id string, uom *Uom, params ...func(*Params)) (*Uom, *resty.Response, error)
 }
 
 const (

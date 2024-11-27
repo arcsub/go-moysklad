@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,13 +15,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kanal-prodazh
 type SalesChannel struct {
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Канала продаж
+	ID           *string          `json:"id,omitempty"`           // ID Канала продаж
 	Archived     *bool            `json:"archived,omitempty"`     // Добавлен ли Канал продаж в архив
 	Code         *string          `json:"code,omitempty"`         // Код Канала продаж
 	Description  *string          `json:"description,omitempty"`  // Описание Канала продаж
 	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Канала продаж
 	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string          `json:"accountId,omitempty"`    // ID учётной записи
 	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Канала продаж
 	Name         *string          `json:"name,omitempty"`         // Наименование Канала продаж
 	Owner        *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
@@ -41,7 +41,7 @@ func (salesChannel SalesChannel) Clean() *SalesChannel {
 }
 
 // GetID возвращает ID Канала продаж.
-func (salesChannel SalesChannel) GetID() uuid.UUID {
+func (salesChannel SalesChannel) GetID() string {
 	return Deref(salesChannel.ID)
 }
 
@@ -71,7 +71,7 @@ func (salesChannel SalesChannel) GetGroup() Group {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (salesChannel SalesChannel) GetAccountID() uuid.UUID {
+func (salesChannel SalesChannel) GetAccountID() string {
 	return Deref(salesChannel.AccountID)
 }
 
@@ -222,12 +222,12 @@ func (SalesChannel) MetaType() MetaType {
 }
 
 // Update shortcut
-func (salesChannel *SalesChannel) Update(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+func (salesChannel *SalesChannel) Update(ctx context.Context, client *Client, params ...func(*Params)) (*SalesChannel, *resty.Response, error) {
 	return NewSalesChannelService(client).Update(ctx, salesChannel.GetID(), salesChannel, params...)
 }
 
 // Create shortcut
-func (salesChannel *SalesChannel) Create(ctx context.Context, client *Client, params ...*Params) (*SalesChannel, *resty.Response, error) {
+func (salesChannel *SalesChannel) Create(ctx context.Context, client *Client, params ...func(*Params)) (*SalesChannel, *resty.Response, error) {
 	return NewSalesChannelService(client).Create(ctx, salesChannel, params...)
 }
 
@@ -267,12 +267,12 @@ type SalesChannelService interface {
 	// GetList выполняет запрос на получение списка каналов продаж.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[SalesChannel], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[SalesChannel], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех каналов продаж в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[SalesChannel], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[SalesChannel], *resty.Response, error)
 
 	// Create выполняет запрос на создание канала продаж.
 	// Обязательные поля для заполнения:
@@ -280,13 +280,13 @@ type SalesChannelService interface {
 	//	- type (Тип Канала продаж)
 	// Принимает контекст, канал продаж и опционально объект параметров запроса Params.
 	// Возвращает созданный канал продаж.
-	Create(ctx context.Context, salesChannel *SalesChannel, params ...*Params) (*SalesChannel, *resty.Response, error)
+	Create(ctx context.Context, salesChannel *SalesChannel, params ...func(*Params)) (*SalesChannel, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение каналов продаж.
 	// Изменяемые каналы продаж должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список каналов продаж и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых каналов продаж.
-	CreateUpdateMany(ctx context.Context, salesChannelList Slice[SalesChannel], params ...*Params) (*Slice[SalesChannel], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, salesChannelList Slice[SalesChannel], params ...func(*Params)) (*Slice[SalesChannel], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление каналов продаж.
 	// Принимает контекст и множество каналов продаж.
@@ -296,7 +296,7 @@ type SalesChannelService interface {
 	// DeleteByID выполняет запрос на удаление канала продаж по ID.
 	// Принимает контекст и ID канала продаж.
 	// Возвращает «true» в случае успешного удаления канала продаж.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление канала продаж.
 	// Принимает контекст и канал продаж.
@@ -306,12 +306,12 @@ type SalesChannelService interface {
 	// GetByID выполняет запрос на получение отдельного канала продаж по ID.
 	// Принимает контекст, ID канала продаж и опционально объект параметров запроса Params.
 	// Возвращает канал продаж.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SalesChannel, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*SalesChannel, *resty.Response, error)
 
 	// Update выполняет запрос на изменение канала продаж.
 	// Принимает контекст, канал продаж и опционально объект параметров запроса Params.
 	// Возвращает изменённый канал продаж.
-	Update(ctx context.Context, id uuid.UUID, salesChannel *SalesChannel, params ...*Params) (*SalesChannel, *resty.Response, error)
+	Update(ctx context.Context, id string, salesChannel *SalesChannel, params ...func(*Params)) (*SalesChannel, *resty.Response, error)
 }
 
 const (

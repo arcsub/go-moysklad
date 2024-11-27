@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -30,9 +30,9 @@ type RetailShift struct {
 	ExternalCode        *string                `json:"externalCode,omitempty"`        // Внешний код Розничной смены
 	Files               *MetaArray[File]       `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group               *Group                 `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID             `json:"id,omitempty"`                  // ID Розничной смены
+	ID                  *string                `json:"id,omitempty"`                  // ID Розничной смены
 	Meta                *Meta                  `json:"meta,omitempty"`                // Метаданные Розничной смены
-	AccountID           *uuid.UUID             `json:"accountId,omitempty"`           // ID учётной записи
+	AccountID           *string                `json:"accountId,omitempty"`           // ID учётной записи
 	Cheque              *Cheque                `json:"cheque,omitempty"`              // Информация о смене ККТ
 	Acquire             *Agent                 `json:"acquire,omitempty"`             // Метаданные Банка-эквайера по операциям по карте
 	Moment              *Timestamp             `json:"moment,omitempty"`              // Дата смены
@@ -49,7 +49,7 @@ type RetailShift struct {
 	ReceivedNoCash      *float64               `json:"receivedNoCash,omitempty"`      // Получено безнал
 	RetailStore         *RetailStore           `json:"retailStore,omitempty"`         // Метаданные точки продаж
 	Store               *Store                 `json:"store,omitempty"`               // Метаданные склада. Если не указано, заполняется с точки продаж автоматически
-	SyncID              *uuid.UUID             `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *string                `json:"syncId,omitempty"`              // ID синхронизации
 	Updated             *Timestamp             `json:"updated,omitempty"`             // Момент последнего обновления Розничной смены
 	VatEnabled          *bool                  `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
 	PaymentOperations   Slice[Payment]         `json:"paymentOperations,omitempty"`   // Коллекция метаданных платежных операций
@@ -172,7 +172,7 @@ func (retailShift RetailShift) GetGroup() Group {
 }
 
 // GetID возвращает ID Розничной смены.
-func (retailShift RetailShift) GetID() uuid.UUID {
+func (retailShift RetailShift) GetID() string {
 	return Deref(retailShift.ID)
 }
 
@@ -182,7 +182,7 @@ func (retailShift RetailShift) GetMeta() Meta {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (retailShift RetailShift) GetAccountID() uuid.UUID {
+func (retailShift RetailShift) GetAccountID() string {
 	return Deref(retailShift.AccountID)
 }
 
@@ -271,7 +271,7 @@ func (retailShift RetailShift) GetStore() Store {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (retailShift RetailShift) GetSyncID() uuid.UUID {
+func (retailShift RetailShift) GetSyncID() string {
 	return Deref(retailShift.SyncID)
 }
 
@@ -445,7 +445,7 @@ func (retailShift *RetailShift) SetStore(store *Store) *RetailShift {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (retailShift *RetailShift) SetSyncID(syncID uuid.UUID) *RetailShift {
+func (retailShift *RetailShift) SetSyncID(syncID string) *RetailShift {
 	retailShift.SyncID = &syncID
 	return retailShift
 }
@@ -469,12 +469,12 @@ func (RetailShift) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailShift *RetailShift) Update(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+func (retailShift *RetailShift) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailShift, *resty.Response, error) {
 	return NewRetailShiftService(client).Update(ctx, retailShift.GetID(), retailShift, params...)
 }
 
 // Create shortcut
-func (retailShift *RetailShift) Create(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+func (retailShift *RetailShift) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailShift, *resty.Response, error) {
 	return NewRetailShiftService(client).Create(ctx, retailShift, params...)
 }
 
@@ -538,12 +538,12 @@ type RetailShiftService interface {
 	// GetList выполняет запрос на получение списка розничных смен.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailShift], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailShift], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех розничных смен в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailShift], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailShift], *resty.Response, error)
 
 	// Create выполняет запрос на создание розничной смены.
 	// Обязательные поля для заполнения:
@@ -551,12 +551,12 @@ type RetailShiftService interface {
 	//	- retailStore (Метаданные точки продаж)
 	// Принимает контекст, розничную смены и опционально объект параметров запроса Params.
 	// Возвращает созданную розничную смены.
-	Create(ctx context.Context, retailShift *RetailShift, params ...*Params) (*RetailShift, *resty.Response, error)
+	Create(ctx context.Context, retailShift *RetailShift, params ...func(*Params)) (*RetailShift, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление розничной смены по ID.
 	// Принимает контекст и ID розничной смены.
 	// Возвращает «true» в случае успешного удаления розничной смены.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление розничной смены.
 	// Принимает контекст и розничную смену.
@@ -566,12 +566,12 @@ type RetailShiftService interface {
 	// GetByID выполняет запрос на получение розничной смены по ID.
 	// Принимает контекст, ID розничной смены и опционально объект параметров запроса Params.
 	// Возвращает розничную смену.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailShift, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailShift, *resty.Response, error)
 
 	// Update выполняет запрос на изменение розничной смены.
 	// Принимает контекст, розничную смену и опционально объект параметров запроса Params.
 	// Возвращает изменённую розничную смену.
-	Update(ctx context.Context, id uuid.UUID, retailShift *RetailShift, params ...*Params) (*RetailShift, *resty.Response, error)
+	Update(ctx context.Context, id string, retailShift *RetailShift, params ...func(*Params)) (*RetailShift, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных розничных смен.
 	// Принимает контекст.
@@ -586,7 +586,7 @@ type RetailShiftService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -602,12 +602,12 @@ type RetailShiftService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -617,52 +617,52 @@ type RetailShiftService interface {
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailShift, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*RetailShift, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

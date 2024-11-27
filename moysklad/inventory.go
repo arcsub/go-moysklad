@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"net/http"
 	"time"
 )
@@ -26,12 +26,12 @@ type Inventory struct {
 	ExternalCode *string                       `json:"externalCode,omitempty"` // Внешний код Инвентаризации
 	Files        *MetaArray[File]              `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group                        `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID                    `json:"id,omitempty"`           // ID Инвентаризации
+	ID           *string                       `json:"id,omitempty"`           // ID Инвентаризации
 	Updated      *Timestamp                    `json:"updated,omitempty"`      // Момент последнего обновления Инвентаризации
 	Meta         *Meta                         `json:"meta,omitempty"`         // Метаданные Инвентаризации
 	Owner        *Employee                     `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Organization *Organization                 `json:"organization,omitempty"` // Метаданные юрлица
-	AccountID    *uuid.UUID                    `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string                       `json:"accountId,omitempty"`    // ID учётной записи
 	Positions    *MetaArray[InventoryPosition] `json:"positions,omitempty"`    // Метаданные позиций Инвентаризации
 	Printed      *bool                         `json:"printed,omitempty"`      // Напечатан ли документ
 	Published    *bool                         `json:"published,omitempty"`    // Опубликован ли документ
@@ -39,7 +39,7 @@ type Inventory struct {
 	State        *NullValue[State]             `json:"state,omitempty"`        // Метаданные статуса Инвентаризации
 	Store        *Store                        `json:"store,omitempty"`        // Метаданные склада
 	Moment       *Timestamp                    `json:"moment,omitempty"`       // Дата документа
-	SyncID       *uuid.UUID                    `json:"syncId,omitempty"`       // ID синхронизации
+	SyncID       *string                       `json:"syncId,omitempty"`       // ID синхронизации
 	Attributes   Slice[Attribute]              `json:"attributes,omitempty"`   // Список метаданных доп. полей
 	Enters       Slice[Enter]                  `json:"enters,omitempty"`       // Список связанных с инвентаризацией оприходований
 	Losses       Slice[Loss]                   `json:"losses,omitempty"`       // Список связанных с инвентаризацией списаний
@@ -106,7 +106,7 @@ func (inventory Inventory) GetGroup() Group {
 }
 
 // GetID возвращает ID Инвентаризации.
-func (inventory Inventory) GetID() uuid.UUID {
+func (inventory Inventory) GetID() string {
 	return Deref(inventory.ID)
 }
 
@@ -131,7 +131,7 @@ func (inventory Inventory) GetOrganization() Organization {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (inventory Inventory) GetAccountID() uuid.UUID {
+func (inventory Inventory) GetAccountID() string {
 	return Deref(inventory.AccountID)
 }
 
@@ -171,7 +171,7 @@ func (inventory Inventory) GetMoment() time.Time {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (inventory Inventory) GetSyncID() uuid.UUID {
+func (inventory Inventory) GetSyncID() string {
 	return Deref(inventory.SyncID)
 }
 
@@ -289,7 +289,7 @@ func (inventory *Inventory) SetMoment(moment time.Time) *Inventory {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (inventory *Inventory) SetSyncID(syncID uuid.UUID) *Inventory {
+func (inventory *Inventory) SetSyncID(syncID string) *Inventory {
 	inventory.SyncID = &syncID
 	return inventory
 }
@@ -329,12 +329,12 @@ func (Inventory) MetaType() MetaType {
 }
 
 // Update shortcut
-func (inventory *Inventory) Update(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+func (inventory *Inventory) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Inventory, *resty.Response, error) {
 	return NewInventoryService(client).Update(ctx, inventory.GetID(), inventory, params...)
 }
 
 // Create shortcut
-func (inventory *Inventory) Create(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+func (inventory *Inventory) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Inventory, *resty.Response, error) {
 	return NewInventoryService(client).Create(ctx, inventory, params...)
 }
 
@@ -351,19 +351,19 @@ func (inventory *Inventory) Delete(ctx context.Context, client *Client) (bool, *
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-inwentarizaciq-inwentarizaciq-pozicii-inwentarizacii
 type InventoryPosition struct {
-	AccountID          *uuid.UUID          `json:"accountId,omitempty"`          // ID учётной записи
+	AccountID          *string             `json:"accountId,omitempty"`          // ID учётной записи
 	Assortment         *AssortmentPosition `json:"assortment,omitempty"`         // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	CalculatedQuantity *float64            `json:"calculatedQuantity,omitempty"` // расчетный остаток
 	CorrectionAmount   *float64            `json:"correctionAmount,omitempty"`   // разница между расчетным остатком и фактическим
 	CorrectionSum      *float64            `json:"correctionSum,omitempty"`      // избыток/недостача
-	ID                 *uuid.UUID          `json:"id,omitempty"`                 // ID сущности
+	ID                 *string             `json:"id,omitempty"`                 // ID сущности
 	Pack               *Pack               `json:"pack,omitempty"`               // Упаковка Товара
 	Price              *float64            `json:"price,omitempty"`              // Цена товара/услуги в копейках
 	Quantity           *float64            `json:"quantity,omitempty"`           // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (inventoryPosition InventoryPosition) GetAccountID() uuid.UUID {
+func (inventoryPosition InventoryPosition) GetAccountID() string {
 	return Deref(inventoryPosition.AccountID)
 }
 
@@ -388,7 +388,7 @@ func (inventoryPosition InventoryPosition) GetCorrectionSum() float64 {
 }
 
 // GetID возвращает ID позиции.
-func (inventoryPosition InventoryPosition) GetID() uuid.UUID {
+func (inventoryPosition InventoryPosition) GetID() string {
 	return Deref(inventoryPosition.ID)
 }
 
@@ -464,12 +464,12 @@ type InventoryService interface {
 	// GetList выполняет запрос на получение списка инвентаризаций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Inventory], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Inventory], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех инвентаризаций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Inventory], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Inventory], *resty.Response, error)
 
 	// Create выполняет запрос на создание инвентаризации.
 	// Обязательные поля для заполнения:
@@ -477,13 +477,13 @@ type InventoryService interface {
 	//	- store (Ссылка на склад)
 	// Принимает контекст, инвентаризацию и опционально объект параметров запроса Params.
 	// Возвращает созданную инвентаризацию.
-	Create(ctx context.Context, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
+	Create(ctx context.Context, inventory *Inventory, params ...func(*Params)) (*Inventory, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение инвентаризаций.
 	// Изменяемые инвентаризации должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список инвентаризации и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых инвентаризаций.
-	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...*Params) (*Slice[Inventory], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...func(*Params)) (*Slice[Inventory], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление инвентаризаций.
 	// Принимает контекст и множество инвентаризаций.
@@ -493,7 +493,7 @@ type InventoryService interface {
 	// DeleteByID выполняет запрос на удаление инвентаризации по ID.
 	// Принимает контекст и ID инвентаризации.
 	// Возвращает «true» в случае успешного удаления инвентаризации.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление инвентаризации.
 	// Принимает контекст и инвентаризацию.
@@ -503,12 +503,12 @@ type InventoryService interface {
 	// GetByID выполняет запрос на получение отдельного инвентаризации по ID.
 	// Принимает контекст, ID инвентаризации и опционально объект параметров запроса Params.
 	// Возвращает найденную инвентаризацию.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Inventory, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Inventory, *resty.Response, error)
 
 	// Update выполняет запрос на изменение инвентаризации.
 	// Принимает контекст, инвентаризацию и опционально объект параметров запроса Params.
 	// Возвращает изменённую инвентаризацию.
-	Update(ctx context.Context, id uuid.UUID, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
+	Update(ctx context.Context, id string, inventory *Inventory, params ...func(*Params)) (*Inventory, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной инвентаризации со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -523,54 +523,54 @@ type InventoryService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[InventoryPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[InventoryPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[InventoryPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[InventoryPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*InventoryPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InventoryPosition, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *InventoryPosition, params ...func(*Params)) (*InventoryPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *InventoryPosition, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *InventoryPosition, params ...func(*Params)) (*InventoryPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*InventoryPosition) (*Slice[InventoryPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*InventoryPosition) (*Slice[InventoryPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*InventoryPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*InventoryPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -580,7 +580,7 @@ type InventoryService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -596,12 +596,12 @@ type InventoryService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -611,47 +611,47 @@ type InventoryService interface {
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Inventory, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Inventory, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Recalculate выполняет запрос на пересчёт расчётных остатков у позиций инвентаризации.
 	// Принимает контекст и ID инвентаризации.
 	// Возвращает «true» в случае успешного перерасчёта.
-	Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	Recalculate(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// Evaluate выполняет запрос на получение шаблона документа с автозаполнением.
 	// Принимает контекст, документ и множество значений Evaluate.
@@ -691,7 +691,7 @@ type inventoryService struct {
 	endpointEvaluate[Inventory]
 }
 
-func (service *inventoryService) Recalculate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *inventoryService) Recalculate(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointInventoryRecalculate, id)
 	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -17,7 +17,7 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-zadacha
 type Task struct {
-	AccountID         *uuid.UUID           `json:"accountId,omitempty"`         // ID учётной записи
+	AccountID         *string              `json:"accountId,omitempty"`         // ID учётной записи
 	Agent             *Agent               `json:"agent,omitempty"`             // Метаданные Контрагента или юрлица, связанного с задачей. Задача может быть привязана либо к контрагенту, либо к юрлицу, либо к документу
 	Assignee          *Employee            `json:"assignee,omitempty"`          // Метаданные ответственного за выполнение задачи
 	Author            *Employee            `json:"author,omitempty"`            // Метаданные Сотрудника, создавшего задачу (администратор аккаунта, если автор - Приложение)
@@ -28,7 +28,7 @@ type Task struct {
 	Done              *bool                `json:"done,omitempty"`              // Отметка о выполнении задачи
 	DueToDate         *Timestamp           `json:"dueToDate,omitempty"`         // Срок задачи
 	Files             *MetaArray[File]     `json:"files,omitempty"`             // Метаданные массива Файлов (Максимальное количество файлов - 100)
-	ID                *uuid.UUID           `json:"id,omitempty"`                // ID Задачи
+	ID                *string              `json:"id,omitempty"`                // ID Задачи
 	Implementer       *Employee            `json:"implementer,omitempty"`       // Метаданные Сотрудника, выполнившего задачу
 	Meta              *Meta                `json:"meta,omitempty"`              // Метаданные Задачи
 	State             *State               `json:"state,omitempty"`             // Метаданные Типа задачи
@@ -43,7 +43,7 @@ type TaskOperationConverter interface {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (task Task) GetAccountID() uuid.UUID {
+func (task Task) GetAccountID() string {
 	return Deref(task.AccountID)
 }
 
@@ -100,7 +100,7 @@ func (task Task) GetFiles() MetaArray[File] {
 }
 
 // GetID возвращает ID Задачи.
-func (task Task) GetID() uuid.UUID {
+func (task Task) GetID() string {
 	return Deref(task.ID)
 }
 
@@ -229,12 +229,12 @@ func (Task) MetaType() MetaType {
 }
 
 // Update shortcut
-func (task *Task) Update(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+func (task *Task) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Task, *resty.Response, error) {
 	return NewTaskService(client).Update(ctx, task.GetID(), task, params...)
 }
 
 // Create shortcut
-func (task *Task) Create(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+func (task *Task) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Task, *resty.Response, error) {
 	return NewTaskService(client).Create(ctx, task, params...)
 }
 
@@ -295,10 +295,10 @@ func (TaskNote) MetaType() MetaType {
 
 // TaskOperation Метаданные Документа, связанного с задачей. Задача может быть привязана либо к контрагенту, либо к юрлицу, либо к документу
 type TaskOperation struct {
-	Meta *Meta     `json:"meta,omitempty"` // Метаданные документа
-	Name *string   `json:"name,omitempty"` // Наименование документа
-	raw  []byte    // сырые данные для последующей конвертации в нужный тип
-	ID   uuid.UUID `json:"id"` // ID документа
+	Meta *Meta   `json:"meta,omitempty"` // Метаданные документа
+	Name *string `json:"name,omitempty"` // Наименование документа
+	raw  []byte  // сырые данные для последующей конвертации в нужный тип
+	ID   string  `json:"id"` // ID документа
 }
 
 // MetaType возвращает код сущности.
@@ -833,12 +833,12 @@ type TaskService interface {
 	// GetList выполняет запрос на получение списка задач.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Task], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Task], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех задач в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Task], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Task], *resty.Response, error)
 
 	// Create выполняет запрос на создание задачи.
 	// Создать новую задачу. Для создания новых задач необходима активная тарифная опция CRM.
@@ -847,13 +847,13 @@ type TaskService interface {
 	//	- assignee (Метаданные Сотрудника, ответственного за выполнение задачи)
 	// Принимает контекст, задачу и опционально объект параметров запроса Params.
 	// Возвращает созданную задачу.
-	Create(ctx context.Context, task *Task, params ...*Params) (*Task, *resty.Response, error)
+	Create(ctx context.Context, task *Task, params ...func(*Params)) (*Task, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение задач.
 	// Изменяемые задачи должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список задач и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых задач.
-	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...*Params) (*Slice[Task], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...func(*Params)) (*Slice[Task], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление задач.
 	// Принимает контекст и множество задач.
@@ -863,7 +863,7 @@ type TaskService interface {
 	// DeleteByID выполняет запрос на удаление задачи по ID.
 	// Принимает контекст и ID задачи.
 	// Возвращает «true» в случае успешного удаления задачи.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление задачи.
 	// Принимает контекст и задачу.
@@ -873,79 +873,79 @@ type TaskService interface {
 	// GetByID выполняет запрос на получение отдельной задачи по ID.
 	// Принимает контекст, ID задачи и опционально объект параметров запроса Params.
 	// Возвращает задачу.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Task, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Task, *resty.Response, error)
 
 	// Update выполняет запрос на изменение задачи.
 	// Принимает контекст, задачу и опционально объект параметров запроса Params.
 	// Возвращает изменённую задачу.
-	Update(ctx context.Context, id uuid.UUID, task *Task, params ...*Params) (*Task, *resty.Response, error)
+	Update(ctx context.Context, id string, task *Task, params ...func(*Params)) (*Task, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetNoteList выполняет запрос на получение списка всех комментариев данной задачи.
 	// Принимает контекст, ID задачи и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNoteList(ctx context.Context, taskID uuid.UUID, params ...*Params) (*List[TaskNote], *resty.Response, error)
+	GetNoteList(ctx context.Context, taskID string, params ...func(*Params)) (*List[TaskNote], *resty.Response, error)
 
 	// CreateNote выполняет запрос на создание нового комментария к задаче.
 	// Обязательные поля для заполнения:
 	//	- text (Текст комментария)
 	// Принимает контекст, ID задачи и комментарий к задаче (тип string).
 	// Возвращает созданный комментарий к задаче.
-	CreateNote(ctx context.Context, taskID uuid.UUID, taskNoteText string) (*TaskNote, *resty.Response, error)
+	CreateNote(ctx context.Context, taskID string, taskNoteText string) (*TaskNote, *resty.Response, error)
 
 	// CreateNoteMany выполняет запрос на массовое создание комментариев к задаче.
 	// Принимает контекст, ID задачи и список комментариев к задаче (тип string).
 	// Возвращает список созданных комментариев к задаче.
-	CreateNoteMany(ctx context.Context, taskID uuid.UUID, taskNotesText ...string) (*Slice[TaskNote], *resty.Response, error)
+	CreateNoteMany(ctx context.Context, taskID string, taskNotesText ...string) (*Slice[TaskNote], *resty.Response, error)
 
 	// GetNoteByID выполняет запрос на получение отдельного комментария к задаче по ID.
 	// Принимает контекст, ID задачи и ID комментария к задаче.
 	// Возвращает комментарий к задаче.
-	GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error)
+	GetNoteByID(ctx context.Context, taskID, taskNoteID string) (*TaskNote, *resty.Response, error)
 
 	// UpdateNote выполняет запрос на изменение комментария к задаче.
 	// Принимает контекст, ID задачи, ID комментария к задаче и комментарий к задаче (тип string).
 	// Возвращает изменённый комментарий к задаче.
-	UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNoteText string) (*TaskNote, *resty.Response, error)
+	UpdateNote(ctx context.Context, taskID, taskNoteID string, taskNoteText string) (*TaskNote, *resty.Response, error)
 
 	// DeleteNote выполняет запрос на удаление комментария к задаче.
 	// Принимает контекст, ID задачи и ID комментария к задаче.
 	// Возвращает «true» в случае успешного удаления комментария к задаче.
-	DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error)
+	DeleteNote(ctx context.Context, taskID, taskNoteID string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (
@@ -968,17 +968,17 @@ type taskService struct {
 	endpointFiles
 }
 
-func (service *taskService) GetNoteList(ctx context.Context, taskID uuid.UUID, params ...*Params) (*List[TaskNote], *resty.Response, error) {
+func (service *taskService) GetNoteList(ctx context.Context, taskID string, params ...func(*Params)) (*List[TaskNote], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotes, taskID)
-	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *taskService) CreateNote(ctx context.Context, taskID uuid.UUID, taskNoteText string) (*TaskNote, *resty.Response, error) {
+func (service *taskService) CreateNote(ctx context.Context, taskID string, taskNoteText string) (*TaskNote, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotes, taskID)
 	return NewRequestBuilder[TaskNote](service.client, path).Post(ctx, &TaskNote{Description: String(taskNoteText)})
 }
 
-func (service *taskService) CreateNoteMany(ctx context.Context, taskID uuid.UUID, taskNoteText ...string) (*Slice[TaskNote], *resty.Response, error) {
+func (service *taskService) CreateNoteMany(ctx context.Context, taskID string, taskNoteText ...string) (*Slice[TaskNote], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotes, taskID)
 	var taskNotes Slice[TaskNote]
 	for _, text := range taskNoteText {
@@ -987,17 +987,17 @@ func (service *taskService) CreateNoteMany(ctx context.Context, taskID uuid.UUID
 	return NewRequestBuilder[Slice[TaskNote]](service.client, path).Post(ctx, taskNotes)
 }
 
-func (service *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID uuid.UUID) (*TaskNote, *resty.Response, error) {
+func (service *taskService) GetNoteByID(ctx context.Context, taskID, taskNoteID string) (*TaskNote, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotesID, taskID, taskNoteID)
 	return NewRequestBuilder[TaskNote](service.client, path).Get(ctx)
 }
 
-func (service *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID uuid.UUID, taskNoteText string) (*TaskNote, *resty.Response, error) {
+func (service *taskService) UpdateNote(ctx context.Context, taskID, taskNoteID string, taskNoteText string) (*TaskNote, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotesID, taskID, taskNoteID)
 	return NewRequestBuilder[TaskNote](service.client, path).Put(ctx, &TaskNote{Description: String(taskNoteText)})
 }
 
-func (service *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID uuid.UUID) (bool, *resty.Response, error) {
+func (service *taskService) DeleteNote(ctx context.Context, taskID, taskNoteID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotesID, taskID, taskNoteID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -18,7 +18,7 @@ type InternalOrder struct {
 	Organization          *Organization                     `json:"organization,omitempty"`          // Метаданные юрлица
 	Description           *string                           `json:"description,omitempty"`           // Комментарий Внутреннего заказа
 	VatSum                *float64                          `json:"vatSum,omitempty"`                // Сумма НДС
-	AccountID             *uuid.UUID                        `json:"accountId,omitempty"`             // ID учётной записи
+	AccountID             *string                           `json:"accountId,omitempty"`             // ID учётной записи
 	Created               *Timestamp                        `json:"created,omitempty"`               // Дата создания
 	Deleted               *Timestamp                        `json:"deleted,omitempty"`               // Момент последнего удаления Внутреннего заказа
 	DeliveryPlannedMoment *Timestamp                        `json:"deliveryPlannedMoment,omitempty"` // Планируемая дата приемки
@@ -26,7 +26,7 @@ type InternalOrder struct {
 	ExternalCode          *string                           `json:"externalCode,omitempty"`          // Внешний код Внутреннего заказа
 	Files                 *MetaArray[File]                  `json:"files,omitempty"`                 // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                 *Group                            `json:"group,omitempty"`                 // Отдел сотрудника
-	ID                    *uuid.UUID                        `json:"id,omitempty"`                    // ID Внутреннего заказа
+	ID                    *string                           `json:"id,omitempty"`                    // ID Внутреннего заказа
 	Meta                  *Meta                             `json:"meta,omitempty"`                  // Метаданные Внутреннего заказа
 	Positions             *MetaArray[InternalOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Внутреннего заказа
 	Moves                 Slice[Move]                       `json:"moves,omitempty"`                 // Коллекция метаданных на связанные заказы перемещения
@@ -43,7 +43,7 @@ type InternalOrder struct {
 	State                 *NullValue[State]                 `json:"state,omitempty"`                 // Метаданные статуса Внутреннего заказа
 	Store                 *NullValue[Store]                 `json:"store,omitempty"`                 // Метаданные склада
 	Sum                   *float64                          `json:"sum,omitempty"`                   // Сумма Внутреннего заказа в копейках
-	SyncID                *uuid.UUID                        `json:"syncId,omitempty"`                // ID синхронизации
+	SyncID                *string                           `json:"syncId,omitempty"`                // ID синхронизации
 	Updated               *Timestamp                        `json:"updated,omitempty"`               // Момент последнего обновления Внутреннего заказа
 	VatEnabled            *bool                             `json:"vatEnabled,omitempty"`            // Учитывается ли НДС
 	VatIncluded           *bool                             `json:"vatIncluded,omitempty"`           // Включен ли НДС в цену
@@ -81,7 +81,7 @@ func (internalOrder InternalOrder) GetVatSum() float64 {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (internalOrder InternalOrder) GetAccountID() uuid.UUID {
+func (internalOrder InternalOrder) GetAccountID() string {
 	return Deref(internalOrder.AccountID)
 }
 
@@ -121,7 +121,7 @@ func (internalOrder InternalOrder) GetGroup() Group {
 }
 
 // GetID возвращает ID Внутреннего заказа.
-func (internalOrder InternalOrder) GetID() uuid.UUID {
+func (internalOrder InternalOrder) GetID() string {
 	return Deref(internalOrder.ID)
 }
 
@@ -206,7 +206,7 @@ func (internalOrder InternalOrder) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (internalOrder InternalOrder) GetSyncID() uuid.UUID {
+func (internalOrder InternalOrder) GetSyncID() string {
 	return Deref(internalOrder.SyncID)
 }
 
@@ -373,7 +373,7 @@ func (internalOrder *InternalOrder) SetStore(store *Store) *InternalOrder {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (internalOrder *InternalOrder) SetSyncID(syncID uuid.UUID) *InternalOrder {
+func (internalOrder *InternalOrder) SetSyncID(syncID string) *InternalOrder {
 	internalOrder.SyncID = &syncID
 	return internalOrder
 }
@@ -409,12 +409,12 @@ func (InternalOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (internalOrder *InternalOrder) Update(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+func (internalOrder *InternalOrder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*InternalOrder, *resty.Response, error) {
 	return NewInternalOrderService(client).Update(ctx, internalOrder.GetID(), internalOrder, params...)
 }
 
 // Create shortcut
-func (internalOrder *InternalOrder) Create(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+func (internalOrder *InternalOrder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*InternalOrder, *resty.Response, error) {
 	return NewInternalOrderService(client).Create(ctx, internalOrder, params...)
 }
 
@@ -431,9 +431,9 @@ func (internalOrder *InternalOrder) Delete(ctx context.Context, client *Client) 
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vnutrennij-zakaz-vnutrennie-zakazy-pozicii-vnutrennego-zakaza
 type InternalOrderPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
@@ -442,7 +442,7 @@ type InternalOrderPosition struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (internalOrderPosition InternalOrderPosition) GetAccountID() uuid.UUID {
+func (internalOrderPosition InternalOrderPosition) GetAccountID() string {
 	return Deref(internalOrderPosition.AccountID)
 }
 
@@ -452,7 +452,7 @@ func (internalOrderPosition InternalOrderPosition) GetAssortment() AssortmentPos
 }
 
 // GetID возвращает ID позиции.
-func (internalOrderPosition InternalOrderPosition) GetID() uuid.UUID {
+func (internalOrderPosition InternalOrderPosition) GetID() string {
 	return Deref(internalOrderPosition.ID)
 }
 
@@ -538,25 +538,25 @@ type InternalOrderService interface {
 	// GetList выполняет запрос на получение списка внутренних заказов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[InternalOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[InternalOrder], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех внутренних заказов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[InternalOrder], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[InternalOrder], *resty.Response, error)
 
 	// Create выполняет запрос на создание внутреннего заказа.
 	// Обязательные поля для заполнения:
 	//	- organization (Ссылка на ваше юрлицо)
 	// Принимает контекст, внутренний заказ и опционально объект параметров запроса Params.
 	// Возвращает созданный внутренний заказ.
-	Create(ctx context.Context, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
+	Create(ctx context.Context, internalOrder *InternalOrder, params ...func(*Params)) (*InternalOrder, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение внутренних заказов.
 	// Изменяемые внутренние заказы должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список внутренних заказов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых внутренних заказов.
-	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params ...*Params) (*Slice[InternalOrder], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params ...func(*Params)) (*Slice[InternalOrder], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление внутренних заказов.
 	// Принимает контекст и множество внутренних заказов.
@@ -566,7 +566,7 @@ type InternalOrderService interface {
 	// DeleteByID выполняет запрос на удаление внутреннего заказа по ID.
 	// Принимает контекст и ID внутреннего заказа.
 	// Возвращает «true» в случае успешного удаления внутреннего заказа.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление внутреннего заказа.
 	// Принимает контекст и внутренний заказ.
@@ -576,12 +576,12 @@ type InternalOrderService interface {
 	// GetByID выполняет запрос на получение отдельного внутреннего заказа по ID.
 	// Принимает контекст, ID внутреннего заказа и опционально объект параметров запроса Params.
 	// Возвращает найденный внутренний заказ.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*InternalOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*InternalOrder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение внутреннего заказа.
 	// Принимает контекст, внутренний заказ и опционально объект параметров запроса Params.
 	// Возвращает изменённый внутренний заказ.
-	Update(ctx context.Context, id uuid.UUID, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
+	Update(ctx context.Context, id string, internalOrder *InternalOrder, params ...func(*Params)) (*InternalOrder, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного внутреннего заказа со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -596,54 +596,54 @@ type InternalOrderService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[InternalOrderPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[InternalOrderPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[InternalOrderPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[InternalOrderPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*InternalOrderPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *InternalOrderPosition, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *InternalOrderPosition, params ...func(*Params)) (*InternalOrderPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *InternalOrderPosition, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *InternalOrderPosition, params ...func(*Params)) (*InternalOrderPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*InternalOrderPosition) (*Slice[InternalOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*InternalOrderPosition) (*Slice[InternalOrderPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*InternalOrderPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*InternalOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -653,7 +653,7 @@ type InternalOrderService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -669,12 +669,12 @@ type InternalOrderService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -684,42 +684,42 @@ type InternalOrderService interface {
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*InternalOrder, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*InternalOrder, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -729,7 +729,7 @@ type InternalOrderService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -739,32 +739,32 @@ type InternalOrderService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// Evaluate выполняет запрос на получение шаблона документа с автозаполнением.
 	// Принимает контекст, документ и множество значений Evaluate.

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -17,11 +17,11 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt
 type Bundle struct {
 	Volume              *float64                    `json:"volume,omitempty"`              // Объем
-	SyncID              *uuid.UUID                  `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *string                     `json:"syncId,omitempty"`              // ID синхронизации
 	Code                *string                     `json:"code,omitempty"`                // Код Комплекта
 	Description         *string                     `json:"description,omitempty"`         // Описание Комплекта
 	ExternalCode        *string                     `json:"externalCode,omitempty"`        // Внешний код Комплекта
-	ID                  *uuid.UUID                  `json:"id,omitempty"`                  // ID Комплекта
+	ID                  *string                     `json:"id,omitempty"`                  // ID Комплекта
 	Meta                *Meta                       `json:"meta,omitempty"`                // Метаданные Комплекта
 	Name                *string                     `json:"name,omitempty"`                // Наименование Комплекта
 	Archived            *bool                       `json:"archived,omitempty"`            // Добавлен ли Комплект в архив
@@ -44,7 +44,7 @@ type Bundle struct {
 	ProductFolder       *NullValue[ProductFolder]   `json:"productFolder,omitempty"`       // Метаданные группы Комплекта
 	Shared              *bool                       `json:"shared,omitempty"`              // Общий доступ
 	Updated             *Timestamp                  `json:"updated,omitempty"`             // Момент последнего обновления сущности
-	AccountID           *uuid.UUID                  `json:"accountId,omitempty"`           // ID учётной записи
+	AccountID           *string                     `json:"accountId,omitempty"`           // ID учётной записи
 	TNVED               *string                     `json:"tnved,omitempty"`               // Код ТН ВЭД
 	VatEnabled          *bool                       `json:"vatEnabled,omitempty"`          // Включен ли НДС для комплекта. С помощью этого флага для комплекта можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Uom                 *NullValue[Uom]             `json:"uom,omitempty"`                 // Единица измерения
@@ -86,7 +86,7 @@ func (bundle Bundle) GetVolume() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (bundle Bundle) GetSyncID() uuid.UUID {
+func (bundle Bundle) GetSyncID() string {
 	return Deref(bundle.SyncID)
 }
 
@@ -106,7 +106,7 @@ func (bundle Bundle) GetExternalCode() string {
 }
 
 // GetID возвращает ID Комплекта.
-func (bundle Bundle) GetID() uuid.UUID {
+func (bundle Bundle) GetID() string {
 	return Deref(bundle.ID)
 }
 
@@ -226,7 +226,7 @@ func (bundle Bundle) GetUpdated() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (bundle Bundle) GetAccountID() uuid.UUID {
+func (bundle Bundle) GetAccountID() string {
 	return Deref(bundle.AccountID)
 }
 
@@ -282,7 +282,7 @@ func (bundle *Bundle) SetVolume(volume float64) *Bundle {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (bundle *Bundle) SetSyncID(syncID uuid.UUID) *Bundle {
+func (bundle *Bundle) SetSyncID(syncID string) *Bundle {
 	bundle.SyncID = &syncID
 	return bundle
 }
@@ -518,12 +518,12 @@ func (Bundle) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bundle *Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+func (bundle *Bundle) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Bundle, *resty.Response, error) {
 	return NewBundleService(client).Update(ctx, bundle.GetID(), bundle, params...)
 }
 
 // Create shortcut
-func (bundle *Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+func (bundle *Bundle) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Bundle, *resty.Response, error) {
 	return NewBundleService(client).Create(ctx, bundle, params...)
 }
 
@@ -579,9 +579,9 @@ func (bundleOverhead BundleOverhead) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-komplekt-komplekty-komponenty-komplekta
 type BundleComponent struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги, которую представляет собой компонент
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID компонента
+	ID         *string             `json:"id,omitempty"`         // ID компонента
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в компоненте
 }
 
@@ -592,7 +592,7 @@ func NewBundleComponent(assortment AssortmentConverter, quantity float64) *Bundl
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (bundleComponent BundleComponent) GetAccountID() uuid.UUID {
+func (bundleComponent BundleComponent) GetAccountID() string {
 	return Deref(bundleComponent.AccountID)
 }
 
@@ -602,7 +602,7 @@ func (bundleComponent BundleComponent) GetAssortment() AssortmentPosition {
 }
 
 // GetID возвращает ID компонента.
-func (bundleComponent BundleComponent) GetID() uuid.UUID {
+func (bundleComponent BundleComponent) GetID() string {
 	return Deref(bundleComponent.ID)
 }
 
@@ -642,12 +642,12 @@ type BundleService interface {
 	// GetList выполняет запрос на получение списка комплектов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Bundle], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Bundle], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех комплектов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Bundle], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Bundle], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
@@ -655,28 +655,28 @@ type BundleService interface {
 	//	- components (Компоненты комплекта)
 	// Принимает контекст, комплект и опционально объект параметров запроса Params.
 	// Возвращает созданный комплект.
-	Create(ctx context.Context, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
+	Create(ctx context.Context, bundle *Bundle, params ...func(*Params)) (*Bundle, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение комплектов.
 	// Изменяемые комплекты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список комплектов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых комплектов.
-	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...func(*Params)) (*Slice[Bundle], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение комплекта по ID.
 	// Принимает контекст, ID комплекта и опционально объект параметров запроса Params.
 	// Возвращает комплект.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Bundle, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Bundle, *resty.Response, error)
 
 	// Update выполняет запрос на изменение комплекта.
 	// Принимает контекст, комплект и опционально объект параметров запроса Params.
 	// Возвращает изменённый комплект.
-	Update(ctx context.Context, id uuid.UUID, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
+	Update(ctx context.Context, id string, bundle *Bundle, params ...func(*Params)) (*Bundle, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление комплекта по ID.
 	// Принимает контекст и ID комплекта.
 	// Возвращает «true» в случае успешного удаления комплекта.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление комплекта.
 	// Принимает контекст и комплект.
@@ -691,77 +691,77 @@ type BundleService interface {
 	// GetComponentList выполняет запрос на получение компонентов комплекта в виде списка.
 	// Принимает контекст и ID комплекта.
 	// Возвращает объект List.
-	GetComponentList(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error)
+	GetComponentList(ctx context.Context, id string) (*List[BundleComponent], *resty.Response, error)
 
 	// CreateComponent выполняет запрос на добавление компонента комплекта.
 	// Принимает контекст, ID комплекта и компонент комплекта.
 	// Возвращает добавленный компонент комплекта.
-	CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
+	CreateComponent(ctx context.Context, id string, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 
 	// GetComponentByID выполняет запрос на получение компонента комплекта по ID.
 	// Принимает контекст, ID комплекта и ID компонента комплекта.
-	GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error)
+	GetComponentByID(ctx context.Context, id, componentID string) (*BundleComponent, *resty.Response, error)
 
 	// UpdateComponent выполняет запрос на изменение компонента комплекта.
 	// Принимает контекст, ID комплекта, ID компонента комплекта и компонент комплекта.
 	// Возвращает изменённый компонент комплекта.
-	UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
+	UpdateComponent(ctx context.Context, id, componentID string, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error)
 
 	// DeleteComponent выполняет запрос на удаление компонента комплекта по ID.
 	// Принимает контекст, ID комплекта и ID компонента комплекта.
 	// Возвращает «true» в случае успешного удаления компонента комплекта.
-	DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error)
+	DeleteComponent(ctx context.Context, id, componentID string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetImageList выполняет запрос на получение изображений комплекта в виде списка.
 	// Принимает контекст и ID комплекта.
 	// Возвращает объект List.
-	GetImageList(ctx context.Context, id uuid.UUID) (*List[Image], *resty.Response, error)
+	GetImageList(ctx context.Context, id string) (*List[Image], *resty.Response, error)
 
 	// CreateImage выполняет запрос на добавление изображения.
 	// Принимает контекст, ID комплекта и изображение.
 	// Возвращает список изображений.
-	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
+	CreateImage(ctx context.Context, id string, image *Image) (*Slice[Image], *resty.Response, error)
 
 	// UpdateImageMany выполняет запрос на обновления изображений.
 	// Принимает контекст, ID комплекта и изображение.
 	// Если необходимо оставить некоторые Изображения, то необходимо передать эти изображения.
 	// Возвращает список изображений.
-	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id string, images ...*Image) (*Slice[Image], *resty.Response, error)
 
 	// DeleteImage выполняет запрос на удаление изображения комплекта.
 	// Принимает контекст, ID комплекта и ID изображения.
 	// Возвращает «true» в случае успешного удаления изображения комплекта.
-	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
+	DeleteImage(ctx context.Context, id string, imageID string) (bool, *resty.Response, error)
 
 	// DeleteImageMany выполняет запрос на массовое удаление изображений комплекта.
 	// Принимает контекст, ID комплекта и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id string, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -771,7 +771,7 @@ type BundleService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -787,12 +787,12 @@ type BundleService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -802,12 +802,12 @@ type BundleService interface {
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Bundle, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Bundle, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 }
 
 const (
@@ -832,27 +832,27 @@ type bundleService struct {
 	endpointSyncID[Bundle]
 }
 
-func (service *bundleService) GetComponentList(ctx context.Context, id uuid.UUID) (*List[BundleComponent], *resty.Response, error) {
+func (service *bundleService) GetComponentList(ctx context.Context, id string) (*List[BundleComponent], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointBundleComponents, id)
 	return NewRequestBuilder[List[BundleComponent]](service.client, path).Get(ctx)
 }
 
-func (service *bundleService) CreateComponent(ctx context.Context, id uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+func (service *bundleService) CreateComponent(ctx context.Context, id string, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointBundleComponents, id)
 	return NewRequestBuilder[BundleComponent](service.client, path).Post(ctx, bundleComponent)
 }
 
-func (service *bundleService) GetComponentByID(ctx context.Context, id, componentID uuid.UUID) (*BundleComponent, *resty.Response, error) {
+func (service *bundleService) GetComponentByID(ctx context.Context, id, componentID string) (*BundleComponent, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointBundleComponentsID, id, componentID)
 	return NewRequestBuilder[BundleComponent](service.client, path).Get(ctx)
 }
 
-func (service *bundleService) UpdateComponent(ctx context.Context, id, componentID uuid.UUID, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
+func (service *bundleService) UpdateComponent(ctx context.Context, id, componentID string, bundleComponent *BundleComponent) (*BundleComponent, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointBundleComponentsID, id, componentID)
 	return NewRequestBuilder[BundleComponent](service.client, path).Put(ctx, bundleComponent)
 }
 
-func (service *bundleService) DeleteComponent(ctx context.Context, id, componentID uuid.UUID) (bool, *resty.Response, error) {
+func (service *bundleService) DeleteComponent(ctx context.Context, id, componentID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointBundleComponentsID, id, componentID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

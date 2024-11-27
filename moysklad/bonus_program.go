@@ -3,7 +3,6 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // BonusProgram Бонусная программа.
@@ -21,8 +20,8 @@ type BonusProgram struct {
 	MaxPaidRatePercents       *int               `json:"maxPaidRatePercents,omitempty"`       // Максимальный процент оплаты баллами
 	EarnRateRoublesToPoint    *int               `json:"earnRateRoublesToPoint,omitempty"`    // Курс начисления
 	EarnWhileRedeeming        *bool              `json:"earnWhileRedeeming,omitempty"`        // Разрешить одновременное начисление и списание бонусов. Если «true» - бонусы будут начислены на денежную часть покупки, даже при частичной оплате покупки баллами.
-	ID                        *uuid.UUID         `json:"id,omitempty"`                        // ID Бонусной программы
-	AccountID                 *uuid.UUID         `json:"accountId,omitempty"`                 // ID учётной записи
+	ID                        *string            `json:"id,omitempty"`                        // ID Бонусной программы
+	AccountID                 *string            `json:"accountId,omitempty"`                 // ID учётной записи
 	Meta                      *Meta              `json:"meta,omitempty"`                      // Метаданные Бонусной программы
 	Name                      *string            `json:"name,omitempty"`                      // Наименование Бонусной программы
 	PostponedBonusesDelayDays *int               `json:"postponedBonusesDelayDays,omitempty"` // Баллы начисляются через [N] дней [Тарифная опция «Расширенная бонусная программа»]
@@ -78,12 +77,12 @@ func (bonusProgram BonusProgram) GetEarnWhileRedeeming() bool {
 }
 
 // GetID возвращает ID Бонусной программы.
-func (bonusProgram BonusProgram) GetID() uuid.UUID {
+func (bonusProgram BonusProgram) GetID() string {
 	return Deref(bonusProgram.ID)
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (bonusProgram BonusProgram) GetAccountID() uuid.UUID {
+func (bonusProgram BonusProgram) GetAccountID() string {
 	return Deref(bonusProgram.AccountID)
 }
 
@@ -231,12 +230,12 @@ func (BonusProgram) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bonusProgram *BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+func (bonusProgram *BonusProgram) Update(ctx context.Context, client *Client, params ...func(*Params)) (*BonusProgram, *resty.Response, error) {
 	return NewBonusProgramService(client).Update(ctx, bonusProgram.GetID(), bonusProgram, params...)
 }
 
 // Create shortcut
-func (bonusProgram *BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+func (bonusProgram *BonusProgram) Create(ctx context.Context, client *Client, params ...func(*Params)) (*BonusProgram, *resty.Response, error) {
 	return NewBonusProgramService(client).Create(ctx, bonusProgram, params...)
 }
 
@@ -266,12 +265,12 @@ type BonusProgramService interface {
 	// GetList выполняет запрос на получение списка бонусных программ.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[BonusProgram], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[BonusProgram], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех бонусных программ в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[BonusProgram], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[BonusProgram], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
@@ -284,22 +283,22 @@ type BonusProgramService interface {
 	//	- maxPaidRatePercents (максимальный процент оплаты баллами)
 	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную программу.
-	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
+	Create(ctx context.Context, bonusProgram *BonusProgram, params ...func(*Params)) (*BonusProgram, *resty.Response, error)
 
 	// Update выполняет запрос на изменение бонусной программы.
 	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает изменённую бонусную программу.
-	Update(ctx context.Context, id uuid.UUID, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
+	Update(ctx context.Context, id string, bonusProgram *BonusProgram, params ...func(*Params)) (*BonusProgram, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной программы.
 	// Принимает контекст, ID бонусной программы и опционально объект параметров запроса Params.
 	// Возвращает бонусную программу.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusProgram, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*BonusProgram, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление бонусной программы по ID.
 	// Принимает контекст и ID бонусной программы.
 	// Возвращает «true» в случае успешного удаления бонусной программы.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление бонусной программы.
 	// Принимает контекст и бонусную программу.

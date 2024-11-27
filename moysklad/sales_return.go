@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -28,11 +28,11 @@ type SalesReturn struct {
 	ExternalCode        *string                         `json:"externalCode,omitempty"`        // Внешний код Возврата Покупателя
 	Files               *MetaArray[File]                `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group               *Group                          `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID                      `json:"id,omitempty"`                  // ID Возврата Покупателя
+	ID                  *string                         `json:"id,omitempty"`                  // ID Возврата Покупателя
 	Meta                *Meta                           `json:"meta,omitempty"`                // Метаданные Возврата Покупателя
 	Moment              *Timestamp                      `json:"moment,omitempty"`              // Дата документа
 	Name                *string                         `json:"name,omitempty"`                // Наименование Возврата Покупателя
-	AccountID           *uuid.UUID                      `json:"accountId,omitempty"`           // ID учетной записи
+	AccountID           *string                         `json:"accountId,omitempty"`           // ID учетной записи
 	Contract            *NullValue[Contract]            `json:"contract,omitempty"`            // Метаданные договора
 	Agent               *Agent                          `json:"agent,omitempty"`               // Метаданные контрагента
 	Organization        *Organization                   `json:"organization,omitempty"`        // Метаданные юрлица
@@ -45,7 +45,7 @@ type SalesReturn struct {
 	State               *NullValue[State]               `json:"state,omitempty"`               // Метаданные статуса Возврата Покупателя
 	Store               *Store                          `json:"store,omitempty"`               // Метаданные склада
 	Sum                 *float64                        `json:"sum,omitempty"`                 // Сумма Возврата Покупателя в копейках
-	SyncID              *uuid.UUID                      `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *string                         `json:"syncId,omitempty"`              // ID синхронизации
 	Updated             *Timestamp                      `json:"updated,omitempty"`             // Момент последнего обновления Возврата Покупателя
 	VatEnabled          *bool                           `json:"vatEnabled,omitempty"`          // Учитывается ли НДС
 	VatIncluded         *bool                           `json:"vatIncluded,omitempty"`         // Включен ли НДС в цену
@@ -140,7 +140,7 @@ func (salesReturn SalesReturn) GetGroup() Group {
 }
 
 // GetID возвращает ID Возврата Покупателя.
-func (salesReturn SalesReturn) GetID() uuid.UUID {
+func (salesReturn SalesReturn) GetID() string {
 	return Deref(salesReturn.ID)
 }
 
@@ -160,7 +160,7 @@ func (salesReturn SalesReturn) GetName() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (salesReturn SalesReturn) GetAccountID() uuid.UUID {
+func (salesReturn SalesReturn) GetAccountID() string {
 	return Deref(salesReturn.AccountID)
 }
 
@@ -225,7 +225,7 @@ func (salesReturn SalesReturn) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (salesReturn SalesReturn) GetSyncID() uuid.UUID {
+func (salesReturn SalesReturn) GetSyncID() string {
 	return Deref(salesReturn.SyncID)
 }
 
@@ -437,7 +437,7 @@ func (salesReturn *SalesReturn) SetStore(store *Store) *SalesReturn {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (salesReturn *SalesReturn) SetSyncID(syncID uuid.UUID) *SalesReturn {
+func (salesReturn *SalesReturn) SetSyncID(syncID string) *SalesReturn {
 	salesReturn.SyncID = &syncID
 	return salesReturn
 }
@@ -505,12 +505,12 @@ func (SalesReturn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (salesReturn *SalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+func (salesReturn *SalesReturn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*SalesReturn, *resty.Response, error) {
 	return NewSalesReturnService(client).Update(ctx, salesReturn.GetID(), salesReturn, params...)
 }
 
 // Create shortcut
-func (salesReturn *SalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+func (salesReturn *SalesReturn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*SalesReturn, *resty.Response, error) {
 	return NewSalesReturnService(client).Create(ctx, salesReturn, params...)
 }
 
@@ -527,7 +527,7 @@ func (salesReturn *SalesReturn) Delete(ctx context.Context, client *Client) (boo
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vozwrat-pokupatelq-vozwraty-pokupatelej-pozicii-vozwrata-pokupatelq
 type SalesReturnPosition struct {
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Cost       *float64            `json:"cost,omitempty"`       // Себестоимость (выводится, если документ был создан без основания)
 	Country    *Country            `json:"country,omitempty"`    // Метаданные Страны
@@ -535,7 +535,7 @@ type SalesReturnPosition struct {
 	GTD        *GTD                `json:"gtd,omitempty"`        // ГТД
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учетной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учетной записи
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Slot       *Slot               `json:"slot,omitempty"`       // Ячейка на складе
 	Stock      *Stock              `json:"stock,omitempty"`      // Остатки и себестоимость позиции (указывается при наличии параметра запроса `fields=stock`)
@@ -545,7 +545,7 @@ type SalesReturnPosition struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (salesReturnPosition SalesReturnPosition) GetAccountID() uuid.UUID {
+func (salesReturnPosition SalesReturnPosition) GetAccountID() string {
 	return Deref(salesReturnPosition.AccountID)
 }
 
@@ -577,7 +577,7 @@ func (salesReturnPosition SalesReturnPosition) GetGTD() GTD {
 }
 
 // GetID возвращает ID позиции.
-func (salesReturnPosition SalesReturnPosition) GetID() uuid.UUID {
+func (salesReturnPosition SalesReturnPosition) GetID() string {
 	return Deref(salesReturnPosition.ID)
 }
 
@@ -744,12 +744,12 @@ type SalesReturnService interface {
 	// GetList выполняет запрос на получение списка возвратов покупателей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[SalesReturn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[SalesReturn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех возвратов покупателей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[SalesReturn], *resty.Response, error)
 
 	// Create выполняет запрос на создание возврата покупателя.
 	// Обязательные поля для заполнения:
@@ -759,13 +759,13 @@ type SalesReturnService interface {
 	//	- agent (Ссылка на контрагента (поставщика))
 	// Принимает контекст, возврат покупателя и опционально объект параметров запроса Params.
 	// Возвращает созданный возврат покупателя.
-	Create(ctx context.Context, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
+	Create(ctx context.Context, salesReturn *SalesReturn, params ...func(*Params)) (*SalesReturn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение возвратов покупателя.
 	// Изменяемые возвраты покупателя должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список возвратов покупателя и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых возвратов покупателя.
-	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params ...func(*Params)) (*Slice[SalesReturn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление возвратов покупателя.
 	// Принимает контекст и множество возвратов покупателя.
@@ -775,7 +775,7 @@ type SalesReturnService interface {
 	// DeleteByID выполняет запрос на удаление возврата покупателя по ID.
 	// Принимает контекст и ID возврата покупателя.
 	// Возвращает «true» в случае успешного удаления возврата покупателя.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление возврата покупателя.
 	// Принимает контекст и возврат покупателя.
@@ -785,12 +785,12 @@ type SalesReturnService interface {
 	// GetByID выполняет запрос на получение отдельного возврата покупателя по ID.
 	// Принимает контекст, ID возврата покупателя и опционально объект параметров запроса Params.
 	// Возвращает возврат покупателя.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SalesReturn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*SalesReturn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение возврата покупателя.
 	// Принимает контекст, возврат покупателя и опционально объект параметров запроса Params.
 	// Возвращает изменённый возврат покупателя.
-	Update(ctx context.Context, id uuid.UUID, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
+	Update(ctx context.Context, id string, salesReturn *SalesReturn, params ...func(*Params)) (*SalesReturn, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного возврата покупателя со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -812,54 +812,54 @@ type SalesReturnService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[SalesReturnPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[SalesReturnPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[SalesReturnPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[SalesReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*SalesReturnPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *SalesReturnPosition, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *SalesReturnPosition, params ...func(*Params)) (*SalesReturnPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *SalesReturnPosition, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *SalesReturnPosition, params ...func(*Params)) (*SalesReturnPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*SalesReturnPosition) (*Slice[SalesReturnPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*SalesReturnPosition) (*Slice[SalesReturnPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, entities ...*SalesReturnPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, entities ...*SalesReturnPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -869,7 +869,7 @@ type SalesReturnService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -885,12 +885,12 @@ type SalesReturnService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -900,52 +900,52 @@ type SalesReturnService interface {
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*SalesReturn, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*SalesReturn, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -955,7 +955,7 @@ type SalesReturnService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -965,32 +965,32 @@ type SalesReturnService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// Evaluate выполняет запрос на получение шаблона документа с автозаполнением.
 	// Принимает контекст, документ и множество значений Evaluate.

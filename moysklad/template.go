@@ -2,7 +2,7 @@ package moysklad
 
 import (
 	"bytes"
-	"github.com/google/uuid"
+
 	"io"
 	"os"
 	"path/filepath"
@@ -16,7 +16,7 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-shablon-pechatnoj-formy
 type Template struct {
 	Content *string      `json:"content,omitempty"` // Ссылка на скачивание
-	ID      *uuid.UUID   `json:"id,omitempty"`      // ID шаблона
+	ID      *string      `json:"id,omitempty"`      // ID шаблона
 	Meta    *Meta        `json:"meta,omitempty"`    // Метаданные шаблона
 	Name    *string      `json:"name,omitempty"`    // Наименование шаблона
 	Type    TemplateType `json:"type,omitempty"`    // Тип шаблона (entity - документ, mxtemplate - новый тип шаблона для ценников и этикеток)
@@ -28,7 +28,7 @@ func (template Template) GetContent() string {
 }
 
 // GetID возвращает ID шаблона.
-func (template Template) GetID() uuid.UUID {
+func (template Template) GetID() string {
 	return Deref(template.ID)
 }
 

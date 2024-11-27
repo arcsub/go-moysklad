@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.73"                                // Версия библиотеки
+	Version                      = "v0.0.75"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	ApplicationJson              = "application/json"                       // Тип данных
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
@@ -37,91 +37,65 @@ const (
 type Client struct {
 	*resty.Client
 	limits      *queryLimits
-	clientMu    sync.Mutex
+	mu          sync.Mutex
 	nextReqTime time.Time // время следующего запроса
 }
 
-// NewClient возвращает новый клиент для работы с API МойСклад.
-func NewClient(credentials ...string) *Client {
-	client := &Client{Client: resty.New()}
-
-	return client.init(credentials)
-}
-
-// NewHTTPClient принимает [http.Client] и возвращает новый клиент для работы с API МойСклад.
-func NewHTTPClient(httpClient *http.Client, credentials ...string) *Client {
-	client := &Client{Client: resty.NewWithClient(httpClient)}
-
-	return client.init(credentials)
-}
-
-// NewRestyClient принимает [resty.Client] и возвращает новый клиент для работы с API МойСклад.
-func NewRestyClient(restyClient *resty.Client, credentials ...string) *Client {
-	client := &Client{Client: restyClient}
-
-	return client.init(credentials)
-}
-
-func (client *Client) setCredentials(credentials []string) *Client {
-	switch length := len(credentials); {
-	case length == 1:
-		client.SetAuthToken(credentials[0])
-	case length > 1:
-		client.SetBasicAuth(credentials[0], credentials[1])
+func New(options ...func(*Client)) *Client {
+	client := &Client{
+		Client: resty.New(),
+		limits: &queryLimits{
+			// количество запросов за 3-х секундный период и количество параллельных запросов.
+			rl:       ratelimit.New(MaxQueriesPerSecond),
+			queryBuf: make(chan struct{}, MaxQueriesPerUser),
+		},
 	}
+
+	for _, o := range options {
+		o(client)
+	}
+
+	// устанавливаем базовый URL
+	client.SetBaseURL(baseApiURL)
+
+	// устанавливаем необходимые заголовки
+	client.Header.Set("Accept", "application/json;charset=utf-8")
+	client.Header.Set("Accept-Encoding", "gzip")
+	client.Header.Set("User-Agent", fmt.Sprintf("go-moysklad/%s, https://github.com/arcsub/go-moysklad", Version))
 
 	return client
 }
 
-// init инициализирует стандартные параметры клиента.
-func (client *Client) init(credentials []string) *Client {
-	headers := map[string]string{
-		"Accept":          "application/json;charset=utf-8", // https://dev.moysklad.ru/doc/api/remap/1.2/index.html#error_1062
-		"Accept-Encoding": "gzip",                           // Обязательное использование сжатия содержимого ответов
-		"User-Agent":      fmt.Sprintf("go-moysklad/%s, https://github.com/arcsub/go-moysklad", Version),
+// WithTokenAuth устанавливает авторизацию через Bearer токен.
+func WithTokenAuth(token string) func(*Client) {
+	return func(client *Client) {
+		client.SetAuthToken(token)
 	}
-
-	retryCondition := func(r *resty.Response, _ error) bool {
-		return r.StatusCode() == http.StatusTooManyRequests
-	}
-
-	client.setQueryLimits().
-		setCredentials(credentials).
-		SetHeaders(headers).
-		SetBaseURL(baseApiURL).
-		SetRetryWaitTime(time.Second).
-		SetRetryMaxWaitTime(10 * time.Second).
-		SetRetryCount(10).
-		AddRetryAfterErrorCondition().
-		AddRetryCondition(retryCondition)
-
-	return client
 }
 
-// setQueryLimits устанавливает количество запросов за 3-х секундный период и количество параллельных запросов.
-func (client *Client) setQueryLimits() *Client {
-	client.limits = &queryLimits{
-		rl:       ratelimit.New(MaxQueriesPerSecond),
-		queryBuf: make(chan struct{}, MaxQueriesPerUser),
+// WithBasicAuth устанавливает авторизацию по логину и паролю.
+func WithBasicAuth(username, password string) func(*Client) {
+	return func(client *Client) {
+		client.SetBasicAuth(username, password)
 	}
-
-	return client
 }
 
-// WithTimeout устанавливает необходимый таймаут для http клиента.
-func (client *Client) WithTimeout(timeout time.Duration) *Client {
-	transport := &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   timeout,
-			KeepAlive: timeout,
-		}).DialContext,
+// WithHTTPClient устанавливает заранее инициализированный клиент [http.Client].
+func WithHTTPClient(httpClient *http.Client) func(*Client) {
+	return func(client *Client) {
+		if httpClient != nil {
+			client.Client = resty.NewWithClient(httpClient)
+		}
 	}
+}
 
-	client.SetTimeout(timeout)
-
-	client.SetTransport(transport)
-
-	return client
+// WithRestyClient устанавливает заранее инициализированный клиент [resty.Client].
+func WithRestyClient(restyClient *resty.Client) func(*Client) {
+	return func(client *Client) {
+		if restyClient != nil {
+			client.Client = restyClient
+		}
+	}
 }
 
 // WithDisabledWebhookContent устанавливает флаг, который отвечает
@@ -130,10 +104,10 @@ func (client *Client) WithTimeout(timeout time.Duration) *Client {
 // [Подробнее]
 //
 // [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
-func (client *Client) WithDisabledWebhookContent(value bool) *Client {
-	client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
-
-	return client
+func WithDisabledWebhookContent(value bool) func(*Client) {
+	return func(client *Client) {
+		client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
+	}
 }
 
 // WithDisabledWebhookByPrefix позволяет указать набор префиксов url-адресов.
@@ -143,24 +117,27 @@ func (client *Client) WithDisabledWebhookContent(value bool) *Client {
 // [Подробнее]
 //
 // [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
-func (client *Client) WithDisabledWebhookByPrefix(urls ...string) *Client {
-	for _, url := range urls {
-		client.Header.Add(headerWebHookDisableByPrefix, url)
+func WithDisabledWebhookByPrefix(urls ...string) func(*Client) {
+	return func(client *Client) {
+		for _, url := range urls {
+			client.Header.Add(headerWebHookDisableByPrefix, url)
+		}
 	}
-
-	return client
 }
 
-// WithTokenAuth возвращает клиент с авторизацией через Bearer токен.
-func (client *Client) WithTokenAuth(token string) *Client {
-	client.SetAuthToken(token)
-	return client
-}
+// WithTimeout устанавливает необходимый таймаут для http клиента.
+func WithTimeout(timeout time.Duration) func(*Client) {
+	return func(client *Client) {
+		transport := &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout:   timeout,
+				KeepAlive: timeout,
+			}).DialContext,
+		}
 
-// WithBasicAuth возвращает клиент с авторизацией по паре логин:пароль.
-func (client *Client) WithBasicAuth(username, password string) *Client {
-	client.SetBasicAuth(username, password)
-	return client
+		client.SetTimeout(timeout)
+		client.SetTransport(transport)
+	}
 }
 
 type queryLimits struct {

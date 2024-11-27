@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -25,7 +25,7 @@ type Contract struct {
 	Description         *string           `json:"description,omitempty"`         // Описание Договора
 	ExternalCode        *string           `json:"externalCode,omitempty"`        // Внешний код Договора
 	Group               *Group            `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID        `json:"id,omitempty"`                  // ID Договора
+	ID                  *string           `json:"id,omitempty"`                  // ID Договора
 	Meta                *Meta             `json:"meta,omitempty"`                // Метаданные Договора
 	Moment              *Timestamp        `json:"moment,omitempty"`              // Дата Договора
 	Printed             *bool             `json:"printed,omitempty"`             // Напечатан ли документ
@@ -33,12 +33,12 @@ type Contract struct {
 	OwnAgent            *Organization     `json:"ownAgent,omitempty"`            // Метаданные вашего юрлица
 	Owner               *Employee         `json:"owner,omitempty"`               // Метаданные владельца (Сотрудника)
 	Rate                *NullValue[Rate]  `json:"rate,omitempty"`                // Валюта
-	AccountID           *uuid.UUID        `json:"accountId,omitempty"`           // ID учётной записи
+	AccountID           *string           `json:"accountId,omitempty"`           // ID учётной записи
 	Updated             *Timestamp        `json:"updated,omitempty"`             // Момент последнего обновления сущности
 	Shared              *bool             `json:"shared,omitempty"`              // Общий доступ
 	State               *NullValue[State] `json:"state,omitempty"`               // Метаданные статуса договора
 	Sum                 *float64          `json:"sum,omitempty"`                 // Сумма Договора
-	SyncID              *uuid.UUID        `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *string           `json:"syncId,omitempty"`              // ID синхронизации
 	ContractType        ContractType      `json:"contractType,omitempty"`        // Тип Договора
 	RewardType          RewardType        `json:"rewardType,omitempty"`          // Тип Вознаграждения
 	Attributes          Slice[Attribute]  `json:"attributes,omitempty"`          // Список метаданных доп. полей
@@ -105,7 +105,7 @@ func (contract Contract) GetGroup() Group {
 }
 
 // GetID возвращает ID Договора.
-func (contract Contract) GetID() uuid.UUID {
+func (contract Contract) GetID() string {
 	return Deref(contract.ID)
 }
 
@@ -145,7 +145,7 @@ func (contract Contract) GetRate() Rate {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (contract Contract) GetAccountID() uuid.UUID {
+func (contract Contract) GetAccountID() string {
 	return Deref(contract.AccountID)
 }
 
@@ -170,7 +170,7 @@ func (contract Contract) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (contract Contract) GetSyncID() uuid.UUID {
+func (contract Contract) GetSyncID() string {
 	return Deref(contract.SyncID)
 }
 
@@ -314,7 +314,7 @@ func (contract *Contract) SetSum(sum *float64) *Contract {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (contract *Contract) SetSyncID(syncID uuid.UUID) *Contract {
+func (contract *Contract) SetSyncID(syncID string) *Contract {
 	contract.SyncID = &syncID
 	return contract
 }
@@ -374,12 +374,12 @@ func (Contract) MetaType() MetaType {
 }
 
 // Update shortcut
-func (contract *Contract) Update(ctx context.Context, client *Client, params ...*Params) (*Contract, *resty.Response, error) {
+func (contract *Contract) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Contract, *resty.Response, error) {
 	return NewContractService(client).Update(ctx, contract.GetID(), contract, params...)
 }
 
 // Create shortcut
-func (contract *Contract) Create(ctx context.Context, client *Client, params ...*Params) (*Contract, *resty.Response, error) {
+func (contract *Contract) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Contract, *resty.Response, error) {
 	return NewContractService(client).Create(ctx, contract, params...)
 }
 
@@ -417,12 +417,12 @@ type ContractService interface {
 	// GetList выполняет запрос на получение списка договоров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Contract], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Contract], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех договоров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Contract], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Contract], *resty.Response, error)
 
 	// Create выполняет запрос на создание договора.
 	// Обязательные поля для заполнения:
@@ -431,13 +431,13 @@ type ContractService interface {
 	//	- agent (Метаданные Контрагента)
 	// Принимает контекст, договор и опционально объект параметров запроса Params.
 	// Возвращает созданный договор.
-	Create(ctx context.Context, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
+	Create(ctx context.Context, contract *Contract, params ...func(*Params)) (*Contract, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение договоров.
 	// Изменяемые договоры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список договоров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых договоров.
-	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...*Params) (*Slice[Contract], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...func(*Params)) (*Slice[Contract], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление договоров.
 	// Принимает контекст и множество договоров.
@@ -447,7 +447,7 @@ type ContractService interface {
 	// DeleteByID выполняет запрос на удаление договора.
 	// Принимает контекст и ID договора.
 	// Возвращает «true» в случае успешного удаления договора.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление договора.
 	// Принимает контекст и договор.
@@ -462,12 +462,12 @@ type ContractService interface {
 	// GetByID выполняет запрос на получение отдельного договора по ID.
 	// Принимает контекст, ID договора и опционально объект параметров запроса Params.
 	// Возвращает найденный договор.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Contract, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Contract, *resty.Response, error)
 
 	// Update выполняет запрос на изменение договора.
 	// Принимает контекст, договор и опционально объект параметров запроса Params.
 	// Возвращает изменённый договор.
-	Update(ctx context.Context, id uuid.UUID, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
+	Update(ctx context.Context, id string, contract *Contract, params ...func(*Params)) (*Contract, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -477,7 +477,7 @@ type ContractService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -493,12 +493,12 @@ type ContractService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -508,42 +508,42 @@ type ContractService interface {
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -553,7 +553,7 @@ type ContractService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -563,7 +563,7 @@ type ContractService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (

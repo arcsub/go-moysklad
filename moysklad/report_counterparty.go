@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // ReportCounterparty Показатели контрагентов.
@@ -65,7 +64,7 @@ type ReportCounterpartyService interface {
 	// GetList выполняет запрос на получение отчёта по контрагентам.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ReportCounterparty], *resty.Response, error)
 
 	// GetListAsync выполняет запрос на получение отчёта по контрагентам (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -80,7 +79,7 @@ type ReportCounterpartyService interface {
 	// GetByCounterpartyID выполняет запрос на получение отчёта по контрагенту с указанным ID.
 	// Принимает контекст и ID контрагента.
 	// Возвращает отчёт по конкретному контрагенту.
-	GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error)
+	GetByCounterpartyID(ctx context.Context, id string) (*ReportCounterparty, *resty.Response, error)
 }
 
 const (
@@ -91,8 +90,8 @@ type reportCounterpartyService struct {
 	Endpoint
 }
 
-func (service *reportCounterpartyService) GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params...).Get(ctx)
+func (service *reportCounterpartyService) GetList(ctx context.Context, params ...func(*Params)) (*List[ReportCounterparty], *resty.Response, error) {
+	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 func (service *reportCounterpartyService) GetListAsync(ctx context.Context) (AsyncResultService[List[ReportCounterparty]], *resty.Response, error) {
@@ -107,7 +106,7 @@ func (service *reportCounterpartyService) GetByCounterparties(ctx context.Contex
 	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).Post(ctx, data)
 }
 
-func (service *reportCounterpartyService) GetByCounterpartyID(ctx context.Context, id uuid.UUID) (*ReportCounterparty, *resty.Response, error) {
+func (service *reportCounterpartyService) GetByCounterpartyID(ctx context.Context, id string) (*ReportCounterparty, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", service.uri, id)
 	return NewRequestBuilder[ReportCounterparty](service.client, path).Get(ctx)
 }

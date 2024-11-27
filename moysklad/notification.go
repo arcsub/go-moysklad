@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
+
 	"net/http"
 )
 
@@ -31,7 +31,7 @@ type NotificationInvoice struct {
 	Name                 string    `json:"name"`
 	CustomerName         string    `json:"customerName"`
 	Sum                  float64   `json:"sum"`
-	ID                   uuid.UUID `json:"id"` // ID Уведомления
+	ID                   string    `json:"id"` // ID Уведомления
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -41,11 +41,11 @@ func (invoice NotificationInvoice) String() string {
 
 // Order Метаданные заказа.
 type Order struct {
-	Meta      Meta      `json:"meta"` // Метаданные объекта. Содержит тип конкретного уведомления
-	Name      string    `json:"name"`
-	AgentName string    `json:"agentName"` // Имя контрагента
-	Sum       float64   `json:"sum"`
-	ID        uuid.UUID `json:"id"` // ID Уведомления
+	Meta      Meta    `json:"meta"` // Метаданные объекта. Содержит тип конкретного уведомления
+	Name      string  `json:"name"`
+	AgentName string  `json:"agentName"` // Имя контрагента
+	Sum       float64 `json:"sum"`
+	ID        string  `json:"id"` // ID Уведомления
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -146,8 +146,8 @@ type NotificationExportCompleted struct {
 	TaskState           NotificationTaskState `json:"taskState"`           // Статус завершения
 	TaskType            NotificationTaskType  `json:"taskType"`            // Тип экспорта
 	Title               string                `json:"title"`               // Краткий текст уведомления
-	AccountID           uuid.UUID             `json:"accountId"`           // ID учетной записи
-	ID                  uuid.UUID             `json:"id"`                  // ID Уведомления
+	AccountID           string                `json:"accountId"`           // ID учетной записи
+	ID                  string                `json:"id"`                  // ID Уведомления
 	Read                bool                  `json:"read"`                // Признак того, было ли Уведомление прочитано
 }
 
@@ -176,8 +176,8 @@ type NotificationImportCompleted struct {
 	TaskState           NotificationTaskState `json:"taskState"`           // Статус завершения
 	TaskType            NotificationTaskType  `json:"taskType"`            // Тип экспорта
 	Title               string                `json:"title"`               // Краткий текст уведомления
-	AccountID           uuid.UUID             `json:"accountId"`           // ID учетной записи
-	ID                  uuid.UUID             `json:"id"`                  // ID Уведомления
+	AccountID           string                `json:"accountId"`           // ID учетной записи
+	ID                  string                `json:"id"`                  // ID Уведомления
 	Read                bool                  `json:"read"`                // Признак того, было ли Уведомление прочитано
 }
 
@@ -204,8 +204,8 @@ type NotificationGoodCountTooLow struct {
 	Good           MetaNameID `json:"good"`           // Метаданные товара
 	ActualBalance  int        `json:"actualBalance"`  // Остаток товара
 	MinimumBalance int        `json:"minimumBalance"` // Неснижаемый остаток товара
-	AccountID      uuid.UUID  `json:"accountId"`      // ID учетной записи
-	ID             uuid.UUID  `json:"id"`             // ID Уведомления
+	AccountID      string     `json:"accountId"`      // ID учетной записи
+	ID             string     `json:"id"`             // ID Уведомления
 	Read           bool       `json:"read"`           // Признак того, было ли Уведомление прочитано
 }
 
@@ -232,8 +232,8 @@ type NotificationInvoiceOutOverdue struct {
 	Description          string              `json:"description"`          // Описание уведомления
 	Invoice              NotificationInvoice `json:"invoice"`              // Метаданные счета
 	Sum                  float64             `json:"sum"`                  // Сумма счета
-	AccountID            uuid.UUID           `json:"accountId"`            // ID учетной записи
-	ID                   uuid.UUID           `json:"id"`                   // ID Уведомления
+	AccountID            string              `json:"accountId"`            // ID учетной записи
+	ID                   string              `json:"id"`                   // ID Уведомления
 	Read                 bool                `json:"read"`                 // Признак того, было ли Уведомление прочитано
 }
 
@@ -261,8 +261,8 @@ type NotificationOrderNew struct {
 	Title                 string    `json:"title"`                 // Краткий текст уведомления
 	Order                 Order     `json:"order"`                 // Метаданные заказа
 	Sum                   float64   `json:"sum"`                   // Сумма
-	AccountID             uuid.UUID `json:"accountId"`             // ID учетной записи
-	ID                    uuid.UUID `json:"id"`                    // ID Уведомления
+	AccountID             string    `json:"accountId"`             // ID учетной записи
+	ID                    string    `json:"id"`                    // ID Уведомления
 	Read                  bool      `json:"read"`                  // Признак того, было ли Уведомление прочитано
 }
 
@@ -290,8 +290,8 @@ type NotificationOrderOverdue struct {
 	Title                 string    `json:"title"`                 // Краткий текст уведомления
 	Order                 Order     `json:"order"`                 // Метаданные заказа
 	Sum                   float64   `json:"sum"`                   // Сумма
-	AccountID             uuid.UUID `json:"accountId"`             // ID учетной записи
-	ID                    uuid.UUID `json:"id"`                    // ID Уведомления
+	AccountID             string    `json:"accountId"`             // ID учетной записи
+	ID                    string    `json:"id"`                    // ID Уведомления
 	Read                  bool      `json:"read"`                  // Признак того, было ли Уведомление прочитано
 }
 
@@ -315,8 +315,8 @@ type NotificationSubscribeExpired struct {
 	Created     Timestamp `json:"created"`     // Дата и время формирования Уведомления
 	Description string    `json:"description"` // Описание уведомления
 	Title       string    `json:"title"`       // Краткий текст уведомления
-	AccountID   uuid.UUID `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID `json:"id"`          // ID Уведомления
+	AccountID   string    `json:"accountId"`   // ID учетной записи
+	ID          string    `json:"id"`          // ID Уведомления
 	Read        bool      `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -341,8 +341,8 @@ type NotificationSubscribeTermsExpired struct {
 	Description string    `json:"description"` // Описание уведомления
 	Title       string    `json:"title"`       // Краткий текст уведомления
 	DaysLeft    int       `json:"daysLeft"`    // Количество оставшихся дней подписки
-	AccountID   uuid.UUID `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID `json:"id"`          // ID Уведомления
+	AccountID   string    `json:"accountId"`   // ID учетной записи
+	ID          string    `json:"id"`          // ID Уведомления
 	Read        bool      `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -368,8 +368,8 @@ type NotificationTaskAssigned struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -395,8 +395,8 @@ type NotificationTaskUnassigned struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -419,7 +419,7 @@ type NotificationTask struct {
 	Meta     Meta      `json:"meta"`     // Метаданные объекта. Содержит тип конкретного уведомления
 	Deadline Timestamp `json:"deadline"` // Планируемая дата завершения задачи
 	Name     string    `json:"name"`     // Наименование Контрагента
-	ID       uuid.UUID `json:"id"`       // ID Уведомления
+	ID       string    `json:"id"`       // ID Уведомления
 }
 
 // NotificationTaskChanged Задача изменена.
@@ -435,8 +435,8 @@ type NotificationTaskChanged struct {
 	Title       string                      `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask            `json:"task"`        // Задача
 	PerformedBy MetaNameID                  `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID                   `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID                   `json:"id"`          // ID Уведомления
+	AccountID   string                      `json:"accountId"`   // ID учетной записи
+	ID          string                      `json:"id"`          // ID Уведомления
 	Read        bool                        `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -475,8 +475,8 @@ type NotificationTaskCompleted struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -502,8 +502,8 @@ type NotificationTaskDeleted struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -528,8 +528,8 @@ type NotificationTaskOverdue struct {
 	Description string           `json:"description"` // Описание уведомления
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -555,8 +555,8 @@ type NotificationTaskReopened struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -583,8 +583,8 @@ type NotificationTaskNewComment struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -612,8 +612,8 @@ type NotificationTaskCommentChanged struct {
 	Title       string                      `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask            `json:"task"`        // Задача
 	PerformedBy MetaNameID                  `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID                   `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID                   `json:"id"`          // ID Уведомления
+	AccountID   string                      `json:"accountId"`   // ID учетной записи
+	ID          string                      `json:"id"`          // ID Уведомления
 	Read        bool                        `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -640,8 +640,8 @@ type NotificationTaskCommentDeleted struct {
 	Title       string           `json:"title"`       // Краткий текст уведомления
 	Task        NotificationTask `json:"task"`        // Задача
 	PerformedBy MetaNameID       `json:"performedBy"` // Сотрудник, выполнивший изменение
-	AccountID   uuid.UUID        `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID        `json:"id"`          // ID Уведомления
+	AccountID   string           `json:"accountId"`   // ID учетной записи
+	ID          string           `json:"id"`          // ID Уведомления
 	Read        bool             `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -660,7 +660,7 @@ type NotificationRetailShift struct {
 	Open    Timestamp `json:"open"`    // Дата открытия смены
 	Name    string    `json:"name"`    // Номер смены
 	Proceed float64   `json:"proceed"` // Выручка
-	ID      uuid.UUID `json:"id"`      // ID смены
+	ID      string    `json:"id"`      // ID смены
 }
 
 // NotificationRetailShiftOpened Смена открыта.
@@ -676,8 +676,8 @@ type NotificationRetailShiftOpened struct {
 	RetailStore MetaNameID              `json:"retailStore"` // Точка продаж
 	User        MetaNameID              `json:"user"`        // Сотрудник
 	RetailShift NotificationRetailShift `json:"retailShift"` // Описание смены
-	AccountID   uuid.UUID               `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID               `json:"id"`          // ID Уведомления
+	AccountID   string                  `json:"accountId"`   // ID учетной записи
+	ID          string                  `json:"id"`          // ID Уведомления
 	Read        bool                    `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -706,8 +706,8 @@ type NotificationRetailShiftClosed struct {
 	RetailShift NotificationRetailShift `json:"retailShift"` // Описание смены
 	Returns     int                     `json:"returns"`     // Количество возвратов
 	Sales       int                     `json:"sales"`       // Количество продаж
-	AccountID   uuid.UUID               `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID               `json:"id"`          // ID Уведомления
+	AccountID   string                  `json:"accountId"`   // ID учетной записи
+	ID          string                  `json:"id"`          // ID Уведомления
 	Read        bool                    `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -733,8 +733,8 @@ type NotificationScript struct {
 	EventType   EventType  `json:"eventType"`   // Тип события сценария
 	Title       string     `json:"title"`       // Краткий текст уведомления
 	Entity      MetaNameID `json:"entity"`      // Ссылка на объект сценария
-	AccountID   uuid.UUID  `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID  `json:"id"`          // ID Уведомления
+	AccountID   string     `json:"accountId"`   // ID учетной записи
+	ID          string     `json:"id"`          // ID Уведомления
 	Read        bool       `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -783,8 +783,8 @@ type FacebookTokenExpirationNotification struct {
 	Description          string    `json:"description"`          // Описание уведомления
 	Title                string    `json:"title"`                // Краткий текст уведомления
 	DaysLeftToExpiration int       `json:"daysLeftToExpiration"` // Количество дней, оставшихся до окончания действия доступа к аккаунту Facebook
-	AccountID            uuid.UUID `json:"accountId"`            // ID учетной записи
-	ID                   uuid.UUID `json:"id"`                   // ID Уведомления
+	AccountID            string    `json:"accountId"`            // ID учетной записи
+	ID                   string    `json:"id"`                   // ID Уведомления
 	Read                 bool      `json:"read"`                 // Признак того, было ли Уведомление прочитано
 }
 
@@ -808,8 +808,8 @@ type NotificationBonusMoney struct {
 	Created     Timestamp `json:"created"`     // Дата и время формирования Уведомления
 	Description string    `json:"description"` // Описание уведомления
 	Title       string    `json:"title"`       // Краткий текст уведомления
-	AccountID   uuid.UUID `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID `json:"id"`          // ID Уведомления
+	AccountID   string    `json:"accountId"`   // ID учетной записи
+	ID          string    `json:"id"`          // ID Уведомления
 	Read        bool      `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -834,8 +834,8 @@ type NewMentionInEvent struct {
 	Description string        `json:"description"` // Описание уведомления
 	Title       string        `json:"title"`       // Краткий текст уведомления
 	Operation   TaskOperation `json:"operation"`   // Объект, в ленте которого было добавлено событие с упоминанием
-	AccountID   uuid.UUID     `json:"accountId"`   // ID учетной записи
-	ID          uuid.UUID     `json:"id"`          // ID Уведомления
+	AccountID   string        `json:"accountId"`   // ID учетной записи
+	ID          string        `json:"id"`          // ID Уведомления
 	Read        bool          `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -921,9 +921,9 @@ type Notification struct {
 	Description string    `json:"description"` // Описание уведомления
 	Title       string    `json:"title"`       // Краткий текст уведомления
 	raw         []byte
-	AccountID   uuid.UUID `json:"accountId"` // ID учетной записи
-	ID          uuid.UUID `json:"id"`        // ID Уведомления
-	Read        bool      `json:"read"`      // Признак того, было ли Уведомление прочитано
+	AccountID   string `json:"accountId"` // ID учетной записи
+	ID          string `json:"id"`        // ID Уведомления
+	Read        bool   `json:"read"`      // Признак того, было ли Уведомление прочитано
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -1174,27 +1174,27 @@ type NotificationService interface {
 	// GetList выполняет запрос на получение ленты уведомлений.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Notification], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Notification], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех уведомлений в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Notification], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Notification], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного уведомления по ID.
 	// Принимает контекст, ID уведомления и опционально объект параметров запроса Params.
 	// Возвращает найденное уведомление.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Notification, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Notification, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление уведомления.
 	// Принимает контекст и ID уведомления.
 	// Возвращает «true» в случае успешного удаления уведомления.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// MarkAsRead выполняет запрос на отметку о прочтении Уведомления.
 	// Принимает контекст и ID уведомления.
 	// Возвращает «true» в случае успешного запроса.
-	MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MarkAsRead(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// MarkAsReadAll выполняет запрос на отметку о прочтении всех уведомлений.
 	// Принимает контекст.
@@ -1226,7 +1226,7 @@ type notificationService struct {
 	endpointDeleteByID
 }
 
-func (service *notificationService) MarkAsRead(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *notificationService) MarkAsRead(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointNotificationMarkAsRead, id)
 	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	return resp.StatusCode() == http.StatusOK, resp, err

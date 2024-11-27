@@ -1,9 +1,5 @@
 package moysklad
 
-import (
-	"github.com/google/uuid"
-)
-
 // NamedFilter Сохраненный фильтр.
 //
 // Код сущности: namedfilter
@@ -12,11 +8,11 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sohranennye-fil-try
 type NamedFilter struct {
-	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учётной записи
-	ID        *uuid.UUID `json:"id,omitempty"`        // ID фильтра
-	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные фильтра
-	Name      *string    `json:"name,omitempty"`      // Наименование фильтра
-	Owner     *Employee  `json:"owner,omitempty"`     // Метаданные владельца (Сотрудника)
+	AccountID *string   `json:"accountId,omitempty"` // ID учётной записи
+	ID        *string   `json:"id,omitempty"`        // ID фильтра
+	Meta      *Meta     `json:"meta,omitempty"`      // Метаданные фильтра
+	Name      *string   `json:"name,omitempty"`      // Наименование фильтра
+	Owner     *Employee `json:"owner,omitempty"`     // Метаданные владельца (Сотрудника)
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
@@ -30,12 +26,12 @@ func (namedFilter NamedFilter) Clean() *NamedFilter {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (namedFilter NamedFilter) GetAccountID() uuid.UUID {
+func (namedFilter NamedFilter) GetAccountID() string {
 	return Deref(namedFilter.AccountID)
 }
 
 // GetID возвращает ID фильтра.
-func (namedFilter NamedFilter) GetID() uuid.UUID {
+func (namedFilter NamedFilter) GetID() string {
 	return Deref(namedFilter.ID)
 }
 

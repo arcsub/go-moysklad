@@ -1,9 +1,5 @@
 package moysklad
 
-import (
-	"github.com/google/uuid"
-)
-
 // Attribute Дополнительное поле.
 //
 // Код сущности: attributemetadata
@@ -14,7 +10,7 @@ import (
 type Attribute struct {
 	CustomEntityMeta *Meta                     `json:"customEntityMeta,omitempty"` // Метаданные пользовательского справочника
 	Description      *string                   `json:"description,omitempty"`      // Описание доп. поля
-	ID               *uuid.UUID                `json:"id,omitempty"`               // ID доп. поля [Обязательное при ответе] [Только для чтения]
+	ID               *string                   `json:"id,omitempty"`               // ID доп. поля [Обязательное при ответе] [Только для чтения]
 	Meta             *Meta                     `json:"meta,omitempty"`             // Метаданные доп. поля [Обязательное при ответе]
 	Name             *string                   `json:"name,omitempty"`             // Наименование доп. поля [Обязательное при ответе] [Необходимо при создании]
 	Required         *bool                     `json:"required,omitempty"`         // Является ли доп. поле обязательным [Обязательное при ответе]
@@ -36,7 +32,7 @@ func (attribute Attribute) GetDescription() string {
 }
 
 // GetID возвращает ID доп. поля.
-func (attribute Attribute) GetID() uuid.UUID {
+func (attribute Attribute) GetID() string {
 	return Deref(attribute.ID)
 }
 

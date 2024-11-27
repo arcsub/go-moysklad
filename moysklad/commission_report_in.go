@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -33,10 +33,10 @@ type CommissionReportIn struct {
 	ExternalCode                  *string                                      `json:"externalCode,omitempty"`                  // Внешний код Полученного отчёта комиссионера
 	Files                         *MetaArray[File]                             `json:"files,omitempty"`                         // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                         *Group                                       `json:"group,omitempty"`                         // Отдел сотрудника
-	ID                            *uuid.UUID                                   `json:"id,omitempty"`                            // ID Полученного отчёта комиссионера
+	ID                            *string                                      `json:"id,omitempty"`                            // ID Полученного отчёта комиссионера
 	Meta                          *Meta                                        `json:"meta,omitempty"`                          // Метаданные Полученного отчёта комиссионера
 	Moment                        *Timestamp                                   `json:"moment,omitempty"`                        // Дата документа
-	AccountID                     *uuid.UUID                                   `json:"accountId,omitempty"`                     // ID учётной записи
+	AccountID                     *string                                      `json:"accountId,omitempty"`                     // ID учётной записи
 	Applicable                    *bool                                        `json:"applicable,omitempty"`                    // Отметка о проведении
 	OrganizationAccount           *AgentAccount                                `json:"organizationAccount,omitempty"`           // Метаданные счета юрлица
 	Owner                         *Employee                                    `json:"owner,omitempty"`                         // Метаданные владельца (Сотрудника)
@@ -53,7 +53,7 @@ type CommissionReportIn struct {
 	Shared                        *bool                                        `json:"shared,omitempty"`                        // Общий доступ
 	State                         *NullValue[State]                            `json:"state,omitempty"`                         // Метаданные статуса Полученного отчёта комиссионера
 	Sum                           *float64                                     `json:"sum,omitempty"`                           // Сумма Полученного отчёта комиссионера в копейках
-	SyncID                        *uuid.UUID                                   `json:"syncId,omitempty"`                        // ID синхронизации
+	SyncID                        *string                                      `json:"syncId,omitempty"`                        // ID синхронизации
 	Updated                       *Timestamp                                   `json:"updated,omitempty"`                       // Момент последнего обновления Полученного отчёта комиссионера
 	VatEnabled                    *bool                                        `json:"vatEnabled,omitempty"`                    // Учитывается ли НДС
 	VatIncluded                   *bool                                        `json:"vatIncluded,omitempty"`                   // Включен ли НДС в цену
@@ -177,7 +177,7 @@ func (commissionReportIn CommissionReportIn) GetGroup() Group {
 }
 
 // GetID возвращает ID Полученного отчёта комиссионера.
-func (commissionReportIn CommissionReportIn) GetID() uuid.UUID {
+func (commissionReportIn CommissionReportIn) GetID() string {
 	return Deref(commissionReportIn.ID)
 }
 
@@ -192,7 +192,7 @@ func (commissionReportIn CommissionReportIn) GetMoment() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (commissionReportIn CommissionReportIn) GetAccountID() uuid.UUID {
+func (commissionReportIn CommissionReportIn) GetAccountID() string {
 	return Deref(commissionReportIn.AccountID)
 }
 
@@ -277,7 +277,7 @@ func (commissionReportIn CommissionReportIn) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (commissionReportIn CommissionReportIn) GetSyncID() uuid.UUID {
+func (commissionReportIn CommissionReportIn) GetSyncID() string {
 	return Deref(commissionReportIn.SyncID)
 }
 
@@ -511,7 +511,7 @@ func (commissionReportIn *CommissionReportIn) SetState(state *State) *Commission
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (commissionReportIn *CommissionReportIn) SetSyncID(syncID uuid.UUID) *CommissionReportIn {
+func (commissionReportIn *CommissionReportIn) SetSyncID(syncID string) *CommissionReportIn {
 	commissionReportIn.SyncID = &syncID
 	return commissionReportIn
 }
@@ -553,12 +553,12 @@ func (CommissionReportIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (commissionReportIn *CommissionReportIn) Update(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+func (commissionReportIn *CommissionReportIn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*CommissionReportIn, *resty.Response, error) {
 	return NewCommissionReportInService(client).Update(ctx, commissionReportIn.GetID(), commissionReportIn, params...)
 }
 
 // Create shortcut
-func (commissionReportIn *CommissionReportIn) Create(ctx context.Context, client *Client, params ...*Params) (*CommissionReportIn, *resty.Response, error) {
+func (commissionReportIn *CommissionReportIn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*CommissionReportIn, *resty.Response, error) {
 	return NewCommissionReportInService(client).Create(ctx, commissionReportIn, params...)
 }
 
@@ -600,9 +600,9 @@ func (commissionOverhead CommissionOverhead) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-pozicii-poluchennogo-otcheta-komissionera
 type CommissionReportInPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров данного вида в позиции.
@@ -612,7 +612,7 @@ type CommissionReportInPosition struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (commissionReportInPosition CommissionReportInPosition) GetAccountID() uuid.UUID {
+func (commissionReportInPosition CommissionReportInPosition) GetAccountID() string {
 	return Deref(commissionReportInPosition.AccountID)
 }
 
@@ -622,7 +622,7 @@ func (commissionReportInPosition CommissionReportInPosition) GetAssortment() Ass
 }
 
 // GetID возвращает ID Позиции Полученного отчёта комиссионера.
-func (commissionReportInPosition CommissionReportInPosition) GetID() uuid.UUID {
+func (commissionReportInPosition CommissionReportInPosition) GetID() string {
 	return Deref(commissionReportInPosition.ID)
 }
 
@@ -722,9 +722,9 @@ func (CommissionReportInPosition) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-poluchennyj-otchet-komissionera-poluchennye-otchety-komissionera-pozicii-poluchennogo-otcheta-komissionera-ob-ekt-pozicii-wozwrata-na-sklad-komissionera-soderzhit-sleduuschie-polq
 type CommissionReportInReturnPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров данного вида в позиции
 	Reward     *float64            `json:"reward,omitempty"`     // Вознаграждение
@@ -733,7 +733,7 @@ type CommissionReportInReturnPosition struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetAccountID() uuid.UUID {
+func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetAccountID() string {
 	return Deref(commissionReportInReturnPosition.AccountID)
 }
 
@@ -743,7 +743,7 @@ func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetAsso
 }
 
 // GetID возвращает ID позиции.
-func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetID() uuid.UUID {
+func (commissionReportInReturnPosition CommissionReportInReturnPosition) GetID() string {
 	return Deref(commissionReportInReturnPosition.ID)
 }
 
@@ -827,12 +827,12 @@ type CommissionReportInService interface {
 	// GetList выполняет запрос на получение списка полученных отчётов комиссионера.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[CommissionReportIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[CommissionReportIn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех полученных отчётов комиссионера в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[CommissionReportIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание полученного отчёта комиссионера.
 	// Обязательные поля для заполнения:
@@ -845,13 +845,13 @@ type CommissionReportInService interface {
 	//	- agentAccount (Счет контрагента, если у контрагента несколько счетов)
 	// Принимает контекст, расходный ордер и опционально объект параметров запроса Params.
 	// Возвращает созданный расходный ордер.
-	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
+	Create(ctx context.Context, commissionReportIn *CommissionReportIn, params ...func(*Params)) (*CommissionReportIn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение полученных отчётов комиссионера.
 	// Изменяемые полученные отчёты комиссионера должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список полученных отчётов комиссионера и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых полученных отчётов комиссионера.
-	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...*Params) (*Slice[CommissionReportIn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, commissionReportInList Slice[CommissionReportIn], params ...func(*Params)) (*Slice[CommissionReportIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление полученных отчётов комиссионера.
 	// Принимает контекст и множество полученных отчётов комиссионера.
@@ -861,7 +861,7 @@ type CommissionReportInService interface {
 	// DeleteByID выполняет запрос на удаление полученного отчёта комиссионера по ID.
 	// Принимает контекст и ID полученного отчёта комиссионера.
 	// Возвращает «true» в случае успешного удаления полученного отчёта комиссионера.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление полученного отчёта комиссионера.
 	// Принимает контекст и полученный отчёт комиссионера.
@@ -871,12 +871,12 @@ type CommissionReportInService interface {
 	// GetByID выполняет запрос на получение отдельного полученного отчёта комиссионера по ID.
 	// Принимает контекст, ID полученного отчёта комиссионера и опционально объект параметров запроса Params.
 	// Возвращает найденный полученный отчёт комиссионера.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CommissionReportIn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*CommissionReportIn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение полученного отчёта комиссионера.
 	// Принимает контекст, полученный отчёт комиссионера и опционально объект параметров запроса Params.
 	// Возвращает изменённый полученный отчёт комиссионера.
-	Update(ctx context.Context, id uuid.UUID, commissionReportIn *CommissionReportIn, params ...*Params) (*CommissionReportIn, *resty.Response, error)
+	Update(ctx context.Context, id string, commissionReportIn *CommissionReportIn, params ...func(*Params)) (*CommissionReportIn, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных полученных отчётов комиссионера.
 	// Принимает контекст.
@@ -886,54 +886,54 @@ type CommissionReportInService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[CommissionReportInPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[CommissionReportInPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[CommissionReportInPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*CommissionReportInPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *CommissionReportInPosition, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *CommissionReportInPosition, params ...func(*Params)) (*CommissionReportInPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *CommissionReportInPosition, params ...*Params) (*CommissionReportInPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *CommissionReportInPosition, params ...func(*Params)) (*CommissionReportInPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportInPosition) (*Slice[CommissionReportInPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*CommissionReportInPosition) (*Slice[CommissionReportInPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportInPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*CommissionReportInPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -943,7 +943,7 @@ type CommissionReportInService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -959,12 +959,12 @@ type CommissionReportInService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -974,77 +974,77 @@ type CommissionReportInService interface {
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*CommissionReportIn, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*CommissionReportIn, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetReturnPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetReturnPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error)
+	GetReturnPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[CommissionReportInReturnPosition], *resty.Response, error)
 
 	// GetReturnPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error)
+	GetReturnPositionByID(ctx context.Context, id, positionID string, params ...func(*Params)) (*CommissionReportInReturnPosition, *resty.Response, error)
 
 	// CreateReturnPosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error)
+	CreateReturnPosition(ctx context.Context, id string, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error)
 
 	// UpdateReturnPosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error)
+	UpdateReturnPosition(ctx context.Context, id, positionID string, position *CommissionReportInReturnPosition, params ...func(*Params)) (*CommissionReportInReturnPosition, *resty.Response, error)
 
 	// DeleteReturnPosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeleteReturnPosition(ctx context.Context, id, positionID string) (bool, *resty.Response, error)
 
 	// DeleteReturnPositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteReturnPositionMany(ctx context.Context, id uuid.UUID, positions ...*CommissionReportInReturnPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeleteReturnPositionMany(ctx context.Context, id string, positions ...*CommissionReportInReturnPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -1054,7 +1054,7 @@ type CommissionReportInService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -1064,32 +1064,32 @@ type CommissionReportInService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// Evaluate выполняет запрос на получение шаблона документа с автозаполнением.
 	// Принимает контекст, документ и множество значений Evaluate.
@@ -1132,32 +1132,32 @@ type commissionReportInService struct {
 	endpointEvaluate[CommissionReportIn]
 }
 
-func (service *commissionReportInService) GetReturnPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[CommissionReportInReturnPosition], *resty.Response, error) {
+func (service *commissionReportInService) GetReturnPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[CommissionReportInReturnPosition], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCommissionReportInReturnPositions, id)
-	return NewRequestBuilder[List[CommissionReportInReturnPosition]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[CommissionReportInReturnPosition]](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID uuid.UUID, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (service *commissionReportInService) GetReturnPositionByID(ctx context.Context, id, positionID string, params ...func(*Params)) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCommissionReportInReturnPositionsID, id, positionID)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *commissionReportInService) CreateReturnPosition(ctx context.Context, id uuid.UUID, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (service *commissionReportInService) CreateReturnPosition(ctx context.Context, id string, position *CommissionReportInReturnPosition) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCommissionReportInReturnPositions, id)
 	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).Post(ctx, position)
 }
 
-func (service *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID uuid.UUID, position *CommissionReportInReturnPosition, params ...*Params) (*CommissionReportInReturnPosition, *resty.Response, error) {
+func (service *commissionReportInService) UpdateReturnPosition(ctx context.Context, id, positionID string, position *CommissionReportInReturnPosition, params ...func(*Params)) (*CommissionReportInReturnPosition, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCommissionReportInReturnPositionsID, id, positionID)
-	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params...).Put(ctx, position)
+	return NewRequestBuilder[CommissionReportInReturnPosition](service.client, path).SetParams(params).Put(ctx, position)
 }
 
-func (service *commissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionID uuid.UUID) (bool, *resty.Response, error) {
+func (service *commissionReportInService) DeleteReturnPosition(ctx context.Context, id, positionID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositionsID, id, positionID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *commissionReportInService) DeleteReturnPositionMany(ctx context.Context, id uuid.UUID, entities ...*CommissionReportInReturnPosition) (*DeleteManyResponse, *resty.Response, error) {
+func (service *commissionReportInService) DeleteReturnPositionMany(ctx context.Context, id string, entities ...*CommissionReportInReturnPosition) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositionsDelete, id)
 	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, entities)
 }

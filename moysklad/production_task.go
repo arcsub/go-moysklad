@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -18,7 +18,7 @@ import (
 type ProductionTask struct {
 	Moment                *Timestamp                       `json:"moment,omitempty"` // Дата документа
 	Created               *Timestamp                       `json:"created,omitempty"`
-	AccountID             *uuid.UUID                       `json:"accountId,omitempty"` // ID учётной записи
+	AccountID             *string                          `json:"accountId,omitempty"` // ID учётной записи
 	Code                  *string                          `json:"code,omitempty"`
 	Name                  *string                          `json:"name,omitempty"`
 	Deleted               *Timestamp                       `json:"deleted,omitempty"`
@@ -32,7 +32,7 @@ type ProductionTask struct {
 	Meta                  *Meta                            `json:"meta,omitempty"`
 	Updated               *Timestamp                       `json:"updated,omitempty"`
 	Applicable            *bool                            `json:"applicable,omitempty"` // Отметка о проведении
-	ID                    *uuid.UUID                       `json:"id,omitempty"`
+	ID                    *string                          `json:"id,omitempty"`
 	Owner                 *Employee                        `json:"owner,omitempty"`   // Метаданные владельца (Сотрудника)
 	Printed               *bool                            `json:"printed,omitempty"` // Напечатан ли документ
 	ProductionRows        *MetaArray[ProductionRow]        `json:"productionRows,omitempty"`
@@ -70,7 +70,7 @@ func (productionTask ProductionTask) GetCreated() time.Time {
 	return Deref(productionTask.Created).Time()
 }
 
-func (productionTask ProductionTask) GetAccountID() uuid.UUID {
+func (productionTask ProductionTask) GetAccountID() string {
 	return Deref(productionTask.AccountID)
 }
 
@@ -126,7 +126,7 @@ func (productionTask ProductionTask) GetApplicable() bool {
 	return Deref(productionTask.Applicable)
 }
 
-func (productionTask ProductionTask) GetID() uuid.UUID {
+func (productionTask ProductionTask) GetID() string {
 	return Deref(productionTask.ID)
 }
 
@@ -293,12 +293,12 @@ func (ProductionTask) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productionTask *ProductionTask) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+func (productionTask *ProductionTask) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProductionTask, *resty.Response, error) {
 	return NewProductionTaskService(client).Update(ctx, productionTask.GetID(), productionTask, params...)
 }
 
 // Create shortcut
-func (productionTask *ProductionTask) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+func (productionTask *ProductionTask) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProductionTask, *resty.Response, error) {
 	return NewProductionTaskService(client).Create(ctx, productionTask, params...)
 }
 
@@ -315,16 +315,16 @@ func (productionTask *ProductionTask) Delete(ctx context.Context, client *Client
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-zadaniq-pozicii-proizwodstwennogo-zadaniq
 type ProductionRow struct {
-	AccountID        *uuid.UUID      `json:"accountId,omitempty"`        // ID учётной записи
+	AccountID        *string         `json:"accountId,omitempty"`        // ID учётной записи
 	ExternalCode     *string         `json:"externalCode,omitempty"`     // Внешний код
-	ID               *uuid.UUID      `json:"id,omitempty"`               // ID позиции
+	ID               *string         `json:"id,omitempty"`               // ID позиции
 	Name             *string         `json:"name,omitempty"`             // Наименование
 	ProcessingPlan   *ProcessingPlan `json:"processingPlan,omitempty"`   // Метаданные Техкарты
 	ProductionVolume *float64        `json:"productionVolume,omitempty"` // Объем производства.
 	Updated          *Timestamp      `json:"updated,omitempty"`          // Момент последнего обновления Производственного задания
 }
 
-func (productionRow ProductionRow) GetAccountID() uuid.UUID {
+func (productionRow ProductionRow) GetAccountID() string {
 	return Deref(productionRow.AccountID)
 }
 
@@ -332,7 +332,7 @@ func (productionRow ProductionRow) GetExternalCode() string {
 	return Deref(productionRow.ExternalCode)
 }
 
-func (productionRow ProductionRow) GetID() uuid.UUID {
+func (productionRow ProductionRow) GetID() string {
 	return Deref(productionRow.ID)
 }
 
@@ -386,14 +386,14 @@ func (ProductionRow) MetaType() MetaType {
 // Код сущности: productiontaskresult
 // https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-zadaniq-produkty-proizwodstwennogo-zadaniq
 type ProductionTaskResult struct {
-	AccountID     *uuid.UUID          `json:"accountId,omitempty"`     // ID учётной записи
+	AccountID     *string             `json:"accountId,omitempty"`     // ID учётной записи
 	Assortment    *AssortmentPosition `json:"assortment,omitempty"`    // Ссылка на товар/серию/модификацию, которую представляет собой позиция.
-	ID            *uuid.UUID          `json:"id,omitempty"`            // ID позиции
+	ID            *string             `json:"id,omitempty"`            // ID позиции
 	PlanQuantity  *float64            `json:"planQuantity,omitempty"`  // Запланированное для производства количество продукта
 	ProductionRow *ProductionRow      `json:"productionRow,omitempty"` // Метаданные Позиции производственного задания
 }
 
-func (productionTaskResult ProductionTaskResult) GetAccountID() uuid.UUID {
+func (productionTaskResult ProductionTaskResult) GetAccountID() string {
 	return Deref(productionTaskResult.AccountID)
 }
 
@@ -401,7 +401,7 @@ func (productionTaskResult ProductionTaskResult) GetAssortment() AssortmentPosit
 	return Deref(productionTaskResult.Assortment)
 }
 
-func (productionTaskResult ProductionTaskResult) GetID() uuid.UUID {
+func (productionTaskResult ProductionTaskResult) GetID() string {
 	return Deref(productionTaskResult.ID)
 }
 
@@ -436,9 +436,9 @@ func (ProductionTaskResult) MetaType() MetaType {
 // ProductionTaskService
 // Сервис для работы с производственными заданиями
 type ProductionTaskService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProductionTask], *resty.Response, error)
-	Create(ctx context.Context, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, productionTaskList Slice[ProductionTask], params ...*Params) (*Slice[ProductionTask], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProductionTask], *resty.Response, error)
+	Create(ctx context.Context, productionTask *ProductionTask, params ...func(*Params)) (*ProductionTask, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productionTaskList Slice[ProductionTask], params ...func(*Params)) (*Slice[ProductionTask], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProductionTask) (*DeleteManyResponse, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
@@ -450,7 +450,7 @@ type ProductionTaskService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -466,20 +466,20 @@ type ProductionTaskService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductionTask, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProductionTask, *resty.Response, error)
+	Update(ctx context.Context, id string, productionTask *ProductionTask, params ...func(*Params)) (*ProductionTask, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление производственного задания.
 	// Принимает контекст и производственное задание.
@@ -489,81 +489,81 @@ type ProductionTaskService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ProductionRow], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[ProductionRow], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[ProductionRow], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[ProductionRow], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProductionRow, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*ProductionRow, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProductionRow, params ...*Params) (*ProductionRow, *resty.Response, error)
-	CreatePosition(ctx context.Context, id uuid.UUID, position *ProductionRow, params ...*Params) (*ProductionRow, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProductionRow, params ...func(*Params)) (*ProductionRow, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProductionRow, params ...func(*Params)) (*ProductionRow, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProductionRow) (*Slice[ProductionRow], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*ProductionRow) (*Slice[ProductionRow], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProductionRow) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*ProductionRow) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
-	GetProducts(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProductionTaskResult], *resty.Response, error)
-	GetProductByID(ctx context.Context, id uuid.UUID, productID uuid.UUID, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
-	CreateProduct(ctx context.Context, id uuid.UUID, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
-	UpdateProduct(ctx context.Context, id uuid.UUID, productID uuid.UUID, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
-	DeleteProduct(ctx context.Context, id uuid.UUID, productID uuid.UUID) (bool, *resty.Response, error)
-	DeleteProductMany(ctx context.Context, id uuid.UUID) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	GetProducts(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionTaskResult], *resty.Response, error)
+	GetProductByID(ctx context.Context, id string, productID string, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error)
+	CreateProduct(ctx context.Context, id string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error)
+	UpdateProduct(ctx context.Context, id string, productID string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error)
+	DeleteProduct(ctx context.Context, id string, productID string) (bool, *resty.Response, error)
+	DeleteProductMany(ctx context.Context, id string) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (
@@ -595,9 +595,9 @@ type productionTaskService struct {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-poluchit-produkty-proizwodstwennogo-zadaniq
-func (service *productionTaskService) GetProducts(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProductionTaskResult], *resty.Response, error) {
+func (service *productionTaskService) GetProducts(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionTaskResult], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProducts, id)
-	return NewRequestBuilder[MetaArray[ProductionTaskResult]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProductionTaskResult]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetProductByID Получить продукт производственного задания.
@@ -605,9 +605,9 @@ func (service *productionTaskService) GetProducts(ctx context.Context, id uuid.U
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-produkt-proizwodstwennogo-zadaniq
-func (service *productionTaskService) GetProductByID(ctx context.Context, id uuid.UUID, productID uuid.UUID, params ...*Params) (*ProductionTaskResult, *resty.Response, error) {
+func (service *productionTaskService) GetProductByID(ctx context.Context, id string, productID string, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProductsID, id, productID)
-	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateProduct Создать продукт.
@@ -615,9 +615,9 @@ func (service *productionTaskService) GetProductByID(ctx context.Context, id uui
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-sozdat-produkt
-func (service *productionTaskService) CreateProduct(ctx context.Context, id uuid.UUID, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error) {
+func (service *productionTaskService) CreateProduct(ctx context.Context, id string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProducts, id) // fixme:в документации указан endpoint без 's' на конце, вероятно ошибка
-	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params...).Post(ctx, productionTaskResult)
+	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params).Post(ctx, productionTaskResult)
 }
 
 // UpdateProduct Изменить продукт.
@@ -625,9 +625,9 @@ func (service *productionTaskService) CreateProduct(ctx context.Context, id uuid
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-izmenit-produkt
-func (service *productionTaskService) UpdateProduct(ctx context.Context, id uuid.UUID, productID uuid.UUID, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error) {
+func (service *productionTaskService) UpdateProduct(ctx context.Context, id string, productID string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProductsID, id, productID)
-	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params...).Put(ctx, productionTaskResult)
+	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params).Put(ctx, productionTaskResult)
 }
 
 // DeleteProduct Удалить продукт.
@@ -635,7 +635,7 @@ func (service *productionTaskService) UpdateProduct(ctx context.Context, id uuid
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-udalit-produkt
-func (service *productionTaskService) DeleteProduct(ctx context.Context, id uuid.UUID, productID uuid.UUID) (bool, *resty.Response, error) {
+func (service *productionTaskService) DeleteProduct(ctx context.Context, id string, productID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProductsID, id, productID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
@@ -645,7 +645,7 @@ func (service *productionTaskService) DeleteProduct(ctx context.Context, id uuid
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-udalit-produkt
-func (service *productionTaskService) DeleteProductMany(ctx context.Context, id uuid.UUID) (*DeleteManyResponse, *resty.Response, error) {
+func (service *productionTaskService) DeleteProductMany(ctx context.Context, id string) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProductsDelete, id)
 	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, nil)
 }

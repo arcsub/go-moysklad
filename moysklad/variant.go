@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -18,10 +18,10 @@ import (
 type Variant struct {
 	Archived           *bool                 `json:"archived,omitempty"`           // Добавлен ли товар в архив
 	Updated            *Timestamp            `json:"updated,omitempty"`            // Момент последнего обновления Модификации
-	AccountID          *uuid.UUID            `json:"accountId,omitempty"`          // ID учётной записи
+	AccountID          *string               `json:"accountId,omitempty"`          // ID учётной записи
 	Description        *string               `json:"description,omitempty"`        // Описание Модификации
 	ExternalCode       *string               `json:"externalCode,omitempty"`       // Внешний код Модификации
-	ID                 *uuid.UUID            `json:"id,omitempty"`                 // ID Модификации
+	ID                 *string               `json:"id,omitempty"`                 // ID Модификации
 	Meta               *Meta                 `json:"meta,omitempty"`               // Метаданные Модификации
 	Name               *string               `json:"name,omitempty"`               // Наименование товара с Модификацией
 	Code               *string               `json:"code,omitempty"`               // Код Модификации
@@ -81,7 +81,7 @@ func (variant Variant) GetUpdated() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (variant Variant) GetAccountID() uuid.UUID {
+func (variant Variant) GetAccountID() string {
 	return Deref(variant.AccountID)
 }
 
@@ -96,7 +96,7 @@ func (variant Variant) GetExternalCode() string {
 }
 
 // GetID возвращает ID Модификации.
-func (variant Variant) GetID() uuid.UUID {
+func (variant Variant) GetID() string {
 	return Deref(variant.ID)
 }
 
@@ -284,12 +284,12 @@ func (Variant) MetaType() MetaType {
 }
 
 // Update shortcut
-func (variant *Variant) Update(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+func (variant *Variant) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Variant, *resty.Response, error) {
 	return NewVariantService(client).Update(ctx, variant.GetID(), variant, params...)
 }
 
 // Create shortcut
-func (variant *Variant) Create(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+func (variant *Variant) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Variant, *resty.Response, error) {
 	return NewVariantService(client).Create(ctx, variant, params...)
 }
 
@@ -304,13 +304,13 @@ func (variant *Variant) Delete(ctx context.Context, client *Client) (bool, *rest
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-upakowki-modifikacii
 type VariantPack struct {
-	ID         *uuid.UUID     `json:"id,omitempty"`         // ID упаковки модификации
+	ID         *string        `json:"id,omitempty"`         // ID упаковки модификации
 	ParentPack *Pack          `json:"parentpack,omitempty"` // Метаданные родительской упаковки (упаковки товара), для которой переопределяется штрихкод
 	Barcodes   Slice[Barcode] `json:"barcodes,omitempty"`   // Массив штрихкодов упаковки модификации. Данный массив может содержать только один штрихкод
 }
 
 // GetID возвращает ID упаковки модификации.
-func (variantPack VariantPack) GetID() uuid.UUID {
+func (variantPack VariantPack) GetID() string {
 	return Deref(variantPack.ID)
 }
 
@@ -361,16 +361,16 @@ func (variantPack VariantPack) String() string {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-modifikaciq-modifikacii-atributy-wlozhennyh-suschnostej-metadannye-modifikacij-harakteristiki-modifikacii
 type Characteristic struct {
-	ID       *uuid.UUID `json:"id,omitempty"`       // ID соответствующей характеристики
-	Meta     *Meta      `json:"meta,omitempty"`     // Метаданные характеристики
-	Name     *string    `json:"name,omitempty"`     // Наименование характеристики
-	Required *bool      `json:"required,omitempty"` // Флаг о том, является ли характеристика обязательной
-	Type     *string    `json:"type,omitempty"`     // Тип значения характеристики (значение всегда "string")
-	Value    *string    `json:"value,omitempty"`    // Значение характеристики
+	ID       *string `json:"id,omitempty"`       // ID соответствующей характеристики
+	Meta     *Meta   `json:"meta,omitempty"`     // Метаданные характеристики
+	Name     *string `json:"name,omitempty"`     // Наименование характеристики
+	Required *bool   `json:"required,omitempty"` // Флаг о том, является ли характеристика обязательной
+	Type     *string `json:"type,omitempty"`     // Тип значения характеристики (значение всегда "string")
+	Value    *string `json:"value,omitempty"`    // Значение характеристики
 }
 
 // GetID возвращает ID соответствующей характеристики.
-func (characteristic Characteristic) GetID() uuid.UUID {
+func (characteristic Characteristic) GetID() string {
 	return Deref(characteristic.ID)
 }
 
@@ -439,12 +439,12 @@ type VariantService interface {
 	// GetList выполняет запрос на получение списка модификаций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Variant], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Variant], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех модификаций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Variant], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Variant], *resty.Response, error)
 
 	// Create выполняет запрос на создание заказа модификации.
 	// Обязательные поля для заполнения:
@@ -452,13 +452,13 @@ type VariantService interface {
 	//	- characteristics (Характеристики Модификации)
 	// Принимает контекст, модификацию и опционально объект параметров запроса Params.
 	// Возвращает созданную модификацию.
-	Create(ctx context.Context, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
+	Create(ctx context.Context, variant *Variant, params ...func(*Params)) (*Variant, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение модификаций.
 	// Изменяемые модификации должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список модификаций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых модификаций.
-	CreateUpdateMany(ctx context.Context, variantList Slice[Variant], params ...*Params) (*Slice[Variant], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, variantList Slice[Variant], params ...func(*Params)) (*Slice[Variant], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление модификаций.
 	// Принимает контекст и множество модификаций.
@@ -468,7 +468,7 @@ type VariantService interface {
 	// DeleteByID выполняет запрос на удаление модификации по ID.
 	// Принимает контекст и ID модификации.
 	// Возвращает «true» в случае успешного удаления модификации.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление модификации.
 	// Принимает контекст и модификацию.
@@ -478,12 +478,12 @@ type VariantService interface {
 	// GetByID выполняет запрос на получение отдельной модификации по ID.
 	// Принимает контекст, ID модификации и опционально объект параметров запроса Params.
 	// Возвращает модификацию.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Variant, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Variant, *resty.Response, error)
 
 	// Update выполняет запрос на изменение модификации.
 	// Принимает контекст, модификацию и опционально объект параметров запроса Params.
 	// Возвращает изменённую модификацию.
-	Update(ctx context.Context, id uuid.UUID, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
+	Update(ctx context.Context, id string, variant *Variant, params ...func(*Params)) (*Variant, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных модификаций.
 	// Принимает контекст.
@@ -493,38 +493,38 @@ type VariantService interface {
 	// GetImageList выполняет запрос на получение изображений модификации в виде списка.
 	// Принимает контекст и ID модификации.
 	// Возвращает объект List.
-	GetImageList(ctx context.Context, id uuid.UUID) (*List[Image], *resty.Response, error)
+	GetImageList(ctx context.Context, id string) (*List[Image], *resty.Response, error)
 
 	// CreateImage выполняет запрос на добавление изображения.
 	// Принимает контекст, ID модификации и изображение.
 	// Возвращает список изображений.
-	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
+	CreateImage(ctx context.Context, id string, image *Image) (*Slice[Image], *resty.Response, error)
 
 	// UpdateImageMany выполняет запрос на обновления изображений.
 	// Принимает контекст, ID модификации и изображение.
 	// Если необходимо оставить некоторые Изображения, то необходимо передать эти изображения.
 	// Возвращает список изображений.
-	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id string, images ...*Image) (*Slice[Image], *resty.Response, error)
 
 	// DeleteImage выполняет запрос на удаление изображения модификации.
 	// Принимает контекст, ID модификации и ID изображения.
 	// Возвращает «true» в случае успешного удаления изображения модификации.
-	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
+	DeleteImage(ctx context.Context, id string, imageID string) (bool, *resty.Response, error)
 
 	// DeleteImageMany выполняет запрос на массовое удаление изображений модификации.
 	// Принимает контекст, ID модификации и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id string, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// CreateCharacteristic выполняет запрос на создание характеристики.
 	// Принимает контекст и характеристику.
@@ -540,17 +540,17 @@ type VariantService interface {
 	// GetCharacteristicByID выполняет запрос на получение отдельной характеристики по ID.
 	// Принимает контекст, ID характеристики.
 	// Возвращает характеристику.
-	GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error)
+	GetCharacteristicByID(ctx context.Context, id string) (*Characteristic, *resty.Response, error)
 
 	// UpdateCharacteristic выполняет запрос на изменение характеристики.
 	// Принимает контекст и характеристику.
 	// Возвращает изменённую характеристику.
-	UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
+	UpdateCharacteristic(ctx context.Context, id string, characteristic *Characteristic) (*Characteristic, *resty.Response, error)
 
 	// DeleteCharacteristic выполняет запрос на удаление характеристики.
 	// Принимает контекст и ID характеристики.
 	// Возвращает «true» в случае успешного удаления характеристики.
-	DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteCharacteristic(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (
@@ -582,17 +582,17 @@ func (service *variantService) CreateCharacteristicMany(ctx context.Context, cha
 	return NewRequestBuilder[Slice[Characteristic]](service.client, EndpointVariantCharacteristics).Post(ctx, characteristics)
 }
 
-func (service *variantService) GetCharacteristicByID(ctx context.Context, id uuid.UUID) (*Characteristic, *resty.Response, error) {
+func (service *variantService) GetCharacteristicByID(ctx context.Context, id string) (*Characteristic, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointVariantCharacteristicsID, id)
 	return NewRequestBuilder[Characteristic](service.client, path).Get(ctx)
 }
 
-func (service *variantService) UpdateCharacteristic(ctx context.Context, id uuid.UUID, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
+func (service *variantService) UpdateCharacteristic(ctx context.Context, id string, characteristic *Characteristic) (*Characteristic, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointVariantCharacteristicsID, id)
 	return NewRequestBuilder[Characteristic](service.client, path).Put(ctx, characteristic)
 }
 
-func (service *variantService) DeleteCharacteristic(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *variantService) DeleteCharacteristic(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointVariantCharacteristicsID, id)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

@@ -3,6 +3,7 @@ package moysklad
 import (
 	"fmt"
 	"github.com/google/go-querystring/query"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -26,16 +27,25 @@ type Params struct {
 	Async       bool       `url:"async,omitempty"`          // Параметр создания асинхронной задачи
 }
 
-func GetParamsFromSliceOrNew(params []*Params) *Params {
-	if len(params) == 0 {
-		return NewParams()
+// String реализует интерфейс [fmt.Stringer].
+func (params *Params) String() string {
+	return params.Values().Encode()
+}
+
+func (params *Params) Values() url.Values {
+	v, _ := query.Values(params)
+
+	return v
+}
+
+func ApplyParams(params []func(*Params)) *Params {
+	p := &Params{}
+
+	for _, o := range params {
+		o(p)
 	}
 
-	if params[0] == nil {
-		return NewParams()
-	}
-
-	return params[0]
+	return p
 }
 
 // Interval Интервал, с которым будет построен отчёт.
@@ -169,66 +179,58 @@ func (groupByType GroupBy) String() string {
 	return string(groupByType)
 }
 
-// NewParams возвращает новый объект параметров запроса.
-func NewParams() *Params {
-	return &Params{}
-}
-
-// Clone копирует параметры запроса в новый указатель.
-func (params *Params) Clone() *Params {
-	clone := NewParams()
-	if params != nil {
-		*clone = *params
-	}
-	return clone
-}
-
 // WithMomentFrom Начало периода.
 //
 // momentFrom=value
-func (params *Params) WithMomentFrom(momentFrom time.Time) *Params {
-	params.MomentFrom = momentFrom.Format(time.DateTime)
-	return params
+func WithMomentFrom(momentFrom time.Time) func(*Params) {
+	return func(params *Params) {
+		params.MomentFrom = momentFrom.Format(time.DateTime)
+	}
 }
 
 // WithMomentTo Конец периода.
 //
 // momentTo=value
-func (params *Params) WithMomentTo(momentTo time.Time) *Params {
-	params.MomentTo = momentTo.Format(time.DateTime)
-	return params
+func WithMomentTo(momentTo time.Time) func(*Params) {
+	return func(params *Params) {
+		params.MomentFrom = momentTo.Format(time.DateTime)
+	}
 }
 
 // WithInterval Интервал, с которым будет построен отчёт.
 //
 // interval=value
-func (params *Params) WithInterval(interval Interval) *Params {
-	params.Interval = interval
-	return params
+func WithInterval(interval Interval) func(*Params) {
+	return func(params *Params) {
+		params.Interval = interval
+	}
 }
 
 // WithIntervalHour Интервал, с которым будет построен отчёт (час).
 //
 // interval=hour
-func (params *Params) WithIntervalHour() *Params {
-	params.Interval = IntervalHour
-	return params
+func WithIntervalHour() func(*Params) {
+	return func(params *Params) {
+		params.Interval = IntervalHour
+	}
 }
 
 // WithIntervalDay Интервал, с которым будет построен отчёт (день).
 //
 // interval=day
-func (params *Params) WithIntervalDay() *Params {
-	params.Interval = IntervalDay
-	return params
+func WithIntervalDay() func(*Params) {
+	return func(params *Params) {
+		params.Interval = IntervalDay
+	}
 }
 
 // WithIntervalMonth Интервал, с которым будет построен отчёт (месяц).
 //
 // interval=month
-func (params *Params) WithIntervalMonth() *Params {
-	params.Interval = IntervalMonth
-	return params
+func WithIntervalMonth() func(*Params) {
+	return func(params *Params) {
+		params.Interval = IntervalMonth
+	}
 }
 
 // WithAsync Запрос на создание асинхронной задачи.
@@ -238,9 +240,10 @@ func (params *Params) WithIntervalMonth() *Params {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-asinhronnyj-obmen-vypolnenie-zaprosa-w-asinhronnom-rezhime
-func (params *Params) WithAsync() *Params {
-	params.Async = true
-	return params
+func WithAsync() func(*Params) {
+	return func(params *Params) {
+		params.Async = true
+	}
 }
 
 // WithStockFiled Остатки и себестоимость в позициях документов.
@@ -250,11 +253,12 @@ func (params *Params) WithAsync() *Params {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-obschie-swedeniq-ostatki-i-sebestoimost-w-poziciqh-dokumentow
-func (params *Params) WithStockFiled() *Params {
-	params.Fields = "stock"
-	params.WithLimit(100)
-	params.WithExpand("positions")
-	return params
+func WithStockFiled() func(*Params) {
+	return func(params *Params) {
+		params.Fields = "stock"
+		params.Limit = 100
+		params.Expand = append(params.Expand, "positions")
+	}
 }
 
 // WithExpand Замена ссылок объектами.
@@ -267,9 +271,10 @@ func (params *Params) WithStockFiled() *Params {
 //
 // [Документация МойСклад #1]: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-chto-takoe-expand
 // [Документация МойСклад #2]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-zamena-ssylok-ob-ektami-s-pomosch-u-expand
-func (params *Params) WithExpand(fields ...string) *Params {
-	params.Expand = append(params.Expand, fields...)
-	return params
+func WithExpand(fields ...string) func(*Params) {
+	return func(params *Params) {
+		params.Expand = append(params.Expand, fields...)
+	}
 }
 
 func newFilter(key, value string, filterType FilterType) string {
@@ -285,159 +290,177 @@ func newFilter(key, value string, filterType FilterType) string {
 // где store - указатель на [Store], который содержит заполненный объект [Meta].
 //
 // ?filter=store=https://api.moysklad.ru/api/remap/1.2/entity/store/dbc4fab9-2226-11ee-0a80-112e00094247
-func (params *Params) WithFilterObject(object MetaOwner) *Params {
-	metaType := object.GetMeta().GetType().String()
-	href := object.GetMeta().GetHref()
+func WithFilterObject(object MetaOwner) func(*Params) {
+	return func(params *Params) {
+		metaType := object.GetMeta().GetType().String()
+		href := object.GetMeta().GetHref()
 
-	if metaType != "" && href != "" {
-		params.Filter = append(params.Filter, newFilter(metaType, href, FilterEquals))
+		if metaType != "" && href != "" {
+			params.Filter = append(params.Filter, newFilter(metaType, href, FilterEquals))
+		}
 	}
-
-	return params
 }
 
 // WithFilterEquals Фильтрация по значению.
 //
 // key=value
-func (params *Params) WithFilterEquals(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterEquals))
-	return params
+func WithFilterEquals(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterEquals))
+	}
 }
 
 // WithFilterGreater Больше.
 //
 // key>value
-func (params *Params) WithFilterGreater(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterGreater))
-	return params
+func WithFilterGreater(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterGreater))
+	}
 }
 
 // WithFilterLesser Меньше.
 //
 // key<value
-func (params *Params) WithFilterLesser(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterLesser))
-	return params
+func WithFilterLesser(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterLesser))
+	}
 }
 
 // WithFilterGreaterOrEquals Больше или равно.
 //
 // key>=value
-func (params *Params) WithFilterGreaterOrEquals(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterGreaterOrEquals))
-	return params
+func WithFilterGreaterOrEquals(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterGreaterOrEquals))
+	}
 }
 
 // WithFilterLesserOrEquals Меньше или равно.
 //
 // key<=value
-func (params *Params) WithFilterLesserOrEquals(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterLesserOrEquals))
-	return params
+func WithFilterLesserOrEquals(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterLesserOrEquals))
+	}
 }
 
 // WithFilterNotEquals Не равно.
 //
 // key!=value
-func (params *Params) WithFilterNotEquals(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterNotEquals))
-	return params
+func WithFilterNotEquals(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterNotEquals))
+	}
 }
 
 // WithFilterEquivalence Частичное совпадение.
 //
 // key~value
-func (params *Params) WithFilterEquivalence(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterEquivalence))
-	return params
+func WithFilterEquivalence(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterEquivalence))
+	}
 }
 
 // WithFilterEquivalenceLeft Полное совпадение в начале значения.
 //
 // key~=value
-func (params *Params) WithFilterEquivalenceLeft(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterEquivalenceLeft))
-	return params
+func WithFilterEquivalenceLeft(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterEquivalenceLeft))
+	}
 }
 
 // WithFilterEquivalenceRight Полное совпадение в конце значения.
 //
 // key=~value
-func (params *Params) WithFilterEquivalenceRight(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterEquivalenceRight))
-	return params
+func WithFilterEquivalenceRight(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterEquivalenceRight))
+	}
 }
 
 // WithFilterNotEquivalence Частичное совпадение не выводится.
 //
 // key!~value
-func (params *Params) WithFilterNotEquivalence(key, value string) *Params {
-	params.Filter = append(params.Filter, newFilter(key, value, FilterNotEquivalence))
-	return params
+func WithFilterNotEquivalence(key, value string) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter(key, value, FilterNotEquivalence))
+	}
 }
 
 // WithFilterDeleted Фильтрация по удалённым документам.
 //
 // isDeleted=true
-func (params *Params) WithFilterDeleted(value bool) *Params {
-	params.Filter = append(params.Filter, newFilter("isDeleted", strconv.FormatBool(value), FilterEquals))
-	return params
+func WithFilterDeleted(value bool) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter("isDeleted", strconv.FormatBool(value), FilterEquals))
+	}
 }
 
 // WithFilterPrinted Фильтрация по напечатанным документам.
 //
 // printed=true
-func (params *Params) WithFilterPrinted(value bool) *Params {
-	params.Filter = append(params.Filter, newFilter("printed", strconv.FormatBool(value), FilterEquals))
-	return params
+func WithFilterPrinted(value bool) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter("printed", strconv.FormatBool(value), FilterEquals))
+	}
 }
 
 // WithFilterPublished Фильтрация по опубликованным документам.
 //
 // published=true
-func (params *Params) WithFilterPublished(value bool) *Params {
-	params.Filter = append(params.Filter, newFilter("published", strconv.FormatBool(value), FilterEquals))
-	return params
+func WithFilterPublished(value bool) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter("published", strconv.FormatBool(value), FilterEquals))
+	}
 }
 
 // WithFilterArchived Фильтрация по архивным сущностям.
 //
 // archived=true
-func (params *Params) WithFilterArchived(value bool) *Params {
-	params.Filter = append(params.Filter, newFilter("archived", strconv.FormatBool(value), FilterEquals))
-	return params
+func WithFilterArchived(value bool) func(*Params) {
+	return func(params *Params) {
+		params.Filter = append(params.Filter, newFilter("archived", strconv.FormatBool(value), FilterEquals))
+	}
 }
 
 // WithGroupBy Группировка выдачи.
 //
 // groupBy=value
-func (params *Params) WithGroupBy(value GroupBy) *Params {
-	params.GroupBy = value
-	return params
+func WithGroupBy(value GroupBy) func(*Params) {
+	return func(params *Params) {
+		params.GroupBy = value
+	}
 }
 
 // WithGroupByProduct Группировка выдачи (только товары).
 //
 // groupBy=product
-func (params *Params) WithGroupByProduct() *Params {
-	params.GroupBy = GroupByProduct
-	return params
+func WithGroupByProduct() func(*Params) {
+	return func(params *Params) {
+		params.GroupBy = GroupByProduct
+	}
 }
 
 // WithGroupByVariant Группировка выдачи (товары и модификации).
 //
 // groupBy=variant
-func (params *Params) WithGroupByVariant() *Params {
-	params.GroupBy = GroupByVariant
-	return params
+func WithGroupByVariant() func(*Params) {
+	return func(params *Params) {
+		params.GroupBy = GroupByVariant
+	}
 }
 
 // WithGroupByConsignment Группировка выдачи (товары, модификации и серии).
 //
 // groupBy=consignment
-func (params *Params) WithGroupByConsignment() *Params {
-	params.GroupBy = GroupByConsignment
-	return params
+func WithGroupByConsignment() func(*Params) {
+	return func(params *Params) {
+		params.GroupBy = GroupByConsignment
+	}
 }
 
 // WithLimit Количество элементов на странице.
@@ -445,28 +468,30 @@ func (params *Params) WithGroupByConsignment() *Params {
 // Диапазон значения: от 1 до 1000.
 //
 // limit=value
-func (params *Params) WithLimit(limit int) *Params {
-	params.Limit = Clamp(limit, 1, MaxPositions)
-	return params
+func WithLimit(limit int) func(*Params) {
+	return func(params *Params) {
+		params.Limit = Clamp(limit, 1, MaxPositions)
+	}
 }
 
 // WithOffset Смещение от первого элемента.
 //
 // offset=value
-func (params *Params) WithOffset(offset int) *Params {
-	params.Offset = offset
-	return params
+func WithOffset(offset int) func(*Params) {
+	return func(params *Params) {
+		params.Offset = offset
+	}
 }
 
 // WithNamedFilter позволяет использовать сохранённый фильтр в качестве параметра.
 //
 // namedfilter=https://api.moysklad.ru/api/remap/1.2/entity/product/namedfilter/b5863410-ca86-11eb-ac12-000d00000019
-func (params *Params) WithNamedFilter(filter *NamedFilter) *Params {
-	if filter.Meta == nil {
-		return params
+func WithNamedFilter(filter *NamedFilter) func(*Params) {
+	return func(params *Params) {
+		if filter.Meta != nil {
+			params.NamedFilter = filter.GetMeta().GetHref()
+		}
 	}
-	params.NamedFilter = filter.GetMeta().GetHref()
-	return params
 }
 
 func newOrderParam(fieldName string, dir OrderDirection) string {
@@ -479,31 +504,34 @@ func newOrderParam(fieldName string, dir OrderDirection) string {
 // WithOrder сортирует объекты по полю fieldName, по умолчанию (asc).
 //
 // order=fieldName
-func (params *Params) WithOrder(fields ...string) *Params {
-	for _, fieldName := range fields {
-		params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDefault))
+func WithOrder(fields ...string) func(*Params) {
+	return func(params *Params) {
+		for _, fieldName := range fields {
+			params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDefault))
+		}
 	}
-	return params
 }
 
 // WithOrderAsc сортирует объекты по полю fieldName, по возрастанию (asc).
 //
 // order=fieldName,asc
-func (params *Params) WithOrderAsc(fields ...string) *Params {
-	for _, fieldName := range fields {
-		params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionAsc))
+func WithOrderAsc(fields ...string) func(*Params) {
+	return func(params *Params) {
+		for _, fieldName := range fields {
+			params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionAsc))
+		}
 	}
-	return params
 }
 
 // WithOrderDesc сортирует объекты по полю fieldName, по убыванию (desc).
 //
 // order=fieldName,desc
-func (params *Params) WithOrderDesc(fields ...string) *Params {
-	for _, fieldName := range fields {
-		params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDesc))
+func WithOrderDesc(fields ...string) func(*Params) {
+	return func(params *Params) {
+		for _, fieldName := range fields {
+			params.Order = append(params.Order, newOrderParam(fieldName, OrderDirectionDesc))
+		}
 	}
-	return params
 }
 
 // WithSearch Контекстный поиск.
@@ -513,68 +541,64 @@ func (params *Params) WithOrderDesc(fields ...string) *Params {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/workbook/#workbook-fil-traciq-listanie-poisk-i-sortirowka-poisk
-func (params *Params) WithSearch(search string) *Params {
-	params.Search = search
-	return params
+func WithSearch(search string) func(*Params) {
+	return func(params *Params) {
+		params.Search = search
+	}
 }
 
 // WithStockType Параметром stockType выбирается тип остатка, который необходимо рассчитать.
 //
 // stockType=value
-func (params *Params) WithStockType(stockType StockType) *Params {
-	params.StockType = stockType
-	return params
+func WithStockType(stockType StockType) func(*Params) {
+	return func(params *Params) {
+		params.StockType = stockType
+	}
 }
 
 // WithStockDefault Физический остаток на складах, без учёта резерва и ожидания.
 //
 // stockType=stock
-func (params *Params) WithStockDefault() *Params {
-	params.StockType = StockDefault
-	return params
+func WithStockDefault() func(*Params) {
+	return func(params *Params) {
+		params.StockType = StockDefault
+	}
 }
 
 // WithStockFree Остаток на складах за вычетом резерва.
 //
 // stockType=freeStock
-func (params *Params) WithStockFree() *Params {
-	params.StockType = StockFreeStock
-	return params
+func WithStockFree() func(*Params) {
+	return func(params *Params) {
+		params.StockType = StockFreeStock
+	}
 }
 
 // WithStockQuantity Доступно. Учитывает резерв и ожидания.
 //
 // stockType=quantity
-func (params *Params) WithStockQuantity() *Params {
-	params.StockType = StockQuantity
-	return params
+func WithStockQuantity() func(*Params) {
+	return func(params *Params) {
+		params.StockType = StockQuantity
+	}
 }
 
 // WithStockReserve Резерв.
 //
 // stockType=reserve
-func (params *Params) WithStockReserve() *Params {
-	params.StockType = StockReserve
-	return params
+func WithStockReserve() func(*Params) {
+	return func(params *Params) {
+		params.StockType = StockReserve
+	}
 }
 
 // WithStockInTransit Ожидание.
 //
 // stockType=inTransit
-func (params *Params) WithStockInTransit() *Params {
-	params.StockType = StockInTransit
-	return params
-}
-
-// QueryString конкатенирует поля и возвращает URI валидную строку.
-func (params *Params) QueryString() string {
-	v, _ := query.Values(params)
-	return v.Encode()
-}
-
-// String реализует интерфейс [fmt.Stringer].
-func (params *Params) String() string {
-	return params.QueryString()
+func WithStockInTransit() func(*Params) {
+	return func(params *Params) {
+		params.StockType = StockInTransit
+	}
 }
 
 // WithEvaluate автозаполнение.
@@ -584,7 +608,8 @@ func (params *Params) String() string {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-awtozapolnenie
-func (params *Params) WithEvaluate(evaluate ...Evaluate) *Params {
-	params.Action = append(params.Action, evaluate...)
-	return params
+func WithEvaluate(evaluate ...Evaluate) func(*Params) {
+	return func(params *Params) {
+		params.Action = append(params.Action, evaluate...)
+	}
 }

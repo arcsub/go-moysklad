@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -26,10 +26,10 @@ type ProcessingOrder struct {
 	ExternalCode          *string                             `json:"externalCode,omitempty"`          // Внешний код Заказа на производство
 	Files                 *MetaArray[File]                    `json:"files,omitempty"`                 // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group                 *Group                              `json:"group,omitempty"`                 // Отдел сотрудника
-	ID                    *uuid.UUID                          `json:"id,omitempty"`                    // ID Заказа на производство
+	ID                    *string                             `json:"id,omitempty"`                    // ID Заказа на производство
 	Meta                  *Meta                               `json:"meta,omitempty"`                  // Метаданные Заказа на производство
 	Moment                *Timestamp                          `json:"moment,omitempty"`                // Дата документа
-	AccountID             *uuid.UUID                          `json:"accountId,omitempty"`             // ID учётной записи
+	AccountID             *string                             `json:"accountId,omitempty"`             // ID учётной записи
 	Owner                 *Employee                           `json:"owner,omitempty"`                 // Метаданные владельца (Сотрудника)
 	Positions             *MetaArray[ProcessingOrderPosition] `json:"positions,omitempty"`             // Метаданные позиций Заказа на производство
 	Printed               *bool                               `json:"printed,omitempty"`               // Напечатан ли документ
@@ -40,7 +40,7 @@ type ProcessingOrder struct {
 	Shared                *bool                               `json:"shared,omitempty"`                // Общий доступ
 	State                 *NullValue[State]                   `json:"state,omitempty"`                 // Метаданные статуса Заказа на производство
 	Store                 *Store                              `json:"store,omitempty"`                 // Метаданные склада
-	SyncID                *uuid.UUID                          `json:"syncId,omitempty"`                // ID синхронизации
+	SyncID                *string                             `json:"syncId,omitempty"`                // ID синхронизации
 	Updated               *Timestamp                          `json:"updated,omitempty"`               // Момент последнего обновления Заказа на производство
 	Processings           Slice[Processing]                   `json:"processings,omitempty"`           // Массив ссылок на связанные техоперации
 	Attributes            Slice[Attribute]                    `json:"attributes,omitempty"`            // Список метаданных доп. полей
@@ -117,7 +117,7 @@ func (processingOrder ProcessingOrder) GetGroup() Group {
 }
 
 // GetID возвращает ID Заказа на производство.
-func (processingOrder ProcessingOrder) GetID() uuid.UUID {
+func (processingOrder ProcessingOrder) GetID() string {
 	return Deref(processingOrder.ID)
 }
 
@@ -132,7 +132,7 @@ func (processingOrder ProcessingOrder) GetMoment() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (processingOrder ProcessingOrder) GetAccountID() uuid.UUID {
+func (processingOrder ProcessingOrder) GetAccountID() string {
 	return Deref(processingOrder.AccountID)
 }
 
@@ -187,7 +187,7 @@ func (processingOrder ProcessingOrder) GetStore() Store {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (processingOrder ProcessingOrder) GetSyncID() uuid.UUID {
+func (processingOrder ProcessingOrder) GetSyncID() string {
 	return Deref(processingOrder.SyncID)
 }
 
@@ -339,7 +339,7 @@ func (processingOrder *ProcessingOrder) SetStore(store *Store) *ProcessingOrder 
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (processingOrder *ProcessingOrder) SetSyncID(syncID uuid.UUID) *ProcessingOrder {
+func (processingOrder *ProcessingOrder) SetSyncID(syncID string) *ProcessingOrder {
 	processingOrder.SyncID = &syncID
 	return processingOrder
 }
@@ -371,12 +371,12 @@ func (ProcessingOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingOrder *ProcessingOrder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+func (processingOrder *ProcessingOrder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error) {
 	return NewProcessingOrderService(client).Update(ctx, processingOrder.GetID(), processingOrder, params...)
 }
 
 // Create shortcut
-func (processingOrder *ProcessingOrder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+func (processingOrder *ProcessingOrder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error) {
 	return NewProcessingOrderService(client).Create(ctx, processingOrder, params...)
 }
 
@@ -393,16 +393,16 @@ func (processingOrder *ProcessingOrder) Delete(ctx context.Context, client *Clie
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-na-proizwodstwo-zakazy-na-proizwodstwo-pozicii-zakaza-na-proizwodstwo
 type ProcessingOrderPosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров/услуг данного вида в позиции. Если позиция - товар, у которого включен учет по серийным номерам, то значение в этом поле всегда будет равно количеству серийных номеров для данной позиции в документе.
 	Reserve    *float64            `json:"reserve,omitempty"`    // Резерв данной позиции
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (processingOrderPosition ProcessingOrderPosition) GetAccountID() uuid.UUID {
+func (processingOrderPosition ProcessingOrderPosition) GetAccountID() string {
 	return Deref(processingOrderPosition.AccountID)
 }
 
@@ -412,7 +412,7 @@ func (processingOrderPosition ProcessingOrderPosition) GetAssortment() Assortmen
 }
 
 // GetID возвращает ID позиции.
-func (processingOrderPosition ProcessingOrderPosition) GetID() uuid.UUID {
+func (processingOrderPosition ProcessingOrderPosition) GetID() string {
 	return Deref(processingOrderPosition.ID)
 }
 
@@ -482,12 +482,12 @@ type ProcessingOrderService interface {
 	// GetList выполняет запрос на получение списка заказов на производство.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingOrder], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех заказов на производство в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[ProcessingOrder], *resty.Response, error)
 
 	// Create выполняет запрос на создание заказа на производство.
 	// Обязательные поля для заполнения:
@@ -496,13 +496,13 @@ type ProcessingOrderService interface {
 	//	- positions (Ссылка на позиции в Заказе)
 	// Принимает контекст, заказ на производство и опционально объект параметров запроса Params.
 	// Возвращает созданный заказ на производство.
-	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение заказов на производство.
 	// Изменяемые заказы на производство должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список заказов на производство и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых заказов на производство.
-	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...func(*Params)) (*Slice[ProcessingOrder], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление заказов на производство.
 	// Принимает контекст и множество заказов на производство.
@@ -512,7 +512,7 @@ type ProcessingOrderService interface {
 	// DeleteByID выполняет запрос на удаление заказа на производство по ID.
 	// Принимает контекст и ID заказа на производство.
 	// Возвращает «true» в случае успешного удаления заказа на производство.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление заказа на производство.
 	// Принимает контекст и заказ на производство.
@@ -522,12 +522,12 @@ type ProcessingOrderService interface {
 	// GetByID выполняет запрос на получение заказа на производство по ID.
 	// Принимает контекст, ID заказа на производство и опционально объект параметров запроса Params.
 	// Возвращает заказ на производство.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение заказа на производство.
 	// Принимает контекст, заказ на производство и опционально объект параметров запроса Params.
 	// Возвращает изменённый заказа на производство.
-	Update(ctx context.Context, id uuid.UUID, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	Update(ctx context.Context, id string, processingOrder *ProcessingOrder, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного заказа на производство со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -549,54 +549,54 @@ type ProcessingOrderService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ProcessingOrderPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[ProcessingOrderPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[ProcessingOrderPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[ProcessingOrderPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*ProcessingOrderPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingOrderPosition, params ...func(*Params)) (*ProcessingOrderPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProcessingOrderPosition, params ...func(*Params)) (*ProcessingOrderPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingOrderPosition) (*Slice[ProcessingOrderPosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*ProcessingOrderPosition) (*Slice[ProcessingOrderPosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingOrderPosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*ProcessingOrderPosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -606,7 +606,7 @@ type ProcessingOrderService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -622,12 +622,12 @@ type ProcessingOrderService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -637,22 +637,22 @@ type ProcessingOrderService interface {
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*ProcessingOrder, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*ProcessingOrder, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -662,7 +662,7 @@ type ProcessingOrderService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -672,32 +672,32 @@ type ProcessingOrderService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

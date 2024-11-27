@@ -52,17 +52,17 @@ type ReportByOperationsService interface {
 	// GetStock выполняет запрос на получение отчёта с остатками.
 	// Принимает контекст и номенклатуру (товар/модификация/серия) и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetStock(ctx context.Context, assortment AssortmentConverter, params ...*Params) (*List[ReportByOperationsStock], *resty.Response, error)
+	GetStock(ctx context.Context, assortment AssortmentConverter, params ...func(*Params)) (*List[ReportByOperationsStock], *resty.Response, error)
 
 	// GetReserve выполняет запрос на получение отчёта с резервами.
 	// Принимает контекст и номенклатуру (товар/модификация/серия) и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetReserve(ctx context.Context, assortment AssortmentConverter, params ...*Params) (*List[ReportByOperationsReserve], *resty.Response, error)
+	GetReserve(ctx context.Context, assortment AssortmentConverter, params ...func(*Params)) (*List[ReportByOperationsReserve], *resty.Response, error)
 
 	// GetTransit выполняет запрос на получение отчёта с ожиданием.
 	// Принимает контекст и номенклатуру (товар/модификация/серия) и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetTransit(ctx context.Context, assortment AssortmentConverter, params ...*Params) (*List[ReportByOperationsTransit], *resty.Response, error)
+	GetTransit(ctx context.Context, assortment AssortmentConverter, params ...func(*Params)) (*List[ReportByOperationsTransit], *resty.Response, error)
 }
 
 const (
@@ -75,23 +75,21 @@ type reportByOperationsService struct {
 	Endpoint
 }
 
-func makeParamByOperations(assortment AssortmentConverter, params []*Params) *Params {
-	p := GetParamsFromSliceOrNew(params)
-	p.WithFilterEquals("assortment", assortment.AsAssortment().GetMeta().GetHref())
-	return p
+func makeParamByOperations(assortment AssortmentConverter, params []func(*Params)) []func(*Params) {
+	return append(params, WithFilterEquals("assortment", assortment.AsAssortment().GetMeta().GetHref()))
 }
 
-func (service *reportByOperationsService) GetStock(ctx context.Context, assortment AssortmentConverter, params ...*Params) (*List[ReportByOperationsStock], *resty.Response, error) {
+func (service *reportByOperationsService) GetStock(ctx context.Context, assortment AssortmentConverter, params ...func(*Params)) (*List[ReportByOperationsStock], *resty.Response, error) {
 	p := makeParamByOperations(assortment, params)
 	return NewRequestBuilder[List[ReportByOperationsStock]](service.client, EndpointReportByOperationsStock).SetParams(p).Get(ctx)
 }
 
-func (service *reportByOperationsService) GetReserve(ctx context.Context, assortment AssortmentConverter, params ...*Params) (*List[ReportByOperationsReserve], *resty.Response, error) {
+func (service *reportByOperationsService) GetReserve(ctx context.Context, assortment AssortmentConverter, params ...func(*Params)) (*List[ReportByOperationsReserve], *resty.Response, error) {
 	p := makeParamByOperations(assortment, params)
 	return NewRequestBuilder[List[ReportByOperationsReserve]](service.client, EndpointReportByOperationsReserve).SetParams(p).Get(ctx)
 }
 
-func (service *reportByOperationsService) GetTransit(ctx context.Context, assortment AssortmentConverter, params ...*Params) (*List[ReportByOperationsTransit], *resty.Response, error) {
+func (service *reportByOperationsService) GetTransit(ctx context.Context, assortment AssortmentConverter, params ...func(*Params)) (*List[ReportByOperationsTransit], *resty.Response, error) {
 	p := makeParamByOperations(assortment, params)
 	return NewRequestBuilder[List[ReportByOperationsTransit]](service.client, EndpointReportByOperationsTransit).SetParams(p).Get(ctx)
 }

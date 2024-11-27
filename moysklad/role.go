@@ -3,7 +3,6 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // Role Пользовательская роль.
@@ -14,7 +13,7 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skie-roli
 type Role struct {
-	ID          *uuid.UUID           `json:"id,omitempty"`          // ID пользовательской роли
+	ID          *string              `json:"id,omitempty"`          // ID пользовательской роли
 	Meta        *Meta                `json:"meta,omitempty"`        // Метаданные пользовательской роли
 	Name        *string              `json:"name,omitempty"`        // Наименование пользовательской роли
 	Permissions *EmployeePermissions `json:"permissions,omitempty"` // Список пермиссий
@@ -31,7 +30,7 @@ func (role Role) Clean() *Role {
 }
 
 // GetID возвращает ID пользовательской роли.
-func (role Role) GetID() uuid.UUID {
+func (role Role) GetID() string {
 	return Deref(role.ID)
 }
 
@@ -75,12 +74,12 @@ func (role Role) String() string { return Stringify(role) }
 func (Role) MetaType() MetaType { return MetaTypeRole }
 
 // Update shortcut
-func (role *Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+func (role *Role) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Role, *resty.Response, error) {
 	return NewRoleService(client).Update(ctx, role.GetID(), role, params...)
 }
 
 // Create shortcut
-func (role *Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+func (role *Role) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Role, *resty.Response, error) {
 	return NewRoleService(client).Create(ctx, role, params...)
 }
 
@@ -323,12 +322,12 @@ type RoleService interface {
 	// GetList выполняет запрос на получение списка пользовательских ролей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Role], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Role], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех пользовательских ролей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Role], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Role], *resty.Response, error)
 
 	// Create выполняет запрос на создание пользовательской роли.
 	// Обязательные поля для заполнения:
@@ -336,12 +335,12 @@ type RoleService interface {
 	//	- permissions (Список пермиссий)
 	// Принимает контекст, пользовательскую роль и опционально объект параметров запроса Params.
 	// Возвращает созданную пользовательскую роль.
-	Create(ctx context.Context, role *Role, params ...*Params) (*Role, *resty.Response, error)
+	Create(ctx context.Context, role *Role, params ...func(*Params)) (*Role, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на массовое удаление пользовательской роли по ID.
 	// Принимает контекст и ID пользовательской роли.
 	// Возвращает «true» в случае успешного удаления пользовательской роли.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление пользовательской роли.
 	// Принимает контекст и пользовательскую роль.
@@ -351,12 +350,12 @@ type RoleService interface {
 	// GetByID выполняет запрос на получение отдельной пользовательской роли по ID.
 	// Принимает контекст, ID пользовательской роли и опционально объект параметров запроса Params.
 	// Возвращает пользовательскую роль.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Role, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Role, *resty.Response, error)
 
 	// Update выполняет запрос на изменение пользовательской роли.
 	// Принимает контекст, пользовательскую роль и опционально объект параметров запроса Params.
 	// Возвращает изменённую пользовательскую роль.
-	Update(ctx context.Context, id uuid.UUID, role *Role, params ...*Params) (*Role, *resty.Response, error)
+	Update(ctx context.Context, id string, role *Role, params ...func(*Params)) (*Role, *resty.Response, error)
 
 	// GetAdminRole выполняет запрос на получение роли администратора.
 	// Принимает контекст.

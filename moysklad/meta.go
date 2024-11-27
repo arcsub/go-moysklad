@@ -3,7 +3,6 @@ package moysklad
 import (
 	"fmt"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 	"reflect"
 	"strings"
 )
@@ -32,7 +31,7 @@ type Meta struct {
 	Type         *MetaType `json:"type,omitempty"`         // тип объекта (код сущности)
 }
 
-func newMeta(metaType MetaType, id uuid.UUID) *Meta {
+func newMeta(metaType MetaType, id string) *Meta {
 	href := fmt.Sprintf("%s%s%s/%s", baseApiURL, EndpointEntity, metaType, id)
 
 	meta := new(Meta).SetHref(href).SetMediaType(ApplicationJson).SetType(metaType)
@@ -40,7 +39,7 @@ func newMeta(metaType MetaType, id uuid.UUID) *Meta {
 	return meta
 }
 
-func NewMetaProduct(id uuid.UUID) *Meta {
+func NewMetaProduct(id string) *Meta {
 	return newMeta(MetaTypeProduct, id)
 }
 
@@ -107,24 +106,27 @@ func (meta *Meta) IsEqual(other *Meta) bool {
 	return IsEqualPtr(meta.Href, other.Href)
 }
 
-// GetUUIDFromHref возвращает UUID из поля Href.
+// GetUUIDFromHref возвращает ID из поля Href.
 //
-// Возвращает [uuid.Nil], если поле Href пустое или не содержит идентификатора.
-func (meta Meta) GetUUIDFromHref() uuid.UUID {
+// Возвращает "<empty id>", если поле Href пустое или не содержит идентификатора.
+func (meta Meta) GetUUIDFromHref() string {
 	href := Deref(meta.Href)
 	if href == "" {
-		return uuid.Nil
+		return "<empty id>"
 	}
 
 	sep := strings.Split(href, "/")
 	if len(sep) == 0 {
-		return uuid.Nil
+		return "<empty id>"
 	}
 
-	if id, err := uuid.Parse(sep[len(sep)-1]); err == nil {
-		return id
+	id := sep[len(sep)-1]
+
+	if strings.Contains(id, "?") {
+		id = strings.Split(id, "?")[0]
 	}
-	return uuid.Nil
+
+	return id
 }
 
 // MetaWrapper объект-обёртка для [Meta]
@@ -224,9 +226,9 @@ func (metaArray MetaArray[T]) MarshalJSON() ([]byte, error) {
 }
 
 type MetaNameID struct {
-	Meta Meta      `json:"meta"`
-	Name string    `json:"name"`
-	ID   uuid.UUID `json:"id"`
+	Meta Meta   `json:"meta"`
+	Name string `json:"name"`
+	ID   string `json:"id"`
 }
 
 func (metaNameID MetaNameID) String() string {

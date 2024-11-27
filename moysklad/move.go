@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -17,7 +17,7 @@ import (
 type Move struct {
 	Moment        *Timestamp                `json:"moment,omitempty"`        // Дата документа
 	Updated       *Timestamp                `json:"updated,omitempty"`       // Момент последнего обновления Перемещения
-	AccountID     *uuid.UUID                `json:"accountId,omitempty"`     // ID учётной записи
+	AccountID     *string                   `json:"accountId,omitempty"`     // ID учётной записи
 	Code          *string                   `json:"code,omitempty"`          // Код Перемещения
 	Created       *Timestamp                `json:"created,omitempty"`       // Дата создания
 	Deleted       *Timestamp                `json:"deleted,omitempty"`       // Момент последнего удаления Перемещения
@@ -26,7 +26,7 @@ type Move struct {
 	ExternalCode  *string                   `json:"externalCode,omitempty"`  // Внешний код Перемещения
 	Files         *MetaArray[File]          `json:"files,omitempty"`         // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group         *Group                    `json:"group,omitempty"`         // Отдел сотрудника
-	ID            *uuid.UUID                `json:"id,omitempty"`            // ID Перемещения
+	ID            *string                   `json:"id,omitempty"`            // ID Перемещения
 	InternalOrder *NullValue[InternalOrder] `json:"internalOrder,omitempty"` // Метаданные Внутреннего заказа, связанного с Перемещением
 	CustomerOrder *NullValue[CustomerOrder] `json:"customerOrder,omitempty"` // Метаданные Заказа покупателя, связанного с Перемещением
 	Meta          *Meta                     `json:"meta,omitempty"`          // Метаданные Перемещения
@@ -44,7 +44,7 @@ type Move struct {
 	SourceStore   *Store                    `json:"sourceStore,omitempty"`   // Метаданные склада, с которого совершается перемещение
 	State         *NullValue[State]         `json:"state,omitempty"`         // Метаданные статуса Перемещения
 	Sum           *float64                  `json:"sum,omitempty"`           // Сумма Перемещения в копейках
-	SyncID        *uuid.UUID                `json:"syncId,omitempty"`        // ID синхронизации
+	SyncID        *string                   `json:"syncId,omitempty"`        // ID синхронизации
 	Supply        *Supply                   `json:"supply,omitempty"`        // Метаданные Приемки, связанной с Перемещением
 	TargetStore   *Store                    `json:"targetStore,omitempty"`   // Метаданные склада, на который совершается перемещение
 	Attributes    Slice[Attribute]          `json:"attributes,omitempty"`    // Список метаданных доп. полей
@@ -76,7 +76,7 @@ func (move Move) GetUpdated() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (move Move) GetAccountID() uuid.UUID {
+func (move Move) GetAccountID() string {
 	return Deref(move.AccountID)
 }
 
@@ -116,7 +116,7 @@ func (move Move) GetGroup() Group {
 }
 
 // GetID возвращает ID Перемещения.
-func (move Move) GetID() uuid.UUID {
+func (move Move) GetID() string {
 	return Deref(move.ID)
 }
 
@@ -208,7 +208,7 @@ func (move Move) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (move Move) GetSyncID() uuid.UUID {
+func (move Move) GetSyncID() string {
 	return Deref(move.SyncID)
 }
 
@@ -375,7 +375,7 @@ func (move *Move) SetState(state *State) *Move {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (move *Move) SetSyncID(syncID uuid.UUID) *Move {
+func (move *Move) SetSyncID(syncID string) *Move {
 	move.SyncID = &syncID
 	return move
 }
@@ -407,12 +407,12 @@ func (Move) MetaType() MetaType {
 }
 
 // Update shortcut
-func (move *Move) Update(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+func (move *Move) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Move, *resty.Response, error) {
 	return NewMoveService(client).Update(ctx, move.GetID(), move, params...)
 }
 
 // Create shortcut
-func (move *Move) Create(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+func (move *Move) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Move, *resty.Response, error) {
 	return NewMoveService(client).Create(ctx, move, params...)
 }
 
@@ -429,9 +429,9 @@ func (move *Move) Delete(ctx context.Context, client *Client) (bool, *resty.Resp
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-peremeschenie-peremescheniq-pozicii-peremescheniq
 type MovePosition struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Overhead   *float64            `json:"overhead,omitempty"`   // Накладные расходы. Если Позиции Перемещения не заданы, то накладные расходы нельзя задать
 	Pack       *Pack               `json:"pack,omitempty"`       // Упаковка Товара
 	Price      *float64            `json:"price,omitempty"`      // Цена товара/услуги в копейках
@@ -442,7 +442,7 @@ type MovePosition struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (movePosition MovePosition) GetAccountID() uuid.UUID {
+func (movePosition MovePosition) GetAccountID() string {
 	return Deref(movePosition.AccountID)
 }
 
@@ -452,7 +452,7 @@ func (movePosition MovePosition) GetAssortment() AssortmentPosition {
 }
 
 // GetID возвращает ID позиции.
-func (movePosition MovePosition) GetID() uuid.UUID {
+func (movePosition MovePosition) GetID() string {
 	return Deref(movePosition.ID)
 }
 
@@ -566,12 +566,12 @@ type MoveService interface {
 	// GetList выполняет запрос на получение списка перемещений.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Move], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Move], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех перемещений в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Move], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Move], *resty.Response, error)
 
 	// Create выполняет запрос на создание перемещения.
 	// Обязательные поля для заполнения:
@@ -580,13 +580,13 @@ type MoveService interface {
 	//	- targetStore (Ссылка на склад, на который совершается перемещение)
 	// Принимает контекст, перемещение и опционально объект параметров запроса Params.
 	// Возвращает созданное перемещение.
-	Create(ctx context.Context, move *Move, params ...*Params) (*Move, *resty.Response, error)
+	Create(ctx context.Context, move *Move, params ...func(*Params)) (*Move, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение перемещений.
 	// Изменяемые перемещения должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список перемещений и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых перемещений.
-	CreateUpdateMany(ctx context.Context, moveList Slice[Move], params ...*Params) (*Slice[Move], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, moveList Slice[Move], params ...func(*Params)) (*Slice[Move], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление перемещений.
 	// Принимает контекст и множество перемещений.
@@ -596,7 +596,7 @@ type MoveService interface {
 	// DeleteByID выполняет запрос на удаление перемещения по ID.
 	// Принимает контекст и ID перемещения.
 	// Возвращает «true» в случае успешного удаления перемещения.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление перемещения.
 	// Принимает контекст и перемещение.
@@ -606,12 +606,12 @@ type MoveService interface {
 	// GetByID выполняет запрос на получение отдельного перемещения по ID.
 	// Принимает контекст, ID перемещения и опционально объект параметров запроса Params.
 	// Возвращает найденное перемещение.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Move, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Move, *resty.Response, error)
 
 	// Update выполняет запрос на изменение перемещения.
 	// Принимает контекст, перемещение и опционально объект параметров запроса Params.
 	// Возвращает изменённое перемещение.
-	Update(ctx context.Context, id uuid.UUID, move *Move, params ...*Params) (*Move, *resty.Response, error)
+	Update(ctx context.Context, id string, move *Move, params ...func(*Params)) (*Move, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного перемещения со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -634,54 +634,54 @@ type MoveService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[MovePosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[MovePosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[MovePosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[MovePosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*MovePosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*MovePosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *MovePosition, params ...*Params) (*MovePosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *MovePosition, params ...func(*Params)) (*MovePosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *MovePosition, params ...*Params) (*MovePosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *MovePosition, params ...func(*Params)) (*MovePosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*MovePosition) (*Slice[MovePosition], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*MovePosition) (*Slice[MovePosition], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*MovePosition) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*MovePosition) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -691,7 +691,7 @@ type MoveService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -707,12 +707,12 @@ type MoveService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -722,42 +722,42 @@ type MoveService interface {
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Move, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Move, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -767,7 +767,7 @@ type MoveService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -777,32 +777,32 @@ type MoveService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 
 	// Evaluate выполняет запрос на получение шаблона документа с автозаполнением.
 	// Принимает контекст, документ и множество значений Evaluate.

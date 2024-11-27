@@ -129,7 +129,7 @@ type MetadataService interface {
 	// Get выполняет запрос на получение метаданных.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект Metadata.
-	Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error)
+	Get(ctx context.Context, params ...func(*Params)) (*Metadata, *resty.Response, error)
 }
 
 const (
@@ -140,8 +140,8 @@ type metadataService struct {
 	Endpoint
 }
 
-func (service *metadataService) Get(ctx context.Context, params ...*Params) (*Metadata, *resty.Response, error) {
-	return NewRequestBuilder[Metadata](service.client, service.uri).SetParams(params...).Get(ctx)
+func (service *metadataService) Get(ctx context.Context, params ...func(*Params)) (*Metadata, *resty.Response, error) {
+	return NewRequestBuilder[Metadata](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 // NewMetadataService принимает [Client] и возвращает сервис для работы с глобальными метаданными.

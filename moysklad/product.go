@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -21,7 +21,7 @@ type Product struct {
 	Code                *string                   `json:"code,omitempty"`                // Код товара
 	Description         *string                   `json:"description,omitempty"`         // Описание Товара
 	ExternalCode        *string                   `json:"externalCode,omitempty"`        // Внешний код Товара
-	ID                  *uuid.UUID                `json:"id,omitempty"`                  // ID Товара
+	ID                  *string                   `json:"id,omitempty"`                  // ID Товара
 	Meta                *Meta                     `json:"meta,omitempty"`                // Метаданные Товара
 	Name                *string                   `json:"name,omitempty"`                // Наименование Товара
 	Alcoholic           *NullValue[Alcoholic]     `json:"alcoholic,omitempty"`           // Объект, содержащий поля алкогольной продукции
@@ -50,8 +50,8 @@ type Product struct {
 	SalePrices          Slice[SalePrice]          `json:"salePrices,omitempty"`          // Цены продажи
 	Shared              *bool                     `json:"shared,omitempty"`              // Общий доступ
 	MinimumBalance      *float64                  `json:"minimumBalance,omitempty"`      // Неснижаемый остаток
-	SyncID              *uuid.UUID                `json:"syncId,omitempty"`              // ID синхронизации
-	AccountID           *uuid.UUID                `json:"accountId,omitempty"`           // ID учётной записи
+	SyncID              *string                   `json:"syncId,omitempty"`              // ID синхронизации
+	AccountID           *string                   `json:"accountId,omitempty"`           // ID учётной записи
 	Things              Slice[string]             `json:"things,omitempty"`              // Серийные номера
 	TNVED               *string                   `json:"tnved,omitempty"`               // Код ТН ВЭД
 	VatEnabled          *bool                     `json:"vatEnabled,omitempty"`          // Включен ли НДС для товара. С помощью этого флага для товара можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
@@ -141,7 +141,7 @@ func (product Product) GetExternalCode() string {
 }
 
 // GetID возвращает ID Товара.
-func (product Product) GetID() uuid.UUID {
+func (product Product) GetID() string {
 	return Deref(product.ID)
 }
 
@@ -298,12 +298,12 @@ func (product Product) GetMinimumBalance() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (product Product) GetSyncID() uuid.UUID {
+func (product Product) GetSyncID() string {
 	return Deref(product.SyncID)
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (product Product) GetAccountID() uuid.UUID {
+func (product Product) GetAccountID() string {
 	return Deref(product.AccountID)
 }
 
@@ -591,7 +591,7 @@ func (product *Product) SetMinimumBalance(minimumBalance float64) *Product {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (product *Product) SetSyncID(syncID uuid.UUID) *Product {
+func (product *Product) SetSyncID(syncID string) *Product {
 	product.SyncID = &syncID
 	return product
 }
@@ -673,12 +673,12 @@ func (Product) MetaType() MetaType {
 }
 
 // Create shortcut
-func (product *Product) Create(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+func (product *Product) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Product, *resty.Response, error) {
 	return NewProductService(client).Create(ctx, product, params...)
 }
 
 // Update shortcut
-func (product *Product) Update(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+func (product *Product) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Product, *resty.Response, error) {
 	return NewProductService(client).Update(ctx, product.GetID(), product, params...)
 }
 
@@ -755,25 +755,25 @@ type ProductService interface {
 	// GetList выполняет запрос на получение списка товаров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Product], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Product], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех товаров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Product], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Product], *resty.Response, error)
 
 	// Create выполняет запрос на создание товара.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование товара)
 	// Принимает контекст, товар и опционально объект параметров запроса Params.
 	// Возвращает созданный товар.
-	Create(ctx context.Context, product *Product, params ...*Params) (*Product, *resty.Response, error)
+	Create(ctx context.Context, product *Product, params ...func(*Params)) (*Product, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение товаров.
 	// Изменяемые товары должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список товаров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых товаров.
-	CreateUpdateMany(ctx context.Context, productList Slice[Product], params ...*Params) (*Slice[Product], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productList Slice[Product], params ...func(*Params)) (*Slice[Product], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление товаров.
 	// Принимает контекст и множество товаров.
@@ -783,7 +783,7 @@ type ProductService interface {
 	// DeleteByID выполняет запрос на удаление товара по ID.
 	// Принимает контекст и ID товара.
 	// Возвращает «true» в случае успешного удаления товара.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление товара.
 	// Принимает контекст и товар.
@@ -793,12 +793,12 @@ type ProductService interface {
 	// GetByID выполняет запрос на получение отдельного товара по ID.
 	// Принимает контекст, ID товара и опционально объект параметров запроса Params.
 	// Возвращает найденный товар.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Product, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Product, *resty.Response, error)
 
 	// Update выполняет запрос на изменение товара.
 	// Принимает контекст, товар и опционально объект параметров запроса Params.
 	// Возвращает изменённый товар.
-	Update(ctx context.Context, id uuid.UUID, product *Product, params ...*Params) (*Product, *resty.Response, error)
+	Update(ctx context.Context, id string, product *Product, params ...func(*Params)) (*Product, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных товаров.
 	// Принимает контекст.
@@ -813,7 +813,7 @@ type ProductService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -829,12 +829,12 @@ type ProductService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -844,83 +844,83 @@ type ProductService interface {
 	// GetImageList выполняет запрос на получение изображений товара в виде списка.
 	// Принимает контекст и ID товара.
 	// Возвращает объект List.
-	GetImageList(ctx context.Context, id uuid.UUID) (*List[Image], *resty.Response, error)
+	GetImageList(ctx context.Context, id string) (*List[Image], *resty.Response, error)
 
 	// CreateImage выполняет запрос на добавление изображения.
 	// Принимает контекст, ID товара и изображение.
 	// Возвращает список изображений.
-	CreateImage(ctx context.Context, id uuid.UUID, image *Image) (*Slice[Image], *resty.Response, error)
+	CreateImage(ctx context.Context, id string, image *Image) (*Slice[Image], *resty.Response, error)
 
 	// UpdateImageMany выполняет запрос на обновления изображений.
 	// Принимает контекст, ID товара и изображение.
 	// Если необходимо оставить некоторые Изображения, то необходимо передать эти изображения.
 	// Возвращает список изображений.
-	UpdateImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*Slice[Image], *resty.Response, error)
+	UpdateImageMany(ctx context.Context, id string, images ...*Image) (*Slice[Image], *resty.Response, error)
 
 	// DeleteImage выполняет запрос на удаление изображения товара.
 	// Принимает контекст, ID товара и ID изображения.
 	// Возвращает «true» в случае успешного удаления изображения товара.
-	DeleteImage(ctx context.Context, id uuid.UUID, imageID uuid.UUID) (bool, *resty.Response, error)
+	DeleteImage(ctx context.Context, id string, imageID string) (bool, *resty.Response, error)
 
 	// DeleteImageMany выполняет запрос на массовое удаление изображений товара.
 	// Принимает контекст, ID товара и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteImageMany(ctx context.Context, id uuid.UUID, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
+	DeleteImageMany(ctx context.Context, id string, images ...*Image) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Product, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Product, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetAudit выполняет запрос на получения событий товара.
 	// Принимает контекст, ID товара и опционально объект параметров запроса Params.
 	// Возвращает объект List
-	GetAudit(ctx context.Context, id uuid.UUID, params ...*Params) (*List[AuditEvent], *resty.Response, error)
+	GetAudit(ctx context.Context, id string, params ...func(*Params)) (*List[AuditEvent], *resty.Response, error)
 
 	// PrintLabel выполняет запрос на печать этикеток и ценников.
 	// Принимает контекст, ID товара и объект PrintLabelArg.
 	// Возвращает объект PrintFile.
-	PrintLabel(ctx context.Context, id uuid.UUID, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error)
+	PrintLabel(ctx context.Context, id string, PrintLabelArg *PrintLabelArg) (*PrintFile, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (
