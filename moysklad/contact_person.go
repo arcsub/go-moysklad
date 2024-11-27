@@ -1,7 +1,6 @@
 package moysklad
 
 import (
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -13,12 +12,12 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-kontragenty-attributy-suschnosti-adres-kontaktnye-lica-kontragentow
 type ContactPerson struct {
-	AccountID    *uuid.UUID    `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string       `json:"accountId,omitempty"`    // ID учётной записи
 	Agent        *Counterparty `json:"agent,omitempty"`        // Метаданные контрагента
 	Description  *string       `json:"description,omitempty"`  // Описание контактного лица
 	Email        *string       `json:"email,omitempty"`        // Адрес электронной почты контактного лица
 	ExternalCode *string       `json:"externalCode,omitempty"` // Внешний код контактного лица
-	ID           *uuid.UUID    `json:"id,omitempty"`           // ID Контактного лица
+	ID           *string       `json:"id,omitempty"`           // ID Контактного лица
 	Meta         *Meta         `json:"meta,omitempty"`         // Метаданные Контактного лица Контрагента
 	Name         *string       `json:"name,omitempty"`         // ФИО контактного лица
 	Phone        *string       `json:"phone,omitempty"`        // Номер телефона контактного лица
@@ -37,7 +36,7 @@ func (contactPerson ContactPerson) Clean() *ContactPerson {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (contactPerson ContactPerson) GetAccountID() uuid.UUID {
+func (contactPerson ContactPerson) GetAccountID() string {
 	return Deref(contactPerson.AccountID)
 }
 
@@ -62,7 +61,7 @@ func (contactPerson ContactPerson) GetExternalCode() string {
 }
 
 // GetID возвращает ID Контактного лица.
-func (contactPerson ContactPerson) GetID() uuid.UUID {
+func (contactPerson ContactPerson) GetID() string {
 	return Deref(contactPerson.ID)
 }
 

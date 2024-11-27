@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"net/http"
 )
 
@@ -23,8 +23,8 @@ type Async struct {
 	ResultURL    string      `json:"resultUrl,omitempty"`    // Ссылка на результат выполнения задачи. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
 	State        AsyncState  `json:"state,omitempty"`        // Статус выполнения Асинхронной задачи.
 	Errors       ApiErrors   `json:"errors,omitempty"`       // Ошибки апи, если поле state имеет значение AsyncStateApiError (API_ERROR)
-	AccountID    uuid.UUID   `json:"accountId,omitempty"`    // ID учётной записи
-	ID           uuid.UUID   `json:"id,omitempty"`           // ID Асинхронной задачи
+	AccountID    string      `json:"accountId,omitempty"`    // ID учётной записи
+	ID           string      `json:"id,omitempty"`           // ID Асинхронной задачи
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -68,7 +68,7 @@ type AsyncService interface {
 	// GetStatusByID выполняет запрос на получение статуса Асинхронной задачи.
 	// Принимает контекст и ID асинхронной задачи.
 	// Возвращает объект Async.
-	GetStatusByID(ctx context.Context, id uuid.UUID) (*Async, *resty.Response, error)
+	GetStatusByID(ctx context.Context, id string) (*Async, *resty.Response, error)
 }
 
 type asyncService struct {
@@ -79,7 +79,7 @@ func (service *asyncService) GetStatuses(ctx context.Context, params ...*Params)
 	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
-func (service *asyncService) GetStatusByID(ctx context.Context, id uuid.UUID) (*Async, *resty.Response, error) {
+func (service *asyncService) GetStatusByID(ctx context.Context, id string) (*Async, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointAsyncID, id)
 	return NewRequestBuilder[Async](service.client, path).Get(ctx)
 }

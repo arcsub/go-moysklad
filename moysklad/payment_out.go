@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -30,7 +30,7 @@ type PaymentOut struct {
 	Files               *MetaArray[File]         `json:"files,omitempty"`               // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	NoClosingDocs       *bool                    `json:"noClosingDocs,omitempty"`       // Признак возможности привязки закрывающих документов и отключения взаиморасчетов с контрагентом по этой выплате
 	Group               *Group                   `json:"group,omitempty"`               // Отдел сотрудника
-	ID                  *uuid.UUID               `json:"id,omitempty"`                  // ID Исходящего платежа
+	ID                  *string                  `json:"id,omitempty"`                  // ID Исходящего платежа
 	Meta                *Meta                    `json:"meta,omitempty"`                // Метаданные Исходящего платежа
 	FactureIn           *FactureIn               `json:"factureIn,omitempty"`           // Ссылка на Счет-фактуру полученный, с которым связан этот платеж
 	Agent               *Agent                   `json:"agent,omitempty"`               // Метаданные контрагента, сотрудника или юр.лица
@@ -46,10 +46,10 @@ type PaymentOut struct {
 	Shared              *bool                    `json:"shared,omitempty"`              // Общий доступ
 	State               *NullValue[State]        `json:"state,omitempty"`               // Метаданные статуса Исходящего платежа
 	Sum                 *float64                 `json:"sum,omitempty"`                 // Сумма Исходящего платежа в установленной валюте
-	SyncID              *uuid.UUID               `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *string                  `json:"syncId,omitempty"`              // ID синхронизации
 	Updated             *Timestamp               `json:"updated,omitempty"`             // Момент последнего обновления Исходящего платежа
 	VatSum              *float64                 `json:"vatSum,omitempty"`              // Сумма НДС
-	AccountID           *uuid.UUID               `json:"accountId,omitempty"`           // ID учётной записи
+	AccountID           *string                  `json:"accountId,omitempty"`           // ID учётной записи
 	Attributes          Slice[Attribute]         `json:"attributes,omitempty"`          // Список метаданных доп. полей
 }
 
@@ -161,7 +161,7 @@ func (paymentOut PaymentOut) GetGroup() Group {
 }
 
 // GetID возвращает ID Исходящего платежа.
-func (paymentOut PaymentOut) GetID() uuid.UUID {
+func (paymentOut PaymentOut) GetID() string {
 	return Deref(paymentOut.ID)
 }
 
@@ -241,7 +241,7 @@ func (paymentOut PaymentOut) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (paymentOut PaymentOut) GetSyncID() uuid.UUID {
+func (paymentOut PaymentOut) GetSyncID() string {
 	return Deref(paymentOut.SyncID)
 }
 
@@ -256,7 +256,7 @@ func (paymentOut PaymentOut) GetVatSum() float64 {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (paymentOut PaymentOut) GetAccountID() uuid.UUID {
+func (paymentOut PaymentOut) GetAccountID() string {
 	return Deref(paymentOut.AccountID)
 }
 
@@ -465,7 +465,7 @@ func (paymentOut *PaymentOut) SetSum(sum float64) *PaymentOut {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (paymentOut *PaymentOut) SetSyncID(syncID uuid.UUID) *PaymentOut {
+func (paymentOut *PaymentOut) SetSyncID(syncID string) *PaymentOut {
 	paymentOut.SyncID = &syncID
 	return paymentOut
 }
@@ -538,7 +538,7 @@ type PaymentOutService interface {
 	// DeleteByID выполняет запрос на удаление исходящего платежа по ID.
 	// Принимает контекст и ID исходящего платежа.
 	// Возвращает «true» в случае успешного удаления исходящего платежа.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление исходящего платежа.
 	// Принимает контекст и исходящий платеж.
@@ -548,12 +548,12 @@ type PaymentOutService interface {
 	// GetByID выполняет запрос на получение отдельного исходящего платежа по ID.
 	// Принимает контекст, ID исходящего платежа и опционально объект параметров запроса Params.
 	// Возвращает найденный исходящий платеж.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PaymentOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*PaymentOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение исходящего платежа.
 	// Принимает контекст, исходящий платеж и опционально объект параметров запроса Params.
 	// Возвращает изменённый исходящий платеж.
-	Update(ctx context.Context, id uuid.UUID, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
+	Update(ctx context.Context, id string, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного исходящего платежа со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -584,7 +584,7 @@ type PaymentOutService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -600,12 +600,12 @@ type PaymentOutService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -615,42 +615,42 @@ type PaymentOutService interface {
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*PaymentOut, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*PaymentOut, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -660,7 +660,7 @@ type PaymentOutService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -670,32 +670,32 @@ type PaymentOutService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

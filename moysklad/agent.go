@@ -2,7 +2,7 @@ package moysklad
 
 import (
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -12,11 +12,11 @@ import (
 //   - [Employee] (Сотрудник)
 type Agent struct {
 	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Контрагента/Юрлица/Сотрудника
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string          `json:"accountId,omitempty"`    // ID учётной записи
 	Updated      *Timestamp       `json:"updated,omitempty"`      // Момент последнего обновления Контрагента/Юрлица/Сотрудника
 	Archived     *bool            `json:"archived,omitempty"`     // Добавлен ли Контрагент/Юрлицо/Сотрудник в архив
 	Phone        *string          `json:"phone,omitempty"`        // Номер телефона
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Контрагента/Юрлица/Сотрудника
+	ID           *string          `json:"id,omitempty"`           // ID Контрагента/Юрлица/Сотрудника
 	Attributes   Slice[Attribute] `json:"attributes,omitempty"`   // Список метаданных доп. полей
 	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
 	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
@@ -98,7 +98,7 @@ func (agent Agent) GetMeta() Meta {
 }
 
 // GetID возвращает ID Контрагента/Юрлица/Сотрудника.
-func (agent Agent) GetID() uuid.UUID {
+func (agent Agent) GetID() string {
 	return Deref(agent.ID)
 }
 
@@ -143,7 +143,7 @@ func (agent Agent) GetCode() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (agent Agent) GetAccountID() uuid.UUID {
+func (agent Agent) GetAccountID() string {
 	return Deref(agent.AccountID)
 }
 

@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,12 +15,12 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-strana
 type Country struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи
 	Code         *string    `json:"code,omitempty"`         // Код Страны
 	Description  *string    `json:"description,omitempty"`  // Описание Страны
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Страны
 	Group        *Group     `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID Страны
+	ID           *string    `json:"id,omitempty"`           // ID Страны
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Страны
 	Name         *string    `json:"name,omitempty"`         // Наименование Страны
 	Owner        *Employee  `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
@@ -39,7 +39,7 @@ func (country Country) Clean() *Country {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (country Country) GetAccountID() uuid.UUID {
+func (country Country) GetAccountID() string {
 	return Deref(country.AccountID)
 }
 
@@ -64,7 +64,7 @@ func (country Country) GetGroup() Group {
 }
 
 // GetID возвращает ID Страны.
-func (country Country) GetID() uuid.UUID {
+func (country Country) GetID() string {
 	return Deref(country.ID)
 }
 
@@ -203,7 +203,7 @@ type CountryService interface {
 	// DeleteByID выполняет запрос на удаление страны по ID.
 	// Принимает контекст и ID страны.
 	// Возвращает «true» в случае успешного удаления страны.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление страны.
 	// Принимает контекст и страну.
@@ -213,12 +213,12 @@ type CountryService interface {
 	// GetByID выполняет запрос на получение отдельной страны по ID.
 	// Принимает контекст, ID страны и опционально объект параметров запроса Params.
 	// Возвращает найденную страну.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Country, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Country, *resty.Response, error)
 
 	// Update выполняет запрос на изменение страны.
 	// Принимает контекст, страну и опционально объект параметров запроса Params.
 	// Возвращает изменённую страну.
-	Update(ctx context.Context, id uuid.UUID, country *Country, params ...*Params) (*Country, *resty.Response, error)
+	Update(ctx context.Context, id string, country *Country, params ...*Params) (*Country, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -228,7 +228,7 @@ type CountryService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 }
 
 const (

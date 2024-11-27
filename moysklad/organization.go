@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -27,19 +27,19 @@ type Organization struct {
 	Description            *string                  `json:"description,omitempty"`            // Комментарий к Юрлицу
 	ExternalCode           *string                  `json:"externalCode,omitempty"`           // Внешний код Юрлица
 	Group                  *Group                   `json:"group,omitempty"`                  // Отдел сотрудника
-	ID                     *uuid.UUID               `json:"id,omitempty"`                     // ID Юрлица
+	ID                     *string                  `json:"id,omitempty"`                     // ID Юрлица
 	Meta                   *Meta                    `json:"meta,omitempty"`                   // Метаданные Юрлица
 	Name                   *string                  `json:"name,omitempty"`                   // Наименование Юрлица
 	Owner                  *Employee                `json:"owner,omitempty"`                  // Метаданные владельца (Сотрудника)
 	Shared                 *bool                    `json:"shared,omitempty"`                 // Общий доступ
-	SyncID                 *uuid.UUID               `json:"syncId,omitempty"`                 // ID синхронизации
+	SyncID                 *string                  `json:"syncId,omitempty"`                 // ID синхронизации
 	TrackingContractDate   *Timestamp               `json:"trackingContractDate,omitempty"`   // Дата договора с ЦРПТ
 	TrackingContractNumber *string                  `json:"trackingContractNumber,omitempty"` // Номер договора с ЦРПТ
 	CertificateNumber      *string                  `json:"certificateNumber,omitempty"`      // Номер свидетельства
 	Accounts               *MetaArray[AgentAccount] `json:"accounts,omitempty"`               // Метаданные счетов юрлица
 	Stamp                  *Image                   `json:"stamp,omitempty"`                  // Печать
 	CertificateDate        *Timestamp               `json:"certificateDate,omitempty"`        // Дата свидетельства
-	AccountID              *uuid.UUID               `json:"accountId,omitempty"`              // ID учётной записи
+	AccountID              *string                  `json:"accountId,omitempty"`              // ID учётной записи
 	Code                   *string                  `json:"code,omitempty"`                   // Код Юрлица
 	ChiefAccountant        *string                  `json:"chiefAccountant,omitempty"`        // Главный бухгалтер
 	Director               *string                  `json:"director,omitempty"`               // Руководитель
@@ -150,7 +150,7 @@ func (organization Organization) GetGroup() Group {
 }
 
 // GetID возвращает ID Юрлица.
-func (organization Organization) GetID() uuid.UUID {
+func (organization Organization) GetID() string {
 	return Deref(organization.ID)
 }
 
@@ -175,7 +175,7 @@ func (organization Organization) GetShared() bool {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (organization Organization) GetSyncID() uuid.UUID {
+func (organization Organization) GetSyncID() string {
 	return Deref(organization.SyncID)
 }
 
@@ -210,7 +210,7 @@ func (organization Organization) GetCertificateDate() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (organization Organization) GetAccountID() uuid.UUID {
+func (organization Organization) GetAccountID() string {
 	return Deref(organization.AccountID)
 }
 
@@ -438,7 +438,7 @@ func (organization *Organization) SetShared(shared bool) *Organization {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (organization *Organization) SetSyncID(syncID uuid.UUID) *Organization {
+func (organization *Organization) SetSyncID(syncID string) *Organization {
 	organization.SyncID = &syncID
 	return organization
 }
@@ -695,7 +695,7 @@ type OrganizationService interface {
 	// DeleteByID выполняет запрос на удаление юрлица по ID.
 	// Принимает контекст и ID юрлица.
 	// Возвращает «true» в случае успешного удаления юрлица.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление юрлица.
 	// Принимает контекст и юрлицо.
@@ -705,12 +705,12 @@ type OrganizationService interface {
 	// GetByID выполняет запрос на получение отдельного юрлица по ID.
 	// Принимает контекст, ID юрлица и опционально объект параметров запроса Params.
 	// Возвращает найденное юрлицо.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Organization, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Organization, *resty.Response, error)
 
 	// Update выполняет запрос на изменение юрлица.
 	// Принимает контекст, юрлицо и опционально объект параметров запроса Params.
 	// Возвращает изменённое юрлицо.
-	Update(ctx context.Context, id uuid.UUID, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
+	Update(ctx context.Context, id string, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных юрлиц.
 	// Принимает контекст.
@@ -725,7 +725,7 @@ type OrganizationService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -741,12 +741,12 @@ type OrganizationService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -756,27 +756,27 @@ type OrganizationService interface {
 	// GetAccountList выполняет запрос на получение списка счетов юрлица.
 	// Принимает контекст и ID юрлица.
 	// Возвращает объект List.
-	GetAccountList(ctx context.Context, id uuid.UUID) (*List[AgentAccount], *resty.Response, error)
+	GetAccountList(ctx context.Context, id string) (*List[AgentAccount], *resty.Response, error)
 
 	// GetAccountByID выполняет запрос на получение отдельного счёта юрлица по ID.
 	// Принимает контекст, ID юрлица и ID счёта юрлица.
 	// Возвращает найденный счёт юрлица.
-	GetAccountByID(ctx context.Context, id uuid.UUID, accountID uuid.UUID) (*AgentAccount, *resty.Response, error)
+	GetAccountByID(ctx context.Context, id string, accountID string) (*AgentAccount, *resty.Response, error)
 
 	// UpdateAccountMany выполняет запрос на массовое изменение счетов юрлица.
 	// Принимает контекст, ID юрлица и множество счетов юрлица.
 	// Возвращает список изменённых счетов юрлица.
-	UpdateAccountMany(ctx context.Context, id uuid.UUID, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
+	UpdateAccountMany(ctx context.Context, id string, accounts ...*AgentAccount) (*MetaArray[AgentAccount], *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Organization, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Organization, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 }
 
 const (

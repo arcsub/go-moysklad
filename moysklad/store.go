@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -20,7 +20,7 @@ type Store struct {
 	Slots        *MetaArray[Slot] `json:"slots,omitempty"`        // Ячейки склада
 	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
 	Archived     *bool            `json:"archived,omitempty"`     // Добавлен ли Склад в архив
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Склада
+	ID           *string          `json:"id,omitempty"`           // ID Склада
 	Code         *string          `json:"code,omitempty"`         // Код Склада
 	Description  *string          `json:"description,omitempty"`  // Комментарий к Складу
 	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Склада
@@ -28,7 +28,7 @@ type Store struct {
 	Address      *string          `json:"address,omitempty"`      // Адрес склада
 	Name         *string          `json:"name,omitempty"`         // Наименование Склада
 	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Склада
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string          `json:"accountId,omitempty"`    // ID учётной записи
 	Parent       *Store           `json:"parent,omitempty"`       // Метаданные родительского склада (Группы)
 	PathName     *string          `json:"pathName,omitempty"`     // Группа Склада
 	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
@@ -68,7 +68,7 @@ func (store Store) GetArchived() bool {
 }
 
 // GetID возвращает ID Склада.
-func (store Store) GetID() uuid.UUID {
+func (store Store) GetID() string {
 	return Deref(store.ID)
 }
 
@@ -108,7 +108,7 @@ func (store Store) GetMeta() Meta {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (store Store) GetAccountID() uuid.UUID {
+func (store Store) GetAccountID() string {
 	return Deref(store.AccountID)
 }
 
@@ -267,10 +267,10 @@ func (store *Store) Delete(ctx context.Context, client *Client) (bool, *resty.Re
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-yachejki-sklada
 type Slot struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи
 	Barcode      *string    `json:"barcode,omitempty"`      // Штрихкод ячейки
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Ячейки
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID Ячейки
+	ID           *string    `json:"id,omitempty"`           // ID Ячейки
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Ячейки
 	Name         *string    `json:"name,omitempty"`         // Наименование Ячейки
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Ячейки
@@ -288,7 +288,7 @@ func (slot Slot) Clean() *Slot {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (slot Slot) GetAccountID() uuid.UUID {
+func (slot Slot) GetAccountID() string {
 	return Deref(slot.AccountID)
 }
 
@@ -303,7 +303,7 @@ func (slot Slot) GetExternalCode() string {
 }
 
 // GetID возвращает ID Ячейки.
-func (slot Slot) GetID() uuid.UUID {
+func (slot Slot) GetID() string {
 	return Deref(slot.ID)
 }
 
@@ -369,16 +369,16 @@ func (Slot) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sklad-zony-sklada
 type Zone struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Зоны
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID Зоны
+	ID           *string    `json:"id,omitempty"`           // ID Зоны
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Зоны
 	Name         *string    `json:"name,omitempty"`         // Наименование Зоны
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Зоны
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (zone Zone) GetAccountID() uuid.UUID {
+func (zone Zone) GetAccountID() string {
 	return Deref(zone.AccountID)
 }
 
@@ -388,7 +388,7 @@ func (zone Zone) GetExternalCode() string {
 }
 
 // GetID возвращает ID Зоны.
-func (zone Zone) GetID() uuid.UUID {
+func (zone Zone) GetID() string {
 	return Deref(zone.ID)
 }
 
@@ -468,7 +468,7 @@ type StoreService interface {
 	// DeleteByID выполняет запрос на удаление склада по ID.
 	// Принимает контекст и ID склада.
 	// Возвращает «true» в случае успешного удаления склада.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление склада.
 	// Принимает контекст и склад.
@@ -488,7 +488,7 @@ type StoreService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -504,12 +504,12 @@ type StoreService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -519,12 +519,12 @@ type StoreService interface {
 	// GetByID выполняет запрос на получение отдельного склада по ID.
 	// Принимает контекст, ID склада и опционально объект параметров запроса Params.
 	// Возвращает склад.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Store, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Store, *resty.Response, error)
 
 	// Update выполняет запрос на изменение склада.
 	// Принимает контекст, ID склада, склад и опционально объект параметров запроса Params.
 	// Возвращает изменённый склад.
-	Update(ctx context.Context, id uuid.UUID, store *Store, params ...*Params) (*Store, *resty.Response, error)
+	Update(ctx context.Context, id string, store *Store, params ...*Params) (*Store, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -534,83 +534,83 @@ type StoreService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetSlotList выполняет запрос на получение списка всех ячеек склада.
 	// Принимает контекст и ID склада.
 	// Возвращает объект List.
-	GetSlotList(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error)
+	GetSlotList(ctx context.Context, storeID string) (*List[Slot], *resty.Response, error)
 
 	// CreateSlot выполняет запрос на создание ячейки склада.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование ячейки склада)
 	// Принимает контекст, ID склада и ячейку склада.
 	// Возвращает созданную ячейку склада.
-	CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error)
+	CreateSlot(ctx context.Context, storeID string, slot *Slot) (*Slot, *resty.Response, error)
 
 	// CreateUpdateSlotMany выполняет запрос на массовое создание и/или изменение ячеек склада.
 	// Изменяемые ячейки склада должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, ID склада и множество ячеек склада.
 	// Возвращает список созданных и/или изменённых ячеек склада.
-	CreateUpdateSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*Slice[Slot], *resty.Response, error)
+	CreateUpdateSlotMany(ctx context.Context, storeID string, slots ...*Slot) (*Slice[Slot], *resty.Response, error)
 
 	// DeleteSlotMany выполняет запрос на массовое удаление ячеек склада.
 	// Принимает контекст, ID склада и множество ячеек склада.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error)
+	DeleteSlotMany(ctx context.Context, storeID string, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error)
 
 	// DeleteSlot выполняет запрос на удаление ячейки склада.
 	// Принимает контекст, ID склада и ID ячейки склада.
 	// Возвращает «true» в случае успешного удаления ячейки склада.
-	DeleteSlot(ctx context.Context, storeID, slotID uuid.UUID) (bool, *resty.Response, error)
+	DeleteSlot(ctx context.Context, storeID, slotID string) (bool, *resty.Response, error)
 
 	// GetSlotByID выполняет запрос на получение отдельной ячейки склада по ID.
 	// Принимает контекст, ID склада и ID ячейки склада.
 	// Возвращает ячейку склада.
-	GetSlotByID(ctx context.Context, storeID, slotID uuid.UUID) (*Slot, *resty.Response, error)
+	GetSlotByID(ctx context.Context, storeID, slotID string) (*Slot, *resty.Response, error)
 
 	// UpdateSlot выполняет запрос на изменение ячейки склада.
 	// Принимает контекст, ID склада, ID ячейки склада и ячейку склада.
 	// Возвращает изменённую ячейку склада.
-	UpdateSlot(ctx context.Context, storeID, slotID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error)
+	UpdateSlot(ctx context.Context, storeID, slotID string, slot *Slot) (*Slot, *resty.Response, error)
 
 	// GetZoneList выполняет запрос на получение списка всех зон склада.
 	// Принимает контекст и ID склада.
 	// Возвращает объект List.
-	GetZoneList(ctx context.Context, storeID uuid.UUID) (*List[Zone], *resty.Response, error)
+	GetZoneList(ctx context.Context, storeID string) (*List[Zone], *resty.Response, error)
 
 	// CreateZone выполняет запрос на создание зоны склада.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование зоны склада)
 	// Принимает контекст, ID склада и зону склада.
 	// Возвращает созданную зону склада.
-	CreateZone(ctx context.Context, storeID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error)
+	CreateZone(ctx context.Context, storeID string, zone *Zone) (*Zone, *resty.Response, error)
 
 	// CreateUpdateZoneMany выполняет запрос на массовое создание и/или изменение зон склада.
 	// Изменяемые зоны склада должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, ID склада и множество зон склада.
 	// Возвращает список созданных и/или изменённых зон склада.
-	CreateUpdateZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*Slice[Zone], *resty.Response, error)
+	CreateUpdateZoneMany(ctx context.Context, storeID string, zones ...*Zone) (*Slice[Zone], *resty.Response, error)
 
 	// DeleteZoneMany выполняет запрос на массовое удаление зон склада.
 	// Принимает контекст, ID склада и множество зон склада.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error)
+	DeleteZoneMany(ctx context.Context, storeID string, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error)
 
 	// DeleteZone выполняет запрос на удаление зоны склада.
 	// Принимает контекст, ID склада и ID зоны склада.
 	// Возвращает «true» в случае успешного удаления зоны склада.
-	DeleteZone(ctx context.Context, storeID, zoneID uuid.UUID) (bool, *resty.Response, error)
+	DeleteZone(ctx context.Context, storeID, zoneID string) (bool, *resty.Response, error)
 
 	// GetZoneByID выполняет запрос на получение отдельной зоны склада по ID.
 	// Принимает контекст, ID склада и ID зоны склада.
 	// Возвращает зону склада.
-	GetZoneByID(ctx context.Context, storeID, zoneID uuid.UUID) (*Zone, *resty.Response, error)
+	GetZoneByID(ctx context.Context, storeID, zoneID string) (*Zone, *resty.Response, error)
 
 	// UpdateZone выполняет запрос на изменение зоны склада.
 	// Принимает контекст, ID склада, ID зоны склада и зону склада.
 	// Возвращает изменённую зону склада.
-	UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error)
+	UpdateZone(ctx context.Context, storeID, zoneID string, zone *Zone) (*Zone, *resty.Response, error)
 }
 
 const (
@@ -638,72 +638,72 @@ type storeService struct {
 	endpointNamedFilter
 }
 
-func (service *storeService) GetSlotList(ctx context.Context, storeID uuid.UUID) (*List[Slot], *resty.Response, error) {
+func (service *storeService) GetSlotList(ctx context.Context, storeID string) (*List[Slot], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlots, storeID)
 	return NewRequestBuilder[List[Slot]](service.client, path).Get(ctx)
 }
 
-func (service *storeService) CreateSlot(ctx context.Context, storeID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
+func (service *storeService) CreateSlot(ctx context.Context, storeID string, slot *Slot) (*Slot, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlots, storeID)
 	return NewRequestBuilder[Slot](service.client, path).Post(ctx, slot)
 }
 
-func (service *storeService) CreateUpdateSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*Slice[Slot], *resty.Response, error) {
+func (service *storeService) CreateUpdateSlotMany(ctx context.Context, storeID string, slots ...*Slot) (*Slice[Slot], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlots, storeID)
 	return NewRequestBuilder[Slice[Slot]](service.client, path).Post(ctx, slots)
 }
 
-func (service *storeService) DeleteSlotMany(ctx context.Context, storeID uuid.UUID, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error) {
+func (service *storeService) DeleteSlotMany(ctx context.Context, storeID string, slots ...*Slot) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlotsDelete, storeID)
 	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, AsMetaWrapperSlice(slots))
 }
 
-func (service *storeService) GetSlotByID(ctx context.Context, storeID, slotID uuid.UUID) (*Slot, *resty.Response, error) {
+func (service *storeService) GetSlotByID(ctx context.Context, storeID, slotID string) (*Slot, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlotsID, storeID, slotID)
 	return NewRequestBuilder[Slot](service.client, path).Get(ctx)
 }
 
-func (service *storeService) DeleteSlot(ctx context.Context, storeID, slotID uuid.UUID) (bool, *resty.Response, error) {
+func (service *storeService) DeleteSlot(ctx context.Context, storeID, slotID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlotsID, storeID, slotID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *storeService) UpdateSlot(ctx context.Context, storeID, slotID uuid.UUID, slot *Slot) (*Slot, *resty.Response, error) {
+func (service *storeService) UpdateSlot(ctx context.Context, storeID, slotID string, slot *Slot) (*Slot, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreSlotsID, storeID, slotID)
 	return NewRequestBuilder[Slot](service.client, path).Put(ctx, slot)
 }
 
-func (service *storeService) GetZoneList(ctx context.Context, storeID uuid.UUID) (*List[Zone], *resty.Response, error) {
+func (service *storeService) GetZoneList(ctx context.Context, storeID string) (*List[Zone], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZones, storeID)
 	return NewRequestBuilder[List[Zone]](service.client, path).Get(ctx)
 }
 
-func (service *storeService) CreateZone(ctx context.Context, storeID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
+func (service *storeService) CreateZone(ctx context.Context, storeID string, zone *Zone) (*Zone, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZones, storeID)
 	return NewRequestBuilder[Zone](service.client, path).Post(ctx, zone)
 }
 
-func (service *storeService) CreateUpdateZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*Slice[Zone], *resty.Response, error) {
+func (service *storeService) CreateUpdateZoneMany(ctx context.Context, storeID string, zones ...*Zone) (*Slice[Zone], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZones, storeID)
 	return NewRequestBuilder[Slice[Zone]](service.client, path).Post(ctx, zones)
 }
 
-func (service *storeService) DeleteZoneMany(ctx context.Context, storeID uuid.UUID, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error) {
+func (service *storeService) DeleteZoneMany(ctx context.Context, storeID string, zones ...*Zone) (*DeleteManyResponse, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZonesDelete, storeID)
 	return NewRequestBuilder[DeleteManyResponse](service.client, path).Post(ctx, AsMetaWrapperSlice(zones))
 }
 
-func (service *storeService) DeleteZone(ctx context.Context, storeID, zoneID uuid.UUID) (bool, *resty.Response, error) {
+func (service *storeService) DeleteZone(ctx context.Context, storeID, zoneID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZonesID, storeID, zoneID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *storeService) GetZoneByID(ctx context.Context, storeID, zoneID uuid.UUID) (*Zone, *resty.Response, error) {
+func (service *storeService) GetZoneByID(ctx context.Context, storeID, zoneID string) (*Zone, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZonesID, storeID, zoneID)
 	return NewRequestBuilder[Zone](service.client, path).Get(ctx)
 }
 
-func (service *storeService) UpdateZone(ctx context.Context, storeID, zoneID uuid.UUID, zone *Zone) (*Zone, *resty.Response, error) {
+func (service *storeService) UpdateZone(ctx context.Context, storeID, zoneID string, zone *Zone) (*Zone, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointStoreZonesID, storeID, zoneID)
 	return NewRequestBuilder[Zone](service.client, path).Put(ctx, zone)
 }

@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -22,7 +22,7 @@ type ProductFolder struct {
 	EffectiveVat        *int                      `json:"effectiveVat,omitempty"`        // Реальный НДС %
 	EffectiveVatEnabled *bool                     `json:"effectiveVatEnabled,omitempty"` // Дополнительный признак для определения разграничения реального НДС = 0 или "без НДС". (effectiveVat = 0, effectiveVatEnabled = false) -> "без НДС", (effectiveVat = 0, effectiveVatEnabled = true) -> 0%.
 	ExternalCode        *string                   `json:"externalCode,omitempty"`        // Внешний код Группы товаров
-	AccountID           *uuid.UUID                `json:"accountId,omitempty"`           // ID учётной записи
+	AccountID           *string                   `json:"accountId,omitempty"`           // ID учётной записи
 	VatEnabled          *bool                     `json:"vatEnabled,omitempty"`          // Включен ли НДС для группы. С помощью этого флага для группы можно выставлять НДС = 0 или НДС = "без НДС". (vat = 0, vatEnabled = false) -> vat = "без НДС", (vat = 0, vatEnabled = true) -> vat = 0%.
 	Archived            *bool                     `json:"archived,omitempty"`            // Добавлена ли Группа товаров в архив
 	Group               *Group                    `json:"group,omitempty"`               // Отдел сотрудника
@@ -30,7 +30,7 @@ type ProductFolder struct {
 	PathName            *string                   `json:"pathName,omitempty"`            // Наименование Группы товаров, в которую входит данная Группа товаров
 	ProductFolder       *NullValue[ProductFolder] `json:"productFolder,omitempty"`       // Ссылка на Группу товаров, в которую входит данная Группа товаров, в формате Метаданных
 	Shared              *bool                     `json:"shared,omitempty"`              // Общий доступ
-	ID                  *uuid.UUID                `json:"id,omitempty"`                  // ID Группы товаров
+	ID                  *string                   `json:"id,omitempty"`                  // ID Группы товаров
 	Updated             *Timestamp                `json:"updated,omitempty"`             // Момент последнего обновления Группы товаров
 	Meta                *Meta                     `json:"meta,omitempty"`                // Метаданные Группы товаров
 	Vat                 *int                      `json:"vat,omitempty"`                 // НДС %
@@ -89,7 +89,7 @@ func (productFolder ProductFolder) GetExternalCode() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (productFolder ProductFolder) GetAccountID() uuid.UUID {
+func (productFolder ProductFolder) GetAccountID() string {
 	return Deref(productFolder.AccountID)
 }
 
@@ -135,7 +135,7 @@ func (productFolder ProductFolder) GetShared() bool {
 }
 
 // GetID возвращает ID Группы товаров.
-func (productFolder ProductFolder) GetID() uuid.UUID {
+func (productFolder ProductFolder) GetID() string {
 	return Deref(productFolder.ID)
 }
 
@@ -315,7 +315,7 @@ type ProductFolderService interface {
 	// DeleteByID выполняет запрос на удаление группы товаров по ID.
 	// Принимает контекст и ID группы товаров.
 	// Возвращает «true» в случае успешного удаления группы товаров.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление группы товаров.
 	// Принимает контекст и группу товаров.
@@ -325,12 +325,12 @@ type ProductFolderService interface {
 	// GetByID выполняет запрос на получение отдельной группы товаров по ID.
 	// Принимает контекст, ID группы товаров и опционально объект параметров запроса Params.
 	// Возвращает найденную группу товаров.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProductFolder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*ProductFolder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение группы товаров.
 	// Принимает контекст, группу товаров и опционально объект параметров запроса Params.
 	// Возвращает изменённую группу товаров.
-	Update(ctx context.Context, id uuid.UUID, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
+	Update(ctx context.Context, id string, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных групп товаров.
 	// Принимает контекст.
@@ -345,7 +345,7 @@ type ProductFolderService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -361,12 +361,12 @@ type ProductFolderService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.

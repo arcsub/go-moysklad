@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"net/http"
 	"time"
 )
@@ -17,7 +17,7 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sotrudnik
 type Employee struct {
-	ID           *uuid.UUID          `json:"id,omitempty"`           // ID Сотрудника
+	ID           *string             `json:"id,omitempty"`           // ID Сотрудника
 	Owner        *Employee           `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Image        *NullValue[Image]   `json:"image,omitempty"`        // Фотография сотрудника
 	INN          *string             `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
@@ -30,7 +30,7 @@ type Employee struct {
 	FullName     *string             `json:"fullName,omitempty"`     // Имя Отчество Фамилия
 	Group        *Group              `json:"group,omitempty"`        // Отдел сотрудника
 	Updated      *Timestamp          `json:"updated,omitempty"`      // Момент последнего обновления Сотрудника
-	AccountID    *uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string             `json:"accountId,omitempty"`    // ID учётной записи
 	Cashiers     *MetaArray[Cashier] `json:"cashiers,omitempty"`     // Массив кассиров
 	LastName     *string             `json:"lastName,omitempty"`     // Фамилия
 	Meta         *Meta               `json:"meta,omitempty"`         // Метаданные Сотрудника
@@ -70,7 +70,7 @@ func (employee Employee) AsAgent() *Agent {
 }
 
 // GetID возвращает ID Сотрудника.
-func (employee Employee) GetID() uuid.UUID {
+func (employee Employee) GetID() string {
 	return Deref(employee.ID)
 }
 
@@ -135,7 +135,7 @@ func (employee Employee) GetUpdated() time.Time {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (employee Employee) GetAccountID() uuid.UUID {
+func (employee Employee) GetAccountID() string {
 	return Deref(employee.AccountID)
 }
 
@@ -523,7 +523,7 @@ type EmployeeService interface {
 	// DeleteByID выполняет запрос на удаление сотрудника по ID.
 	// Принимает контекст и ID сотрудника.
 	// Возвращает «true» в случае успешного удаления сотрудника.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление сотрудника.
 	// Принимает контекст и сотрудника.
@@ -543,7 +543,7 @@ type EmployeeService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -559,12 +559,12 @@ type EmployeeService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -574,22 +574,22 @@ type EmployeeService interface {
 	// GetByID выполняет запрос на получение отдельного сотрудника по ID.
 	// Принимает контекст, ID сотрудника и опционально объект параметров запроса Params.
 	// Возвращает найденного сотрудника.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Employee, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Employee, *resty.Response, error)
 
 	// Update выполняет запрос на изменение сотрудника.
 	// Принимает контекст, сотрудника и опционально объект параметров запроса Params.
 	// Возвращает изменённого сотрудника.
-	Update(ctx context.Context, id uuid.UUID, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
+	Update(ctx context.Context, id string, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
 
 	// GetPermissions выполняет запрос на получение информации о правах сотрудника.
 	// Принимает контекст и ID сотрудника.
 	// Возвращает объект EmployeePermission.
-	GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error)
+	GetPermissions(ctx context.Context, id string) (*EmployeePermission, *resty.Response, error)
 
 	// UpdatePermissions выполняет запрос на изменение информации о правах сотрудника.
 	// Принимает контекст, ID сотрудника и объект EmployeePermission.
 	// Возвращает объект EmployeePermission.
-	UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error)
+	UpdatePermissions(ctx context.Context, id string, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error)
 
 	// Activate выполняет запрос на активацию сотрудника.
 	//
@@ -602,17 +602,17 @@ type EmployeeService interface {
 	// Если пользователь уже был ранее активным, то при активации не нужно указывать поле login.
 	// Успешным результатом выполнения запроса будет json, содержащий поле mailActivationRequired со значением false.
 	// В данном случае можно использовать ранее заданный пароль для данного пользователя.
-	Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (bool, *resty.Response, error)
+	Activate(ctx context.Context, id string, permissions *EmployeePermission) (bool, *resty.Response, error)
 
 	// Deactivate выполняет запрос на деактивацию сотрудника.
 	// Принимает контекст и ID сотрудника.
 	// Возвращает «true» в случае успешной деактивации.
-	Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	Deactivate(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// ResetPassword выполняет запрос на сброс пароля сотрудника.
 	// Принимает контекст и ID сотрудника.
 	// Возвращает «true» в случае успешного сброса пароля.
-	ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	ResetPassword(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (
@@ -637,23 +637,23 @@ type employeeService struct {
 	endpointUpdate[Employee]
 }
 
-func (service *employeeService) GetPermissions(ctx context.Context, id uuid.UUID) (*EmployeePermission, *resty.Response, error) {
+func (service *employeeService) GetPermissions(ctx context.Context, id string) (*EmployeePermission, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointEmployeeSecurity, id)
 	return NewRequestBuilder[EmployeePermission](service.client, path).Get(ctx)
 }
 
-func (service *employeeService) UpdatePermissions(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
+func (service *employeeService) UpdatePermissions(ctx context.Context, id string, permissions *EmployeePermission) (*EmployeePermission, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointEmployeeSecurity, id)
 	return NewRequestBuilder[EmployeePermission](service.client, path).Put(ctx, permissions)
 }
 
-func (service *employeeService) Activate(ctx context.Context, id uuid.UUID, permissions *EmployeePermission) (bool, *resty.Response, error) {
+func (service *employeeService) Activate(ctx context.Context, id string, permissions *EmployeePermission) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointEmployeeActivate, id)
 	mailActivationRequired, resp, err := NewRequestBuilder[MailActivationRequired](service.client, path).Put(ctx, permissions)
 	return mailActivationRequired.MailActivationRequired, resp, err
 }
 
-func (service *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *employeeService) Deactivate(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointEmployeeDeactivate, id)
 	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {
@@ -662,7 +662,7 @@ func (service *employeeService) Deactivate(ctx context.Context, id uuid.UUID) (b
 	return resp.StatusCode() == http.StatusNoContent, resp, nil
 }
 
-func (service *employeeService) ResetPassword(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *employeeService) ResetPassword(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointEmployeeResetPassword, id)
 	_, resp, err := NewRequestBuilder[any](service.client, path).Put(ctx, nil)
 	if err != nil {

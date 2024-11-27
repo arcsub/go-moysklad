@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,11 +15,11 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-stawka-nds
 type TaxRate struct {
-	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учётной записи
+	AccountID *string    `json:"accountId,omitempty"` // ID учётной записи
 	Archived  *bool      `json:"archived,omitempty"`  // Флаг принадлежности ставки к архивным ставкам
 	Comment   *string    `json:"comment,omitempty"`   // Комментарий к налоговой ставке
 	Group     *Group     `json:"group,omitempty"`     // Отдел сотрудника
-	ID        *uuid.UUID `json:"id,omitempty"`        // ID налоговой ставки
+	ID        *string    `json:"id,omitempty"`        // ID налоговой ставки
 	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные налоговой ставки
 	Rate      *int       `json:"rate,omitempty"`      // Значение налоговой ставки
 	Owner     *Employee  `json:"owner,omitempty"`     // Метаданные владельца (Сотрудника)
@@ -28,7 +28,7 @@ type TaxRate struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (taxRate TaxRate) GetAccountID() uuid.UUID {
+func (taxRate TaxRate) GetAccountID() string {
 	return Deref(taxRate.AccountID)
 }
 
@@ -48,7 +48,7 @@ func (taxRate TaxRate) GetGroup() Group {
 }
 
 // GetID возвращает ID налоговой ставки.
-func (taxRate TaxRate) GetID() uuid.UUID {
+func (taxRate TaxRate) GetID() string {
 	return Deref(taxRate.ID)
 }
 
@@ -181,7 +181,7 @@ type TaxRateService interface {
 	// DeleteByID выполняет запрос на удаление налоговой ставки по ID.
 	// Принимает контекст и ID налоговой ставки.
 	// Возвращает «true» в случае успешного удаления налоговой ставки.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление налоговой ставки.
 	// Принимает контекст и налоговую ставку.
@@ -191,12 +191,12 @@ type TaxRateService interface {
 	// GetByID выполняет запрос на получение отдельной налоговой ставки по ID.
 	// Принимает контекст, ID налоговой ставки и опционально объект параметров запроса Params.
 	// Возвращает налоговую ставку.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*TaxRate, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*TaxRate, *resty.Response, error)
 
 	// Update выполняет запрос на изменение налоговой ставки.
 	// Принимает контекст, налоговую ставку и опционально объект параметров запроса Params.
 	// Возвращает изменённую налоговую ставку.
-	Update(ctx context.Context, id uuid.UUID, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
+	Update(ctx context.Context, id string, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
 }
 
 const (

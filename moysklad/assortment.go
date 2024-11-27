@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
+
 	"reflect"
 )
 
@@ -81,8 +81,8 @@ type AssortmentPosition struct {
 	Name         string         `json:"name,omitempty"`         // Наименование сущности
 	Barcodes     Slice[Barcode] `json:"barcodes,omitempty"`     // Штрихкоды
 	raw          []byte         // сырые данные для последующей конвертации в нужный тип
-	AccountID    uuid.UUID      `json:"accountId,omitempty"` // ID учётной записи
-	ID           uuid.UUID      `json:"id,omitempty"`        // ID сущности
+	AccountID    string         `json:"accountId,omitempty"` // ID учётной записи
+	ID           string         `json:"id,omitempty"`        // ID сущности
 }
 
 // AssortmentConverter описывает метод, возвращающий [AssortmentPosition].

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // StockAll Расширенный отчёт об остатках.
@@ -175,7 +174,7 @@ type ReportStockService interface {
 	//	- Возврат поставщику
 	//	- Возврат покупателя
 	// Возвращает объект List.
-	GetByOperationID(ctx context.Context, operationID uuid.UUID, params ...*Params) (*List[StockByOperation], *resty.Response, error)
+	GetByOperationID(ctx context.Context, operationID string, params ...*Params) (*List[StockByOperation], *resty.Response, error)
 
 	// GetAllAsync выполняет запрос на получение Расширенного отчёта об остатках (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -217,7 +216,7 @@ func (service *reportStockService) GetCurrentByStore(ctx context.Context, params
 	return NewRequestBuilder[Slice[StockCurrentByStore]](service.client, EndpointReportStockByStoreCurrent).SetParams(params...).Get(ctx)
 }
 
-func (service *reportStockService) GetByOperationID(ctx context.Context, operationID uuid.UUID, params ...*Params) (*List[StockByOperation], *resty.Response, error) {
+func (service *reportStockService) GetByOperationID(ctx context.Context, operationID string, params ...*Params) (*List[StockByOperation], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointReportStockByOperation, operationID)
 	return NewRequestBuilder[List[StockByOperation]](service.client, path).SetParams(params...).Get(ctx)
 }

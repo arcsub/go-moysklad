@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
+
 	"log"
 )
 
@@ -27,7 +27,7 @@ type Audit struct {
 	Source        string         `json:"source"`        // Тип изменения
 	UID           string         `json:"uid"`           // Логин Сотрудника
 	ObjectCount   int            `json:"objectCount"`   // количество измененных объектов
-	ID            uuid.UUID      `json:"id"`            // ID Контекста
+	ID            string         `json:"id"`            // ID Контекста
 	SupportAccess bool           `json:"supportAccess"` // Был ли доступ произведен поддержкой от имени пользователя. Флаг отсутствует, если значение false
 }
 
@@ -270,7 +270,7 @@ type AuditService interface {
 	// GetEvents выполняет запрос на получение Событий по Контексту AuditEvent.
 	// Принимает контекст и ID контекста Аудита.
 	// Возвращает объект List.
-	GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error)
+	GetEvents(ctx context.Context, id string) (*List[AuditEvent], *resty.Response, error)
 
 	// GetFilters выполняет запрос на получение Фильтров Аудита.
 	// Принимает контекст.
@@ -292,7 +292,7 @@ func (service *auditService) GetContexts(ctx context.Context, params ...*Params)
 	return NewRequestBuilder[List[Audit]](service.client, service.uri).SetParams(params...).Get(ctx)
 }
 
-func (service *auditService) GetEvents(ctx context.Context, id uuid.UUID) (*List[AuditEvent], *resty.Response, error) {
+func (service *auditService) GetEvents(ctx context.Context, id string) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointAuditEvents, id)
 	return NewRequestBuilder[List[AuditEvent]](service.client, path).Get(ctx)
 }

@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,13 +15,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-gruppa-tehkart-gruppy-tehkart
 type ProcessingPlanFolder struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи    // ID учётной записи
 	Archived     *bool      `json:"archived,omitempty"`     // Добавлена ли Группа тех. карт в архив
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Группы тех. карт
 	Code         *string    `json:"code,omitempty"`         // Код Группы тех. карт
 	Description  *string    `json:"description,omitempty"`  // Описание Группы тех. карт
 	Group        *Group     `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID Группы тех. карт
+	ID           *string    `json:"id,omitempty"`           // ID Группы тех. карт
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные
 	Name         *string    `json:"name,omitempty"`         // Наименование
 	Owner        *Employee  `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)        // Владелец (Сотрудник)
@@ -40,7 +40,7 @@ func (processingPlanFolder ProcessingPlanFolder) Clean() *ProcessingPlanFolder {
 	return &ProcessingPlanFolder{Meta: processingPlanFolder.Meta}
 }
 
-func (processingPlanFolder ProcessingPlanFolder) GetAccountID() uuid.UUID {
+func (processingPlanFolder ProcessingPlanFolder) GetAccountID() string {
 	return Deref(processingPlanFolder.AccountID)
 }
 
@@ -64,7 +64,7 @@ func (processingPlanFolder ProcessingPlanFolder) GetGroup() Group {
 	return Deref(processingPlanFolder.Group)
 }
 
-func (processingPlanFolder ProcessingPlanFolder) GetID() uuid.UUID {
+func (processingPlanFolder ProcessingPlanFolder) GetID() string {
 	return Deref(processingPlanFolder.ID)
 }
 
@@ -166,14 +166,14 @@ func (processingPlanFolder *ProcessingPlanFolder) Delete(ctx context.Context, cl
 type ProcessingPlanFolderService interface {
 	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlanFolder], *resty.Response, error)
 	Create(ctx context.Context, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление группы техкарт.
 	// Принимает контекст и группу техкарт.
 	// Возвращает «true» в случае успешного удаления группы техкарт.
 	Delete(ctx context.Context, entity *ProcessingPlanFolder) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
+	Update(ctx context.Context, id string, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
@@ -184,12 +184,12 @@ type ProcessingPlanFolderService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (

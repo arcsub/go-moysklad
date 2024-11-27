@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -20,8 +20,8 @@ type Consignment struct {
 	Code         *string             `json:"code,omitempty"`         // Код Серии
 	Description  *string             `json:"description,omitempty"`  // Описание Серии
 	ExternalCode *string             `json:"externalCode,omitempty"` // Внешний код Серии
-	ID           *uuid.UUID          `json:"id,omitempty"`           // ID Серии
-	AccountID    *uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
+	ID           *string             `json:"id,omitempty"`           // ID Серии
+	AccountID    *string             `json:"accountId,omitempty"`    // ID учётной записи
 	Name         *string             `json:"name,omitempty"`         // Наименование Серии. "Собирается" и отображается как "Наименование товара / Метка Серии"
 	Assortment   *AssortmentPosition `json:"assortment,omitempty"`   // Метаданные товара
 	Image        *NullValue[Image]   `json:"image,omitempty"`        // Изображение товара, к которому относится данная серия
@@ -89,12 +89,12 @@ func (consignment Consignment) GetExternalCode() string {
 }
 
 // GetID возвращает ID Серии.
-func (consignment Consignment) GetID() uuid.UUID {
+func (consignment Consignment) GetID() string {
 	return Deref(consignment.ID)
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (consignment Consignment) GetAccountID() uuid.UUID {
+func (consignment Consignment) GetAccountID() string {
 	return Deref(consignment.AccountID)
 }
 
@@ -249,7 +249,7 @@ type ConsignmentService interface {
 	// DeleteByID выполняет запрос на удаление серии по ID.
 	// Принимает контекст и ID серии.
 	// Возвращает «true» в случае успешного удаления серии.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление серии.
 	// Принимает контекст и серию.
@@ -259,12 +259,12 @@ type ConsignmentService interface {
 	// GetByID выполняет запрос на получение отдельной серии по ID.
 	// Принимает контекст, ID серии и опционально объект параметров запроса Params.
 	// Возвращает найденную серию.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Consignment, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Consignment, *resty.Response, error)
 
 	// Update выполняет запрос на изменение серии.
 	// Принимает контекст, серию и опционально объект параметров запроса Params.
 	// Возвращает изменённую серию.
-	Update(ctx context.Context, id uuid.UUID, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
+	Update(ctx context.Context, id string, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных серий.
 	// Принимает контекст.
@@ -279,7 +279,7 @@ type ConsignmentService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -295,12 +295,12 @@ type ConsignmentService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attr *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attr *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -315,7 +315,7 @@ type ConsignmentService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 }
 
 const (

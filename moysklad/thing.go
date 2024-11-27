@@ -3,7 +3,6 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // Thing Серийный номер
@@ -12,15 +11,15 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-serijnyj-nomer
 type Thing struct {
-	AccountID   *uuid.UUID `json:"accountId,omitempty"`   // ID учётной записи
-	Description *string    `json:"description,omitempty"` // Описание Серийного номера
-	ID          *uuid.UUID `json:"id,omitempty"`          // ID Серийного номера
-	Meta        *Meta      `json:"meta,omitempty"`        // Метаданные о Серийном номере
-	Name        *string    `json:"name,omitempty"`        // Наименование Серийного номера
+	AccountID   *string `json:"accountId,omitempty"`   // ID учётной записи
+	Description *string `json:"description,omitempty"` // Описание Серийного номера
+	ID          *string `json:"id,omitempty"`          // ID Серийного номера
+	Meta        *Meta   `json:"meta,omitempty"`        // Метаданные о Серийном номере
+	Name        *string `json:"name,omitempty"`        // Наименование Серийного номера
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (thing Thing) GetAccountID() uuid.UUID {
+func (thing Thing) GetAccountID() string {
 	return Deref(thing.AccountID)
 }
 
@@ -30,7 +29,7 @@ func (thing Thing) GetDescription() string {
 }
 
 // GetID возвращает ID Серийного номера.
-func (thing Thing) GetID() uuid.UUID {
+func (thing Thing) GetID() string {
 	return Deref(thing.ID)
 }
 
@@ -87,7 +86,7 @@ type ThingService interface {
 	// GetByID выполняет запрос на получение отдельного серийного номера по ID.
 	// Принимает контекст, ID серийного номера и опционально объект параметров запроса Params.
 	// Возвращает найденный серийный номер.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Thing, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Thing, *resty.Response, error)
 }
 
 const (

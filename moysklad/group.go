@@ -3,7 +3,6 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // Group Отдел.
@@ -14,11 +13,11 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-otdel
 type Group struct {
-	AccountID *uuid.UUID `json:"accountId,omitempty"` // ID учётной записи
-	ID        *uuid.UUID `json:"id,omitempty"`        // ID Отдела
-	Index     *int       `json:"index,omitempty"`     // Порядковый номер в списке отделов
-	Meta      *Meta      `json:"meta,omitempty"`      // Метаданные Отдела
-	Name      *string    `json:"name,omitempty"`      // Наименование Отдела
+	AccountID *string `json:"accountId,omitempty"` // ID учётной записи
+	ID        *string `json:"id,omitempty"`        // ID Отдела
+	Index     *int    `json:"index,omitempty"`     // Порядковый номер в списке отделов
+	Meta      *Meta   `json:"meta,omitempty"`      // Метаданные Отдела
+	Name      *string `json:"name,omitempty"`      // Наименование Отдела
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
@@ -32,12 +31,12 @@ func (group Group) Clean() *Group {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (group Group) GetAccountID() uuid.UUID {
+func (group Group) GetAccountID() string {
 	return Deref(group.AccountID)
 }
 
 // GetID возвращает ID Отдела.
-func (group Group) GetID() uuid.UUID {
+func (group Group) GetID() string {
 	return Deref(group.ID)
 }
 
@@ -121,7 +120,7 @@ type GroupService interface {
 	// DeleteByID выполняет запрос на удаление отдела по ID.
 	// Принимает контекст и ID отдела.
 	// Возвращает «true» в случае успешного удаления отдела.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление отдела.
 	// Принимает контекст и отдел.
@@ -131,12 +130,12 @@ type GroupService interface {
 	// GetByID выполняет запрос на получение отдельного отдела по ID.
 	// Принимает контекст, ID отдела и опционально объект параметров запроса Params.
 	// Возвращает найденный отдел.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Group, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Group, *resty.Response, error)
 
 	// Update выполняет запрос на изменение отдела.
 	// Принимает контекст, отдел и опционально объект параметров запроса Params.
 	// Возвращает изменённый отдел.
-	Update(ctx context.Context, id uuid.UUID, group *Group, params ...*Params) (*Group, *resty.Response, error)
+	Update(ctx context.Context, id string, group *Group, params ...*Params) (*Group, *resty.Response, error)
 }
 
 const (

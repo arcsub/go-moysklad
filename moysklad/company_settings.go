@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // CompanySettings Настройки компании.
@@ -216,7 +215,7 @@ type ContextCompanySettingsService interface {
 	// GetPriceTypeByID выполняет запрос на получение отдельного типа цен по ID.
 	// Принимает контекст и ID типа цен.
 	// Возвращает найденный тип цен.
-	GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error)
+	GetPriceTypeByID(ctx context.Context, id string) (*PriceType, *resty.Response, error)
 
 	// GetPriceTypeDefault выполняет запрос на получение типа цен по умолчанию.
 	// Принимает контекст.
@@ -262,7 +261,7 @@ func (service *contextCompanySettingsService) UpdatePriceTypeMany(ctx context.Co
 	return NewRequestBuilder[Slice[PriceType]](service.client, EndpointCompanySettingsPriceType).Post(ctx, priceTypes)
 }
 
-func (service *contextCompanySettingsService) GetPriceTypeByID(ctx context.Context, id uuid.UUID) (*PriceType, *resty.Response, error) {
+func (service *contextCompanySettingsService) GetPriceTypeByID(ctx context.Context, id string) (*PriceType, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCompanySettingsPriceTypeID, id)
 	return NewRequestBuilder[PriceType](service.client, path).Get(ctx)
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 )
 
 // Discount Скидка.
@@ -15,8 +14,8 @@ import (
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki
 type Discount struct {
 	Meta        *Meta         `json:"meta,omitempty"`        // Метаданные Скидки
-	ID          *uuid.UUID    `json:"id,omitempty"`          // ID Скидки
-	AccountID   *uuid.UUID    `json:"accountId,omitempty"`   // ID учётной записи
+	ID          *string       `json:"id,omitempty"`          // ID Скидки
+	AccountID   *string       `json:"accountId,omitempty"`   // ID учётной записи
 	Name        *string       `json:"name,omitempty"`        // Наименование Скидки
 	Active      *bool         `json:"active,omitempty"`      // Индикатор, является ли скидка активной на данный момент
 	AllProducts *bool         `json:"allProducts,omitempty"` // Индикатор, действует ли скидка на все товары
@@ -42,12 +41,12 @@ func (discount Discount) GetMeta() Meta {
 }
 
 // GetID возвращает ID Скидки.
-func (discount Discount) GetID() uuid.UUID {
+func (discount Discount) GetID() string {
 	return Deref(discount.ID)
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (discount Discount) GetAccountID() uuid.UUID {
+func (discount Discount) GetAccountID() string {
 	return Deref(discount.AccountID)
 }
 
@@ -194,8 +193,8 @@ func (discount *Discount) AsSpecialPriceDiscount() *SpecialPriceDiscount {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-nakopitel-nyh-skidok
 type AccumulationDiscount struct {
-	AccountID      *uuid.UUID                `json:"accountId,omitempty"`      // ID учётной записи
-	ID             *uuid.UUID                `json:"id,omitempty"`             // ID накопительной скидки
+	AccountID      *string                   `json:"accountId,omitempty"`      // ID учётной записи
+	ID             *string                   `json:"id,omitempty"`             // ID накопительной скидки
 	Name           *string                   `json:"name,omitempty"`           // Наименование накопительной скидки
 	Meta           *Meta                     `json:"meta,omitempty"`           // Метаданные накопительной скидки
 	Active         *bool                     `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
@@ -218,12 +217,12 @@ func (accumulationDiscount AccumulationDiscount) Clean() *AccumulationDiscount {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (accumulationDiscount AccumulationDiscount) GetAccountID() uuid.UUID {
+func (accumulationDiscount AccumulationDiscount) GetAccountID() string {
 	return Deref(accumulationDiscount.AccountID)
 }
 
 // GetID возвращает ID накопительной скидки.
-func (accumulationDiscount AccumulationDiscount) GetID() uuid.UUID {
+func (accumulationDiscount AccumulationDiscount) GetID() string {
 	return Deref(accumulationDiscount.ID)
 }
 
@@ -385,8 +384,8 @@ func (accumulationLevel *AccumulationLevel) String() string {
 //
 // Код сущности: personaldiscount
 type PersonalDiscount struct {
-	AccountID      *uuid.UUID                `json:"accountId,omitempty"`      // ID учётной записи
-	ID             *uuid.UUID                `json:"id,omitempty"`             // ID персональной скидки
+	AccountID      *string                   `json:"accountId,omitempty"`      // ID учётной записи
+	ID             *string                   `json:"id,omitempty"`             // ID персональной скидки
 	Name           *string                   `json:"name,omitempty"`           // Наименование персональной скидки
 	Meta           *Meta                     `json:"meta,omitempty"`           // Метаданные персональной скидки
 	Active         *bool                     `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
@@ -408,12 +407,12 @@ func (personalDiscount PersonalDiscount) Clean() *PersonalDiscount {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (personalDiscount PersonalDiscount) GetAccountID() uuid.UUID {
+func (personalDiscount PersonalDiscount) GetAccountID() string {
 	return Deref(personalDiscount.AccountID)
 }
 
 // GetID возвращает ID персональной скидки.
-func (personalDiscount PersonalDiscount) GetID() uuid.UUID {
+func (personalDiscount PersonalDiscount) GetID() string {
 	return Deref(personalDiscount.ID)
 }
 
@@ -530,11 +529,11 @@ func (PersonalDiscount) MetaType() MetaType {
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-skidki-polq-spec-cen
 type SpecialPriceDiscount struct {
 	AllProducts    *bool                     `json:"allProducts,omitempty"`    // Индикатор, действует ли скидка на все товары
-	ID             *uuid.UUID                `json:"id,omitempty"`             // ID специальной цены
+	ID             *string                   `json:"id,omitempty"`             // ID специальной цены
 	Name           *string                   `json:"name,omitempty"`           // Наименование специальной цены
 	Meta           *Meta                     `json:"meta,omitempty"`           // Метаданные специальной цены
 	Active         *bool                     `json:"active,omitempty"`         // Индикатор, является ли скидка активной на данный момент
-	AccountID      *uuid.UUID                `json:"accountId,omitempty"`      // ID учётной записи
+	AccountID      *string                   `json:"accountId,omitempty"`      // ID учётной записи
 	AllAgents      *bool                     `json:"allAgents,omitempty"`      // Индикатор, действует ли скидка на всех агентов
 	UsePriceType   *bool                     `json:"usePriceType,omitempty"`   // Индикатор, использовать ли специальную цену
 	Assortment     Assortment                `json:"assortment,omitempty"`     // Массив метаданных Товаров и Услуг, которые были выбраны для применения скидки, если та применяется не ко всем товарам
@@ -555,12 +554,12 @@ func (specialPriceDiscount SpecialPriceDiscount) Clean() *SpecialPriceDiscount {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (specialPriceDiscount SpecialPriceDiscount) GetAccountID() uuid.UUID {
+func (specialPriceDiscount SpecialPriceDiscount) GetAccountID() string {
 	return Deref(specialPriceDiscount.AccountID)
 }
 
 // GetID возвращает ID специальной цены.
-func (specialPriceDiscount SpecialPriceDiscount) GetID() uuid.UUID {
+func (specialPriceDiscount SpecialPriceDiscount) GetID() string {
 	return Deref(specialPriceDiscount.ID)
 }
 
@@ -755,7 +754,7 @@ type DiscountService interface {
 	// UpdateRoundOffDiscount выполняет запрос на изменение округления копеек.
 	// Принимает контекст, ID округления копеек и скидку.
 	// Возвращает скидку.
-	UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error)
+	UpdateRoundOffDiscount(ctx context.Context, id string, entity *Discount) (*Discount, *resty.Response, error)
 
 	// GetAccumulationDiscountList выполняет запрос на получение списка накопительных скидок.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -775,17 +774,17 @@ type DiscountService interface {
 	// GetAccumulationDiscountByID выполняет запрос на получение накопительной скидки по ID.
 	// Принимает контекст, ID накопительной скидки и опционально объект параметров запроса Params.
 	// Возвращает накопительную скидку.
-	GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*AccumulationDiscount, *resty.Response, error)
+	GetAccumulationDiscountByID(ctx context.Context, id string, params ...*Params) (*AccumulationDiscount, *resty.Response, error)
 
 	// UpdateAccumulationDiscount выполняет запрос на изменение накопительной скидки.
 	// Принимает контекст, накопительную скидку и опционально объект параметров запроса Params.
 	// Возвращает изменённую накопительную скидку.
-	UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
+	UpdateAccumulationDiscount(ctx context.Context, id string, accumulationDiscount *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error)
 
 	// DeleteAccumulationDiscount выполняет запрос на удаление накопительной скидки.
 	// Принимает контекст и ID накопительной скидки.
 	// Возвращает «true» в случае успешного удаления накопительной скидки.
-	DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAccumulationDiscount(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetPersonalDiscountList выполняет запрос на получение списка персональных скидок.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -805,17 +804,17 @@ type DiscountService interface {
 	// GetPersonalDiscountByID выполняет запрос на получение персональной скидки по ID.
 	// Принимает контекст, ID персональной скидки и опционально объект параметров запроса Params.
 	// Возвращает персональную скидку.
-	GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PersonalDiscount, *resty.Response, error)
+	GetPersonalDiscountByID(ctx context.Context, id string, params ...*Params) (*PersonalDiscount, *resty.Response, error)
 
 	// UpdatePersonalDiscount выполняет запрос на изменение персональной скидки.
 	// Принимает контекст, персональную скидку и опционально объект параметров запроса Params.
 	// Возвращает изменённую персональную скидку.
-	UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
+	UpdatePersonalDiscount(ctx context.Context, id string, personalDiscount *PersonalDiscount) (*PersonalDiscount, *resty.Response, error)
 
 	// DeletePersonalDiscount выполняет запрос на удаление персональной скидки.
 	// Принимает контекст и ID персональной скидки.
 	// Возвращает «true» в случае успешного удаления персональной скидки.
-	DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeletePersonalDiscount(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetSpecialPriceDiscountList выполняет запрос на получение списка специальных цен.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -836,17 +835,17 @@ type DiscountService interface {
 	// GetSpecialPriceDiscountByID выполняет запрос на получение специальной цены по ID.
 	// Принимает контекст, ID специальной цены и опционально объект параметров запроса Params.
 	// Возвращает специальную цену.
-	GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error)
+	GetSpecialPriceDiscountByID(ctx context.Context, id string, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error)
 
 	// UpdateSpecialPriceDiscount выполняет запрос на изменение специальной цены.
 	// Принимает контекст, специальную цену и опционально объект параметров запроса Params.
 	// Возвращает изменённую специальную цену.
-	UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
+	UpdateSpecialPriceDiscount(ctx context.Context, id string, specialPriceDiscount *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error)
 
 	// DeleteSpecialPriceDiscount выполняет запрос на удаление специальной цены.
 	// Принимает контекст и ID специальной цены.
 	// Возвращает «true» в случае успешного удаления специальной цены.
-	DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteSpecialPriceDiscount(ctx context.Context, id string) (bool, *resty.Response, error)
 }
 
 const (
@@ -864,7 +863,7 @@ type discountService struct {
 	endpointGetList[Discount]
 }
 
-func (service *discountService) UpdateRoundOffDiscount(ctx context.Context, id uuid.UUID, entity *Discount) (*Discount, *resty.Response, error) {
+func (service *discountService) UpdateRoundOffDiscount(ctx context.Context, id string, entity *Discount) (*Discount, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", service.uri, id)
 	return NewRequestBuilder[Discount](service.client, path).Put(ctx, entity)
 }
@@ -877,17 +876,17 @@ func (service *discountService) CreateAccumulationDiscount(ctx context.Context, 
 	return NewRequestBuilder[AccumulationDiscount](service.client, EndpointAccumulationDiscount).Post(ctx, entity)
 }
 
-func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id string, params ...*Params) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointAccumulationDiscountID, id)
 	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
-func (service *discountService) UpdateAccumulationDiscount(ctx context.Context, id uuid.UUID, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) UpdateAccumulationDiscount(ctx context.Context, id string, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointAccumulationDiscountID, id)
 	return NewRequestBuilder[AccumulationDiscount](service.client, path).Put(ctx, entity)
 }
 
-func (service *discountService) DeleteAccumulationDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *discountService) DeleteAccumulationDiscount(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointAccumulationDiscountID, id)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
@@ -900,17 +899,17 @@ func (service *discountService) CreatePersonalDiscount(ctx context.Context, enti
 	return NewRequestBuilder[PersonalDiscount](service.client, EndpointPersonalDiscount).Post(ctx, entity)
 }
 
-func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id string, params ...*Params) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPersonalDiscountID, id)
 	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
-func (service *discountService) UpdatePersonalDiscount(ctx context.Context, id uuid.UUID, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) UpdatePersonalDiscount(ctx context.Context, id string, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPersonalDiscountID, id)
 	return NewRequestBuilder[PersonalDiscount](service.client, path).Put(ctx, entity)
 }
 
-func (service *discountService) DeletePersonalDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *discountService) DeletePersonalDiscount(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPersonalDiscountID, id)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
@@ -923,17 +922,17 @@ func (service *discountService) CreateSpecialPriceDiscount(ctx context.Context, 
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, EndpointSpecialPriceDiscount).Post(ctx, entity)
 }
 
-func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id uuid.UUID, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id string, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointSpecialPriceDiscountID, id)
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params...).Get(ctx)
 }
 
-func (service *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id uuid.UUID, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id string, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointSpecialPriceDiscountID, id)
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).Put(ctx, entity)
 }
 
-func (service *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error) {
+func (service *discountService) DeleteSpecialPriceDiscount(ctx context.Context, id string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointSpecialPriceDiscountID, id)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

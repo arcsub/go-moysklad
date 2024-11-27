@@ -1,7 +1,6 @@
 package moysklad
 
 import (
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -10,8 +9,8 @@ import (
 // Код сущности: payroll
 type Payroll struct {
 	Meta         *Meta            `json:"meta,omitempty"`         // Метаданные Начисления зарплаты
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Начисления зарплаты
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	ID           *string          `json:"id,omitempty"`           // ID Начисления зарплаты
+	AccountID    *string          `json:"accountId,omitempty"`    // ID учётной записи
 	Owner        *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
 	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
@@ -40,12 +39,12 @@ func (payroll Payroll) GetMeta() Meta {
 }
 
 // GetID возвращает ID Начисления зарплаты.
-func (payroll Payroll) GetID() uuid.UUID {
+func (payroll Payroll) GetID() string {
 	return Deref(payroll.ID)
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (payroll Payroll) GetAccountID() uuid.UUID {
+func (payroll Payroll) GetAccountID() string {
 	return Deref(payroll.AccountID)
 }
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // UserSettings Настройки пользователя.
@@ -469,7 +468,7 @@ type UserSettingsService interface {
 	// Update выполняет запрос на изменение настроек пользователя.
 	// Принимает контекст и настройки пользователя.
 	// Возвращает изменённые настройки пользователя.
-	Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error)
+	Update(ctx context.Context, id string, userSettings *UserSettings) (*UserSettings, *resty.Response, error)
 }
 
 const (
@@ -484,7 +483,7 @@ func (service *userSettingsService) Get(ctx context.Context) (*UserSettings, *re
 	return NewRequestBuilder[UserSettings](service.client, service.uri).Get(ctx)
 }
 
-func (service *userSettingsService) Update(ctx context.Context, id uuid.UUID, userSettings *UserSettings) (*UserSettings, *resty.Response, error) {
+func (service *userSettingsService) Update(ctx context.Context, id string, userSettings *UserSettings) (*UserSettings, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", service.uri, id)
 	return NewRequestBuilder[UserSettings](service.client, path).Put(ctx, userSettings)
 }

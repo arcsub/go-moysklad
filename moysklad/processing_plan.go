@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -16,13 +16,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty
 type ProcessingPlan struct {
-	AccountID            *uuid.UUID                         `json:"accountId,omitempty"`            // ID учётной записи            // ID учётной записи
+	AccountID            *string                            `json:"accountId,omitempty"`            // ID учётной записи            // ID учётной записи
 	Archived             *bool                              `json:"archived,omitempty"`             // Добавлена ли Тех. карта в архив
 	Code                 *string                            `json:"code,omitempty"`                 // Код Тех. карты
 	Cost                 *float64                           `json:"cost,omitempty"`                 // Стоимость производства
 	ExternalCode         *string                            `json:"externalCode,omitempty"`         // Внешний код
 	Group                *Group                             `json:"group,omitempty"`                // Отдел сотрудника                // Отдел сотрудника
-	ID                   *uuid.UUID                         `json:"id,omitempty"`                   // ID сущности
+	ID                   *string                            `json:"id,omitempty"`                   // ID сущности
 	Stages               *MetaArray[ProcessingPlanStages]   `json:"stages,omitempty"`               // Коллекция метаданных этапов Тех. карты
 	Materials            *MetaArray[ProcessingPlanMaterial] `json:"materials,omitempty"`            // Список Метаданных материалов Тех. операции
 	Meta                 *Meta                              `json:"meta,omitempty"`                 // Метаданные
@@ -47,7 +47,7 @@ func (processingPlan ProcessingPlan) Clean() *ProcessingPlan {
 	return &ProcessingPlan{Meta: processingPlan.Meta}
 }
 
-func (processingPlan ProcessingPlan) GetAccountID() uuid.UUID {
+func (processingPlan ProcessingPlan) GetAccountID() string {
 	return Deref(processingPlan.AccountID)
 }
 
@@ -75,7 +75,7 @@ func (processingPlan ProcessingPlan) GetGroup() Group {
 	return Deref(processingPlan.Group)
 }
 
-func (processingPlan ProcessingPlan) GetID() uuid.UUID {
+func (processingPlan ProcessingPlan) GetID() string {
 	return Deref(processingPlan.ID)
 }
 
@@ -224,19 +224,19 @@ func (processingPlan *ProcessingPlan) Delete(ctx context.Context, client *Client
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-jetapy-tehkarty
 type ProcessingPlanStages struct {
-	AccountID                 *uuid.UUID `json:"accountId,omitempty"`                 // ID учётной записи                 // ID учётной записи
-	ID                        *uuid.UUID `json:"id,omitempty"`                        // ID Материала
-	Cost                      *float64   `json:"cost,omitempty"`                      // Стоимость производства, на определенном этапе
-	LabourCost                *float64   `json:"labourCost,omitempty"`                // Оплата труда, на определенном этапе
-	StandardHour              *float64   `json:"standardHour,omitempty"`              // Нормо-часы, на определенном этапе
-	ProcessingProcessPosition *Meta      `json:"processingProcessPosition,omitempty"` // Метаданные позиции техпроцесса
+	AccountID                 *string  `json:"accountId,omitempty"`                 // ID учётной записи                 // ID учётной записи
+	ID                        *string  `json:"id,omitempty"`                        // ID Материала
+	Cost                      *float64 `json:"cost,omitempty"`                      // Стоимость производства, на определенном этапе
+	LabourCost                *float64 `json:"labourCost,omitempty"`                // Оплата труда, на определенном этапе
+	StandardHour              *float64 `json:"standardHour,omitempty"`              // Нормо-часы, на определенном этапе
+	ProcessingProcessPosition *Meta    `json:"processingProcessPosition,omitempty"` // Метаданные позиции техпроцесса
 }
 
-func (processingPlanStages ProcessingPlanStages) GetAccountID() uuid.UUID {
+func (processingPlanStages ProcessingPlanStages) GetAccountID() string {
 	return Deref(processingPlanStages.AccountID)
 }
 
-func (processingPlanStages ProcessingPlanStages) GetID() uuid.UUID {
+func (processingPlanStages ProcessingPlanStages) GetID() string {
 	return Deref(processingPlanStages.ID)
 }
 
@@ -288,14 +288,14 @@ func (ProcessingPlanStages) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-produkty-tehkarty
 type ProcessingPlanProduct struct {
-	AccountID  *uuid.UUID          `json:"accountId,omitempty"`  // ID учётной записи  // ID учётной записи
+	AccountID  *string             `json:"accountId,omitempty"`  // ID учётной записи  // ID учётной записи
 	Assortment *AssortmentPosition `json:"assortment,omitempty"` // Метаданные товара или модификации позиции
-	ID         *uuid.UUID          `json:"id,omitempty"`         // ID позиции
+	ID         *string             `json:"id,omitempty"`         // ID позиции
 	Product    *Product            `json:"product,omitempty"`    // Метаданные товара позиции. В случае, если в поле assortment указана модификация, то это поле содержит товар, к которому относится эта модификация
 	Quantity   *float64            `json:"quantity,omitempty"`   // Количество товаров данного вида в позиции
 }
 
-func (processingPlanProduct ProcessingPlanProduct) GetAccountID() uuid.UUID {
+func (processingPlanProduct ProcessingPlanProduct) GetAccountID() string {
 	return Deref(processingPlanProduct.AccountID)
 }
 
@@ -303,7 +303,7 @@ func (processingPlanProduct ProcessingPlanProduct) GetAssortment() AssortmentPos
 	return Deref(processingPlanProduct.Assortment)
 }
 
-func (processingPlanProduct ProcessingPlanProduct) GetID() uuid.UUID {
+func (processingPlanProduct ProcessingPlanProduct) GetID() string {
 	return Deref(processingPlanProduct.ID)
 }
 
@@ -348,16 +348,16 @@ func (ProcessingPlanProduct) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tehkarta-tehkarty-materialy-tehkarty
 type ProcessingPlanMaterial struct {
-	AccountID                 *uuid.UUID          `json:"accountId,omitempty"`                 // ID учётной записи                 // ID учётной записи
+	AccountID                 *string             `json:"accountId,omitempty"`                 // ID учётной записи                 // ID учётной записи
 	Assortment                *AssortmentPosition `json:"assortment,omitempty"`                // Метаданные товара или модификации позиции
-	ID                        *uuid.UUID          `json:"id,omitempty"`                        // ID позиции
+	ID                        *string             `json:"id,omitempty"`                        // ID позиции
 	Product                   *Product            `json:"product,omitempty"`                   // Метаданные товара позиции. В случае, если в поле assortment указана модификация, то это поле содержит товар, к которому относится эта модификация
 	Quantity                  *float64            `json:"quantity,omitempty"`                  // Количество товаров данного вида в позиции
 	ProcessingProcessPosition *Meta               `json:"processingProcessPosition,omitempty"` // Метаданные позиции Тех. процесса
 	MaterialProcessingPlan    *Meta               `json:"materialProcessingPlan"`              // Метаданные техкарты материала [11-01-2024]
 }
 
-func (processingPlanMaterial ProcessingPlanMaterial) GetAccountID() uuid.UUID {
+func (processingPlanMaterial ProcessingPlanMaterial) GetAccountID() string {
 	return Deref(processingPlanMaterial.AccountID)
 }
 
@@ -365,7 +365,7 @@ func (processingPlanMaterial ProcessingPlanMaterial) GetAssortment() AssortmentP
 	return Deref(processingPlanMaterial.Assortment)
 }
 
-func (processingPlanMaterial ProcessingPlanMaterial) GetID() uuid.UUID {
+func (processingPlanMaterial ProcessingPlanMaterial) GetID() string {
 	return Deref(processingPlanMaterial.ID)
 }
 
@@ -429,84 +429,84 @@ type ProcessingPlanService interface {
 	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление техкарты.
 	// Принимает контекст и техкарту.
 	// Возвращает «true» в случае успешного удаления техкарты.
 	Delete(ctx context.Context, entity *ProcessingPlan) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*ProcessingPlan, *resty.Response, error)
-	Update(ctx context.Context, id uuid.UUID, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*ProcessingPlan, *resty.Response, error)
+	Update(ctx context.Context, id string, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id uuid.UUID, params ...*Params) (*List[ProcessingPlanProduct], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[ProcessingPlanProduct], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id uuid.UUID, params ...*Params) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id uuid.UUID, positionID uuid.UUID, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id uuid.UUID, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
 	// Возвращает список добавленных позиций.
-	CreatePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+	CreatePositionMany(ctx context.Context, id string, positions ...*ProcessingPlanProduct) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 
 	// DeletePosition выполняет запрос на удаление позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает «true» в случае успешного удаления позиции.
-	DeletePosition(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (bool, *resty.Response, error)
+	DeletePosition(ctx context.Context, id string, positionID string) (bool, *resty.Response, error)
 
 	// DeletePositionMany выполняет запрос на массовое удаление позиций документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionMany(ctx context.Context, id uuid.UUID, positions ...*ProcessingPlanProduct) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionMany(ctx context.Context, id string, positions ...*ProcessingPlanProduct) (*DeleteManyResponse, *resty.Response, error)
 
 	// GetPositionTrackingCodeList выполняет запрос на получение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа и ID позиции.
 	// Возвращает объект List.
-	GetPositionTrackingCodeList(ctx context.Context, id uuid.UUID, positionID uuid.UUID) (*List[TrackingCode], *resty.Response, error)
+	GetPositionTrackingCodeList(ctx context.Context, id string, positionID string) (*List[TrackingCode], *resty.Response, error)
 
 	// CreateUpdatePositionTrackingCodeMany выполняет запрос на массовое создание/изменение кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает список созданных и/или изменённых кодов маркировки позиции документа.
-	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
+	CreateUpdatePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*Slice[TrackingCode], *resty.Response, error)
 
 	// DeletePositionTrackingCodeMany выполняет запрос на массовое удаление кодов маркировки позиции документа.
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeletePositionTrackingCodeMany(ctx context.Context, id uuid.UUID, positionID uuid.UUID, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
+	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
-	GetStages(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error)
-	GetStageByID(ctx context.Context, id, stageID uuid.UUID) (*ProcessingStage, *resty.Response, error)
-	UpdateStage(ctx context.Context, id, stageID uuid.UUID, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error)
-	GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error)
-	CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
-	GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error)
-	UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
-	DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error)
-	GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error)
-	CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error)
-	UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
-	DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
+	GetStages(ctx context.Context, id string, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error)
+	GetStageByID(ctx context.Context, id, stageID string) (*ProcessingStage, *resty.Response, error)
+	UpdateStage(ctx context.Context, id, stageID string, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error)
+	GetMaterials(ctx context.Context, id string) (*List[ProcessingPlanMaterial], *resty.Response, error)
+	CreateMaterial(ctx context.Context, id string, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
+	GetMaterialByID(ctx context.Context, id, materialID string) (*ProcessingPlanMaterial, *resty.Response, error)
+	UpdateMaterial(ctx context.Context, id, materialID string, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error)
+	DeleteMaterial(ctx context.Context, id, materialID string) (bool, *resty.Response, error)
+	GetProducts(ctx context.Context, id string) (*List[ProcessingPlanProduct], *resty.Response, error)
+	CreateProduct(ctx context.Context, id string, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
+	GetProductByID(ctx context.Context, id, productID string) (*ProcessingPlanProduct, *resty.Response, error)
+	UpdateProduct(ctx context.Context, id, productID string, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error)
+	DeleteProduct(ctx context.Context, id, productID string) (bool, *resty.Response, error)
 }
 
 const (
@@ -533,67 +533,67 @@ type processingPlanService struct {
 	endpointTrash
 }
 
-func (service *processingPlanService) GetStages(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error) {
+func (service *processingPlanService) GetStages(ctx context.Context, id string, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanStages, id)
 	return NewRequestBuilder[MetaArray[ProcessingStage]](service.client, path).SetParams(params...).Get(ctx)
 }
 
-func (service *processingPlanService) GetStageByID(ctx context.Context, id, stageID uuid.UUID) (*ProcessingStage, *resty.Response, error) {
+func (service *processingPlanService) GetStageByID(ctx context.Context, id, stageID string) (*ProcessingStage, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanStagesID, id, stageID)
 	return NewRequestBuilder[ProcessingStage](service.client, path).Get(ctx)
 }
 
-func (service *processingPlanService) UpdateStage(ctx context.Context, id, stageID uuid.UUID, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error) {
+func (service *processingPlanService) UpdateStage(ctx context.Context, id, stageID string, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanStagesID, id, stageID)
 	return NewRequestBuilder[ProcessingStage](service.client, path).Put(ctx, stage)
 }
 
-func (service *processingPlanService) GetMaterials(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanMaterial], *resty.Response, error) {
+func (service *processingPlanService) GetMaterials(ctx context.Context, id string) (*List[ProcessingPlanMaterial], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanMaterials, id)
 	return NewRequestBuilder[List[ProcessingPlanMaterial]](service.client, path).Get(ctx)
 }
 
-func (service *processingPlanService) CreateMaterial(ctx context.Context, id uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+func (service *processingPlanService) CreateMaterial(ctx context.Context, id string, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanMaterials, id)
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Post(ctx, material)
 }
 
-func (service *processingPlanService) GetMaterialByID(ctx context.Context, id, materialID uuid.UUID) (*ProcessingPlanMaterial, *resty.Response, error) {
+func (service *processingPlanService) GetMaterialByID(ctx context.Context, id, materialID string) (*ProcessingPlanMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanMaterialsID, id, materialID)
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Get(ctx)
 }
 
-func (service *processingPlanService) UpdateMaterial(ctx context.Context, id, materialID uuid.UUID, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
+func (service *processingPlanService) UpdateMaterial(ctx context.Context, id, materialID string, material *ProcessingPlanMaterial) (*ProcessingPlanMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanMaterialsID, id, materialID)
 	return NewRequestBuilder[ProcessingPlanMaterial](service.client, path).Put(ctx, material)
 }
 
-func (service *processingPlanService) DeleteMaterial(ctx context.Context, id, materialID uuid.UUID) (bool, *resty.Response, error) {
+func (service *processingPlanService) DeleteMaterial(ctx context.Context, id, materialID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanMaterialsID, id, materialID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *processingPlanService) GetProducts(ctx context.Context, id uuid.UUID) (*List[ProcessingPlanProduct], *resty.Response, error) {
+func (service *processingPlanService) GetProducts(ctx context.Context, id string) (*List[ProcessingPlanProduct], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanProducts, id)
 	return NewRequestBuilder[List[ProcessingPlanProduct]](service.client, path).Get(ctx)
 }
 
-func (service *processingPlanService) CreateProduct(ctx context.Context, id uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+func (service *processingPlanService) CreateProduct(ctx context.Context, id string, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanProducts, id)
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Post(ctx, product)
 }
 
-func (service *processingPlanService) GetProductByID(ctx context.Context, id, productID uuid.UUID) (*ProcessingPlanProduct, *resty.Response, error) {
+func (service *processingPlanService) GetProductByID(ctx context.Context, id, productID string) (*ProcessingPlanProduct, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanProductsID, id, productID)
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Get(ctx)
 }
 
-func (service *processingPlanService) UpdateProduct(ctx context.Context, id, productID uuid.UUID, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
+func (service *processingPlanService) UpdateProduct(ctx context.Context, id, productID string, product *ProcessingPlanProduct) (*ProcessingPlanProduct, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanProductsID, id, productID)
 	return NewRequestBuilder[ProcessingPlanProduct](service.client, path).Put(ctx, product)
 }
 
-func (service *processingPlanService) DeleteProduct(ctx context.Context, id, productID uuid.UUID) (bool, *resty.Response, error) {
+func (service *processingPlanService) DeleteProduct(ctx context.Context, id, productID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanProductsID, id, productID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

@@ -1,7 +1,6 @@
 package moysklad
 
 import (
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -11,13 +10,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-kontragent-kontragenty-attributy-suschnosti-adres-scheta-kontragentow
 type AgentAccount struct {
-	AccountID            *uuid.UUID `json:"accountId,omitempty"`            // ID учётной записи
+	AccountID            *string    `json:"accountId,omitempty"`            // ID учётной записи
 	AccountNumber        *string    `json:"accountNumber,omitempty"`        // Номер счета
 	BankLocation         *string    `json:"bankLocation,omitempty"`         // Адрес банка
 	BankName             *string    `json:"bankName,omitempty"`             // Наименование банка
 	BIC                  *string    `json:"bic,omitempty"`                  // БИК
 	CorrespondentAccount *string    `json:"correspondentAccount,omitempty"` // Корр счет
-	ID                   *uuid.UUID `json:"id,omitempty"`                   // ID счета
+	ID                   *string    `json:"id,omitempty"`                   // ID счета
 	IsDefault            *bool      `json:"isDefault,omitempty"`            // Является ли счет основным счетом Контрагента
 	Meta                 *Meta      `json:"meta,omitempty"`                 // Метаданные Счета Контрагента
 	Updated              *Timestamp `json:"updated,omitempty"`              // Момент последнего обновления
@@ -34,7 +33,7 @@ func (agentAccount AgentAccount) Clean() *AgentAccount {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (agentAccount AgentAccount) GetAccountID() uuid.UUID {
+func (agentAccount AgentAccount) GetAccountID() string {
 	return Deref(agentAccount.AccountID)
 }
 
@@ -64,7 +63,7 @@ func (agentAccount AgentAccount) GetCorrespondentAccount() string {
 }
 
 // GetID возвращает ID счета.
-func (agentAccount AgentAccount) GetID() uuid.UUID {
+func (agentAccount AgentAccount) GetID() string {
 	return Deref(agentAccount.ID)
 }
 

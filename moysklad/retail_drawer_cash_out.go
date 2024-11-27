@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -26,10 +26,10 @@ type RetailDrawerCashOut struct {
 	ExternalCode *string           `json:"externalCode,omitempty"` // Внешний код Выплаты денег
 	Files        *MetaArray[File]  `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Group        *Group            `json:"group,omitempty"`        // Отдел сотрудника
-	ID           *uuid.UUID        `json:"id,omitempty"`           // ID Выплаты денег
+	ID           *string           `json:"id,omitempty"`           // ID Выплаты денег
 	RetailShift  *RetailShift      `json:"retailShift,omitempty"`  // Ссылка на розничную смену, в рамках которой было выполнено Внесение денег
 	Agent        *Employee         `json:"agent,omitempty"`        // Ссылка на сотрудника, которому была совершена Выплата
-	AccountID    *uuid.UUID        `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string           `json:"accountId,omitempty"`    // ID учётной записи
 	Organization *Organization     `json:"organization,omitempty"` // Метаданные юрлица
 	Owner        *Employee         `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Printed      *bool             `json:"printed,omitempty"`      // Напечатан ли документ
@@ -38,7 +38,7 @@ type RetailDrawerCashOut struct {
 	Shared       *bool             `json:"shared,omitempty"`       // Общий доступ
 	State        *NullValue[State] `json:"state,omitempty"`        // Метаданные статуса Выплаты денег
 	Sum          *float64          `json:"sum,omitempty"`          // Сумма Выплаты денег установленной валюте
-	SyncID       *uuid.UUID        `json:"syncId,omitempty"`       // ID синхронизации
+	SyncID       *string           `json:"syncId,omitempty"`       // ID синхронизации
 	Updated      *Timestamp        `json:"updated,omitempty"`      // Момент последнего обновления Выплаты денег
 	Attributes   Slice[Attribute]  `json:"attributes,omitempty"`   // Список метаданных доп. полей
 }
@@ -114,7 +114,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetGroup() Group {
 }
 
 // GetID возвращает ID Выплаты денег.
-func (retailDrawerCashOut RetailDrawerCashOut) GetID() uuid.UUID {
+func (retailDrawerCashOut RetailDrawerCashOut) GetID() string {
 	return Deref(retailDrawerCashOut.ID)
 }
 
@@ -129,7 +129,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetAgent() Employee {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (retailDrawerCashOut RetailDrawerCashOut) GetAccountID() uuid.UUID {
+func (retailDrawerCashOut RetailDrawerCashOut) GetAccountID() string {
 	return Deref(retailDrawerCashOut.AccountID)
 }
 
@@ -174,7 +174,7 @@ func (retailDrawerCashOut RetailDrawerCashOut) GetSum() float64 {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (retailDrawerCashOut RetailDrawerCashOut) GetSyncID() uuid.UUID {
+func (retailDrawerCashOut RetailDrawerCashOut) GetSyncID() string {
 	return Deref(retailDrawerCashOut.SyncID)
 }
 
@@ -301,7 +301,7 @@ func (retailDrawerCashOut *RetailDrawerCashOut) SetState(state *State) *RetailDr
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (retailDrawerCashOut *RetailDrawerCashOut) SetSyncID(syncID uuid.UUID) *RetailDrawerCashOut {
+func (retailDrawerCashOut *RetailDrawerCashOut) SetSyncID(syncID string) *RetailDrawerCashOut {
 	retailDrawerCashOut.SyncID = &syncID
 	return retailDrawerCashOut
 }
@@ -374,7 +374,7 @@ type RetailDrawerCashOutService interface {
 	// DeleteByID выполняет запрос на удаление выплаты денег по ID.
 	// Принимает контекст и ID выплаты денег.
 	// Возвращает «true» в случае успешного удаления выплаты денег.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление выплаты денег.
 	// Принимает контекст и выплату денег.
@@ -384,12 +384,12 @@ type RetailDrawerCashOutService interface {
 	// GetByID выполняет запрос на получение выплаты денег по ID.
 	// Принимает контекст, ID выплаты денег и опционально объект параметров запроса Params.
 	// Возвращает выплату денег.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение выплаты денег.
 	// Принимает контекст, выплату денег и опционально объект параметров запроса Params.
 	// Возвращает изменённую выплату денег.
-	Update(ctx context.Context, id uuid.UUID, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
+	Update(ctx context.Context, id string, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной выплаты денег со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -416,7 +416,7 @@ type RetailDrawerCashOutService interface {
 	// GetAttributeByID выполняет запрос на получение отдельного доп поля по ID.
 	// Принимает контекст и ID доп поля.
 	// Возвращает найденное доп поле.
-	GetAttributeByID(ctx context.Context, id uuid.UUID) (*Attribute, *resty.Response, error)
+	GetAttributeByID(ctx context.Context, id string) (*Attribute, *resty.Response, error)
 
 	// CreateAttribute выполняет запрос на создание доп поля.
 	// Принимает контекст и доп поле.
@@ -432,12 +432,12 @@ type RetailDrawerCashOutService interface {
 	// UpdateAttribute выполняет запрос на изменения доп поля.
 	// Принимает контекст, ID доп поля и доп поле.
 	// Возвращает изменённое доп поле.
-	UpdateAttribute(ctx context.Context, id uuid.UUID, attribute *Attribute) (*Attribute, *resty.Response, error)
+	UpdateAttribute(ctx context.Context, id string, attribute *Attribute) (*Attribute, *resty.Response, error)
 
 	// DeleteAttribute выполняет запрос на удаление доп поля.
 	// Принимает контекст и ID доп поля.
 	// Возвращает «true» в случае успешного удаления доп поля.
-	DeleteAttribute(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteAttribute(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// DeleteAttributeMany выполняет запрос на массовое удаление доп полей.
 	// Принимает контекст и множество доп полей.
@@ -447,32 +447,32 @@ type RetailDrawerCashOutService interface {
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.
 	// Возвращает объект List.
-	GetPublicationList(ctx context.Context, id uuid.UUID) (*List[Publication], *resty.Response, error)
+	GetPublicationList(ctx context.Context, id string) (*List[Publication], *resty.Response, error)
 
 	// GetPublicationByID выполняет запрос на получение отдельной публикации по ID.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает найденную публикацию.
-	GetPublicationByID(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (*Publication, *resty.Response, error)
+	GetPublicationByID(ctx context.Context, id string, publicationID string) (*Publication, *resty.Response, error)
 
 	// Publish выполняет запрос на создание публикации.
 	// Принимает контекст, ID документа и шаблон (CustomTemplate или EmbeddedTemplate)
 	// Возвращает созданную публикацию.
-	Publish(ctx context.Context, id uuid.UUID, template TemplateConverter) (*Publication, *resty.Response, error)
+	Publish(ctx context.Context, id string, template TemplateConverter) (*Publication, *resty.Response, error)
 
 	// DeletePublication выполняет запрос на удаление публикации.
 	// Принимает контекст, ID документа и ID публикации.
 	// Возвращает «true» в случае успешного удаления публикации.
-	DeletePublication(ctx context.Context, id uuid.UUID, publicationID uuid.UUID) (bool, *resty.Response, error)
+	DeletePublication(ctx context.Context, id string, publicationID string) (bool, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*RetailDrawerCashOut, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*RetailDrawerCashOut, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -482,17 +482,17 @@ type RetailDrawerCashOutService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetStateByID выполняет запрос на получение статуса документа по ID.
 	// Принимает контекст и ID статуса.
 	// Возвращает найденный статус.
-	GetStateByID(ctx context.Context, id uuid.UUID) (*State, *resty.Response, error)
+	GetStateByID(ctx context.Context, id string) (*State, *resty.Response, error)
 
 	// CreateState выполняет запрос на создание статуса документа.
 	// Принимает контекст и статус.
@@ -502,7 +502,7 @@ type RetailDrawerCashOutService interface {
 	// UpdateState выполняет запрос на изменение статуса документа.
 	// Принимает контекст, ID статуса и статус.
 	// Возвращает изменённый статус.
-	UpdateState(ctx context.Context, id uuid.UUID, state *State) (*State, *resty.Response, error)
+	UpdateState(ctx context.Context, id string, state *State) (*State, *resty.Response, error)
 
 	// CreateUpdateStateMany выполняет запрос на массовое создание и/или изменение статусов документа.
 	// Принимает контекст и множество статусов.
@@ -512,32 +512,32 @@ type RetailDrawerCashOutService interface {
 	// DeleteState выполняет запрос на удаление статуса документа.
 	// Принимает контекст и ID статуса.
 	// Возвращает «true» в случае успешного удаления статуса.
-	DeleteState(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteState(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

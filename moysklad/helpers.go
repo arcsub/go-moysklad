@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"reflect"
@@ -377,7 +376,7 @@ func CheckType[T MetaOwner](entity T, metaType MetaType) bool {
 
 type MetaIDOwner interface {
 	MetaOwner
-	GetID() uuid.UUID
+	GetID() string
 }
 
 // GetUUIDFromEntity возвращает ID объекта.
@@ -386,13 +385,13 @@ type MetaIDOwner interface {
 // Если получает [uuid.Nil], пытается достать ID из поля Href встроенного объекта [Meta].
 //
 // Возвращает [uuid.Nil], если поле Href пустое или не содержит идентификатора.
-func GetUUIDFromEntity[T MetaIDOwner](entity *T) uuid.UUID {
+func GetUUIDFromEntity[T MetaIDOwner](entity *T) string {
 	if entity == nil {
-		return uuid.Nil
+		return "<empty id>"
 	}
 
 	id := Deref(entity).GetID()
-	if id == uuid.Nil {
+	if id == "" {
 		id = Deref(entity).GetMeta().GetUUIDFromHref()
 	}
 

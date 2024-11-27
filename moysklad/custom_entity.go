@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -16,9 +16,9 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skij-sprawochnik
 type CustomEntity struct {
-	ID   *uuid.UUID `json:"id,omitempty"`   // ID Пользовательского справочника
-	Meta *Meta      `json:"meta,omitempty"` // Метаданные Пользовательского справочника
-	Name *string    `json:"name,omitempty"` // Наименование Пользовательского справочника
+	ID   *string `json:"id,omitempty"`   // ID Пользовательского справочника
+	Meta *Meta   `json:"meta,omitempty"` // Метаданные Пользовательского справочника
+	Name *string `json:"name,omitempty"` // Наименование Пользовательского справочника
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
@@ -32,7 +32,7 @@ func (customEntity CustomEntity) Clean() *CustomEntity {
 }
 
 // GetID возвращает ID Пользовательского справочника.
-func (customEntity CustomEntity) GetID() uuid.UUID {
+func (customEntity CustomEntity) GetID() string {
 	return Deref(customEntity.ID)
 }
 
@@ -89,11 +89,11 @@ func (customEntity *CustomEntity) Delete(ctx context.Context, client *Client) (b
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-pol-zowatel-skij-sprawochnik-jelementy-pol-zowatel-skogo-sprawochnika
 type CustomEntityElement struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи
 	Code         *string    `json:"code,omitempty"`         // Код элемента Пользовательского справочника
 	Description  *string    `json:"description,omitempty"`  // Описание элемента Пользовательского справочника
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код элемента Пользовательского справочника
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID элемента Пользовательского справочника
+	ID           *string    `json:"id,omitempty"`           // ID элемента Пользовательского справочника
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные элемента Пользовательского справочника
 	Name         *string    `json:"name,omitempty"`         // Наименование элемента Пользовательского справочника
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления элементе Пользовательского справочника
@@ -103,7 +103,7 @@ type CustomEntityElement struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (customEntityElement CustomEntityElement) GetAccountID() uuid.UUID {
+func (customEntityElement CustomEntityElement) GetAccountID() string {
 	return Deref(customEntityElement.AccountID)
 }
 
@@ -123,7 +123,7 @@ func (customEntityElement CustomEntityElement) GetExternalCode() string {
 }
 
 // GetID возвращает ID элемента Пользовательского справочника.
-func (customEntityElement CustomEntityElement) GetID() uuid.UUID {
+func (customEntityElement CustomEntityElement) GetID() string {
 	return Deref(customEntityElement.ID)
 }
 
@@ -226,12 +226,12 @@ type CustomEntityService interface {
 	// Update выполняет запрос на изменение пользовательского справочника.
 	// Принимает контекст, пользовательский справочник и опционально объект параметров запроса Params.
 	// Возвращает изменённый пользовательский справочник.
-	Update(ctx context.Context, id uuid.UUID, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
+	Update(ctx context.Context, id string, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление пользовательского справочника по ID.
 	// Принимает контекст и ID пользовательского справочника.
 	// Возвращает «true» в случае успешного удаления пользовательского справочника.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление пользовательского справочника.
 	// Принимает контекст и пользовательский справочник.
@@ -241,29 +241,29 @@ type CustomEntityService interface {
 	// GetElementList выполняет запрос на получение списка элементов пользовательского справочника.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetElementList(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error)
+	GetElementList(ctx context.Context, id string) (*List[CustomEntityElement], *resty.Response, error)
 
 	// CreateElement выполняет запрос на создание элемента пользовательского справочника.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование элемента пользовательского справочника)
 	// Принимает контекст, элемент пользовательского справочника и опционально объект параметров запроса Params.
 	// Возвращает созданный элемент пользовательского справочника.
-	CreateElement(ctx context.Context, id uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
+	CreateElement(ctx context.Context, id string, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
 
 	// DeleteElement выполняет запрос на удаление элемента пользовательского справочника.
 	// Принимает контекст и ID элемента пользовательского справочника.
 	// Возвращает «true» в случае успешного удаления элемента пользовательского справочника.
-	DeleteElement(ctx context.Context, id, elementID uuid.UUID) (bool, *resty.Response, error)
+	DeleteElement(ctx context.Context, id, elementID string) (bool, *resty.Response, error)
 
 	// GetElementByID выполняет запрос на получение отдельного элемента пользовательского справочника по ID.
 	// Принимает контекст, ID элемента пользовательского справочника и опционально объект параметров запроса Params.
 	// Возвращает найденный элемент пользовательского справочника.
-	GetElementByID(ctx context.Context, id, elementID uuid.UUID) (*CustomEntityElement, *resty.Response, error)
+	GetElementByID(ctx context.Context, id, elementID string) (*CustomEntityElement, *resty.Response, error)
 
 	// UpdateElement выполняет запрос на изменение элемента пользовательского справочника.
 	// Принимает контекст, элемент пользовательского справочника и опционально объект параметров запроса Params.
 	// Возвращает изменённый элемент пользовательского справочника.
-	UpdateElement(ctx context.Context, id, elementID uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
+	UpdateElement(ctx context.Context, id, elementID string, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error)
 }
 
 const (
@@ -280,27 +280,27 @@ type customEntityService struct {
 	endpointDelete[CustomEntity]
 }
 
-func (service *customEntityService) GetElementList(ctx context.Context, id uuid.UUID) (*List[CustomEntityElement], *resty.Response, error) {
+func (service *customEntityService) GetElementList(ctx context.Context, id string) (*List[CustomEntityElement], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCustomEntityID, id)
 	return NewRequestBuilder[List[CustomEntityElement]](service.client, path).Get(ctx)
 }
 
-func (service *customEntityService) CreateElement(ctx context.Context, id uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
+func (service *customEntityService) CreateElement(ctx context.Context, id string, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCustomEntityID, id)
 	return NewRequestBuilder[CustomEntityElement](service.client, path).Post(ctx, element)
 }
 
-func (service *customEntityService) DeleteElement(ctx context.Context, id, elementID uuid.UUID) (bool, *resty.Response, error) {
+func (service *customEntityService) DeleteElement(ctx context.Context, id, elementID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCustomEntityIDID, id, elementID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *customEntityService) GetElementByID(ctx context.Context, id, elementID uuid.UUID) (*CustomEntityElement, *resty.Response, error) {
+func (service *customEntityService) GetElementByID(ctx context.Context, id, elementID string) (*CustomEntityElement, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCustomEntityIDID, id, elementID)
 	return NewRequestBuilder[CustomEntityElement](service.client, path).Get(ctx)
 }
 
-func (service *customEntityService) UpdateElement(ctx context.Context, id, elementID uuid.UUID, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
+func (service *customEntityService) UpdateElement(ctx context.Context, id, elementID string, element *CustomEntityElement) (*CustomEntityElement, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCustomEntityIDID, id, elementID)
 	return NewRequestBuilder[CustomEntityElement](service.client, path).Put(ctx, element)
 }

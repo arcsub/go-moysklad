@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -15,10 +15,10 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-region
 type Region struct {
-	AccountID    *uuid.UUID `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string    `json:"accountId,omitempty"`    // ID учётной записи
 	Code         *string    `json:"code,omitempty"`         // Код Региона
 	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Региона
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID Региона
+	ID           *string    `json:"id,omitempty"`           // ID Региона
 	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Региона
 	Name         *string    `json:"name,omitempty"`         // Наименование Региона
 	Updated      *Timestamp `json:"updated,omitempty"`      // Момент последнего обновления Региона
@@ -36,7 +36,7 @@ func (region Region) Clean() *Region {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (region Region) GetAccountID() uuid.UUID {
+func (region Region) GetAccountID() string {
 	return Deref(region.AccountID)
 }
 
@@ -51,7 +51,7 @@ func (region Region) GetExternalCode() string {
 }
 
 // GetID возвращает ID Региона.
-func (region Region) GetID() uuid.UUID {
+func (region Region) GetID() string {
 	return Deref(region.ID)
 }
 
@@ -124,7 +124,7 @@ type RegionService interface {
 	// GetByID выполняет запрос на получение отдельного региона по ID.
 	// Принимает контекст, ID региона и опционально объект параметров запроса Params.
 	// Возвращает найденный регион.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Region, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Region, *resty.Response, error)
 }
 
 const (

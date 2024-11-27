@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 )
 
 // ProductionStage Производственный этап
@@ -15,8 +14,8 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-atapy
 type ProductionStage struct {
-	AccountID          *uuid.UUID                         `json:"accountId,omitempty"`          // ID учётной записи
-	ID                 *uuid.UUID                         `json:"id,omitempty"`                 // ID Производственного этапа
+	AccountID          *string                            `json:"accountId,omitempty"`          // ID учётной записи
+	ID                 *string                            `json:"id,omitempty"`                 // ID Производственного этапа
 	Meta               *Meta                              `json:"meta,omitempty"`               // Метаданные Производственного этапа
 	LabourUnitCost     *float64                           `json:"labourUnitCost,omitempty"`     // Затраты на оплату труда за единицу объема производства
 	Materials          *MetaArray[ProductionTaskMaterial] `json:"materials,omitempty"`          // Метаданные Материалов производственного этапа
@@ -42,11 +41,11 @@ func (productionStage ProductionStage) Clean() *ProductionStage {
 	return &ProductionStage{Meta: productionStage.Meta}
 }
 
-func (productionStage ProductionStage) GetAccountID() uuid.UUID {
+func (productionStage ProductionStage) GetAccountID() string {
 	return Deref(productionStage.AccountID)
 }
 
-func (productionStage ProductionStage) GetID() uuid.UUID {
+func (productionStage ProductionStage) GetID() string {
 	return Deref(productionStage.ID)
 }
 
@@ -144,13 +143,13 @@ func (ProductionStage) MetaType() MetaType {
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-proizwodstwennye-atapy-materialy-proizwodstwennogo-atapa
 type ProductionTaskMaterial struct {
-	AccountID    *uuid.UUID          `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string             `json:"accountId,omitempty"`    // ID учётной записи
 	Assortment   *AssortmentPosition `json:"assortment,omitempty"`   // Метаданные товара/услуги/серии/модификации, которую представляет собой позиция
-	ID           *uuid.UUID          `json:"id,omitempty"`           // ID позиции
+	ID           *string             `json:"id,omitempty"`           // ID позиции
 	PlanQuantity *float64            `json:"planQuantity,omitempty"` // Количество товаров/модификаций данного вида в позиции
 }
 
-func (productionTaskMaterial ProductionTaskMaterial) GetAccountID() uuid.UUID {
+func (productionTaskMaterial ProductionTaskMaterial) GetAccountID() string {
 	return Deref(productionTaskMaterial.AccountID)
 }
 
@@ -158,7 +157,7 @@ func (productionTaskMaterial ProductionTaskMaterial) GetAssortment() AssortmentP
 	return Deref(productionTaskMaterial.Assortment)
 }
 
-func (productionTaskMaterial ProductionTaskMaterial) GetID() uuid.UUID {
+func (productionTaskMaterial ProductionTaskMaterial) GetID() string {
 	return Deref(productionTaskMaterial.ID)
 }
 
@@ -189,12 +188,12 @@ func (ProductionTaskMaterial) MetaType() MetaType {
 // ProductionStageService
 // Сервис для работы с производственными этапами
 type ProductionStageService interface {
-	Update(ctx context.Context, id uuid.UUID, productionStage *ProductionStage, params ...*Params) (*ProductionStage, *resty.Response, error)
-	GetProductStages(ctx context.Context, productionTaskID uuid.UUID, params ...*Params) (*MetaArray[ProductionStage], *resty.Response, error)
-	GetMaterials(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProductionTaskMaterial], *resty.Response, error)
-	CreateMaterial(ctx context.Context, id uuid.UUID, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error)
-	UpdateMaterial(ctx context.Context, id uuid.UUID, materialID uuid.UUID, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error)
-	DeleteMaterial(ctx context.Context, id uuid.UUID, materialID uuid.UUID) (bool, *resty.Response, error)
+	Update(ctx context.Context, id string, productionStage *ProductionStage, params ...*Params) (*ProductionStage, *resty.Response, error)
+	GetProductStages(ctx context.Context, productionTaskID string, params ...*Params) (*MetaArray[ProductionStage], *resty.Response, error)
+	GetMaterials(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionTaskMaterial], *resty.Response, error)
+	CreateMaterial(ctx context.Context, id string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error)
+	UpdateMaterial(ctx context.Context, id string, materialID string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error)
+	DeleteMaterial(ctx context.Context, id string, materialID string) (bool, *resty.Response, error)
 }
 
 const (
@@ -213,7 +212,7 @@ type productionStageService struct {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-poluchit-spisok-proizwodstwennyh-atapow-proizwodstwennogo-zadaniq
-func (service *productionStageService) GetProductStages(ctx context.Context, productionTaskID uuid.UUID, params ...*Params) (*MetaArray[ProductionStage], *resty.Response, error) {
+func (service *productionStageService) GetProductStages(ctx context.Context, productionTaskID string, params ...*Params) (*MetaArray[ProductionStage], *resty.Response, error) {
 	ptURL := fmt.Sprintf("https://api.moysklad.ru/api/remap/1.2/entity/productiontask/%s", productionTaskID)
 	var param *Params
 	if len(params) > 0 {
@@ -230,7 +229,7 @@ func (service *productionStageService) GetProductStages(ctx context.Context, pro
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-poluchit-materialy-proizwodstwennogo-atapa
-func (service *productionStageService) GetMaterials(ctx context.Context, id uuid.UUID, params ...*Params) (*MetaArray[ProductionTaskMaterial], *resty.Response, error) {
+func (service *productionStageService) GetMaterials(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionTaskMaterial], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterials, id)
 	return NewRequestBuilder[MetaArray[ProductionTaskMaterial]](service.client, path).SetParams(params...).Get(ctx)
 }
@@ -240,7 +239,7 @@ func (service *productionStageService) GetMaterials(ctx context.Context, id uuid
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-dobawit-material-k-proizwodstwennomu-atapu
-func (service *productionStageService) CreateMaterial(ctx context.Context, id uuid.UUID, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error) {
+func (service *productionStageService) CreateMaterial(ctx context.Context, id string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterials, id)
 	return NewRequestBuilder[ProductionTaskMaterial](service.client, path).SetParams(params...).Post(ctx, productionTaskMaterial)
 }
@@ -250,7 +249,7 @@ func (service *productionStageService) CreateMaterial(ctx context.Context, id uu
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-izmenit-material-proizwodstwennogo-atapa
-func (service *productionStageService) UpdateMaterial(ctx context.Context, id uuid.UUID, materialID uuid.UUID, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error) {
+func (service *productionStageService) UpdateMaterial(ctx context.Context, id string, materialID string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterialsID, id, materialID)
 	return NewRequestBuilder[ProductionTaskMaterial](service.client, path).SetParams(params...).Put(ctx, productionTaskMaterial)
 }
@@ -260,7 +259,7 @@ func (service *productionStageService) UpdateMaterial(ctx context.Context, id uu
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-udalit-material-proizwodstwennogo-atapa
-func (service *productionStageService) DeleteMaterial(ctx context.Context, id uuid.UUID, materialID uuid.UUID) (bool, *resty.Response, error) {
+func (service *productionStageService) DeleteMaterial(ctx context.Context, id string, materialID string) (bool, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterialsID, id, materialID)
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }

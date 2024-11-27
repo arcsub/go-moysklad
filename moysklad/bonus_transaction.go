@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -19,7 +19,7 @@ type BonusTransaction struct {
 	Group             *Group                   `json:"group,omitempty"`             // Отдел сотрудника
 	BonusProgram      *BonusProgram            `json:"bonusProgram,omitempty"`      // Метаданные бонусной программы
 	BonusValue        *int                     `json:"bonusValue,omitempty"`        // Количество бонусных баллов
-	ID                *uuid.UUID               `json:"id,omitempty"`                // ID Бонусной операции
+	ID                *string                  `json:"id,omitempty"`                // ID Бонусной операции
 	Code              *string                  `json:"code,omitempty"`              // Код Бонусной операции
 	Created           *Timestamp               `json:"created,omitempty"`           // Момент создания Бонусной операции
 	ExecutionDate     *Timestamp               `json:"executionDate,omitempty"`     // Дата начисления бонусной операции
@@ -29,7 +29,7 @@ type BonusTransaction struct {
 	ExternalCode      *string                  `json:"externalCode,omitempty"`      // Внешний код Бонусной операции
 	Moment            *Timestamp               `json:"moment,omitempty"`            // Время проведения бонусной операции
 	Name              *string                  `json:"name,omitempty"`              // Наименование Бонусной операции
-	AccountID         *uuid.UUID               `json:"accountId,omitempty"`         // ID учётной записи
+	AccountID         *string                  `json:"accountId,omitempty"`         // ID учётной записи
 	Owner             *Employee                `json:"owner,omitempty"`             // Метаданные владельца (Сотрудника)
 	ParentDocument    *BonusTransaction        `json:"parentDocument,omitempty"`    // Метаданные связанного документа бонусной операции
 	Shared            *bool                    `json:"shared,omitempty"`            // Общий доступ
@@ -75,7 +75,7 @@ func (bonusTransaction BonusTransaction) GetBonusValue() int {
 }
 
 // GetID возвращает ID Бонусной операции.
-func (bonusTransaction BonusTransaction) GetID() uuid.UUID {
+func (bonusTransaction BonusTransaction) GetID() string {
 	return Deref(bonusTransaction.ID)
 }
 
@@ -125,7 +125,7 @@ func (bonusTransaction BonusTransaction) GetName() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (bonusTransaction BonusTransaction) GetAccountID() uuid.UUID {
+func (bonusTransaction BonusTransaction) GetAccountID() string {
 	return Deref(bonusTransaction.AccountID)
 }
 
@@ -378,7 +378,7 @@ type BonusTransactionService interface {
 	// DeleteByID выполняет запрос на удаление бонусной операции по ID.
 	// Принимает контекст и ID бонусной операции.
 	// Возвращает «true» в случае успешного удаления бонусной операции.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление бонусной операции.
 	// Принимает контекст и бонусную операцию.
@@ -388,12 +388,12 @@ type BonusTransactionService interface {
 	// GetByID выполняет запрос на получение бонусной операции.
 	// Принимает контекст, ID бонусной операции и опционально объект параметров запроса Params.
 	// Возвращает бонусную операцию.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*BonusTransaction, *resty.Response, error)
 
 	// Update выполняет запрос на изменение бонусной операции.
 	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает изменённую бонусную операцию.
-	Update(ctx context.Context, id uuid.UUID, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	Update(ctx context.Context, id string, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
 }
 
 const (

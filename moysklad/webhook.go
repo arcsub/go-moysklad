@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/uuid"
 )
 
 // Webhook Вебхук.
@@ -15,13 +14,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki
 type Webhook struct {
-	AccountID         *uuid.UUID    `json:"accountId,omitempty"`         // ID учётной записи
+	AccountID         *string       `json:"accountId,omitempty"`         // ID учётной записи
 	Action            WebhookAction `json:"action,omitempty"`            // Действие, которое отслеживается веб-хуком. Задать значение PROCESSED возможно только для асинхронных задач
 	AuthorApplication *Application  `json:"authorApplication,omitempty"` // Метаданные Приложения, создавшего веб-хук
 	DiffType          WebhookDiff   `json:"diffType,omitempty"`          // Режим отображения изменения сущности. Указывается только для действия UPDATE
 	Enabled           *bool         `json:"enabled,omitempty"`           // Флажок состояние веб-хука (включен / отключен)
 	EntityType        MetaType      `json:"entityType,omitempty"`        // Тип сущности, к которой привязан веб-хук
-	ID                *uuid.UUID    `json:"id,omitempty"`                // ID Веб-хука
+	ID                *string       `json:"id,omitempty"`                // ID Веб-хука
 	Meta              *Meta         `json:"meta,omitempty"`              // Метаданные веб-хука
 	Method            *string       `json:"method,omitempty"`            // HTTP метод, с которым будет происходить запрос
 	URL               *string       `json:"url,omitempty"`               // URL, по которому будет происходить запрос. Допустимая длина до 255 символов
@@ -29,7 +28,7 @@ type Webhook struct {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (webhook Webhook) GetAccountID() uuid.UUID {
+func (webhook Webhook) GetAccountID() string {
 	return Deref(webhook.AccountID)
 }
 
@@ -61,7 +60,7 @@ func (webhook Webhook) GetEntityType() MetaType {
 }
 
 // GetID возвращает ID Веб-хука.
-func (webhook Webhook) GetID() uuid.UUID {
+func (webhook Webhook) GetID() string {
 	return Deref(webhook.ID)
 }
 
@@ -253,7 +252,7 @@ type WebhookService interface {
 	// DeleteByID выполняет запрос на удаление вебхука по ID.
 	// Принимает контекст и ID вебхука.
 	// Возвращает «true» в случае успешного удаления вебхука.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление вебхука.
 	// Принимает контекст и вебхук.
@@ -263,12 +262,12 @@ type WebhookService interface {
 	// GetByID выполняет запрос на получение отдельного вебхука по ID.
 	// Принимает контекст, ID вебхука и опционально объект параметров запроса Params.
 	// Возвращает найденный вебхук.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Webhook, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Webhook, *resty.Response, error)
 
 	// Update выполняет запрос на изменение вебхука.
 	// Принимает контекст, вебхук и опционально объект параметров запроса Params.
 	// Возвращает изменённый вебхук.
-	Update(ctx context.Context, id uuid.UUID, webhook *Webhook, params ...*Params) (*Webhook, *resty.Response, error)
+	Update(ctx context.Context, id string, webhook *Webhook, params ...*Params) (*Webhook, *resty.Response, error)
 }
 
 const (

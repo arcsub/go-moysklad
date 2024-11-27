@@ -6,7 +6,6 @@ require (
 	github.com/go-resty/resty/v2 v2.15.3
 	github.com/goccy/go-json v0.10.3
 	github.com/google/go-querystring v1.1.0
-	github.com/google/uuid v1.6.0
 	go.uber.org/ratelimit v0.3.1
 )
 

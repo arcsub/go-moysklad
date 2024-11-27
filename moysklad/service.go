@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -20,7 +20,7 @@ type Service struct {
 	Barcodes            Slice[Barcode]       `json:"barcodes,omitempty"`            // Штрихкоды Услуги
 	Description         *string              `json:"description,omitempty"`         // Описание Услуги
 	ExternalCode        *string              `json:"externalCode,omitempty"`        // Внешний код Услуги
-	ID                  *uuid.UUID           `json:"id,omitempty"`                  // ID Услуги
+	ID                  *string              `json:"id,omitempty"`                  // ID Услуги
 	Meta                *Meta                `json:"meta,omitempty"`                // Метаданные Услуги
 	Name                *string              `json:"name,omitempty"`                // Наименование Услуги
 	Archived            *bool                `json:"archived,omitempty"`            // Добавлена ли Услуга в архив
@@ -34,11 +34,11 @@ type Service struct {
 	MinPrice            *NullValue[MinPrice] `json:"minPrice,omitempty"`            // Минимальная цена
 	Owner               *Employee            `json:"owner,omitempty"`               // Метаданные владельца (Сотрудника)
 	PathName            *string              `json:"pathName,omitempty"`            // Наименование группы, в которую входит Услуга
-	AccountID           *uuid.UUID           `json:"accountId,omitempty"`           // ID учётной записи
+	AccountID           *string              `json:"accountId,omitempty"`           // ID учётной записи
 	ProductFolder       *ProductFolder       `json:"productFolder,omitempty"`       // Метаданные группы услуги
 	SalePrices          Slice[SalePrice]     `json:"salePrices,omitempty"`          // Цены продажи
 	Shared              *bool                `json:"shared,omitempty"`              // Общий доступ
-	SyncID              *uuid.UUID           `json:"syncId,omitempty"`              // ID синхронизации
+	SyncID              *string              `json:"syncId,omitempty"`              // ID синхронизации
 	Vat                 *int                 `json:"vat,omitempty"`                 // НДС %
 	Uom                 *NullValue[Uom]      `json:"uom,omitempty"`                 // Единица измерения
 	Updated             *Timestamp           `json:"updated,omitempty"`             // Момент последнего обновления Услуги
@@ -112,7 +112,7 @@ func (service Service) GetExternalCode() string {
 }
 
 // GetID возвращает ID Услуги.
-func (service Service) GetID() uuid.UUID {
+func (service Service) GetID() string {
 	return Deref(service.ID)
 }
 
@@ -188,7 +188,7 @@ func (service Service) GetPathName() string {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (service Service) GetAccountID() uuid.UUID {
+func (service Service) GetAccountID() string {
 	return Deref(service.AccountID)
 }
 
@@ -208,7 +208,7 @@ func (service Service) GetShared() bool {
 }
 
 // GetSyncID возвращает ID синхронизации.
-func (service Service) GetSyncID() uuid.UUID {
+func (service Service) GetSyncID() string {
 	return Deref(service.SyncID)
 }
 
@@ -379,7 +379,7 @@ func (service *Service) SetShared(shared bool) *Service {
 }
 
 // SetSyncID устанавливает ID синхронизации.
-func (service *Service) SetSyncID(syncID uuid.UUID) *Service {
+func (service *Service) SetSyncID(syncID string) *Service {
 	service.SyncID = &syncID
 	return service
 }
@@ -476,7 +476,7 @@ type ServiceService interface {
 	// DeleteByID выполняет запрос на удаление услуги по ID.
 	// Принимает контекст и ID услуги.
 	// Возвращает «true» в случае успешного удаления услуги.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление услуги.
 	// Принимает контекст и услугу.
@@ -486,22 +486,22 @@ type ServiceService interface {
 	// GetByID выполняет запрос на получение отдельной услуги по ID.
 	// Принимает контекст, ID услуги и опционально объект параметров запроса Params.
 	// Возвращает услугу.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*Service, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*Service, *resty.Response, error)
 
 	// Update выполняет запрос на изменение услуги.
 	// Принимает контекст, услугу и опционально объект параметров запроса Params.
 	// Возвращает изменённую услугу.
-	Update(ctx context.Context, id uuid.UUID, service *Service, params ...*Params) (*Service, *resty.Response, error)
+	Update(ctx context.Context, id string, service *Service, params ...*Params) (*Service, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает найденный документ.
-	GetBySyncID(ctx context.Context, syncID uuid.UUID) (*Service, *resty.Response, error)
+	GetBySyncID(ctx context.Context, syncID string) (*Service, *resty.Response, error)
 
 	// DeleteBySyncID выполняет запрос на удаление документа по syncID.
 	// Принимает контекст и syncID документа.
 	// Возвращает «true» в случае успешного удаления документа.
-	DeleteBySyncID(ctx context.Context, syncID uuid.UUID) (bool, *resty.Response, error)
+	DeleteBySyncID(ctx context.Context, syncID string) (bool, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -511,32 +511,32 @@ type ServiceService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

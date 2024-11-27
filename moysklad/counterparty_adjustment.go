@@ -3,7 +3,7 @@ package moysklad
 import (
 	"context"
 	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
+
 	"time"
 )
 
@@ -17,7 +17,7 @@ import (
 type CounterpartyAdjustment struct {
 	ExternalCode *string          `json:"externalCode,omitempty"` // Внешний код Корректировки взаиморасчетов
 	Printed      *bool            `json:"printed,omitempty"`      // Напечатан ли документ
-	AccountID    *uuid.UUID       `json:"accountId,omitempty"`    // ID учётной записи
+	AccountID    *string          `json:"accountId,omitempty"`    // ID учётной записи
 	Group        *Group           `json:"group,omitempty"`        // Отдел сотрудника
 	Files        *MetaArray[File] `json:"files,omitempty"`        // Метаданные массива Файлов (Максимальное количество файлов - 100)
 	Applicable   *bool            `json:"applicable,omitempty"`   // Отметка о проведении
@@ -31,7 +31,7 @@ type CounterpartyAdjustment struct {
 	Moment       *Timestamp       `json:"moment,omitempty"`       // Дата документа
 	Organization *Organization    `json:"organization,omitempty"` // Метаданные юрлица
 	Owner        *Employee        `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
-	ID           *uuid.UUID       `json:"id,omitempty"`           // ID Корректировки взаиморасчетов
+	ID           *string          `json:"id,omitempty"`           // ID Корректировки взаиморасчетов
 	Published    *bool            `json:"published,omitempty"`    // Опубликован ли документ
 	Shared       *bool            `json:"shared,omitempty"`       // Общий доступ
 	Sum          *float64         `json:"sum,omitempty"`          // Сумма Корректировки взаиморасчетов в копейках
@@ -64,7 +64,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) GetPrinted() bool {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (counterPartyAdjustment CounterpartyAdjustment) GetAccountID() uuid.UUID {
+func (counterPartyAdjustment CounterpartyAdjustment) GetAccountID() string {
 	return Deref(counterPartyAdjustment.AccountID)
 }
 
@@ -134,7 +134,7 @@ func (counterPartyAdjustment CounterpartyAdjustment) GetOwner() Employee {
 }
 
 // GetID возвращает ID Корректировки взаиморасчетов.
-func (counterPartyAdjustment CounterpartyAdjustment) GetID() uuid.UUID {
+func (counterPartyAdjustment CounterpartyAdjustment) GetID() string {
 	return Deref(counterPartyAdjustment.ID)
 }
 
@@ -307,7 +307,7 @@ type CounterPartyAdjustmentService interface {
 	// DeleteByID выполняет запрос на удаление корректировки взаиморасчётов по ID.
 	// Принимает контекст и ID корректировки взаиморасчётов.
 	// Возвращает «true» в случае успешного удаления корректировки взаиморасчётов.
-	DeleteByID(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление корректировки взаиморасчётов.
 	// Принимает контекст и корректировку взаиморасчётов.
@@ -317,12 +317,12 @@ type CounterPartyAdjustmentService interface {
 	// GetByID выполняет запрос на получение отдельной корректировки взаиморасчётов по ID.
 	// Принимает контекст, ID корректировки взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает найденную корректировку взаиморасчётов.
-	GetByID(ctx context.Context, id uuid.UUID, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
 
 	// Update выполняет запрос на изменение корректировки взаиморасчётов.
 	// Принимает контекст, корректировку взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает изменённый корректировку взаиморасчётов.
-	Update(ctx context.Context, id uuid.UUID, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
+	Update(ctx context.Context, id string, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных корректировок взаиморасчётов.
 	// Принимает контекст.
@@ -337,37 +337,37 @@ type CounterPartyAdjustmentService interface {
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
 	// Возвращает найденный фильтр.
-	GetNamedFilterByID(ctx context.Context, id uuid.UUID) (*NamedFilter, *resty.Response, error)
+	GetNamedFilterByID(ctx context.Context, id string) (*NamedFilter, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
-	MoveToTrash(ctx context.Context, id uuid.UUID) (bool, *resty.Response, error)
+	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// GetFileList выполняет запрос на получение файлов в виде списка.
 	// Принимает контекст и ID сущности/документа.
 	// Возвращает объект List.
-	GetFileList(ctx context.Context, id uuid.UUID) (*List[File], *resty.Response, error)
+	GetFileList(ctx context.Context, id string) (*List[File], *resty.Response, error)
 
 	// CreateFile выполняет запрос на добавление файла.
 	// Принимает контекст, ID сущности/документа и файл.
 	// Возвращает список файлов.
-	CreateFile(ctx context.Context, id uuid.UUID, file *File) (*Slice[File], *resty.Response, error)
+	CreateFile(ctx context.Context, id string, file *File) (*Slice[File], *resty.Response, error)
 
 	// UpdateFileMany выполняет запрос на массовое создание и/или изменение файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает созданных и/или изменённых файлов.
-	UpdateFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*Slice[File], *resty.Response, error)
+	UpdateFileMany(ctx context.Context, id string, files ...*File) (*Slice[File], *resty.Response, error)
 
 	// DeleteFile выполняет запрос на удаление файла сущности/документа.
 	// Принимает контекст, ID сущности/документа и ID файла.
 	// Возвращает «true» в случае успешного удаления файла.
-	DeleteFile(ctx context.Context, id uuid.UUID, fileID uuid.UUID) (bool, *resty.Response, error)
+	DeleteFile(ctx context.Context, id string, fileID string) (bool, *resty.Response, error)
 
 	// DeleteFileMany выполняет запрос на массовое удаление файлов сущности/документа.
 	// Принимает контекст, ID сущности/документа и множество файлов.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
-	DeleteFileMany(ctx context.Context, id uuid.UUID, files ...*File) (*DeleteManyResponse, *resty.Response, error)
+	DeleteFileMany(ctx context.Context, id string, files ...*File) (*DeleteManyResponse, *resty.Response, error)
 }
 
 const (

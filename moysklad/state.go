@@ -2,7 +2,7 @@ package moysklad
 
 import (
 	"fmt"
-	"github.com/google/uuid"
+
 	"image/color"
 	"strconv"
 	"strings"
@@ -14,13 +14,13 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-statusy-dokumentow
 type State struct {
-	AccountID  *uuid.UUID `json:"accountId,omitempty"`  // ID учётной записи
-	Color      *uint64    `json:"color,omitempty"`      // Цвет Статуса
-	EntityType MetaType   `json:"entityType,omitempty"` // Тип сущности, к которой относится Статус (Код сущности в рамках JSON API)
-	ID         *uuid.UUID `json:"id,omitempty"`         // ID Статуса
-	Meta       *Meta      `json:"meta,omitempty"`       // Метаданные Статуса
-	Name       *string    `json:"name,omitempty"`       // Наименование Статуса
-	StateType  StateType  `json:"stateType,omitempty"`  // Тип Статуса
+	AccountID  *string   `json:"accountId,omitempty"`  // ID учётной записи
+	Color      *uint64   `json:"color,omitempty"`      // Цвет Статуса
+	EntityType MetaType  `json:"entityType,omitempty"` // Тип сущности, к которой относится Статус (Код сущности в рамках JSON API)
+	ID         *string   `json:"id,omitempty"`         // ID Статуса
+	Meta       *Meta     `json:"meta,omitempty"`       // Метаданные Статуса
+	Name       *string   `json:"name,omitempty"`       // Наименование Статуса
+	StateType  StateType `json:"stateType,omitempty"`  // Тип Статуса
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
@@ -34,7 +34,7 @@ func (state State) Clean() *State {
 }
 
 // GetAccountID возвращает ID учётной записи.
-func (state State) GetAccountID() uuid.UUID {
+func (state State) GetAccountID() string {
 	return Deref(state.AccountID)
 }
 
@@ -49,7 +49,7 @@ func (state State) GetEntityType() MetaType {
 }
 
 // GetID возвращает ID Статуса.
-func (state State) GetID() uuid.UUID {
+func (state State) GetID() string {
 	return Deref(state.ID)
 }
 

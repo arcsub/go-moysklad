@@ -1,9 +1,5 @@
 package moysklad
 
-import (
-	"github.com/google/uuid"
-)
-
 // PriceType Тип цены.
 //
 // Код сущности: pricetype
@@ -12,10 +8,10 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-tipy-cen
 type PriceType struct {
-	ExternalCode *string    `json:"externalCode,omitempty"` // Внешний код Типа цены
-	ID           *uuid.UUID `json:"id,omitempty"`           // ID типа цены
-	Meta         *Meta      `json:"meta,omitempty"`         // Метаданные Типа цены
-	Name         *string    `json:"name,omitempty"`         // Наименование Типа цены
+	ExternalCode *string `json:"externalCode,omitempty"` // Внешний код Типа цены
+	ID           *string `json:"id,omitempty"`           // ID типа цены
+	Meta         *Meta   `json:"meta,omitempty"`         // Метаданные Типа цены
+	Name         *string `json:"name,omitempty"`         // Наименование Типа цены
 }
 
 // Clean возвращает указатель на объект с единственным заполненным полем [Meta].
@@ -34,7 +30,7 @@ func (priceType PriceType) GetExternalCode() string {
 }
 
 // GetID возвращает ID типа цены.
-func (priceType PriceType) GetID() uuid.UUID {
+func (priceType PriceType) GetID() string {
 	return Deref(priceType.ID)
 }
 
