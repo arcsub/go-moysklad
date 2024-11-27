@@ -250,8 +250,6 @@ func getAll[T any](ctx context.Context, client *Client, path string, params []fu
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 
-	//paramsCpy := GetParamsFromSliceOrNew(params) // TODO .WithLimit(offset).WithOffset(0)
-
 	_params := append(params, WithLimit(offset), WithOffset(0))
 
 	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(_params).Get(ctx)
@@ -272,8 +270,6 @@ func getAll[T any](ctx context.Context, client *Client, path string, params []fu
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-
-			//paramsCpy := paramsCpy.Clone() // TODO .WithLimit(perPage).WithOffset(i)
 
 			_params := append(_params[:], WithLimit(perPage), WithOffset(i))
 
