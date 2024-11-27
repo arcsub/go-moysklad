@@ -120,7 +120,13 @@ func (meta Meta) GetUUIDFromHref() string {
 		return "<empty id>"
 	}
 
-	return sep[len(sep)-1]
+	id := sep[len(sep)-1]
+
+	if strings.Contains(id, "?") {
+		id = strings.Split(id, "?")[0]
+	}
+
+	return id
 }
 
 // MetaWrapper объект-обёртка для [Meta]
