@@ -331,12 +331,12 @@ func (Employee) MetaType() MetaType {
 }
 
 // Update shortcut
-func (employee *Employee) Update(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+func (employee *Employee) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Employee, *resty.Response, error) {
 	return NewEmployeeService(client).Update(ctx, employee.GetID(), employee, params...)
 }
 
 // Create shortcut
-func (employee *Employee) Create(ctx context.Context, client *Client, params ...*Params) (*Employee, *resty.Response, error) {
+func (employee *Employee) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Employee, *resty.Response, error) {
 	return NewEmployeeService(client).Create(ctx, employee, params...)
 }
 
@@ -495,25 +495,25 @@ type EmployeeService interface {
 	// GetList выполняет запрос на получение списка сотрудников.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Employee], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Employee], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех сотрудников в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Employee], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Employee], *resty.Response, error)
 
 	// Create выполняет запрос на создание сотрудника.
 	// Обязательные поля для заполнения:
 	//	- lastName (Фамилия)
 	// Принимает контекст, сотрудника и опционально объект параметров запроса Params.
 	// Возвращает созданного сотрудника.
-	Create(ctx context.Context, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
+	Create(ctx context.Context, employee *Employee, params ...func(*Params)) (*Employee, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение сотрудников.
 	// Изменяемые сотрудники должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список сотрудников и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых сотрудников.
-	CreateUpdateMany(ctx context.Context, employeeList Slice[Employee], params ...*Params) (*Slice[Employee], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, employeeList Slice[Employee], params ...func(*Params)) (*Slice[Employee], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление сотрудников.
 	// Принимает контекст и множество сотрудников.
@@ -574,12 +574,12 @@ type EmployeeService interface {
 	// GetByID выполняет запрос на получение отдельного сотрудника по ID.
 	// Принимает контекст, ID сотрудника и опционально объект параметров запроса Params.
 	// Возвращает найденного сотрудника.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Employee, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Employee, *resty.Response, error)
 
 	// Update выполняет запрос на изменение сотрудника.
 	// Принимает контекст, сотрудника и опционально объект параметров запроса Params.
 	// Возвращает изменённого сотрудника.
-	Update(ctx context.Context, id string, employee *Employee, params ...*Params) (*Employee, *resty.Response, error)
+	Update(ctx context.Context, id string, employee *Employee, params ...func(*Params)) (*Employee, *resty.Response, error)
 
 	// GetPermissions выполняет запрос на получение информации о правах сотрудника.
 	// Принимает контекст и ID сотрудника.

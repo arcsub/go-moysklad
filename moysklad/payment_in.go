@@ -483,12 +483,12 @@ func (paymentIn PaymentIn) AsOperation() *Operation {
 }
 
 // Update shortcut
-func (paymentIn *PaymentIn) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
+func (paymentIn *PaymentIn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*PaymentIn, *resty.Response, error) {
 	return NewPaymentInService(client).Update(ctx, paymentIn.GetID(), paymentIn, params...)
 }
 
 // Create shortcut
-func (paymentIn *PaymentIn) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentIn, *resty.Response, error) {
+func (paymentIn *PaymentIn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*PaymentIn, *resty.Response, error) {
 	return NewPaymentInService(client).Create(ctx, paymentIn, params...)
 }
 
@@ -502,12 +502,12 @@ type PaymentInService interface {
 	// GetList выполняет запрос на получение списка входящих платежей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[PaymentIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[PaymentIn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех входящих платежей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[PaymentIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[PaymentIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание входящего платежа.
 	// Обязательные поля для заполнения:
@@ -515,13 +515,13 @@ type PaymentInService interface {
 	//	- agent (Ссылка на контрагента)
 	// Принимает контекст, входящий платеж и опционально объект параметров запроса Params.
 	// Возвращает созданный входящий платеж.
-	Create(ctx context.Context, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
+	Create(ctx context.Context, paymentIn *PaymentIn, params ...func(*Params)) (*PaymentIn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение входящих платежей.
 	// Изменяемые входящие платежи должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список входящих платежей и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых входящих платежей.
-	CreateUpdateMany(ctx context.Context, paymentInList Slice[PaymentIn], params ...*Params) (*Slice[PaymentIn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, paymentInList Slice[PaymentIn], params ...func(*Params)) (*Slice[PaymentIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление входящих платежей.
 	// Принимает контекст и множество входящих платежей.
@@ -541,12 +541,12 @@ type PaymentInService interface {
 	// GetByID выполняет запрос на получение отдельного входящего платежа по ID.
 	// Принимает контекст, ID входящего платежа и опционально объект параметров запроса Params.
 	// Возвращает найденный входящий платеж.
-	GetByID(ctx context.Context, id string, params ...*Params) (*PaymentIn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*PaymentIn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение входящего платежа.
 	// Принимает контекст, входящий платеж и опционально объект параметров запроса Params.
 	// Возвращает изменённый входящий платеж.
-	Update(ctx context.Context, id string, paymentIn *PaymentIn, params ...*Params) (*PaymentIn, *resty.Response, error)
+	Update(ctx context.Context, id string, paymentIn *PaymentIn, params ...func(*Params)) (*PaymentIn, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного входящего платежа со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.

@@ -208,12 +208,12 @@ func (ProductionStageCompletion) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productionStageCompletion *ProductionStageCompletion) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+func (productionStageCompletion *ProductionStageCompletion) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProductionStageCompletion, *resty.Response, error) {
 	return NewProductionStageCompletionService(client).Update(ctx, productionStageCompletion.GetID(), productionStageCompletion, params...)
 }
 
 // Create shortcut
-func (productionStageCompletion *ProductionStageCompletion) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionStageCompletion, *resty.Response, error) {
+func (productionStageCompletion *ProductionStageCompletion) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProductionStageCompletion, *resty.Response, error) {
 	return NewProductionStageCompletionService(client).Create(ctx, productionStageCompletion, params...)
 }
 
@@ -345,9 +345,9 @@ func (ProductionStageCompletionResult) MetaType() MetaType {
 // ProductionStageCompletionService
 // Сервис для работы с выполнениями этапов производства
 type ProductionStageCompletionService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProductionStageCompletion], *resty.Response, error)
-	Create(ctx context.Context, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, productionStageCompletionList Slice[ProductionStageCompletion], params ...*Params) (*Slice[ProductionStageCompletion], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProductionStageCompletion], *resty.Response, error)
+	Create(ctx context.Context, productionStageCompletion *ProductionStageCompletion, params ...func(*Params)) (*ProductionStageCompletion, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productionStageCompletionList Slice[ProductionStageCompletion], params ...func(*Params)) (*Slice[ProductionStageCompletion], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProductionStageCompletion) (*DeleteManyResponse, *resty.Response, error)
 	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
@@ -355,13 +355,13 @@ type ProductionStageCompletionService interface {
 	// Принимает контекст и выполнение этапов производства.
 	// Возвращает «true» в случае успешного удаления выполнения этапов производства.
 	Delete(ctx context.Context, entity *ProductionStageCompletion) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
-	Update(ctx context.Context, id string, productionStageCompletion *ProductionStageCompletion, params ...*Params) (*ProductionStageCompletion, *resty.Response, error)
-	GetMaterials(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionStageCompletionMaterial], *resty.Response, error)
-	CreateMaterial(ctx context.Context, id string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...*Params) (*ProductionStageCompletionMaterial, *resty.Response, error)
-	UpdateMaterial(ctx context.Context, id string, materialID string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...*Params) (*ProductionStageCompletionMaterial, *resty.Response, error)
-	GetProducts(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionStageCompletionResult], *resty.Response, error)
-	UpdateProduct(ctx context.Context, id string, productID string, productionStageCompletionResult *ProductionStageCompletionResult, params ...*Params) (*ProductionStageCompletionResult, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProductionStageCompletion, *resty.Response, error)
+	Update(ctx context.Context, id string, productionStageCompletion *ProductionStageCompletion, params ...func(*Params)) (*ProductionStageCompletion, *resty.Response, error)
+	GetMaterials(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionStageCompletionMaterial], *resty.Response, error)
+	CreateMaterial(ctx context.Context, id string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...func(*Params)) (*ProductionStageCompletionMaterial, *resty.Response, error)
+	UpdateMaterial(ctx context.Context, id string, materialID string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...func(*Params)) (*ProductionStageCompletionMaterial, *resty.Response, error)
+	GetProducts(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionStageCompletionResult], *resty.Response, error)
+	UpdateProduct(ctx context.Context, id string, productID string, productionStageCompletionResult *ProductionStageCompletionResult, params ...func(*Params)) (*ProductionStageCompletionResult, *resty.Response, error)
 }
 
 const (
@@ -389,9 +389,9 @@ type productionStageCompletionService struct {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-poluchit-materialy-wypolneniq-atapa-proizwodstwa
-func (service *productionStageCompletionService) GetMaterials(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionStageCompletionMaterial], *resty.Response, error) {
+func (service *productionStageCompletionService) GetMaterials(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionStageCompletionMaterial], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageCompletionMaterials, id)
-	return NewRequestBuilder[MetaArray[ProductionStageCompletionMaterial]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProductionStageCompletionMaterial]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateMaterial Добавить Материал выполнения этапа производства.
@@ -399,9 +399,9 @@ func (service *productionStageCompletionService) GetMaterials(ctx context.Contex
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-dobawit-material-wypolneniq-atapa-proizwodstwa
-func (service *productionStageCompletionService) CreateMaterial(ctx context.Context, id string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...*Params) (*ProductionStageCompletionMaterial, *resty.Response, error) {
+func (service *productionStageCompletionService) CreateMaterial(ctx context.Context, id string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...func(*Params)) (*ProductionStageCompletionMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageCompletionMaterials, id)
-	return NewRequestBuilder[ProductionStageCompletionMaterial](service.client, path).SetParams(params...).Post(ctx, productionStageCompletionMaterial)
+	return NewRequestBuilder[ProductionStageCompletionMaterial](service.client, path).SetParams(params).Post(ctx, productionStageCompletionMaterial)
 }
 
 // UpdateMaterial Изменить Материал выполнения этапа производства.
@@ -409,9 +409,9 @@ func (service *productionStageCompletionService) CreateMaterial(ctx context.Cont
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-material-wypolneniq-atapa-proizwodstwa
-func (service *productionStageCompletionService) UpdateMaterial(ctx context.Context, id string, materialID string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...*Params) (*ProductionStageCompletionMaterial, *resty.Response, error) {
+func (service *productionStageCompletionService) UpdateMaterial(ctx context.Context, id string, materialID string, productionStageCompletionMaterial *ProductionStageCompletionMaterial, params ...func(*Params)) (*ProductionStageCompletionMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageCompletionMaterialsID, id, materialID)
-	return NewRequestBuilder[ProductionStageCompletionMaterial](service.client, path).SetParams(params...).Put(ctx, productionStageCompletionMaterial)
+	return NewRequestBuilder[ProductionStageCompletionMaterial](service.client, path).SetParams(params).Put(ctx, productionStageCompletionMaterial)
 }
 
 // GetProducts Получить Продукты выполнения этапа производства.
@@ -419,9 +419,9 @@ func (service *productionStageCompletionService) UpdateMaterial(ctx context.Cont
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-poluchit-produkty-wypolneniq-atapa-proizwodstwa
-func (service *productionStageCompletionService) GetProducts(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionStageCompletionResult], *resty.Response, error) {
+func (service *productionStageCompletionService) GetProducts(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionStageCompletionResult], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageCompletionProducts, id)
-	return NewRequestBuilder[MetaArray[ProductionStageCompletionResult]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProductionStageCompletionResult]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdateProduct Изменить Продукт выполнения этапа производства.
@@ -429,9 +429,9 @@ func (service *productionStageCompletionService) GetProducts(ctx context.Context
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-vypolnenie-atapa-proizwodstwa-izmenit-produkt-wypolneniq-atapa-proizwodstwa
-func (service *productionStageCompletionService) UpdateProduct(ctx context.Context, id string, productID string, productionStageCompletionResult *ProductionStageCompletionResult, params ...*Params) (*ProductionStageCompletionResult, *resty.Response, error) {
+func (service *productionStageCompletionService) UpdateProduct(ctx context.Context, id string, productID string, productionStageCompletionResult *ProductionStageCompletionResult, params ...func(*Params)) (*ProductionStageCompletionResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageCompletionProductsID, id, productID)
-	return NewRequestBuilder[ProductionStageCompletionResult](service.client, path).SetParams(params...).Put(ctx, productionStageCompletionResult)
+	return NewRequestBuilder[ProductionStageCompletionResult](service.client, path).SetParams(params).Put(ctx, productionStageCompletionResult)
 }
 
 func NewProductionStageCompletionService(client *Client) ProductionStageCompletionService {

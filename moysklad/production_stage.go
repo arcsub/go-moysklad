@@ -188,11 +188,11 @@ func (ProductionTaskMaterial) MetaType() MetaType {
 // ProductionStageService
 // Сервис для работы с производственными этапами
 type ProductionStageService interface {
-	Update(ctx context.Context, id string, productionStage *ProductionStage, params ...*Params) (*ProductionStage, *resty.Response, error)
-	GetProductStages(ctx context.Context, productionTaskID string, params ...*Params) (*MetaArray[ProductionStage], *resty.Response, error)
-	GetMaterials(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionTaskMaterial], *resty.Response, error)
-	CreateMaterial(ctx context.Context, id string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error)
-	UpdateMaterial(ctx context.Context, id string, materialID string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error)
+	Update(ctx context.Context, id string, productionStage *ProductionStage, params ...func(*Params)) (*ProductionStage, *resty.Response, error)
+	GetProductStages(ctx context.Context, productionTaskID string, params ...func(*Params)) (*MetaArray[ProductionStage], *resty.Response, error)
+	GetMaterials(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionTaskMaterial], *resty.Response, error)
+	CreateMaterial(ctx context.Context, id string, productionTaskMaterial *ProductionTaskMaterial, params ...func(*Params)) (*ProductionTaskMaterial, *resty.Response, error)
+	UpdateMaterial(ctx context.Context, id string, materialID string, productionTaskMaterial *ProductionTaskMaterial, params ...func(*Params)) (*ProductionTaskMaterial, *resty.Response, error)
 	DeleteMaterial(ctx context.Context, id string, materialID string) (bool, *resty.Response, error)
 }
 
@@ -212,16 +212,12 @@ type productionStageService struct {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-poluchit-spisok-proizwodstwennyh-atapow-proizwodstwennogo-zadaniq
-func (service *productionStageService) GetProductStages(ctx context.Context, productionTaskID string, params ...*Params) (*MetaArray[ProductionStage], *resty.Response, error) {
+func (service *productionStageService) GetProductStages(ctx context.Context, productionTaskID string, params ...func(*Params)) (*MetaArray[ProductionStage], *resty.Response, error) {
 	ptURL := fmt.Sprintf("https://api.moysklad.ru/api/remap/1.2/entity/productiontask/%s", productionTaskID)
-	var param *Params
-	if len(params) > 0 {
-		param = params[0]
-	} else {
-		param = NewParams()
-	}
-	param.WithFilterEquals("productionTask", ptURL)
-	return NewRequestBuilder[MetaArray[ProductionStage]](service.client, service.uri).SetParams(param).Get(ctx)
+
+	params = append(params, WithFilterEquals("productionTask", ptURL))
+
+	return NewRequestBuilder[MetaArray[ProductionStage]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 // GetMaterials Получить Материалы производственного этапа.
@@ -229,9 +225,9 @@ func (service *productionStageService) GetProductStages(ctx context.Context, pro
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-poluchit-materialy-proizwodstwennogo-atapa
-func (service *productionStageService) GetMaterials(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionTaskMaterial], *resty.Response, error) {
+func (service *productionStageService) GetMaterials(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionTaskMaterial], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterials, id)
-	return NewRequestBuilder[MetaArray[ProductionTaskMaterial]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProductionTaskMaterial]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateMaterial Добавить Материал к производственному этапу.
@@ -239,9 +235,9 @@ func (service *productionStageService) GetMaterials(ctx context.Context, id stri
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-dobawit-material-k-proizwodstwennomu-atapu
-func (service *productionStageService) CreateMaterial(ctx context.Context, id string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error) {
+func (service *productionStageService) CreateMaterial(ctx context.Context, id string, productionTaskMaterial *ProductionTaskMaterial, params ...func(*Params)) (*ProductionTaskMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterials, id)
-	return NewRequestBuilder[ProductionTaskMaterial](service.client, path).SetParams(params...).Post(ctx, productionTaskMaterial)
+	return NewRequestBuilder[ProductionTaskMaterial](service.client, path).SetParams(params).Post(ctx, productionTaskMaterial)
 }
 
 // UpdateMaterial Изменить Материал производственного этапа.
@@ -249,9 +245,9 @@ func (service *productionStageService) CreateMaterial(ctx context.Context, id st
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-izmenit-material-proizwodstwennogo-atapa
-func (service *productionStageService) UpdateMaterial(ctx context.Context, id string, materialID string, productionTaskMaterial *ProductionTaskMaterial, params ...*Params) (*ProductionTaskMaterial, *resty.Response, error) {
+func (service *productionStageService) UpdateMaterial(ctx context.Context, id string, materialID string, productionTaskMaterial *ProductionTaskMaterial, params ...func(*Params)) (*ProductionTaskMaterial, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionStageMaterialsID, id, materialID)
-	return NewRequestBuilder[ProductionTaskMaterial](service.client, path).SetParams(params...).Put(ctx, productionTaskMaterial)
+	return NewRequestBuilder[ProductionTaskMaterial](service.client, path).SetParams(params).Put(ctx, productionTaskMaterial)
 }
 
 // DeleteMaterial Удалить Материал производственного этапа.

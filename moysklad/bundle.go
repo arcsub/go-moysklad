@@ -518,12 +518,12 @@ func (Bundle) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bundle *Bundle) Update(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+func (bundle *Bundle) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Bundle, *resty.Response, error) {
 	return NewBundleService(client).Update(ctx, bundle.GetID(), bundle, params...)
 }
 
 // Create shortcut
-func (bundle *Bundle) Create(ctx context.Context, client *Client, params ...*Params) (*Bundle, *resty.Response, error) {
+func (bundle *Bundle) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Bundle, *resty.Response, error) {
 	return NewBundleService(client).Create(ctx, bundle, params...)
 }
 
@@ -642,12 +642,12 @@ type BundleService interface {
 	// GetList выполняет запрос на получение списка комплектов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Bundle], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Bundle], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех комплектов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Bundle], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Bundle], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
@@ -655,23 +655,23 @@ type BundleService interface {
 	//	- components (Компоненты комплекта)
 	// Принимает контекст, комплект и опционально объект параметров запроса Params.
 	// Возвращает созданный комплект.
-	Create(ctx context.Context, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
+	Create(ctx context.Context, bundle *Bundle, params ...func(*Params)) (*Bundle, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение комплектов.
 	// Изменяемые комплекты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список комплектов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых комплектов.
-	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...*Params) (*Slice[Bundle], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bundleList Slice[Bundle], params ...func(*Params)) (*Slice[Bundle], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение комплекта по ID.
 	// Принимает контекст, ID комплекта и опционально объект параметров запроса Params.
 	// Возвращает комплект.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Bundle, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Bundle, *resty.Response, error)
 
 	// Update выполняет запрос на изменение комплекта.
 	// Принимает контекст, комплект и опционально объект параметров запроса Params.
 	// Возвращает изменённый комплект.
-	Update(ctx context.Context, id string, bundle *Bundle, params ...*Params) (*Bundle, *resty.Response, error)
+	Update(ctx context.Context, id string, bundle *Bundle, params ...func(*Params)) (*Bundle, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление комплекта по ID.
 	// Принимает контекст и ID комплекта.

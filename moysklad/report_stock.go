@@ -143,22 +143,22 @@ type ReportStockService interface {
 	// GetAll выполняет запрос на получение Расширенного отчёта об остатках.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetAll(ctx context.Context, params ...*Params) (*List[StockAll], *resty.Response, error)
+	GetAll(ctx context.Context, params ...func(*Params)) (*List[StockAll], *resty.Response, error)
 
 	// GetByStore выполняет запрос на получение отчёта "Остатки по складам".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetByStore(ctx context.Context, params ...*Params) (*List[StockByStore], *resty.Response, error)
+	GetByStore(ctx context.Context, params ...func(*Params)) (*List[StockByStore], *resty.Response, error)
 
 	// GetCurrentAll выполняет запрос на получение текущих остатков без разбиения по складам.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список остатков.
-	GetCurrentAll(ctx context.Context, params ...*Params) (*Slice[StockCurrentAll], *resty.Response, error)
+	GetCurrentAll(ctx context.Context, params ...func(*Params)) (*Slice[StockCurrentAll], *resty.Response, error)
 
 	// GetCurrentByStore выполняет запрос на получение текущих остатков с разбиением по складам.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список остатков.
-	GetCurrentByStore(ctx context.Context, params ...*Params) (*Slice[StockCurrentByStore], *resty.Response, error)
+	GetCurrentByStore(ctx context.Context, params ...func(*Params)) (*Slice[StockCurrentByStore], *resty.Response, error)
 
 	// GetByOperationID выполняет запрос на получение отчёта "Остатки по документу".
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
@@ -174,17 +174,17 @@ type ReportStockService interface {
 	//	- Возврат поставщику
 	//	- Возврат покупателя
 	// Возвращает объект List.
-	GetByOperationID(ctx context.Context, operationID string, params ...*Params) (*List[StockByOperation], *resty.Response, error)
+	GetByOperationID(ctx context.Context, operationID string, params ...func(*Params)) (*List[StockByOperation], *resty.Response, error)
 
 	// GetAllAsync выполняет запрос на получение Расширенного отчёта об остатках (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetAllAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockAll]], *resty.Response, error)
+	GetAllAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[StockAll]], *resty.Response, error)
 
 	// GetByStoreAsync выполняет запрос на получение отчёта "Остатки по складам" (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetByStoreAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockByStore]], *resty.Response, error)
+	GetByStoreAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[StockByStore]], *resty.Response, error)
 }
 
 const (
@@ -200,33 +200,33 @@ type reportStockService struct {
 	Endpoint
 }
 
-func (service *reportStockService) GetAll(ctx context.Context, params ...*Params) (*List[StockAll], *resty.Response, error) {
-	return NewRequestBuilder[List[StockAll]](service.client, EndpointReportStockAll).SetParams(params...).Get(ctx)
+func (service *reportStockService) GetAll(ctx context.Context, params ...func(*Params)) (*List[StockAll], *resty.Response, error) {
+	return NewRequestBuilder[List[StockAll]](service.client, EndpointReportStockAll).SetParams(params).Get(ctx)
 }
 
-func (service *reportStockService) GetByStore(ctx context.Context, params ...*Params) (*List[StockByStore], *resty.Response, error) {
-	return NewRequestBuilder[List[StockByStore]](service.client, EndpointReportStockByStore).SetParams(params...).Get(ctx)
+func (service *reportStockService) GetByStore(ctx context.Context, params ...func(*Params)) (*List[StockByStore], *resty.Response, error) {
+	return NewRequestBuilder[List[StockByStore]](service.client, EndpointReportStockByStore).SetParams(params).Get(ctx)
 }
 
-func (service *reportStockService) GetCurrentAll(ctx context.Context, params ...*Params) (*Slice[StockCurrentAll], *resty.Response, error) {
-	return NewRequestBuilder[Slice[StockCurrentAll]](service.client, EndpointReportStockAllCurrent).SetParams(params...).Get(ctx)
+func (service *reportStockService) GetCurrentAll(ctx context.Context, params ...func(*Params)) (*Slice[StockCurrentAll], *resty.Response, error) {
+	return NewRequestBuilder[Slice[StockCurrentAll]](service.client, EndpointReportStockAllCurrent).SetParams(params).Get(ctx)
 }
 
-func (service *reportStockService) GetCurrentByStore(ctx context.Context, params ...*Params) (*Slice[StockCurrentByStore], *resty.Response, error) {
-	return NewRequestBuilder[Slice[StockCurrentByStore]](service.client, EndpointReportStockByStoreCurrent).SetParams(params...).Get(ctx)
+func (service *reportStockService) GetCurrentByStore(ctx context.Context, params ...func(*Params)) (*Slice[StockCurrentByStore], *resty.Response, error) {
+	return NewRequestBuilder[Slice[StockCurrentByStore]](service.client, EndpointReportStockByStoreCurrent).SetParams(params).Get(ctx)
 }
 
-func (service *reportStockService) GetByOperationID(ctx context.Context, operationID string, params ...*Params) (*List[StockByOperation], *resty.Response, error) {
+func (service *reportStockService) GetByOperationID(ctx context.Context, operationID string, params ...func(*Params)) (*List[StockByOperation], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointReportStockByOperation, operationID)
-	return NewRequestBuilder[List[StockByOperation]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[StockByOperation]](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *reportStockService) GetAllAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockAll]], *resty.Response, error) {
-	return NewRequestBuilder[List[StockAll]](service.client, EndpointReportStockAll).SetParams(params...).Async(ctx)
+func (service *reportStockService) GetAllAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[StockAll]], *resty.Response, error) {
+	return NewRequestBuilder[List[StockAll]](service.client, EndpointReportStockAll).SetParams(params).Async(ctx)
 }
 
-func (service *reportStockService) GetByStoreAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[StockByStore]], *resty.Response, error) {
-	return NewRequestBuilder[List[StockByStore]](service.client, EndpointReportStockByStore).SetParams(params...).Async(ctx)
+func (service *reportStockService) GetByStoreAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[StockByStore]], *resty.Response, error) {
+	return NewRequestBuilder[List[StockByStore]](service.client, EndpointReportStockByStore).SetParams(params).Async(ctx)
 }
 
 // NewReportStockService принимает [Client] и возвращает сервис для работы с отчётом Остатки.

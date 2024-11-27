@@ -374,12 +374,12 @@ func (Contract) MetaType() MetaType {
 }
 
 // Update shortcut
-func (contract *Contract) Update(ctx context.Context, client *Client, params ...*Params) (*Contract, *resty.Response, error) {
+func (contract *Contract) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Contract, *resty.Response, error) {
 	return NewContractService(client).Update(ctx, contract.GetID(), contract, params...)
 }
 
 // Create shortcut
-func (contract *Contract) Create(ctx context.Context, client *Client, params ...*Params) (*Contract, *resty.Response, error) {
+func (contract *Contract) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Contract, *resty.Response, error) {
 	return NewContractService(client).Create(ctx, contract, params...)
 }
 
@@ -417,12 +417,12 @@ type ContractService interface {
 	// GetList выполняет запрос на получение списка договоров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Contract], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Contract], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех договоров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Contract], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Contract], *resty.Response, error)
 
 	// Create выполняет запрос на создание договора.
 	// Обязательные поля для заполнения:
@@ -431,13 +431,13 @@ type ContractService interface {
 	//	- agent (Метаданные Контрагента)
 	// Принимает контекст, договор и опционально объект параметров запроса Params.
 	// Возвращает созданный договор.
-	Create(ctx context.Context, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
+	Create(ctx context.Context, contract *Contract, params ...func(*Params)) (*Contract, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение договоров.
 	// Изменяемые договоры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список договоров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых договоров.
-	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...*Params) (*Slice[Contract], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, contractList Slice[Contract], params ...func(*Params)) (*Slice[Contract], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление договоров.
 	// Принимает контекст и множество договоров.
@@ -462,12 +462,12 @@ type ContractService interface {
 	// GetByID выполняет запрос на получение отдельного договора по ID.
 	// Принимает контекст, ID договора и опционально объект параметров запроса Params.
 	// Возвращает найденный договор.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Contract, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Contract, *resty.Response, error)
 
 	// Update выполняет запрос на изменение договора.
 	// Принимает контекст, договор и опционально объект параметров запроса Params.
 	// Возвращает изменённый договор.
-	Update(ctx context.Context, id string, contract *Contract, params ...*Params) (*Contract, *resty.Response, error)
+	Update(ctx context.Context, id string, contract *Contract, params ...func(*Params)) (*Contract, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -528,7 +528,7 @@ type ContractService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

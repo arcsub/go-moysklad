@@ -69,12 +69,12 @@ func (CustomEntity) MetaType() MetaType {
 }
 
 // Update shortcut
-func (customEntity *CustomEntity) Update(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+func (customEntity *CustomEntity) Update(ctx context.Context, client *Client, params ...func(*Params)) (*CustomEntity, *resty.Response, error) {
 	return NewCustomEntityService(client).Update(ctx, customEntity.GetID(), customEntity, params...)
 }
 
 // Create shortcut
-func (customEntity *CustomEntity) Create(ctx context.Context, client *Client, params ...*Params) (*CustomEntity, *resty.Response, error) {
+func (customEntity *CustomEntity) Create(ctx context.Context, client *Client, params ...func(*Params)) (*CustomEntity, *resty.Response, error) {
 	return NewCustomEntityService(client).Create(ctx, customEntity, params...)
 }
 
@@ -221,12 +221,12 @@ type CustomEntityService interface {
 	//	- name (Наименование Пользовательского справочника)
 	// Принимает контекст, пользовательский справочник и опционально объект параметров запроса Params.
 	// Возвращает созданный пользовательский справочник.
-	Create(ctx context.Context, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
+	Create(ctx context.Context, customEntity *CustomEntity, params ...func(*Params)) (*CustomEntity, *resty.Response, error)
 
 	// Update выполняет запрос на изменение пользовательского справочника.
 	// Принимает контекст, пользовательский справочник и опционально объект параметров запроса Params.
 	// Возвращает изменённый пользовательский справочник.
-	Update(ctx context.Context, id string, customEntity *CustomEntity, params ...*Params) (*CustomEntity, *resty.Response, error)
+	Update(ctx context.Context, id string, customEntity *CustomEntity, params ...func(*Params)) (*CustomEntity, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление пользовательского справочника по ID.
 	// Принимает контекст и ID пользовательского справочника.

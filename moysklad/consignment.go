@@ -201,12 +201,12 @@ func (Consignment) MetaType() MetaType {
 }
 
 // Update shortcut
-func (consignment *Consignment) Update(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
+func (consignment *Consignment) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Consignment, *resty.Response, error) {
 	return NewConsignmentService(client).Update(ctx, consignment.GetID(), consignment, params...)
 }
 
 // Create shortcut
-func (consignment *Consignment) Create(ctx context.Context, client *Client, params ...*Params) (*Consignment, *resty.Response, error) {
+func (consignment *Consignment) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Consignment, *resty.Response, error) {
 	return NewConsignmentService(client).Create(ctx, consignment, params...)
 }
 
@@ -220,12 +220,12 @@ type ConsignmentService interface {
 	// GetList выполняет запрос на получение списка серий.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Consignment], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Consignment], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Consignment], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Consignment], *resty.Response, error)
 
 	// Create выполняет запрос на создание серии.
 	// Обязательные поля для заполнения:
@@ -233,13 +233,13 @@ type ConsignmentService interface {
 	//	- assortment (Метаданные товара)
 	// Принимает контекст, серию и опционально объект параметров запроса Params.
 	// Возвращает созданную серию.
-	Create(ctx context.Context, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
+	Create(ctx context.Context, consignment *Consignment, params ...func(*Params)) (*Consignment, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение серий.
 	// Изменяемые серии должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список серий и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых серий.
-	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params ...*Params) (*Slice[Consignment], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, consignmentList Slice[Consignment], params ...func(*Params)) (*Slice[Consignment], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление серий.
 	// Принимает контекст и множество серий.
@@ -259,12 +259,12 @@ type ConsignmentService interface {
 	// GetByID выполняет запрос на получение отдельной серии по ID.
 	// Принимает контекст, ID серии и опционально объект параметров запроса Params.
 	// Возвращает найденную серию.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Consignment, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Consignment, *resty.Response, error)
 
 	// Update выполняет запрос на изменение серии.
 	// Принимает контекст, серию и опционально объект параметров запроса Params.
 	// Возвращает изменённую серию.
-	Update(ctx context.Context, id string, consignment *Consignment, params ...*Params) (*Consignment, *resty.Response, error)
+	Update(ctx context.Context, id string, consignment *Consignment, params ...func(*Params)) (*Consignment, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных серий.
 	// Принимает контекст.
@@ -310,7 +310,7 @@ type ConsignmentService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

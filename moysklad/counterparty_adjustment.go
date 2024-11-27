@@ -259,12 +259,12 @@ func (CounterpartyAdjustment) MetaType() MetaType {
 }
 
 // Update shortcut
-func (counterPartyAdjustment *CounterpartyAdjustment) Update(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
+func (counterPartyAdjustment *CounterpartyAdjustment) Update(ctx context.Context, client *Client, params ...func(*Params)) (*CounterpartyAdjustment, *resty.Response, error) {
 	return NewCounterPartyAdjustmentService(client).Update(ctx, counterPartyAdjustment.GetID(), counterPartyAdjustment, params...)
 }
 
 // Create shortcut
-func (counterPartyAdjustment *CounterpartyAdjustment) Create(ctx context.Context, client *Client, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error) {
+func (counterPartyAdjustment *CounterpartyAdjustment) Create(ctx context.Context, client *Client, params ...func(*Params)) (*CounterpartyAdjustment, *resty.Response, error) {
 	return NewCounterPartyAdjustmentService(client).Create(ctx, counterPartyAdjustment, params...)
 }
 
@@ -278,12 +278,12 @@ type CounterPartyAdjustmentService interface {
 	// GetList выполняет запрос на получение списка корректировок взаиморасчётов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[CounterpartyAdjustment], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[CounterpartyAdjustment], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех корректировок взаиморасчётов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[CounterpartyAdjustment], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[CounterpartyAdjustment], *resty.Response, error)
 
 	// Create выполняет запрос на создание корректировки взаиморасчётов.
 	// Обязательные поля для заполнения:
@@ -291,13 +291,13 @@ type CounterPartyAdjustmentService interface {
 	//	- agent (Ссылка на контрагента или сотрудника)
 	// Принимает контекст, корректировку взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает созданную корректировку взаиморасчётов.
-	Create(ctx context.Context, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
+	Create(ctx context.Context, counterPartyAdjustment *CounterpartyAdjustment, params ...func(*Params)) (*CounterpartyAdjustment, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение корректировок взаиморасчётов.
 	// Изменяемые корректировки взаиморасчётов должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список корректировок взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых корректировок взаиморасчётов.
-	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterpartyAdjustment], params ...*Params) (*Slice[CounterpartyAdjustment], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterPartyAdjustmentList Slice[CounterpartyAdjustment], params ...func(*Params)) (*Slice[CounterpartyAdjustment], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление корректировок взаиморасчётов.
 	// Принимает контекст и множество корректировок взаиморасчётов.
@@ -317,12 +317,12 @@ type CounterPartyAdjustmentService interface {
 	// GetByID выполняет запрос на получение отдельной корректировки взаиморасчётов по ID.
 	// Принимает контекст, ID корректировки взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает найденную корректировку взаиморасчётов.
-	GetByID(ctx context.Context, id string, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*CounterpartyAdjustment, *resty.Response, error)
 
 	// Update выполняет запрос на изменение корректировки взаиморасчётов.
 	// Принимает контекст, корректировку взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает изменённый корректировку взаиморасчётов.
-	Update(ctx context.Context, id string, counterPartyAdjustment *CounterpartyAdjustment, params ...*Params) (*CounterpartyAdjustment, *resty.Response, error)
+	Update(ctx context.Context, id string, counterPartyAdjustment *CounterpartyAdjustment, params ...func(*Params)) (*CounterpartyAdjustment, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных корректировок взаиморасчётов.
 	// Принимает контекст.
@@ -332,7 +332,7 @@ type CounterPartyAdjustmentService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

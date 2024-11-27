@@ -459,12 +459,12 @@ func (CashOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (cashOut *CashOut) Update(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
+func (cashOut *CashOut) Update(ctx context.Context, client *Client, params ...func(*Params)) (*CashOut, *resty.Response, error) {
 	return NewCashOutService(client).Update(ctx, cashOut.GetID(), cashOut, params...)
 }
 
 // Create shortcut
-func (cashOut *CashOut) Create(ctx context.Context, client *Client, params ...*Params) (*CashOut, *resty.Response, error) {
+func (cashOut *CashOut) Create(ctx context.Context, client *Client, params ...func(*Params)) (*CashOut, *resty.Response, error) {
 	return NewCashOutService(client).Create(ctx, cashOut, params...)
 }
 
@@ -478,12 +478,12 @@ type CashOutService interface {
 	// GetList выполняет запрос на получение списка расходных ордеров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[CashOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[CashOut], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех расходных ордеров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[CashOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[CashOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание расходного ордера.
 	// Обязательные поля для заполнения:
@@ -492,13 +492,13 @@ type CashOutService interface {
 	//	- expenseItem (Метаданные Статьи расходов)
 	// Принимает контекст, расходный ордер и опционально объект параметров запроса Params.
 	// Возвращает созданный расходный ордер.
-	Create(ctx context.Context, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
+	Create(ctx context.Context, cashOut *CashOut, params ...func(*Params)) (*CashOut, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение расходных ордеров.
 	// Изменяемые приходные ордеры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или расходных приходных ордеров.
-	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params ...*Params) (*Slice[CashOut], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, cashOutList Slice[CashOut], params ...func(*Params)) (*Slice[CashOut], *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление расходного ордера по ID.
 	// Принимает контекст и ID расходного ордера.
@@ -575,12 +575,12 @@ type CashOutService interface {
 	// GetByID выполняет запрос на получение отдельного расходного ордера по ID.
 	// Принимает контекст, ID расходный ордера и опционально объект параметров запроса Params.
 	// Возвращает найденный расходный ордер.
-	GetByID(ctx context.Context, id string, params ...*Params) (*CashOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*CashOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение расходного ордера.
 	// Принимает контекст, расходный ордер и опционально объект параметров запроса Params.
 	// Возвращает изменённый расходный ордер.
-	Update(ctx context.Context, id string, cashOut *CashOut, params ...*Params) (*CashOut, *resty.Response, error)
+	Update(ctx context.Context, id string, cashOut *CashOut, params ...func(*Params)) (*CashOut, *resty.Response, error)
 
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.

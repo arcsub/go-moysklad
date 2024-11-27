@@ -64,7 +64,7 @@ type ReportCounterpartyService interface {
 	// GetList выполняет запрос на получение отчёта по контрагентам.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ReportCounterparty], *resty.Response, error)
 
 	// GetListAsync выполняет запрос на получение отчёта по контрагентам (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
@@ -90,8 +90,8 @@ type reportCounterpartyService struct {
 	Endpoint
 }
 
-func (service *reportCounterpartyService) GetList(ctx context.Context, params ...*Params) (*List[ReportCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params...).Get(ctx)
+func (service *reportCounterpartyService) GetList(ctx context.Context, params ...func(*Params)) (*List[ReportCounterparty], *resty.Response, error) {
+	return NewRequestBuilder[List[ReportCounterparty]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 func (service *reportCounterpartyService) GetListAsync(ctx context.Context) (AsyncResultService[List[ReportCounterparty]], *resty.Response, error) {

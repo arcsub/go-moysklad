@@ -74,12 +74,12 @@ func (role Role) String() string { return Stringify(role) }
 func (Role) MetaType() MetaType { return MetaTypeRole }
 
 // Update shortcut
-func (role *Role) Update(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+func (role *Role) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Role, *resty.Response, error) {
 	return NewRoleService(client).Update(ctx, role.GetID(), role, params...)
 }
 
 // Create shortcut
-func (role *Role) Create(ctx context.Context, client *Client, params ...*Params) (*Role, *resty.Response, error) {
+func (role *Role) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Role, *resty.Response, error) {
 	return NewRoleService(client).Create(ctx, role, params...)
 }
 
@@ -322,12 +322,12 @@ type RoleService interface {
 	// GetList выполняет запрос на получение списка пользовательских ролей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Role], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Role], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех пользовательских ролей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Role], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Role], *resty.Response, error)
 
 	// Create выполняет запрос на создание пользовательской роли.
 	// Обязательные поля для заполнения:
@@ -335,7 +335,7 @@ type RoleService interface {
 	//	- permissions (Список пермиссий)
 	// Принимает контекст, пользовательскую роль и опционально объект параметров запроса Params.
 	// Возвращает созданную пользовательскую роль.
-	Create(ctx context.Context, role *Role, params ...*Params) (*Role, *resty.Response, error)
+	Create(ctx context.Context, role *Role, params ...func(*Params)) (*Role, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на массовое удаление пользовательской роли по ID.
 	// Принимает контекст и ID пользовательской роли.
@@ -350,12 +350,12 @@ type RoleService interface {
 	// GetByID выполняет запрос на получение отдельной пользовательской роли по ID.
 	// Принимает контекст, ID пользовательской роли и опционально объект параметров запроса Params.
 	// Возвращает пользовательскую роль.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Role, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Role, *resty.Response, error)
 
 	// Update выполняет запрос на изменение пользовательской роли.
 	// Принимает контекст, пользовательскую роль и опционально объект параметров запроса Params.
 	// Возвращает изменённую пользовательскую роль.
-	Update(ctx context.Context, id string, role *Role, params ...*Params) (*Role, *resty.Response, error)
+	Update(ctx context.Context, id string, role *Role, params ...func(*Params)) (*Role, *resty.Response, error)
 
 	// GetAdminRole выполняет запрос на получение роли администратора.
 	// Принимает контекст.

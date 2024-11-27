@@ -284,12 +284,12 @@ func (Variant) MetaType() MetaType {
 }
 
 // Update shortcut
-func (variant *Variant) Update(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+func (variant *Variant) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Variant, *resty.Response, error) {
 	return NewVariantService(client).Update(ctx, variant.GetID(), variant, params...)
 }
 
 // Create shortcut
-func (variant *Variant) Create(ctx context.Context, client *Client, params ...*Params) (*Variant, *resty.Response, error) {
+func (variant *Variant) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Variant, *resty.Response, error) {
 	return NewVariantService(client).Create(ctx, variant, params...)
 }
 
@@ -439,12 +439,12 @@ type VariantService interface {
 	// GetList выполняет запрос на получение списка модификаций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Variant], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Variant], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех модификаций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Variant], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Variant], *resty.Response, error)
 
 	// Create выполняет запрос на создание заказа модификации.
 	// Обязательные поля для заполнения:
@@ -452,13 +452,13 @@ type VariantService interface {
 	//	- characteristics (Характеристики Модификации)
 	// Принимает контекст, модификацию и опционально объект параметров запроса Params.
 	// Возвращает созданную модификацию.
-	Create(ctx context.Context, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
+	Create(ctx context.Context, variant *Variant, params ...func(*Params)) (*Variant, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение модификаций.
 	// Изменяемые модификации должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список модификаций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых модификаций.
-	CreateUpdateMany(ctx context.Context, variantList Slice[Variant], params ...*Params) (*Slice[Variant], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, variantList Slice[Variant], params ...func(*Params)) (*Slice[Variant], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление модификаций.
 	// Принимает контекст и множество модификаций.
@@ -478,12 +478,12 @@ type VariantService interface {
 	// GetByID выполняет запрос на получение отдельной модификации по ID.
 	// Принимает контекст, ID модификации и опционально объект параметров запроса Params.
 	// Возвращает модификацию.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Variant, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Variant, *resty.Response, error)
 
 	// Update выполняет запрос на изменение модификации.
 	// Принимает контекст, модификацию и опционально объект параметров запроса Params.
 	// Возвращает изменённую модификацию.
-	Update(ctx context.Context, id string, variant *Variant, params ...*Params) (*Variant, *resty.Response, error)
+	Update(ctx context.Context, id string, variant *Variant, params ...func(*Params)) (*Variant, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных модификаций.
 	// Принимает контекст.
@@ -519,7 +519,7 @@ type VariantService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

@@ -60,17 +60,17 @@ type ApplicationService interface {
 	// GetList выполняет запрос на получение списка сущностей установленных приложений.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Application], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Application], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех установленных приложений в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Application], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Application], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение сущности установленного приложения.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект Application.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Application, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Application, *resty.Response, error)
 }
 
 const (

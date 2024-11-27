@@ -265,7 +265,7 @@ type AuditService interface {
 	// GetContexts выполняет запрос на получение Контекстов Аудита.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error)
+	GetContexts(ctx context.Context, params ...func(*Params)) (*List[Audit], *resty.Response, error)
 
 	// GetEvents выполняет запрос на получение Событий по Контексту AuditEvent.
 	// Принимает контекст и ID контекста Аудита.
@@ -288,8 +288,8 @@ type auditService struct {
 	Endpoint
 }
 
-func (service *auditService) GetContexts(ctx context.Context, params ...*Params) (*List[Audit], *resty.Response, error) {
-	return NewRequestBuilder[List[Audit]](service.client, service.uri).SetParams(params...).Get(ctx)
+func (service *auditService) GetContexts(ctx context.Context, params ...func(*Params)) (*List[Audit], *resty.Response, error) {
+	return NewRequestBuilder[List[Audit]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 func (service *auditService) GetEvents(ctx context.Context, id string) (*List[AuditEvent], *resty.Response, error) {

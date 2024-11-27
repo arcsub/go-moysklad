@@ -268,12 +268,12 @@ func (ProductFolder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productFolder *ProductFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+func (productFolder *ProductFolder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProductFolder, *resty.Response, error) {
 	return NewProductFolderService(client).Update(ctx, productFolder.GetID(), productFolder, params...)
 }
 
 // Create shortcut
-func (productFolder *ProductFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProductFolder, *resty.Response, error) {
+func (productFolder *ProductFolder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProductFolder, *resty.Response, error) {
 	return NewProductFolderService(client).Create(ctx, productFolder, params...)
 }
 
@@ -287,25 +287,25 @@ type ProductFolderService interface {
 	// GetList выполняет запрос на получение списка группы товаров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[ProductFolder], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProductFolder], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех групп товаров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[ProductFolder], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[ProductFolder], *resty.Response, error)
 
 	// Create выполняет запрос на создание группы товаров.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование группы товаров)
 	// Принимает контекст, группу товаров и опционально объект параметров запроса Params.
 	// Возвращает созданную группу товаров.
-	Create(ctx context.Context, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
+	Create(ctx context.Context, productFolder *ProductFolder, params ...func(*Params)) (*ProductFolder, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение групп товаров.
 	// Изменяемые группы товаров должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список групп товаров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых групп товаров.
-	CreateUpdateMany(ctx context.Context, productFolderList Slice[ProductFolder], params ...*Params) (*Slice[ProductFolder], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productFolderList Slice[ProductFolder], params ...func(*Params)) (*Slice[ProductFolder], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление группы товаров.
 	// Принимает контекст и множество групп товаров.
@@ -325,12 +325,12 @@ type ProductFolderService interface {
 	// GetByID выполняет запрос на получение отдельной группы товаров по ID.
 	// Принимает контекст, ID группы товаров и опционально объект параметров запроса Params.
 	// Возвращает найденную группу товаров.
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProductFolder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProductFolder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение группы товаров.
 	// Принимает контекст, группу товаров и опционально объект параметров запроса Params.
 	// Возвращает изменённую группу товаров.
-	Update(ctx context.Context, id string, productFolder *ProductFolder, params ...*Params) (*ProductFolder, *resty.Response, error)
+	Update(ctx context.Context, id string, productFolder *ProductFolder, params ...func(*Params)) (*ProductFolder, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных групп товаров.
 	// Принимает контекст.

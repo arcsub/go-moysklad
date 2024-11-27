@@ -426,12 +426,12 @@ func (FactureOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (factureOut *FactureOut) Update(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
+func (factureOut *FactureOut) Update(ctx context.Context, client *Client, params ...func(*Params)) (*FactureOut, *resty.Response, error) {
 	return NewFactureOutService(client).Update(ctx, factureOut.GetID(), factureOut, params...)
 }
 
 // Create shortcut
-func (factureOut *FactureOut) Create(ctx context.Context, client *Client, params ...*Params) (*FactureOut, *resty.Response, error) {
+func (factureOut *FactureOut) Create(ctx context.Context, client *Client, params ...func(*Params)) (*FactureOut, *resty.Response, error) {
 	return NewFactureOutService(client).Create(ctx, factureOut, params...)
 }
 
@@ -445,12 +445,12 @@ type FactureOutService interface {
 	// GetList выполняет запрос на получение списка выданных счетов-фактур.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[FactureOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[FactureOut], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех выданных счетов-фактур в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[FactureOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[FactureOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание выданного счета-фактуры.
 	// Обязательные поля для заполнения:
@@ -458,13 +458,13 @@ type FactureOutService interface {
 	//	- paymentDate (Дата платежного документа)
 	// Принимает контекст, выданный счет-фактуру и опционально объект параметров запроса Params.
 	// Возвращает созданную выданный счет-фактуру.
-	Create(ctx context.Context, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)
+	Create(ctx context.Context, factureOut *FactureOut, params ...func(*Params)) (*FactureOut, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение выданных счетов-фактур.
 	// Изменяемые выданные счета-фактуры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список выданных счетов-фактур и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых выданных счетов-фактур.
-	CreateUpdateMany(ctx context.Context, factureOutList Slice[FactureOut], params ...*Params) (*Slice[FactureOut], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, factureOutList Slice[FactureOut], params ...func(*Params)) (*Slice[FactureOut], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление выданных счетов-фактур.
 	// Принимает контекст и множество выданных счетов-фактур.
@@ -484,12 +484,12 @@ type FactureOutService interface {
 	// GetByID выполняет запрос на получение отдельного выданного счета-фактуры по ID.
 	// Принимает контекст, ID выданного счета-фактуры и опционально объект параметров запроса Params.
 	// Возвращает найденный выданный счет-фактуру.
-	GetByID(ctx context.Context, id string, params ...*Params) (*FactureOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*FactureOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение выданного счета-фактуры.
 	// Принимает контекст, выданный счет-фактуру и опционально объект параметров запроса Params.
 	// Возвращает изменённую выданный счет-фактуру.
-	Update(ctx context.Context, id string, factureOut *FactureOut, params ...*Params) (*FactureOut, *resty.Response, error)
+	Update(ctx context.Context, id string, factureOut *FactureOut, params ...func(*Params)) (*FactureOut, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных выданных счетов-фактур.
 	// Принимает контекст.

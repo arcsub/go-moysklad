@@ -638,12 +638,12 @@ func (Counterparty) MetaType() MetaType {
 }
 
 // Update shortcut
-func (counterparty *Counterparty) Update(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+func (counterparty *Counterparty) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Counterparty, *resty.Response, error) {
 	return NewCounterpartyService(client).Update(ctx, counterparty.GetID(), counterparty, params...)
 }
 
 // Create shortcut
-func (counterparty *Counterparty) Create(ctx context.Context, client *Client, params ...*Params) (*Counterparty, *resty.Response, error) {
+func (counterparty *Counterparty) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Counterparty, *resty.Response, error) {
 	return NewCounterpartyService(client).Create(ctx, counterparty, params...)
 }
 
@@ -816,25 +816,25 @@ type CounterpartyService interface {
 	// GetList выполняет запрос на получение списка контрагентов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Counterparty], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Counterparty], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех контрагентов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Counterparty], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Counterparty], *resty.Response, error)
 
 	// Create выполняет запрос на создание контрагента.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование контрагента)
 	// Принимает контекст, контрагент и опционально объект параметров запроса Params.
 	// Возвращает созданный контрагент.
-	Create(ctx context.Context, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
+	Create(ctx context.Context, counterparty *Counterparty, params ...func(*Params)) (*Counterparty, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или контрагентов.
 	// Изменяемые контрагенты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список контрагентов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых контрагентов.
-	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...*Params) (*Slice[Counterparty], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, counterpartyList Slice[Counterparty], params ...func(*Params)) (*Slice[Counterparty], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление контрагентов.
 	// Принимает контекст и множество контрагентов.
@@ -854,12 +854,12 @@ type CounterpartyService interface {
 	// GetByID выполняет запрос на получение отдельного контрагента по ID.
 	// Принимает контекст, ID контрагента и опционально объект параметров запроса Params.
 	// Возвращает найденный контрагент.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Counterparty, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Counterparty, *resty.Response, error)
 
 	// Update выполняет запрос на изменение контрагента.
 	// Принимает контекст, контрагент и опционально объект параметров запроса Params.
 	// Возвращает изменённый контрагент.
-	Update(ctx context.Context, id string, counterparty *Counterparty, params ...*Params) (*Counterparty, *resty.Response, error)
+	Update(ctx context.Context, id string, counterparty *Counterparty, params ...func(*Params)) (*Counterparty, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных контрагентов.
 	// Принимает контекст.
@@ -940,7 +940,7 @@ type CounterpartyService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
@@ -950,12 +950,12 @@ type CounterpartyService interface {
 	// GetListAsync выполняет запрос на получение списка контрагентов асинхронно.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error)
+	GetListAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[Counterparty]], *resty.Response, error)
 
 	// GetContactPersonList выполняет запрос на получение списка контактных лиц контрагента.
 	// Принимает контекст, ID контрагента и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetContactPersonList(ctx context.Context, id string, params ...*Params) (*List[ContactPerson], *resty.Response, error)
+	GetContactPersonList(ctx context.Context, id string, params ...func(*Params)) (*List[ContactPerson], *resty.Response, error)
 
 	// GetContactPersonByID выполняет запрос на получение отдельного контактного лица контрагента по ID.
 	// Принимает контекст, ID контрагента и ID контактного лица.
@@ -1051,13 +1051,13 @@ type counterpartyService struct {
 	endpointFiles
 }
 
-func (service *counterpartyService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params...).Async(ctx)
+func (service *counterpartyService) GetListAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[Counterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[Counterparty]](service.client, service.uri).SetParams(params).Async(ctx)
 }
 
-func (service *counterpartyService) GetContactPersonList(ctx context.Context, id string, params ...*Params) (*List[ContactPerson], *resty.Response, error) {
+func (service *counterpartyService) GetContactPersonList(ctx context.Context, id string, params ...func(*Params)) (*List[ContactPerson], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCounterpartyContactPersons, id)
-	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[ContactPerson]](service.client, path).SetParams(params).Get(ctx)
 }
 
 func (service *counterpartyService) GetContactPersonByID(ctx context.Context, id, contactPersonID string) (*ContactPerson, *resty.Response, error) {

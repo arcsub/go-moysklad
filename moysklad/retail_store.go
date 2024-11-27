@@ -922,12 +922,12 @@ func (RetailStore) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailStore *RetailStore) Update(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+func (retailStore *RetailStore) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailStore, *resty.Response, error) {
 	return NewRetailStoreService(client).Update(ctx, retailStore.GetID(), retailStore, params...)
 }
 
 // Create shortcut
-func (retailStore *RetailStore) Create(ctx context.Context, client *Client, params ...*Params) (*RetailStore, *resty.Response, error) {
+func (retailStore *RetailStore) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailStore, *resty.Response, error) {
 	return NewRetailStoreService(client).Create(ctx, retailStore, params...)
 }
 
@@ -1323,12 +1323,12 @@ type RetailStoreService interface {
 	// GetList выполняет запрос на получение списка точек продаж.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailStore], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailStore], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех точек продаж в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailStore], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailStore], *resty.Response, error)
 
 	// Create выполняет запрос на создание точи продаж.
 	// Обязательные поля для заполнения:
@@ -1338,13 +1338,13 @@ type RetailStoreService interface {
 	//	- priceType (Тип цен, с которыми будут продаваться товары в рознице)
 	// Принимает контекст, точку продаж и опционально объект параметров запроса Params.
 	// Возвращает созданную точку продаж.
-	Create(ctx context.Context, retailStore *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
+	Create(ctx context.Context, retailStore *RetailStore, params ...func(*Params)) (*RetailStore, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение точек продаж.
 	// Изменяемые точки продаж должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список точек продаж и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых точек продаж.
-	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...*Params) (*Slice[RetailStore], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailStore Slice[RetailStore], params ...func(*Params)) (*Slice[RetailStore], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление точек продаж.
 	// Принимает контекст и множество точек продаж.
@@ -1364,17 +1364,17 @@ type RetailStoreService interface {
 	// GetByID выполняет запрос на получение отдельной точки продаж по ID.
 	// Принимает контекст, ID точки продаж и опционально объект параметров запроса Params.
 	// Возвращает точку продаж.
-	GetByID(ctx context.Context, id string, params ...*Params) (*RetailStore, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailStore, *resty.Response, error)
 
 	// Update выполняет запрос на изменение точки продаж.
 	// Принимает контекст, точку продаж и опционально объект параметров запроса Params.
 	// Возвращает изменённую точку продаж.
-	Update(ctx context.Context, id string, entity *RetailStore, params ...*Params) (*RetailStore, *resty.Response, error)
+	Update(ctx context.Context, id string, entity *RetailStore, params ...func(*Params)) (*RetailStore, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
@@ -1384,12 +1384,12 @@ type RetailStoreService interface {
 	// GetCashiers выполняет запрос на получение списка кассиров.
 	// Принимает контекст, ID точки продаж и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetCashiers(ctx context.Context, id string, params ...*Params) (*MetaArray[Cashier], *resty.Response, error)
+	GetCashiers(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[Cashier], *resty.Response, error)
 
 	// GetCashierByID выполняет запрос на получение отдельного кассира по ID.
 	// Принимает контекст, ID точки продаж, ID кассира и опционально объект параметров запроса Params.
 	// Возвращает кассира.
-	GetCashierByID(ctx context.Context, id, cashierID string, params ...*Params) (*Cashier, *resty.Response, error)
+	GetCashierByID(ctx context.Context, id, cashierID string, params ...func(*Params)) (*Cashier, *resty.Response, error)
 }
 
 const (
@@ -1411,14 +1411,14 @@ type retailStoreService struct {
 	endpointNamedFilter
 }
 
-func (service *retailStoreService) GetCashiers(ctx context.Context, id string, params ...*Params) (*MetaArray[Cashier], *resty.Response, error) {
+func (service *retailStoreService) GetCashiers(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[Cashier], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointRetailStoreCashiers, id)
-	return NewRequestBuilder[MetaArray[Cashier]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[Cashier]](service.client, path).SetParams(params).Get(ctx)
 }
 
-func (service *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID string, params ...*Params) (*Cashier, *resty.Response, error) {
+func (service *retailStoreService) GetCashierByID(ctx context.Context, id, cashierID string, params ...func(*Params)) (*Cashier, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointRetailStoreCashiersID, id, cashierID)
-	return NewRequestBuilder[Cashier](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[Cashier](service.client, path).SetParams(params).Get(ctx)
 }
 
 // NewRetailStoreService принимает [Client] и возвращает сервис для работы с точками продаж.

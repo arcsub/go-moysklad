@@ -156,12 +156,12 @@ func (Country) MetaType() MetaType {
 }
 
 // Update shortcut
-func (country *Country) Update(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+func (country *Country) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Country, *resty.Response, error) {
 	return NewCountryService(client).Update(ctx, country.GetID(), country, params...)
 }
 
 // Create shortcut
-func (country *Country) Create(ctx context.Context, client *Client, params ...*Params) (*Country, *resty.Response, error) {
+func (country *Country) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Country, *resty.Response, error) {
 	return NewCountryService(client).Create(ctx, country, params...)
 }
 
@@ -175,25 +175,25 @@ type CountryService interface {
 	// GetList выполняет запрос на получение списка стран.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Country], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Country], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех стран в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Country], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Country], *resty.Response, error)
 
 	// Create выполняет запрос на создание страны.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование страны)
 	// Принимает контекст, страну и опционально объект параметров запроса Params.
 	// Возвращает созданную страну.
-	Create(ctx context.Context, country *Country, params ...*Params) (*Country, *resty.Response, error)
+	Create(ctx context.Context, country *Country, params ...func(*Params)) (*Country, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение стран.
 	// Изменяемые страны должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список стран и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых стран.
-	CreateUpdateMany(ctx context.Context, countryList Slice[Country], params ...*Params) (*Slice[Country], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, countryList Slice[Country], params ...func(*Params)) (*Slice[Country], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление стран.
 	// Принимает контекст и множество стран.
@@ -213,17 +213,17 @@ type CountryService interface {
 	// GetByID выполняет запрос на получение отдельной страны по ID.
 	// Принимает контекст, ID страны и опционально объект параметров запроса Params.
 	// Возвращает найденную страну.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Country, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Country, *resty.Response, error)
 
 	// Update выполняет запрос на изменение страны.
 	// Принимает контекст, страну и опционально объект параметров запроса Params.
 	// Возвращает изменённую страну.
-	Update(ctx context.Context, id string, country *Country, params ...*Params) (*Country, *resty.Response, error)
+	Update(ctx context.Context, id string, country *Country, params ...func(*Params)) (*Country, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

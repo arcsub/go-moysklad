@@ -489,12 +489,12 @@ func (PaymentOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (paymentOut *PaymentOut) Update(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
+func (paymentOut *PaymentOut) Update(ctx context.Context, client *Client, params ...func(*Params)) (*PaymentOut, *resty.Response, error) {
 	return NewPaymentOutService(client).Update(ctx, paymentOut.GetID(), paymentOut, params...)
 }
 
 // Create shortcut
-func (paymentOut *PaymentOut) Create(ctx context.Context, client *Client, params ...*Params) (*PaymentOut, *resty.Response, error) {
+func (paymentOut *PaymentOut) Create(ctx context.Context, client *Client, params ...func(*Params)) (*PaymentOut, *resty.Response, error) {
 	return NewPaymentOutService(client).Create(ctx, paymentOut, params...)
 }
 
@@ -508,12 +508,12 @@ type PaymentOutService interface {
 	// GetList выполняет запрос на получение списка исходящих платежей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[PaymentOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[PaymentOut], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех исходящих платежей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[PaymentOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[PaymentOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание исходящего платежа.
 	// Обязательные поля для заполнения:
@@ -522,13 +522,13 @@ type PaymentOutService interface {
 	//	- expenseItem (Статья расходов)
 	// Принимает контекст, исходящий платеж и опционально объект параметров запроса Params.
 	// Возвращает созданный исходящий платеж.
-	Create(ctx context.Context, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
+	Create(ctx context.Context, paymentOut *PaymentOut, params ...func(*Params)) (*PaymentOut, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение исходящих платежей.
 	// Изменяемые исходящие платежи должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список исходящих платежей и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых исходящих платежей.
-	CreateUpdateMany(ctx context.Context, paymentOutList Slice[PaymentOut], params ...*Params) (*Slice[PaymentOut], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, paymentOutList Slice[PaymentOut], params ...func(*Params)) (*Slice[PaymentOut], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление исходящих платежей.
 	// Принимает контекст и множество исходящих платежей.
@@ -548,12 +548,12 @@ type PaymentOutService interface {
 	// GetByID выполняет запрос на получение отдельного исходящего платежа по ID.
 	// Принимает контекст, ID исходящего платежа и опционально объект параметров запроса Params.
 	// Возвращает найденный исходящий платеж.
-	GetByID(ctx context.Context, id string, params ...*Params) (*PaymentOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*PaymentOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение исходящего платежа.
 	// Принимает контекст, исходящий платеж и опционально объект параметров запроса Params.
 	// Возвращает изменённый исходящий платеж.
-	Update(ctx context.Context, id string, paymentOut *PaymentOut, params ...*Params) (*PaymentOut, *resty.Response, error)
+	Update(ctx context.Context, id string, paymentOut *PaymentOut, params ...func(*Params)) (*PaymentOut, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного исходящего платежа со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.

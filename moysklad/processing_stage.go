@@ -152,12 +152,12 @@ func (ProcessingStage) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingStage *ProcessingStage) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+func (processingStage *ProcessingStage) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingStage, *resty.Response, error) {
 	return NewProcessingStageService(client).Update(ctx, processingStage.GetID(), processingStage, params...)
 }
 
 // Create shortcut
-func (processingStage *ProcessingStage) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingStage, *resty.Response, error) {
+func (processingStage *ProcessingStage) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingStage, *resty.Response, error) {
 	return NewProcessingStageService(client).Create(ctx, processingStage, params...)
 }
 
@@ -169,9 +169,9 @@ func (processingStage *ProcessingStage) Delete(ctx context.Context, client *Clie
 // ProcessingStageService
 // Сервис для работы с этапами производства.
 type ProcessingStageService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingStage], *resty.Response, error)
-	Create(ctx context.Context, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...*Params) (*Slice[ProcessingStage], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingStage], *resty.Response, error)
+	Create(ctx context.Context, processingStage *ProcessingStage, params ...func(*Params)) (*ProcessingStage, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingStageList Slice[ProcessingStage], params ...func(*Params)) (*Slice[ProcessingStage], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingStage) (*DeleteManyResponse, *resty.Response, error)
 	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
@@ -179,13 +179,13 @@ type ProcessingStageService interface {
 	// Принимает контекст и этап производства.
 	// Возвращает «true» в случае успешного удаления этапа производства.
 	Delete(ctx context.Context, entity *ProcessingStage) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProcessingStage, *resty.Response, error)
-	Update(ctx context.Context, id string, processingStage *ProcessingStage, params ...*Params) (*ProcessingStage, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingStage, *resty.Response, error)
+	Update(ctx context.Context, id string, processingStage *ProcessingStage, params ...func(*Params)) (*ProcessingStage, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

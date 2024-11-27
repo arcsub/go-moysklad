@@ -311,12 +311,12 @@ func (PriceList) MetaType() MetaType {
 }
 
 // Update shortcut
-func (priceList *PriceList) Update(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+func (priceList *PriceList) Update(ctx context.Context, client *Client, params ...func(*Params)) (*PriceList, *resty.Response, error) {
 	return NewPriceListService(client).Update(ctx, priceList.GetID(), priceList, params...)
 }
 
 // Create shortcut
-func (priceList *PriceList) Create(ctx context.Context, client *Client, params ...*Params) (*PriceList, *resty.Response, error) {
+func (priceList *PriceList) Create(ctx context.Context, client *Client, params ...func(*Params)) (*PriceList, *resty.Response, error) {
 	return NewPriceListService(client).Create(ctx, priceList, params...)
 }
 
@@ -480,25 +480,25 @@ type PriceListService interface {
 	// GetList выполняет запрос на получение списка прайс-листов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[PriceList], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[PriceList], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех прайс-листов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[PriceList], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[PriceList], *resty.Response, error)
 
 	// Create выполняет запрос на создание прайс-листа.
 	// Обязательные поля для заполнения:
 	//	- columns (Массив объектов, описывающих столбцы нового прайс-листа)
 	// Принимает контекст, прайс-лист и опционально объект параметров запроса Params.
 	// Возвращает созданный прайс-листа.
-	Create(ctx context.Context, priceList *PriceList, params ...*Params) (*PriceList, *resty.Response, error)
+	Create(ctx context.Context, priceList *PriceList, params ...func(*Params)) (*PriceList, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение прайс-листа.
 	// Изменяемые прайс-листы должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список прайс-листов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых прайс-листов.
-	CreateUpdateMany(ctx context.Context, priceListList Slice[PriceList], params ...*Params) (*Slice[PriceList], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, priceListList Slice[PriceList], params ...func(*Params)) (*Slice[PriceList], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление прайс-листов.
 	// Принимает контекст и множество прайс-листов.
@@ -518,12 +518,12 @@ type PriceListService interface {
 	// GetByID выполняет запрос на получение отдельного прайс-листа по ID.
 	// Принимает контекст, ID прайс-листа и опционально объект параметров запроса Params.
 	// Возвращает найденный прайс-лист.
-	GetByID(ctx context.Context, id string, params ...*Params) (*PriceList, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*PriceList, *resty.Response, error)
 
 	// Update выполняет запрос на изменение прайс-листа.
 	// Принимает контекст, прайс-лист и опционально объект параметров запроса Params.
 	// Возвращает изменённый прайс-лист.
-	Update(ctx context.Context, id string, priceList *PriceList, params ...*Params) (*PriceList, *resty.Response, error)
+	Update(ctx context.Context, id string, priceList *PriceList, params ...func(*Params)) (*PriceList, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных прайс-листов.
 	// Принимает контекст.
@@ -533,24 +533,24 @@ type PriceListService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[PriceListPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[PriceListPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[PriceListPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[PriceListPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*PriceListPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*PriceListPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *PriceListPosition, params ...*Params) (*PriceListPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *PriceListPosition, params ...func(*Params)) (*PriceListPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *PriceListPosition, params ...*Params) (*PriceListPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *PriceListPosition, params ...func(*Params)) (*PriceListPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

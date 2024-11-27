@@ -204,12 +204,12 @@ func (Currency) MetaType() MetaType {
 }
 
 // Update shortcut
-func (currency *Currency) Update(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+func (currency *Currency) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Currency, *resty.Response, error) {
 	return NewCurrencyService(client).Update(ctx, currency.GetID(), currency, params...)
 }
 
 // Create shortcut
-func (currency *Currency) Create(ctx context.Context, client *Client, params ...*Params) (*Currency, *resty.Response, error) {
+func (currency *Currency) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Currency, *resty.Response, error) {
 	return NewCurrencyService(client).Create(ctx, currency, params...)
 }
 
@@ -308,12 +308,12 @@ type CurrencyService interface {
 	// GetList выполняет запрос на получение списка валют.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Currency], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Currency], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех валют в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Currency], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Currency], *resty.Response, error)
 
 	// Create выполняет запрос на создание валюты.
 	// Обязательные поля для заполнения:
@@ -322,13 +322,13 @@ type CurrencyService interface {
 	//	- isoCode (Буквенный код Валюты)
 	// Принимает контекст, валюту и опционально объект параметров запроса Params.
 	// Возвращает созданную валюту.
-	Create(ctx context.Context, currency *Currency, params ...*Params) (*Currency, *resty.Response, error)
+	Create(ctx context.Context, currency *Currency, params ...func(*Params)) (*Currency, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение валют.
 	// Изменяемые валюты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список валют и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых валют.
-	CreateUpdateMany(ctx context.Context, currencyList Slice[Currency], params ...*Params) (*Slice[Currency], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, currencyList Slice[Currency], params ...func(*Params)) (*Slice[Currency], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление валют.
 	// Принимает контекст и множество валют.
@@ -348,17 +348,17 @@ type CurrencyService interface {
 	// GetByID выполняет запрос на получение отдельной валюты по ID.
 	// Принимает контекст, ID валюты взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает найденную валюту.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Currency, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Currency, *resty.Response, error)
 
 	// Update выполняет запрос на изменение валюты.
 	// Принимает контекст, валюту и опционально объект параметров запроса Params.
 	// Возвращает изменённую валюту.
-	Update(ctx context.Context, id string, currency *Currency, params ...*Params) (*Currency, *resty.Response, error)
+	Update(ctx context.Context, id string, currency *Currency, params ...func(*Params)) (*Currency, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

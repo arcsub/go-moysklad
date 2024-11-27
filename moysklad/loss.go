@@ -354,12 +354,12 @@ func (Loss) MetaType() MetaType {
 }
 
 // Update shortcut
-func (loss *Loss) Update(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
+func (loss *Loss) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Loss, *resty.Response, error) {
 	return NewLossService(client).Update(ctx, loss.GetID(), loss, params...)
 }
 
 // Create shortcut
-func (loss *Loss) Create(ctx context.Context, client *Client, params ...*Params) (*Loss, *resty.Response, error) {
+func (loss *Loss) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Loss, *resty.Response, error) {
 	return NewLossService(client).Create(ctx, loss, params...)
 }
 
@@ -508,12 +508,12 @@ type LossService interface {
 	// GetList выполняет запрос на получение списка списаний.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Loss], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Loss], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех списаний в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Loss], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Loss], *resty.Response, error)
 
 	// Create выполняет запрос на создание списания.
 	// Обязательные поля для заполнения:
@@ -521,13 +521,13 @@ type LossService interface {
 	//	- store (Ссылка на склад)
 	// Принимает контекст, списание и опционально объект параметров запроса Params.
 	// Возвращает созданное списание.
-	Create(ctx context.Context, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)
+	Create(ctx context.Context, loss *Loss, params ...func(*Params)) (*Loss, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение списаний.
 	// Изменяемые списания должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список списаний и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых списаний.
-	CreateUpdateMany(ctx context.Context, lossList Slice[Loss], params ...*Params) (*Slice[Loss], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, lossList Slice[Loss], params ...func(*Params)) (*Slice[Loss], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление списаний.
 	// Принимает контекст и множество списаний.
@@ -547,12 +547,12 @@ type LossService interface {
 	// GetByID выполняет запрос на получение отдельного списания по ID.
 	// Принимает контекст, ID списания и опционально объект параметров запроса Params.
 	// Возвращает найденное списание.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Loss, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Loss, *resty.Response, error)
 
 	// Update выполняет запрос на изменение списания.
 	// Принимает контекст, списание и опционально объект параметров запроса Params.
 	// Возвращает изменённое списание.
-	Update(ctx context.Context, id string, loss *Loss, params ...*Params) (*Loss, *resty.Response, error)
+	Update(ctx context.Context, id string, loss *Loss, params ...func(*Params)) (*Loss, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного списания со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -575,24 +575,24 @@ type LossService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[LossPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[LossPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[LossPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[LossPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*LossPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*LossPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *LossPosition, params ...*Params) (*LossPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *LossPosition, params ...func(*Params)) (*LossPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *LossPosition, params ...*Params) (*LossPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *LossPosition, params ...func(*Params)) (*LossPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

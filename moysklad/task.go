@@ -229,12 +229,12 @@ func (Task) MetaType() MetaType {
 }
 
 // Update shortcut
-func (task *Task) Update(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+func (task *Task) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Task, *resty.Response, error) {
 	return NewTaskService(client).Update(ctx, task.GetID(), task, params...)
 }
 
 // Create shortcut
-func (task *Task) Create(ctx context.Context, client *Client, params ...*Params) (*Task, *resty.Response, error) {
+func (task *Task) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Task, *resty.Response, error) {
 	return NewTaskService(client).Create(ctx, task, params...)
 }
 
@@ -833,12 +833,12 @@ type TaskService interface {
 	// GetList выполняет запрос на получение списка задач.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Task], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Task], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех задач в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Task], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Task], *resty.Response, error)
 
 	// Create выполняет запрос на создание задачи.
 	// Создать новую задачу. Для создания новых задач необходима активная тарифная опция CRM.
@@ -847,13 +847,13 @@ type TaskService interface {
 	//	- assignee (Метаданные Сотрудника, ответственного за выполнение задачи)
 	// Принимает контекст, задачу и опционально объект параметров запроса Params.
 	// Возвращает созданную задачу.
-	Create(ctx context.Context, task *Task, params ...*Params) (*Task, *resty.Response, error)
+	Create(ctx context.Context, task *Task, params ...func(*Params)) (*Task, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение задач.
 	// Изменяемые задачи должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список задач и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых задач.
-	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...*Params) (*Slice[Task], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, taskList Slice[Task], params ...func(*Params)) (*Slice[Task], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление задач.
 	// Принимает контекст и множество задач.
@@ -873,17 +873,17 @@ type TaskService interface {
 	// GetByID выполняет запрос на получение отдельной задачи по ID.
 	// Принимает контекст, ID задачи и опционально объект параметров запроса Params.
 	// Возвращает задачу.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Task, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Task, *resty.Response, error)
 
 	// Update выполняет запрос на изменение задачи.
 	// Принимает контекст, задачу и опционально объект параметров запроса Params.
 	// Возвращает изменённую задачу.
-	Update(ctx context.Context, id string, task *Task, params ...*Params) (*Task, *resty.Response, error)
+	Update(ctx context.Context, id string, task *Task, params ...func(*Params)) (*Task, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
@@ -893,7 +893,7 @@ type TaskService interface {
 	// GetNoteList выполняет запрос на получение списка всех комментариев данной задачи.
 	// Принимает контекст, ID задачи и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNoteList(ctx context.Context, taskID string, params ...*Params) (*List[TaskNote], *resty.Response, error)
+	GetNoteList(ctx context.Context, taskID string, params ...func(*Params)) (*List[TaskNote], *resty.Response, error)
 
 	// CreateNote выполняет запрос на создание нового комментария к задаче.
 	// Обязательные поля для заполнения:
@@ -968,9 +968,9 @@ type taskService struct {
 	endpointFiles
 }
 
-func (service *taskService) GetNoteList(ctx context.Context, taskID string, params ...*Params) (*List[TaskNote], *resty.Response, error) {
+func (service *taskService) GetNoteList(ctx context.Context, taskID string, params ...func(*Params)) (*List[TaskNote], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointTaskNotes, taskID)
-	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[TaskNote]](service.client, path).SetParams(params).Get(ctx)
 }
 
 func (service *taskService) CreateNote(ctx context.Context, taskID string, taskNoteText string) (*TaskNote, *resty.Response, error) {

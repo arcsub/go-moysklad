@@ -134,12 +134,12 @@ func (TaxRate) MetaType() MetaType {
 }
 
 // Update shortcut
-func (taxRate *TaxRate) Update(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+func (taxRate *TaxRate) Update(ctx context.Context, client *Client, params ...func(*Params)) (*TaxRate, *resty.Response, error) {
 	return NewTaxRateService(client).Update(ctx, taxRate.GetID(), taxRate, params...)
 }
 
 // Create shortcut
-func (taxRate *TaxRate) Create(ctx context.Context, client *Client, params ...*Params) (*TaxRate, *resty.Response, error) {
+func (taxRate *TaxRate) Create(ctx context.Context, client *Client, params ...func(*Params)) (*TaxRate, *resty.Response, error) {
 	return NewTaxRateService(client).Create(ctx, taxRate, params...)
 }
 
@@ -153,25 +153,25 @@ type TaxRateService interface {
 	// GetList выполняет запрос на получение списка налоговых ставок.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[TaxRate], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[TaxRate], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех налоговых ставок в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[TaxRate], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[TaxRate], *resty.Response, error)
 
 	// Create выполняет запрос на создание налоговой ставки.
 	// Обязательные поля для заполнения:
 	//	- rate (Значение налоговой ставки)
 	// Принимает контекст, налоговую ставку и опционально объект параметров запроса Params.
 	// Возвращает созданную налоговую ставку.
-	Create(ctx context.Context, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
+	Create(ctx context.Context, taxRate *TaxRate, params ...func(*Params)) (*TaxRate, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение налоговых ставок.
 	// Изменяемые налоговые ставки должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список налоговых ставок и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых налоговых ставок.
-	CreateUpdateMany(ctx context.Context, taxRateList Slice[TaxRate], params ...*Params) (*Slice[TaxRate], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, taxRateList Slice[TaxRate], params ...func(*Params)) (*Slice[TaxRate], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление налоговых ставок.
 	// Принимает контекст и множество налоговых ставок.
@@ -191,12 +191,12 @@ type TaxRateService interface {
 	// GetByID выполняет запрос на получение отдельной налоговой ставки по ID.
 	// Принимает контекст, ID налоговой ставки и опционально объект параметров запроса Params.
 	// Возвращает налоговую ставку.
-	GetByID(ctx context.Context, id string, params ...*Params) (*TaxRate, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*TaxRate, *resty.Response, error)
 
 	// Update выполняет запрос на изменение налоговой ставки.
 	// Принимает контекст, налоговую ставку и опционально объект параметров запроса Params.
 	// Возвращает изменённую налоговую ставку.
-	Update(ctx context.Context, id string, taxRate *TaxRate, params ...*Params) (*TaxRate, *resty.Response, error)
+	Update(ctx context.Context, id string, taxRate *TaxRate, params ...func(*Params)) (*TaxRate, *resty.Response, error)
 }
 
 const (

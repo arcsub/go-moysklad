@@ -469,12 +469,12 @@ func (RetailShift) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailShift *RetailShift) Update(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+func (retailShift *RetailShift) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailShift, *resty.Response, error) {
 	return NewRetailShiftService(client).Update(ctx, retailShift.GetID(), retailShift, params...)
 }
 
 // Create shortcut
-func (retailShift *RetailShift) Create(ctx context.Context, client *Client, params ...*Params) (*RetailShift, *resty.Response, error) {
+func (retailShift *RetailShift) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailShift, *resty.Response, error) {
 	return NewRetailShiftService(client).Create(ctx, retailShift, params...)
 }
 
@@ -538,12 +538,12 @@ type RetailShiftService interface {
 	// GetList выполняет запрос на получение списка розничных смен.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailShift], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailShift], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех розничных смен в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailShift], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailShift], *resty.Response, error)
 
 	// Create выполняет запрос на создание розничной смены.
 	// Обязательные поля для заполнения:
@@ -551,7 +551,7 @@ type RetailShiftService interface {
 	//	- retailStore (Метаданные точки продаж)
 	// Принимает контекст, розничную смены и опционально объект параметров запроса Params.
 	// Возвращает созданную розничную смены.
-	Create(ctx context.Context, retailShift *RetailShift, params ...*Params) (*RetailShift, *resty.Response, error)
+	Create(ctx context.Context, retailShift *RetailShift, params ...func(*Params)) (*RetailShift, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление розничной смены по ID.
 	// Принимает контекст и ID розничной смены.
@@ -566,12 +566,12 @@ type RetailShiftService interface {
 	// GetByID выполняет запрос на получение розничной смены по ID.
 	// Принимает контекст, ID розничной смены и опционально объект параметров запроса Params.
 	// Возвращает розничную смену.
-	GetByID(ctx context.Context, id string, params ...*Params) (*RetailShift, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailShift, *resty.Response, error)
 
 	// Update выполняет запрос на изменение розничной смены.
 	// Принимает контекст, розничную смену и опционально объект параметров запроса Params.
 	// Возвращает изменённую розничную смену.
-	Update(ctx context.Context, id string, retailShift *RetailShift, params ...*Params) (*RetailShift, *resty.Response, error)
+	Update(ctx context.Context, id string, retailShift *RetailShift, params ...func(*Params)) (*RetailShift, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных розничных смен.
 	// Принимает контекст.
@@ -627,7 +627,7 @@ type RetailShiftService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

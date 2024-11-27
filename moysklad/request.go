@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/goccy/go-json"
-	"github.com/google/go-querystring/query"
 	"log"
 	"net/http"
 	"reflect"
@@ -51,11 +50,10 @@ func (requestBuilder *RequestBuilder[T]) SetHeader(header, value string) *Reques
 	return requestBuilder
 }
 
-func (requestBuilder *RequestBuilder[T]) SetParams(params ...*Params) *RequestBuilder[T] {
-	if len(params) > 0 {
-		v, _ := query.Values(params[0])
-		requestBuilder.req.SetQueryParamsFromValues(v)
-	}
+func (requestBuilder *RequestBuilder[T]) SetParams(params []func(*Params)) *RequestBuilder[T] {
+	values := ApplyParams(params).Values()
+
+	requestBuilder.req.SetQueryParamsFromValues(values)
 
 	return requestBuilder
 }
@@ -116,8 +114,8 @@ func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResult
 // FetchMeta позволяет выполнить точечный запрос по переданному объекту [Meta].
 //
 // Необходимо точно указать обобщённый тип T, который ожидаем получить в ответ, иначе есть риск получить ошибку.
-func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...*Params) (*T, *resty.Response, error) {
-	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params...).Get(ctx)
+func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params []func(*Params)) (*T, *resty.Response, error) {
+	return NewRequestBuilder[T](client, strings.ReplaceAll(meta.GetHref(), baseApiURL, "")).SetParams(params).Get(ctx)
 }
 
 // TODO: improve
@@ -245,35 +243,41 @@ func parseResponse[T any](r *resty.Response) (*T, *resty.Response, error) {
 	return &result, r, nil
 }
 
-func getAll[T any](ctx context.Context, client *Client, path string, params []*Params) (*Slice[T], *resty.Response, error) {
+func getAll[T any](ctx context.Context, client *Client, path string, params []func(*Params)) (*Slice[T], *resty.Response, error) {
 	var offset = 1
 	var perPage = MaxPositions
 	var data Slice[T]
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 
-	paramsCpy := GetParamsFromSliceOrNew(params).WithLimit(offset).WithOffset(0)
+	//paramsCpy := GetParamsFromSliceOrNew(params) // TODO .WithLimit(offset).WithOffset(0)
 
-	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
+	_params := append(params, WithLimit(offset), WithOffset(0))
+
+	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(_params).Get(ctx)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	data = append(data, list.Rows...)
-	size := list.Meta.Size
+	_paramsCheck := ApplyParams(_params)
 
-	if len(paramsCpy.Expand) > 0 {
+	if len(_paramsCheck.Expand) > 0 {
 		perPage = 100
 	}
+
+	data = append(data, list.Rows...)
+	size := list.Meta.Size
 
 	for i := offset; i < size; i += perPage {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
 
-			paramsCpy := paramsCpy.Clone().WithLimit(perPage).WithOffset(i)
+			//paramsCpy := paramsCpy.Clone() // TODO .WithLimit(perPage).WithOffset(i)
 
-			list, resResp, err := NewRequestBuilder[List[T]](client, path).SetParams(paramsCpy).Get(ctx)
+			_params := append(_params[:], WithLimit(perPage), WithOffset(i))
+
+			list, resResp, err := NewRequestBuilder[List[T]](client, path).SetParams(_params).Get(ctx)
 
 			mu.Lock()
 			resp = resResp
@@ -295,8 +299,8 @@ func getAll[T any](ctx context.Context, client *Client, path string, params []*P
 	return &data, resp, nil
 }
 
-func posAll[T any](ctx context.Context, client *Client, path string, entities Slice[T], params []*Params) (*Slice[T], *resty.Response, error) {
-	paramsCpy := GetParamsFromSliceOrNew(params)
+func posAll[T any](ctx context.Context, client *Client, path string, entities Slice[T], params []func(*Params)) (*Slice[T], *resty.Response, error) {
+	//paramsCpy := GetParamsFromSliceOrNew(params)
 
 	if entities.Len() > MaxPositions {
 		var data Slice[T]
@@ -310,7 +314,7 @@ func posAll[T any](ctx context.Context, client *Client, path string, entities Sl
 			go func(chunk Slice[T]) {
 				defer wg.Done()
 
-				list, resResp, err := NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, chunk)
+				list, resResp, err := NewRequestBuilder[Slice[T]](client, path).SetParams(params).Post(ctx, chunk)
 
 				mu.Lock()
 				resp = resResp
@@ -334,7 +338,7 @@ func posAll[T any](ctx context.Context, client *Client, path string, entities Sl
 		return &data, resp, nil
 	}
 
-	return NewRequestBuilder[Slice[T]](client, path).SetParams(paramsCpy).Post(ctx, entities)
+	return NewRequestBuilder[Slice[T]](client, path).SetParams(params).Post(ctx, entities)
 }
 
 func deleteAll[T MetaOwner](ctx context.Context, client *Client, path string, entities Slice[T]) (*DeleteManyResponse, *resty.Response, error) {

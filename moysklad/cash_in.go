@@ -429,12 +429,12 @@ func (CashIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (cashIn *CashIn) Update(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+func (cashIn *CashIn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*CashIn, *resty.Response, error) {
 	return NewCashInService(client).Update(ctx, cashIn.GetID(), cashIn, params...)
 }
 
 // Create shortcut
-func (cashIn *CashIn) Create(ctx context.Context, client *Client, params ...*Params) (*CashIn, *resty.Response, error) {
+func (cashIn *CashIn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*CashIn, *resty.Response, error) {
 	return NewCashInService(client).Create(ctx, cashIn, params...)
 }
 
@@ -448,12 +448,12 @@ type CashInService interface {
 	// GetList выполняет запрос на получение списка приходных ордеров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[CashIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[CashIn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех приходных ордеров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[CashIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[CashIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание приходного ордера.
 	// Обязательные поля для заполнения:
@@ -461,13 +461,13 @@ type CashInService interface {
 	//	- agent (Метаданные контрагента)
 	// Принимает контекст, приходный ордер и опционально объект параметров запроса Params.
 	// Возвращает созданный приходный ордер.
-	Create(ctx context.Context, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
+	Create(ctx context.Context, cashIn *CashIn, params ...func(*Params)) (*CashIn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение приходных ордеров.
 	// Изменяемые приходные ордеры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список приходных ордеров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых приходных ордеров.
-	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...*Params) (*Slice[CashIn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, cashInList Slice[CashIn], params ...func(*Params)) (*Slice[CashIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление приходных ордеров.
 	// Принимает контекст и множество приходных ордеров.
@@ -544,12 +544,12 @@ type CashInService interface {
 	// GetByID выполняет запрос на получение отдельного приходного ордера по ID.
 	// Принимает контекст, ID приходного ордера и опционально объект параметров запроса Params.
 	// Возвращает найденный приходный ордер.
-	GetByID(ctx context.Context, id string, params ...*Params) (*CashIn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*CashIn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение приходного ордера.
 	// Принимает контекст, приходный ордер и опционально объект параметров запроса Params.
 	// Возвращает изменённый приходный ордер.
-	Update(ctx context.Context, id string, cashIn *CashIn, params ...*Params) (*CashIn, *resty.Response, error)
+	Update(ctx context.Context, id string, cashIn *CashIn, params ...func(*Params)) (*CashIn, *resty.Response, error)
 
 	// GetPublicationList выполняет запрос на получение списка публикаций.
 	// Принимает контекст и ID документа.

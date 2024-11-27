@@ -143,12 +143,12 @@ func newMainService[E MetaIDOwner, P any, M any, S any](client *Client, path str
 type endpointGetList[T any] struct{ Endpoint }
 
 // GetList выполняет запрос на получение объектов в виде списка.
-func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...*Params) (*List[T], *resty.Response, error) {
-	return NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(params...).Get(ctx)
+func (endpoint *endpointGetList[T]) GetList(ctx context.Context, params ...func(*Params)) (*List[T], *resty.Response, error) {
+	return NewRequestBuilder[List[T]](endpoint.client, endpoint.uri).SetParams(params).Get(ctx)
 }
 
 // GetListAll выполняет запрос на получение всех объектов в виде списка.
-func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...*Params) (*Slice[T], *resty.Response, error) {
+func (endpoint *endpointGetList[T]) GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[T], *resty.Response, error) {
 	return getAll[T](ctx, endpoint.client, endpoint.uri, params)
 }
 
@@ -172,9 +172,9 @@ func (endpoint *endpointDelete[T]) Delete(ctx context.Context, entity *T) (bool,
 type endpointGetByID[T any] struct{ Endpoint }
 
 // GetByID выполняет запрос на получение отдельного объекта по ID.
-func (endpoint *endpointGetByID[T]) GetByID(ctx context.Context, id string, params ...*Params) (*T, *resty.Response, error) {
+func (endpoint *endpointGetByID[T]) GetByID(ctx context.Context, id string, params ...func(*Params)) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", endpoint.uri, id)
-	return NewRequestBuilder[T](endpoint.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Get(ctx)
 }
 
 type endpointMetadata[T any] struct{ Endpoint }
@@ -268,8 +268,8 @@ func (endpoint *endpointTemplateBased[T]) TemplateBased(ctx context.Context, bas
 type endpointCreate[T any] struct{ Endpoint }
 
 // Create выполняет запрос на создание объекта.
-func (endpoint *endpointCreate[T]) Create(ctx context.Context, entity *T, params ...*Params) (*T, *resty.Response, error) {
-	return NewRequestBuilder[T](endpoint.client, endpoint.uri).SetParams(params...).Post(ctx, entity)
+func (endpoint *endpointCreate[T]) Create(ctx context.Context, entity *T, params ...func(*Params)) (*T, *resty.Response, error) {
+	return NewRequestBuilder[T](endpoint.client, endpoint.uri).SetParams(params).Post(ctx, entity)
 }
 
 // DeleteManyResponse объект ответа на запрос удаления нескольких объектов.
@@ -299,16 +299,16 @@ type endpointCreateUpdateMany[T any] struct{ Endpoint }
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/index.html#mojsklad-json-api-obschie-swedeniq-sozdanie-i-obnowlenie-neskol-kih-ob-ektow
-func (endpoint *endpointCreateUpdateMany[T]) CreateUpdateMany(ctx context.Context, entities Slice[T], params ...*Params) (*Slice[T], *resty.Response, error) {
+func (endpoint *endpointCreateUpdateMany[T]) CreateUpdateMany(ctx context.Context, entities Slice[T], params ...func(*Params)) (*Slice[T], *resty.Response, error) {
 	return posAll[T](ctx, endpoint.client, endpoint.uri, entities, params)
 }
 
 type endpointUpdate[T any] struct{ Endpoint }
 
 // Update выполняет запрос на изменение объекта.
-func (endpoint *endpointUpdate[T]) Update(ctx context.Context, id string, entity *T, params ...*Params) (*T, *resty.Response, error) {
+func (endpoint *endpointUpdate[T]) Update(ctx context.Context, id string, entity *T, params ...func(*Params)) (*T, *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s", endpoint.uri, id)
-	return NewRequestBuilder[T](endpoint.client, path).SetParams(params...).Put(ctx, entity)
+	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Put(ctx, entity)
 }
 
 type endpointAccounts struct{ Endpoint }
@@ -428,9 +428,9 @@ type endpointAudit struct{ Endpoint }
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/audit/#audit-audit-poluchit-sobytiq-po-suschnosti
-func (endpoint *endpointAudit) GetAudit(ctx context.Context, id string, params ...*Params) (*List[AuditEvent], *resty.Response, error) {
+func (endpoint *endpointAudit) GetAudit(ctx context.Context, id string, params ...func(*Params)) (*List[AuditEvent], *resty.Response, error) {
 	path := fmt.Sprintf("%s/%s/audit", endpoint.uri, id)
-	return NewRequestBuilder[List[AuditEvent]](endpoint.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[AuditEvent]](endpoint.client, path).SetParams(params).Get(ctx)
 }
 
 type endpointFiles struct{ Endpoint }
@@ -536,9 +536,9 @@ type endpointNamedFilter struct{ Endpoint }
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-sohranennye-fil-try-poluchit-spisok-fil-trow
-func (endpoint *endpointNamedFilter) GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error) {
+func (endpoint *endpointNamedFilter) GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointNamedFilter, endpoint.uri)
-	return NewRequestBuilder[List[NamedFilter]](endpoint.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[NamedFilter]](endpoint.client, path).SetParams(params).Get(ctx)
 }
 
 // GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
@@ -554,32 +554,32 @@ func (endpoint *endpointNamedFilter) GetNamedFilterByID(ctx context.Context, id 
 type endpointPositions[T any] struct{ Endpoint }
 
 // GetPositionList выполняет запрос на получение всех позиций документа.
-func (endpoint *endpointPositions[T]) GetPositionList(ctx context.Context, id string, params ...*Params) (*List[T], *resty.Response, error) {
+func (endpoint *endpointPositions[T]) GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[T], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositions, endpoint.uri, id)
-	return NewRequestBuilder[List[T]](endpoint.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[List[T]](endpoint.client, path).SetParams(params).Get(ctx)
 }
 
-func (endpoint *endpointPositions[T]) GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[T], *resty.Response, error) {
+func (endpoint *endpointPositions[T]) GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[T], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositions, endpoint.uri, id)
 	return getAll[T](ctx, endpoint.client, path, params)
 }
 
 // GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
-func (endpoint *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionID string, params ...*Params) (*T, *resty.Response, error) {
+func (endpoint *endpointPositions[T]) GetPositionByID(ctx context.Context, id, positionID string, params ...func(*Params)) (*T, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositionsID, endpoint.uri, id, positionID)
-	return NewRequestBuilder[T](endpoint.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Get(ctx)
 }
 
 // UpdatePosition выполняет запрос на изменение позиции документа.
-func (endpoint *endpointPositions[T]) UpdatePosition(ctx context.Context, id, positionID string, position *T, params ...*Params) (*T, *resty.Response, error) {
+func (endpoint *endpointPositions[T]) UpdatePosition(ctx context.Context, id, positionID string, position *T, params ...func(*Params)) (*T, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositionsID, endpoint.uri, id, positionID)
-	return NewRequestBuilder[T](endpoint.client, path).SetParams(params...).Put(ctx, position)
+	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Put(ctx, position)
 }
 
 // CreatePosition выполняет запрос на создание позиции документа.
-func (endpoint *endpointPositions[T]) CreatePosition(ctx context.Context, id string, position *T, params ...*Params) (*T, *resty.Response, error) {
+func (endpoint *endpointPositions[T]) CreatePosition(ctx context.Context, id string, position *T, params ...func(*Params)) (*T, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPositions, endpoint.uri, id)
-	return NewRequestBuilder[T](endpoint.client, path).SetParams(params...).Post(ctx, position)
+	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Post(ctx, position)
 }
 
 // CreatePositionMany выполняет запрос на массовое создание позиций документа.
@@ -870,6 +870,6 @@ type endpointEvaluate[T any] struct{ Endpoint }
 func (endpoint *endpointEvaluate[T]) Evaluate(ctx context.Context, entity *T, evaluate ...Evaluate) (*T, *resty.Response, error) {
 	uriParts := strings.Split(endpoint.uri, "/")
 	path := fmt.Sprintf("wizard/%s", uriParts[len(uriParts)-1])
-	params := NewParams().WithEvaluate(evaluate...)
-	return NewRequestBuilder[T](endpoint.client, path).SetParams(params).Post(ctx, entity)
+	//params := NewParams().WithEvaluate(evaluate...) // TODO
+	return NewRequestBuilder[T](endpoint.client, path). /*.SetParams(params)*/ Post(ctx, entity)
 }

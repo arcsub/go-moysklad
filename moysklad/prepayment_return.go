@@ -343,17 +343,17 @@ type PrepaymentReturnService interface {
 	// GetList выполняет запрос на получение списка возвратов предоплат.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[PrepaymentReturn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[PrepaymentReturn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех возвратов предоплат в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[PrepaymentReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[PrepaymentReturn], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного возврата предоплаты по ID.
 	// Принимает контекст, ID возврата предоплаты и опционально объект параметров запроса Params.
 	// Возвращает найденный возврат предоплаты.
-	GetByID(ctx context.Context, id string, params ...*Params) (*PrepaymentReturn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*PrepaymentReturn, *resty.Response, error)
 
 	// GetAttributeList выполняет запрос на получение списка доп полей.
 	// Принимает контекст.
@@ -399,14 +399,14 @@ type PrepaymentReturnService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[PrepaymentReturnPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[PrepaymentReturnPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[PrepaymentReturnPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[PrepaymentReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*PrepaymentReturnPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*PrepaymentReturnPosition, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.

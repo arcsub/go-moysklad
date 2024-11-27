@@ -429,12 +429,12 @@ func (Service) MetaType() MetaType {
 }
 
 // Update shortcut
-func (service *Service) Update(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
+func (service *Service) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Service, *resty.Response, error) {
 	return NewServiceService(client).Update(ctx, service.GetID(), service, params...)
 }
 
 // Create shortcut
-func (service *Service) Create(ctx context.Context, client *Client, params ...*Params) (*Service, *resty.Response, error) {
+func (service *Service) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Service, *resty.Response, error) {
 	return NewServiceService(client).Create(ctx, service, params...)
 }
 
@@ -448,25 +448,25 @@ type ServiceService interface {
 	// GetList выполняет запрос на получение списка услуг.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Service], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Service], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех услуг в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Service], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Service], *resty.Response, error)
 
 	// Create выполняет запрос на создание услуги.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование услуги)
 	// Принимает контекст, услугу и опционально объект параметров запроса Params.
 	// Возвращает созданную услугу.
-	Create(ctx context.Context, service *Service, params ...*Params) (*Service, *resty.Response, error)
+	Create(ctx context.Context, service *Service, params ...func(*Params)) (*Service, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение услуг.
 	// Изменяемые услуги должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список услуг и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых услуг.
-	CreateUpdateMany(ctx context.Context, serviceList Slice[Service], params ...*Params) (*Slice[Service], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, serviceList Slice[Service], params ...func(*Params)) (*Slice[Service], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление услуг.
 	// Принимает контекст и множество услуг.
@@ -486,12 +486,12 @@ type ServiceService interface {
 	// GetByID выполняет запрос на получение отдельной услуги по ID.
 	// Принимает контекст, ID услуги и опционально объект параметров запроса Params.
 	// Возвращает услугу.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Service, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Service, *resty.Response, error)
 
 	// Update выполняет запрос на изменение услуги.
 	// Принимает контекст, услугу и опционально объект параметров запроса Params.
 	// Возвращает изменённую услугу.
-	Update(ctx context.Context, id string, service *Service, params ...*Params) (*Service, *resty.Response, error)
+	Update(ctx context.Context, id string, service *Service, params ...func(*Params)) (*Service, *resty.Response, error)
 
 	// GetBySyncID выполняет запрос на получение отдельного документа по syncID.
 	// Принимает контекст и syncID документа.
@@ -506,7 +506,7 @@ type ServiceService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

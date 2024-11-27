@@ -505,12 +505,12 @@ func (SalesReturn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (salesReturn *SalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+func (salesReturn *SalesReturn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*SalesReturn, *resty.Response, error) {
 	return NewSalesReturnService(client).Update(ctx, salesReturn.GetID(), salesReturn, params...)
 }
 
 // Create shortcut
-func (salesReturn *SalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*SalesReturn, *resty.Response, error) {
+func (salesReturn *SalesReturn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*SalesReturn, *resty.Response, error) {
 	return NewSalesReturnService(client).Create(ctx, salesReturn, params...)
 }
 
@@ -744,12 +744,12 @@ type SalesReturnService interface {
 	// GetList выполняет запрос на получение списка возвратов покупателей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[SalesReturn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[SalesReturn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех возвратов покупателей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[SalesReturn], *resty.Response, error)
 
 	// Create выполняет запрос на создание возврата покупателя.
 	// Обязательные поля для заполнения:
@@ -759,13 +759,13 @@ type SalesReturnService interface {
 	//	- agent (Ссылка на контрагента (поставщика))
 	// Принимает контекст, возврат покупателя и опционально объект параметров запроса Params.
 	// Возвращает созданный возврат покупателя.
-	Create(ctx context.Context, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
+	Create(ctx context.Context, salesReturn *SalesReturn, params ...func(*Params)) (*SalesReturn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение возвратов покупателя.
 	// Изменяемые возвраты покупателя должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список возвратов покупателя и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых возвратов покупателя.
-	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params ...*Params) (*Slice[SalesReturn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, salesReturnList Slice[SalesReturn], params ...func(*Params)) (*Slice[SalesReturn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление возвратов покупателя.
 	// Принимает контекст и множество возвратов покупателя.
@@ -785,12 +785,12 @@ type SalesReturnService interface {
 	// GetByID выполняет запрос на получение отдельного возврата покупателя по ID.
 	// Принимает контекст, ID возврата покупателя и опционально объект параметров запроса Params.
 	// Возвращает возврат покупателя.
-	GetByID(ctx context.Context, id string, params ...*Params) (*SalesReturn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*SalesReturn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение возврата покупателя.
 	// Принимает контекст, возврат покупателя и опционально объект параметров запроса Params.
 	// Возвращает изменённый возврат покупателя.
-	Update(ctx context.Context, id string, salesReturn *SalesReturn, params ...*Params) (*SalesReturn, *resty.Response, error)
+	Update(ctx context.Context, id string, salesReturn *SalesReturn, params ...func(*Params)) (*SalesReturn, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного возврата покупателя со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -812,24 +812,24 @@ type SalesReturnService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[SalesReturnPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[SalesReturnPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[SalesReturnPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[SalesReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*SalesReturnPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *SalesReturnPosition, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *SalesReturnPosition, params ...func(*Params)) (*SalesReturnPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *SalesReturnPosition, params ...*Params) (*SalesReturnPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *SalesReturnPosition, params ...func(*Params)) (*SalesReturnPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -930,7 +930,7 @@ type SalesReturnService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

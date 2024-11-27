@@ -329,12 +329,12 @@ func (Inventory) MetaType() MetaType {
 }
 
 // Update shortcut
-func (inventory *Inventory) Update(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+func (inventory *Inventory) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Inventory, *resty.Response, error) {
 	return NewInventoryService(client).Update(ctx, inventory.GetID(), inventory, params...)
 }
 
 // Create shortcut
-func (inventory *Inventory) Create(ctx context.Context, client *Client, params ...*Params) (*Inventory, *resty.Response, error) {
+func (inventory *Inventory) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Inventory, *resty.Response, error) {
 	return NewInventoryService(client).Create(ctx, inventory, params...)
 }
 
@@ -464,12 +464,12 @@ type InventoryService interface {
 	// GetList выполняет запрос на получение списка инвентаризаций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Inventory], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Inventory], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех инвентаризаций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Inventory], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Inventory], *resty.Response, error)
 
 	// Create выполняет запрос на создание инвентаризации.
 	// Обязательные поля для заполнения:
@@ -477,13 +477,13 @@ type InventoryService interface {
 	//	- store (Ссылка на склад)
 	// Принимает контекст, инвентаризацию и опционально объект параметров запроса Params.
 	// Возвращает созданную инвентаризацию.
-	Create(ctx context.Context, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
+	Create(ctx context.Context, inventory *Inventory, params ...func(*Params)) (*Inventory, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение инвентаризаций.
 	// Изменяемые инвентаризации должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список инвентаризации и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых инвентаризаций.
-	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...*Params) (*Slice[Inventory], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, inventoryList Slice[Inventory], params ...func(*Params)) (*Slice[Inventory], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление инвентаризаций.
 	// Принимает контекст и множество инвентаризаций.
@@ -503,12 +503,12 @@ type InventoryService interface {
 	// GetByID выполняет запрос на получение отдельного инвентаризации по ID.
 	// Принимает контекст, ID инвентаризации и опционально объект параметров запроса Params.
 	// Возвращает найденную инвентаризацию.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Inventory, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Inventory, *resty.Response, error)
 
 	// Update выполняет запрос на изменение инвентаризации.
 	// Принимает контекст, инвентаризацию и опционально объект параметров запроса Params.
 	// Возвращает изменённую инвентаризацию.
-	Update(ctx context.Context, id string, inventory *Inventory, params ...*Params) (*Inventory, *resty.Response, error)
+	Update(ctx context.Context, id string, inventory *Inventory, params ...func(*Params)) (*Inventory, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной инвентаризации со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -523,24 +523,24 @@ type InventoryService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[InventoryPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[InventoryPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[InventoryPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[InventoryPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*InventoryPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *InventoryPosition, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *InventoryPosition, params ...func(*Params)) (*InventoryPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *InventoryPosition, params ...*Params) (*InventoryPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *InventoryPosition, params ...func(*Params)) (*InventoryPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

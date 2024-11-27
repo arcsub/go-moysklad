@@ -116,12 +116,12 @@ func (ExpenseItem) MetaType() MetaType {
 }
 
 // Update shortcut
-func (expenseItem *ExpenseItem) Update(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+func (expenseItem *ExpenseItem) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ExpenseItem, *resty.Response, error) {
 	return NewExpenseItemService(client).Update(ctx, expenseItem.GetID(), expenseItem, params...)
 }
 
 // Create shortcut
-func (expenseItem *ExpenseItem) Create(ctx context.Context, client *Client, params ...*Params) (*ExpenseItem, *resty.Response, error) {
+func (expenseItem *ExpenseItem) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ExpenseItem, *resty.Response, error) {
 	return NewExpenseItemService(client).Create(ctx, expenseItem, params...)
 }
 
@@ -135,25 +135,25 @@ type ExpenseItemService interface {
 	// GetList выполняет запрос на получение списка статей расходов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[ExpenseItem], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ExpenseItem], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех статей расходов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[ExpenseItem], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[ExpenseItem], *resty.Response, error)
 
 	// Create выполняет запрос на создание статьи расходов.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование Статьи расходов)
 	// Принимает контекст, статью расходов и опционально объект параметров запроса Params.
 	// Возвращает созданную статью расходов.
-	Create(ctx context.Context, expenseItem *ExpenseItem, params ...*Params) (*ExpenseItem, *resty.Response, error)
+	Create(ctx context.Context, expenseItem *ExpenseItem, params ...func(*Params)) (*ExpenseItem, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или статей расходов.
 	// Изменяемые статьи расходов должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список статей расходов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых статей расходов.
-	CreateUpdateMany(ctx context.Context, expenseItemList Slice[ExpenseItem], params ...*Params) (*Slice[ExpenseItem], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, expenseItemList Slice[ExpenseItem], params ...func(*Params)) (*Slice[ExpenseItem], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление статей расходов.
 	// Принимает контекст и множество статей расходов.
@@ -173,12 +173,12 @@ type ExpenseItemService interface {
 	// GetByID выполняет запрос на получение отдельной статьи расходов по ID.
 	// Принимает контекст, ID статьи расходов взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает найденную статью расходов.
-	GetByID(ctx context.Context, id string, params ...*Params) (*ExpenseItem, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ExpenseItem, *resty.Response, error)
 
 	// Update выполняет запрос на изменение статьи расходов.
 	// Принимает контекст, статью расходов и опционально объект параметров запроса Params.
 	// Возвращает изменённую статью расходов.
-	Update(ctx context.Context, id string, expenseItem *ExpenseItem, params ...*Params) (*ExpenseItem, *resty.Response, error)
+	Update(ctx context.Context, id string, expenseItem *ExpenseItem, params ...func(*Params)) (*ExpenseItem, *resty.Response, error)
 
 	// MoveToTrash выполняет запрос на перемещение документа с указанным ID в корзину.
 	// Принимает контекст и ID документа.

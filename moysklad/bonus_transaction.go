@@ -291,12 +291,12 @@ func (BonusTransaction) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bonusTransaction *BonusTransaction) Update(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+func (bonusTransaction *BonusTransaction) Update(ctx context.Context, client *Client, params ...func(*Params)) (*BonusTransaction, *resty.Response, error) {
 	return NewBonusTransactionService(client).Update(ctx, bonusTransaction.GetID(), bonusTransaction, params...)
 }
 
 // Create shortcut
-func (bonusTransaction *BonusTransaction) Create(ctx context.Context, client *Client, params ...*Params) (*BonusTransaction, *resty.Response, error) {
+func (bonusTransaction *BonusTransaction) Create(ctx context.Context, client *Client, params ...func(*Params)) (*BonusTransaction, *resty.Response, error) {
 	return NewBonusTransactionService(client).Create(ctx, bonusTransaction, params...)
 }
 
@@ -348,12 +348,12 @@ type BonusTransactionService interface {
 	// GetList выполняет запрос на получение списка бонусных операций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[BonusTransaction], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[BonusTransaction], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех бонусных операций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[BonusTransaction], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной операции.
 	// Обязательные поля для заполнения:
@@ -362,13 +362,13 @@ type BonusTransactionService interface {
 	//	- transactionType (Тип бонусной операции)
 	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную операцию.
-	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	Create(ctx context.Context, bonusTransaction *BonusTransaction, params ...func(*Params)) (*BonusTransaction, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение бонусных операций.
 	// Изменяемые Бонусные операции должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список бонусных операций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых бонусных операций.
-	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...*Params) (*Slice[BonusTransaction], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, bonusTransactionList Slice[BonusTransaction], params ...func(*Params)) (*Slice[BonusTransaction], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление бонусных операций.
 	// Принимает контекст и множество бонусных операций.
@@ -388,12 +388,12 @@ type BonusTransactionService interface {
 	// GetByID выполняет запрос на получение бонусной операции.
 	// Принимает контекст, ID бонусной операции и опционально объект параметров запроса Params.
 	// Возвращает бонусную операцию.
-	GetByID(ctx context.Context, id string, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*BonusTransaction, *resty.Response, error)
 
 	// Update выполняет запрос на изменение бонусной операции.
 	// Принимает контекст, бонусную операцию и опционально объект параметров запроса Params.
 	// Возвращает изменённую бонусную операцию.
-	Update(ctx context.Context, id string, bonusTransaction *BonusTransaction, params ...*Params) (*BonusTransaction, *resty.Response, error)
+	Update(ctx context.Context, id string, bonusTransaction *BonusTransaction, params ...func(*Params)) (*BonusTransaction, *resty.Response, error)
 }
 
 const (

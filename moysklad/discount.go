@@ -744,12 +744,12 @@ type DiscountService interface {
 	// GetList выполняет запрос на получение списка всех скидок.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Discount], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Discount], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех скидок в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Discount], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Discount], *resty.Response, error)
 
 	// UpdateRoundOffDiscount выполняет запрос на изменение округления копеек.
 	// Принимает контекст, ID округления копеек и скидку.
@@ -759,7 +759,7 @@ type DiscountService interface {
 	// GetAccumulationDiscountList выполняет запрос на получение списка накопительных скидок.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetAccumulationDiscountList(ctx context.Context, params ...*Params) (*List[AccumulationDiscount], *resty.Response, error)
+	GetAccumulationDiscountList(ctx context.Context, params ...func(*Params)) (*List[AccumulationDiscount], *resty.Response, error)
 
 	// CreateAccumulationDiscount выполняет запрос на создание накопительной скидки.
 	// Обязательные поля для заполнения:
@@ -774,7 +774,7 @@ type DiscountService interface {
 	// GetAccumulationDiscountByID выполняет запрос на получение накопительной скидки по ID.
 	// Принимает контекст, ID накопительной скидки и опционально объект параметров запроса Params.
 	// Возвращает накопительную скидку.
-	GetAccumulationDiscountByID(ctx context.Context, id string, params ...*Params) (*AccumulationDiscount, *resty.Response, error)
+	GetAccumulationDiscountByID(ctx context.Context, id string, params ...func(*Params)) (*AccumulationDiscount, *resty.Response, error)
 
 	// UpdateAccumulationDiscount выполняет запрос на изменение накопительной скидки.
 	// Принимает контекст, накопительную скидку и опционально объект параметров запроса Params.
@@ -789,7 +789,7 @@ type DiscountService interface {
 	// GetPersonalDiscountList выполняет запрос на получение списка персональных скидок.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPersonalDiscountList(ctx context.Context, params ...*Params) (*List[PersonalDiscount], *resty.Response, error)
+	GetPersonalDiscountList(ctx context.Context, params ...func(*Params)) (*List[PersonalDiscount], *resty.Response, error)
 
 	// CreatePersonalDiscount выполняет запрос на создание персональной скидки.
 	// Обязательные поля для заполнения:
@@ -804,7 +804,7 @@ type DiscountService interface {
 	// GetPersonalDiscountByID выполняет запрос на получение персональной скидки по ID.
 	// Принимает контекст, ID персональной скидки и опционально объект параметров запроса Params.
 	// Возвращает персональную скидку.
-	GetPersonalDiscountByID(ctx context.Context, id string, params ...*Params) (*PersonalDiscount, *resty.Response, error)
+	GetPersonalDiscountByID(ctx context.Context, id string, params ...func(*Params)) (*PersonalDiscount, *resty.Response, error)
 
 	// UpdatePersonalDiscount выполняет запрос на изменение персональной скидки.
 	// Принимает контекст, персональную скидку и опционально объект параметров запроса Params.
@@ -819,7 +819,7 @@ type DiscountService interface {
 	// GetSpecialPriceDiscountList выполняет запрос на получение списка специальных цен.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetSpecialPriceDiscountList(ctx context.Context, params ...*Params) (*List[SpecialPriceDiscount], *resty.Response, error)
+	GetSpecialPriceDiscountList(ctx context.Context, params ...func(*Params)) (*List[SpecialPriceDiscount], *resty.Response, error)
 
 	// CreateSpecialPriceDiscount выполняет запрос на создание специальной цены.
 	// Обязательные поля для заполнения:
@@ -835,7 +835,7 @@ type DiscountService interface {
 	// GetSpecialPriceDiscountByID выполняет запрос на получение специальной цены по ID.
 	// Принимает контекст, ID специальной цены и опционально объект параметров запроса Params.
 	// Возвращает специальную цену.
-	GetSpecialPriceDiscountByID(ctx context.Context, id string, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error)
+	GetSpecialPriceDiscountByID(ctx context.Context, id string, params ...func(*Params)) (*SpecialPriceDiscount, *resty.Response, error)
 
 	// UpdateSpecialPriceDiscount выполняет запрос на изменение специальной цены.
 	// Принимает контекст, специальную цену и опционально объект параметров запроса Params.
@@ -868,17 +868,17 @@ func (service *discountService) UpdateRoundOffDiscount(ctx context.Context, id s
 	return NewRequestBuilder[Discount](service.client, path).Put(ctx, entity)
 }
 
-func (service *discountService) GetAccumulationDiscountList(ctx context.Context, params ...*Params) (*List[AccumulationDiscount], *resty.Response, error) {
-	return NewRequestBuilder[List[AccumulationDiscount]](service.client, EndpointAccumulationDiscount).SetParams(params...).Get(ctx)
+func (service *discountService) GetAccumulationDiscountList(ctx context.Context, params ...func(*Params)) (*List[AccumulationDiscount], *resty.Response, error) {
+	return NewRequestBuilder[List[AccumulationDiscount]](service.client, EndpointAccumulationDiscount).SetParams(params).Get(ctx)
 }
 
 func (service *discountService) CreateAccumulationDiscount(ctx context.Context, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
 	return NewRequestBuilder[AccumulationDiscount](service.client, EndpointAccumulationDiscount).Post(ctx, entity)
 }
 
-func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id string, params ...*Params) (*AccumulationDiscount, *resty.Response, error) {
+func (service *discountService) GetAccumulationDiscountByID(ctx context.Context, id string, params ...func(*Params)) (*AccumulationDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointAccumulationDiscountID, id)
-	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[AccumulationDiscount](service.client, path).SetParams(params).Get(ctx)
 }
 
 func (service *discountService) UpdateAccumulationDiscount(ctx context.Context, id string, entity *AccumulationDiscount) (*AccumulationDiscount, *resty.Response, error) {
@@ -891,17 +891,17 @@ func (service *discountService) DeleteAccumulationDiscount(ctx context.Context, 
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *discountService) GetPersonalDiscountList(ctx context.Context, params ...*Params) (*List[PersonalDiscount], *resty.Response, error) {
-	return NewRequestBuilder[List[PersonalDiscount]](service.client, EndpointPersonalDiscount).SetParams(params...).Get(ctx)
+func (service *discountService) GetPersonalDiscountList(ctx context.Context, params ...func(*Params)) (*List[PersonalDiscount], *resty.Response, error) {
+	return NewRequestBuilder[List[PersonalDiscount]](service.client, EndpointPersonalDiscount).SetParams(params).Get(ctx)
 }
 
 func (service *discountService) CreatePersonalDiscount(ctx context.Context, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
 	return NewRequestBuilder[PersonalDiscount](service.client, EndpointPersonalDiscount).Post(ctx, entity)
 }
 
-func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id string, params ...*Params) (*PersonalDiscount, *resty.Response, error) {
+func (service *discountService) GetPersonalDiscountByID(ctx context.Context, id string, params ...func(*Params)) (*PersonalDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointPersonalDiscountID, id)
-	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[PersonalDiscount](service.client, path).SetParams(params).Get(ctx)
 }
 
 func (service *discountService) UpdatePersonalDiscount(ctx context.Context, id string, entity *PersonalDiscount) (*PersonalDiscount, *resty.Response, error) {
@@ -914,17 +914,17 @@ func (service *discountService) DeletePersonalDiscount(ctx context.Context, id s
 	return NewRequestBuilder[any](service.client, path).Delete(ctx)
 }
 
-func (service *discountService) GetSpecialPriceDiscountList(ctx context.Context, params ...*Params) (*List[SpecialPriceDiscount], *resty.Response, error) {
-	return NewRequestBuilder[List[SpecialPriceDiscount]](service.client, EndpointSpecialPriceDiscount).SetParams(params...).Get(ctx)
+func (service *discountService) GetSpecialPriceDiscountList(ctx context.Context, params ...func(*Params)) (*List[SpecialPriceDiscount], *resty.Response, error) {
+	return NewRequestBuilder[List[SpecialPriceDiscount]](service.client, EndpointSpecialPriceDiscount).SetParams(params).Get(ctx)
 }
 
 func (service *discountService) CreateSpecialPriceDiscount(ctx context.Context, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {
 	return NewRequestBuilder[SpecialPriceDiscount](service.client, EndpointSpecialPriceDiscount).Post(ctx, entity)
 }
 
-func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id string, params ...*Params) (*SpecialPriceDiscount, *resty.Response, error) {
+func (service *discountService) GetSpecialPriceDiscountByID(ctx context.Context, id string, params ...func(*Params)) (*SpecialPriceDiscount, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointSpecialPriceDiscountID, id)
-	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[SpecialPriceDiscount](service.client, path).SetParams(params).Get(ctx)
 }
 
 func (service *discountService) UpdateSpecialPriceDiscount(ctx context.Context, id string, entity *SpecialPriceDiscount) (*SpecialPriceDiscount, *resty.Response, error) {

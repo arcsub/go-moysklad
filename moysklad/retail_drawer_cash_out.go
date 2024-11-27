@@ -325,12 +325,12 @@ func (RetailDrawerCashOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailDrawerCashOut *RetailDrawerCashOut) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error) {
+func (retailDrawerCashOut *RetailDrawerCashOut) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailDrawerCashOut, *resty.Response, error) {
 	return NewRetailDrawerCashOutService(client).Update(ctx, retailDrawerCashOut.GetID(), retailDrawerCashOut, params...)
 }
 
 // Create shortcut
-func (retailDrawerCashOut *RetailDrawerCashOut) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error) {
+func (retailDrawerCashOut *RetailDrawerCashOut) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailDrawerCashOut, *resty.Response, error) {
 	return NewRetailDrawerCashOutService(client).Create(ctx, retailDrawerCashOut, params...)
 }
 
@@ -344,12 +344,12 @@ type RetailDrawerCashOutService interface {
 	// GetList выполняет запрос на получение списка выплат денег.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailDrawerCashOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailDrawerCashOut], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех выплат денег в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailDrawerCashOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailDrawerCashOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание выплаты денег.
 	// Обязательные поля для заполнения:
@@ -358,13 +358,13 @@ type RetailDrawerCashOutService interface {
 	//	- retailShift (Ссылка на розничную смену)
 	// Принимает контекст, выплату денег и опционально объект параметров запроса Params.
 	// Возвращает созданную выплату денег.
-	Create(ctx context.Context, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
+	Create(ctx context.Context, retailDrawerCashOut *RetailDrawerCashOut, params ...func(*Params)) (*RetailDrawerCashOut, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение выплат денег.
 	// Изменяемые выплаты денег должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список выплат денег и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых выплат денег.
-	CreateUpdateMany(ctx context.Context, retailDrawerCashOutList Slice[RetailDrawerCashOut], params ...*Params) (*Slice[RetailDrawerCashOut], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailDrawerCashOutList Slice[RetailDrawerCashOut], params ...func(*Params)) (*Slice[RetailDrawerCashOut], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление выплат денег.
 	// Принимает контекст и множество выплат денег.
@@ -384,12 +384,12 @@ type RetailDrawerCashOutService interface {
 	// GetByID выполняет запрос на получение выплаты денег по ID.
 	// Принимает контекст, ID выплаты денег и опционально объект параметров запроса Params.
 	// Возвращает выплату денег.
-	GetByID(ctx context.Context, id string, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailDrawerCashOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение выплаты денег.
 	// Принимает контекст, выплату денег и опционально объект параметров запроса Params.
 	// Возвращает изменённую выплату денег.
-	Update(ctx context.Context, id string, retailDrawerCashOut *RetailDrawerCashOut, params ...*Params) (*RetailDrawerCashOut, *resty.Response, error)
+	Update(ctx context.Context, id string, retailDrawerCashOut *RetailDrawerCashOut, params ...func(*Params)) (*RetailDrawerCashOut, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной выплаты денег со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -477,7 +477,7 @@ type RetailDrawerCashOutService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

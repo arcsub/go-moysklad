@@ -412,12 +412,12 @@ func (Processing) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processing *Processing) Update(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+func (processing *Processing) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Processing, *resty.Response, error) {
 	return NewProcessingService(client).Update(ctx, processing.GetID(), processing, params...)
 }
 
 // Create shortcut
-func (processing *Processing) Create(ctx context.Context, client *Client, params ...*Params) (*Processing, *resty.Response, error) {
+func (processing *Processing) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Processing, *resty.Response, error) {
 	return NewProcessingService(client).Create(ctx, processing, params...)
 }
 
@@ -551,12 +551,12 @@ type ProcessingService interface {
 	// GetList выполняет запрос на получение списка техопераций.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Processing], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Processing], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех техопераций в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Processing], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Processing], *resty.Response, error)
 
 	// Create выполняет запрос на создание техоперации.
 	// Обязательные для создания поля с привязкой техкарты:
@@ -575,13 +575,13 @@ type ProcessingService interface {
 	//
 	// Принимает контекст, техоперацию и опционально объект параметров запроса Params.
 	// Возвращает созданную техоперацию.
-	Create(ctx context.Context, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
+	Create(ctx context.Context, processing *Processing, params ...func(*Params)) (*Processing, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение техопераций.
 	// Изменяемые техоперации должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список техопераций и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых техопераций.
-	CreateUpdateMany(ctx context.Context, processingList Slice[Processing], params ...*Params) (*Slice[Processing], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingList Slice[Processing], params ...func(*Params)) (*Slice[Processing], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление техопераций.
 	// Принимает контекст и множество техопераций.
@@ -601,12 +601,12 @@ type ProcessingService interface {
 	// GetByID выполняет запрос на получение отдельной техоперации по ID.
 	// Принимает контекст, ID техоперации и опционально объект параметров запроса Params.
 	// Возвращает найденную техоперацию.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Processing, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Processing, *resty.Response, error)
 
 	// Update выполняет запрос на изменение техоперации.
 	// Принимает контекст, техоперацию и опционально объект параметров запроса Params.
 	// Возвращает изменённую техоперацию.
-	Update(ctx context.Context, id string, processing *Processing, params ...*Params) (*Processing, *resty.Response, error)
+	Update(ctx context.Context, id string, processing *Processing, params ...func(*Params)) (*Processing, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной техоперации со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.

@@ -511,12 +511,12 @@ func (InvoiceOut) MetaType() MetaType {
 }
 
 // Update shortcut
-func (invoiceOut *InvoiceOut) Update(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
+func (invoiceOut *InvoiceOut) Update(ctx context.Context, client *Client, params ...func(*Params)) (*InvoiceOut, *resty.Response, error) {
 	return NewInvoiceOutService(client).Update(ctx, invoiceOut.GetID(), invoiceOut, params...)
 }
 
 // Create shortcut
-func (invoiceOut *InvoiceOut) Create(ctx context.Context, client *Client, params ...*Params) (*InvoiceOut, *resty.Response, error) {
+func (invoiceOut *InvoiceOut) Create(ctx context.Context, client *Client, params ...func(*Params)) (*InvoiceOut, *resty.Response, error) {
 	return NewInvoiceOutService(client).Create(ctx, invoiceOut, params...)
 }
 
@@ -662,12 +662,12 @@ type InvoiceOutService interface {
 	// GetList выполняет запрос на получение списка счетов покупателям.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[InvoiceOut], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[InvoiceOut], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех счетов покупателям в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[InvoiceOut], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[InvoiceOut], *resty.Response, error)
 
 	// Create выполняет запрос на создание счета покупателю.
 	// Обязательные поля для заполнения:
@@ -676,13 +676,13 @@ type InvoiceOutService interface {
 	//	- agent (Ссылка на контрагента (покупателя))
 	// Принимает контекст, счет покупателю и опционально объект параметров запроса Params.
 	// Возвращает созданный счет покупателю.
-	Create(ctx context.Context, invoiceOut *InvoiceOut, params ...*Params) (*InvoiceOut, *resty.Response, error)
+	Create(ctx context.Context, invoiceOut *InvoiceOut, params ...func(*Params)) (*InvoiceOut, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение счетов покупателям.
 	// Изменяемые счета покупателям должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список счетов покупателям и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых счетов покупателям.
-	CreateUpdateMany(ctx context.Context, invoiceOutList Slice[InvoiceOut], params ...*Params) (*Slice[InvoiceOut], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, invoiceOutList Slice[InvoiceOut], params ...func(*Params)) (*Slice[InvoiceOut], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление счетов покупателям.
 	// Принимает контекст и множество счетов покупателям.
@@ -702,12 +702,12 @@ type InvoiceOutService interface {
 	// GetByID выполняет запрос на получение отдельного счета покупателю по ID.
 	// Принимает контекст, ID счета покупателю и опционально объект параметров запроса Params.
 	// Возвращает найденный счет покупателю.
-	GetByID(ctx context.Context, id string, params ...*Params) (*InvoiceOut, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*InvoiceOut, *resty.Response, error)
 
 	// Update выполняет запрос на изменение счета покупателю.
 	// Принимает контекст, счет покупателю и опционально объект параметров запроса Params.
 	// Возвращает изменённый счет покупателю.
-	Update(ctx context.Context, id string, invoiceOut *InvoiceOut, params ...*Params) (*InvoiceOut, *resty.Response, error)
+	Update(ctx context.Context, id string, invoiceOut *InvoiceOut, params ...func(*Params)) (*InvoiceOut, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного счета покупателю со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -730,24 +730,24 @@ type InvoiceOutService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[InvoiceOutPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[InvoiceOutPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[InvoiceOutPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[InvoiceOutPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*InvoiceOutPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*InvoiceOutPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *InvoiceOutPosition, params ...*Params) (*InvoiceOutPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *InvoiceOutPosition, params ...func(*Params)) (*InvoiceOutPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *InvoiceOutPosition, params ...*Params) (*InvoiceOutPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *InvoiceOutPosition, params ...func(*Params)) (*InvoiceOutPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

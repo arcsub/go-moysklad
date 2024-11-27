@@ -1174,17 +1174,17 @@ type NotificationService interface {
 	// GetList выполняет запрос на получение ленты уведомлений.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Notification], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Notification], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех уведомлений в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Notification], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Notification], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного уведомления по ID.
 	// Принимает контекст, ID уведомления и опционально объект параметров запроса Params.
 	// Возвращает найденное уведомление.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Notification, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Notification, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление уведомления.
 	// Принимает контекст и ID уведомления.

@@ -371,12 +371,12 @@ func (ProcessingOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingOrder *ProcessingOrder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+func (processingOrder *ProcessingOrder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error) {
 	return NewProcessingOrderService(client).Update(ctx, processingOrder.GetID(), processingOrder, params...)
 }
 
 // Create shortcut
-func (processingOrder *ProcessingOrder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingOrder, *resty.Response, error) {
+func (processingOrder *ProcessingOrder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error) {
 	return NewProcessingOrderService(client).Create(ctx, processingOrder, params...)
 }
 
@@ -482,12 +482,12 @@ type ProcessingOrderService interface {
 	// GetList выполняет запрос на получение списка заказов на производство.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingOrder], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех заказов на производство в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[ProcessingOrder], *resty.Response, error)
 
 	// Create выполняет запрос на создание заказа на производство.
 	// Обязательные поля для заполнения:
@@ -496,13 +496,13 @@ type ProcessingOrderService interface {
 	//	- positions (Ссылка на позиции в Заказе)
 	// Принимает контекст, заказ на производство и опционально объект параметров запроса Params.
 	// Возвращает созданный заказ на производство.
-	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	Create(ctx context.Context, processingOrder *ProcessingOrder, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение заказов на производство.
 	// Изменяемые заказы на производство должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список заказов на производство и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых заказов на производство.
-	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...*Params) (*Slice[ProcessingOrder], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingOrderList Slice[ProcessingOrder], params ...func(*Params)) (*Slice[ProcessingOrder], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление заказов на производство.
 	// Принимает контекст и множество заказов на производство.
@@ -522,12 +522,12 @@ type ProcessingOrderService interface {
 	// GetByID выполняет запрос на получение заказа на производство по ID.
 	// Принимает контекст, ID заказа на производство и опционально объект параметров запроса Params.
 	// Возвращает заказ на производство.
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение заказа на производство.
 	// Принимает контекст, заказ на производство и опционально объект параметров запроса Params.
 	// Возвращает изменённый заказа на производство.
-	Update(ctx context.Context, id string, processingOrder *ProcessingOrder, params ...*Params) (*ProcessingOrder, *resty.Response, error)
+	Update(ctx context.Context, id string, processingOrder *ProcessingOrder, params ...func(*Params)) (*ProcessingOrder, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного заказа на производство со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -549,24 +549,24 @@ type ProcessingOrderService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[ProcessingOrderPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[ProcessingOrderPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[ProcessingOrderPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[ProcessingOrderPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*ProcessingOrderPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingOrderPosition, params ...func(*Params)) (*ProcessingOrderPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *ProcessingOrderPosition, params ...*Params) (*ProcessingOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProcessingOrderPosition, params ...func(*Params)) (*ProcessingOrderPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

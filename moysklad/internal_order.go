@@ -409,12 +409,12 @@ func (InternalOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (internalOrder *InternalOrder) Update(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+func (internalOrder *InternalOrder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*InternalOrder, *resty.Response, error) {
 	return NewInternalOrderService(client).Update(ctx, internalOrder.GetID(), internalOrder, params...)
 }
 
 // Create shortcut
-func (internalOrder *InternalOrder) Create(ctx context.Context, client *Client, params ...*Params) (*InternalOrder, *resty.Response, error) {
+func (internalOrder *InternalOrder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*InternalOrder, *resty.Response, error) {
 	return NewInternalOrderService(client).Create(ctx, internalOrder, params...)
 }
 
@@ -538,25 +538,25 @@ type InternalOrderService interface {
 	// GetList выполняет запрос на получение списка внутренних заказов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[InternalOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[InternalOrder], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех внутренних заказов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[InternalOrder], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[InternalOrder], *resty.Response, error)
 
 	// Create выполняет запрос на создание внутреннего заказа.
 	// Обязательные поля для заполнения:
 	//	- organization (Ссылка на ваше юрлицо)
 	// Принимает контекст, внутренний заказ и опционально объект параметров запроса Params.
 	// Возвращает созданный внутренний заказ.
-	Create(ctx context.Context, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
+	Create(ctx context.Context, internalOrder *InternalOrder, params ...func(*Params)) (*InternalOrder, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение внутренних заказов.
 	// Изменяемые внутренние заказы должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список внутренних заказов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых внутренних заказов.
-	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params ...*Params) (*Slice[InternalOrder], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, internalOrderList Slice[InternalOrder], params ...func(*Params)) (*Slice[InternalOrder], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление внутренних заказов.
 	// Принимает контекст и множество внутренних заказов.
@@ -576,12 +576,12 @@ type InternalOrderService interface {
 	// GetByID выполняет запрос на получение отдельного внутреннего заказа по ID.
 	// Принимает контекст, ID внутреннего заказа и опционально объект параметров запроса Params.
 	// Возвращает найденный внутренний заказ.
-	GetByID(ctx context.Context, id string, params ...*Params) (*InternalOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*InternalOrder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение внутреннего заказа.
 	// Принимает контекст, внутренний заказ и опционально объект параметров запроса Params.
 	// Возвращает изменённый внутренний заказ.
-	Update(ctx context.Context, id string, internalOrder *InternalOrder, params ...*Params) (*InternalOrder, *resty.Response, error)
+	Update(ctx context.Context, id string, internalOrder *InternalOrder, params ...func(*Params)) (*InternalOrder, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного внутреннего заказа со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -596,24 +596,24 @@ type InternalOrderService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[InternalOrderPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[InternalOrderPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[InternalOrderPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[InternalOrderPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*InternalOrderPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *InternalOrderPosition, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *InternalOrderPosition, params ...func(*Params)) (*InternalOrderPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *InternalOrderPosition, params ...*Params) (*InternalOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *InternalOrderPosition, params ...func(*Params)) (*InternalOrderPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

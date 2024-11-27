@@ -407,12 +407,12 @@ func (Move) MetaType() MetaType {
 }
 
 // Update shortcut
-func (move *Move) Update(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+func (move *Move) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Move, *resty.Response, error) {
 	return NewMoveService(client).Update(ctx, move.GetID(), move, params...)
 }
 
 // Create shortcut
-func (move *Move) Create(ctx context.Context, client *Client, params ...*Params) (*Move, *resty.Response, error) {
+func (move *Move) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Move, *resty.Response, error) {
 	return NewMoveService(client).Create(ctx, move, params...)
 }
 
@@ -566,12 +566,12 @@ type MoveService interface {
 	// GetList выполняет запрос на получение списка перемещений.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Move], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Move], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех перемещений в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Move], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Move], *resty.Response, error)
 
 	// Create выполняет запрос на создание перемещения.
 	// Обязательные поля для заполнения:
@@ -580,13 +580,13 @@ type MoveService interface {
 	//	- targetStore (Ссылка на склад, на который совершается перемещение)
 	// Принимает контекст, перемещение и опционально объект параметров запроса Params.
 	// Возвращает созданное перемещение.
-	Create(ctx context.Context, move *Move, params ...*Params) (*Move, *resty.Response, error)
+	Create(ctx context.Context, move *Move, params ...func(*Params)) (*Move, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение перемещений.
 	// Изменяемые перемещения должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список перемещений и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых перемещений.
-	CreateUpdateMany(ctx context.Context, moveList Slice[Move], params ...*Params) (*Slice[Move], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, moveList Slice[Move], params ...func(*Params)) (*Slice[Move], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление перемещений.
 	// Принимает контекст и множество перемещений.
@@ -606,12 +606,12 @@ type MoveService interface {
 	// GetByID выполняет запрос на получение отдельного перемещения по ID.
 	// Принимает контекст, ID перемещения и опционально объект параметров запроса Params.
 	// Возвращает найденное перемещение.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Move, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Move, *resty.Response, error)
 
 	// Update выполняет запрос на изменение перемещения.
 	// Принимает контекст, перемещение и опционально объект параметров запроса Params.
 	// Возвращает изменённое перемещение.
-	Update(ctx context.Context, id string, move *Move, params ...*Params) (*Move, *resty.Response, error)
+	Update(ctx context.Context, id string, move *Move, params ...func(*Params)) (*Move, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного перемещения со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -634,24 +634,24 @@ type MoveService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[MovePosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[MovePosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[MovePosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[MovePosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*MovePosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*MovePosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *MovePosition, params ...*Params) (*MovePosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *MovePosition, params ...func(*Params)) (*MovePosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *MovePosition, params ...*Params) (*MovePosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *MovePosition, params ...func(*Params)) (*MovePosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.

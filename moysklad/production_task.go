@@ -293,12 +293,12 @@ func (ProductionTask) MetaType() MetaType {
 }
 
 // Update shortcut
-func (productionTask *ProductionTask) Update(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+func (productionTask *ProductionTask) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProductionTask, *resty.Response, error) {
 	return NewProductionTaskService(client).Update(ctx, productionTask.GetID(), productionTask, params...)
 }
 
 // Create shortcut
-func (productionTask *ProductionTask) Create(ctx context.Context, client *Client, params ...*Params) (*ProductionTask, *resty.Response, error) {
+func (productionTask *ProductionTask) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProductionTask, *resty.Response, error) {
 	return NewProductionTaskService(client).Create(ctx, productionTask, params...)
 }
 
@@ -436,9 +436,9 @@ func (ProductionTaskResult) MetaType() MetaType {
 // ProductionTaskService
 // Сервис для работы с производственными заданиями
 type ProductionTaskService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProductionTask], *resty.Response, error)
-	Create(ctx context.Context, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, productionTaskList Slice[ProductionTask], params ...*Params) (*Slice[ProductionTask], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProductionTask], *resty.Response, error)
+	Create(ctx context.Context, productionTask *ProductionTask, params ...func(*Params)) (*ProductionTask, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productionTaskList Slice[ProductionTask], params ...func(*Params)) (*Slice[ProductionTask], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProductionTask) (*DeleteManyResponse, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
@@ -477,8 +477,8 @@ type ProductionTaskService interface {
 	// Принимает контекст и множество доп полей.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeleteAttributeMany(ctx context.Context, attributes ...*Attribute) (*DeleteManyResponse, *resty.Response, error)
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProductionTask, *resty.Response, error)
-	Update(ctx context.Context, id string, productionTask *ProductionTask, params ...*Params) (*ProductionTask, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProductionTask, *resty.Response, error)
+	Update(ctx context.Context, id string, productionTask *ProductionTask, params ...func(*Params)) (*ProductionTask, *resty.Response, error)
 	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление производственного задания.
@@ -489,20 +489,20 @@ type ProductionTaskService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[ProductionRow], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[ProductionRow], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[ProductionRow], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[ProductionRow], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*ProductionRow, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*ProductionRow, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *ProductionRow, params ...*Params) (*ProductionRow, *resty.Response, error)
-	CreatePosition(ctx context.Context, id string, position *ProductionRow, params ...*Params) (*ProductionRow, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProductionRow, params ...func(*Params)) (*ProductionRow, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProductionRow, params ...func(*Params)) (*ProductionRow, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -533,10 +533,10 @@ type ProductionTaskService interface {
 	// Принимает контекст, ID документа, ID позиции и множество кодов маркировки.
 	// Возвращает объект DeleteManyResponse, содержащий информацию об успешном удалении или ошибку.
 	DeletePositionTrackingCodeMany(ctx context.Context, id string, positionID string, trackingCodes ...*TrackingCode) (*DeleteManyResponse, *resty.Response, error)
-	GetProducts(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionTaskResult], *resty.Response, error)
-	GetProductByID(ctx context.Context, id string, productID string, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
-	CreateProduct(ctx context.Context, id string, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
-	UpdateProduct(ctx context.Context, id string, productID string, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error)
+	GetProducts(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionTaskResult], *resty.Response, error)
+	GetProductByID(ctx context.Context, id string, productID string, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error)
+	CreateProduct(ctx context.Context, id string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error)
+	UpdateProduct(ctx context.Context, id string, productID string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error)
 	DeleteProduct(ctx context.Context, id string, productID string) (bool, *resty.Response, error)
 	DeleteProductMany(ctx context.Context, id string) (*DeleteManyResponse, *resty.Response, error)
 
@@ -595,9 +595,9 @@ type productionTaskService struct {
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-poluchit-produkty-proizwodstwennogo-zadaniq
-func (service *productionTaskService) GetProducts(ctx context.Context, id string, params ...*Params) (*MetaArray[ProductionTaskResult], *resty.Response, error) {
+func (service *productionTaskService) GetProducts(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProductionTaskResult], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProducts, id)
-	return NewRequestBuilder[MetaArray[ProductionTaskResult]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProductionTaskResult]](service.client, path).SetParams(params).Get(ctx)
 }
 
 // GetProductByID Получить продукт производственного задания.
@@ -605,9 +605,9 @@ func (service *productionTaskService) GetProducts(ctx context.Context, id string
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-produkt-proizwodstwennogo-zadaniq
-func (service *productionTaskService) GetProductByID(ctx context.Context, id string, productID string, params ...*Params) (*ProductionTaskResult, *resty.Response, error) {
+func (service *productionTaskService) GetProductByID(ctx context.Context, id string, productID string, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProductsID, id, productID)
-	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params).Get(ctx)
 }
 
 // CreateProduct Создать продукт.
@@ -615,9 +615,9 @@ func (service *productionTaskService) GetProductByID(ctx context.Context, id str
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-sozdat-produkt
-func (service *productionTaskService) CreateProduct(ctx context.Context, id string, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error) {
+func (service *productionTaskService) CreateProduct(ctx context.Context, id string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProducts, id) // fixme:в документации указан endpoint без 's' на конце, вероятно ошибка
-	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params...).Post(ctx, productionTaskResult)
+	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params).Post(ctx, productionTaskResult)
 }
 
 // UpdateProduct Изменить продукт.
@@ -625,9 +625,9 @@ func (service *productionTaskService) CreateProduct(ctx context.Context, id stri
 // [Документация МойСклад]
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-proizwodstwennoe-zadanie-izmenit-produkt
-func (service *productionTaskService) UpdateProduct(ctx context.Context, id string, productID string, productionTaskResult *ProductionTaskResult, params ...*Params) (*ProductionTaskResult, *resty.Response, error) {
+func (service *productionTaskService) UpdateProduct(ctx context.Context, id string, productID string, productionTaskResult *ProductionTaskResult, params ...func(*Params)) (*ProductionTaskResult, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProductionTaskProductsID, id, productID)
-	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params...).Put(ctx, productionTaskResult)
+	return NewRequestBuilder[ProductionTaskResult](service.client, path).SetParams(params).Put(ctx, productionTaskResult)
 }
 
 // DeleteProduct Удалить продукт.

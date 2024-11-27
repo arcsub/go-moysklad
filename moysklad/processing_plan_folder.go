@@ -147,12 +147,12 @@ func (ProcessingPlanFolder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingPlanFolder *ProcessingPlanFolder) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
+func (processingPlanFolder *ProcessingPlanFolder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingPlanFolder, *resty.Response, error) {
 	return NewProcessingPlanFolderService(client).Update(ctx, processingPlanFolder.GetID(), processingPlanFolder, params...)
 }
 
 // Create shortcut
-func (processingPlanFolder *ProcessingPlanFolder) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error) {
+func (processingPlanFolder *ProcessingPlanFolder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingPlanFolder, *resty.Response, error) {
 	return NewProcessingPlanFolderService(client).Create(ctx, processingPlanFolder, params...)
 }
 
@@ -164,22 +164,22 @@ func (processingPlanFolder *ProcessingPlanFolder) Delete(ctx context.Context, cl
 // ProcessingPlanFolderService
 // Сервис для работы с группами техкарт.
 type ProcessingPlanFolderService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlanFolder], *resty.Response, error)
-	Create(ctx context.Context, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingPlanFolder], *resty.Response, error)
+	Create(ctx context.Context, processingPlanFolder *ProcessingPlanFolder, params ...func(*Params)) (*ProcessingPlanFolder, *resty.Response, error)
 	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
 	// Delete выполняет запрос на удаление группы техкарт.
 	// Принимает контекст и группу техкарт.
 	// Возвращает «true» в случае успешного удаления группы техкарт.
 	Delete(ctx context.Context, entity *ProcessingPlanFolder) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
-	Update(ctx context.Context, id string, processingPlanFolder *ProcessingPlanFolder, params ...*Params) (*ProcessingPlanFolder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingPlanFolder, *resty.Response, error)
+	Update(ctx context.Context, id string, processingPlanFolder *ProcessingPlanFolder, params ...func(*Params)) (*ProcessingPlanFolder, *resty.Response, error)
 	GetMetadata(ctx context.Context) (*MetaAttributesStatesSharedWrapper, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

@@ -123,12 +123,12 @@ func (WebhookStock) MetaType() MetaType {
 }
 
 // Update shortcut
-func (webhookStock *WebhookStock) Update(ctx context.Context, client *Client, params ...*Params) (*WebhookStock, *resty.Response, error) {
+func (webhookStock *WebhookStock) Update(ctx context.Context, client *Client, params ...func(*Params)) (*WebhookStock, *resty.Response, error) {
 	return NewWebhookStockService(client).Update(ctx, webhookStock.GetID(), webhookStock, params...)
 }
 
 // Create shortcut
-func (webhookStock *WebhookStock) Create(ctx context.Context, client *Client, params ...*Params) (*WebhookStock, *resty.Response, error) {
+func (webhookStock *WebhookStock) Create(ctx context.Context, client *Client, params ...func(*Params)) (*WebhookStock, *resty.Response, error) {
 	return NewWebhookStockService(client).Create(ctx, webhookStock, params...)
 }
 
@@ -160,12 +160,12 @@ type WebhookStockService interface {
 	// GetList выполняет запрос на получение списка вебхуков на изменение остатков.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[WebhookStock], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[WebhookStock], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех вебхуков на изменение остатков в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[WebhookStock], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[WebhookStock], *resty.Response, error)
 
 	// Create выполняет запрос на создание вебхука на изменение остатков.
 	// Обязательные поля для заполнения:
@@ -173,13 +173,13 @@ type WebhookStockService interface {
 	//	- url (URL, по которому будет происходить обработка вебхука)
 	// Принимает контекст, вебхук на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает созданный вебхук на изменение остатков.
-	Create(ctx context.Context, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
+	Create(ctx context.Context, webhookStock *WebhookStock, params ...func(*Params)) (*WebhookStock, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение вебхуков на изменение остатков.
 	// Изменяемые вебхуки на изменение остатков должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список вебхуков на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых вебхуков на изменение остатков.
-	CreateUpdateMany(ctx context.Context, webhookStockList Slice[WebhookStock], params ...*Params) (*Slice[WebhookStock], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, webhookStockList Slice[WebhookStock], params ...func(*Params)) (*Slice[WebhookStock], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление вебхуков на изменение остатков.
 	// Принимает контекст и множество вебхуков на изменение остатков.
@@ -199,12 +199,12 @@ type WebhookStockService interface {
 	// GetByID выполняет запрос на получение отдельного вебхука на изменение остатков по ID.
 	// Принимает контекст, ID вебхука на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает найденный вебхук на изменение остатков.
-	GetByID(ctx context.Context, id string, params ...*Params) (*WebhookStock, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*WebhookStock, *resty.Response, error)
 
 	// Update выполняет запрос на изменение вебхука на изменение остатков.
 	// Принимает контекст, вебхук на изменение остатков и опционально объект параметров запроса Params.
 	// Возвращает изменённый вебхук на изменение остатков.
-	Update(ctx context.Context, id string, webhookStock *WebhookStock, params ...*Params) (*WebhookStock, *resty.Response, error)
+	Update(ctx context.Context, id string, webhookStock *WebhookStock, params ...func(*Params)) (*WebhookStock, *resty.Response, error)
 }
 
 const (

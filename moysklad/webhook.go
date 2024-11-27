@@ -163,12 +163,12 @@ func (Webhook) MetaType() MetaType {
 }
 
 // Update shortcut
-func (webhook *Webhook) Update(ctx context.Context, client *Client, params ...*Params) (*Webhook, *resty.Response, error) {
+func (webhook *Webhook) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Webhook, *resty.Response, error) {
 	return NewWebhookService(client).Update(ctx, webhook.GetID(), webhook, params...)
 }
 
 // Create shortcut
-func (webhook *Webhook) Create(ctx context.Context, client *Client, params ...*Params) (*Webhook, *resty.Response, error) {
+func (webhook *Webhook) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Webhook, *resty.Response, error) {
 	return NewWebhookService(client).Create(ctx, webhook, params...)
 }
 
@@ -222,12 +222,12 @@ type WebhookService interface {
 	// GetList выполняет запрос на получение списка вебхуков.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Webhook], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Webhook], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех вебхуков в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Webhook], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Webhook], *resty.Response, error)
 
 	// Create выполняет запрос на создание вебхука.
 	// Обязательные поля для заполнения:
@@ -236,13 +236,13 @@ type WebhookService interface {
 	//	- url (URL, по которому будет происходить запрос)
 	// Принимает контекст, вебхук и опционально объект параметров запроса Params.
 	// Возвращает созданный вебхук.
-	Create(ctx context.Context, webhook *Webhook, params ...*Params) (*Webhook, *resty.Response, error)
+	Create(ctx context.Context, webhook *Webhook, params ...func(*Params)) (*Webhook, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение вебхуков.
 	// Изменяемые вебхуки должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список вебхуков и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых вебхуков.
-	CreateUpdateMany(ctx context.Context, webhookList Slice[Webhook], params ...*Params) (*Slice[Webhook], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, webhookList Slice[Webhook], params ...func(*Params)) (*Slice[Webhook], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление вебхуков.
 	// Принимает контекст и множество вебхуков.
@@ -262,12 +262,12 @@ type WebhookService interface {
 	// GetByID выполняет запрос на получение отдельного вебхука по ID.
 	// Принимает контекст, ID вебхука и опционально объект параметров запроса Params.
 	// Возвращает найденный вебхук.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Webhook, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Webhook, *resty.Response, error)
 
 	// Update выполняет запрос на изменение вебхука.
 	// Принимает контекст, вебхук и опционально объект параметров запроса Params.
 	// Возвращает изменённый вебхук.
-	Update(ctx context.Context, id string, webhook *Webhook, params ...*Params) (*Webhook, *resty.Response, error)
+	Update(ctx context.Context, id string, webhook *Webhook, params ...func(*Params)) (*Webhook, *resty.Response, error)
 }
 
 const (

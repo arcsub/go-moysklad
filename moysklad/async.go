@@ -63,7 +63,7 @@ type AsyncService interface {
 	// Доступна фильтрация по полям state, request, deletionDate.
 	// Результат содержит статусы Асинхронных задач за последнюю неделю.
 	// Возвращает объект List.
-	GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error)
+	GetStatuses(ctx context.Context, params ...func(*Params)) (*List[Async], *resty.Response, error)
 
 	// GetStatusByID выполняет запрос на получение статуса Асинхронной задачи.
 	// Принимает контекст и ID асинхронной задачи.
@@ -75,8 +75,8 @@ type asyncService struct {
 	Endpoint
 }
 
-func (service *asyncService) GetStatuses(ctx context.Context, params ...*Params) (*List[Async], *resty.Response, error) {
-	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params...).Get(ctx)
+func (service *asyncService) GetStatuses(ctx context.Context, params ...func(*Params)) (*List[Async], *resty.Response, error) {
+	return NewRequestBuilder[List[Async]](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
 func (service *asyncService) GetStatusByID(ctx context.Context, id string) (*Async, *resty.Response, error) {

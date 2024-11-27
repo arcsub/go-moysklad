@@ -612,12 +612,12 @@ func (CustomerOrder) MetaType() MetaType {
 }
 
 // Update shortcut
-func (customerOrder *CustomerOrder) Update(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+func (customerOrder *CustomerOrder) Update(ctx context.Context, client *Client, params ...func(*Params)) (*CustomerOrder, *resty.Response, error) {
 	return NewCustomerOrderService(client).Update(ctx, customerOrder.GetID(), customerOrder, params...)
 }
 
 // Create shortcut
-func (customerOrder *CustomerOrder) Create(ctx context.Context, client *Client, params ...*Params) (*CustomerOrder, *resty.Response, error) {
+func (customerOrder *CustomerOrder) Create(ctx context.Context, client *Client, params ...func(*Params)) (*CustomerOrder, *resty.Response, error) {
 	return NewCustomerOrderService(client).Create(ctx, customerOrder, params...)
 }
 
@@ -832,12 +832,12 @@ type CustomerOrderService interface {
 	// GetList выполняет запрос на получение списка заказов покупателей.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[CustomerOrder], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[CustomerOrder], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех заказов покупателей в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[CustomerOrder], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[CustomerOrder], *resty.Response, error)
 
 	// Create выполняет запрос на создание заказа покупателя.
 	// Обязательные поля для заполнения:
@@ -845,13 +845,13 @@ type CustomerOrderService interface {
 	//	- agent (Ссылка на контрагента (покупателя))
 	// Принимает контекст, заказ покупателя и опционально объект параметров запроса Params.
 	// Возвращает созданный заказ покупателя.
-	Create(ctx context.Context, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)
+	Create(ctx context.Context, customerOrder *CustomerOrder, params ...func(*Params)) (*CustomerOrder, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение заказов покупателей.
 	// Изменяемые заказы покупателей должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список заказов покупателей и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых заказов покупателей.
-	CreateUpdateMany(ctx context.Context, customerOrderList Slice[CustomerOrder], params ...*Params) (*Slice[CustomerOrder], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, customerOrderList Slice[CustomerOrder], params ...func(*Params)) (*Slice[CustomerOrder], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление заказов покупателей.
 	// Принимает контекст и множество заказов покупателей.
@@ -871,12 +871,12 @@ type CustomerOrderService interface {
 	// GetByID выполняет запрос на получение отдельного заказа покупателя по ID.
 	// Принимает контекст, ID заказа покупателя и опционально объект параметров запроса Params.
 	// Возвращает найденный заказ покупателя.
-	GetByID(ctx context.Context, id string, params ...*Params) (*CustomerOrder, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*CustomerOrder, *resty.Response, error)
 
 	// Update выполняет запрос на изменение заказа покупателя.
 	// Принимает контекст, заказ покупателя и опционально объект параметров запроса Params.
 	// Возвращает изменённый заказ покупателя.
-	Update(ctx context.Context, id string, customerOrder *CustomerOrder, params ...*Params) (*CustomerOrder, *resty.Response, error)
+	Update(ctx context.Context, id string, customerOrder *CustomerOrder, params ...func(*Params)) (*CustomerOrder, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных заказов покупателей.
 	// Принимает контекст.
@@ -886,24 +886,24 @@ type CustomerOrderService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[CustomerOrderPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[CustomerOrderPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[CustomerOrderPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[CustomerOrderPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*CustomerOrderPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*CustomerOrderPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *CustomerOrderPosition, params ...*Params) (*CustomerOrderPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *CustomerOrderPosition, params ...func(*Params)) (*CustomerOrderPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *CustomerOrderPosition, params ...*Params) (*CustomerOrderPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *CustomerOrderPosition, params ...func(*Params)) (*CustomerOrderPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -1004,7 +1004,7 @@ type CustomerOrderService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

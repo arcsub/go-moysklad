@@ -182,12 +182,12 @@ func (Project) MetaType() MetaType {
 }
 
 // Update shortcut
-func (project *Project) Update(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+func (project *Project) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Project, *resty.Response, error) {
 	return NewProjectService(client).Update(ctx, project.GetID(), project, params...)
 }
 
 // Create shortcut
-func (project *Project) Create(ctx context.Context, client *Client, params ...*Params) (*Project, *resty.Response, error) {
+func (project *Project) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Project, *resty.Response, error) {
 	return NewProjectService(client).Create(ctx, project, params...)
 }
 
@@ -201,25 +201,25 @@ type ProjectService interface {
 	// GetList выполняет запрос на получение списка проектов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Project], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Project], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех проектов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Project], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Project], *resty.Response, error)
 
 	// Create выполняет запрос на создание проекта.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование проекта)
 	// Принимает контекст, проект и опционально объект параметров запроса Params.
 	// Возвращает созданный проект.
-	Create(ctx context.Context, project *Project, params ...*Params) (*Project, *resty.Response, error)
+	Create(ctx context.Context, project *Project, params ...func(*Params)) (*Project, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение проектов.
 	// Изменяемые проекты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список проектов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых проектов.
-	CreateUpdateMany(ctx context.Context, projectList Slice[Project], params ...*Params) (*Slice[Project], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, projectList Slice[Project], params ...func(*Params)) (*Slice[Project], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление проектов.
 	// Принимает контекст и множество проектов.
@@ -239,12 +239,12 @@ type ProjectService interface {
 	// GetByID выполняет запрос на получение отдельного проекта по ID.
 	// Принимает контекст, ID проекта и опционально объект параметров запроса Params.
 	// Возвращает найденный проект.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Project, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Project, *resty.Response, error)
 
 	// Update выполняет запрос на изменение проекта.
 	// Принимает контекст, проект и опционально объект параметров запроса Params.
 	// Возвращает изменённый проект.
-	Update(ctx context.Context, id string, project *Project, params ...*Params) (*Project, *resty.Response, error)
+	Update(ctx context.Context, id string, project *Project, params ...func(*Params)) (*Project, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных проектов.
 	// Принимает контекст.
@@ -290,7 +290,7 @@ type ProjectService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

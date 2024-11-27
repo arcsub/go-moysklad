@@ -654,17 +654,17 @@ type AssortmentService interface {
 	// GetList выполняет запрос на получение товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект AssortmentResponse.
-	GetList(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*AssortmentResponse, *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (Assortment, *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (Assortment, *resty.Response, error)
 
 	// GetListAsync выполняет асинхронный запрос на получение всех товаров, услуг, комплектов, модификаций и серий в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает готовый сервис AsyncResultService для обработки данного запроса.
-	GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error)
+	GetListAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[AssortmentResponse], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление позиций в Ассортименте.
 	// Принимает контекст и множество объектов, реализующих интерфейс AssortmentConverter.
@@ -691,27 +691,26 @@ const (
 	EndpointAssortmentSettings = EndpointAssortment + "/settings"
 )
 
-func (service *assortmentService) GetList(ctx context.Context, params ...*Params) (*AssortmentResponse, *resty.Response, error) {
-	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params...).Get(ctx)
+func (service *assortmentService) GetList(ctx context.Context, params ...func(*Params)) (*AssortmentResponse, *resty.Response, error) {
+	return NewRequestBuilder[AssortmentResponse](service.client, service.uri).SetParams(params).Get(ctx)
 }
 
-func (service *assortmentService) GetListAll(ctx context.Context, params ...*Params) (Assortment, *resty.Response, error) {
+func (service *assortmentService) GetListAll(ctx context.Context, params ...func(*Params)) (Assortment, *resty.Response, error) {
 	ep := &endpointGetList[AssortmentPosition]{service.Endpoint}
 	aps, resp, err := ep.GetListAll(ctx, params...)
 	return Assortment(*aps), resp, err
 }
 
-func (service *assortmentService) GetListAsync(ctx context.Context, params ...*Params) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
-	p := NewParams()
-	if len(params) > 0 {
-		p = params[0]
-	}
-	p.WithAsync()
-	_, resp, err := NewRequestBuilder[any](service.client, service.uri).SetParams(p).Get(ctx)
+func (service *assortmentService) GetListAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[AssortmentResponse], *resty.Response, error) {
+	params = append(params, WithAsync())
+
+	_, resp, err := NewRequestBuilder[any](service.client, service.uri).SetParams(params).Get(ctx)
 	if err != nil {
 		return nil, resp, nil
 	}
+
 	async := NewAsyncResultService[AssortmentResponse](service.client, resp)
+
 	return async, resp, err
 }
 

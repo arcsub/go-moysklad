@@ -114,17 +114,17 @@ type RegionService interface {
 	// GetList выполняет запрос на получение списка регионов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Region], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Region], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех регионов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Region], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Region], *resty.Response, error)
 
 	// GetByID выполняет запрос на получение отдельного региона по ID.
 	// Принимает контекст, ID региона и опционально объект параметров запроса Params.
 	// Возвращает найденный регион.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Region, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Region, *resty.Response, error)
 }
 
 const (

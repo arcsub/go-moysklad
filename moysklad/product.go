@@ -673,12 +673,12 @@ func (Product) MetaType() MetaType {
 }
 
 // Create shortcut
-func (product *Product) Create(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+func (product *Product) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Product, *resty.Response, error) {
 	return NewProductService(client).Create(ctx, product, params...)
 }
 
 // Update shortcut
-func (product *Product) Update(ctx context.Context, client *Client, params ...*Params) (*Product, *resty.Response, error) {
+func (product *Product) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Product, *resty.Response, error) {
 	return NewProductService(client).Update(ctx, product.GetID(), product, params...)
 }
 
@@ -755,25 +755,25 @@ type ProductService interface {
 	// GetList выполняет запрос на получение списка товаров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Product], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Product], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех товаров в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Product], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Product], *resty.Response, error)
 
 	// Create выполняет запрос на создание товара.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование товара)
 	// Принимает контекст, товар и опционально объект параметров запроса Params.
 	// Возвращает созданный товар.
-	Create(ctx context.Context, product *Product, params ...*Params) (*Product, *resty.Response, error)
+	Create(ctx context.Context, product *Product, params ...func(*Params)) (*Product, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение товаров.
 	// Изменяемые товары должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список товаров и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых товаров.
-	CreateUpdateMany(ctx context.Context, productList Slice[Product], params ...*Params) (*Slice[Product], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, productList Slice[Product], params ...func(*Params)) (*Slice[Product], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление товаров.
 	// Принимает контекст и множество товаров.
@@ -793,12 +793,12 @@ type ProductService interface {
 	// GetByID выполняет запрос на получение отдельного товара по ID.
 	// Принимает контекст, ID товара и опционально объект параметров запроса Params.
 	// Возвращает найденный товар.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Product, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Product, *resty.Response, error)
 
 	// Update выполняет запрос на изменение товара.
 	// Принимает контекст, товар и опционально объект параметров запроса Params.
 	// Возвращает изменённый товар.
-	Update(ctx context.Context, id string, product *Product, params ...*Params) (*Product, *resty.Response, error)
+	Update(ctx context.Context, id string, product *Product, params ...func(*Params)) (*Product, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных товаров.
 	// Принимает контекст.
@@ -880,7 +880,7 @@ type ProductService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.
@@ -890,7 +890,7 @@ type ProductService interface {
 	// GetAudit выполняет запрос на получения событий товара.
 	// Принимает контекст, ID товара и опционально объект параметров запроса Params.
 	// Возвращает объект List
-	GetAudit(ctx context.Context, id string, params ...*Params) (*List[AuditEvent], *resty.Response, error)
+	GetAudit(ctx context.Context, id string, params ...func(*Params)) (*List[AuditEvent], *resty.Response, error)
 
 	// PrintLabel выполняет запрос на печать этикеток и ценников.
 	// Принимает контекст, ID товара и объект PrintLabelArg.

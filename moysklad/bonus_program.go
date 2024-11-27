@@ -230,12 +230,12 @@ func (BonusProgram) MetaType() MetaType {
 }
 
 // Update shortcut
-func (bonusProgram *BonusProgram) Update(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+func (bonusProgram *BonusProgram) Update(ctx context.Context, client *Client, params ...func(*Params)) (*BonusProgram, *resty.Response, error) {
 	return NewBonusProgramService(client).Update(ctx, bonusProgram.GetID(), bonusProgram, params...)
 }
 
 // Create shortcut
-func (bonusProgram *BonusProgram) Create(ctx context.Context, client *Client, params ...*Params) (*BonusProgram, *resty.Response, error) {
+func (bonusProgram *BonusProgram) Create(ctx context.Context, client *Client, params ...func(*Params)) (*BonusProgram, *resty.Response, error) {
 	return NewBonusProgramService(client).Create(ctx, bonusProgram, params...)
 }
 
@@ -265,12 +265,12 @@ type BonusProgramService interface {
 	// GetList выполняет запрос на получение списка бонусных программ.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[BonusProgram], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[BonusProgram], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех бонусных программ в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[BonusProgram], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[BonusProgram], *resty.Response, error)
 
 	// Create выполняет запрос на создание бонусной программы.
 	// Обязательные поля для заполнения:
@@ -283,17 +283,17 @@ type BonusProgramService interface {
 	//	- maxPaidRatePercents (максимальный процент оплаты баллами)
 	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает созданную бонусную программу.
-	Create(ctx context.Context, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
+	Create(ctx context.Context, bonusProgram *BonusProgram, params ...func(*Params)) (*BonusProgram, *resty.Response, error)
 
 	// Update выполняет запрос на изменение бонусной программы.
 	// Принимает контекст, бонусную программу и опционально объект параметров запроса Params.
 	// Возвращает изменённую бонусную программу.
-	Update(ctx context.Context, id string, bonusProgram *BonusProgram, params ...*Params) (*BonusProgram, *resty.Response, error)
+	Update(ctx context.Context, id string, bonusProgram *BonusProgram, params ...func(*Params)) (*BonusProgram, *resty.Response, error)
 
 	// GetByID выполняет запрос на получение бонусной программы.
 	// Принимает контекст, ID бонусной программы и опционально объект параметров запроса Params.
 	// Возвращает бонусную программу.
-	GetByID(ctx context.Context, id string, params ...*Params) (*BonusProgram, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*BonusProgram, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление бонусной программы по ID.
 	// Принимает контекст и ID бонусной программы.

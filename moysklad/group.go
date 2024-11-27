@@ -84,12 +84,12 @@ func (Group) MetaType() MetaType {
 }
 
 // Update shortcut
-func (group *Group) Update(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
+func (group *Group) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Group, *resty.Response, error) {
 	return NewGroupService(client).Update(ctx, group.GetID(), group, params...)
 }
 
 // Create shortcut
-func (group *Group) Create(ctx context.Context, client *Client, params ...*Params) (*Group, *resty.Response, error) {
+func (group *Group) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Group, *resty.Response, error) {
 	return NewGroupService(client).Create(ctx, group, params...)
 }
 
@@ -103,19 +103,19 @@ type GroupService interface {
 	// GetList выполняет запрос на получение списка отделов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Group], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Group], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех отделов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Group], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Group], *resty.Response, error)
 
 	// Create выполняет запрос на создание отдела.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование отдела)
 	// Принимает контекст, отдел и опционально объект параметров запроса Params.
 	// Возвращает созданный отдел.
-	Create(ctx context.Context, group *Group, params ...*Params) (*Group, *resty.Response, error)
+	Create(ctx context.Context, group *Group, params ...func(*Params)) (*Group, *resty.Response, error)
 
 	// DeleteByID выполняет запрос на удаление отдела по ID.
 	// Принимает контекст и ID отдела.
@@ -130,12 +130,12 @@ type GroupService interface {
 	// GetByID выполняет запрос на получение отдельного отдела по ID.
 	// Принимает контекст, ID отдела и опционально объект параметров запроса Params.
 	// Возвращает найденный отдел.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Group, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Group, *resty.Response, error)
 
 	// Update выполняет запрос на изменение отдела.
 	// Принимает контекст, отдел и опционально объект параметров запроса Params.
 	// Возвращает изменённый отдел.
-	Update(ctx context.Context, id string, group *Group, params ...*Params) (*Group, *resty.Response, error)
+	Update(ctx context.Context, id string, group *Group, params ...func(*Params)) (*Group, *resty.Response, error)
 }
 
 const (

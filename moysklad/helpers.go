@@ -382,9 +382,9 @@ type MetaIDOwner interface {
 // GetUUIDFromEntity возвращает ID объекта.
 //
 // Функция пытается достать ID из поля ID, путём вызова метода GetID().
-// Если получает [uuid.Nil], пытается достать ID из поля Href встроенного объекта [Meta].
+// Если получает пустую строку, пытается достать ID из поля Href встроенного объекта [Meta].
 //
-// Возвращает [uuid.Nil], если поле Href пустое или не содержит идентификатора.
+// Возвращает "<empty id>", если поле Href пустое или не содержит идентификатора.
 func GetUUIDFromEntity[T MetaIDOwner](entity *T) string {
 	if entity == nil {
 		return "<empty id>"

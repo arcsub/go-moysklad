@@ -648,12 +648,12 @@ func (Organization) MetaType() MetaType {
 }
 
 // Update shortcut
-func (organization *Organization) Update(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+func (organization *Organization) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Organization, *resty.Response, error) {
 	return NewOrganizationService(client).Update(ctx, organization.GetID(), organization, params...)
 }
 
 // Create shortcut
-func (organization *Organization) Create(ctx context.Context, client *Client, params ...*Params) (*Organization, *resty.Response, error) {
+func (organization *Organization) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Organization, *resty.Response, error) {
 	return NewOrganizationService(client).Create(ctx, organization, params...)
 }
 
@@ -667,25 +667,25 @@ type OrganizationService interface {
 	// GetList выполняет запрос на получение списка юрлиц.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Organization], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Organization], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех юрлиц в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Organization], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Organization], *resty.Response, error)
 
 	// Create выполняет запрос на создание юрлица.
 	// Обязательные поля для заполнения:
 	//	- name (Наименование Юрлица)
 	// Принимает контекст, юрлицо и опционально объект параметров запроса Params.
 	// Возвращает созданное юрлицо.
-	Create(ctx context.Context, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
+	Create(ctx context.Context, organization *Organization, params ...func(*Params)) (*Organization, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение юрлиц.
 	// Изменяемые юрлица должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список юрлиц и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых юрлиц.
-	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params ...*Params) (*Slice[Organization], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, organizationList Slice[Organization], params ...func(*Params)) (*Slice[Organization], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление юрлиц.
 	// Принимает контекст и множество юрлиц.
@@ -705,12 +705,12 @@ type OrganizationService interface {
 	// GetByID выполняет запрос на получение отдельного юрлица по ID.
 	// Принимает контекст, ID юрлица и опционально объект параметров запроса Params.
 	// Возвращает найденное юрлицо.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Organization, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Organization, *resty.Response, error)
 
 	// Update выполняет запрос на изменение юрлица.
 	// Принимает контекст, юрлицо и опционально объект параметров запроса Params.
 	// Возвращает изменённое юрлицо.
-	Update(ctx context.Context, id string, organization *Organization, params ...*Params) (*Organization, *resty.Response, error)
+	Update(ctx context.Context, id string, organization *Organization, params ...func(*Params)) (*Organization, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных юрлиц.
 	// Принимает контекст.

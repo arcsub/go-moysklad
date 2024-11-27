@@ -384,12 +384,12 @@ func (FactureIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (factureIn *FactureIn) Update(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
+func (factureIn *FactureIn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*FactureIn, *resty.Response, error) {
 	return NewFactureInService(client).Update(ctx, factureIn.GetID(), factureIn, params...)
 }
 
 // Create shortcut
-func (factureIn *FactureIn) Create(ctx context.Context, client *Client, params ...*Params) (*FactureIn, *resty.Response, error) {
+func (factureIn *FactureIn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*FactureIn, *resty.Response, error) {
 	return NewFactureInService(client).Create(ctx, factureIn, params...)
 }
 
@@ -403,12 +403,12 @@ type FactureInService interface {
 	// GetList выполняет запрос на получение списка полученных счетов-фактур.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[FactureIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[FactureIn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех полученных счетов-фактур в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[FactureIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[FactureIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание полученного счета-фактуры.
 	// Обязательные поля для заполнения:
@@ -416,13 +416,13 @@ type FactureInService interface {
 	//	- incomingDate (Входящая дата)
 	// Принимает контекст, полученный счет-фактуру и опционально объект параметров запроса Params.
 	// Возвращает созданную полученный счет-фактуру.
-	Create(ctx context.Context, factureIn *FactureIn, params ...*Params) (*FactureIn, *resty.Response, error)
+	Create(ctx context.Context, factureIn *FactureIn, params ...func(*Params)) (*FactureIn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение полученных счетов-фактур.
 	// Изменяемые полученные счета-фактуры должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список полученных счетов-фактур и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых полученных счетов-фактур.
-	CreateUpdateMany(ctx context.Context, factureInList Slice[FactureIn], params ...*Params) (*Slice[FactureIn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, factureInList Slice[FactureIn], params ...func(*Params)) (*Slice[FactureIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление полученных счетов-фактур.
 	// Принимает контекст и множество полученных счетов-фактур.
@@ -442,12 +442,12 @@ type FactureInService interface {
 	// GetByID выполняет запрос на получение отдельного полученного счета-фактуры по ID.
 	// Принимает контекст, ID полученного счета-фактуры и опционально объект параметров запроса Params.
 	// Возвращает найденный полученный счет-фактуру.
-	GetByID(ctx context.Context, id string, params ...*Params) (*FactureIn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*FactureIn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение полученного счета-фактуры.
 	// Принимает контекст, полученный счет-фактуру и опционально объект параметров запроса Params.
 	// Возвращает изменённую полученный счет-фактуру.
-	Update(ctx context.Context, id string, factureIn *FactureIn, params ...*Params) (*FactureIn, *resty.Response, error)
+	Update(ctx context.Context, id string, factureIn *FactureIn, params ...func(*Params)) (*FactureIn, *resty.Response, error)
 
 	// GetMetadata выполняет запрос на получение метаданных полученных счетов-фактур.
 	// Принимает контекст.

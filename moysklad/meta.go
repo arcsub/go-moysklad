@@ -106,9 +106,9 @@ func (meta *Meta) IsEqual(other *Meta) bool {
 	return IsEqualPtr(meta.Href, other.Href)
 }
 
-// GetUUIDFromHref возвращает UUID из поля Href.
+// GetUUIDFromHref возвращает ID из поля Href.
 //
-// Возвращает [uuid.Nil], если поле Href пустое или не содержит идентификатора.
+// Возвращает "<empty id>", если поле Href пустое или не содержит идентификатора.
 func (meta Meta) GetUUIDFromHref() string {
 	href := Deref(meta.Href)
 	if href == "" {

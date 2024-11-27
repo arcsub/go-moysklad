@@ -625,12 +625,12 @@ func (RetailDemand) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailDemand *RetailDemand) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+func (retailDemand *RetailDemand) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailDemand, *resty.Response, error) {
 	return NewRetailDemandService(client).Update(ctx, retailDemand.GetID(), retailDemand, params...)
 }
 
 // Create shortcut
-func (retailDemand *RetailDemand) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDemand, *resty.Response, error) {
+func (retailDemand *RetailDemand) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailDemand, *resty.Response, error) {
 	return NewRetailDemandService(client).Create(ctx, retailDemand, params...)
 }
 
@@ -831,25 +831,25 @@ type RetailDemandService interface {
 	// GetList выполняет запрос на получение списка розничных продаж.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailDemand], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailDemand], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех розничных продаж в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailDemand], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailDemand], *resty.Response, error)
 
 	// Create выполняет запрос на создание розничной продажи.
 	// Обязательные поля для заполнения:
 	//	- retailShift (Ссылка на Розничную смену, в рамках которой происходит продажа)
 	// Принимает контекст, розничную продажу и опционально объект параметров запроса Params.
 	// Возвращает созданный розничную продажу.
-	Create(ctx context.Context, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
+	Create(ctx context.Context, retailDemand *RetailDemand, params ...func(*Params)) (*RetailDemand, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение розничных продаж.
 	// Изменяемые розничные продажи должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список розничных продаж и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых розничных продаж.
-	CreateUpdateMany(ctx context.Context, retailDemandList Slice[RetailDemand], params ...*Params) (*Slice[RetailDemand], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailDemandList Slice[RetailDemand], params ...func(*Params)) (*Slice[RetailDemand], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление розничных продаж.
 	// Принимает контекст и множество розничных продаж.
@@ -869,12 +869,12 @@ type RetailDemandService interface {
 	// GetByID выполняет запрос на получение отдельной розничной продажи по ID.
 	// Принимает контекст, ID розничной продажи и опционально объект параметров запроса Params.
 	// Возвращает найденную розничную продажу.
-	GetByID(ctx context.Context, id string, params ...*Params) (*RetailDemand, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailDemand, *resty.Response, error)
 
 	// Update выполняет запрос на изменение розничной продажи.
 	// Принимает контекст, розничную продажу и опционально объект параметров запроса Params.
 	// Возвращает изменённую розничную продажу.
-	Update(ctx context.Context, id string, retailDemand *RetailDemand, params ...*Params) (*RetailDemand, *resty.Response, error)
+	Update(ctx context.Context, id string, retailDemand *RetailDemand, params ...func(*Params)) (*RetailDemand, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной розничной продажи со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -897,24 +897,24 @@ type RetailDemandService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[RetailDemandPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[RetailDemandPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[RetailDemandPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[RetailDemandPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*RetailDemandPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *RetailDemandPosition, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *RetailDemandPosition, params ...func(*Params)) (*RetailDemandPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *RetailDemandPosition, params ...*Params) (*RetailDemandPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *RetailDemandPosition, params ...func(*Params)) (*RetailDemandPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -1015,7 +1015,7 @@ type RetailDemandService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

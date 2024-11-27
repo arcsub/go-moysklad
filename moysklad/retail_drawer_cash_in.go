@@ -313,12 +313,12 @@ func (RetailDrawerCashIn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailDrawerCashIn *RetailDrawerCashIn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
+func (retailDrawerCashIn *RetailDrawerCashIn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailDrawerCashIn, *resty.Response, error) {
 	return NewRetailDrawerCashInService(client).Update(ctx, retailDrawerCashIn.GetID(), retailDrawerCashIn, params...)
 }
 
 // Create shortcut
-func (retailDrawerCashIn *RetailDrawerCashIn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error) {
+func (retailDrawerCashIn *RetailDrawerCashIn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailDrawerCashIn, *resty.Response, error) {
 	return NewRetailDrawerCashInService(client).Create(ctx, retailDrawerCashIn, params...)
 }
 
@@ -332,12 +332,12 @@ type RetailDrawerCashInService interface {
 	// GetList выполняет запрос на получение списка внесений денег.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailDrawerCashIn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailDrawerCashIn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех внесений денег в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailDrawerCashIn], *resty.Response, error)
 
 	// Create выполняет запрос на создание внесения денег.
 	// Обязательные поля для заполнения:
@@ -346,13 +346,13 @@ type RetailDrawerCashInService interface {
 	//	- retailShift (Ссылка на розничную смену)
 	// Принимает контекст, внесение денег и опционально объект параметров запроса Params.
 	// Возвращает созданное внесение денег.
-	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
+	Create(ctx context.Context, retailDrawerCashIn *RetailDrawerCashIn, params ...func(*Params)) (*RetailDrawerCashIn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение внесений денег.
 	// Изменяемые внесения денег должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список внесений денег и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых внесений денег.
-	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params ...*Params) (*Slice[RetailDrawerCashIn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailDrawerCashInList Slice[RetailDrawerCashIn], params ...func(*Params)) (*Slice[RetailDrawerCashIn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление внесений денег.
 	// Принимает контекст и множество внесений денег.
@@ -372,12 +372,12 @@ type RetailDrawerCashInService interface {
 	// GetByID выполняет запрос на получение внесения денег по ID.
 	// Принимает контекст, ID внесения денег и опционально объект параметров запроса Params.
 	// Возвращает внесение денег.
-	GetByID(ctx context.Context, id string, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailDrawerCashIn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение внесения денег.
 	// Принимает контекст, внесение денег и опционально объект параметров запроса Params.
 	// Возвращает изменённое внесение денег.
-	Update(ctx context.Context, id string, retailDrawerCashIn *RetailDrawerCashIn, params ...*Params) (*RetailDrawerCashIn, *resty.Response, error)
+	Update(ctx context.Context, id string, retailDrawerCashIn *RetailDrawerCashIn, params ...func(*Params)) (*RetailDrawerCashIn, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненного внесения денег со стандартными полями без связи с какими-либо другими документами.
 	// Принимает контекст.
@@ -465,7 +465,7 @@ type RetailDrawerCashInService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

@@ -161,52 +161,52 @@ type ReportProfitService interface {
 	// GetByProduct выполняет запрос на получение отчёта "Прибыльность по товарам".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetByProduct(ctx context.Context, params ...*Params) (*List[ProfitByProduct], *resty.Response, error)
+	GetByProduct(ctx context.Context, params ...func(*Params)) (*List[ProfitByProduct], *resty.Response, error)
 
 	// GetByVariant выполняет запрос на получение отчёта "Прибыльность по модификациям".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetByVariant(ctx context.Context, params ...*Params) (*List[ProfitByVariant], *resty.Response, error)
+	GetByVariant(ctx context.Context, params ...func(*Params)) (*List[ProfitByVariant], *resty.Response, error)
 
 	// GetByEmployee выполняет запрос на получение отчёта "Прибыльность по сотрудникам".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetByEmployee(ctx context.Context, params ...*Params) (*List[ProfitByEmployee], *resty.Response, error)
+	GetByEmployee(ctx context.Context, params ...func(*Params)) (*List[ProfitByEmployee], *resty.Response, error)
 
 	// GetByCounterparty выполняет запрос на получение отчёта "Прибыльность по покупателям".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetByCounterparty(ctx context.Context, params ...*Params) (*List[ProfitByCounterparty], *resty.Response, error)
+	GetByCounterparty(ctx context.Context, params ...func(*Params)) (*List[ProfitByCounterparty], *resty.Response, error)
 
 	// GetBySalesChannel выполняет запрос на получение отчёта "Прибыльность по каналам продаж".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetBySalesChannel(ctx context.Context, params ...*Params) (*List[ProfitBySalesChannel], *resty.Response, error)
+	GetBySalesChannel(ctx context.Context, params ...func(*Params)) (*List[ProfitBySalesChannel], *resty.Response, error)
 
 	// GetByProductAsync выполняет запрос на получение отчёта "Прибыльность по товарам" (асинхронно).
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetByProductAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error)
+	GetByProductAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error)
 
 	// GetByVariantAsync выполняет запрос на получение отчёта "Прибыльность по модификациям".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetByVariantAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error)
+	GetByVariantAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error)
 
 	// GetByEmployeeAsync выполняет запрос на получение отчёта "Прибыльность по сотрудникам".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetByEmployeeAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error)
+	GetByEmployeeAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error)
 
 	// GetByCounterpartyAsync выполняет запрос на получение отчёта "Прибыльность по покупателям".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetByCounterpartyAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error)
+	GetByCounterpartyAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error)
 
 	// GetBySalesChannelAsync выполняет запрос на получение отчёта "Прибыльность по каналам продаж".
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает сервис для работы с контекстом асинхронного запроса.
-	GetBySalesChannelAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error)
+	GetBySalesChannelAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error)
 }
 
 const (
@@ -222,44 +222,44 @@ type reportProfitService struct {
 	Endpoint
 }
 
-func (service *reportProfitService) GetByProduct(ctx context.Context, params ...*Params) (*List[ProfitByProduct], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByProduct]](service.client, EndpointReportProfitByProduct).SetParams(params...).Get(ctx)
+func (service *reportProfitService) GetByProduct(ctx context.Context, params ...func(*Params)) (*List[ProfitByProduct], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, EndpointReportProfitByProduct).SetParams(params).Get(ctx)
 }
 
-func (service *reportProfitService) GetByVariant(ctx context.Context, params ...*Params) (*List[ProfitByVariant], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByVariant]](service.client, EndpointReportProfitByVariant).SetParams(params...).Get(ctx)
+func (service *reportProfitService) GetByVariant(ctx context.Context, params ...func(*Params)) (*List[ProfitByVariant], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, EndpointReportProfitByVariant).SetParams(params).Get(ctx)
 }
 
-func (service *reportProfitService) GetByEmployee(ctx context.Context, params ...*Params) (*List[ProfitByEmployee], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByEmployee]](service.client, EndpointReportProfitByEmployee).SetParams(params...).Get(ctx)
+func (service *reportProfitService) GetByEmployee(ctx context.Context, params ...func(*Params)) (*List[ProfitByEmployee], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, EndpointReportProfitByEmployee).SetParams(params).Get(ctx)
 }
 
-func (service *reportProfitService) GetByCounterparty(ctx context.Context, params ...*Params) (*List[ProfitByCounterparty], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, EndpointReportProfitByCounterparty).SetParams(params...).Get(ctx)
+func (service *reportProfitService) GetByCounterparty(ctx context.Context, params ...func(*Params)) (*List[ProfitByCounterparty], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, EndpointReportProfitByCounterparty).SetParams(params).Get(ctx)
 }
 
-func (service *reportProfitService) GetBySalesChannel(ctx context.Context, params ...*Params) (*List[ProfitBySalesChannel], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, EndpointReportProfitBySalesChannel).SetParams(params...).Get(ctx)
+func (service *reportProfitService) GetBySalesChannel(ctx context.Context, params ...func(*Params)) (*List[ProfitBySalesChannel], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, EndpointReportProfitBySalesChannel).SetParams(params).Get(ctx)
 }
 
-func (service *reportProfitService) GetByProductAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByProduct]](service.client, EndpointReportProfitByProduct).SetParams(params...).Async(ctx)
+func (service *reportProfitService) GetByProductAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByProduct]], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByProduct]](service.client, EndpointReportProfitByProduct).SetParams(params).Async(ctx)
 }
 
-func (service *reportProfitService) GetByVariantAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByVariant]](service.client, EndpointReportProfitByVariant).SetParams(params...).Async(ctx)
+func (service *reportProfitService) GetByVariantAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByVariant]], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByVariant]](service.client, EndpointReportProfitByVariant).SetParams(params).Async(ctx)
 }
 
-func (service *reportProfitService) GetByEmployeeAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByEmployee]](service.client, EndpointReportProfitByEmployee).SetParams(params...).Async(ctx)
+func (service *reportProfitService) GetByEmployeeAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByEmployee]], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByEmployee]](service.client, EndpointReportProfitByEmployee).SetParams(params).Async(ctx)
 }
 
-func (service *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, EndpointReportProfitByCounterparty).SetParams(params...).Async(ctx)
+func (service *reportProfitService) GetByCounterpartyAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitByCounterparty]], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitByCounterparty]](service.client, EndpointReportProfitByCounterparty).SetParams(params).Async(ctx)
 }
 
-func (service *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params ...*Params) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
-	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, EndpointReportProfitBySalesChannel).SetParams(params...).Async(ctx)
+func (service *reportProfitService) GetBySalesChannelAsync(ctx context.Context, params ...func(*Params)) (AsyncResultService[List[ProfitBySalesChannel]], *resty.Response, error) {
+	return NewRequestBuilder[List[ProfitBySalesChannel]](service.client, EndpointReportProfitBySalesChannel).SetParams(params).Async(ctx)
 }
 
 // NewReportProfitService принимает [Client] и возвращает сервис для работы с отчётом Прибыльность.

@@ -671,12 +671,12 @@ func (Demand) MetaType() MetaType {
 }
 
 // Update shortcut
-func (demand *Demand) Update(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+func (demand *Demand) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Demand, *resty.Response, error) {
 	return NewDemandService(client).Update(ctx, demand.GetID(), demand, params...)
 }
 
 // Create shortcut
-func (demand *Demand) Create(ctx context.Context, client *Client, params ...*Params) (*Demand, *resty.Response, error) {
+func (demand *Demand) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Demand, *resty.Response, error) {
 	return NewDemandService(client).Create(ctx, demand, params...)
 }
 
@@ -932,12 +932,12 @@ type DemandService interface {
 	// GetList выполняет запрос на получение списка отгрузок.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Demand], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Demand], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех отгрузок в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Demand], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Demand], *resty.Response, error)
 
 	// Create выполняет запрос на создание отгрузки.
 	// Обязательные поля для заполнения:
@@ -946,13 +946,13 @@ type DemandService interface {
 	//	- store (Ссылка на склад)
 	// Принимает контекст, отгрузку и опционально объект параметров запроса Params.
 	// Возвращает созданную отгрузку.
-	Create(ctx context.Context, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
+	Create(ctx context.Context, demand *Demand, params ...func(*Params)) (*Demand, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение отгрузок.
 	// Изменяемые отгрузки должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список отгрузок и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых отгрузок.
-	CreateUpdateMany(ctx context.Context, demandList Slice[Demand], params ...*Params) (*Slice[Demand], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, demandList Slice[Demand], params ...func(*Params)) (*Slice[Demand], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление отгрузок.
 	// Принимает контекст и множество отгрузок.
@@ -972,12 +972,12 @@ type DemandService interface {
 	// GetByID выполняет запрос на получение отдельной отгрузки по ID.
 	// Принимает контекст, ID отгрузки взаиморасчётов и опционально объект параметров запроса Params.
 	// Возвращает найденную отгрузку.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Demand, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Demand, *resty.Response, error)
 
 	// Update выполняет запрос на изменение отгрузки.
 	// Принимает контекст, отгрузку и опционально объект параметров запроса Params.
 	// Возвращает изменённую отгрузку.
-	Update(ctx context.Context, id string, demand *Demand, params ...*Params) (*Demand, *resty.Response, error)
+	Update(ctx context.Context, id string, demand *Demand, params ...func(*Params)) (*Demand, *resty.Response, error)
 
 	// Template выполняет запрос на получение предзаполненной отгрузки со стандартными полями.
 	// без связи с какими-либо другими документами.
@@ -1001,24 +1001,24 @@ type DemandService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[DemandPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[DemandPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[DemandPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[DemandPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*DemandPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*DemandPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *DemandPosition, params ...*Params) (*DemandPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *DemandPosition, params ...func(*Params)) (*DemandPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *DemandPosition, params ...*Params) (*DemandPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *DemandPosition, params ...func(*Params)) (*DemandPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -1119,7 +1119,7 @@ type DemandService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

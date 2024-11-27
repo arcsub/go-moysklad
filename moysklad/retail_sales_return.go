@@ -503,12 +503,12 @@ func (retailSalesReturn RetailSalesReturn) MetaType() MetaType {
 }
 
 // Update shortcut
-func (retailSalesReturn *RetailSalesReturn) Update(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
+func (retailSalesReturn *RetailSalesReturn) Update(ctx context.Context, client *Client, params ...func(*Params)) (*RetailSalesReturn, *resty.Response, error) {
 	return NewRetailSalesReturnService(client).Update(ctx, retailSalesReturn.GetID(), retailSalesReturn, params...)
 }
 
 // Create shortcut
-func (retailSalesReturn *RetailSalesReturn) Create(ctx context.Context, client *Client, params ...*Params) (*RetailSalesReturn, *resty.Response, error) {
+func (retailSalesReturn *RetailSalesReturn) Create(ctx context.Context, client *Client, params ...func(*Params)) (*RetailSalesReturn, *resty.Response, error) {
 	return NewRetailSalesReturnService(client).Create(ctx, retailSalesReturn, params...)
 }
 
@@ -704,12 +704,12 @@ type RetailSalesReturnService interface {
 	// GetList выполняет запрос на получение списка розничных возвратов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[RetailSalesReturn], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[RetailSalesReturn], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех розничных возвратов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[RetailSalesReturn], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[RetailSalesReturn], *resty.Response, error)
 
 	// Create выполняет запрос на создание внесения денег.
 	// Обязательные поля для заполнения:
@@ -724,13 +724,13 @@ type RetailSalesReturnService interface {
 	//	- noCashSum (Оплачено картой. Поле является необходимым для возврата без основания)
 	// Принимает контекст, розничный возврат и опционально объект параметров запроса Params.
 	// Возвращает созданный розничный возврат.
-	Create(ctx context.Context, retailSalesReturn *RetailSalesReturn, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
+	Create(ctx context.Context, retailSalesReturn *RetailSalesReturn, params ...func(*Params)) (*RetailSalesReturn, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение розничных возвратов.
 	// Изменяемые розничные возвраты должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список розничных возвратов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых розничных возвратов.
-	CreateUpdateMany(ctx context.Context, retailSalesReturnList Slice[RetailSalesReturn], params ...*Params) (*Slice[RetailSalesReturn], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, retailSalesReturnList Slice[RetailSalesReturn], params ...func(*Params)) (*Slice[RetailSalesReturn], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление розничных возвратов.
 	// Принимает контекст и множество розничных возвратов.
@@ -750,12 +750,12 @@ type RetailSalesReturnService interface {
 	// GetByID выполняет запрос на получение розничного возврата по ID.
 	// Принимает контекст, ID розничного возврата и опционально объект параметров запроса Params.
 	// Возвращает розничный возврат.
-	GetByID(ctx context.Context, id string, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*RetailSalesReturn, *resty.Response, error)
 
 	// Update выполняет запрос на изменение розничного возврата.
 	// Принимает контекст, розничный возврат и опционально объект параметров запроса Params.
 	// Возвращает изменённый розничный возврат.
-	Update(ctx context.Context, id string, retailSalesReturn *RetailSalesReturn, params ...*Params) (*RetailSalesReturn, *resty.Response, error)
+	Update(ctx context.Context, id string, retailSalesReturn *RetailSalesReturn, params ...func(*Params)) (*RetailSalesReturn, *resty.Response, error)
 
 	// TemplateBased выполняет запрос на получение шаблона розничного возврата на основе других документов.
 	// Основание, на котором может быть создано:
@@ -773,24 +773,24 @@ type RetailSalesReturnService interface {
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[RetailSalesReturnPosition], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[RetailSalesReturnPosition], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[RetailSalesReturnPosition], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[RetailSalesReturnPosition], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*RetailSalesReturnPosition, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*RetailSalesReturnPosition, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *RetailSalesReturnPosition, params ...*Params) (*RetailSalesReturnPosition, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *RetailSalesReturnPosition, params ...func(*Params)) (*RetailSalesReturnPosition, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *RetailSalesReturnPosition, params ...*Params) (*RetailSalesReturnPosition, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *RetailSalesReturnPosition, params ...func(*Params)) (*RetailSalesReturnPosition, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -891,7 +891,7 @@ type RetailSalesReturnService interface {
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

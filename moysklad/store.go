@@ -245,12 +245,12 @@ func (Store) MetaType() MetaType {
 }
 
 // Update shortcut
-func (store *Store) Update(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+func (store *Store) Update(ctx context.Context, client *Client, params ...func(*Params)) (*Store, *resty.Response, error) {
 	return NewStoreService(client).Update(ctx, store.GetID(), store, params...)
 }
 
 // Create shortcut
-func (store *Store) Create(ctx context.Context, client *Client, params ...*Params) (*Store, *resty.Response, error) {
+func (store *Store) Create(ctx context.Context, client *Client, params ...func(*Params)) (*Store, *resty.Response, error) {
 	return NewStoreService(client).Create(ctx, store, params...)
 }
 
@@ -440,25 +440,25 @@ type StoreService interface {
 	// GetList выполняет запрос на получение списка складов.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetList(ctx context.Context, params ...*Params) (*List[Store], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[Store], *resty.Response, error)
 
 	// GetListAll выполняет запрос на получение всех складов в виде списка.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает список объектов.
-	GetListAll(ctx context.Context, params ...*Params) (*Slice[Store], *resty.Response, error)
+	GetListAll(ctx context.Context, params ...func(*Params)) (*Slice[Store], *resty.Response, error)
 
 	// Create выполняет запрос на создание склада.
 	// Обязательные поля для заполнения:
 	//	- name (Наименования склада)
 	// Принимает контекст, склад и опционально объект параметров запроса Params.
 	// Возвращает созданный склад.
-	Create(ctx context.Context, store *Store, params ...*Params) (*Store, *resty.Response, error)
+	Create(ctx context.Context, store *Store, params ...func(*Params)) (*Store, *resty.Response, error)
 
 	// CreateUpdateMany выполняет запрос на массовое создание и/или изменение складов.
 	// Изменяемые склады должны содержать идентификатор в виде метаданных.
 	// Принимает контекст, список складов и опционально объект параметров запроса Params.
 	// Возвращает список созданных и/или изменённых складов.
-	CreateUpdateMany(ctx context.Context, storeList Slice[Store], params ...*Params) (*Slice[Store], *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, storeList Slice[Store], params ...func(*Params)) (*Slice[Store], *resty.Response, error)
 
 	// DeleteMany выполняет запрос на массовое удаление складов.
 	// Принимает контекст и множество складов.
@@ -519,17 +519,17 @@ type StoreService interface {
 	// GetByID выполняет запрос на получение отдельного склада по ID.
 	// Принимает контекст, ID склада и опционально объект параметров запроса Params.
 	// Возвращает склад.
-	GetByID(ctx context.Context, id string, params ...*Params) (*Store, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*Store, *resty.Response, error)
 
 	// Update выполняет запрос на изменение склада.
 	// Принимает контекст, ID склада, склад и опционально объект параметров запроса Params.
 	// Возвращает изменённый склад.
-	Update(ctx context.Context, id string, store *Store, params ...*Params) (*Store, *resty.Response, error)
+	Update(ctx context.Context, id string, store *Store, params ...func(*Params)) (*Store, *resty.Response, error)
 
 	// GetNamedFilterList выполняет запрос на получение списка фильтров.
 	// Принимает контекст и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetNamedFilterList(ctx context.Context, params ...*Params) (*List[NamedFilter], *resty.Response, error)
+	GetNamedFilterList(ctx context.Context, params ...func(*Params)) (*List[NamedFilter], *resty.Response, error)
 
 	// GetNamedFilterByID выполняет запрос на получение отдельного фильтра по ID.
 	// Принимает контекст и ID фильтра.

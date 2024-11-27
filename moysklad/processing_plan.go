@@ -203,12 +203,12 @@ func (ProcessingPlan) MetaType() MetaType {
 }
 
 // Update shortcut
-func (processingPlan *ProcessingPlan) Update(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+func (processingPlan *ProcessingPlan) Update(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingPlan, *resty.Response, error) {
 	return NewProcessingPlanService(client).Update(ctx, processingPlan.GetID(), processingPlan, params...)
 }
 
 // Create shortcut
-func (processingPlan *ProcessingPlan) Create(ctx context.Context, client *Client, params ...*Params) (*ProcessingPlan, *resty.Response, error) {
+func (processingPlan *ProcessingPlan) Create(ctx context.Context, client *Client, params ...func(*Params)) (*ProcessingPlan, *resty.Response, error) {
 	return NewProcessingPlanService(client).Create(ctx, processingPlan, params...)
 }
 
@@ -425,9 +425,9 @@ const (
 // ProcessingPlanService
 // Сервис для работы с тех картами.
 type ProcessingPlanService interface {
-	GetList(ctx context.Context, params ...*Params) (*List[ProcessingPlan], *resty.Response, error)
-	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
-	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...*Params) (*Slice[ProcessingPlan], *resty.Response, error)
+	GetList(ctx context.Context, params ...func(*Params)) (*List[ProcessingPlan], *resty.Response, error)
+	Create(ctx context.Context, processingPlan *ProcessingPlan, params ...func(*Params)) (*ProcessingPlan, *resty.Response, error)
+	CreateUpdateMany(ctx context.Context, processingPlanList Slice[ProcessingPlan], params ...func(*Params)) (*Slice[ProcessingPlan], *resty.Response, error)
 	DeleteMany(ctx context.Context, entities ...*ProcessingPlan) (*DeleteManyResponse, *resty.Response, error)
 	DeleteByID(ctx context.Context, id string) (bool, *resty.Response, error)
 
@@ -435,30 +435,30 @@ type ProcessingPlanService interface {
 	// Принимает контекст и техкарту.
 	// Возвращает «true» в случае успешного удаления техкарты.
 	Delete(ctx context.Context, entity *ProcessingPlan) (bool, *resty.Response, error)
-	GetByID(ctx context.Context, id string, params ...*Params) (*ProcessingPlan, *resty.Response, error)
-	Update(ctx context.Context, id string, processingPlan *ProcessingPlan, params ...*Params) (*ProcessingPlan, *resty.Response, error)
+	GetByID(ctx context.Context, id string, params ...func(*Params)) (*ProcessingPlan, *resty.Response, error)
+	Update(ctx context.Context, id string, processingPlan *ProcessingPlan, params ...func(*Params)) (*ProcessingPlan, *resty.Response, error)
 
 	// GetPositionList выполняет запрос на получение списка позиций документа.
 	// Принимает контекст, ID документа и опционально объект параметров запроса Params.
 	// Возвращает объект List.
-	GetPositionList(ctx context.Context, id string, params ...*Params) (*List[ProcessingPlanProduct], *resty.Response, error)
+	GetPositionList(ctx context.Context, id string, params ...func(*Params)) (*List[ProcessingPlanProduct], *resty.Response, error)
 
-	GetPositionListAll(ctx context.Context, id string, params ...*Params) (*Slice[ProcessingPlanProduct], *resty.Response, error)
+	GetPositionListAll(ctx context.Context, id string, params ...func(*Params)) (*Slice[ProcessingPlanProduct], *resty.Response, error)
 
 	// GetPositionByID выполняет запрос на получение отдельной позиции документа по ID.
 	// Принимает контекст, ID документа, ID позиции и опционально объект параметров запроса Params.
 	// Возвращает найденную позицию.
-	GetPositionByID(ctx context.Context, id string, positionID string, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	GetPositionByID(ctx context.Context, id string, positionID string, params ...func(*Params)) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// UpdatePosition выполняет запрос на изменение позиции документа.
 	// Принимает контекст, ID документа, ID позиции, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает изменённую позицию.
-	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	UpdatePosition(ctx context.Context, id string, positionID string, position *ProcessingPlanProduct, params ...func(*Params)) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// CreatePosition выполняет запрос на добавление позиции документа.
 	// Принимает контекст, ID документа, позицию документа и опционально объект параметров запроса Params.
 	// Возвращает добавленную позицию.
-	CreatePosition(ctx context.Context, id string, position *ProcessingPlanProduct, params ...*Params) (*ProcessingPlanProduct, *resty.Response, error)
+	CreatePosition(ctx context.Context, id string, position *ProcessingPlanProduct, params ...func(*Params)) (*ProcessingPlanProduct, *resty.Response, error)
 
 	// CreatePositionMany выполняет запрос на массовое добавление позиций документа.
 	// Принимает контекст, ID документа и множество позиций.
@@ -494,7 +494,7 @@ type ProcessingPlanService interface {
 	// Принимает контекст и ID документа.
 	// Возвращает «true» в случае успешного перемещения в корзину.
 	MoveToTrash(ctx context.Context, id string) (bool, *resty.Response, error)
-	GetStages(ctx context.Context, id string, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error)
+	GetStages(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProcessingStage], *resty.Response, error)
 	GetStageByID(ctx context.Context, id, stageID string) (*ProcessingStage, *resty.Response, error)
 	UpdateStage(ctx context.Context, id, stageID string, stage *ProcessingStage) (*ProcessingStage, *resty.Response, error)
 	GetMaterials(ctx context.Context, id string) (*List[ProcessingPlanMaterial], *resty.Response, error)
@@ -533,9 +533,9 @@ type processingPlanService struct {
 	endpointTrash
 }
 
-func (service *processingPlanService) GetStages(ctx context.Context, id string, params ...*Params) (*MetaArray[ProcessingStage], *resty.Response, error) {
+func (service *processingPlanService) GetStages(ctx context.Context, id string, params ...func(*Params)) (*MetaArray[ProcessingStage], *resty.Response, error) {
 	path := fmt.Sprintf(EndpointProcessingPlanStages, id)
-	return NewRequestBuilder[MetaArray[ProcessingStage]](service.client, path).SetParams(params...).Get(ctx)
+	return NewRequestBuilder[MetaArray[ProcessingStage]](service.client, path).SetParams(params).Get(ctx)
 }
 
 func (service *processingPlanService) GetStageByID(ctx context.Context, id, stageID string) (*ProcessingStage, *resty.Response, error) {
