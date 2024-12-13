@@ -83,87 +83,39 @@ product.SetName("iPhone 16 Pro Max").SetCode("APPL16PM")
 ## Использование
 ### Создание экземпляра клиента
 ```go
-    // создание стандартного клиента на базе resty.New()
-client := moysklad.New(
+  // создание стандартного клиента (на базе resty.New())
+client := moysklad.New(moysklad.Config{
 // с использованием токена
-moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
+Token: os.Getenv("MOYSKLAD_TOKEN"),
+
 // или с использованием логина и пароля
-moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
-)
+Username: os.Getenv("MOYSKLAD_USERNAME"),
+Password: os.Getenv("MOYSKLAD_PASSWORD"),
+})
 ```
 
 ### Создание экземпляра клиента со своим http клиентом
 
 ```go
-    httpClient := &http.Client{Timeout: 5 * time.Minute}
+  httpClient := &http.Client{Timeout: 5 * time.Minute}
 
-client := moysklad.New(
-moysklad.WithHTTPClient(httpClient),
-moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
-)
+client := moysklad.New(moysklad.Config{
+Token: os.Getenv("MOYSKLAD_TOKEN"),
+HTTPClient: httpClient,
+})
 ```
 
 ### Создание экземпляра клиента с resty клиентом
 
 ```go
-    restyClient := resty.New()
-
+  restyClient := resty.New()
 restyClient.SetRetryCount(10) // количество повторных попыток
 
-client := moysklad.New(
-moysklad.WithRestyClient(httpClient),
-moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
-)
+client := moysklad.New(moysklad.Config{
+Token: os.Getenv("MOYSKLAD_TOKEN"),
+RestyClient: restyClient,
+})
 ```
-
-### Функциональные параметры
-
-#### WithTokenAuth(token)
-
-Получить простой клиент с авторизацией через токен.
-
-```go
-    client := moysklad.New(
-moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
-)
-```
-
-#### WithBasicAuth(username, password)
-
-Получить простой клиент с авторизацией через пару логин/пароль.
-
-```go
-    client := moysklad.New(
-moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
-)
-```
-#### WithTimeout(timeout)
-
-Установить необходимый таймаут для http клиента.
-
-```go
-    client := moysklad.New(
-moysklad.WithTimeout(15 * time.Minute), // таймаут 15 минут
-)
-```
-#### WithDisabledWebhookContent(value)
-Временное отключение уведомлений вебхуков
-```go
-    client := moysklad.New(
-moysklad.WithDisabledWebhookContent(true), // отключим уведомления вебхуков на данном клиенте
-)
-```
-
-#### WithDisabledWebhookByPrefix(urls...)
-
-Позволяет указать набор префиксов url-адресов.
-
-```go
-    client := moysklad.New(
-moysklad.WithDisabledWebhookByPrefix("https://abc.ru/ms/v1/wh1", "https://abc.ru/ms/v1/wh2"),
-)
-```
-
 ### Параметры запроса
 
 #### Пример передачи параметров запроса в метод
@@ -171,7 +123,7 @@ moysklad.WithDisabledWebhookByPrefix("https://abc.ru/ms/v1/wh1", "https://abc.ru
 Функциональные параметры запроса можно передавать в методы, сигнатура которых это предусматривают.
 
 ```go
-    list, _, err := client.Entity().Product().GetList(context.Background(),
+  list, _, err := client.Entity().Product().GetList(context.Background(),
 moysklad.WithExpand("country"),
 moysklad.WithOrder("name"),
 moysklad.WithLimit(10),
@@ -366,7 +318,7 @@ moysklad.WithLimit(10),
 Относительный путь: `/entity/product`
 Цепочка вызовов от клиента будет выглядеть следующим образом:
 ```go
-    client := moysklad.New(
+  client := moysklad.New(
 moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
 )
 
@@ -414,10 +366,11 @@ import (
 
 func main() {
   // инициализируем простой клиент с аутентификацией по паре логин/пароль
-  client := moysklad.New(
-    moysklad.WithBasicAuth(os.Getenv("MOYSKLAD_USERNAME"), os.Getenv("MOYSKLAD_PASSWORD")),
-    moysklad.WithDisabledWebhookContent(true),
-  )
+  client := moysklad.New(moysklad.Config{
+    Username:               os.Getenv("MOYSKLAD_USERNAME"),
+    Password:               os.Getenv("MOYSKLAD_PASSWORD"),
+    DisabledWebhookContent: true,
+  })
 
   // сервис для работы с товарами
   productService := client.Entity().Product()
