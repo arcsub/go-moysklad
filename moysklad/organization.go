@@ -62,6 +62,7 @@ type Organization struct {
 	OKPO                   *string                  `json:"okpo,omitempty"`                   // ОКПО
 	PayerVat               *bool                    `json:"payerVat,omitempty"`               // Является ли данное юрлицо плательщиком НДС
 	Phone                  *string                  `json:"phone,omitempty"`                  // Номер городского телефона
+	AdvancePaymentVat      *float64                 `json:"advancePaymentVat,omitempty"`      // Налоговая ставка для авансов для плательщиков НДС. Можно использовать значение только из существующих ставок НДС.
 	CompanyType            CompanyType              `json:"companyType,omitempty"`            // Тип Юрлица . В зависимости от значения данного поля набор выводимых реквизитов контрагента может меняться
 	Attributes             Slice[Attribute]         `json:"attributes,omitempty"`             // Список метаданных доп. полей
 }
@@ -331,6 +332,11 @@ func (organization Organization) GetPayerVat() bool {
 // GetPhone возвращает Номер городского телефона.
 func (organization Organization) GetPhone() string {
 	return Deref(organization.Phone)
+}
+
+// GetAdvancePaymentVat возвращает Налоговую ставку для авансов для плательщиков НДС.
+func (organization Organization) GetAdvancePaymentVat() float64 {
+	return Deref(organization.AdvancePaymentVat)
 }
 
 // GetCompanyType возвращает Тип Юрлица.
@@ -620,6 +626,12 @@ func (organization *Organization) SetPayerVat(payerVat bool) *Organization {
 // SetPhone устанавливает Номер городского телефона.
 func (organization *Organization) SetPhone(phone string) *Organization {
 	organization.Phone = &phone
+	return organization
+}
+
+// SetAdvancePaymentVat устанавливает Налоговую ставка для авансов для плательщиков НДС.
+func (organization *Organization) SetAdvancePaymentVat(advancePaymentVat float64) *Organization {
+	organization.AdvancePaymentVat = &advancePaymentVat
 	return organization
 }
 
