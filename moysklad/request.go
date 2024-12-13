@@ -88,7 +88,7 @@ func (requestBuilder *RequestBuilder[T]) Post(ctx context.Context, body any) (*T
 
 func (requestBuilder *RequestBuilder[T]) Delete(ctx context.Context) (bool, *resty.Response, error) {
 	_, resp, err := requestBuilder.Send(ctx, http.MethodDelete, nil)
-	return resp.StatusCode() == http.StatusOK, resp, err
+	return resp.StatusCode() == http.StatusOK || resp.StatusCode() == http.StatusNoContent, resp, err
 }
 
 func (requestBuilder *RequestBuilder[T]) Async(ctx context.Context) (AsyncResultService[T], *resty.Response, error) {

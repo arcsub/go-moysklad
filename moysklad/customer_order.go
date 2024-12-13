@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"net/http"
 
 	"time"
 )
@@ -1092,9 +1093,24 @@ type CustomerOrderService interface {
 	GetNoteList(ctx context.Context, id string) (*List[EventNote], *resty.Response, error)
 
 	// GetNoteByID выполняет запрос на получение события по ID.
-	// Принимает контекст и ID события.
+	// Принимает контекст, ID заказа покупателя и ID события.
 	// Возвращает найденное событие.
 	GetNoteByID(ctx context.Context, id string, noteID string) (*EventNote, *resty.Response, error)
+
+	// AddNote выполняет запрос на добавление события Заказа покупателя.
+	// Принимает контекст, ID заказа покупателя и текст события.
+	// Возвращает объект [EventNote].
+	AddNote(ctx context.Context, id string, description string) (*EventNote, *resty.Response, error)
+
+	// UpdateNote выполняет запрос на обновление события Заказа покупателя.
+	// Принимает контекст ID заказа покупателя, ID события и текст события.
+	// Возвращает объект [EventNote].
+	UpdateNote(ctx context.Context, id string, noteID string, description string) (*EventNote, *resty.Response, error)
+
+	// DeleteNoteByID выполняет запрос на удаление события Заказа покупателя по ID.
+	// Принимает контекст, ID заказа покупателя и ID события.
+	// Возвращает «true» в случае успешного удаления события.
+	DeleteNoteByID(ctx context.Context, id string, noteID string) (bool, *resty.Response, error)
 
 	// Evaluate выполняет запрос на получение шаблона документа с автозаполнением.
 	// Принимает контекст, документ и множество значений Evaluate.
@@ -1122,6 +1138,27 @@ func (service *customerOrderService) GetNoteList(ctx context.Context, id string)
 func (service *customerOrderService) GetNoteByID(ctx context.Context, id string, noteID string) (*EventNote, *resty.Response, error) {
 	path := fmt.Sprintf(EndpointCustomerOrderNotesID, id, noteID)
 	return NewRequestBuilder[EventNote](service.client, path).Get(ctx)
+}
+
+func (service *customerOrderService) AddNote(ctx context.Context, id string, description string) (*EventNote, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomerOrderNotes, id)
+	note := EventNote{Description: description}
+
+	return NewRequestBuilder[EventNote](service.client, path).Post(ctx, note)
+}
+
+func (service *customerOrderService) UpdateNote(ctx context.Context, id string, noteID string, description string) (*EventNote, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomerOrderNotesID, id, noteID)
+	note := EventNote{Description: description}
+
+	return NewRequestBuilder[EventNote](service.client, path).Put(ctx, note)
+}
+
+func (service *customerOrderService) DeleteNoteByID(ctx context.Context, id string, noteID string) (bool, *resty.Response, error) {
+	path := fmt.Sprintf(EndpointCustomerOrderNotesID, id, noteID)
+	_, resp, err := NewRequestBuilder[EventNote](service.client, path).Delete(ctx)
+
+	return resp.StatusCode() == http.StatusNoContent, resp, err
 }
 
 // NewCustomerOrderService принимает [Client] и возвращает сервис для работы с заказами покупателя.
