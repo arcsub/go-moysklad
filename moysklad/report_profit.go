@@ -20,6 +20,7 @@ type ProfitByAssortment struct {
 	ReturnSum      float64                `json:"returnSum"`      // Сумма возвратов
 	SellCost       float64                `json:"sellCost"`       // Себестоимость в копейках
 	Margin         float64                `json:"margin"`         // Рентабельность
+	SalesMargin    float64                `json:"salesMargin"`    // Рентабельность продаж
 	SellPrice      float64                `json:"sellPrice"`      // Цена продаж (средняя)
 	SellSum        float64                `json:"sellSum"`        // Сумма продаж
 	ReturnQuantity float64                `json:"returnQuantity"` // Возвращенное количество
@@ -65,6 +66,7 @@ type ProfitByCounterparty struct {
 	SellSum        float64         `json:"sellSum"`        // Сумма продаж
 	ReturnCount    float64         `json:"returnCount"`    // Количество возвратов
 	SalesCount     float64         `json:"salesCount"`     // Количество продаж
+	SalesMargin    float64         `json:"salesMargin"`    // Рентабельность продаж
 }
 
 // MetaType возвращает код сущности.
@@ -91,6 +93,7 @@ type ProfitByEmployee struct {
 	SellSum        float64         `json:"sellSum"`        // Сумма продаж
 	ReturnCount    float64         `json:"returnCount"`    // Количество возвратов
 	SalesCount     float64         `json:"salesCount"`     // Количество продаж
+	SalesMargin    float64         `json:"salesMargin"`    // Рентабельность продаж
 }
 
 // MetaType возвращает код сущности.
@@ -149,6 +152,7 @@ type ProfitBySalesChannel struct {
 	SellSum        float64                  `json:"sellSum"`        // Сумма продаж
 	ReturnCount    float64                  `json:"returnCount"`    // Количество возвратов
 	SalesCount     float64                  `json:"salesCount"`     // Количество продаж
+	SalesMargin    float64                  `json:"salesMargin"`    // Рентабельность продаж
 }
 
 // MetaType возвращает код сущности.
