@@ -30,8 +30,8 @@ type NotificationInvoice struct {
 	PaymentPlannedMoment Timestamp `json:"paymentPlannedMoment"`
 	Name                 string    `json:"name"`
 	CustomerName         string    `json:"customerName"`
-	Sum                  float64   `json:"sum"`
 	ID                   string    `json:"id"` // ID Уведомления
+	Sum                  float64   `json:"sum"`
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -44,8 +44,8 @@ type Order struct {
 	Meta      Meta    `json:"meta"` // Метаданные объекта. Содержит тип конкретного уведомления
 	Name      string  `json:"name"`
 	AgentName string  `json:"agentName"` // Имя контрагента
+	ID        string  `json:"id"`        // ID Уведомления
 	Sum       float64 `json:"sum"`
-	ID        string  `json:"id"` // ID Уведомления
 }
 
 // String реализует интерфейс [fmt.Stringer].
@@ -199,13 +199,13 @@ func (NotificationImportCompleted) MetaType() MetaType {
 type NotificationGoodCountTooLow struct {
 	Meta           Meta       `json:"meta"`           // Метаданные объекта. Содержит тип конкретного уведомления
 	Created        Timestamp  `json:"created"`        // Дата и время формирования Уведомления
+	Good           MetaNameID `json:"good"`           // Метаданные товара
 	Description    string     `json:"description"`    // Описание уведомления
 	Title          string     `json:"title"`          // Краткий текст уведомления
-	Good           MetaNameID `json:"good"`           // Метаданные товара
-	ActualBalance  int        `json:"actualBalance"`  // Остаток товара
-	MinimumBalance int        `json:"minimumBalance"` // Неснижаемый остаток товара
 	AccountID      string     `json:"accountId"`      // ID учетной записи
 	ID             string     `json:"id"`             // ID Уведомления
+	ActualBalance  int        `json:"actualBalance"`  // Остаток товара
+	MinimumBalance int        `json:"minimumBalance"` // Неснижаемый остаток товара
 	Read           bool       `json:"read"`           // Признак того, было ли Уведомление прочитано
 }
 
@@ -228,12 +228,12 @@ type NotificationInvoiceOutOverdue struct {
 	Meta                 Meta                `json:"meta"`                 // Метаданные объекта. Содержит тип конкретного уведомления
 	Created              Timestamp           `json:"created"`              // Дата и время формирования Уведомления
 	PaymentPlannedMoment Timestamp           `json:"paymentPlannedMoment"` // Запланированная дата оплаты
+	Invoice              NotificationInvoice `json:"invoice"`              // Метаданные счета
 	AgentName            string              `json:"agentName"`            // Имя контрагента
 	Description          string              `json:"description"`          // Описание уведомления
-	Invoice              NotificationInvoice `json:"invoice"`              // Метаданные счета
-	Sum                  float64             `json:"sum"`                  // Сумма счета
 	AccountID            string              `json:"accountId"`            // ID учетной записи
 	ID                   string              `json:"id"`                   // ID Уведомления
+	Sum                  float64             `json:"sum"`                  // Сумма счета
 	Read                 bool                `json:"read"`                 // Признак того, было ли Уведомление прочитано
 }
 
@@ -256,13 +256,13 @@ type NotificationOrderNew struct {
 	Meta                  Meta      `json:"meta"`                  // Метаданные объекта. Содержит тип конкретного уведомления
 	Created               Timestamp `json:"created"`               // Дата и время формирования Уведомления
 	DeliveryPlannedMoment Timestamp `json:"deliveryPlannedMoment"` // Планируемое время отгрузки
+	Order                 Order     `json:"order"`                 // Метаданные заказа
 	AgentName             string    `json:"agentName"`             // Имя контрагента
 	Description           string    `json:"description"`           // Описание уведомления
 	Title                 string    `json:"title"`                 // Краткий текст уведомления
-	Order                 Order     `json:"order"`                 // Метаданные заказа
-	Sum                   float64   `json:"sum"`                   // Сумма
 	AccountID             string    `json:"accountId"`             // ID учетной записи
 	ID                    string    `json:"id"`                    // ID Уведомления
+	Sum                   float64   `json:"sum"`                   // Сумма
 	Read                  bool      `json:"read"`                  // Признак того, было ли Уведомление прочитано
 }
 
@@ -285,13 +285,13 @@ type NotificationOrderOverdue struct {
 	Meta                  Meta      `json:"meta"`                  // Метаданные объекта. Содержит тип конкретного уведомления
 	Created               Timestamp `json:"created"`               // Дата и время формирования Уведомления
 	DeliveryPlannedMoment Timestamp `json:"deliveryPlannedMoment"` // Планируемое время отгрузки
+	Order                 Order     `json:"order"`                 // Метаданные заказа
 	AgentName             string    `json:"agentName"`             // Имя контрагента
 	Description           string    `json:"description"`           // Описание уведомления
 	Title                 string    `json:"title"`                 // Краткий текст уведомления
-	Order                 Order     `json:"order"`                 // Метаданные заказа
-	Sum                   float64   `json:"sum"`                   // Сумма
 	AccountID             string    `json:"accountId"`             // ID учетной записи
 	ID                    string    `json:"id"`                    // ID Уведомления
+	Sum                   float64   `json:"sum"`                   // Сумма
 	Read                  bool      `json:"read"`                  // Признак того, было ли Уведомление прочитано
 }
 
@@ -340,9 +340,9 @@ type NotificationSubscribeTermsExpired struct {
 	Created     Timestamp `json:"created"`     // Дата и время формирования Уведомления
 	Description string    `json:"description"` // Описание уведомления
 	Title       string    `json:"title"`       // Краткий текст уведомления
-	DaysLeft    int       `json:"daysLeft"`    // Количество оставшихся дней подписки
 	AccountID   string    `json:"accountId"`   // ID учетной записи
 	ID          string    `json:"id"`          // ID Уведомления
+	DaysLeft    int       `json:"daysLeft"`    // Количество оставшихся дней подписки
 	Read        bool      `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -659,8 +659,8 @@ type NotificationRetailShift struct {
 	Meta    Meta      `json:"meta"`    // Метаданные смены
 	Open    Timestamp `json:"open"`    // Дата открытия смены
 	Name    string    `json:"name"`    // Номер смены
-	Proceed float64   `json:"proceed"` // Выручка
 	ID      string    `json:"id"`      // ID смены
+	Proceed float64   `json:"proceed"` // Выручка
 }
 
 // NotificationRetailShiftOpened Смена открыта.
@@ -699,15 +699,15 @@ func (NotificationRetailShiftOpened) MetaType() MetaType {
 type NotificationRetailShiftClosed struct {
 	Meta        Meta                    `json:"meta"`        // Метаданные объекта. Содержит тип конкретного уведомления
 	Created     Timestamp               `json:"created"`     // Дата и время формирования Уведомления
-	Description string                  `json:"description"` // Описание уведомления
-	Title       string                  `json:"title"`       // Краткий текст уведомления
+	RetailShift NotificationRetailShift `json:"retailShift"` // Описание смены
 	RetailStore MetaNameID              `json:"retailStore"` // Точка продаж
 	User        MetaNameID              `json:"user"`        // Сотрудник
-	RetailShift NotificationRetailShift `json:"retailShift"` // Описание смены
-	Returns     int                     `json:"returns"`     // Количество возвратов
-	Sales       int                     `json:"sales"`       // Количество продаж
+	Description string                  `json:"description"` // Описание уведомления
+	Title       string                  `json:"title"`       // Краткий текст уведомления
 	AccountID   string                  `json:"accountId"`   // ID учетной записи
 	ID          string                  `json:"id"`          // ID Уведомления
+	Returns     int                     `json:"returns"`     // Количество возвратов
+	Sales       int                     `json:"sales"`       // Количество продаж
 	Read        bool                    `json:"read"`        // Признак того, было ли Уведомление прочитано
 }
 
@@ -782,9 +782,9 @@ type FacebookTokenExpirationNotification struct {
 	ConnectorName        string    `json:"connectorName"`        // Название коннектора "Instagram and Facebook"
 	Description          string    `json:"description"`          // Описание уведомления
 	Title                string    `json:"title"`                // Краткий текст уведомления
-	DaysLeftToExpiration int       `json:"daysLeftToExpiration"` // Количество дней, оставшихся до окончания действия доступа к аккаунту Facebook
 	AccountID            string    `json:"accountId"`            // ID учетной записи
 	ID                   string    `json:"id"`                   // ID Уведомления
+	DaysLeftToExpiration int       `json:"daysLeftToExpiration"` // Количество дней, оставшихся до окончания действия доступа к аккаунту Facebook
 	Read                 bool      `json:"read"`                 // Признак того, было ли Уведомление прочитано
 }
 
@@ -920,10 +920,10 @@ type Notification struct {
 	Created     Timestamp `json:"created"`     // Дата и время формирования Уведомления
 	Description string    `json:"description"` // Описание уведомления
 	Title       string    `json:"title"`       // Краткий текст уведомления
+	AccountID   string    `json:"accountId"`   // ID учетной записи
+	ID          string    `json:"id"`          // ID Уведомления
 	raw         []byte
-	AccountID   string `json:"accountId"` // ID учетной записи
-	ID          string `json:"id"`        // ID Уведомления
-	Read        bool   `json:"read"`      // Признак того, было ли Уведомление прочитано
+	Read        bool `json:"read"` // Признак того, было ли Уведомление прочитано
 }
 
 // String реализует интерфейс [fmt.Stringer].

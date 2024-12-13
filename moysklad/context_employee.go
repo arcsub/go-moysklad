@@ -20,25 +20,25 @@ type ContextEmployee struct {
 	Updated      Timestamp          `json:"updated,omitempty"`      // Момент последнего обновления Сотрудника
 	Salary       Salary             `json:"salary,omitempty"`       // Оклад сотрудника
 	Permissions  Permissions        `json:"permissions,omitempty"`  // Перечисление пермиссий сотрудника
-	Position     string             `json:"position,omitempty"`     // Должность сотрудника
-	Code         string             `json:"code,omitempty"`         // Код Сотрудника
+	UID          string             `json:"uid,omitempty"`          // Логин Сотрудника
+	Name         string             `json:"name,omitempty"`         // Наименование Сотрудника
 	FirstName    string             `json:"firstName,omitempty"`    // Имя
 	FullName     string             `json:"fullName,omitempty"`     // Имя Отчество Фамилия
 	Email        string             `json:"email,omitempty"`        // Электронная почта сотрудника
 	Description  string             `json:"description,omitempty"`  // Комментарий к Сотруднику
 	ExternalCode string             `json:"externalCode,omitempty"` // Внешний код Сотрудника
-	UID          string             `json:"uid,omitempty"`          // Логин Сотрудника
+	Position     string             `json:"position,omitempty"`     // Должность сотрудника
 	LastName     string             `json:"lastName,omitempty"`     // Фамилия
 	ShortFio     string             `json:"shortFio,omitempty"`     // Краткое ФИО
 	MiddleName   string             `json:"middleName,omitempty"`   // Отчество
-	Name         string             `json:"name,omitempty"`         // Наименование Сотрудника
+	Code         string             `json:"code,omitempty"`         // Код Сотрудника
 	INN          string             `json:"inn,omitempty"`          // ИНН сотрудника (в формате ИНН физического лица)
 	Phone        string             `json:"phone,omitempty"`        // Телефон сотрудника
+	ID           string             `json:"id,omitempty"`           // ID Сотрудника
+	AccountID    string             `json:"accountId,omitempty"`    // ID учётной записи
 	Owner        Employee           `json:"owner,omitempty"`        // Метаданные владельца (Сотрудника)
 	Attributes   Slice[Attribute]   `json:"attributes,omitempty"`   // Дополнительные поля Сотрудника
 	Cashiers     MetaArray[Cashier] `json:"cashiers,omitempty"`     // Массив кассиров
-	AccountID    string             `json:"accountId,omitempty"`    // ID учётной записи
-	ID           string             `json:"id,omitempty"`           // ID Сотрудника
 	Shared       bool               `json:"shared,omitempty"`       // Общий доступ
 	Archived     bool               `json:"archived,omitempty"`     // Добавлен ли Сотрудник в архив
 }

@@ -799,9 +799,9 @@ type EventNote struct {
 	Meta        Meta      `json:"meta,omitempty"`        // Метаданные События
 	Created     Timestamp `json:"created,omitempty"`     // Момент создания События
 	Description string    `json:"description,omitempty"` // Текст События
-	Author      Employee  `json:"author,omitempty"`      // Метаданные Сотрудника - создателя События
 	ID          string    `json:"id,omitempty"`          // ID События
 	AccountID   string    `json:"accountId,omitempty"`   // ID учётной записи
+	Author      Employee  `json:"author,omitempty"`      // Метаданные Сотрудника - создателя События
 }
 
 type customerOrderService struct {

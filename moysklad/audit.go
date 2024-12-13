@@ -26,8 +26,8 @@ type Audit struct {
 	ObjectType    MetaType       `json:"objectType"`    // Тип сущностей, с которыми связанно данное изменение. Поле присутствует только для entityType = entitysettings или statesettings или templatesettings
 	Source        string         `json:"source"`        // Тип изменения
 	UID           string         `json:"uid"`           // Логин Сотрудника
-	ObjectCount   int            `json:"objectCount"`   // количество измененных объектов
 	ID            string         `json:"id"`            // ID Контекста
+	ObjectCount   int            `json:"objectCount"`   // количество измененных объектов
 	SupportAccess bool           `json:"supportAccess"` // Был ли доступ произведен поддержкой от имени пользователя. Флаг отсутствует, если значение false
 }
 

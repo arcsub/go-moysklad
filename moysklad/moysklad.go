@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.75"                                // Версия библиотеки
+	Version                      = "v0.0.76"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	ApplicationJson              = "application/json"                       // Тип данных
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
@@ -34,10 +34,10 @@ const (
 
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
+	nextReqTime time.Time
 	*resty.Client
-	limits      *queryLimits
-	mu          sync.Mutex
-	nextReqTime time.Time // время следующего запроса
+	limits *queryLimits
+	mu     sync.Mutex
 }
 
 // Config конфигурация клиента.
@@ -50,25 +50,20 @@ type Client struct {
 //		DisabledWebhookContent: true,
 //	})
 type Config struct {
-	// Устанавливает авторизацию через Bearer токен (в приоритете).
-	Token string
-
-	// Устанавливает авторизацию по логину и паролю.
-	Username, Password string
-
 	// Устанавливает заранее инициализированный клиент [resty.Client] (в приоритете).
 	RestyClient *resty.Client
 
 	// Устанавливает заранее инициализированный клиент [http.Client].
 	HTTPClient *http.Client
 
-	// Устанавливает флаг, который отвечает за формирование заголовка временного отключения уведомления вебхуков
-	// через API (X-Lognex-WebHook-Disable).
-	//
-	// [Подробнее]
-	//
-	// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
-	DisabledWebhookContent bool
+	// Токен (в приоритете).
+	Token string
+
+	// Логин.
+	Username string
+
+	// Пароль.
+	Password string
 
 	// Набор префиксов url-адресов.
 	//
@@ -78,6 +73,14 @@ type Config struct {
 	//
 	// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
 	DisabledWebhookByPrefix []string
+
+	// Устанавливает флаг, который отвечает за формирование заголовка временного отключения уведомления вебхуков
+	// через API (X-Lognex-WebHook-Disable).
+	//
+	// [Подробнее]
+	//
+	// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
+	DisabledWebhookContent bool
 }
 
 // apply применяет конфигурацию к клиенту.

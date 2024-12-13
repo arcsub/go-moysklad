@@ -16,15 +16,15 @@ import (
 //
 // [Документация МойСклад]: https://dev.moysklad.ru/doc/api/remap/1.2/#mojsklad-json-api-asinhronnyj-obmen-asinhronnaq-zadacha
 type Async struct {
-	DeletionDate Timestamp   `json:"deletionDate,omitempty"` // Дата, после которой результат выполнения задачи станет недоступен. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
 	Meta         Meta        `json:"meta,omitempty"`         // Метаданные Асинхронной задачи
 	Owner        MetaWrapper `json:"owner,omitempty"`        // Пользователь или приложение, которые создали Асинхронную задачу
+	DeletionDate Timestamp   `json:"deletionDate,omitempty"` // Дата, после которой результат выполнения задачи станет недоступен. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
 	RequestURL   string      `json:"request,omitempty"`      // URL запроса, по которому создана Асинхронная задача
 	ResultURL    string      `json:"resultUrl,omitempty"`    // Ссылка на результат выполнения задачи. Содержится в ответе, если поле state имеет значение AsyncStateDone (DONE)
 	State        AsyncState  `json:"state,omitempty"`        // Статус выполнения Асинхронной задачи.
-	Errors       ApiErrors   `json:"errors,omitempty"`       // Ошибки апи, если поле state имеет значение AsyncStateApiError (API_ERROR)
 	AccountID    string      `json:"accountId,omitempty"`    // ID учётной записи
 	ID           string      `json:"id,omitempty"`           // ID Асинхронной задачи
+	Errors       ApiErrors   `json:"errors,omitempty"`       // Ошибки апи, если поле state имеет значение AsyncStateApiError (API_ERROR)
 }
 
 // String реализует интерфейс [fmt.Stringer].

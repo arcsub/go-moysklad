@@ -79,10 +79,10 @@ type AssortmentPosition struct {
 	Description  string         `json:"description,omitempty"`  // Комментарий сущности
 	ExternalCode string         `json:"externalCode,omitempty"` // Внешний код сущности
 	Name         string         `json:"name,omitempty"`         // Наименование сущности
+	AccountID    string         `json:"accountId,omitempty"`    // ID учётной записи
+	ID           string         `json:"id,omitempty"`           // ID сущности
 	Barcodes     Slice[Barcode] `json:"barcodes,omitempty"`     // Штрихкоды
 	raw          []byte         // сырые данные для последующей конвертации в нужный тип
-	AccountID    string         `json:"accountId,omitempty"` // ID учётной записи
-	ID           string         `json:"id,omitempty"`        // ID сущности
 }
 
 // AssortmentConverter описывает метод, возвращающий [AssortmentPosition].
