@@ -247,11 +247,8 @@ func getAll[T any](ctx context.Context, client *Client, path string, params []fu
 	var offset = 1
 	var perPage = MaxPositions
 	var data Slice[T]
-	var mu sync.Mutex
-	var wg sync.WaitGroup
 
 	_params := append(params, WithLimit(offset), WithOffset(0))
-
 	list, resp, err := NewRequestBuilder[List[T]](client, path).SetParams(_params).Get(ctx)
 	if err != nil {
 		return nil, resp, err
@@ -259,45 +256,47 @@ func getAll[T any](ctx context.Context, client *Client, path string, params []fu
 
 	_paramsCheck := ApplyParams(_params)
 
+	// Если есть expand, изменяем размер страницы
 	if len(_paramsCheck.Expand) > 0 {
 		perPage = 100
 	}
 
+	// Добавляем первые данные
 	data = append(data, list.Rows...)
 	size := list.Meta.Size
 
+	// Канал для сбора данных из горутин
+	dataChan := make(chan Slice[T], 10)
+	defer close(dataChan)
+
+	// Обрабатываем оставшиеся страницы параллельно
 	for i := offset; i < size; i += perPage {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
+		_params := append(_params[:], WithLimit(perPage), WithOffset(i))
 
-			_params := append(_params[:], WithLimit(perPage), WithOffset(i))
-
-			list, resResp, err := NewRequestBuilder[List[T]](client, path).SetParams(_params).Get(ctx)
-
-			mu.Lock()
-			resp = resResp
-			mu.Unlock()
-
+		// Запускаем горутину для каждого запроса
+		go func(i int, _params []func(*Params)) {
+			list, _, err = NewRequestBuilder[List[T]](client, path).SetParams(_params).Get(ctx)
 			if err != nil {
 				log.Println("getAll error:", err)
+				dataChan <- nil
 				return
 			}
-
-			mu.Lock()
-			data = append(data, list.Rows...)
-			mu.Unlock()
-		}(i)
+			dataChan <- list.Rows
+		}(i, _params)
 	}
 
-	wg.Wait()
+	// Собираем результаты из канала
+	for i := offset; i < size; i += perPage {
+		rows := <-dataChan
+		if rows != nil {
+			data = append(data, rows...)
+		}
+	}
 
 	return &data, resp, nil
 }
 
 func posAll[T any](ctx context.Context, client *Client, path string, entities Slice[T], params []func(*Params)) (*Slice[T], *resty.Response, error) {
-	//paramsCpy := GetParamsFromSliceOrNew(params)
-
 	if entities.Len() > MaxPositions {
 		var data Slice[T]
 		var resp *resty.Response
@@ -403,6 +402,6 @@ func (requestBuilder *RequestBuilder[T]) parseLimits(response *resty.Response) {
 
 func (requestBuilder *RequestBuilder[T]) waitLimits() {
 	for time.Now().Before(requestBuilder.client.nextReqTime) {
-		time.After(100 * time.Millisecond)
+		time.After(50 * time.Millisecond)
 	}
 }
