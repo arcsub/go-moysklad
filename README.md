@@ -85,12 +85,12 @@ product.SetName("iPhone 16 Pro Max").SetCode("APPL16PM")
 ```go
 // создание стандартного клиента (на базе resty.New())
 client := moysklad.New(moysklad.Config{
-// с использованием токена
-Token: os.Getenv("MOYSKLAD_TOKEN"),
-
-// или с использованием логина и пароля
-Username: os.Getenv("MOYSKLAD_USERNAME"),
-Password: os.Getenv("MOYSKLAD_PASSWORD"),
+  // с использованием токена
+  Token: os.Getenv("MOYSKLAD_TOKEN"),
+  
+  // или с использованием логина и пароля
+  Username: os.Getenv("MOYSKLAD_USERNAME"),
+  Password: os.Getenv("MOYSKLAD_PASSWORD"),
 })
 ```
 
@@ -100,8 +100,8 @@ Password: os.Getenv("MOYSKLAD_PASSWORD"),
 httpClient := &http.Client{Timeout: 5 * time.Minute}
 
 client := moysklad.New(moysklad.Config{
-Token: os.Getenv("MOYSKLAD_TOKEN"),
-HTTPClient: httpClient,
+  Token: os.Getenv("MOYSKLAD_TOKEN"),
+  HTTPClient: httpClient,
 })
 ```
 
@@ -112,8 +112,8 @@ restyClient := resty.New()
 restyClient.SetRetryCount(10) // количество повторных попыток
 
 client := moysklad.New(moysklad.Config{
-Token: os.Getenv("MOYSKLAD_TOKEN"),
-RestyClient: restyClient,
+  Token: os.Getenv("MOYSKLAD_TOKEN"),
+  RestyClient: restyClient,
 })
 ```
 ### Параметры запроса
@@ -124,9 +124,9 @@ RestyClient: restyClient,
 
 ```go
 list, _, err := client.Entity().Product().GetList(context.Background(),
-moysklad.WithExpand("country"),
-moysklad.WithOrder("name"),
-moysklad.WithLimit(10),
+  moysklad.WithExpand("country"),
+  moysklad.WithOrder("name"),
+  moysklad.WithLimit(10),
 )
 ```
 
@@ -318,10 +318,6 @@ moysklad.WithMomentTo(time.Now())
 Относительный путь: `/entity/product`
 Цепочка вызовов от клиента будет выглядеть следующим образом:
 ```go
-client := moysklad.New(
-moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
-)
-
 // `/entity/product`
 _ = client.Entity().Product()
 
