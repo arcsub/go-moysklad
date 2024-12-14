@@ -297,8 +297,8 @@ func (TaskNote) MetaType() MetaType {
 type TaskOperation struct {
 	Meta *Meta   `json:"meta,omitempty"` // Метаданные документа
 	Name *string `json:"name,omitempty"` // Наименование документа
+	ID   string  `json:"id"`             // ID документа
 	raw  []byte  // сырые данные для последующей конвертации в нужный тип
-	ID   string  `json:"id"` // ID документа
 }
 
 // MetaType возвращает код сущности.

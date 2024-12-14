@@ -69,6 +69,20 @@ func (employee Employee) AsAgent() *Agent {
 	return &Agent{Meta: employee.Meta}
 }
 
+// AsMention преобразует объект сотрудника в упоминание в Ленте событий.
+//
+// Пример использования:
+//
+//	func main() {
+//		note := fmt.Sprintf("Привет, %s! Как у тебя дела?", employee.AsMention())
+//
+//		// Привет, {{employee;861d34a9-f1b3-11ee-ac12-00110000004e}}! Как у тебя дела?
+//		fmt.Println(note)
+//	}
+func (employee Employee) AsMention() string {
+	return fmt.Sprintf("{{employee;%s}}", employee.GetID())
+}
+
 // GetID возвращает ID Сотрудника.
 func (employee Employee) GetID() string {
 	return Deref(employee.ID)

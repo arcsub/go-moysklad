@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/ratelimit"
-	"net"
 	"net/http"
 	"strconv"
 	"sync"
@@ -12,7 +11,7 @@ import (
 )
 
 const (
-	Version                      = "v0.0.75"                                // Версия библиотеки
+	Version                      = "v0.0.76"                                // Версия библиотеки
 	baseApiURL                   = "https://api.moysklad.ru/api/remap/1.2/" // Базовый адрес API
 	ApplicationJson              = "application/json"                       // Тип данных
 	headerWebHookDisable         = "X-Lognex-WebHook-Disable"               // Заголовок временного отключения уведомлений через API.
@@ -35,24 +34,83 @@ const (
 
 // Client базовый клиент для взаимодействия с API МойСклад.
 type Client struct {
+	nextReqTime time.Time
 	*resty.Client
-	limits      *queryLimits
-	mu          sync.Mutex
-	nextReqTime time.Time // время следующего запроса
+	limits *queryLimits
+	mu     sync.Mutex
 }
 
-func New(options ...func(*Client)) *Client {
-	client := &Client{
-		Client: resty.New(),
-		limits: &queryLimits{
-			// количество запросов за 3-х секундный период и количество параллельных запросов.
-			rl:       ratelimit.New(MaxQueriesPerSecond),
-			queryBuf: make(chan struct{}, MaxQueriesPerUser),
-		},
+// Config конфигурация клиента.
+// Обязательно указывать либо токен (в приоритете), либо логин и пароль.
+//
+// # Пример:
+//
+//	client := moysklad.New(moysklad.Config{
+//		Token:                  "MS_TOKEN_HERE",
+//		DisabledWebhookContent: true,
+//	})
+type Config struct {
+	// Устанавливает заранее инициализированный клиент [resty.Client] (в приоритете).
+	RestyClient *resty.Client
+
+	// Устанавливает заранее инициализированный клиент [http.Client].
+	HTTPClient *http.Client
+
+	// Токен (в приоритете).
+	Token string
+
+	// Логин.
+	Username string
+
+	// Пароль.
+	Password string
+
+	// Набор префиксов url-адресов.
+	//
+	// Если адрес вебхука содержит один из указанных префиксов, то этот вебхук не будет инициирован по результатам запроса.
+	//
+	// [Подробнее]
+	//
+	// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
+	DisabledWebhookByPrefix []string
+
+	// Устанавливает флаг, который отвечает за формирование заголовка временного отключения уведомления вебхуков
+	// через API (X-Lognex-WebHook-Disable).
+	//
+	// [Подробнее]
+	//
+	// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
+	DisabledWebhookContent bool
+}
+
+// apply применяет конфигурацию к клиенту.
+func (config Config) apply(client *Client) {
+	if config.HTTPClient != nil {
+		client.Client = resty.NewWithClient(config.HTTPClient)
 	}
 
-	for _, o := range options {
-		o(client)
+	if config.RestyClient != nil {
+		client.Client = config.RestyClient
+	} else {
+		client.Client = resty.New()
+	}
+
+	if config.Username != "" && config.Password != "" {
+		client.SetBasicAuth(config.Username, config.Password)
+	}
+
+	if config.Token != "" {
+		client.SetAuthToken(config.Token)
+	}
+
+	if config.DisabledWebhookContent {
+		client.SetHeader(headerWebHookDisable, strconv.FormatBool(true))
+	}
+
+	if len(config.DisabledWebhookByPrefix) > 0 {
+		for _, prefix := range config.DisabledWebhookByPrefix {
+			client.Header.Add(headerWebHookDisableByPrefix, prefix)
+		}
 	}
 
 	// устанавливаем базовый URL
@@ -62,87 +120,37 @@ func New(options ...func(*Client)) *Client {
 	client.Header.Set("Accept", "application/json;charset=utf-8")
 	client.Header.Set("Accept-Encoding", "gzip")
 	client.Header.Set("User-Agent", fmt.Sprintf("go-moysklad/%s, https://github.com/arcsub/go-moysklad", Version))
+}
+
+// New создает новый экземпляр клиента.
+//
+// Принимает аргумент [Config], в котором необходимо указывать либо токен (в приоритете), либо логин и пароль.
+//
+// # Пример:
+//
+//	client := moysklad.New(moysklad.Config{
+//		Token:                  "MS_TOKEN_HERE",
+//		DisabledWebhookContent: true,
+//	})
+func New(config Config) *Client {
+	client := &Client{
+		limits: &queryLimits{
+			// количество запросов за 3-х секундный период и количество параллельных запросов.
+			rl:       ratelimit.New(MaxQueriesPerSecond),
+			queryBuf: make(chan struct{}, MaxQueriesPerUser),
+		},
+	}
+
+	config.apply(client)
 
 	return client
 }
 
-// WithTokenAuth устанавливает авторизацию через Bearer токен.
-func WithTokenAuth(token string) func(*Client) {
-	return func(client *Client) {
-		client.SetAuthToken(token)
-	}
-}
-
-// WithBasicAuth устанавливает авторизацию по логину и паролю.
-func WithBasicAuth(username, password string) func(*Client) {
-	return func(client *Client) {
-		client.SetBasicAuth(username, password)
-	}
-}
-
-// WithHTTPClient устанавливает заранее инициализированный клиент [http.Client].
-func WithHTTPClient(httpClient *http.Client) func(*Client) {
-	return func(client *Client) {
-		if httpClient != nil {
-			client.Client = resty.NewWithClient(httpClient)
-		}
-	}
-}
-
-// WithRestyClient устанавливает заранее инициализированный клиент [resty.Client].
-func WithRestyClient(restyClient *resty.Client) func(*Client) {
-	return func(client *Client) {
-		if restyClient != nil {
-			client.Client = restyClient
-		}
-	}
-}
-
-// WithDisabledWebhookContent устанавливает флаг, который отвечает
-// за формирование заголовка временного отключения уведомления вебхуков через API (X-Lognex-WebHook-Disable).
-//
-// [Подробнее]
-//
-// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-cherez-api
-func WithDisabledWebhookContent(value bool) func(*Client) {
-	return func(client *Client) {
-		client.SetHeader(headerWebHookDisable, strconv.FormatBool(value))
-	}
-}
-
-// WithDisabledWebhookByPrefix позволяет указать набор префиксов url-адресов.
-//
-// Если адрес вебхука содержит один из указанных префиксов, то этот вебхук не будет инициирован по результатам запроса.
-//
-// [Подробнее]
-//
-// [Подробнее]: https://dev.moysklad.ru/doc/api/remap/1.2/dictionaries/#suschnosti-vebhuki-primer-webhuka-zagolowok-wremennogo-otklucheniq-x-lognex-webhook-disablebyprefix-cherez-api
-func WithDisabledWebhookByPrefix(urls ...string) func(*Client) {
-	return func(client *Client) {
-		for _, url := range urls {
-			client.Header.Add(headerWebHookDisableByPrefix, url)
-		}
-	}
-}
-
-// WithTimeout устанавливает необходимый таймаут для http клиента.
-func WithTimeout(timeout time.Duration) func(*Client) {
-	return func(client *Client) {
-		transport := &http.Transport{
-			DialContext: (&net.Dialer{
-				Timeout:   timeout,
-				KeepAlive: timeout,
-			}).DialContext,
-		}
-
-		client.SetTimeout(timeout)
-		client.SetTransport(transport)
-	}
-}
-
+// queryLimits используется для ограничения количества параллельных запросов
+// и минимального интервала между ними.
 type queryLimits struct {
-	rl       ratelimit.Limiter // Лимит между запросами
-	queryBuf chan struct{}     // Буферизированный канал
+	rl       ratelimit.Limiter // Лимитатор для контроля частоты запросов
+	queryBuf chan struct{}     // Буфер для управления параллельными запросами
 }
 
 func (queryLimits *queryLimits) Wait() {
