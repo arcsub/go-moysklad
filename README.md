@@ -83,7 +83,7 @@ product.SetName("iPhone 16 Pro Max").SetCode("APPL16PM")
 ## Использование
 ### Создание экземпляра клиента
 ```go
-  // создание стандартного клиента (на базе resty.New())
+// создание стандартного клиента (на базе resty.New())
 client := moysklad.New(moysklad.Config{
 // с использованием токена
 Token: os.Getenv("MOYSKLAD_TOKEN"),
@@ -97,7 +97,7 @@ Password: os.Getenv("MOYSKLAD_PASSWORD"),
 ### Создание экземпляра клиента со своим http клиентом
 
 ```go
-  httpClient := &http.Client{Timeout: 5 * time.Minute}
+httpClient := &http.Client{Timeout: 5 * time.Minute}
 
 client := moysklad.New(moysklad.Config{
 Token: os.Getenv("MOYSKLAD_TOKEN"),
@@ -108,7 +108,7 @@ HTTPClient: httpClient,
 ### Создание экземпляра клиента с resty клиентом
 
 ```go
-  restyClient := resty.New()
+restyClient := resty.New()
 restyClient.SetRetryCount(10) // количество повторных попыток
 
 client := moysklad.New(moysklad.Config{
@@ -123,7 +123,7 @@ RestyClient: restyClient,
 Функциональные параметры запроса можно передавать в методы, сигнатура которых это предусматривают.
 
 ```go
-  list, _, err := client.Entity().Product().GetList(context.Background(),
+list, _, err := client.Entity().Product().GetList(context.Background(),
 moysklad.WithExpand("country"),
 moysklad.WithOrder("name"),
 moysklad.WithLimit(10),
@@ -134,114 +134,114 @@ moysklad.WithLimit(10),
 #### Количество элементов на странице `limit=val`
 Пример:
 ```go
-    moysklad.WithLimit(100)
+moysklad.WithLimit(100)
 ```
 
 #### Смещение от первого элемента `offset=val`
 Пример:
 ```go
-    moysklad.WithOffset(100)
+moysklad.WithOffset(100)
 ```
 
 #### Контекстный поиск `search=val`
 Пример:
 ```go
-    moysklad.WithSearch("iPhone 16 Pro Max")
+moysklad.WithSearch("iPhone 16 Pro Max")
 ```
 #### Замена ссылок объектами
 Пример:
 ```go
-    moysklad.WithExpand("positions").WithExpand("group")
+moysklad.WithExpand("positions").WithExpand("group")
 ```
 
 #### Фильтрация по значению `key=value`
 Пример:
 ```go
-    moysklad.WithFilterEquals("name", "Яблоко")
+moysklad.WithFilterEquals("name", "Яблоко")
 ```
 
 #### Строго больше `key>value`
 Пример:
 ```go
-    moysklad.WithFilterGreater("sum", "100")
+moysklad.WithFilterGreater("sum", "100")
 ```
 
 #### Строго меньше `key<value`
 Пример:
 ```go
-    moysklad.WithFilterLesser("sum", "1000")
+moysklad.WithFilterLesser("sum", "1000")
 ```
 
 #### Больше или равно `key=>value`
 Пример:
 ```go
-    moysklad.WithFilterGreaterOrEquals("moment", "2023-06-01")
+moysklad.WithFilterGreaterOrEquals("moment", "2023-06-01")
 ```
 
 #### Меньше или равно `key<=value`
 Пример:
 ```go
-    moysklad.WithFilterLesserOrEquals("moment", "2023-06-01")
+moysklad.WithFilterLesserOrEquals("moment", "2023-06-01")
 ```
 
 #### Не равно `key!=value`
 Пример:
 ```go
-    moysklad.WithFilterNotEquals("name", "0001")
+moysklad.WithFilterNotEquals("name", "0001")
 ```
 
 #### Частичное совпадение (обычное подобие) `key~value`
 Пример:
 ```go
-    moysklad.WithFilterEquivalence("code", "ms")
+moysklad.WithFilterEquivalence("code", "ms")
 ```
 
 #### Полное совпадение в начале значения (левое подобие) `key~=value`
 Пример:
 ```go
-    moysklad.WithFilterEquivalenceLeft("code", "ms")
+moysklad.WithFilterEquivalenceLeft("code", "ms")
 ```
 
 #### Полное совпадение в конце значения (правое подобие) `key=~value`
 Пример:
 ```go
-    moysklad.WithFilterEquivalenceRight("code", "ms")
+moysklad.WithFilterEquivalenceRight("code", "ms")
 ```
 
 #### Частичное совпадение не выводится `key!~value`
 Пример:
 ```go
-    moysklad.WithFilterNotEquivalence("code", "ms")
+moysklad.WithFilterNotEquivalence("code", "ms")
 ```
 
 #### Фильтрация по удалённым документам `isDeleted=val`
 Пример:
 ```go
-    moysklad.WithFilterDeleted(true)
+moysklad.WithFilterDeleted(true)
 ```
 
 #### Фильтрация по напечатанным документам `printed=val`
 Пример:
 ```go
-    moysklad.WithFilterPrinted(true)
+moysklad.WithFilterPrinted(true)
 ```
 
 #### Фильтрация по опубликованным документам `published=val`
 Пример:
 ```go
-    moysklad.WithFilterPublished(true)
+moysklad.WithFilterPublished(true)
 ```
 
 #### Фильтрация по архивным сущностям `archived=val`
 Пример:
 ```go
-    moysklad.WithFilterArchived(true)
+moysklad.WithFilterArchived(true)
 ```
 
 #### Группировка выдачи `groupBy=val`
 Пример:
 ```go
-    moysklad.WithGroupBy(moysklad.GroupByProduct)
+moysklad.WithGroupBy(moysklad.GroupByProduct)
 ```
 
 #### Применение сохранённого фильтра `namedFilter=href`
@@ -249,25 +249,25 @@ moysklad.WithLimit(10),
 
 Пример:
 ```go
-    moysklad.WithNamedFilter(&NamedFilter{...})
+moysklad.WithNamedFilter(&NamedFilter{...})
 ```
 
 #### Сортировка по умолчанию `order=fieldName`
 Пример:
 ```go
-    moysklad.WithOrder("name")
+moysklad.WithOrder("name")
 ```
 
 #### Сортировка по возрастанию `order=fieldName,asc`
 Пример:
 ```go
-    moysklad.WithOrderAsc("name")
+moysklad.WithOrderAsc("name")
 ```
 
 #### Сортировка по убыванию `order=fieldName,desc`
 Пример:
 ```go
-    moysklad.WithOrderDesc("name")
+moysklad.WithOrderDesc("name")
 ```
 
 #### Остатки и себестоимость в позициях документов `fields=stock`
@@ -275,7 +275,7 @@ moysklad.WithLimit(10),
 
 Пример:
 ```go
-    moysklad.WithStockFiled()
+moysklad.WithStockFiled()
 ```
 
 #### Тип остатка `stockType=val`
@@ -284,7 +284,7 @@ moysklad.WithLimit(10),
 
 Пример:
 ```go
-    moysklad.WithStockType(moysklad.StockDefault)
+moysklad.WithStockType(moysklad.StockDefault)
 ```
 
 #### Интервал, с которым будет построен отчет `interval=val`
@@ -292,21 +292,21 @@ moysklad.WithLimit(10),
 
 Пример:
 ```go
-    moysklad.WithInterval(moysklad.IntervalMonth)
+moysklad.WithInterval(moysklad.IntervalMonth)
 ```
 
 #### Начало периода `momentFrom=val`
 Метод принимает `time.Time`
 Пример:
 ```go
-    moysklad.WithMomentFrom(time.Now())
+moysklad.WithMomentFrom(time.Now())
 ```
 
 #### Конец периода `momentTo=val`
 Метод принимает `time.Time`
 Пример:
 ```go
-    moysklad.WithMomentTo(time.Now())
+moysklad.WithMomentTo(time.Now())
 ```
 
 ### Сервисы
@@ -318,7 +318,7 @@ moysklad.WithLimit(10),
 Относительный путь: `/entity/product`
 Цепочка вызовов от клиента будет выглядеть следующим образом:
 ```go
-  client := moysklad.New(
+client := moysklad.New(
 moysklad.WithTokenAuth(os.Getenv("MOYSKLAD_TOKEN")),
 )
 
@@ -351,7 +351,7 @@ func FetchMeta[T any](ctx context.Context, client *Client, meta Meta, params ...
 Пример:
 
 ```go
-    productFromMeta, resp, err := moysklad.FetchMeta[moysklad.Product](ctx, client, product.GetMeta())
+product, _, _ := moysklad.FetchMeta[moysklad.Product](ctx, client, product.GetMeta())
 ```
 ### Пример работы
 ```go
