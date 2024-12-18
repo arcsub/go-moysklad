@@ -1,8 +1,6 @@
 package moysklad
 
-import (
-	"github.com/goccy/go-json"
-)
+import "encoding/json"
 
 // Operation общие поля операций, к которым привязан платёж.
 type Operation struct {

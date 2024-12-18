@@ -2,9 +2,8 @@ package moysklad
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/go-resty/resty/v2"
-	"github.com/goccy/go-json"
-
 	"reflect"
 )
 

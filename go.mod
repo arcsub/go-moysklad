@@ -4,7 +4,6 @@ go 1.22.0
 
 require (
 	github.com/go-resty/resty/v2 v2.16.2
-	github.com/goccy/go-json v0.10.3
 	github.com/google/go-querystring v1.1.0
 	go.uber.org/ratelimit v0.3.1
 )

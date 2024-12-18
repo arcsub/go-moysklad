@@ -1,6 +1,6 @@
 package moysklad
 
-import "github.com/goccy/go-json"
+import "encoding/json"
 
 // RetailOperation розничная операция.
 type RetailOperation struct {
