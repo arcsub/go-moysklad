@@ -1,6 +1,7 @@
 module github.com/arcsub/go-moysklad
 
 go 1.22.0
+toolchain go1.23.7
 
 require (
 	github.com/go-resty/resty/v2 v2.16.5
@@ -10,6 +11,6 @@ require (
 
 require (
 	github.com/benbjohnson/clock v1.3.0 // indirect
-	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
